@@ -3,6 +3,10 @@
 #include <armadillo>
 #include <iomanip>
 
+/*
+ * Function for generating random SU3 matrices
+ */
+
 SU3MatrixGenerator::SU3MatrixGenerator(double eps, std::mt19937_64 &gen, std::uniform_real_distribution<double> &randDistr)
 {
     epsilon = eps;

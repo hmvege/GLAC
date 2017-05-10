@@ -8,14 +8,18 @@ SOURCES += main.cpp \
     actions/action.cpp \
     functions.cpp \
     links.cpp \
-    su3matrixgenerator.cpp
+    su3matrixgenerator.cpp \
+    su3.cpp \
+    complex.cpp
 
 HEADERS += \
     metropolis.h \
     actions/action.h \
     functions.h \
     links.h \
-    su3matrixgenerator.h
+    su3matrixgenerator.h \
+    su3.h \
+    complex.h
 
 LIBS += -llapack -lblas -larmadillo
 

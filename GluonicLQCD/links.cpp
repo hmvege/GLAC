@@ -1,14 +1,18 @@
-//#include "links.h"
+#include "links.h"
 
-//Links::Links()
-//{
+/*
+ * For storing a link variable
+ */
 
-//}
+Links::Links()
+{
 
-//Links::~Links()
-//{
-////    delete [] M0;
-////    delete [] M1;
-////    delete [] M2;
-////    delete [] M3;
-//}
+}
+
+Links::~Links()
+{
+//    delete [] M0;
+//    delete [] M1;
+//    delete [] M2;
+//    delete [] M3;
+}
