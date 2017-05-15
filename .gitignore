@@ -1,0 +1,9 @@
+# OS Junk
+.DS_Store
+
+# Build files
+build/*
+*.o
+
+# Other qt files
+*.user

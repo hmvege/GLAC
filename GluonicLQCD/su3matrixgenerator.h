@@ -2,7 +2,6 @@
 #define SU3MATRIXGENERATOR_H
 
 #include <random>
-#include <armadillo>
 
 class SU3MatrixGenerator
 {
@@ -16,7 +15,7 @@ public:
     SU3MatrixGenerator(double eps, std::mt19937_64 &gen, std::uniform_real_distribution<double> &randDistr);
     ~SU3MatrixGenerator();
     double *generate();
-    void generateHermitian(arma::cx_mat &H);
+    void generateHermitian();
     // Setters
     void setEpsilon(double eps) { epsilon = eps; }
     // Getters

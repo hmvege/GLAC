@@ -21,7 +21,7 @@ HEADERS += \
     su3.h \
     complex.h
 
-LIBS += -llapack -lblas -larmadillo
+#LIBS += -llapack -lblas -larmadillo
 
 ## MPI Settings
 #QMAKE_CXX = mpicxx
@@ -42,8 +42,8 @@ LIBS += -llapack -lblas -larmadillo
 #QMAKE_LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
 
 # Following used to make armadillo usable on mac
-LIBS += -L/usr/local/lib -larmadillo
-INCLUDEPATH += /usr/local/include
+#LIBS += -L/usr/local/lib -larmadillo
+#INCLUDEPATH += /usr/local/include
 
 #INCLUDEPATH += -I/usr/local/include
 #INCLUDEPATH += -L/usr/local/lib

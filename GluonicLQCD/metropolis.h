@@ -2,7 +2,6 @@
 #define METROPOLIS_H
 
 #include <random>
-#include <armadillo>
 #include "actions/action.h"
 #include "links.h"
 #include "su3matrixgenerator.h"
@@ -37,10 +36,9 @@ private:
     // Storing the action as a pointer
     Action *S = nullptr;
     // TEMPORARY
-    arma::mat generateMatrix(std::mt19937_64 &gen, std::uniform_real_distribution<double> &randDistr);
     void normalizeVector(double * v, int n);
     void gramSchmitt(double * v1, double *v2, int n);
-    void testOrthogonality(arma::mat M);
+//    void testOrthogonality(arma::mat M);
 
     // Storing the Gamma functional
     double (*gammaFunctional)(double * x, int n, int _N); // Should change to become a class as with the action

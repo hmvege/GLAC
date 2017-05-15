@@ -25,6 +25,7 @@ Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, doub
     NCor = new_NCor;
     NTherm = new_Therm;
     a = new_a;
+    cout << "INITIALIZE RNG's at Metropolis initialization? metorpolis.cpp line 28" << endl;
 }
 Metropolis::~Metropolis()
 {

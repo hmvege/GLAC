@@ -1,10 +1,11 @@
 #ifndef LINKS_H
 #define LINKS_H
 
-#include <armadillo>
-
-struct Links
+class Links
 {
+public:
+    Links();
+    ~Links();
     // Link variables being the matrices
 //    double * M0 = new double[matrixSize]; // CHANGE TO ARMADILLO
 //    double * M1 = new double[matrixSize];
