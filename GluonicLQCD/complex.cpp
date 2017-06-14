@@ -27,8 +27,9 @@ complex &complex::operator*=(complex b)
     /*
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
      */
-    re = re*b.re - im*b.im;
-    im = re*b.im + im*b.re;
+    double prev_re = re;
+    re = prev_re*b.re - im*b.im;
+    im = prev_re*b.im + im*b.re;
     return *this;
 }
 

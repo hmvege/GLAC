@@ -38,14 +38,25 @@ SU3 &SU3::operator*=(SU3 B)
     /*
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
      */
+    complex *temp = new complex[9];
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            fortsetther!
-            cout << "TODO: FIX MATRIX MULTIPLICATION" << endl;
+            for (int k = 0; k < 3; k++)
+            {
+                temp[3*i+j] += mat[(3*i+k)]*B[(3*k+j)];
+            }
         }
     }
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            mat[(i*3+j)] = temp[(i*3+j)];
+        }
+    }
+    delete [] temp;
     return *this;
 }
 

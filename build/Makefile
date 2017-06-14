@@ -55,7 +55,8 @@ SOURCES       = ../GluonicLQCD/main.cpp \
 		../GluonicLQCD/links.cpp \
 		../GluonicLQCD/su3matrixgenerator.cpp \
 		../GluonicLQCD/su3.cpp \
-		../GluonicLQCD/complex.cpp 
+		../GluonicLQCD/complex.cpp \
+		../GluonicLQCD/unittests.cpp 
 OBJECTS       = main.o \
 		metropolis.o \
 		action.o \
@@ -63,7 +64,8 @@ OBJECTS       = main.o \
 		links.o \
 		su3matrixgenerator.o \
 		su3.o \
-		complex.o
+		complex.o \
+		unittests.o
 DIST          = ../../../../Qt/5.8/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/5.8/clang_64/mkspecs/qdevice.pri \
 		../../../../Qt/5.8/clang_64/mkspecs/features/device_config.prf \
@@ -239,14 +241,16 @@ DIST          = ../../../../Qt/5.8/clang_64/mkspecs/features/spec_pre.prf \
 		links.h \
 		su3matrixgenerator.h \
 		su3.h \
-		complex.h ../GluonicLQCD/main.cpp \
+		complex.h \
+		unittests.h ../GluonicLQCD/main.cpp \
 		../GluonicLQCD/metropolis.cpp \
 		../GluonicLQCD/actions/action.cpp \
 		../GluonicLQCD/functions.cpp \
 		../GluonicLQCD/links.cpp \
 		../GluonicLQCD/su3matrixgenerator.cpp \
 		../GluonicLQCD/su3.cpp \
-		../GluonicLQCD/complex.cpp
+		../GluonicLQCD/complex.cpp \
+		../GluonicLQCD/unittests.cpp
 QMAKE_TARGET  = GluonicLQCD
 DESTDIR       = 
 TARGET        = GluonicLQCD
@@ -666,14 +670,21 @@ functions.o: ../GluonicLQCD/functions.cpp
 links.o: ../GluonicLQCD/links.cpp ../GluonicLQCD/links.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o links.o ../GluonicLQCD/links.cpp
 
-su3matrixgenerator.o: ../GluonicLQCD/su3matrixgenerator.cpp ../GluonicLQCD/su3matrixgenerator.h
+su3matrixgenerator.o: ../GluonicLQCD/su3matrixgenerator.cpp ../GluonicLQCD/su3matrixgenerator.h \
+		../GluonicLQCD/su3.h \
+		../GluonicLQCD/complex.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o su3matrixgenerator.o ../GluonicLQCD/su3matrixgenerator.cpp
 
-su3.o: ../GluonicLQCD/su3.cpp ../GluonicLQCD/su3.h
+su3.o: ../GluonicLQCD/su3.cpp ../GluonicLQCD/su3.h \
+		../GluonicLQCD/complex.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o su3.o ../GluonicLQCD/su3.cpp
 
 complex.o: ../GluonicLQCD/complex.cpp ../GluonicLQCD/complex.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o complex.o ../GluonicLQCD/complex.cpp
+
+unittests.o: ../GluonicLQCD/unittests.cpp ../GluonicLQCD/su3.h \
+		../GluonicLQCD/complex.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o unittests.o ../GluonicLQCD/unittests.cpp
 
 ####### Install
 

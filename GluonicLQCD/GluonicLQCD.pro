@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     links.cpp \
     su3matrixgenerator.cpp \
     su3.cpp \
-    complex.cpp
+    complex.cpp \
+    unittests.cpp
 
 HEADERS += \
     metropolis.h \
@@ -19,7 +20,8 @@ HEADERS += \
     links.h \
     su3matrixgenerator.h \
     su3.h \
-    complex.h
+    complex.h \
+    unittests.h
 
 #LIBS += -llapack -lblas -larmadillo
 

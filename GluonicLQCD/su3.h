@@ -39,13 +39,13 @@ inline SU3 operator*(SU3 A, SU3 B)
     return A;
 }
 
-//inline int index(int i, int j)
-//{
-//    /*
-//     * Function for contigious memory allocation.
-//     */
-//    return (3*i + j) ;
-//}
+inline int index(int i, int j)
+{
+    /*
+     * Function for contigious memory allocation.
+     */
+    return (3*i + j) ;
+}
 
 
 #endif // SU3_H
