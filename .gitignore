@@ -6,5 +6,5 @@ build/
 *.o
 
 # Other qt files
-*.user
+*.user*
 *.autosave
