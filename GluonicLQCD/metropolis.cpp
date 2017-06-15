@@ -13,7 +13,7 @@ using std::cout;
 using std::endl;
 void printArray(double *x, int N);
 
-Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, double new_a)
+Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, double new_a, double new_L)
 {
     /*
      * Class for calculating correlators using the Metropolis algorithm.
@@ -25,7 +25,15 @@ Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, doub
     NCor = new_NCor;
     NTherm = new_Therm;
     a = new_a;
-    cout << "INITIALIZE RNG's at Metropolis initialization? metorpolis.cpp line 28" << endl;
+    L = new_L;
+    // Initializing lattice
+    lattice = new double[latticeSize];
+    linkMatrices = new Links[latticeSize];
+    // Setting up array for Gamma-functional values
+    Gamma = new double*[NCf];
+    for (int i = 0; i < NCf; i++) { Gamma[i] = new double[N]; }
+    for (int i = 0; i < NCf; i++) { for (int j = 0; j < N; j++) { Gamma[i][j] = 0; } } // Setting matrix elements to zero
+
 }
 Metropolis::~Metropolis()
 {
@@ -36,57 +44,7 @@ Metropolis::~Metropolis()
     delete [] linkMatrices;
     for (int i = 0; i < NCf; i++) { delete [] Gamma[i]; }
     delete [] Gamma;
-    delete [] averagedGamma;
-    delete [] averagedGammaSquared;
-    delete [] varianceGamma;
-    delete [] stdGamma;
-    delete [] deltaE;
-    delete [] deltaE_std;
 }
-
-//arma::mat Metropolis::generateMatrix(std::mt19937_64 &gen, std::uniform_real_distribution<double> &randDistr)
-//{
-//    /*
-//     * Most likely try to place inside a class later
-//     */
-//    int colSize = 3;
-//    // Generate a column vector with random numbers
-//    double * col1 = new double[colSize];
-//    double * col2 = new double[colSize];
-//    double * col3 = new double[colSize];
-//    for (int i = 0; i < colSize; i++)
-//    {
-//        col1[i] = randDistr(gen);
-//        col2[i] = randDistr(gen);
-//    }
-//    // Normalize
-//    normalizeVector(col1,colSize);
-//    // Gram-Schmitt for first column
-//    gramSchmitt(col1,col2,colSize);
-//    double tempSum = 0;
-//    for (int i = 0; i < colSize; i++) { tempSum += col1[i]*col2[i]; }
-//    cout << "tempSum " << tempSum << endl;
-//    exit(1);
-//    delete [] col1;
-//    delete [] col2;
-//    delete [] col3;
-//}
-
-//void Metropolis::normalizeVector(double * v, int n)
-//{
-//    /*
-//     * Normalizes vectors of length n
-//     */
-//    double vSum = 0;
-//    for (int i = 0; i < n; i++) { vSum += v[i]; }
-//    for (int i = 0; i < n; i++) { v[i] /= vSum; }
-//}
-
-
-//void Metropolis::testOrthogonality(arma::mat M)
-//{
-//    cout << M.t()*M << endl;
-//}
 
 void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
 {
@@ -141,11 +99,6 @@ void Metropolis::runMetropolis()
     std::uniform_real_distribution<double> epsilon_distribution(-epsilon, epsilon);
     std::uniform_real_distribution<double> uniform_distribution(0,1);
 
-    // Setting up array for Gamma-functional values
-    Gamma = new double*[NCf];
-    for (int i = 0; i < NCf; i++) { Gamma[i] = new double[N]; }
-    for (int i = 0; i < NCf; i++) { for (int j = 0; j < N; j++) { Gamma[i][j] = 0; } } // Setting matrix elements to zero
-
     // Setting up array
     double * x = new double[N]; // Only need one array, as it will always be updated. Note, it is 1D
     for (int i = 0; i < N; i++) { x[i] = 0; }
@@ -171,8 +124,7 @@ void Metropolis::runMetropolis()
             Gamma[alpha][n] = gammaFunctional(x,n,N);
         }
     }
-
-    // De-allocating arrays
+    // De-allocating position array
     delete [] x;
 }
 
@@ -222,6 +174,12 @@ void Metropolis::getStatistics()
     {
         deltaE_std[n] = sqrt(pow(stdGamma[n]/averagedGamma[n],2) + pow(stdGamma[(n+1)%N]/averagedGamma[(n+1)%N],2))/a;
     }
+    delete [] averagedGamma;
+    delete [] averagedGammaSquared;
+    delete [] varianceGamma;
+    delete [] stdGamma;
+    delete [] deltaE;
+    delete [] deltaE_std;
 }
 
 void Metropolis::writeDataToFile(const char *filename)

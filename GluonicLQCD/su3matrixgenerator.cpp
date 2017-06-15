@@ -48,6 +48,16 @@ SU3 SU3MatrixGenerator::generate()
             H[3*i + j].im = uniform_distribution(generator);
         }
     }
+    // Normalizing first column
+    double normSum = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        normSum += H[3*i].norm();
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        H[3*i] /= normSum;
+    }
     // Using Gram-Schmitt to generate next column
     complex projectionFactor(0,0);
     complex nom(0,0);
@@ -62,13 +72,46 @@ SU3 SU3MatrixGenerator::generate()
     {
         H[3*i+1] -= projectionFactor*H[3*i];
     }
+    // Normalizing second column
+    normSum = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        normSum += H[3*i+1].norm();
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        H[3*i+1] /= normSum;
+    }
     // Taking cross product to produce the last column of our matrix
     H[2] = H[3]*H[7] - H[6]*H[4];
     H[5] = H[6]*H[1] - H[0]*H[7];
     H[8] = H[0]*H[4] - H[3]*H[1];
 
+    SU3 HInv;
+    HInv.copy(H);
+    HInv.transpose();
+    HInv.conjugate();
+    SU3 I;
+    I = H*HInv;
+
+    cout << endl;
+    H.print();
+    cout << endl;
+    HInv.print();
+    cout << endl;
+    I.print();
+    cout << endl;
+
+    exit(1);
     return H;
 }
+
+//SU3 SU3MatrixGenerator::generateInverse(SU3 H)
+//{
+//    SU3 HInv;
+
+//    return HInv;
+//}
 
 void SU3MatrixGenerator::generateHermitian()
 {

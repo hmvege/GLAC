@@ -87,3 +87,17 @@ void checkOrthogonality(SU3 H)
         cout << "FAILED: Columns is not orthogonal." << endl;
     }
 }
+
+void testHermicity(SU3 H)
+{
+    bool testPassed = true;
+
+    H.transpose();
+
+    if (testPassed) {
+        cout << "PASSED: matrix is hermitian." << endl;
+    }
+    else {
+        cout << "FAILED: matrix is not hermitian." << endl;
+    }
+}

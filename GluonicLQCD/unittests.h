@@ -3,5 +3,6 @@
 
 void SU3BaseTests();
 void checkOrthogonality(SU3 H);
+void testHermicity(SU3 H);
 
 #endif // UNITTESTS_H

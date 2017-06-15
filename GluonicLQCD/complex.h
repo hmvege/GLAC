@@ -18,6 +18,9 @@ public:
     complex &operator-=(complex b);
     complex &operator*=(complex b);
     complex &operator/=(complex b);
+    complex &operator/=(double b);
+
+    double norm();
     complex conjugate();
 
     // TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
@@ -47,5 +50,12 @@ inline complex operator/(complex a, complex b)
     a /= b;
     return a;
 }
+
+inline complex operator/(complex a, double b)
+{
+    a /= b;
+    return a;
+}
+
 
 #endif // COMPLEX_H

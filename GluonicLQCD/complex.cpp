@@ -14,6 +14,11 @@ complex::~complex()
 
 }
 
+double complex::norm()
+{
+    return re*re + im*im;
+}
+
 complex::complex(double real, double imag)
 {
     re = real;
@@ -53,6 +58,16 @@ complex &complex::operator/=(complex b)
     double divisor = b.re*b.re + b.im*b.im;
     re = (re*b.re + im*b.im)/divisor;
     im = (im*b.re - prev_re*b.im)/divisor;
+    return *this;
+}
+
+complex &complex::operator/=(double b)
+{
+    /*
+     * Dividing this/b
+     */
+    re /= b;
+    im /= b;
     return *this;
 }
 

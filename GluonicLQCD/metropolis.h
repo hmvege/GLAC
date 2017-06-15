@@ -16,7 +16,8 @@ private:
     int NCor;
     int NTherm;
     double epsilon;
-    double a;
+    double a; // Lattice spacing
+    double L; // Lattice size
     double ** Gamma;
     int acceptanceCounter;
 
@@ -46,7 +47,7 @@ private:
     // Function for updating our system using the Metropolis algorithm
     void update(double *x, std::mt19937_64 &gen, std::uniform_real_distribution<double> &epsilon_distribution, std::uniform_real_distribution<double> &uniform_distribution);
 public:
-    Metropolis(int new_N, int new_NCf, int new_NCor, int NTherm, double new_a);
+    Metropolis(int new_N, int new_NCf, int new_NCor, int NTherm, double new_a, double new_L);
     ~Metropolis();
     void latticeSetup(SU3MatrixGenerator *SU3Generator);
     void runMetropolis();

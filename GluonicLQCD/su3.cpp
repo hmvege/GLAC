@@ -24,6 +24,38 @@ SU3::~SU3()
 
 }
 
+void SU3::transpose()
+{
+    complex *temp = new complex[9];
+    for (int i = 0; i < 9; i++) { temp[i] = mat[i]; }
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            mat[i*3+j] = temp[j*3+i];
+            mat[j*3+i] = temp[i*3+j];
+        }
+    }
+    delete []temp;
+}
+
+void SU3::conjugate()
+{
+    for (int i = 0; i < 9; i++)
+    {
+        mat[i].conjugate();
+    }
+}
+
+void SU3::copy(SU3 B)
+{
+    for (int i = 0; i < 9; i++)
+    {
+        mat[i] = B[i];
+    }
+}
+
+
 SU3 &SU3::operator+=(SU3 B)
 {
     for (int i = 0; i < 9; i++)
@@ -79,7 +111,7 @@ void SU3::print()
     {
         for (int j = 0; j < 3; j++)
         {
-            cout << std::setw(10) << mat[3*i+j];
+            cout << std::setw(15) << mat[3*i+j];
         }
         cout << endl;
     }
