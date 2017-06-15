@@ -6,6 +6,9 @@
 #include "su3.h"
 #include "complex.h"
 
+// TEMP:
+#include "unittests.h"
+
 using std::cout;
 using std::endl;
 
@@ -25,29 +28,49 @@ SU3MatrixGenerator::~SU3MatrixGenerator()
 
 }
 
-void SU3MatrixGenerator::generate()
+SU3 SU3MatrixGenerator::generate()
 {
-    double * x;
+    /*
+     * Generatores a random SU3 matrix.
+     * Index map:
+     * H =
+     * 0 1 2
+     * 3 4 5
+     * 6 7 8
+     */
+    SU3 H;
+    // Generating two random columns
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            H[3*i + j].re = uniform_distribution(generator);
+            H[3*i + j].im = uniform_distribution(generator);
+        }
+    }
+    // Using Gram-Schmitt to generate next column
+    complex projectionFactor(0,0);
+    complex nom(0,0);
+    complex denom(0,0);
+    for (int i = 0; i < 3; i++)
+    {
+        nom += H[3*i]*H[3*i+1];
+        denom += H[3*i]*H[3*i];
+    }
+    projectionFactor = nom/denom;
+    for (int i = 0; i < 3; i++)
+    {
+        H[3*i+1] -= projectionFactor*H[3*i];
+    }
+    // Taking cross product to produce the last column of our matrix
+    H[2] = H[3]*H[7] - H[6]*H[4];
+    H[5] = H[6]*H[1] - H[0]*H[7];
+    H[8] = H[0]*H[4] - H[3]*H[1];
 
-    exit(1);
+    return H;
 }
 
 void SU3MatrixGenerator::generateHermitian()
 {
-    // Initializes upper triagonal part of matrix
-//    for (int i = 1; i < dim; i++)
-//    {
-//        for (int j = i; j < dim; j++)
-//        {
-//            H(i,j).real(uniform_distribution(generator));
-//            H(i,j).imag(uniform_distribution(generator));
-//            H(j,i).real(H(i,j).real());
-//            H(j,i).imag(-H(i,j).imag());
-//        }
-//    }
-//    for (int i = 0; i < dim; i++)
-//    {
-//        H(i,i).real(uniform_distribution(generator));
-//        H(i,i).imag(uniform_distribution(generator));
-//    }
+
 }

@@ -2,7 +2,7 @@
 .DS_Store
 
 # Build files
-build/*
+build/
 *.o
 
 # Other qt files

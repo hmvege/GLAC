@@ -3,6 +3,8 @@
 #include "actions/action.h"
 #include "su3matrixgenerator.h"
 
+#include "unittests.h"
+
 using namespace std;
 
 int main()
@@ -14,10 +16,10 @@ int main()
     double a = 0.5;         // Lattice spacing
     double SU3Eps = 0.1;    // Epsilon used for generating SU(3) matrices
 
+    SU3BaseTests();
     std::mt19937_64 gen(std::time(nullptr));
     std::uniform_real_distribution<double> uni_dist(-1,1);
     SU3MatrixGenerator SU3Gen(SU3Eps, gen, uni_dist);
-
 
 
     Metropolis gluon(N, NCf, NCor, NTherm, a);

@@ -9,10 +9,21 @@ complex::complex()
 
 }
 
+complex::~complex()
+{
+
+}
+
 complex::complex(double real, double imag)
 {
     re = real;
     im = imag;
+}
+
+complex complex::conjugate()
+{
+    im = -im;
+    return *this;
 }
 
 complex &complex::operator+=(complex b)
@@ -30,6 +41,18 @@ complex &complex::operator*=(complex b)
     double prev_re = re;
     re = prev_re*b.re - im*b.im;
     im = prev_re*b.im + im*b.re;
+    return *this;
+}
+
+complex &complex::operator/=(complex b)
+{
+    /*
+     * Dividing this/b
+     */
+    double prev_re = re;
+    double divisor = b.re*b.re + b.im*b.im;
+    re = (re*b.re + im*b.im)/divisor;
+    im = (im*b.re - prev_re*b.im)/divisor;
     return *this;
 }
 

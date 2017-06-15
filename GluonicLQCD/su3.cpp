@@ -15,7 +15,7 @@ SU3::SU3()
     for (int i = 0; i < 9; i++)
     {
         mat[i].re = 0;
-        mat[i].im = 0; // TEMP set to i+1
+        mat[i].im = 0;
     }
 }
 
