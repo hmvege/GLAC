@@ -55,7 +55,6 @@ void SU3::copy(SU3 B)
     }
 }
 
-
 SU3 &SU3::operator+=(SU3 B)
 {
     for (int i = 0; i < 9; i++)

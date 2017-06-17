@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 #include "metropolis.h"
 #include "actions/action.h"
 #include "su3matrixgenerator.h"

@@ -38,25 +38,49 @@ SU3 SU3MatrixGenerator::generate()
      * 3 4 5
      * 6 7 8
      */
-    SU3 H;
+    double epsilon = 0.24;
+    SU3 H,M;
+    for (int i = 0; i < 3; i++)
+    {
+        H[3*i + i].re = 1;
+    }
     // Generating two random columns
     for (int i = 0; i < 3; i++)
     {
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < i+1; j++)
         {
             H[3*i + j].re = uniform_distribution(generator);
             H[3*i + j].im = uniform_distribution(generator);
         }
     }
-    // Normalizing first column
-    double normSum = 0;
     for (int i = 0; i < 3; i++)
     {
-        normSum += H[3*i].norm();
+        for (int j = 0; j < i; j++)
+        {
+            H[3*j + i].re = H[3*i + j].re;
+            H[3*j + i].im = - H[3*i + j].im;
+        }
     }
+//    for (int i = 0; i < 3; i++)
+//    {
+//        M[3*i+i].re = 1;
+//        for (int j = 0; j < 3; j++)
+//        {
+//            M[3*i + j].re -= epsilon*H[3*i+j].im;
+//            M[3*i + j].im += epsilon*H[3*i+j].re;
+//        }
+//    }
+//    H.copy(M);
+    // Normalizing first column
+    double columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
-        H[3*i] /= normSum;
+        columnLength += H[3*i].norm();
+    }
+    columnLength = sqrt(columnLength);
+    for (int i = 0; i < 3; i++)
+    {
+        H[3*i] /= columnLength;
     }
     // Using Gram-Schmitt to generate next column
     complex projectionFactor(0,0);
@@ -73,20 +97,25 @@ SU3 SU3MatrixGenerator::generate()
         H[3*i+1] -= projectionFactor*H[3*i];
     }
     // Normalizing second column
-    normSum = 0;
+    columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
-        normSum += H[3*i+1].norm();
+        columnLength += H[3*i+1].norm();
     }
+    columnLength = sqrt(columnLength);
     for (int i = 0; i < 3; i++)
     {
-        H[3*i+1] /= normSum;
+        H[3*i+1] /= columnLength;
     }
     // Taking cross product to produce the last column of our matrix
     H[2] = H[3]*H[7] - H[6]*H[4];
     H[5] = H[6]*H[1] - H[0]*H[7];
     H[8] = H[0]*H[4] - H[3]*H[1];
 
+    testOrthogonality(H,true);
+    testNorm(0,H);
+    testNorm(1,H);
+    testNorm(2,H);
     SU3 HInv;
     HInv.copy(H);
     HInv.transpose();
