@@ -12,6 +12,7 @@ private:
 //    arma::cx_mat complexIdentity;
     std::mt19937_64 generator;
     std::uniform_real_distribution<double> uniform_distribution;
+    void GramSchmitt();
 public:
     SU3MatrixGenerator(double eps, std::mt19937_64 &gen, std::uniform_real_distribution<double> &randDistr);
     ~SU3MatrixGenerator();

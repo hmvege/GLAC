@@ -1,10 +1,13 @@
 #include <iostream>
+#include <iomanip>
+#include <cmath>
 #include "su3.h"
 #include "complex.h"
-#include <cmath>
+
 using std::cout;
 using std::endl;
-//using std::fabs;
+using std::setw;
+using std::setprecision;
 
 void SU3BaseTests()
 {
@@ -46,9 +49,13 @@ void SU3BaseTests()
 }
 
 complex dot(complex * a, complex * b) {
+    /*
+     * Dot product defined as:
+     *  (v,u*) = v*conjugate(u)
+     */
     complex returnSum(0,0);
     for (int i = 0; i < 3; i++) {
-        returnSum += a[i]*b[i];
+        returnSum += a[i]*b[i].c();
     }
     return returnSum;
 }
@@ -95,9 +102,22 @@ void testOrthogonality(SU3 H, bool verbose)
 
 void testHermicity(SU3 H)
 {
+    /*
+     * Small test for testing if we have Hermicity
+     */
     bool testPassed = true;
 
-    H.transpose();
+    SU3 HInv;
+    HInv.copy(H);
+    HInv.transpose();
+    HInv.conjugate();
+    SU3 I;
+    I = H*HInv;
+    for (int i = 0; i < 3; i++)
+    {
+
+    }
+
 
     if (testPassed) {
         cout << "PASSED: matrix is hermitian." << endl;
@@ -114,10 +134,10 @@ void testNorm(int col, SU3 H)
     for (int i = 0; i < 3; i++) {
         s += H[3*i+col].norm();
     }
-    if (fabs(s-1) < 1e-16) {
+    if (fabs(s-1) < 1e-15) {
         cout << "PASSED: length = " << s << endl;
     }
     else {
-        cout << "FAILED: length = " << s << endl;
+        cout << "FAILED: length = " << setprecision(16) << s << endl;
     }
 }

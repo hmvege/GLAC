@@ -39,38 +39,19 @@ SU3 SU3MatrixGenerator::generate()
      * 6 7 8
      */
     double epsilon = 0.24;
-    SU3 H,M;
+    SU3 H;
     for (int i = 0; i < 3; i++)
     {
         H[3*i + i].re = 1;
     }
-    // Generating two random columns
     for (int i = 0; i < 3; i++)
     {
-        for (int j = 0; j < i+1; j++)
+        for (int j = 0; j < 2; j++)
         {
             H[3*i + j].re = uniform_distribution(generator);
             H[3*i + j].im = uniform_distribution(generator);
         }
     }
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < i; j++)
-        {
-            H[3*j + i].re = H[3*i + j].re;
-            H[3*j + i].im = - H[3*i + j].im;
-        }
-    }
-//    for (int i = 0; i < 3; i++)
-//    {
-//        M[3*i+i].re = 1;
-//        for (int j = 0; j < 3; j++)
-//        {
-//            M[3*i + j].re -= epsilon*H[3*i+j].im;
-//            M[3*i + j].im += epsilon*H[3*i+j].re;
-//        }
-//    }
-//    H.copy(M);
     // Normalizing first column
     double columnLength = 0;
     for (int i = 0; i < 3; i++)
@@ -83,18 +64,14 @@ SU3 SU3MatrixGenerator::generate()
         H[3*i] /= columnLength;
     }
     // Using Gram-Schmitt to generate next column
-    complex projectionFactor(0,0);
-    complex nom(0,0);
-    complex denom(0,0);
+    complex projectionFactor;
     for (int i = 0; i < 3; i++)
     {
-        nom += H[3*i]*H[3*i+1];
-        denom += H[3*i]*H[3*i];
+        projectionFactor += H[3*i+1]*H[3*i].c();
     }
-    projectionFactor = nom/denom;
     for (int i = 0; i < 3; i++)
     {
-        H[3*i+1] -= projectionFactor*H[3*i];
+        H[3*i+1] = H[3*i+1] - H[3*i]*projectionFactor ;
     }
     // Normalizing second column
     columnLength = 0;
@@ -108,9 +85,9 @@ SU3 SU3MatrixGenerator::generate()
         H[3*i+1] /= columnLength;
     }
     // Taking cross product to produce the last column of our matrix
-    H[2] = H[3]*H[7] - H[6]*H[4];
-    H[5] = H[6]*H[1] - H[0]*H[7];
-    H[8] = H[0]*H[4] - H[3]*H[1];
+    H[2] = H[3].c()*H[7].c() - H[6].c()*H[4].c();
+    H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();
+    H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();
 
     testOrthogonality(H,true);
     testNorm(0,H);
@@ -123,7 +100,7 @@ SU3 SU3MatrixGenerator::generate()
     SU3 I;
     I = H*HInv;
 
-    cout << endl;
+    cout << std::setprecision(4)<<  endl;
     H.print();
     cout << endl;
     HInv.print();
@@ -143,6 +120,11 @@ SU3 SU3MatrixGenerator::generate()
 //}
 
 void SU3MatrixGenerator::generateHermitian()
+{
+
+}
+
+void SU3MatrixGenerator::GramSchmitt()
 {
 
 }

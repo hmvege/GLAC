@@ -6,7 +6,8 @@
 
 complex::complex()
 {
-
+    re = 0;
+    im = 0;
 }
 
 complex::~complex()
@@ -29,6 +30,11 @@ complex complex::conjugate()
 {
     im = -im;
     return *this;
+}
+
+complex complex::c()
+{
+    return complex(re,-im);
 }
 
 complex &complex::operator+=(complex b)
