@@ -38,7 +38,6 @@ SU3 SU3MatrixGenerator::generate()
      * 3 4 5
      * 6 7 8
      */
-    double epsilon = 0.24;
     SU3 H;
     for (int i = 0; i < 3; i++)
     {
@@ -89,26 +88,13 @@ SU3 SU3MatrixGenerator::generate()
     H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();
     H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();
 
-    testOrthogonality(H,true);
-    testNorm(0,H);
-    testNorm(1,H);
-    testNorm(2,H);
-    SU3 HInv;
-    HInv.copy(H);
-    HInv.transpose();
-    HInv.conjugate();
-    SU3 I;
-    I = H*HInv;
+//    testOrthogonality(H,true);
+//    testNorm(0,H);
+//    testNorm(1,H);
+//    testNorm(2,H);
+//    testHermicity(H,true);
+//    exit(1);
 
-    cout << std::setprecision(4)<<  endl;
-    H.print();
-    cout << endl;
-    HInv.print();
-    cout << endl;
-    I.print();
-    cout << endl;
-
-    exit(1);
     return H;
 }
 

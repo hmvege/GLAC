@@ -78,7 +78,7 @@ void testOrthogonality(SU3 H, bool verbose)
         col3[i] = H[3*i+2];
     }
 
-    double eps = 1e-16;
+    double eps = 1e-15;
     bool testPassed = true;
     complex c12dot = dot(col1,col2);
     complex c13dot = dot(col1,col3);
@@ -100,25 +100,45 @@ void testOrthogonality(SU3 H, bool verbose)
     }
 }
 
-void testHermicity(SU3 H)
+void testHermicity(SU3 H, bool verbose)
 {
     /*
-     * Small test for testing if we have Hermicity
+     * Small test for testing if we have Hermicity.
      */
     bool testPassed = true;
-
+    double eps = 1e-15;
+    if (verbose) {
+        cout << "Matrix = " << endl;
+        H.print();
+    }
     SU3 HInv;
     HInv.copy(H);
     HInv.transpose();
     HInv.conjugate();
     SU3 I;
     I = H*HInv;
-    for (int i = 0; i < 3; i++)
-    {
-
+    if (verbose) {
+        cout << "\nInverse matrix = "<< endl;
+        HInv.print();
+        cout << "\nUnit matrix = " << endl;
+        I.print();
+        cout << endl;
     }
-
-
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; i < j; j++) {
+            if ((fabs(I[i*3+j].re) > eps) || (fabs(I[i*3+j].im) > eps)) {
+                testPassed = false;
+            }
+            if ((fabs(I[j*3+i].re) > eps) || (fabs(I[j*3+i].im) > eps)) {
+                testPassed = false;
+            }
+        }
+    }
+    for (int i = 0; i < 3; i++) {
+        if ((fabs(I[3*i+i].re - 1) > eps) || (fabs(I[3*i+i].im) > eps)) {
+            testPassed = false;
+        }
+    }
     if (testPassed) {
         cout << "PASSED: matrix is hermitian." << endl;
     }
