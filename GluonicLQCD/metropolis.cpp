@@ -26,9 +26,7 @@ Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, doub
     NTherm = new_Therm;
     a = new_a;
     L = new_L;
-    // Initializing lattice
-    lattice = new double[latticeSize];
-    linkMatrices = new Links[latticeSize];
+    lattice = new Links[latticeSize];
     // Setting up array for Gamma-functional values
     Gamma = new double*[NCf];
     for (int i = 0; i < NCf; i++) { Gamma[i] = new double[N]; }
@@ -41,7 +39,6 @@ Metropolis::~Metropolis()
      * Class destructor
      */
     delete [] lattice;
-    delete [] linkMatrices;
     for (int i = 0; i < NCf; i++) { delete [] Gamma[i]; }
     delete [] Gamma;
 }
@@ -51,62 +48,69 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
     /*
      * Sets up the lattice and its matrices.
      */
-    lattice = new double[latticeSize];
-    linkMatrices = new Links[latticeSize];
-
-//    std::mt19937_64 generator(std::time(nullptr)); // Starting up the Mersenne-Twister19937 function
-//    std::uniform_real_distribution<double> distribution(-1,1);
-
+    m_SU3Generator = SU3Generator;
     for (int i = 0; i < latticeSize; i++)
     {
-        lattice[i] = 0;
-        linkMatrices[i].M0 = SU3Generator->generate();
-        linkMatrices[i].M1 = SU3Generator->generate();
-        linkMatrices[i].M2 = SU3Generator->generate();
-        linkMatrices[i].M3 = SU3Generator->generate();
+        for (int mu = 0; mu < 4; mu++)
+        {
+            lattice[i].U[mu] = m_SU3Generator->generate();
+        }
     }
 }
 
-void Metropolis::update(double *x,
-                        std::mt19937_64 &gen,
-                        std::uniform_real_distribution<double> &epsilon_distribution,
-                        std::uniform_real_distribution<double> &uniform_distribution)
+void Metropolis::updateLink(int i, int mu)
 {
     /*
-     * Private function used for updating our system. Performs the Metropolis algorithm
+     * Private function used for updating our system. Updates a single gauge link.
+     * Arguments:
+     *  i   : spacetime index
+     *  mu  : Lorentz index
      */
-    for (int i = 0; i < N; i++)
-    {
-        double x_prev = x[i];
-        double oldS = S->getAction(x, i);
-        x[i] += epsilon_distribution(gen); // setting a new possible x-position to test for
-        double deltaS = S->getAction(x, i) - oldS;
-        if ((deltaS > 0) && (exp(-deltaS) < uniform_distribution(gen)))
-        {
-            x[i] = x_prev;
-        }
-        else
-        {
-            acceptanceCounter++;
+    SU3 X = m_SU3Generator->generate(); // Generates a random matrix, SHOULD BE MODIVIED TO X = RST, page 83 Gattinger & Lang
+    updatedMatrix = X*lattice[i].U[mu];
+    cout << "updating" << endl;
+    exit(1);
+}
+
+void Metropolis::update()
+{
+    // Updates the entire Lattice
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            for (int k = 0; k < N; k++) {
+                for (int l = 0; l < N; l++) {
+                    for (int mu = 0; mu < 4; mu++)
+                    {
+                        for (int n = 0; n < m_nUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
+                        {
+                            updateLink(index(i, j, k, l, N), mu);
+                        }
+                        // Calculate action
+                        deltaS = exp(-S->getDeltaAction(lattice, updatedMatrix, i, j, k, l, mu));
+                        if ((deltaS >= 1) || (m_uniform_distribution(m_generator) <= deltaS))
+                        {
+                            lattice[i].U[mu] = updatedMatrix;
+                        }
+                        else
+                        {
+                            acceptanceCounter++;
+                        }
+                    }
+                }
+            }
         }
     }
 }
+
 
 void Metropolis::runMetropolis()
 {
-    // Setting up random generators
-    std::mt19937_64 generator(std::time(nullptr)); // Starting up the Mersenne-Twister19937 function
-    std::uniform_real_distribution<double> epsilon_distribution(-epsilon, epsilon);
-    std::uniform_real_distribution<double> uniform_distribution(0,1);
-
-    // Setting up array
-    double * x = new double[N]; // Only need one array, as it will always be updated. Note, it is 1D
-    for (int i = 0; i < N; i++) { x[i] = 0; }
+    // Initializing storage variables
 
     // Running thermalization
     for (int i = 0; i < NTherm * NCor; i++)
     {
-        update(x, generator, epsilon_distribution, uniform_distribution);
+        update();
     }
 
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
@@ -117,15 +121,24 @@ void Metropolis::runMetropolis()
     {
         for (int i = 0; i < NCor; i++) // Updating NCor times before updating the Gamma function
         {
-            update(x, generator, epsilon_distribution, uniform_distribution);
+            update();
+//            double oldS = S->getAction(lattice, i);
+
+//            double deltaS = S->getAction(lattice, i) - oldS;
+//            if (uniform_distribution(gen) <= exp(-deltaS))
+//            {
+//                // Accept new configuration
+//            }
+//            else
+//            {
+//                acceptanceCounter++;
+//            }
         }
-        for (int n = 0; n < N; n++)
-        {
-            Gamma[alpha][n] = gammaFunctional(x,n,N);
-        }
+//        for (int n = 0; n < N; n++)
+//        {
+//            Gamma[alpha][n] = gammaFunctional(lattice,n,N);
+//        }
     }
-    // De-allocating position array
-    delete [] x;
 }
 
 void Metropolis::getStatistics()

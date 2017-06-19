@@ -98,12 +98,6 @@ SU3 SU3MatrixGenerator::generate()
     return H;
 }
 
-//SU3 SU3MatrixGenerator::generateInverse(SU3 H)
-//{
-//    SU3 HInv;
-
-//    return HInv;
-//}
 
 void SU3MatrixGenerator::generateHermitian()
 {

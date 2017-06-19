@@ -100,7 +100,6 @@ SU3 &SU3::operator-=(SU3 B)
     return *this;
 }
 
-
 void SU3::print()
 {
     /*
