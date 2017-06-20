@@ -36,7 +36,7 @@ void SU3::transpose()
             mat[j*3+i] = temp[i*3+j];
         }
     }
-    delete []temp;
+    delete [] temp;
 }
 
 void SU3::conjugate()

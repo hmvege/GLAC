@@ -11,7 +11,9 @@ SOURCES += main.cpp \
     su3matrixgenerator.cpp \
     su3.cpp \
     complex.cpp \
-    unittests.cpp
+    unittests.cpp \
+    correlator.cpp \
+    correlators/correlator.cpp
 
 HEADERS += \
     metropolis.h \
@@ -21,7 +23,9 @@ HEADERS += \
     su3matrixgenerator.h \
     su3.h \
     complex.h \
-    unittests.h
+    unittests.h \
+    correlator.h \
+    correlators/correlator.h
 
 #LIBS += -llapack -lblas -larmadillo
 

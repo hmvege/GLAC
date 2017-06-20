@@ -56,7 +56,8 @@ SOURCES       = ../GluonicLQCD/main.cpp \
 		../GluonicLQCD/su3matrixgenerator.cpp \
 		../GluonicLQCD/su3.cpp \
 		../GluonicLQCD/complex.cpp \
-		../GluonicLQCD/unittests.cpp 
+		../GluonicLQCD/unittests.cpp \
+		../GluonicLQCD/correlator.cpp 
 OBJECTS       = main.o \
 		metropolis.o \
 		action.o \
@@ -65,7 +66,8 @@ OBJECTS       = main.o \
 		su3matrixgenerator.o \
 		su3.o \
 		complex.o \
-		unittests.o
+		unittests.o \
+		correlator.o
 DIST          = ../../../../Qt5.7.0/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.7.0/5.7/gcc_64/mkspecs/common/unix.conf \
 		../../../../Qt5.7.0/5.7/gcc_64/mkspecs/common/linux.conf \
@@ -215,7 +217,8 @@ DIST          = ../../../../Qt5.7.0/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		su3matrixgenerator.h \
 		su3.h \
 		complex.h \
-		unittests.h ../GluonicLQCD/main.cpp \
+		unittests.h \
+		correlator.h ../GluonicLQCD/main.cpp \
 		../GluonicLQCD/metropolis.cpp \
 		../GluonicLQCD/actions/action.cpp \
 		../GluonicLQCD/functions.cpp \
@@ -223,7 +226,8 @@ DIST          = ../../../../Qt5.7.0/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		../GluonicLQCD/su3matrixgenerator.cpp \
 		../GluonicLQCD/su3.cpp \
 		../GluonicLQCD/complex.cpp \
-		../GluonicLQCD/unittests.cpp
+		../GluonicLQCD/unittests.cpp \
+		../GluonicLQCD/correlator.cpp
 QMAKE_TARGET  = GluonicLQCD
 DESTDIR       = 
 TARGET        = GluonicLQCD
@@ -570,6 +574,7 @@ main.o: ../GluonicLQCD/main.cpp ../GluonicLQCD/metropolis.h \
 		../GluonicLQCD/links.h \
 		../GluonicLQCD/su3.h \
 		../GluonicLQCD/complex.h \
+		../GluonicLQCD/functions.h \
 		../GluonicLQCD/su3matrixgenerator.h \
 		../GluonicLQCD/unittests.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../GluonicLQCD/main.cpp
@@ -579,14 +584,19 @@ metropolis.o: ../GluonicLQCD/metropolis.cpp ../GluonicLQCD/metropolis.h \
 		../GluonicLQCD/links.h \
 		../GluonicLQCD/su3.h \
 		../GluonicLQCD/complex.h \
-		../GluonicLQCD/su3matrixgenerator.h \
-		../GluonicLQCD/functions.h
+		../GluonicLQCD/functions.h \
+		../GluonicLQCD/su3matrixgenerator.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o metropolis.o ../GluonicLQCD/metropolis.cpp
 
-action.o: ../GluonicLQCD/actions/action.cpp ../GluonicLQCD/actions/action.h
+action.o: ../GluonicLQCD/actions/action.cpp ../GluonicLQCD/actions/action.h \
+		../GluonicLQCD/links.h \
+		../GluonicLQCD/su3.h \
+		../GluonicLQCD/complex.h \
+		../GluonicLQCD/functions.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o action.o ../GluonicLQCD/actions/action.cpp
 
-functions.o: ../GluonicLQCD/functions.cpp 
+functions.o: ../GluonicLQCD/functions.cpp ../GluonicLQCD/su3.h \
+		../GluonicLQCD/complex.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o functions.o ../GluonicLQCD/functions.cpp
 
 links.o: ../GluonicLQCD/links.cpp ../GluonicLQCD/links.h \
@@ -610,6 +620,9 @@ complex.o: ../GluonicLQCD/complex.cpp ../GluonicLQCD/complex.h
 unittests.o: ../GluonicLQCD/unittests.cpp ../GluonicLQCD/su3.h \
 		../GluonicLQCD/complex.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o unittests.o ../GluonicLQCD/unittests.cpp
+
+correlator.o: ../GluonicLQCD/correlator.cpp ../GluonicLQCD/correlator.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o correlator.o ../GluonicLQCD/correlator.cpp
 
 ####### Install
 

@@ -68,8 +68,6 @@ void Metropolis::updateLink(int i, int mu)
      */
     SU3 X = m_SU3Generator->generate(); // Generates a random matrix, SHOULD BE MODIVIED TO X = RST, page 83 Gattinger & Lang
     updatedMatrix = X*lattice[i].U[mu];
-    cout << "updating" << endl;
-    exit(1);
 }
 
 void Metropolis::update()
@@ -105,6 +103,7 @@ void Metropolis::update()
 
 void Metropolis::runMetropolis()
 {
+    cout << "Running Metropolis for Gluon action. Line 107" << endl;
     // Initializing storage variables
 
     // Running thermalization
@@ -112,7 +111,8 @@ void Metropolis::runMetropolis()
     {
         update();
     }
-
+    cout << "Termalization complete. Line 116. Acceptance rate: " << double(acceptanceCounter)/double( latticeSize*4*NTherm*NCor ) << endl;
+    exit(1);
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     acceptanceCounter = 0;
 
