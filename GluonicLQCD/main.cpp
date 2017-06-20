@@ -2,6 +2,8 @@
 #include <ctime>
 #include "metropolis.h"
 #include "actions/action.h"
+#include "actions/wilsongaugeaction.h"
+#include "correlators/plaquette.h"
 #include "su3matrixgenerator.h"
 
 #include "unittests.h"
@@ -11,33 +13,38 @@ using std::endl;
 
 /*
  * TODO:
+ * [x] Add plaquette correlator
+ * [x] Make actions more general!! Aka, create a Wilson action
  * [ ] Change to updating random matrices by X=RST
- * [ ] Add plaquette correlator
- *
- *
+ * [ ] Switch to method syntax, foo->m_foo
  */
 
 int main()
 {
-    int N           = 8;            // Points for each lattice dimension
-    double L        = 2.0;          // Fermi
+    int N           = 4;            // Points for each lattice dimension
+    double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 10;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 20;           // Only keeping every 20th path
-    int NCf         = 1e3;          // Number of configurations to retrieve
+    int NCf         = 1000;          // Number of configurations to retrieve
     double a        = L/double(N);  // Lattice spacing
-    double g        = 5.5;          // Coupling
-    double beta     = 6/(g*g);      // Should be
-    double SU3Eps   = 0.24;          // Epsilon used for generating SU(3) matrices
+//    double g        = 5.5;          // Coupling
+    double beta     = 6;            // Should be
+    double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
 
+    clock_t programStart, programEnd;
+    programStart = clock();
     std::mt19937_64 gen(std::time(nullptr));
     std::uniform_real_distribution<double> uni_dist(-SU3Eps,SU3Eps);
     SU3MatrixGenerator SU3Gen(SU3Eps, gen, uni_dist);
-    Action S(N,a,beta);
-    Metropolis gluon(N, NCf, NCor, NTherm, a, L);
-    gluon.setAction(&S);
+    Plaquette G(N);
+    WilsonGaugeAction S(N,beta);
+    Metropolis gluon(N, NCf, NCor, NTherm, a, L, &G, &S);
     gluon.latticeSetup(&SU3Gen);
     gluon.runMetropolis();
+    gluon.getStatistics();
+    gluon.writeDataToFile("../output/gluon_data.txt");
 
-    cout << "Program done." << endl;
+    programEnd = clock();
+    cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
     return 0;
 }

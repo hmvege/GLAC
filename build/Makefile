@@ -57,7 +57,9 @@ SOURCES       = ../GluonicLQCD/main.cpp \
 		../GluonicLQCD/su3.cpp \
 		../GluonicLQCD/complex.cpp \
 		../GluonicLQCD/unittests.cpp \
-		../GluonicLQCD/correlator.cpp 
+		../GluonicLQCD/correlators/correlator.cpp \
+		../GluonicLQCD/correlators/plaquette.cpp \
+		../GluonicLQCD/actions/wilsongaugeaction.cpp 
 OBJECTS       = main.o \
 		metropolis.o \
 		action.o \
@@ -67,7 +69,9 @@ OBJECTS       = main.o \
 		su3.o \
 		complex.o \
 		unittests.o \
-		correlator.o
+		correlator.o \
+		plaquette.o \
+		wilsongaugeaction.o
 DIST          = ../../../../Qt5.7.0/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.7.0/5.7/gcc_64/mkspecs/common/unix.conf \
 		../../../../Qt5.7.0/5.7/gcc_64/mkspecs/common/linux.conf \
@@ -218,7 +222,9 @@ DIST          = ../../../../Qt5.7.0/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		su3.h \
 		complex.h \
 		unittests.h \
-		correlator.h ../GluonicLQCD/main.cpp \
+		correlators/correlator.h \
+		correlators/plaquette.h \
+		actions/wilsongaugeaction.h ../GluonicLQCD/main.cpp \
 		../GluonicLQCD/metropolis.cpp \
 		../GluonicLQCD/actions/action.cpp \
 		../GluonicLQCD/functions.cpp \
@@ -227,7 +233,9 @@ DIST          = ../../../../Qt5.7.0/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		../GluonicLQCD/su3.cpp \
 		../GluonicLQCD/complex.cpp \
 		../GluonicLQCD/unittests.cpp \
-		../GluonicLQCD/correlator.cpp
+		../GluonicLQCD/correlators/correlator.cpp \
+		../GluonicLQCD/correlators/plaquette.cpp \
+		../GluonicLQCD/actions/wilsongaugeaction.cpp
 QMAKE_TARGET  = GluonicLQCD
 DESTDIR       = 
 TARGET        = GluonicLQCD
@@ -621,8 +629,27 @@ unittests.o: ../GluonicLQCD/unittests.cpp ../GluonicLQCD/su3.h \
 		../GluonicLQCD/complex.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o unittests.o ../GluonicLQCD/unittests.cpp
 
-correlator.o: ../GluonicLQCD/correlator.cpp ../GluonicLQCD/correlator.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o correlator.o ../GluonicLQCD/correlator.cpp
+correlator.o: ../GluonicLQCD/correlators/correlator.cpp ../GluonicLQCD/correlators/correlator.h \
+		../GluonicLQCD/links.h \
+		../GluonicLQCD/su3.h \
+		../GluonicLQCD/complex.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o correlator.o ../GluonicLQCD/correlators/correlator.cpp
+
+plaquette.o: ../GluonicLQCD/correlators/plaquette.cpp ../GluonicLQCD/correlators/plaquette.h \
+		../GluonicLQCD/correlators/correlator.h \
+		../GluonicLQCD/links.h \
+		../GluonicLQCD/su3.h \
+		../GluonicLQCD/complex.h \
+		../GluonicLQCD/functions.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o plaquette.o ../GluonicLQCD/correlators/plaquette.cpp
+
+wilsongaugeaction.o: ../GluonicLQCD/actions/wilsongaugeaction.cpp ../GluonicLQCD/actions/wilsongaugeaction.h \
+		../GluonicLQCD/actions/action.h \
+		../GluonicLQCD/links.h \
+		../GluonicLQCD/su3.h \
+		../GluonicLQCD/complex.h \
+		../GluonicLQCD/functions.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wilsongaugeaction.o ../GluonicLQCD/actions/wilsongaugeaction.cpp
 
 ####### Install
 

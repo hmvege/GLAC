@@ -5,15 +5,15 @@
 #include <iostream>
 #include "metropolis.h"
 #include "actions/action.h"
+#include "correlators/correlator.h"
 #include "functions.h"
 #include "links.h"
 #include "su3matrixgenerator.h"
 
 using std::cout;
 using std::endl;
-void printArray(double *x, int N);
 
-Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, double new_a, double new_L)
+Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, double new_a, double new_L, Correlator *new_correlator, Action *new_S)
 {
     /*
      * Class for calculating correlators using the Metropolis algorithm.
@@ -26,11 +26,20 @@ Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, doub
     NTherm = new_Therm;
     a = new_a;
     L = new_L;
-    lattice = new Links[latticeSize];
-    // Setting up array for Gamma-functional values
-    Gamma = new double*[NCf];
-    for (int i = 0; i < NCf; i++) { Gamma[i] = new double[N]; }
-    for (int i = 0; i < NCf; i++) { for (int j = 0; j < N; j++) { Gamma[i][j] = 0; } } // Setting matrix elements to zero
+    setAction(new_S);
+    setCorrelator(new_correlator);
+    lattice = new Links[latticeSize]; // Lattice, contigious memory allocation
+    Gamma = new double[NCf]; // Correlator values
+    GammaSquared = new double[NCf];
+//    GammaVariance = new double[NCf];
+//    GammaStd= new double[NCf];
+    for (int alpha = 0; alpha < NCf; alpha++)
+    {
+        Gamma[alpha] = 0;
+        GammaSquared[alpha] = 0;
+//        GammaVariance[alpha] = 0;
+//        GammaStd[alpha] = 0;
+    }
 
 }
 Metropolis::~Metropolis()
@@ -39,8 +48,10 @@ Metropolis::~Metropolis()
      * Class destructor
      */
     delete [] lattice;
-    for (int i = 0; i < NCf; i++) { delete [] Gamma[i]; }
     delete [] Gamma;
+    delete [] GammaSquared;
+//    delete [] GammaVariance;
+//    delete [] GammaStd;
 }
 
 void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
@@ -85,6 +96,7 @@ void Metropolis::update()
                         }
                         // Calculate action
                         deltaS = exp(-S->getDeltaAction(lattice, updatedMatrix, i, j, k, l, mu));
+                        cout << deltaS << endl;
                         if ((deltaS >= 1) || (m_uniform_distribution(m_generator) <= deltaS))
                         {
                             lattice[i].U[mu] = updatedMatrix;
@@ -111,8 +123,10 @@ void Metropolis::runMetropolis()
     {
         update();
     }
-    cout << "Termalization complete. Line 116. Acceptance rate: " << double(acceptanceCounter)/double( latticeSize*4*NTherm*NCor ) << endl;
+    cout << "Termalization complete. Line 116." << endl;
+    printAcceptanceRate();
     exit(1);
+//    exit(1);
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     acceptanceCounter = 0;
 
@@ -122,23 +136,18 @@ void Metropolis::runMetropolis()
         for (int i = 0; i < NCor; i++) // Updating NCor times before updating the Gamma function
         {
             update();
-//            double oldS = S->getAction(lattice, i);
-
-//            double deltaS = S->getAction(lattice, i) - oldS;
-//            if (uniform_distribution(gen) <= exp(-deltaS))
-//            {
-//                // Accept new configuration
-//            }
-//            else
-//            {
-//                acceptanceCounter++;
-//            }
         }
-//        for (int n = 0; n < N; n++)
-//        {
-//            Gamma[alpha][n] = gammaFunctional(lattice,n,N);
-//        }
+        Gamma[alpha] = m_correlator->calculate(lattice);
     }
+    cout << "Metropolis completed, line 126" << endl;
+}
+
+void Metropolis::sampleSystem()
+{
+    /*
+     * For sampling statistics/getting correlators
+     */
+    cout << "Not implemented yet." << endl;
 }
 
 void Metropolis::getStatistics()
@@ -146,53 +155,38 @@ void Metropolis::getStatistics()
     /*
      * Class instance for sampling statistics from our system.
      */
-    averagedGamma           = new double[N];
-    averagedGammaSquared    = new double[N];
-    varianceGamma           = new double[N];
-    stdGamma                = new double[N];
-    deltaE                  = new double[N];
-    deltaE_std              = new double[N];
-    for (int i = 0; i < N; i++)
+//    deltaE          = new double[N];
+//    deltaE_std      = new double[N];
+
+    for (int alpha = 0; alpha < NCf; alpha++)
     {
-        averagedGamma[i]        = 0;
-        averagedGammaSquared[i] = 0;
-        varianceGamma[i]        = 0;
-        stdGamma[i]             = 0;
-        deltaE[i]               = 0;
-        deltaE_std[i]           = 0;
+        GammaSquared[alpha] = Gamma[alpha]*Gamma[alpha];
     }
 
     // Performing an average over the Monte Carlo obtained values
-    for (int n = 0; n < N; n++)
+    for (int alpha = 0; alpha < NCf; alpha++)
     {
-        for (int alpha = 0; alpha < NCf; alpha++)
-        {
-            averagedGamma[n] += Gamma[alpha][n];
-            averagedGammaSquared[n] += Gamma[alpha][n]*Gamma[alpha][n];
-        }
-        averagedGamma[n] /= double(NCf);
-        averagedGammaSquared[n] /= double(NCf);
+        averagedGamma += Gamma[alpha];
+        varianceGamma += (GammaSquared[alpha] - Gamma[alpha]*Gamma[alpha])/NCf;
     }
-
+    averagedGamma  /= double(NCf);
+    varianceGamma  /= double(NCf);
+    stdGamma = sqrt(varianceGamma);
+    cout << averagedGamma << " +/- " << stdGamma << endl;
     // Getting change in energy & calculating variance & standard deviation of G
-    for (int n = 0; n < N; n++)
-    {
-        varianceGamma[n] = (averagedGammaSquared[n] - averagedGamma[n]*averagedGamma[n])/NCf;
-        stdGamma[n] = sqrt(varianceGamma[n]);
-        deltaE[n] = log(averagedGamma[n]/averagedGamma[(n+1) % N])/a;
-    }
+//    for (int n = 0; n < N; n++)
+//    {
+//        deltaE[n] = log(averagedGamma[n]/averagedGamma[(n+1) % N])/a;
+//    }
+//    averagedGamma[n] /= double(NCf);
 
     // Calculating the uncertainty in dE(hand calculation for analytic expression done beforehand)
-    for (int n = 0; n < N; n++)
-    {
-        deltaE_std[n] = sqrt(pow(stdGamma[n]/averagedGamma[n],2) + pow(stdGamma[(n+1)%N]/averagedGamma[(n+1)%N],2))/a;
-    }
-    delete [] averagedGamma;
-    delete [] averagedGammaSquared;
-    delete [] varianceGamma;
-    delete [] stdGamma;
-    delete [] deltaE;
-    delete [] deltaE_std;
+//    for (int n = 0; n < N; n++)
+//    {
+//        deltaE_std[n] = sqrt(pow(stdGamma[n]/averagedGamma[n],2) + pow(stdGamma[(n+1)%N]/averagedGamma[(n+1)%N],2))/a;
+//    }
+//    delete [] deltaE;
+//    delete [] deltaE_std;
 }
 
 void Metropolis::writeDataToFile(const char *filename)
@@ -202,24 +196,23 @@ void Metropolis::writeDataToFile(const char *filename)
      */
     std::ofstream file;
     file.open(filename);
-    file << "acceptanceCounter " << double(acceptanceCounter)/double(N*NCf*NCor) << endl;
+    file << "acceptanceCounter " << double(acceptanceCounter)/double(NCf*NCor*latticeSize*4) << endl;
     file << "NCor " << NCor << endl;
     file << "NCf " << NCf << endl;
     file << "NTherm " << NTherm << endl;
-    for (int i = 0; i < NCf; i++)
+    file << "AverageGamma " << averagedGamma << endl;
+    file << "VarianceGamma " << varianceGamma << endl;
+    file << "stdGamma " << stdGamma << endl;
+    for (int alpha = 0; alpha < NCf; alpha++)
     {
-        for (int j = 0; j < N; j++)
-        {
-            file << Gamma[i][j] << " ";
-        }
-        file << endl;
+        file << Gamma[alpha] << endl;
     }
     file.close();
     cout << filename << " written" << endl;
 }
 
-void Metropolis::writeStatisticsToFile(const char *filename)//, double * dE, double * averagedGamma, double * averagedGammaSquared, int acceptanceCounter)
-{
+//void Metropolis::writeStatisticsToFile(const char *filename)//, double * dE, double * averagedGamma, double * averagedGammaSquared, int acceptanceCounter)
+//{
     /*
      * Writes statistics to file about:
      * acceptanceCounter:   the number of accepted configurations
@@ -231,44 +224,28 @@ void Metropolis::writeStatisticsToFile(const char *filename)//, double * dE, dou
      * variance:            Var(G)
      * standardDeviation:   std(G)
      */
-    std::ofstream file;
-    file.open(filename);
-    file << "acceptanceCounter " << double(acceptanceCounter)/double(N*NCf*NCor) << endl;
-    file << "NCor " << NCor << endl;
-    file << "NCf " << NCf << endl;
-    file << "NTherm " << NTherm << endl;
-    for (int n = 0; n < N; n++)
-    {
-        file << n*a << " "
-             << deltaE[n] << " "
-             << deltaE_std[n] << " "
-             << varianceGamma[n] << " "
-             << stdGamma[n] << endl;
-    }
-    file.close();
-    cout << filename << " written" << endl;
-}
+//    std::ofstream file;
+//    file.open(filename);
+//    file << "acceptanceCounter " << double(acceptanceCounter)/double(NCf*NCor*latticeSize*4) << endl;
+//    file << "NCor " << NCor << endl;
+//    file << "NCf " << NCf << endl;
+//    file << "NTherm " << NTherm << endl;
+//    file.close();
+//    cout << filename << " written" << endl;
+//}
 
-void Metropolis::printEnergies()
-{
-    /*
-     * Printing the energies in the calculation
-     */
-    for (int n = 0; n < N; n++)
-    {
-        cout << deltaE[n] << endl;
-    }
-}
+//void Metropolis::printEnergies()
+//{
+//    /*
+//     * Printing the energies in the calculation
+//     */
+//    for (int n = 0; n < N; n++)
+//    {
+//        cout << deltaE[n] << endl;
+//    }
+//}
 
 void Metropolis::printAcceptanceRate()
 {
-    printf("Acceptancerate: %f \n", double(acceptanceCounter)/double(NCf*NCor*N));
-}
-
-void printArray(double *x, int N)
-{
-    for (int i = 0; i < N; i++)
-    {
-        printf("%.10f \n", x[i]);
-    }
+    printf("Acceptancerate: %.16f \n", double(acceptanceCounter)/double(NCf*NCor*latticeSize*4)); // Times 4 from the Lorentz indices
 }

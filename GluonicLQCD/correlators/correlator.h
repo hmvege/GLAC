@@ -1,13 +1,15 @@
 #ifndef CORRELATOR_H
 #define CORRELATOR_H
 
+#include "links.h"
 
 class Correlator
 {
-private:
+protected:
+    int m_N;
     int m_latticeSize;
 public:
-    Correlator(int latticeSize);
+    Correlator(int N);
     ~Correlator();
     virtual double calculate(Links *lattice);
 };

@@ -12,8 +12,9 @@ SOURCES += main.cpp \
     su3.cpp \
     complex.cpp \
     unittests.cpp \
-    correlator.cpp \
-    correlators/correlator.cpp
+    correlators/correlator.cpp \
+    correlators/plaquette.cpp \
+    actions/wilsongaugeaction.cpp
 
 HEADERS += \
     metropolis.h \
@@ -24,8 +25,9 @@ HEADERS += \
     su3.h \
     complex.h \
     unittests.h \
-    correlator.h \
-    correlators/correlator.h
+    correlators/correlator.h \
+    correlators/plaquette.h \
+    actions/wilsongaugeaction.h
 
 #LIBS += -llapack -lblas -larmadillo
 

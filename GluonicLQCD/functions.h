@@ -4,7 +4,8 @@
 #include "su3.h"
 
 int index(int i, int j, int k, int l, int N);
-int indexAction(int i, int j, int k, int l, int mu, int N);
+int stapleIndex(int i, int j, int k, int l, int N);
+void lorentzIndex(int mu, int *lorentzIndices);
 SU3 inverse(SU3 U);
 
 #endif // FUNCTIONS_H

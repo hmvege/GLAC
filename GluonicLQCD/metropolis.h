@@ -3,6 +3,7 @@
 
 #include <random>
 #include "actions/action.h"
+#include "correlators/correlator.h"
 #include "links.h"
 #include "su3matrixgenerator.h"
 
@@ -19,8 +20,7 @@ private:
     double epsilon;
     double a; // Lattice spacing
     double L; // Lattice size
-    double ** Gamma;
-    int acceptanceCounter;
+    int acceptanceCounter = 0;
 
     // Lattice constants
     int latticeSize;
@@ -28,23 +28,25 @@ private:
     SU3 updatedMatrix;
 
     // Variables used to perform statistics
-    double * varianceGamma;
-    double * stdGamma;
-    double * deltaE_std;
-    double * averagedGamma;
-    double * averagedGammaSquared;
-    double * deltaE;
+    double * Gamma;
+    double * GammaSquared;
+//    double * GammaVariance;
+//    double * GammaStd;
+    double averagedGamma;
+    double varianceGamma;
+    double stdGamma;
+//    double deltaE_std;
+//    double deltaE;
 
     // Storing the action as a pointer
     Action *S = nullptr;
     double deltaS;
-    // TEMPORARY
-    void normalizeVector(double * v, int n);
-    void gramSchmitt(double * v1, double *v2, int n);
-//    void testOrthogonality(arma::mat M);
 
-    // Storing the Gamma functional
-    double (*gammaFunctional)(Links * lattice, int n, int _N); // Should change to become a class as with the action
+    // For sampling the system(lattice)
+    void sampleSystem();
+
+    // Correlator
+    Correlator * m_correlator = nullptr;
 
     // Function for updating our system using the Metropolis algorithm
     void update();
@@ -57,17 +59,17 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 public:
-    Metropolis(int new_N, int new_NCf, int new_NCor, int NTherm, double new_a, double new_L);
+    Metropolis(int new_N, int new_NCf, int new_NCor, int NTherm, double new_a, double new_L, Correlator *new_correlator, Action *new_S);
     ~Metropolis();
     void latticeSetup(SU3MatrixGenerator *SU3Generator);
     void runMetropolis();
     void getStatistics();
-    void writeStatisticsToFile(const char *filename);
+//    void writeStatisticsToFile(const char *filename);
     void writeDataToFile(const char *filename);
 
     // Setters
     void setAction(Action *newS) { S = newS; }
-//    void setGammaFunctional(Linksvoid (*newGammaFunctional)(Links * lattice, int n, int _N)) { gammaFunctional = newGammaFunctional; }
+    void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
     void setN(int new_N) { N = new_N; }
     void setNCf(int new_NCf) { NCf = new_NCf; }
     void setEpsilon(double new_epsilon) { epsilon = new_epsilon; }

@@ -1,13 +1,9 @@
 #include "correlator.h"
 
-Correlator::Correlator()
+Correlator::Correlator(int N)
 {
-
-}
-
-Correlator::Correlator(int latticeSize)
-{
-    m_latticeSize = latticeSize;
+    m_N = N;
+    m_latticeSize = N*N*N*N;
 }
 
 Correlator::~Correlator()
@@ -17,5 +13,8 @@ Correlator::~Correlator()
 
 double Correlator::calculate(Links * lattice)
 {
+    /*
+     * Default correlator is not implemented.
+     */
     return 1.0;
 }
