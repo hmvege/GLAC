@@ -16,11 +16,13 @@ using std::endl;
  * Function for generating random SU3 matrices
  */
 
-SU3MatrixGenerator::SU3MatrixGenerator(double eps, std::mt19937_64 &gen, std::uniform_real_distribution<double> &randDistr)
+SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
 {
+    std::mt19937_64 gen(seed);
+    std::uniform_real_distribution<double> uni_dist(-eps,eps);
     epsilon = eps;
     generator = gen;
-    uniform_distribution = randDistr;
+    uniform_distribution = uni_dist;
 }
 
 SU3MatrixGenerator::~SU3MatrixGenerator()

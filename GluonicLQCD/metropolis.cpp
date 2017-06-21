@@ -16,7 +16,7 @@
 using std::cout;
 using std::endl;
 
-Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, double new_a, double new_L, Correlator *new_correlator, Action *new_S)
+Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, double new_a, double new_L, double seed, Correlator *new_correlator, Action *new_S)
 {
     /*
      * Class for calculating correlators using the Metropolis algorithm.
@@ -34,6 +34,11 @@ Metropolis::Metropolis(int new_N, int new_NCf, int new_NCor, int new_Therm, doub
     lattice = new Links[latticeSize]; // Lattice, contigious memory allocation
     Gamma = new double[NCf]; // Correlator values
     GammaSquared = new double[NCf];
+
+    std::mt19937_64 gen(seed); // Starting up the Mersenne-Twister19937 function
+    std::uniform_real_distribution<double> uni_dist(0,1);
+    m_generator = gen;
+    m_uniform_distribution = uni_dist;
 //    GammaVariance = new double[NCf];
 //    GammaStd= new double[NCf];
     for (int alpha = 0; alpha < NCf; alpha++)

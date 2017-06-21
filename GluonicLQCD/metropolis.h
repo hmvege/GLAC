@@ -62,7 +62,7 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 public:
-    Metropolis(int new_N, int new_NCf, int new_NCor, int NTherm, double new_a, double new_L, Correlator *new_correlator, Action *new_S);
+    Metropolis(int new_N, int new_NCf, int new_NCor, int NTherm, double new_a, double new_L, double seed, Correlator *new_correlator, Action *new_S);
     ~Metropolis();
     void latticeSetup(SU3MatrixGenerator *SU3Generator);
     void runMetropolis();

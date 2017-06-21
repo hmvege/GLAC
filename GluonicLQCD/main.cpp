@@ -15,7 +15,7 @@ using std::endl;
  * TODO:
  * [x] Add plaquette correlator
  * [x] Make actions more general!! Aka, create a Wilson action
- * [ ] Fix bug that makes me get negative correlators
+ * [ ] Fix bug that makes me get negative and small correlators
  * [ ] Change to updating random matrices by X=RST
  * [ ] Switch to method syntax, foo --> m_foo
  * [ ] Create method for saving lattice configuration
@@ -29,21 +29,21 @@ int main()
     int NCor        = 10;           // Only keeping every 20th path
     int NCf         = 1000;          // Number of configurations to retrieve
     double a        = L/double(N);  // Lattice spacing
-//    double g        = 5.5;          // Coupling
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
+    double seed     = std::time(nullptr);
+    double metropolisSeed = std::time(nullptr) + 1;
 
     clock_t programStart, programEnd;
     programStart = clock();
-    std::mt19937_64 gen(std::time(nullptr));
-    std::uniform_real_distribution<double> uni_dist(-SU3Eps,SU3Eps);
-    SU3MatrixGenerator SU3Gen(SU3Eps, gen, uni_dist);
+    SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     Plaquette G(N);
     WilsonGaugeAction S(N,beta);
-    Metropolis gluon(N, NCf, NCor, NTherm, a, L, &G, &S);
+    Metropolis gluon(N, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S);
     gluon.latticeSetup(&SU3Gen);
     gluon.runMetropolis();
     gluon.getStatistics();
+    gluon.printAcceptanceRate();
     gluon.writeDataToFile("../output/gluon_data.txt");
 
     programEnd = clock();

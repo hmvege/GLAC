@@ -43,7 +43,7 @@ double Plaquette::calculate(Links *lattice)
     }
     for (int i = 0; i < 3; i++)
     {
-        gamma += P.mat[i*3+i].re; // 3 from SU3, 6 from number of plaquettes
+        gamma += P.mat[i*3+i].re;
     }
-    return gamma/3.0/6.0/m_latticeSize;
+    return gamma/3.0/6.0/m_latticeSize; // 3 from SU3, 6 from number of plaquettes
 }

@@ -60,7 +60,7 @@ complex dot(complex * a, complex * b) {
     return returnSum;
 }
 
-void testOrthogonality(SU3 H, bool verbose)
+bool testOrthogonality(SU3 H, bool verbose)
 {
     /*
      * Small test for testing the orthogonatility of a SU3 matrix M.
@@ -94,13 +94,15 @@ void testOrthogonality(SU3 H, bool verbose)
 
     if (testPassed) {
         cout << "PASSED: Columns is orthogonal." << endl;
+        return true;
     }
     else {
         cout << "FAILED: Columns is not orthogonal." << endl;
+        return false;
     }
 }
 
-void testHermicity(SU3 H, bool verbose)
+bool testHermicity(SU3 H, bool verbose)
 {
     /*
      * Small test for testing if we have Hermicity.
@@ -141,13 +143,15 @@ void testHermicity(SU3 H, bool verbose)
     }
     if (testPassed) {
         cout << "PASSED: matrix is hermitian." << endl;
+        return true;
     }
     else {
         cout << "FAILED: matrix is not hermitian." << endl;
+        return false;
     }
 }
 
-void testNorm(int col, SU3 H)
+bool testNorm(int col, SU3 H)
 {
     // TEST: Finding length of column
     double s=0;
@@ -156,9 +160,11 @@ void testNorm(int col, SU3 H)
     }
     if (fabs(s-1) < 1e-15) {
         cout << "PASSED: length = " << s << endl;
+        return true;
     }
     else {
         cout << "FAILED: length = " << setprecision(16) << s << endl;
+        return false;
     }
 }
 
