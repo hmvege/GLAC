@@ -3,6 +3,7 @@
 #include <cmath>
 #include "su3.h"
 #include "complex.h"
+#include "functions.h"
 
 using std::cout;
 using std::endl;
@@ -113,15 +114,11 @@ bool testHermicity(SU3 H, bool verbose)
         cout << "Matrix = " << endl;
         H.print();
     }
-    SU3 HInv;
-    HInv.copy(H);
-    HInv.transpose();
-    HInv.conjugate();
     SU3 I;
-    I = H*HInv;
+    I = H*inverse(H);
     if (verbose) {
         cout << "\nInverse matrix = "<< endl;
-        HInv.print();
+        inverse(H).print();
         cout << "\nUnit matrix = " << endl;
         I.print();
         cout << endl;

@@ -37,10 +37,16 @@ double Plaquette::calculate(Links *lattice)
                                     *inverse(lattice[stapleIndex(i,j,k,l, m_N)].U[nu]);
                         }
                     }
+//                    for (int i = 0; i < 3; i++)
+//                    {
+//                        gamma += P.mat[i*3+i].re/3.0/6.0/m_latticeSize;
+//                    }
+//                    P.zeros();
                 }
             }
         }
     }
+//    return gamma;
     for (int i = 0; i < 3; i++)
     {
         gamma += P.mat[i*3+i].re;

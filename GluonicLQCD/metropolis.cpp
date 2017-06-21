@@ -130,16 +130,13 @@ void Metropolis::runMetropolis()
 {
     cout << "Running Metropolis for Gluon action. Line 107" << endl;
     cout << m_correlator->calculate(lattice) << endl;
-//    exit(1);
+    exit(1);
     // Running thermalization
     for (int i = 0; i < NTherm * NCor; i++)
     {
         update();
-//        cout << m_correlator->calculate(lattice) << endl;
-
     }
-    cout << "Termalization complete. Line 116." << endl;
-//    printAcceptanceRate();
+    cout << "Termalization complete. Acceptance rate: " << getAcceptanceRate() << endl;
 //    exit(1);
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     acceptanceCounter = 0;
@@ -203,6 +200,7 @@ void Metropolis::getStatistics()
 //    delete [] deltaE;
 //    delete [] deltaE_std;
 }
+
 
 void Metropolis::writeDataToFile(const char *filename)
 {

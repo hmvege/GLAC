@@ -41,10 +41,10 @@ SU3 SU3MatrixGenerator::generate()
      * 6 7 8
      */
     SU3 H;
-    for (int i = 0; i < 3; i++)
-    {
-        H[3*i + i].re = 1;
-    }
+//    for (int i = 0; i < 3; i++)
+//    {
+//        H[3*i + i].re = 1;
+//    }
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 2; j++)
@@ -120,6 +120,13 @@ SU3 SU3MatrixGenerator::generateIdentity()
         }
     }
     return H;
+}
+
+SU3 SU3MatrixGenerator::updateMatrix()
+{
+    SU3 R, S, T;
+//    fortsett her!
+    return R*S*T;
 }
 
 void SU3MatrixGenerator::generateHermitian()

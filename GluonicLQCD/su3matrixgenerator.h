@@ -16,6 +16,7 @@ public:
     ~SU3MatrixGenerator();
     SU3 generate();
     SU3 generateIdentity();
+    SU3 updateMatrix();
     void generateHermitian();
 
     // Setters
