@@ -15,8 +15,10 @@ using std::endl;
  * TODO:
  * [x] Add plaquette correlator
  * [x] Make actions more general!! Aka, create a Wilson action
+ * [ ] Fix bug that makes me get negative correlators
  * [ ] Change to updating random matrices by X=RST
- * [ ] Switch to method syntax, foo->m_foo
+ * [ ] Switch to method syntax, foo --> m_foo
+ * [ ] Create method for saving lattice configuration
  */
 
 int main()
@@ -24,7 +26,7 @@ int main()
     int N           = 4;            // Points for each lattice dimension
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 10;           // Number of times we are to thermalize, that is NTherm * NCor
-    int NCor        = 20;           // Only keeping every 20th path
+    int NCor        = 10;           // Only keeping every 20th path
     int NCf         = 1000;          // Number of configurations to retrieve
     double a        = L/double(N);  // Lattice spacing
 //    double g        = 5.5;          // Coupling

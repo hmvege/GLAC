@@ -28,14 +28,22 @@ double Plaquette::calculate(Links *lattice)
             for (int k = 0; k < m_N; k++) {
                 for (int l = 0; l < m_N; l++) {
                     for (int mu = 0; mu < 4; mu++) {
-                        for (int nu = 0; nu < 4; nu++) {
-                            if (mu==nu) continue;
+                        for (int nu = mu+1; nu < 4; nu++) {
+//                            if (mu==nu) continue;
                             lorentzIndex(mu,muIndex);
                             lorentzIndex(nu,nuIndex);
                             P += lattice[stapleIndex(i,j,k,l, m_N)].U[mu]
                                     *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3], m_N)].U[nu]
                                     *inverse(lattice[stapleIndex(i+muIndex[0]+nuIndex[0],j+muIndex[1]+nuIndex[1],k+muIndex[2]+nuIndex[2],l+muIndex[3]+nuIndex[3], m_N)].U[mu])
                                     *inverse(lattice[stapleIndex(i,j,k,l, m_N)].U[nu]);
+//                            P = lattice[stapleIndex(i,j,k,l, m_N)].U[mu]
+//                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3], m_N)].U[nu]
+//                                    *inverse(lattice[stapleIndex(i+muIndex[0]+nuIndex[0],j+muIndex[1]+nuIndex[1],k+muIndex[2]+nuIndex[2],l+muIndex[3]+nuIndex[3], m_N)].U[mu])
+//                                    *inverse(lattice[stapleIndex(i,j,k,l, m_N)].U[nu]);
+//                            for (int i = 0; i < 3; i++)
+//                            {
+//                                gamma += 1 - P.mat[i*3+i].re;
+//                            }
                         }
                     }
                 }
@@ -46,5 +54,5 @@ double Plaquette::calculate(Links *lattice)
     {
         gamma += P.mat[i*3+i].re;
     }
-    return 0.3333333333333333*gamma;
+    return gamma/3.0;
 }

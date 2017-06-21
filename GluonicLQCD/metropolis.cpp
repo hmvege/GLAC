@@ -77,7 +77,7 @@ void Metropolis::updateLink(int i, int mu)
      *  i   : spacetime index
      *  mu  : Lorentz index
      */
-    SU3 X = m_SU3Generator->generate(); // Generates a random matrix, SHOULD BE MODIVIED TO X = RST, page 83 Gattinger & Lang
+    SU3 X = m_SU3Generator->generate(); // Generates a random matrix, SHOULD BE MODIFIED TO X = RST, page 83 Gattinger & Lang
     updatedMatrix = X*lattice[i].U[mu];
 }
 
@@ -95,11 +95,12 @@ void Metropolis::update()
                             updateLink(index(i, j, k, l, N), mu);
                         }
                         // Calculate action
-                        deltaS = exp(-S->getDeltaAction(lattice, updatedMatrix, i, j, k, l, mu));
-                        cout << deltaS << endl;
-                        if ((deltaS >= 1) || (m_uniform_distribution(m_generator) <= deltaS))
+                        deltaS = S->getDeltaAction(lattice, updatedMatrix, i, j, k, l, mu);
+                        expDeltaS = exp(-deltaS);
+//                        cout << deltaS << endl;
+                        if ((expDeltaS >= 1) || (m_uniform_distribution(m_generator) <= expDeltaS))
                         {
-                            lattice[i].U[mu] = updatedMatrix;
+                            lattice[i].U[mu].copy(updatedMatrix);
                         }
                         else
                         {
@@ -124,8 +125,8 @@ void Metropolis::runMetropolis()
         update();
     }
     cout << "Termalization complete. Line 116." << endl;
-    printAcceptanceRate();
-    exit(1);
+//    printAcceptanceRate();
+//    exit(1);
 //    exit(1);
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     acceptanceCounter = 0;
