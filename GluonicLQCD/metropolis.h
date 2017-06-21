@@ -20,7 +20,9 @@ private:
     double epsilon;
     double a; // Lattice spacing
     double L; // Lattice size
+    // For handling the acceptance rate
     int acceptanceCounter = 0;
+    double getAcceptanceRate();
 
     // Lattice constants
     int latticeSize;
@@ -32,9 +34,9 @@ private:
     double * GammaSquared;
 //    double * GammaVariance;
 //    double * GammaStd;
-    double averagedGamma;
-    double varianceGamma;
-    double stdGamma;
+    double averagedGamma = 0;
+    double varianceGamma = 0;
+    double stdGamma = 0;
 //    double deltaE_std;
 //    double deltaE;
 

@@ -38,7 +38,7 @@ Action::Action(int N)
 
 double Action::getDeltaAction(Links * lattice, SU3 U, int i, int j, int k, int l, int mu)
 {
-    cout << "If you are seeing this, something is wrong!" << endl;
+    cout << "In Action::getDeltaAction: If you are seeing this, something is wrong!" << endl;
     exit(1);
     /*
      * Takes the entire lattice and the updated spacetime index
@@ -71,4 +71,10 @@ double Action::getDeltaAction(Links * lattice, SU3 U, int i, int j, int k, int l
 //    }
 //    return beta/3.0*S; // Should be N=3 as in the Gauge symmetry?
     return 1.0;
+}
+
+void Action::computeStaple(Links *lattice, int i, int j, int k, int l, int mu)
+{
+    cout << "In Action::computeStaple: If you are seeing this, something is wrong!" << endl;
+    exit(1);
 }

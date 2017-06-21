@@ -17,6 +17,7 @@ public:
     Action(int latticeSize);
     virtual ~Action();
     virtual double getDeltaAction(Links * lattice, SU3 U, int i, int j, int k, int l, int mu);
+    virtual void computeStaple(Links *lattice, int i, int j, int k, int l, int mu);
     // Setters
 //    void setLatticeSpacing(double new_a) { a = new_a; }
     void setNLatticePoints(int N) { m_N = N; }

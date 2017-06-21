@@ -10,6 +10,9 @@
 #include "links.h"
 #include "su3matrixgenerator.h"
 
+//TEMP
+#include "unittests.h"
+
 using std::cout;
 using std::endl;
 
@@ -97,7 +100,7 @@ void Metropolis::update()
                             updateLink(index(i, j, k, l, N), mu);
                             deltaS = S->getDeltaAction(lattice, updatedMatrix, i, j, k, l, mu);
                             expDeltaS = exp(-deltaS);
-                            if (m_uniform_distribution(m_generator) <= expDeltaS)
+                            if (m_uniform_distribution(m_generator) < expDeltaS)
                             {
                                 lattice[i].U[mu].copy(updatedMatrix);
                             }
@@ -121,14 +124,14 @@ void Metropolis::update()
 void Metropolis::runMetropolis()
 {
     cout << "Running Metropolis for Gluon action. Line 107" << endl;
-    // Initializing storage variables
-
-    // Running thermalization
-
 //    cout << m_correlator->calculate(lattice) << endl;
+//    exit(1);
+    // Running thermalization
     for (int i = 0; i < NTherm * NCor; i++)
     {
         update();
+//        cout << m_correlator->calculate(lattice) << endl;
+
     }
     cout << "Termalization complete. Line 116." << endl;
 //    printAcceptanceRate();
@@ -136,7 +139,6 @@ void Metropolis::runMetropolis()
 //    exit(1);
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     acceptanceCounter = 0;
-
     // Main part of algorithm
     for (int alpha = 0; alpha < NCf; alpha++)
     {
@@ -145,6 +147,7 @@ void Metropolis::runMetropolis()
             update();
         }
         Gamma[alpha] = m_correlator->calculate(lattice);
+//        cout << Gamma[alpha] <<endl;|
     }
     cout << "Metropolis completed, line 126" << endl;
     writeConfigurationToFile();
@@ -204,7 +207,7 @@ void Metropolis::writeDataToFile(const char *filename)
      */
     std::ofstream file;
     file.open(filename);
-    file << "acceptanceCounter " << double(acceptanceCounter)/double(NCf*NCor*latticeSize*4) << endl;
+    file << "acceptanceCounter " << getAcceptanceRate() << endl;
     file << "NCor " << NCor << endl;
     file << "NCf " << NCf << endl;
     file << "NTherm " << NTherm << endl;
@@ -255,7 +258,7 @@ void Metropolis::writeDataToFile(const char *filename)
 
 void Metropolis::printAcceptanceRate()
 {
-    printf("Acceptancerate: %.16f \n", double(acceptanceCounter)/double(NCf*NCor*latticeSize*4)); // Times 4 from the Lorentz indices
+    printf("Acceptancerate: %.16f \n", getAcceptanceRate()); // Times 4 from the Lorentz indices
 }
 
 
@@ -283,4 +286,9 @@ void Metropolis::writeConfigurationToFile()
     }
     file.close();
     cout << "configs.txt written" << endl;
+}
+
+double Metropolis::getAcceptanceRate()
+{
+    return double(acceptanceCounter)/double(NCf*NCor*m_nUpdates*latticeSize*4);
 }

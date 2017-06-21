@@ -36,28 +36,15 @@ double Plaquette::calculate(Links *lattice)
                                     *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3], m_N)].U[nu]
                                     *inverse(lattice[stapleIndex(i+muIndex[0]+nuIndex[0],j+muIndex[1]+nuIndex[1],k+muIndex[2]+nuIndex[2],l+muIndex[3]+nuIndex[3], m_N)].U[mu])
                                     *inverse(lattice[stapleIndex(i,j,k,l, m_N)].U[nu]);
-//                            P = lattice[stapleIndex(i,j,k,l, m_N)].U[mu]
-//                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3], m_N)].U[nu]
-//                                    *inverse(lattice[stapleIndex(i+muIndex[0]+nuIndex[0],j+muIndex[1]+nuIndex[1],k+muIndex[2]+nuIndex[2],l+muIndex[3]+nuIndex[3], m_N)].U[mu])
-//                                    *inverse(lattice[stapleIndex(i,j,k,l, m_N)].U[nu]);
-//                            for (int i = 0; i < 3; i++)
-//                            {
-//                                gamma += 1 - P.mat[i*3+i].re;
-//                            }
                         }
                     }
-//                    for (int i = 0; i < 3; i++)
-//                    {
-//                        gamma += P.mat[i*3+i].re/3.0;
-//                    }
-//                    P.zeros();
                 }
             }
         }
     }
     for (int i = 0; i < 3; i++)
     {
-        gamma += P.mat[i*3+i].re/3.0/6.0/m_latticeSize;
+        gamma += P.mat[i*3+i].re; // 3 from SU3, 6 from number of plaquettes
     }
-    return gamma;
+    return gamma/3.0/6.0/m_latticeSize;
 }
