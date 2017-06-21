@@ -24,11 +24,11 @@ double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 U, int i, int j, in
     double S = 0;
     SU3 A;
     SU3 tr;
-    for (int nu = mu; nu < 4; nu++)
-    {
-//    for (int nu = 0; nu < 4; nu++)
+//    for (int nu = mu+1; nu < 4; nu++)
 //    {
-//        if (mu == nu) continue;
+    for (int nu = 0; nu < 4; nu++)
+    {
+        if (mu == nu) continue;
         lorentzIndex(mu,muIndex);
         lorentzIndex(nu,nuIndex);
 

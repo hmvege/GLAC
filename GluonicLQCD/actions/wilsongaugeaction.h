@@ -7,6 +7,7 @@ class WilsonGaugeAction : public Action
 {
 private:
     double m_beta;
+    SU3 staples;
 public:
     WilsonGaugeAction(int latticeSize, double beta);
     ~WilsonGaugeAction();

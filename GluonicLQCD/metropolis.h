@@ -65,8 +65,10 @@ public:
     void latticeSetup(SU3MatrixGenerator *SU3Generator);
     void runMetropolis();
     void getStatistics();
+    // Data outputters
 //    void writeStatisticsToFile(const char *filename);
     void writeDataToFile(const char *filename);
+    void writeConfigurationToFile();
 
     // Setters
     void setAction(Action *newS) { S = newS; }

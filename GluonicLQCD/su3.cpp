@@ -100,6 +100,15 @@ SU3 &SU3::operator-=(SU3 B)
     return *this;
 }
 
+void SU3::zeros()
+{
+    for (int i = 0; i < 9; i++)
+    {
+        mat[i].re = 0;
+        mat[i].im = 0;
+    }
+}
+
 void SU3::print()
 {
     /*

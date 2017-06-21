@@ -65,6 +65,7 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
         for (int mu = 0; mu < 4; mu++)
         {
             lattice[i].U[mu] = m_SU3Generator->generate();
+//            lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
         }
     }
 }
@@ -90,22 +91,25 @@ void Metropolis::update()
                 for (int l = 0; l < N; l++) {
                     for (int mu = 0; mu < 4; mu++)
                     {
+                        S->computeStaple(lattice,i,j,k,l,mu);
                         for (int n = 0; n < m_nUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(index(i, j, k, l, N), mu);
+                            deltaS = S->getDeltaAction(lattice, updatedMatrix, i, j, k, l, mu);
+                            expDeltaS = exp(-deltaS);
+                            if (m_uniform_distribution(m_generator) <= expDeltaS)
+                            {
+                                lattice[i].U[mu].copy(updatedMatrix);
+                            }
+                            else
+                            {
+                                acceptanceCounter++;
+                            }
                         }
+//                        cout << m_correlator->calculate(lattice) << endl;
                         // Calculate action
-                        deltaS = S->getDeltaAction(lattice, updatedMatrix, i, j, k, l, mu);
-                        expDeltaS = exp(-deltaS);
 //                        cout << deltaS << endl;
-                        if ((expDeltaS >= 1) || (m_uniform_distribution(m_generator) <= expDeltaS))
-                        {
-                            lattice[i].U[mu].copy(updatedMatrix);
-                        }
-                        else
-                        {
-                            acceptanceCounter++;
-                        }
+//                        if ((expDeltaS >= 1) || (m_uniform_distribution(m_generator) <= expDeltaS))
                     }
                 }
             }
@@ -120,6 +124,8 @@ void Metropolis::runMetropolis()
     // Initializing storage variables
 
     // Running thermalization
+
+//    cout << m_correlator->calculate(lattice) << endl;
     for (int i = 0; i < NTherm * NCor; i++)
     {
         update();
@@ -141,6 +147,7 @@ void Metropolis::runMetropolis()
         Gamma[alpha] = m_correlator->calculate(lattice);
     }
     cout << "Metropolis completed, line 126" << endl;
+    writeConfigurationToFile();
 }
 
 void Metropolis::sampleSystem()
@@ -168,7 +175,7 @@ void Metropolis::getStatistics()
     for (int alpha = 0; alpha < NCf; alpha++)
     {
         averagedGamma += Gamma[alpha];
-        varianceGamma += (GammaSquared[alpha] - Gamma[alpha]*Gamma[alpha])/NCf;
+        varianceGamma += (GammaSquared[alpha] - Gamma[alpha]*Gamma[alpha])/double(NCf);
     }
     averagedGamma  /= double(NCf);
     varianceGamma  /= double(NCf);
@@ -249,4 +256,31 @@ void Metropolis::writeDataToFile(const char *filename)
 void Metropolis::printAcceptanceRate()
 {
     printf("Acceptancerate: %.16f \n", double(acceptanceCounter)/double(NCf*NCor*latticeSize*4)); // Times 4 from the Lorentz indices
+}
+
+
+void Metropolis::writeConfigurationToFile()
+{
+    std::ofstream file;
+    file.open("../output/configs.txt");
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            for (int k = 0; k < N; k++) {
+                for (int l = 0; l < N; l++) {
+                    for (int mu = 0; mu < 4; mu++) {
+                        for (int i_x = 0; i_x < 9; i_x++) {
+                            file << lattice[index(i,j,k,l,N)].U[mu].mat[i_x] << " ";
+                        }
+                        file << endl;
+                    }
+                    file << endl;
+                }
+                file << endl;
+            }
+            file << endl;
+        }
+        file << endl;
+    }
+    file.close();
+    cout << "configs.txt written" << endl;
 }

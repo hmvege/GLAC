@@ -46,13 +46,18 @@ double Plaquette::calculate(Links *lattice)
 //                            }
                         }
                     }
+//                    for (int i = 0; i < 3; i++)
+//                    {
+//                        gamma += P.mat[i*3+i].re/3.0;
+//                    }
+//                    P.zeros();
                 }
             }
         }
     }
     for (int i = 0; i < 3; i++)
     {
-        gamma += P.mat[i*3+i].re;
+        gamma += P.mat[i*3+i].re/3.0/6.0/m_latticeSize;
     }
-    return gamma/3.0;
+    return gamma;
 }

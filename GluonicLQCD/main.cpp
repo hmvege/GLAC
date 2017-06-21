@@ -30,7 +30,7 @@ int main()
     int NCf         = 1000;          // Number of configurations to retrieve
     double a        = L/double(N);  // Lattice spacing
 //    double g        = 5.5;          // Coupling
-    double beta     = 6;            // Should be
+    double beta     = 100;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
 
     clock_t programStart, programEnd;

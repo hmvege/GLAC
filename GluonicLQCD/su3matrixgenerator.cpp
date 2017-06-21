@@ -92,12 +92,33 @@ SU3 SU3MatrixGenerator::generate()
 //    testNorm(0,H);
 //    testNorm(1,H);
 //    testNorm(2,H);
-//    testHermicity(H,true);
+//    testHermicity(H,false);
 //    exit(1);
 
     return H;
 }
 
+SU3 SU3MatrixGenerator::generateIdentity()
+{
+    SU3 H;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (i==j)
+            {
+                H[3*i+j].re = 1;
+                H[3*i+j].im = 0;
+            }
+            else
+            {
+                H[3*i+j].re = 0;
+                H[3*i+j].im = 0;
+            }
+        }
+    }
+    return H;
+}
 
 void SU3MatrixGenerator::generateHermitian()
 {

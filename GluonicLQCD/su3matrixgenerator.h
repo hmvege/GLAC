@@ -15,6 +15,7 @@ public:
     SU3MatrixGenerator(double eps, std::mt19937_64 &gen, std::uniform_real_distribution<double> &randDistr);
     ~SU3MatrixGenerator();
     SU3 generate();
+    SU3 generateIdentity();
     void generateHermitian();
 
     // Setters
