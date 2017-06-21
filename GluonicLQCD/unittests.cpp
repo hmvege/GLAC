@@ -161,3 +161,35 @@ void testNorm(int col, SU3 H)
         cout << "FAILED: length = " << setprecision(16) << s << endl;
     }
 }
+
+void testMatrixMultiplication()
+{
+    SU3 A,B,C;
+    // Setting A values
+    A.mat[0].re = 1;
+    A.mat[1].re = 0;
+    A.mat[2].re = 0;
+    A.mat[3].re = 0;
+    A.mat[4].re = 0;
+    A.mat[5].re = 0;
+    A.mat[6].re = 1;
+    A.mat[7].re = 0;
+    A.mat[8].re = 0;
+    // Setting B values
+    B.mat[0].re = 0;
+    B.mat[1].re = 1;
+    B.mat[2].re = 0;
+    B.mat[3].re = 0;
+    B.mat[4].re = 0;
+    B.mat[5].re = 0;
+    B.mat[6].re = 0;
+    B.mat[7].re = 0;
+    B.mat[8].re = 0;
+    C = A*B;
+    printf("Matrix A: \n");
+    A.print();
+    printf("Matrix B: \n");
+    B.print();
+    printf("Matrix C: \n");
+    C.print();
+}

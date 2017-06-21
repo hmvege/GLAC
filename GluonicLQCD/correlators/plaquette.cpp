@@ -29,7 +29,6 @@ double Plaquette::calculate(Links *lattice)
                 for (int l = 0; l < m_N; l++) {
                     for (int mu = 0; mu < 4; mu++) {
                         for (int nu = mu+1; nu < 4; nu++) {
-//                            if (mu==nu) continue;
                             lorentzIndex(mu,muIndex);
                             lorentzIndex(nu,nuIndex);
                             P += lattice[stapleIndex(i,j,k,l, m_N)].U[mu]

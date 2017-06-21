@@ -102,7 +102,7 @@ void Metropolis::update()
                             expDeltaS = exp(-deltaS);
                             if (m_uniform_distribution(m_generator) < expDeltaS)
                             {
-                                lattice[i].U[mu].copy(updatedMatrix);
+                                lattice[index(i, j, k, l, N)].U[mu].copy(updatedMatrix);
                             }
                             else
                             {
@@ -124,7 +124,7 @@ void Metropolis::update()
 void Metropolis::runMetropolis()
 {
     cout << "Running Metropolis for Gluon action. Line 107" << endl;
-//    cout << m_correlator->calculate(lattice) << endl;
+    cout << m_correlator->calculate(lattice) << endl;
 //    exit(1);
     // Running thermalization
     for (int i = 0; i < NTherm * NCor; i++)
@@ -135,7 +135,6 @@ void Metropolis::runMetropolis()
     }
     cout << "Termalization complete. Line 116." << endl;
 //    printAcceptanceRate();
-//    exit(1);
 //    exit(1);
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     acceptanceCounter = 0;
@@ -183,7 +182,7 @@ void Metropolis::getStatistics()
     averagedGamma  /= double(NCf);
     varianceGamma  /= double(NCf);
     stdGamma = sqrt(varianceGamma);
-    cout << averagedGamma << " +/- " << stdGamma << endl;
+    cout << averagedGamma << " +/- " << stdGamma << " " << varianceGamma << endl;
     // Getting change in energy & calculating variance & standard deviation of G
 //    for (int n = 0; n < N; n++)
 //    {
@@ -245,22 +244,10 @@ void Metropolis::writeDataToFile(const char *filename)
 //    cout << filename << " written" << endl;
 //}
 
-//void Metropolis::printEnergies()
-//{
-//    /*
-//     * Printing the energies in the calculation
-//     */
-//    for (int n = 0; n < N; n++)
-//    {
-//        cout << deltaE[n] << endl;
-//    }
-//}
-
 void Metropolis::printAcceptanceRate()
 {
     printf("Acceptancerate: %.16f \n", getAcceptanceRate()); // Times 4 from the Lorentz indices
 }
-
 
 void Metropolis::writeConfigurationToFile()
 {
@@ -291,4 +278,14 @@ void Metropolis::writeConfigurationToFile()
 double Metropolis::getAcceptanceRate()
 {
     return double(acceptanceCounter)/double(NCf*NCor*m_nUpdates*latticeSize*4);
+}
+
+void Metropolis::loadFieldConfiguration(const char *filename)
+{
+    /*
+     * Method for loading a field configuration and running the plaquettes on them.
+     */
+    std::ifstream file;
+    file.open(filename);
+    file.close();
 }

@@ -71,6 +71,7 @@ public:
 //    void writeStatisticsToFile(const char *filename);
     void writeDataToFile(const char *filename);
     void writeConfigurationToFile();
+    void loadFieldConfiguration(const char *filename);
 
     // Setters
     void setAction(Action *newS) { S = newS; }
