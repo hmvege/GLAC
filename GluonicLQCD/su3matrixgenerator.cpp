@@ -180,6 +180,8 @@ SU3 SU3MatrixGenerator::updateMatrix()
     delete [] r;
     delete [] s;
     delete [] t;
+    cout << "X=RST: THIS METHOD HAS NOT BEEN UNIT TESTED; SO MAY NOT BE CORRECT!!" << endl;
+    exit(1);
     return R*S*T;
 }
 
