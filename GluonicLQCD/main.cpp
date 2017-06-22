@@ -19,13 +19,15 @@ using std::endl;
  * [ ] Change to updating random matrices by X=RST
  * [ ] Switch to method syntax, foo --> m_foo
  * [ ] Create method for saving lattice configuration
+ * [ ] Change to such that time dimension is 2N
+ * [ ] Change name of project to PureGaugeLQCD
  */
 
 int main()
 {
     int N           = 4;            // Points for each lattice dimension
     double L        = 2.0;          // Length of lattice in fermi
-    int NTherm      = 10;           // Number of times we are to thermalize, that is NTherm * NCor
+    int NTherm      = 20;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path
     int NCf         = 1000;          // Number of configurations to retrieve
     double a        = L/double(N);  // Lattice spacing
@@ -39,12 +41,12 @@ int main()
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     Plaquette G(N);
     WilsonGaugeAction S(N,beta);
-    Metropolis gluon(N, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S);
-    gluon.latticeSetup(&SU3Gen);
-    gluon.runMetropolis();
-    gluon.getStatistics();
-    gluon.printAcceptanceRate();
-    gluon.writeDataToFile("../output/gluon_data.txt");
+    Metropolis pureGauge(N, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S);
+    pureGauge.latticeSetup(&SU3Gen);
+    pureGauge.runMetropolis();
+    pureGauge.getStatistics();
+    pureGauge.printAcceptanceRate();
+    pureGauge.writeDataToFile("../output/pureGauge_data.txt");
 
     programEnd = clock();
     cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;

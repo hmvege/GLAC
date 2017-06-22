@@ -5,6 +5,10 @@ int index(int i, int j, int k, int l, int N)
     /*
      * Function for contigious memory allocation.
      */
+    if ((i < 0) || (j < 0) || (k < 0) || (l < 0)) { //TEST FOR ENSURING CORRECT INDICES
+        std::cout << "Index error!" << std::endl;
+        exit(1);
+    }
     return (N*(N*(N*i + j) + k) + l);
 }
 

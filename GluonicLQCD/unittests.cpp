@@ -139,11 +139,13 @@ bool testHermicity(SU3 H, bool verbose)
         }
     }
     if (testPassed) {
-        cout << "PASSED: matrix is hermitian." << endl;
+//        cout << "PASSED: matrix is hermitian." << endl;
         return true;
     }
     else {
         cout << "FAILED: matrix is not hermitian." << endl;
+        I.print();
+        exit(1);
         return false;
     }
 }

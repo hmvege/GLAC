@@ -124,17 +124,73 @@ SU3 SU3MatrixGenerator::generateIdentity()
 
 SU3 SU3MatrixGenerator::updateMatrix()
 {
+    /*
+     * Generatores a random SU3 matrix close to unity.
+     * Index map:
+     * r,s,t =
+     * 0 1
+     * 2 3
+     * R,S,T =
+     * 0 1 2
+     * 3 4 5
+     * 6 7 8
+     */
     SU3 R, S, T;
-//    fortsett her!
+    complex * r = new complex[4];
+    complex * s = new complex[4];
+    complex * t = new complex[4];
+    // Generates 3 SU2 matrices
+    // Gets a
+    r[0].re = uniform_distribution(generator);
+    r[0].im = uniform_distribution(generator);
+    s[0].re = uniform_distribution(generator);
+    s[0].im = uniform_distribution(generator);
+    t[0].re = uniform_distribution(generator);
+    t[0].im = uniform_distribution(generator);
+    // Gets b
+    r[1].re = uniform_distribution(generator);
+    r[1].im = uniform_distribution(generator);
+    r[2] -= r[1].c();
+    r[3] = r[0].c();
+    s[1].re = uniform_distribution(generator);
+    s[1].im = uniform_distribution(generator);
+    s[2] -= s[1].c();
+    s[3] = s[0].c();
+    t[1].re = uniform_distribution(generator);
+    t[1].im = uniform_distribution(generator);
+    t[2] -= t[1].c();
+    t[3] = t[0].c();
+    // Insert into R,S and T
+    R.mat[0] = r[0];
+    R.mat[1] = r[1];
+    R.mat[3] = r[2];
+    R.mat[4] = r[3];
+    R.mat[8].re = 1;
+    S.mat[0] = s[0];
+    S.mat[2] = s[1];
+    S.mat[6] = s[2];
+    S.mat[8] = s[3];
+    S.mat[4].re = 1;
+    T.mat[4] = t[0];
+    T.mat[5] = t[1];
+    T.mat[7] = t[2];
+    T.mat[8] = t[3];
+    T.mat[0].re = 1;
+    // Returns product
+    delete [] r;
+    delete [] s;
+    delete [] t;
     return R*S*T;
 }
 
 void SU3MatrixGenerator::generateHermitian()
 {
-
+    cout << "SU3MatrixGenerator::generateHermitian not implemented" << endl;
+    exit(1);
 }
 
 void SU3MatrixGenerator::GramSchmitt()
 {
-
+    cout << "SU3MatrixGenerator::GramSchmitt not implemented" << endl;
+    exit(1);
 }

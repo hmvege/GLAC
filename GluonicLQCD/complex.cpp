@@ -1,4 +1,6 @@
 #include "complex.h"
+#include <cmath>
+using std::fabs;
 
 /*
  * For storing complex numbers in the SU3 matrix class
@@ -87,6 +89,11 @@ complex &complex::operator-=(complex b)
 // TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
 std::ostream &operator<<(std::ostream &os, const complex &a)
 {
-    os << a.re << " + i" << a.im;
+    if (a.im < 0) {
+        os << a.re << " - " << fabs(a.im) << "i";
+    }
+    else {
+        os << a.re << " + " << a.im << "i";
+    }
     return os;
 }

@@ -87,12 +87,15 @@ void Metropolis::updateLink(int i, int mu)
      *  mu  : Lorentz index
      */
     SU3 X = m_SU3Generator->generate(); // Generates a random matrix, SHOULD BE MODIFIED TO X = RST, page 83 Gattinger & Lang
+//    SU3 X = m_SU3Generator->updateMatrix();
     updatedMatrix = X*lattice[i].U[mu];
 }
 
 void Metropolis::update()
 {
-    // Updates the entire Lattice
+    /*
+     * Sweeps the entire Lattice, and gives every matrix a chance to update.
+     */
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             for (int k = 0; k < N; k++) {
@@ -114,10 +117,6 @@ void Metropolis::update()
                                 acceptanceCounter++;
                             }
                         }
-//                        cout << m_correlator->calculate(lattice) << endl;
-                        // Calculate action
-//                        cout << deltaS << endl;
-//                        if ((expDeltaS >= 1) || (m_uniform_distribution(m_generator) <= expDeltaS))
                     }
                 }
             }
@@ -128,14 +127,15 @@ void Metropolis::update()
 
 void Metropolis::runMetropolis()
 {
-    cout << "Running Metropolis for Gluon action. Line 107" << endl;
-    cout << m_correlator->calculate(lattice) << endl;
-    exit(1);
+    cout << "Pre-thermialization correlator: " << m_correlator->calculate(lattice) << endl;
+    writeConfigurationToFile();
+//    exit(1);
     // Running thermalization
     for (int i = 0; i < NTherm * NCor; i++)
     {
         update();
     }
+    cout << "Post-thermialization correlator: " << m_correlator->calculate(lattice) << endl;
     cout << "Termalization complete. Acceptance rate: " << getAcceptanceRate() << endl;
 //    exit(1);
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
