@@ -19,13 +19,14 @@ using std::endl;
  * [ ] Change to updating random matrices by X=RST
  * [ ] Switch to method syntax, foo --> m_foo
  * [ ] Create method for saving lattice configuration
+ * [ ] Create method for loading lattice configuration
  * [ ] Change to such that time dimension is 2N
  * [ ] Change name of project to PureGaugeLQCD
  */
 
 int main()
 {
-    int N           = 4;            // Points for each lattice dimension
+    int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 20;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path

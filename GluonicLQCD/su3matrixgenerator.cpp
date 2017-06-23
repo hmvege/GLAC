@@ -177,6 +177,10 @@ SU3 SU3MatrixGenerator::updateMatrix()
     T.mat[8] = t[3];
     T.mat[0].re = 1;
     // Returns product
+
+    complex * I = new complex[4];
+    I[0] =
+
     delete [] r;
     delete [] s;
     delete [] t;

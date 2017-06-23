@@ -262,7 +262,7 @@ void Metropolis::writeConfigurationToFile()
                 for (int l = 0; l < N; l++) {
                     for (int mu = 0; mu < 4; mu++) {
                         for (int i_x = 0; i_x < 9; i_x++) {
-                            file << lattice[index(i,j,k,l,N)].U[mu].mat[i_x] << " ";
+                            file << lattice[index(i,j,k,l,N)].U[mu].mat[i_x].re << " " << lattice[index(i,j,k,l,N)].U[mu].mat[i_x].im << "      ";
                         }
                         file << endl;
                     }
