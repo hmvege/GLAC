@@ -8,7 +8,7 @@
 #include "correlators/correlator.h"
 #include "functions.h"
 #include "links.h"
-#include "su3matrixgenerator.h"
+#include "matrices/su3matrixgenerator.h"
 
 //TEMP
 #include "unittests.h"
@@ -86,8 +86,8 @@ void Metropolis::updateLink(int i, int mu)
      *  i   : spacetime index
      *  mu  : Lorentz index
      */
-    SU3 X = m_SU3Generator->generate(); // Generates a random matrix, SHOULD BE MODIFIED TO X = RST, page 83 Gattinger & Lang
-//    SU3 X = m_SU3Generator->updateMatrix();
+//    SU3 X = m_SU3Generator->generate(); // Generates a random matrix, SHOULD BE MODIFIED TO X = RST, page 83 Gattinger & Lang
+    SU3 X = m_SU3Generator->updateMatrix();
     updatedMatrix = X*lattice[i].U[mu];
 }
 

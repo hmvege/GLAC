@@ -1,7 +1,7 @@
 #ifndef LINKS_H
 #define LINKS_H
 
-#include "su3.h"
+#include "matrices/su3.h"
 
 class Links
 {

@@ -12,6 +12,7 @@ using std::endl;
 
 SU3::SU3()
 {
+//    mat = new complex[9];
     for (int i = 0; i < 9; i++)
     {
         mat[i].re = 0;
@@ -21,7 +22,7 @@ SU3::SU3()
 
 SU3::~SU3()
 {
-
+//    delete [] mat;
 }
 
 void SU3::transpose()
@@ -51,7 +52,7 @@ void SU3::copy(SU3 B)
 {
     for (int i = 0; i < 9; i++)
     {
-        mat[i] = B[i];
+        mat[i] = B.mat[i];
     }
 }
 

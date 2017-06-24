@@ -8,26 +8,28 @@ SOURCES += main.cpp \
     actions/action.cpp \
     functions.cpp \
     links.cpp \
-    su3matrixgenerator.cpp \
-    su3.cpp \
     complex.cpp \
     unittests.cpp \
     correlators/correlator.cpp \
     correlators/plaquette.cpp \
-    actions/wilsongaugeaction.cpp
+    actions/wilsongaugeaction.cpp \
+    matrices/su2.cpp \
+    matrices/su3.cpp \
+    matrices/su3matrixgenerator.cpp
 
 HEADERS += \
     metropolis.h \
     actions/action.h \
     functions.h \
     links.h \
-    su3matrixgenerator.h \
-    su3.h \
     complex.h \
     unittests.h \
     correlators/correlator.h \
     correlators/plaquette.h \
-    actions/wilsongaugeaction.h
+    actions/wilsongaugeaction.h \
+    matrices/su2.h \
+    matrices/su3.h \
+    matrices/su3matrixgenerator.h
 
 #LIBS += -llapack -lblas -larmadillo
 

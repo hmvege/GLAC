@@ -1,4 +1,5 @@
-#include "su3.h"
+#include "matrices/su3.h"
+#include "matrices/su2.h"
 
 int index(int i, int j, int k, int l, int N)
 {
@@ -18,6 +19,15 @@ SU3 inverse(SU3 U)
      * Gets the inverse of a SU3 matrix, MAKE CLASS BASED?!
      */
     SU3 UInverse;
+    UInverse.copy(U);
+    UInverse.conjugate();
+    UInverse.transpose();
+    return UInverse;
+}
+
+SU2 SU2Inverse(SU2 U)
+{
+    SU2 UInverse;
     UInverse.copy(U);
     UInverse.conjugate();
     UInverse.transpose();

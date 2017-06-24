@@ -1,6 +1,6 @@
 #include "action.h"
 #include "links.h"
-#include "su3.h"
+#include "matrices/su3.h"
 #include "functions.h"
 
 // TEMP

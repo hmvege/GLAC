@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
-#include "su3.h"
+#include "matrices/su3.h"
 #include "complex.h"
 #include "functions.h"
 
@@ -197,4 +197,73 @@ void testMatrixMultiplication()
     B.print();
     printf("Matrix C: \n");
     C.print();
+}
+
+bool SU2UnitTest(complex * r, complex * s, complex * t)
+{
+    // UNIT TEST
+    complex * r_inv = new complex[4];
+    complex * s_inv = new complex[4];
+    complex * t_inv = new complex[4];
+    complex * I = new complex[4];
+    r_inv[0] = r[0].c();
+    r_inv[1] = r[2].c();
+    r_inv[2] = r[1].c();
+    r_inv[3] = r[3].c();
+
+    s_inv[0] = s[0].c();
+    s_inv[1] = s[2].c();
+    s_inv[2] = s[1].c();
+    s_inv[3] = s[3].c();
+    t_inv[0] = t[0].c();
+    t_inv[1] = t[2].c();
+    t_inv[2] = t[1].c();
+    t_inv[3] = t[3].c();
+    // Creating inverse matrix
+    I[0] = r[0]*r_inv[0] + r[1]*r_inv[2];
+    I[1] = r[0]*r_inv[1] + r[1]*r_inv[3];
+    I[2] = r[2]*r_inv[0] + r[3]*r_inv[2];
+    I[3] = r[2]*r_inv[1] + r[3]*r_inv[3];
+
+    bool testPassed = true;
+    double eps = 1e-15;
+
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; i < j; j++) {
+            if ((fabs(I[i*2+j].re) > eps) || (fabs(I[i*2+j].im) > eps)) {
+                testPassed = false;
+            }
+            if ((fabs(I[j*2+i].re) > eps) || (fabs(I[j*2+i].im) > eps)) {
+                testPassed = false;
+            }
+        }
+    }
+
+    for (int i = 0; i < 2; i++) {
+        if ((fabs(I[2*i+i].re - 1) > eps) || (fabs(I[2*i+i].im) > eps)) {
+            testPassed = false;
+        }
+    }
+    delete [] r_inv;
+    delete [] s_inv;
+    delete [] t_inv;
+    if (testPassed) {
+        cout << "PASSED: SU2 matrix is hermitian." << endl;
+        return true;
+    }
+    else {
+        cout << "FAILED: SU2 matrix is not hermitian." << endl;
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                cout << std::setw(12) << I[i*2+j] << " ";
+            }
+            cout << endl;
+        }
+        delete [] I;
+        exit(1);
+        return false;
+    }
+
 }

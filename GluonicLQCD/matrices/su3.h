@@ -10,6 +10,7 @@ class SU3
 public:
     SU3();
     ~SU3();
+//    complex *mat;
     complex mat[9];
     void print(); // TEMP, remove or comment out when program is done.
     complex get(int i, int j) { return mat[(3*i + j)]; }
@@ -42,6 +43,5 @@ inline SU3 operator*(SU3 A, SU3 B)
     A *= B;
     return A;
 }
-
 
 #endif // SU3_H

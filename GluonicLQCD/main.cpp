@@ -4,7 +4,7 @@
 #include "actions/action.h"
 #include "actions/wilsongaugeaction.h"
 #include "correlators/plaquette.h"
-#include "su3matrixgenerator.h"
+#include "matrices/su3matrixgenerator.h"
 
 #include "unittests.h"
 
@@ -36,7 +36,6 @@ int main()
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr);
     double metropolisSeed = std::time(nullptr) + 1;
-
     clock_t programStart, programEnd;
     programStart = clock();
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);

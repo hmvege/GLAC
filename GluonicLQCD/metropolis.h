@@ -5,7 +5,7 @@
 #include "actions/action.h"
 #include "correlators/correlator.h"
 #include "links.h"
-#include "su3matrixgenerator.h"
+#include "matrices/su3matrixgenerator.h"
 
 class Action;
 

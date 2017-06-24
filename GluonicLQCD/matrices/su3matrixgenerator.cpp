@@ -6,6 +6,9 @@
 #include "su3.h"
 #include "complex.h"
 
+#include "su2.h"
+#include "functions.h"
+
 // TEMP:
 #include "unittests.h"
 
@@ -20,14 +23,32 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
 {
     std::mt19937_64 gen(seed);
     std::uniform_real_distribution<double> uni_dist(-eps,eps);
+    std::uniform_real_distribution<double> uni_dist_SU2(-0.5,0.5);
     epsilon = eps;
     generator = gen;
     uniform_distribution = uni_dist;
+    SU2_uniform_distribution = uni_dist;
+    // Setting up Pauli matrices
+    sigma = new SU2[3];
+    sigma[0].mat[1].re = 1;
+    sigma[0].mat[2].re = 1;
+    sigma[1].mat[1].im = -1;
+    sigma[1].mat[2].im = 1;
+    sigma[2].mat[0].re = 1;
+    sigma[2].mat[3].re = -1;
+//    sigma1.mat[1].re = 1;
+//    sigma1.mat[2].re = 1;
+//    sigma2.mat[1].im = -1;
+//    sigma2.mat[2].im = 1;
+//    sigma3.mat[0].re = 1;
+//    sigma3.mat[3].re = -1;
+    su2Identity[0].re = 1;
+    su2Identity[3].re = 1;
 }
 
 SU3MatrixGenerator::~SU3MatrixGenerator()
 {
-
+    delete [] sigma;
 }
 
 SU3 SU3MatrixGenerator::generate()
@@ -90,6 +111,7 @@ SU3 SU3MatrixGenerator::generate()
     H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();
     H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();
 
+
 //    testOrthogonality(H,true);
 //    testNorm(0,H);
 //    testNorm(1,H);
@@ -122,6 +144,51 @@ SU3 SU3MatrixGenerator::generateIdentity()
     return H;
 }
 
+SU2 SU3MatrixGenerator::generateSU2()
+{
+    SU2 U;
+    double *r = new double[4];
+    double *x = new double[4];
+    double rNorm = 0;
+//    double eps = 0.01;
+    // Generating 4 r random numbers
+    for (int i = 0; i < 4; i++) {
+        r[i] = SU2_uniform_distribution(generator);
+    }
+    // Populating the x-vector
+    if (r[0] < 0) {
+        x[0] = - sqrt(1 - epsilon*epsilon);
+    }
+    else {
+        x[0] = sqrt(1 - epsilon*epsilon);
+    }
+    for (int i = 0; i < 3; i++) {
+        rNorm += r[i+1]*r[i+1];
+    }
+    rNorm = sqrt(rNorm);
+    for (int i = 0; i < 3; i++) {
+        x[i+1] = epsilon*r[i+1]/rNorm;
+    }
+    // Imposing unity
+    rNorm = 0;
+    for (int i = 0; i < 4; i++) {
+        rNorm += x[i]*x[i];
+    }
+    rNorm = sqrt(rNorm);
+    for (int i = 0; i < 4; i++) {
+        x[i] /= rNorm;
+    }
+    // Generating the SU2 matrix close to unity
+    U += su2Identity*x[0];
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 4; j++) {
+            U.mat[j].re += - x[i+1]*sigma[i].mat[j].im;
+            U.mat[j].im += x[i+1]*sigma[i].mat[j].re;
+        }
+    }
+    return U;
+}
+
 SU3 SU3MatrixGenerator::updateMatrix()
 {
     /*
@@ -135,58 +202,37 @@ SU3 SU3MatrixGenerator::updateMatrix()
      * 3 4 5
      * 6 7 8
      */
-    SU3 R, S, T;
-    complex * r = new complex[4];
-    complex * s = new complex[4];
-    complex * t = new complex[4];
-    // Generates 3 SU2 matrices
-    // Gets a
-    r[0].re = uniform_distribution(generator);
-    r[0].im = uniform_distribution(generator);
-    s[0].re = uniform_distribution(generator);
-    s[0].im = uniform_distribution(generator);
-    t[0].re = uniform_distribution(generator);
-    t[0].im = uniform_distribution(generator);
-    // Gets b
-    r[1].re = uniform_distribution(generator);
-    r[1].im = uniform_distribution(generator);
-    r[2] -= r[1].c();
-    r[3] = r[0].c();
-    s[1].re = uniform_distribution(generator);
-    s[1].im = uniform_distribution(generator);
-    s[2] -= s[1].c();
-    s[3] = s[0].c();
-    t[1].re = uniform_distribution(generator);
-    t[1].im = uniform_distribution(generator);
-    t[2] -= t[1].c();
-    t[3] = t[0].c();
-    // Insert into R,S and T
-    R.mat[0] = r[0];
-    R.mat[1] = r[1];
-    R.mat[3] = r[2];
-    R.mat[4] = r[3];
+    SU3 X, R, S, T;
+    SU2 r,s,t;
+    // Generates SU2 matrices
+    r = generateSU2();
+    s = generateSU2();
+    t = generateSU2();
+    // Populates R,S,T matrices
+    R.mat[0] = r.mat[0];
+    R.mat[1] = r.mat[1];
+    R.mat[3] = r.mat[2];
+    R.mat[4] = r.mat[3];
     R.mat[8].re = 1;
-    S.mat[0] = s[0];
-    S.mat[2] = s[1];
-    S.mat[6] = s[2];
-    S.mat[8] = s[3];
+    S.mat[0] = s.mat[0];
+    S.mat[2] = s.mat[1];
+    S.mat[6] = s.mat[2];
+    S.mat[8] = s.mat[3];
     S.mat[4].re = 1;
-    T.mat[4] = t[0];
-    T.mat[5] = t[1];
-    T.mat[7] = t[2];
-    T.mat[8] = t[3];
+    T.mat[4] = t.mat[0];
+    T.mat[5] = t.mat[1];
+    T.mat[7] = t.mat[2];
+    T.mat[8] = t.mat[3];
     T.mat[0].re = 1;
-    // Returns product
-
-    complex * I = new complex[4];
-    I[0] =
-
-    delete [] r;
-    delete [] s;
-    delete [] t;
-    cout << "X=RST: THIS METHOD HAS NOT BEEN UNIT TESTED; SO MAY NOT BE CORRECT!!" << endl;
-    exit(1);
-    return R*S*T;
+    // Creates the return matrix, which is close to unity
+    X = R*S*T;
+    // Equal probability of returning X and X inverse
+    if (SU2_uniform_distribution(generator) < 0) {
+        return inverse(X);
+    }
+    else {
+        return X;
+    }
 }
 
 void SU3MatrixGenerator::generateHermitian()
