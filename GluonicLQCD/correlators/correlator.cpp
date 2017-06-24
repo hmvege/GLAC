@@ -1,10 +1,11 @@
 #include "correlator.h"
 #include <iostream>
 
-Correlator::Correlator(int N)
+Correlator::Correlator(int N, int N_T)
 {
     m_N = N;
-    m_latticeSize = N*N*N*N;
+    m_N_T = N_T;
+    m_latticeSize = N*N*N*N_T;
 }
 
 Correlator::~Correlator()

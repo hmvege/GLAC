@@ -8,9 +8,10 @@
 using std::cout;
 using std::endl;
 
-Action::Action(int N)
+Action::Action(int N, int N_T)
 {
     m_N = N;
+    m_N_T = N_T;
 }
 
 Action::~Action()

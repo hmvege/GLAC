@@ -12,22 +12,23 @@ class Action;
 class Metropolis
 {
 private:
-    int N;
-    int NCf;
-    int NCor;
-    int NTherm;
+    int m_N;
+    int m_N_T;
+    int m_NCf;
+    int m_NCor;
+    int m_NTherm;
     int m_nUpdates = 10; // N updates before calculating the action, as that is costly
-    double epsilon;
-    double a; // Lattice spacing
-    double L; // Lattice size
+    double m_epsilon;
+    double m_a; // Lattice spacing
+    double m_L; // Lattice size
     // For handling the acceptance rate
     int acceptanceCounter = 0;
     double getAcceptanceRate();
 
     // Lattice constants
-    int latticeSize;
-    Links * lattice;
-    SU3 updatedMatrix;
+    int m_latticeSize;
+    Links * m_lattice;
+    SU3 m_updatedMatrix;
 
     // Variables used to perform statistics
     double * Gamma;
@@ -41,9 +42,9 @@ private:
 //    double deltaE;
 
     // Storing the action as a pointer
-    Action *S = nullptr;
-    double deltaS;
-    double expDeltaS;
+    Action *m_S = nullptr;
+    double m_deltaS;
+    double m_expDeltaS;
 
     // For sampling the system(lattice)
     void sampleSystem();
@@ -53,7 +54,7 @@ private:
 
     // Function for updating our system using the Metropolis algorithm
     void update();
-    void updateLink(int i, int mu);
+    void updateLink(int latticeIndex, int mu);
 
     // SU3 generator
     SU3MatrixGenerator *m_SU3Generator;
@@ -62,7 +63,7 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 public:
-    Metropolis(int new_N, int new_NCf, int new_NCor, int NTherm, double new_a, double new_L, double seed, Correlator *new_correlator, Action *new_S);
+    Metropolis(int N, int N_T, int NCf, int NCor, int Therm, double a, double L, double seed, Correlator *correlator, Action *S);
     ~Metropolis();
     void latticeSetup(SU3MatrixGenerator *SU3Generator);
     void runMetropolis();
@@ -74,17 +75,19 @@ public:
     void loadFieldConfiguration(const char *filename);
 
     // Setters
-    void setAction(Action *newS) { S = newS; }
+    void setAction(Action *S) { m_S = S; }
     void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
-    void setN(int new_N) { N = new_N; }
-    void setNCf(int new_NCf) { NCf = new_NCf; }
-    void setEpsilon(double new_epsilon) { epsilon = new_epsilon; }
+    void setN(int N) { m_N = N; }
+    void setNT(int N_T) { m_N_T = N_T; }
+    void setNCf(int NCf) { m_NCf = NCf; }
+    void setEpsilon(double epsilon) { m_epsilon = epsilon; }
     void setUpdateFrequency(int nUpdates) { m_nUpdates = nUpdates; }
 
     // Getters
-    int getN() { return N; }
-    int getNCf() { return NCf; }
-    int getEpsilon() { return epsilon; }
+    int getN() { return m_N; }
+    int getNT() { return m_N; }
+    int getNCf() { return m_NCf; }
+    int getEpsilon() { return m_epsilon; }
 
     // Printers
     void printEnergies();

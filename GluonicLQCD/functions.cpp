@@ -34,12 +34,12 @@ SU2 SU2Inverse(SU2 U)
     return UInverse;
 }
 
-int stapleIndex(int i, int j, int k, int l, int N)
+int stapleIndex(int i, int j, int k, int l, int N, int N_T)
 {
     /*
      * Unit vector for lorentz indexes
      */
-    return index((i+N) % N, (j+N) % N, (k+N) % N, (l+N) % N, N);;
+    return index((i+N) % N, (j+N) % N, (k+N) % N, (l+N_T) % N_T, N);;
 }
 
 void lorentzIndex(int mu, int *lorentzIndices)
