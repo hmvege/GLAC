@@ -3,6 +3,7 @@
 
 # Outputfiles
 output/*
+*.txt
 
 # Build files
 build/
