@@ -5,8 +5,6 @@
 
 class SU3
 {
-//private:
-//    static int matLength = 9;
 public:
     SU3();
     ~SU3();

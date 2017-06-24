@@ -72,7 +72,8 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
     {
         for (int mu = 0; mu < 4; mu++)
         {
-            lattice[i].U[mu] = m_SU3Generator->generate();
+//            lattice[i].U[mu] = m_SU3Generator->generate();
+            lattice[i].U[mu] = m_SU3Generator->updateMatrix();
 //            lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
         }
     }
@@ -108,7 +109,7 @@ void Metropolis::update()
                             updateLink(index(i, j, k, l, N), mu);
                             deltaS = S->getDeltaAction(lattice, updatedMatrix, i, j, k, l, mu);
                             expDeltaS = exp(-deltaS);
-                            if (m_uniform_distribution(m_generator) < expDeltaS)
+                            if (m_uniform_distribution(m_generator) <= expDeltaS)
                             {
                                 lattice[index(i, j, k, l, N)].U[mu].copy(updatedMatrix);
                             }
@@ -224,28 +225,6 @@ void Metropolis::writeDataToFile(const char *filename)
     cout << filename << " written" << endl;
 }
 
-//void Metropolis::writeStatisticsToFile(const char *filename)//, double * dE, double * averagedGamma, double * averagedGammaSquared, int acceptanceCounter)
-//{
-    /*
-     * Writes statistics to file about:
-     * acceptanceCounter:   the number of accepted configurations
-     * NCor:                number of times between each sampling of the functional
-     * NCf:                 number of paths we are looking at
-     * t=n*a:               points on lattice
-     * dE:                  energy for a given point on lattice
-     * dE error:            the error in the dE measurment
-     * variance:            Var(G)
-     * standardDeviation:   std(G)
-     */
-//    std::ofstream file;
-//    file.open(filename);
-//    file << "acceptanceCounter " << double(acceptanceCounter)/double(NCf*NCor*latticeSize*4) << endl;
-//    file << "NCor " << NCor << endl;
-//    file << "NCf " << NCf << endl;
-//    file << "NTherm " << NTherm << endl;
-//    file.close();
-//    cout << filename << " written" << endl;
-//}
 
 void Metropolis::printAcceptanceRate()
 {

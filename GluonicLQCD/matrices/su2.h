@@ -8,7 +8,6 @@ class SU2
 public:
     SU2();
     ~SU2();
-
 //    complex *mat;
     complex mat[4];
     void print(); // TEMP, remove or comment out when program is done.
@@ -19,7 +18,6 @@ public:
     void conjugate();
 //    SU2 inverse();
     complex &operator[](int i) { return mat[i]; }
-
     SU2 &operator+=(SU2 B);
     SU2 &operator-=(SU2 B);
     SU2 &operator*=(SU2 B);

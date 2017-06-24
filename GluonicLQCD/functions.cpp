@@ -6,10 +6,10 @@ int index(int i, int j, int k, int l, int N)
     /*
      * Function for contigious memory allocation.
      */
-    if ((i < 0) || (j < 0) || (k < 0) || (l < 0)) { //TEST FOR ENSURING CORRECT INDICES
-        std::cout << "Index error!" << std::endl;
-        exit(1);
-    }
+//    if ((i < 0) || (j < 0) || (k < 0) || (l < 0) || (i > N) || (j > N) || (k > N) || (l > N)) { //TEST FOR ENSURING CORRECT INDICES
+//        std::cout << "Index error!" << std::endl;
+//        exit(1);
+//    }
     return (N*(N*(N*i + j) + k) + l);
 }
 
@@ -49,7 +49,7 @@ void lorentzIndex(int mu, int *lorentzIndices)
      */
     for (int i = 0; i < 4; i++)
     {
-        if (mu==i)
+        if (i==mu)
         {
             lorentzIndices[i] = 1;
         }
