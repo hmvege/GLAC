@@ -16,11 +16,11 @@ using std::endl;
  * [x] Add plaquette correlator
  * [x] Make actions more general!! Aka, create a Wilson action
  * [x] Change to updating random matrices by X=RST
- * [ ] Fix bug that makes me get negative and small correlators
+ * [x] Change to such that time dimension is 2N
+ * [ ] Fix bug that makes me get negative and small correlators - convergence wrong?
  * [ ] Switch to method syntax, foo --> m_foo
  * [ ] Create method for saving lattice configuration
  * [ ] Create method for loading lattice configuration
- * [ ] Change to such that time dimension is 2N
  * [ ] Change name of project to PureGaugeLQCD
  */
 

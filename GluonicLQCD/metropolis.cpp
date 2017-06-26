@@ -16,7 +16,7 @@
 using std::cout;
 using std::endl;
 
-Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int Therm, double a, double L, double seed, Correlator *correlator, Action *S)
+Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S)
 {
     /*
      * Class for calculating correlators using the Metropolis algorithm.
@@ -27,7 +27,7 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int Therm, double a, d
     m_latticeSize = m_N*m_N*m_N*m_N_T;
     m_NCf = NCf; // Number of configurations to run for
     m_NCor = NCor;
-    m_NTherm = Therm;
+    m_NTherm = NTherm;
     m_a = a;
     m_L = L;
     setAction(S);
@@ -73,9 +73,9 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
     {
         for (int mu = 0; mu < 4; mu++)
         {
-//            lattice[i].U[mu] = m_SU3Generator->generate();
+//            m_lattice[i].U[mu] = m_SU3Generator->generate();
             m_lattice[i].U[mu] = m_SU3Generator->updateMatrix();
-//            lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
+//            m_lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
         }
     }
 }
@@ -107,8 +107,12 @@ void Metropolis::update()
                         for (int n = 0; n < m_nUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(index(i, j, k, l, m_N), mu);
+//                            m_updatedMatrix.print();
                             m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, i, j, k, l, mu);
                             m_expDeltaS = exp(-m_deltaS);
+//                            cout << m_deltaS << endl;
+//                            cout << m_expDeltaS << endl;
+//                            exit(1);
                             if (m_uniform_distribution(m_generator) <= m_expDeltaS)
                             {
                                 m_lattice[index(i, j, k, l, m_N)].U[mu].copy(m_updatedMatrix);

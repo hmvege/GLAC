@@ -30,6 +30,7 @@ double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int 
     {
         S += tr.mat[i*3+i].re;
     }
+//    std::cout << S << std::endl;
     return -m_beta/3.0*S; // Should be N=3 as in the Gauge symmetry?
 }
 

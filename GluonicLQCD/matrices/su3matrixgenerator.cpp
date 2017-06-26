@@ -229,8 +229,7 @@ SU3 SU3MatrixGenerator::updateMatrix()
     // Equal probability of returning X and X inverse
     if (SU2_uniform_distribution(generator) < 0) {
         return inverse(X);
-    }
-    else {
+    } else {
         return X;
     }
 }
