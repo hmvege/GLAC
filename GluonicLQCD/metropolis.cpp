@@ -103,17 +103,15 @@ void Metropolis::update()
             for (int k = 0; k < m_N; k++) {
                 for (int l = 0; l < m_N_T; l++) {
                     for (int mu = 0; mu < 4; mu++) {
-                        m_S->computeStaple(m_lattice,i,j,k,l,mu);
+                        m_S->computeStaple(m_lattice, i, j, k, l, mu);
                         for (int n = 0; n < m_nUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(index(i, j, k, l, m_N), mu);
 //                            m_updatedMatrix.print();
                             m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, i, j, k, l, mu);
                             m_expDeltaS = exp(-m_deltaS);
-//                            cout << m_deltaS << endl;
-//                            cout << m_expDeltaS << endl;
-//                            exit(1);
-                            if (m_uniform_distribution(m_generator) <= m_expDeltaS)
+//                            cout << "exp(deltaS) = " <<  m_expDeltaS << endl;
+                            if (m_uniform_distribution(m_generator) < m_expDeltaS)
                             {
                                 m_lattice[index(i, j, k, l, m_N)].U[mu].copy(m_updatedMatrix);
                             }
@@ -132,8 +130,8 @@ void Metropolis::update()
 
 void Metropolis::runMetropolis()
 {
-    cout << "Pre-thermialization correlator: " << m_correlator->calculate(m_lattice) << endl;
-    writeConfigurationToFile();
+    cout << "Pre-thermialization correlator:  " << m_correlator->calculate(m_lattice) << endl;
+//    writeConfigurationToFile();
 //    exit(1);
     // Running thermalization
     for (int i = 0; i < m_NTherm * m_NCor; i++)
@@ -141,8 +139,7 @@ void Metropolis::runMetropolis()
         update();
     }
     cout << "Post-thermialization correlator: " << m_correlator->calculate(m_lattice) << endl;
-    cout << "Termalization complete. Acceptance rate: " << getAcceptanceRate() << endl;
-//    exit(1);
+    cout << "Termalization complete. Acceptance rate: " << acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     acceptanceCounter = 0;
     // Main part of algorithm
@@ -153,9 +150,8 @@ void Metropolis::runMetropolis()
             update();
         }
         Gamma[alpha] = m_correlator->calculate(m_lattice);
-//        cout << Gamma[alpha] <<endl;|
     }
-    cout << "Metropolis completed, line 126" << endl;
+    cout << "Metropolis completed." << endl;
     cout << m_correlator->calculate(m_lattice) << endl;
     writeConfigurationToFile();
 }
@@ -175,22 +171,26 @@ void Metropolis::getStatistics()
      */
 //    deltaE          = new double[N];
 //    deltaE_std      = new double[N];
-
-    for (int alpha = 0; alpha < m_NCf; alpha++)
-    {
-        GammaSquared[alpha] = Gamma[alpha]*Gamma[alpha];
-    }
-
+    double averagedGammaSquared = 0;
+//    for (int alpha = 0; alpha < m_NCf; alpha++)
+//    {
+//        GammaSquared[alpha] = Gamma[alpha]*Gamma[alpha];
+//    }
     // Performing an average over the Monte Carlo obtained values
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
         averagedGamma += Gamma[alpha];
-        varianceGamma += (GammaSquared[alpha] - Gamma[alpha]*Gamma[alpha])/double(m_NCf);
+        averagedGammaSquared += Gamma[alpha]*Gamma[alpha];
     }
-    averagedGamma  /= double(m_NCf);
-    varianceGamma  /= double(m_NCf);
+//    for (int alpha = 0; alpha < m_NCf; alpha++)
+//    {
+//        varianceGamma += (GammaSquared[alpha] - Gamma[alpha]*Gamma[alpha])/double(m_NCf);
+//    }
+    averagedGamma /= double(m_NCf);
+    averagedGammaSquared /= double(m_NCf);
+    varianceGamma = (averagedGammaSquared - averagedGamma*averagedGamma)/double(m_NCf);
     stdGamma = sqrt(varianceGamma);
-    cout << averagedGamma << " +/- " << stdGamma << " " << varianceGamma << endl;
+    cout << averagedGamma << ", std = " << stdGamma << ", variance = " << varianceGamma << endl;
     // Getting change in energy & calculating variance & standard deviation of G
 //    for (int n = 0; n < N; n++)
 //    {

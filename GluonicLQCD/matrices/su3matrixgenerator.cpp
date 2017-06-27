@@ -27,7 +27,7 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     epsilon = eps;
     generator = gen;
     uniform_distribution = uni_dist;
-    SU2_uniform_distribution = uni_dist;
+    SU2_uniform_distribution = uni_dist_SU2;
     // Setting up Pauli matrices
     sigma = new SU2[3];
     sigma[0].mat[1].re = 1;
