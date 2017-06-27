@@ -57,7 +57,7 @@ private:
     void updateLink(int latticeIndex, int mu);
 
     // SU3 generator
-    SU3MatrixGenerator *m_SU3Generator;
+    SU3MatrixGenerator *m_SU3Generator = nullptr;
 
     // RNGs
     std::mt19937_64 m_generator;
