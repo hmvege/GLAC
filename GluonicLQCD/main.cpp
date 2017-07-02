@@ -19,6 +19,7 @@ using std::endl;
  * [x] Change to such that time dimension is 2N
  * [ ] Fix bug that makes me get negative and small correlators - convergence wrong?
  * [ ] Switch to method syntax, foo --> m_foo
+ * [ ] Check that the lattice is gauge invariant: M^-1 * U * M
  * [ ] Create method for saving lattice configuration
  * [ ] Create method for loading lattice configuration
  * [ ] Change name of project to PureGaugeLQCD

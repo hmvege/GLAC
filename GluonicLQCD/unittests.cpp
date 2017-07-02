@@ -2,6 +2,9 @@
 #include <iomanip>
 #include <cmath>
 #include "matrices/su3.h"
+#include "matrices/su3matrixgenerator.h"
+#include "correlators/plaquette.h"
+#include "links.h"
 #include "complex.h"
 #include "functions.h"
 
@@ -267,3 +270,44 @@ bool SU2UnitTest(complex * r, complex * s, complex * t)
     }
 
 }
+
+bool checkGauge(Links *lattice, int N, SU3MatrixGenerator *SU3Generator) {
+    /*
+     * Checking the gauge invariance of the lattice.
+     */
+    bool testPassed = true;
+    SU3 preM;
+    SU3 M;
+    SU3 randomU;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < 4; j++) {
+            randomU.copy(SU3Generator->generate());
+            M.copy(lattice[i].U[j]);
+            preM.copy(M);
+            M = inverse(randomU)*preM*randomU;
+            for (int k = 0; k < 9; k++) {
+                if (M.mat[k] != preM) {
+                    testPassed = false;
+                    cout << "Error in gauge invariance!" << endl;
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

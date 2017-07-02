@@ -109,9 +109,9 @@ void Metropolis::update()
                             updateLink(index(i, j, k, l, m_N), mu);
 //                            m_updatedMatrix.print();
                             m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, i, j, k, l, mu);
-                            m_expDeltaS = exp(-m_deltaS);
+//                            m_expDeltaS = exp(-m_deltaS);
 //                            cout << "exp(deltaS) = " <<  m_expDeltaS << endl;
-                            if (m_uniform_distribution(m_generator) < m_expDeltaS)
+                            if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             {
                                 m_lattice[index(i, j, k, l, m_N)].U[mu].copy(m_updatedMatrix);
                             }

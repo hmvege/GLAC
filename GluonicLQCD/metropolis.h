@@ -44,7 +44,6 @@ private:
     // Storing the action as a pointer
     Action *m_S = nullptr;
     double m_deltaS;
-    double m_expDeltaS;
 
     // For sampling the system(lattice)
     void sampleSystem();
