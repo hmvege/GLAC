@@ -26,7 +26,7 @@ double Plaquette::calculate(Links *lattice)
     for (int i = 0; i < m_N; i++) {
         for (int j = 0; j < m_N; j++) {
             for (int k = 0; k < m_N; k++) {
-                for (int l = 0; l < 2*m_N; l++) {
+                for (int l = 0; l < m_N_T; l++) {
                     for (int mu = 0; mu < 4; mu++) {
                         for (int nu = mu+1; nu < 4; nu++) {
                             lorentzIndex(mu,muIndex);

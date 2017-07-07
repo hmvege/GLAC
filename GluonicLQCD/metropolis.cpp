@@ -133,11 +133,8 @@ void Metropolis::update()
 
 void Metropolis::runMetropolis()
 {
+    loadFieldConfiguration("conf0.bin");
     cout << "Pre-thermialization correlator:  " << m_correlator->calculate(m_lattice) << endl;
-    writeConfigurationToFile("configs");
-    cout << "good"<<endl;
-    loadFieldConfiguration("configs");
-    cout << "Post-writing-loading correlator:  " << m_correlator->calculate(m_lattice) << endl;
     exit(1);
     // Running thermalization
     for (int i = 0; i < m_NTherm * m_NCor; i++)
