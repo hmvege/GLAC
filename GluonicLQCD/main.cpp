@@ -48,6 +48,7 @@ int main()
     pureGauge.runMetropolis();
     pureGauge.getStatistics();
     pureGauge.printAcceptanceRate();
+    pureGauge.writeConfigurationToFile("configs");
     pureGauge.writeDataToFile("../output/pureGauge_data.txt");
 
     programEnd = clock();

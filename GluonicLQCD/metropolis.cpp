@@ -13,6 +13,9 @@
 //TEMP
 #include "unittests.h"
 
+#include <cstdio>
+#include <cstdlib>
+
 using std::cout;
 using std::endl;
 
@@ -73,8 +76,8 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
     {
         for (int mu = 0; mu < 4; mu++)
         {
-//            m_lattice[i].U[mu] = m_SU3Generator->generate();
-            m_lattice[i].U[mu] = m_SU3Generator->updateMatrix();
+//            m_lattice[i].U[mu] = m_SU3Generator->generateRandom();
+            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
 //            m_lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
         }
     }
@@ -88,8 +91,8 @@ void Metropolis::updateLink(int latticeIndex, int mu)
      *  i   : spacetime index
      *  mu  : Lorentz index
      */
-//    SU3 X = m_SU3Generator->generate(); // Generates a random matrix, SHOULD BE MODIFIED TO X = RST, page 83 Gattinger & Lang
-    SU3 X = m_SU3Generator->updateMatrix();
+//    SU3 X = m_SU3Generator->generateRandom(); // Generates a random matrix, SHOULD BE MODIFIED TO X = RST, page 83 Gattinger & Lang
+    SU3 X = m_SU3Generator->generateRST();
     m_updatedMatrix = X*m_lattice[latticeIndex].U[mu];
 }
 
@@ -131,12 +134,17 @@ void Metropolis::update()
 void Metropolis::runMetropolis()
 {
     cout << "Pre-thermialization correlator:  " << m_correlator->calculate(m_lattice) << endl;
-//    writeConfigurationToFile();
-//    exit(1);
+    writeConfigurationToFile("configs");
+    cout << "good"<<endl;
+    loadFieldConfiguration("configs");
+    cout << "Post-writing-loading correlator:  " << m_correlator->calculate(m_lattice) << endl;
+    exit(1);
     // Running thermalization
     for (int i = 0; i < m_NTherm * m_NCor; i++)
     {
+        // Print correlator every somehting
         update();
+        cout << m_correlator->calculate(m_lattice) << endl;
     }
     cout << "Post-thermialization correlator: " << m_correlator->calculate(m_lattice) << endl;
     cout << "Termalization complete. Acceptance rate: " << acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
@@ -153,7 +161,6 @@ void Metropolis::runMetropolis()
     }
     cout << "Metropolis completed." << endl;
     cout << m_correlator->calculate(m_lattice) << endl;
-    writeConfigurationToFile();
 }
 
 void Metropolis::sampleSystem()
@@ -236,30 +243,40 @@ void Metropolis::printAcceptanceRate()
     printf("Acceptancerate: %.16f \n", getAcceptanceRate()); // Times 4 from the Lorentz indices
 }
 
-void Metropolis::writeConfigurationToFile()
+void Metropolis::writeConfigurationToFile(std::string filename)
 {
-    std::ofstream file;
-    file.open("../output/configs.txt");
-    for (int i = 0; i < m_N; i++) {
-        for (int j = 0; j < m_N; j++) {
-            for (int k = 0; k < m_N; k++) {
-                for (int l = 0; l < m_N_T; l++) {
+//    std::ofstream file("../output/" + filename, std::ofstream::binary); // Old c++ method
+//    for (int t = 0; t < m_N_T; t++) {
+//        for (int z = 0; z < m_N; z++) {
+//            for (int y = 0; y < m_N; y++) {
+//                for (int x = 0; x < m_N; x++) {
+//                    for (int mu = 0; mu < 4; mu++) {
+//                        file.write(reinterpret_cast<const char*> (&m_lattice[index(x,y,z,t,m_N)].U[mu]), sizeof(SU3));
+//                    }
+//                    file << endl;
+//                }
+//                file << endl;
+//            }
+//            file << endl;
+//        }
+//        file << endl;
+//    }
+//    file.close();
+    FILE *file; // C method
+    file = fopen(filename.c_str(), "wb");
+    for (int t = 0; t < m_N_T; t++) {
+        for (int z = 0; z < m_N; z++) {
+            for (int y = 0; y < m_N; y++) {
+                for (int x = 0; x < m_N; x++) {
                     for (int mu = 0; mu < 4; mu++) {
-                        for (int i_x = 0; i_x < 9; i_x++) {
-                            file << m_lattice[index(i,j,k,l,m_N)].U[mu].mat[i_x].re << " " << m_lattice[index(i,j,k,l,m_N)].U[mu].mat[i_x].im << "      ";
-                        }
-                        file << endl;
+                        fwrite(&m_lattice[index(x,y,z,t,m_N)].U[mu],sizeof(SU3),1,file);
                     }
-                    file << endl;
                 }
-                file << endl;
             }
-            file << endl;
         }
-        file << endl;
     }
-    file.close();
-    cout << "configs.txt written" << endl;
+    fclose(file);
+    cout << "../output/" + filename  + " written" << endl;
 }
 
 double Metropolis::getAcceptanceRate()
@@ -267,12 +284,24 @@ double Metropolis::getAcceptanceRate()
     return double(acceptanceCounter)/double(m_NCf*m_NCor*m_nUpdates*m_latticeSize*4);
 }
 
-void Metropolis::loadFieldConfiguration(const char *filename)
+void Metropolis::loadFieldConfiguration(std::string filename)
 {
     /*
      * Method for loading a field configuration and running the plaquettes on them.
      */
-    std::ifstream file;
-    file.open(filename);
-    file.close();
+    FILE *file; // C method
+    file = fopen(filename.c_str(), "rb");
+    for (int t = 0; t < m_N_T; t++) {
+        for (int z = 0; z < m_N; z++) {
+            for (int y = 0; y < m_N; y++) {
+                for (int x = 0; x < m_N; x++) {
+                    for (int mu = 0; mu < 4; mu++) {
+                        fread(&m_lattice[index(x,y,z,t,m_N)].U[mu],sizeof(SU3),1,file);
+                    }
+                }
+            }
+        }
+    }
+    fclose(file);
+    cout << "../input/" + filename  + " loaded" << endl;
 }

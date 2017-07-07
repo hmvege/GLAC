@@ -70,8 +70,8 @@ public:
     // Data outputters
 //    void writeStatisticsToFile(const char *filename);
     void writeDataToFile(const char *filename);
-    void writeConfigurationToFile();
-    void loadFieldConfiguration(const char *filename);
+    void writeConfigurationToFile(std::__1::string filename);
+    void loadFieldConfiguration(std::__1::string filename);
 
     // Setters
     void setAction(Action *S) { m_S = S; }

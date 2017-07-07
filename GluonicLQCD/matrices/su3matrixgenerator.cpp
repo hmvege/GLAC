@@ -51,7 +51,7 @@ SU3MatrixGenerator::~SU3MatrixGenerator()
     delete [] sigma;
 }
 
-SU3 SU3MatrixGenerator::generate()
+SU3 SU3MatrixGenerator::generateRandom()
 {
     /*
      * Generatores a random SU3 matrix.
@@ -189,7 +189,7 @@ SU2 SU3MatrixGenerator::generateSU2()
     return U;
 }
 
-SU3 SU3MatrixGenerator::updateMatrix()
+SU3 SU3MatrixGenerator::generateRST()
 {
     /*
      * Generatores a random SU3 matrix close to unity.

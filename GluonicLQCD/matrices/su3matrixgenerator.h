@@ -20,9 +20,9 @@ private:
 public:
     SU3MatrixGenerator(double eps, double seed);
     ~SU3MatrixGenerator();
-    SU3 generate();
+    SU3 generateRandom();
     SU3 generateIdentity();
-    SU3 updateMatrix();
+    SU3 generateRST();
     void generateHermitian();
 
 

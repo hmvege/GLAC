@@ -42,12 +42,17 @@ void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l
         if (mu == nu) continue;
         lorentzIndex(mu,muIndex);
         lorentzIndex(nu,nuIndex);
-        m_staple += lattice[stapleIndex(        i+muIndex[0],           j+muIndex[1],           k+muIndex[2],           l+muIndex[3],           m_N, m_N_T)].U[nu] // Gattinger using verbatim staple definition
-                *inverse(lattice[stapleIndex(   i+muIndex[0]+nuIndex[0],j+muIndex[1]+nuIndex[1],k+muIndex[2]+nuIndex[2],l+muIndex[3]+nuIndex[3],m_N, m_N_T)].U[mu])
-                *inverse(lattice[stapleIndex(   i+nuIndex[0],           j+nuIndex[1],           k+nuIndex[2],           l+nuIndex[3],           m_N, m_N_T)].U[nu])
-                + inverse(lattice[stapleIndex(  i+muIndex[0],           j+muIndex[1],           k+muIndex[2],           l+muIndex[3],           m_N, m_N_T)].U[nu])
-                *inverse(lattice[stapleIndex(   i+muIndex[0]-nuIndex[0],j+muIndex[1]-nuIndex[1],k+muIndex[2]-nuIndex[2],l+muIndex[3]-nuIndex[3],m_N, m_N_T)].U[mu])
-                *lattice[stapleIndex(           i-nuIndex[0],           j-nuIndex[1],           k-nuIndex[2],           l-nuIndex[3],           m_N, m_N_T)].U[nu];
+        m_staple += lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N, m_N_T)].U[nu] // Gattinger using verbatim staple definition
+                *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N, m_N_T)].U[mu])
+                *inverse(lattice[stapleIndex(i,j,k,l,m_N, m_N_T)].U[nu])
+                + inverse(lattice[stapleIndex(i+muIndex[0]-nuIndex[0],j+muIndex[1]-nuIndex[1],k+muIndex[2]-nuIndex[2],l+muIndex[3]-nuIndex[3],m_N, m_N_T)].U[nu])
+                *inverse(lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N, m_N_T)].U[mu])
+                *lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N, m_N_T)].U[nu];
+//                *inverse(lattice[stapleIndex(   i+muIndex[0]+nuIndex[0],j+muIndex[1]+nuIndex[1],k+muIndex[2]+nuIndex[2],l+muIndex[3]+nuIndex[3],m_N, m_N_T)].U[mu])
+//                *inverse(lattice[stapleIndex(   i+nuIndex[0],           j+nuIndex[1],           k+nuIndex[2],           l+nuIndex[3],           m_N, m_N_T)].U[nu])
+//                + inverse(lattice[stapleIndex(  i+muIndex[0],           j+muIndex[1],           k+muIndex[2],           l+muIndex[3],           m_N, m_N_T)].U[nu])
+//                *inverse(lattice[stapleIndex(   i+muIndex[0]-nuIndex[0],j+muIndex[1]-nuIndex[1],k+muIndex[2]-nuIndex[2],l+muIndex[3]-nuIndex[3],m_N, m_N_T)].U[mu])
+//                *lattice[stapleIndex(           i-nuIndex[0],           j-nuIndex[1],           k-nuIndex[2],           l-nuIndex[3],           m_N, m_N_T)].U[nu];
     }
 //    for (int i = 0; i < 9; i++) { m_staple.mat[i] /= 6; }
 //    staple.print();

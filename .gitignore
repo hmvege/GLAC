@@ -1,9 +1,12 @@
 # OS Junk
 .DS_Store
 
-# Outputfiles
+# Output files
 output/*
 *.txt
+
+# Input files
+input/*
 
 # Build files
 build/
