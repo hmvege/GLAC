@@ -253,8 +253,7 @@ bool SU2UnitTest(complex * r, complex * s, complex * t)
     if (testPassed) {
         cout << "PASSED: SU2 matrix is hermitian." << endl;
         return true;
-    }
-    else {
+    } else {
         cout << "FAILED: SU2 matrix is not hermitian." << endl;
         for (int i = 0; i < 2; i++)
         {
@@ -268,7 +267,16 @@ bool SU2UnitTest(complex * r, complex * s, complex * t)
         exit(1);
         return false;
     }
+}
 
+void checkDeterminant(SU3 U) {
+    double eps = 1e-16;
+    complex det = SU3Determinant(U);
+    if (((det.re - 1) < eps) && (det.im < eps)) {
+        cout << "PASSED: the determinant of the SU3 matrix is 1." << endl;
+    } else {
+        cout << "FAILED: the determinant of the SU3 matrix differs from 1." << endl;
+    }
 }
 
 //bool checkGauge(Links *lattice, int N, SU3MatrixGenerator *SU3Generator) {

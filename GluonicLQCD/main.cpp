@@ -17,12 +17,12 @@ using std::endl;
  * [x] Make actions more general!! Aka, create a Wilson action
  * [x] Change to updating random matrices by X=RST
  * [x] Change to such that time dimension is 2N
- * [ ] Fix bug that makes me get negative and small correlators - convergence wrong?
+ * [x] Add determinant for SU3 matrices
+ * [x] Create method for saving lattice configuration
+ * [x] Create method for loading lattice configuration
+ * [ ] Fix bug in matrices
  * [ ] Switch to method syntax, foo --> m_foo
- * [ ] Check that the lattice is gauge invariant: M^-1 * U * M
- * [ ] Create method for saving lattice configuration
- * [ ] Create method for loading lattice configuration
- * [ ] Change name of project to PureGaugeLQCD
+ * [ ] Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
  */
 
 int main()
@@ -48,7 +48,7 @@ int main()
     pureGauge.runMetropolis();
     pureGauge.getStatistics();
     pureGauge.printAcceptanceRate();
-    pureGauge.writeConfigurationToFile("configs");
+    pureGauge.writeConfigurationToFile("configs2");
     pureGauge.writeDataToFile("../output/pureGauge_data.txt");
 
     programEnd = clock();

@@ -59,3 +59,12 @@ void lorentzIndex(int mu, int *lorentzIndices)
         }
     }
 }
+
+complex SU3Determinant(SU3 U)
+{
+    complex det;
+    det += U[2]*(U[3]*U[7] - U[6]*U[4]);
+    det += U[5]*(U[6]*U[1] - U[0]*U[7]);
+    det += U[8]*(U[0]*U[4] - U[3]*U[1]);
+    return det;
+}

@@ -36,12 +36,6 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     sigma[1].mat[2].im = 1;
     sigma[2].mat[0].re = 1;
     sigma[2].mat[3].re = -1;
-//    sigma1.mat[1].re = 1;
-//    sigma1.mat[2].re = 1;
-//    sigma2.mat[1].im = -1;
-//    sigma2.mat[2].im = 1;
-//    sigma3.mat[0].re = 1;
-//    sigma3.mat[3].re = -1;
     su2Identity[0].re = 1;
     su2Identity[3].re = 1;
 }
@@ -62,10 +56,6 @@ SU3 SU3MatrixGenerator::generateRandom()
      * 6 7 8
      */
     SU3 H;
-//    for (int i = 0; i < 3; i++)
-//    {
-//        H[3*i + i].re = 1;
-//    }
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 2; j++)
@@ -110,8 +100,6 @@ SU3 SU3MatrixGenerator::generateRandom()
     H[2] = H[3].c()*H[7].c() - H[6].c()*H[4].c();
     H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();
     H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();
-
-
 //    testOrthogonality(H,true);
 //    testNorm(0,H);
 //    testNorm(1,H);

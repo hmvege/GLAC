@@ -133,15 +133,18 @@ void Metropolis::update()
 
 void Metropolis::runMetropolis()
 {
-    loadFieldConfiguration("conf0.bin");
+//    loadFieldConfiguration("conf0.bin");
     cout << "Pre-thermialization correlator:  " << m_correlator->calculate(m_lattice) << endl;
-    exit(1);
     // Running thermalization
     for (int i = 0; i < m_NTherm * m_NCor; i++)
     {
         // Print correlator every somehting
         update();
         cout << m_correlator->calculate(m_lattice) << endl;
+        if ((i+1) % 10 == 0) { // TEMP!!
+            cout << "Exiting in metropolis.cpp, line 145" << endl;
+            exit(1);
+        }
     }
     cout << "Post-thermialization correlator: " << m_correlator->calculate(m_lattice) << endl;
     cout << "Termalization complete. Acceptance rate: " << acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
@@ -260,7 +263,7 @@ void Metropolis::writeConfigurationToFile(std::string filename)
 //    }
 //    file.close();
     FILE *file; // C method
-    file = fopen(filename.c_str(), "wb");
+    file = fopen((m_outputFolder+filename).c_str(), "wb");
     for (int t = 0; t < m_N_T; t++) {
         for (int z = 0; z < m_N; z++) {
             for (int y = 0; y < m_N; y++) {
@@ -273,7 +276,7 @@ void Metropolis::writeConfigurationToFile(std::string filename)
         }
     }
     fclose(file);
-    cout << "../output/" + filename  + " written" << endl;
+    cout << m_outputFolder + filename  + " written" << endl;
 }
 
 double Metropolis::getAcceptanceRate()
@@ -287,7 +290,7 @@ void Metropolis::loadFieldConfiguration(std::string filename)
      * Method for loading a field configuration and running the plaquettes on them.
      */
     FILE *file; // C method
-    file = fopen(filename.c_str(), "rb");
+    file = fopen((m_inputFolder + filename).c_str(), "rb");
     for (int t = 0; t < m_N_T; t++) {
         for (int z = 0; z < m_N; z++) {
             for (int y = 0; y < m_N; y++) {
@@ -300,5 +303,5 @@ void Metropolis::loadFieldConfiguration(std::string filename)
         }
     }
     fclose(file);
-    cout << "../input/" + filename  + " loaded" << endl;
+    cout << m_inputFolder + filename  + " loaded" << endl;
 }
