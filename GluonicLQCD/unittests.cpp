@@ -202,9 +202,81 @@ void testMatrixMultiplication()
     C.print();
 }
 
+void testMatrixSU3Properties() {
+    /* Testing the basic SU3 matrix properties for a known result:
+     * Original:
+     * U1 =
+     * [[ 1.+1.j  1.+2.j  1.+3.j]
+     *  [ 2.+1.j  2.+2.j  2.+3.j]
+     *  [ 3.+1.j  3.+2.j  3.+3.j]]
+     * U2 =
+     * [[ 1.+1.j  1.+2.j  1.+3.j]
+     *  [ 2.+1.j  2.+2.j  2.+3.j]
+     *  [ 3.+1.j  3.+2.j  3.+3.j]]
+     */
+    SU3 U1, U2, U3;
+    U1.mat[0] = complex(1,1);
+    U1.mat[1] = complex(1,2);
+    U1.mat[2] = complex(1,3);
+    U1.mat[3] = complex(2,1);
+    U1.mat[4] = complex(2,2);
+    U1.mat[5] = complex(2,3);
+    U1.mat[6] = complex(3,1);
+    U1.mat[7] = complex(3,2);
+    U1.mat[8] = complex(3,3);
+    U2.mat[0] = complex(4,4);
+    U2.mat[1] = complex(4,5);
+    U2.mat[2] = complex(4,6);
+    U2.mat[3] = complex(5,4);
+    U2.mat[4] = complex(5,5);
+    U2.mat[5] = complex(5,6);
+    U2.mat[6] = complex(6,4);
+    U2.mat[7] = complex(6,5);
+    U2.mat[8] = complex(6,6);
+    // Original matrices
+    cout << "Original matrices\nU1 =" << endl;
+    U1.print();
+    cout << "U2 =" << endl;
+    U2.print();
+    // Addition
+    cout << "Testing SU3 matrix addition" << endl;
+    U3 = U1 + U2;
+    U3.print();
+    U3.zeros();
+    // Subtraction
+    cout << "Testing SU3 matrix subtraction" << endl;
+    U3 = U1 - U2;
+    U3.print();
+    U3.zeros();
+    // Multiplication
+    cout << "Testing SU3 matrix multiplication" << endl;
+    U3 = U1 * U2;
+    U3.print();
+    U3.zeros();
+    // Conjugation
+    cout << "Testing SU3 matrix conjugation" << endl;
+    U3.copy(U1);
+    U3.conjugate();
+    U3.print();
+    U3.zeros();
+    // Transpose
+    cout << "Testing SU3 matrix transposing" << endl;
+    U3.copy(U1);
+    U3.transpose();
+    U3.zeros();
+    // Conjugate transpose
+    cout << "Testing SU3 matrix conjugate transpose" << endl;
+    U3.copy(U1);
+    U3.conjugate();
+    U3.transpose();
+    U3.print();
+}
+
 bool SU2UnitTest(complex * r, complex * s, complex * t)
 {
-    // UNIT TEST
+    /*
+     * Ensuring that the inverse is the transposed complex conjugated in order to produce the inverse.
+     */
     complex * r_inv = new complex[4];
     complex * s_inv = new complex[4];
     complex * t_inv = new complex[4];
@@ -269,7 +341,7 @@ bool SU2UnitTest(complex * r, complex * s, complex * t)
     }
 }
 
-void checkDeterminant(SU3 U) {
+void testDeterminant(SU3 U) {
     double eps = 1e-16;
     complex det = SU3Determinant(U);
     if (((det.re - 1) < eps) && (det.im < eps)) {

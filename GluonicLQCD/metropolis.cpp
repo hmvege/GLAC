@@ -140,11 +140,6 @@ void Metropolis::runMetropolis()
     {
         // Print correlator every somehting
         update();
-        cout << m_correlator->calculate(m_lattice) << endl;
-        if ((i+1) % 10 == 0) { // TEMP!!
-            cout << "Exiting in metropolis.cpp, line 145" << endl;
-            exit(1);
-        }
     }
     cout << "Post-thermialization correlator: " << m_correlator->calculate(m_lattice) << endl;
     cout << "Termalization complete. Acceptance rate: " << acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;

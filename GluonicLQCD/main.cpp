@@ -20,14 +20,14 @@ using std::endl;
  * [x] Add determinant for SU3 matrices
  * [x] Create method for saving lattice configuration
  * [x] Create method for loading lattice configuration
- * [ ] Fix bug in matrices
+ * [x] Fix bug in matrices
  * [ ] Switch to method syntax, foo --> m_foo
  * [ ] Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
  */
 
 int main()
 {
-    int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
+    int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;          // Time dimension
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 20;           // Number of times we are to thermalize, that is NTherm * NCor

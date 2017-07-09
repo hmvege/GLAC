@@ -96,7 +96,7 @@ SU3 &SU3::operator-=(SU3 B)
 {
     for (int i = 0; i < 9; i++)
     {
-        mat[i] += B.mat[i];
+        mat[i] -= B.mat[i];
     }
     return *this;
 }
