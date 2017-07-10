@@ -11,6 +11,7 @@ bool SU2UnitTest(complex * r, complex * s, complex * t);
 void testDeterminant(SU3 U);
 // For testing different basic operations
 void testMatrixSU3Properties();
+void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatrix, bool testComplex);
 //void testMatrixMultiplication();
 //void testMatrixAddition();
 //void testMatrixSubtraction();

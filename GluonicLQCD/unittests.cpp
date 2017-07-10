@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <ctime>
 #include "matrices/su3.h"
 #include "matrices/su3matrixgenerator.h"
 #include "correlators/plaquette.h"
@@ -351,6 +352,39 @@ void testDeterminant(SU3 U) {
     }
 }
 
+void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatrix, bool testComplex) {
+    /*
+     * For running performance tests of the matrix multiplication contained in SU3.
+     */
+    std::mt19937_64 gen(seed);
+    std::uniform_real_distribution<double> uni_dist(0,1);
+    if (testMatrix) {
+        SU3 U1, U2;
+        SU3MatrixGenerator SU3Gen(eps, seed);
+        clock_t programStart, programEnd;
+        programStart = clock();
+        for (int i = 0; i < NTests; i++) {
+            U1 = SU3Gen.generateRST();
+            U2 *= U1;
+        }
+        programEnd = clock();
+        cout << "Matrix multiplication performance test completed. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
+    }
+    if (testComplex) {
+        complex c1(1,1),c2;
+        clock_t programStart, programEnd;
+        programStart = clock();
+        for (int i = 0; i < NTests; i++) {
+            c2.re = uni_dist(gen);
+            c2.im = uni_dist(gen);
+            c1 *= c2;
+        }
+        programEnd = clock();
+        cout << "Complex multiplication performance test completed. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
+    }
+
+}
+
 //bool checkGauge(Links *lattice, int N, SU3MatrixGenerator *SU3Generator) {
 //    /*
 //     * Checking the gauge invariance of the lattice.
@@ -374,20 +408,3 @@ void testDeterminant(SU3 U) {
 //        }
 //    }
 //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

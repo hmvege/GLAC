@@ -10,11 +10,6 @@ using std::endl;
 SU2::SU2()
 {
 //    mat = new complex[4];
-    for (int i = 0; i < 4; i++)
-    {
-        mat[i].re = 0;
-        mat[i].im = 0;
-    }
 }
 
 SU2::~SU2()
@@ -102,7 +97,7 @@ SU2 &SU2::operator-=(SU2 B)
 {
     for (int i = 0; i < 4; i++)
     {
-        mat[i] += B.mat[i];
+        mat[i] -= B.mat[i];
     }
     return *this;
 }

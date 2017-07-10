@@ -22,7 +22,7 @@ private:
     double m_a; // Lattice spacing
     double m_L; // Lattice size
     // For handling the acceptance rate
-    int acceptanceCounter = 0;
+    int m_acceptanceCounter = 0;
     double getAcceptanceRate();
 
     // Lattice constants
@@ -31,13 +31,13 @@ private:
     SU3 m_updatedMatrix;
 
     // Variables used to perform statistics
-    double * Gamma;
-    double * GammaSquared;
+    double * m_Gamma;
+    double * m_GammaSquared;
 //    double * GammaVariance;
 //    double * GammaStd;
-    double averagedGamma = 0;
-    double varianceGamma = 0;
-    double stdGamma = 0;
+    double m_averagedGamma = 0;
+    double m_varianceGamma = 0;
+    double m_stdGamma = 0;
 //    double deltaE_std;
 //    double deltaE;
 

@@ -36,8 +36,8 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
     setAction(S);
     setCorrelator(correlator);
     m_lattice = new Links[m_latticeSize]; // Lattice, contigious memory allocation
-    Gamma = new double[m_NCf]; // Correlator values
-    GammaSquared = new double[m_NCf];
+    m_Gamma = new double[m_NCf]; // Correlator values
+    m_GammaSquared = new double[m_NCf];
 
     std::mt19937_64 gen(seed); // Starting up the Mersenne-Twister19937 function
     std::uniform_real_distribution<double> uni_dist(0,1);
@@ -47,8 +47,8 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
 //    GammaStd= new double[NCf];
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
-        Gamma[alpha] = 0;
-        GammaSquared[alpha] = 0;
+        m_Gamma[alpha] = 0;
+        m_GammaSquared[alpha] = 0;
 //        GammaVariance[alpha] = 0;
 //        GammaStd[alpha] = 0;
     }
@@ -60,8 +60,8 @@ Metropolis::~Metropolis()
      * Class destructor
      */
     delete [] m_lattice;
-    delete [] Gamma;
-    delete [] GammaSquared;
+    delete [] m_Gamma;
+    delete [] m_GammaSquared;
 //    delete [] GammaVariance;
 //    delete [] GammaStd;
 }
@@ -92,8 +92,9 @@ void Metropolis::updateLink(int latticeIndex, int mu)
      *  mu  : Lorentz index
      */
 //    SU3 X = m_SU3Generator->generateRandom(); // Generates a random matrix, SHOULD BE MODIFIED TO X = RST, page 83 Gattinger & Lang
-    SU3 X = m_SU3Generator->generateRST();
-    m_updatedMatrix = X*m_lattice[latticeIndex].U[mu];
+//    SU3 X = m_SU3Generator->generateRST();
+//    m_updatedMatrix = X*m_lattice[latticeIndex].U[mu];
+    m_updatedMatrix = m_SU3Generator->generateRST()*m_lattice[latticeIndex].U[mu]; // Shorter method of updating matrix
 }
 
 void Metropolis::update()
@@ -120,7 +121,7 @@ void Metropolis::update()
                             }
                             else
                             {
-                                acceptanceCounter++;
+                                m_acceptanceCounter++;
                             }
                         }
                     }
@@ -142,9 +143,9 @@ void Metropolis::runMetropolis()
         update();
     }
     cout << "Post-thermialization correlator: " << m_correlator->calculate(m_lattice) << endl;
-    cout << "Termalization complete. Acceptance rate: " << acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
+    cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
-    acceptanceCounter = 0;
+    m_acceptanceCounter = 0;
     // Main part of algorithm
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
@@ -152,7 +153,7 @@ void Metropolis::runMetropolis()
         {
             update();
         }
-        Gamma[alpha] = m_correlator->calculate(m_lattice);
+        m_Gamma[alpha] = m_correlator->calculate(m_lattice);
     }
     cout << "Metropolis completed." << endl;
     cout << m_correlator->calculate(m_lattice) << endl;
@@ -181,18 +182,18 @@ void Metropolis::getStatistics()
     // Performing an average over the Monte Carlo obtained values
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
-        averagedGamma += Gamma[alpha];
-        averagedGammaSquared += Gamma[alpha]*Gamma[alpha];
+        m_averagedGamma += m_Gamma[alpha];
+        averagedGammaSquared += m_Gamma[alpha]*m_Gamma[alpha];
     }
 //    for (int alpha = 0; alpha < m_NCf; alpha++)
 //    {
 //        varianceGamma += (GammaSquared[alpha] - Gamma[alpha]*Gamma[alpha])/double(m_NCf);
 //    }
-    averagedGamma /= double(m_NCf);
+    m_averagedGamma /= double(m_NCf);
     averagedGammaSquared /= double(m_NCf);
-    varianceGamma = (averagedGammaSquared - averagedGamma*averagedGamma)/double(m_NCf);
-    stdGamma = sqrt(varianceGamma);
-    cout << averagedGamma << ", std = " << stdGamma << ", variance = " << varianceGamma << endl;
+    m_varianceGamma = (averagedGammaSquared - m_averagedGamma*m_averagedGamma)/double(m_NCf);
+    m_stdGamma = sqrt(m_varianceGamma);
+    cout << m_averagedGamma << ", std = " << m_stdGamma << ", variance = " << m_varianceGamma << endl;
     // Getting change in energy & calculating variance & standard deviation of G
 //    for (int n = 0; n < N; n++)
 //    {
@@ -221,12 +222,12 @@ void Metropolis::writeDataToFile(const char *filename)
     file << "NCor " << m_NCor << endl;
     file << "NCf " << m_NCf << endl;
     file << "NTherm " << m_NTherm << endl;
-    file << "AverageGamma " << averagedGamma << endl;
-    file << "VarianceGamma " << varianceGamma << endl;
-    file << "stdGamma " << stdGamma << endl;
+    file << "AverageGamma " << m_averagedGamma << endl;
+    file << "VarianceGamma " << m_varianceGamma << endl;
+    file << "stdGamma " << m_stdGamma << endl;
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
-        file << Gamma[alpha] << endl;
+        file << m_Gamma[alpha] << endl;
     }
     file.close();
     cout << filename << " written" << endl;
@@ -235,6 +236,9 @@ void Metropolis::writeDataToFile(const char *filename)
 
 void Metropolis::printAcceptanceRate()
 {
+    /*
+     * Returns the acceptance ratio of the main run of the Metropolis algorithm.
+     */
     printf("Acceptancerate: %.16f \n", getAcceptanceRate()); // Times 4 from the Lorentz indices
 }
 
@@ -276,7 +280,10 @@ void Metropolis::writeConfigurationToFile(std::string filename)
 
 double Metropolis::getAcceptanceRate()
 {
-    return double(acceptanceCounter)/double(m_NCf*m_NCor*m_nUpdates*m_latticeSize*4);
+    /*
+     * Returns the acceptance ratio of the main run of the Metropolis algorithm.
+     */
+    return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_nUpdates*m_latticeSize*4);
 }
 
 void Metropolis::loadFieldConfiguration(std::string filename)

@@ -13,11 +13,6 @@ using std::endl;
 SU3::SU3()
 {
 //    mat = new complex[9];
-    for (int i = 0; i < 9; i++)
-    {
-        mat[i].re = 0;
-        mat[i].im = 0;
-    }
 }
 
 SU3::~SU3()

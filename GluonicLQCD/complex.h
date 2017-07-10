@@ -12,6 +12,7 @@ public:
     ~complex();
     complex(double real, double imag);
 
+//    double *reim;
     double im;
     double re;
     complex &operator+=(complex b);

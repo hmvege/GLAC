@@ -10,6 +10,9 @@ complex::complex()
 {
     re = 0;
     im = 0;
+//    reim = new double[2];
+//    reim[0] = 0; // re
+//    reim[1] = 0; // im
 }
 
 complex::~complex()
@@ -41,8 +44,8 @@ complex complex::c()
 
 complex &complex::operator+=(complex b)
 {
-    re = re + b.re;
-    im = im + b.im;
+    re += b.re;
+    im += b.im;
     return *this;
 }
 
@@ -81,8 +84,8 @@ complex &complex::operator/=(double b)
 
 complex &complex::operator-=(complex b)
 {
-    re = re - b.re;
-    im = im - b.im;
+    re -= b.re;
+    im -= b.im;
     return *this;
 }
 

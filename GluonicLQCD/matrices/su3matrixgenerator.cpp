@@ -221,15 +221,3 @@ SU3 SU3MatrixGenerator::generateRST()
         return X;
     }
 }
-
-void SU3MatrixGenerator::generateHermitian()
-{
-    cout << "SU3MatrixGenerator::generateHermitian not implemented" << endl;
-    exit(1);
-}
-
-void SU3MatrixGenerator::GramSchmitt()
-{
-    cout << "SU3MatrixGenerator::GramSchmitt not implemented" << endl;
-    exit(1);
-}
