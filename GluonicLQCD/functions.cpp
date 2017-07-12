@@ -10,6 +10,11 @@ int index(int i, int j, int k, int l, int N)
 //        std::cout << "Index error!" << std::endl;
 //        exit(1);
 //    }
+    if (l > N) {
+        std::cout << "Inside index" << std::endl;
+        std::cout << l << std::endl;
+        exit(1);
+    }
     return (N*(N*(N*i + j) + k) + l);
 }
 

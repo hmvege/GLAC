@@ -27,7 +27,7 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
      */
     m_N = N; // Spatial dimensions
     m_N_T = N_T; // Time dimensions
-    m_latticeSize = m_N*m_N*m_N*m_N_T;
+    m_latticeSize = N*N*N*N_T;
     m_NCf = NCf; // Number of configurations to run for
     m_NCor = NCor;
     m_NTherm = NTherm;
@@ -52,8 +52,8 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
 //        GammaVariance[alpha] = 0;
 //        GammaStd[alpha] = 0;
     }
-
 }
+
 Metropolis::~Metropolis()
 {
     /*
@@ -102,6 +102,7 @@ void Metropolis::update()
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
+//    double updateS = 0; //TEMP
     for (int i = 0; i < m_N; i++) {
         for (int j = 0; j < m_N; j++) {
             for (int k = 0; k < m_N; k++) {
@@ -111,10 +112,9 @@ void Metropolis::update()
                         for (int n = 0; n < m_nUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(index(i, j, k, l, m_N), mu);
-//                            m_updatedMatrix.print();
                             m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, i, j, k, l, mu);
-//                            m_expDeltaS = exp(-m_deltaS);
-//                            cout << "exp(deltaS) = " <<  m_expDeltaS << endl;
+//                            cout << "Do I forget to divide by 2 somewhere?" << endl;
+//                            updateS+=m_deltaS; // For checking if something is wrong in the update
                             if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             {
                                 m_lattice[index(i, j, k, l, m_N)].U[mu].copy(m_updatedMatrix);
@@ -129,6 +129,7 @@ void Metropolis::update()
             }
         }
     }
+//    cout << updateS/double(4*m_latticeSize*m_nUpdates) << endl;
 }
 
 
@@ -139,8 +140,11 @@ void Metropolis::runMetropolis()
     // Running thermalization
     for (int i = 0; i < m_NTherm * m_NCor; i++)
     {
-        // Print correlator every somehting
         update();
+        // Print correlator every somehting
+        if ((i+1) % 10 == 0) {
+            cout << m_correlator->calculate(m_lattice) << endl;
+        }
     }
     cout << "Post-thermialization correlator: " << m_correlator->calculate(m_lattice) << endl;
     cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;

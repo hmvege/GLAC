@@ -24,12 +24,13 @@ using std::endl;
  * [x] Switch to method syntax, foo --> m_foo
  * [ ] Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
  * [ ] Finish SU3 basic properties unit testing such that I dont have to compare by hand
+ * [ ] Find bug so that N != N_T works.
  */
 
 int main()
 {
-    int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
-    int N_T         = 8;          // Time dimension
+    int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
+    int N_T         = 8;          // Time dimension TEST FOR 4^4
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path
@@ -42,12 +43,11 @@ int main()
 
 //    runMatrixPerformanceTest(SU3Eps, seed, 1e8,false,true);
 //    exit(1);
-
     clock_t programStart, programEnd;
     programStart = clock();
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     Plaquette G(N, N_T);
-    WilsonGaugeAction S(N,N_T,beta);
+    WilsonGaugeAction S(N, N_T, beta);
     Metropolis pureGauge(N, N_T, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S);
     pureGauge.latticeSetup(&SU3Gen);
     pureGauge.runMetropolis();

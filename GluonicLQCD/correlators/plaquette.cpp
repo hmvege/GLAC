@@ -31,18 +31,10 @@ double Plaquette::calculate(Links *lattice)
                         for (int nu = mu+1; nu < 4; nu++) {
                             lorentzIndex(mu,muIndex);
                             lorentzIndex(nu,nuIndex);
-//                            P += lattice[stapleIndex(i,j,k,l,m_N,m_N_T)].U[mu] // LEPAGE DEFINITION
-//                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N,m_N_T)].U[nu]
-//                                    *inverse(lattice[stapleIndex(i+muIndex[0]+nuIndex[0],j+muIndex[1]+nuIndex[1],k+muIndex[2]+nuIndex[2],l+muIndex[3]+nuIndex[3],m_N,m_N_T)].U[mu])
-//                                    *inverse(lattice[stapleIndex(i,j,k,l,m_N,m_N_T)].U[nu]);
                             P += lattice[stapleIndex(i,j,k,l,m_N,m_N_T)].U[mu]
                                     *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N,m_N_T)].U[nu]
                                     *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N,m_N_T)].U[mu])
                                     *inverse(lattice[stapleIndex(i,j,k,l,m_N,m_N_T)].U[nu]);
-//                            P += lattice[stapleIndex(i,j,k,l, m_N, m_N_T)].U[mu] // GATTINGER DEFINITION
-//                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3], m_N, m_N_T)].U[nu]
-//                                    *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3], m_N, m_N_T)].U[mu])
-//                                    *inverse(lattice[stapleIndex(i,j,k,l, m_N, m_N_T)].U[nu]);
                         }
                     }
                 }
