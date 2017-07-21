@@ -1,7 +1,7 @@
 #include "matrices/su3.h"
 #include "matrices/su2.h"
 
-int index(int i, int j, int k, int l, int N)
+int index(int i, int j, int k, int l, int N, int N_T)
 {
     /*
      * Function for contigious memory allocation.
@@ -10,12 +10,12 @@ int index(int i, int j, int k, int l, int N)
 //        std::cout << "Index error!" << std::endl;
 //        exit(1);
 //    }
-    int returnVal = (N*(N*(N*i + j) + k) + l);
+    int returnVal = (N_T*(N*(N*i + j) + k) + l);
 
-    if (returnVal == (N*N*N*2*N-4)) {
-        std::cout << "good" << std::endl;
-        exit(1);
-    }
+//    if (returnVal == (N*N*N*2*N)) {
+//        std::cout << "good" << std::endl;
+//        exit(1);
+//    }
     return returnVal;
 }
 
@@ -45,7 +45,7 @@ int stapleIndex(int i, int j, int k, int l, int N, int N_T)
     /*
      * Unit vector for lorentz indexes
      */
-    return index((i+N) % N, (j+N) % N, (k+N) % N, (l+N_T) % N_T, N);;
+    return index((i+N) % N, (j+N) % N, (k+N) % N, (l+N_T) % N_T, N, N_T);;
 }
 
 void lorentzIndex(int mu, int *lorentzIndices)

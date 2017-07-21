@@ -26,7 +26,7 @@ double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int 
 {
     double S = 0;
     SU3 tr;
-    tr = (UPrime - lattice[index(i,j,k,l,m_N)].U[mu])*m_staple;
+    tr = (UPrime - lattice[index(i,j,k,l,m_N,m_N_T)].U[mu])*m_staple;
     for (int n = 0; n < 3; n++)
     {
         S += tr.mat[n*3+n].re;
