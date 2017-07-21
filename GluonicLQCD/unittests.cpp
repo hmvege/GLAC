@@ -408,3 +408,10 @@ void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatr
 //        }
 //    }
 //}
+
+void checkDim(int N, int N_T) {
+    if (N == N_T) {
+        cout << "Error" << endl;
+        exit(1);
+    }
+}

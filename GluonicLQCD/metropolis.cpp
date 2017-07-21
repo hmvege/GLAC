@@ -77,8 +77,8 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
         for (int mu = 0; mu < 4; mu++)
         {
 //            m_lattice[i].U[mu] = m_SU3Generator->generateRandom();
-            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
-//            m_lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
+//            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
+            m_lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
         }
     }
 }
@@ -103,21 +103,24 @@ void Metropolis::update()
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
 //    double updateS = 0; //TEMP
-    for (int i = 0; i < m_N; i++) {
-        for (int j = 0; j < m_N; j++) {
-            for (int k = 0; k < m_N; k++) {
-                for (int l = 0; l < m_N_T; l++) {
+    for (int x = 0; x < m_N; x++) {
+        for (int y = 0; y < m_N; y++) {
+            for (int z = 0; z < m_N; z++) {
+                for (int t = 0; t < m_N_T; t++) {
+                    if (t == m_N_T-1) {
+                        cout << "index: " << index(x,y,z,t,m_N,m_N_T) << endl;
+                    }
                     for (int mu = 0; mu < 4; mu++) {
-                        m_S->computeStaple(m_lattice, i, j, k, l, mu);
+                        m_S->computeStaple(m_lattice, x, y, z, t, mu);
                         for (int n = 0; n < m_nUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
-                            updateLink(index(i, j, k, l, m_N), mu);
-                            m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, i, j, k, l, mu);
+                            updateLink(index(x, y, z, t, m_N), mu);
+                            m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
 //                            cout << "Do I forget to divide by 2 somewhere?" << endl;
 //                            updateS+=m_deltaS; // For checking if something is wrong in the update
                             if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             {
-                                m_lattice[index(i, j, k, l, m_N)].U[mu].copy(m_updatedMatrix);
+                                m_lattice[index(x, y, z, t, m_N)].U[mu].copy(m_updatedMatrix);
                             }
                             else
                             {

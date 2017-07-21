@@ -35,7 +35,7 @@ private:
     double * m_GammaSquared;
 //    double * GammaVariance;
 //    double * GammaStd;
-    double m_averagedGamma = 0;
+    double m_averagedGamma = 0; // Change these to not have m_ convention
     double m_varianceGamma = 0;
     double m_stdGamma = 0;
 //    double deltaE_std;

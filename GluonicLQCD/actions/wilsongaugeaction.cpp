@@ -2,6 +2,9 @@
 #include "action.h"
 #include "functions.h"
 
+// TEMP
+#include "unittests.h"
+
 WilsonGaugeAction::WilsonGaugeAction(int N, int N_T, double beta): Action(N, N_T)
 {
     m_beta = beta;
@@ -46,4 +49,5 @@ void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l
                 *inverse(lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N, m_N_T)].U[mu])
                 *lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N, m_N_T)].U[nu];
     }
+
 }

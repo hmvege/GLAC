@@ -10,12 +10,13 @@ int index(int i, int j, int k, int l, int N)
 //        std::cout << "Index error!" << std::endl;
 //        exit(1);
 //    }
-    if (l > N) {
-        std::cout << "Inside index" << std::endl;
-        std::cout << l << std::endl;
+    int returnVal = (N*(N*(N*i + j) + k) + l);
+
+    if (returnVal == (N*N*N*2*N-4)) {
+        std::cout << "good" << std::endl;
         exit(1);
     }
-    return (N*(N*(N*i + j) + k) + l);
+    return returnVal;
 }
 
 SU3 inverse(SU3 U)
