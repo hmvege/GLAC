@@ -32,14 +32,11 @@ private:
 
     // Variables used to perform statistics
     double * m_Gamma;
+    double * m_GammaPreThermalization;
     double * m_GammaSquared;
-//    double * GammaVariance;
-//    double * GammaStd;
     double m_averagedGamma = 0; // Change these to not have m_ convention
     double m_varianceGamma = 0;
     double m_stdGamma = 0;
-//    double deltaE_std;
-//    double deltaE;
 
     // Storing the action as a pointer
     Action *m_S = nullptr;
@@ -59,6 +56,10 @@ private:
     std::string m_inputFolder = "../input/";
     std::string m_outputFolder = "../output/";
 
+    // Correlator output
+    std::ofstream *correlatorOutput;
+    void writeObservableToFile(double observable);
+
     // SU3 generator
     SU3MatrixGenerator *m_SU3Generator = nullptr;
 
@@ -73,7 +74,7 @@ public:
     void getStatistics();
     // Data outputters
 //    void writeStatisticsToFile(const char *filename);
-    void writeDataToFile(const char *filename);
+    void writeDataToFile(std::__1::string filename, bool preThermalizationGamma = true);
     void writeConfigurationToFile(std::__1::string filename);
     void loadFieldConfiguration(std::__1::string filename);
 

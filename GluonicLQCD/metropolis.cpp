@@ -3,6 +3,8 @@
 #include <cmath>    // For exp()
 #include <fstream>
 #include <iostream>
+#include <cstdio>   // For io C-style handling.
+#include <cstdlib>
 #include "metropolis.h"
 #include "actions/action.h"
 #include "correlators/correlator.h"
@@ -12,9 +14,6 @@
 
 //TEMP
 #include "unittests.h"
-
-#include <cstdio>
-#include <cstdlib>
 
 using std::cout;
 using std::endl;
@@ -36,6 +35,7 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
     setAction(S);
     setCorrelator(correlator);
     m_lattice = new Links[m_latticeSize]; // Lattice, contigious memory allocation
+    m_GammaPreThermalization = new double[m_NTherm*m_NCor/10];
     m_Gamma = new double[m_NCf]; // Correlator values
     m_GammaSquared = new double[m_NCf];
 
@@ -43,14 +43,10 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
     std::uniform_real_distribution<double> uni_dist(0,1);
     m_generator = gen;
     m_uniform_distribution = uni_dist;
-//    GammaVariance = new double[NCf];
-//    GammaStd= new double[NCf];
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
         m_Gamma[alpha] = 0;
         m_GammaSquared[alpha] = 0;
-//        GammaVariance[alpha] = 0;
-//        GammaStd[alpha] = 0;
     }
 }
 
@@ -62,8 +58,6 @@ Metropolis::~Metropolis()
     delete [] m_lattice;
     delete [] m_Gamma;
     delete [] m_GammaSquared;
-//    delete [] GammaVariance;
-//    delete [] GammaStd;
 }
 
 void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
@@ -102,7 +96,6 @@ void Metropolis::update()
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
-//    double updateS = 0; //TEMP
     for (int x = 0; x < m_N; x++) {
         for (int y = 0; y < m_N; y++) {
             for (int z = 0; z < m_N; z++) {
@@ -113,8 +106,6 @@ void Metropolis::update()
                         {
                             updateLink(index(x, y, z, t, m_N, m_N_T), mu);
                             m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
-//                            cout << "Do I forget to divide by 2 somewhere?" << endl;
-//                            updateS+=m_deltaS; // For checking if something is wrong in the update
                             if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             {
                                 m_lattice[index(x, y, z, t, m_N, m_N_T)].U[mu].copy(m_updatedMatrix);
@@ -129,7 +120,6 @@ void Metropolis::update()
             }
         }
     }
-//    cout << updateS/double(4*m_latticeSize*m_nUpdates) << endl;
 }
 
 
@@ -143,7 +133,7 @@ void Metropolis::runMetropolis()
         update();
         // Print correlator every somehting
         if ((i+1) % 10 == 0) {
-            cout << m_correlator->calculate(m_lattice) << endl;
+            m_GammaPreThermalization[int((i+1)/10.0)] = m_correlator->calculate(m_lattice);
         }
     }
     cout << "Post-thermialization correlator: " << m_correlator->calculate(m_lattice) << endl;
@@ -176,52 +166,30 @@ void Metropolis::getStatistics()
     /*
      * Class instance for sampling statistics from our system.
      */
-//    deltaE          = new double[N];
-//    deltaE_std      = new double[N];
     double averagedGammaSquared = 0;
-//    for (int alpha = 0; alpha < m_NCf; alpha++)
-//    {
-//        GammaSquared[alpha] = Gamma[alpha]*Gamma[alpha];
-//    }
     // Performing an average over the Monte Carlo obtained values
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
         m_averagedGamma += m_Gamma[alpha];
         averagedGammaSquared += m_Gamma[alpha]*m_Gamma[alpha];
     }
-//    for (int alpha = 0; alpha < m_NCf; alpha++)
-//    {
-//        varianceGamma += (GammaSquared[alpha] - Gamma[alpha]*Gamma[alpha])/double(m_NCf);
-//    }
     m_averagedGamma /= double(m_NCf);
     averagedGammaSquared /= double(m_NCf);
     m_varianceGamma = (averagedGammaSquared - m_averagedGamma*m_averagedGamma)/double(m_NCf);
     m_stdGamma = sqrt(m_varianceGamma);
     cout << m_averagedGamma << ", std = " << m_stdGamma << ", variance = " << m_varianceGamma << endl;
-    // Getting change in energy & calculating variance & standard deviation of G
-//    for (int n = 0; n < N; n++)
-//    {
-//        deltaE[n] = log(averagedGamma[n]/averagedGamma[(n+1) % N])/a;
-//    }
-//    averagedGamma[n] /= double(NCf);
-
-    // Calculating the uncertainty in dE(hand calculation for analytic expression done beforehand)
-//    for (int n = 0; n < N; n++)
-//    {
-//        deltaE_std[n] = sqrt(pow(stdGamma[n]/averagedGamma[n],2) + pow(stdGamma[(n+1)%N]/averagedGamma[(n+1)%N],2))/a;
-//    }
-//    delete [] deltaE;
-//    delete [] deltaE_std;
 }
 
 
-void Metropolis::writeDataToFile(const char *filename)
+void Metropolis::writeDataToFile(std::string filename, bool preThermalizationGamma)
 {
     /*
      * For writing the raw Gamma data to file.
+     * Arguments:
+     * - filename
      */
     std::ofstream file;
-    file.open(filename);
+    file.open(filename + ".dat");
     file << "acceptanceCounter " << getAcceptanceRate() << endl;
     file << "NCor " << m_NCor << endl;
     file << "NCf " << m_NCf << endl;
@@ -229,9 +197,13 @@ void Metropolis::writeDataToFile(const char *filename)
     file << "AverageGamma " << m_averagedGamma << endl;
     file << "VarianceGamma " << m_varianceGamma << endl;
     file << "stdGamma " << m_stdGamma << endl;
-    for (int alpha = 0; alpha < m_NCf; alpha++)
-    {
-        file << m_Gamma[alpha] << endl;
+    if (preThermalizationGamma) {
+        for (int i = 0; i < m_NTherm*m_NCor/10; i++) {
+            file << m_GammaPreThermalization[i] << endl;
+        }
+    }
+    for (int i = 0; i < m_NCf; i++) {
+        file << m_Gamma[i] << endl;
     }
     file.close();
     cout << filename << " written" << endl;
@@ -246,25 +218,21 @@ void Metropolis::printAcceptanceRate()
     printf("Acceptancerate: %.16f \n", getAcceptanceRate()); // Times 4 from the Lorentz indices
 }
 
+double Metropolis::getAcceptanceRate()
+{
+    /*
+     * Returns the acceptance ratio of the main run of the Metropolis algorithm.
+     */
+    return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_nUpdates*m_latticeSize*4);
+}
+
 void Metropolis::writeConfigurationToFile(std::string filename)
 {
-//    std::ofstream file("../output/" + filename, std::ofstream::binary); // Old c++ method
-//    for (int t = 0; t < m_N_T; t++) {
-//        for (int z = 0; z < m_N; z++) {
-//            for (int y = 0; y < m_N; y++) {
-//                for (int x = 0; x < m_N; x++) {
-//                    for (int mu = 0; mu < 4; mu++) {
-//                        file.write(reinterpret_cast<const char*> (&m_lattice[index(x,y,z,t,m_N,m_N_T)].U[mu]), sizeof(SU3));
-//                    }
-//                    file << endl;
-//                }
-//                file << endl;
-//            }
-//            file << endl;
-//        }
-//        file << endl;
-//    }
-//    file.close();
+    /*
+     * C-method for writing out configuration to file.
+     * Arguments:
+     * - filename
+     */
     FILE *file; // C method
     file = fopen((m_outputFolder+filename).c_str(), "wb");
     for (int t = 0; t < m_N_T; t++) {
@@ -282,18 +250,12 @@ void Metropolis::writeConfigurationToFile(std::string filename)
     cout << m_outputFolder + filename  + " written" << endl;
 }
 
-double Metropolis::getAcceptanceRate()
-{
-    /*
-     * Returns the acceptance ratio of the main run of the Metropolis algorithm.
-     */
-    return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_nUpdates*m_latticeSize*4);
-}
-
 void Metropolis::loadFieldConfiguration(std::string filename)
 {
     /*
      * Method for loading a field configuration and running the plaquettes on them.
+     * Arguments:
+     * - filename
      */
     FILE *file; // C method
     file = fopen((m_inputFolder + filename).c_str(), "rb");
