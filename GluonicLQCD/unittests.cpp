@@ -215,7 +215,8 @@ void testMatrixSU3Properties() {
      *  [ 2.+1.j  2.+2.j  2.+3.j]
      *  [ 3.+1.j  3.+2.j  3.+3.j]]
      */
-    SU3 U1, U2, U3;
+    SU3 U1, U2, U3, UAdd, USub, UMul, UC, UT, UCT;
+    // Setting up matrix U1
     U1.mat[0] = complex(1,1);
     U1.mat[1] = complex(1,2);
     U1.mat[2] = complex(1,3);
@@ -225,6 +226,7 @@ void testMatrixSU3Properties() {
     U1.mat[6] = complex(3,1);
     U1.mat[7] = complex(3,2);
     U1.mat[8] = complex(3,3);
+    // Setting up matrix U2
     U2.mat[0] = complex(4,4);
     U2.mat[1] = complex(4,5);
     U2.mat[2] = complex(4,6);
@@ -240,37 +242,128 @@ void testMatrixSU3Properties() {
     cout << "U2 =" << endl;
     U2.print();
     // Addition
-    cout << "Testing SU3 matrix addition" << endl;
+    UAdd.mat[0] = complex(5,5);
+    UAdd.mat[1] = complex(5,7);
+    UAdd.mat[2] = complex(5,9);
+    UAdd.mat[3] = complex(7,5);
+    UAdd.mat[4] = complex(7,7);
+    UAdd.mat[5] = complex(7,9);
+    UAdd.mat[6] = complex(9,5);
+    UAdd.mat[7] = complex(9,7);
+    UAdd.mat[8] = complex(9,9);
     U3 = U1 + U2;
-    U3.print();
+    if (compareSU3(U3,UAdd)) {
+        cout << "Matrix addition passed" << endl;
+    }
+    else {
+        cout << "Matrix addition failed" << endl;
+        U3.print();
+        UAdd.print();
+    }
     U3.zeros();
     // Subtraction
-    cout << "Testing SU3 matrix subtraction" << endl;
+    USub.mat[0] = complex(-3,-3);
+    USub.mat[3] = complex(-3,-3);
+    USub.mat[6] = complex(-3,-3);
+    USub.mat[1] = complex(-3,-3);
+    USub.mat[4] = complex(-3,-3);
+    USub.mat[7] = complex(-3,-3);
+    USub.mat[2] = complex(-3,-3);
+    USub.mat[5] = complex(-3,-3);
+    USub.mat[8] = complex(-3,-3);
     U3 = U1 - U2;
-    U3.print();
+    if (compareSU3(U3,USub)) {
+        cout << "Matrix subtraction passed" << endl;
+    }
+    else {
+        cout << "Matrix subtraction failed" << endl;
+        U3.print();
+        USub.print();
+    }
     U3.zeros();
     // Multiplication
-    cout << "Testing SU3 matrix multiplication" << endl;
+    UMul.mat[0] = complex(-9,44);
+    UMul.mat[1] = complex(-15,47);
+    UMul.mat[2] = complex(-21,50);
+    UMul.mat[3] = complex(6,56);
+    UMul.mat[4] = complex(0,62);
+    UMul.mat[5] = complex(-6,68);
+    UMul.mat[6] = complex(21,68);
+    UMul.mat[7] = complex(15,77);
+    UMul.mat[8] = complex(9,86);
     U3 = U1 * U2;
-    U3.print();
+    if (compareSU3(U3,UMul)) {
+        cout << "Matrix multiplication passed" << endl;
+    }
+    else {
+        cout << "Matrix multiplication failed" << endl;
+        U3.print();
+        UMul.print();
+    }
     U3.zeros();
     // Conjugation
-    cout << "Testing SU3 matrix conjugation" << endl;
+    UC.mat[0] = complex(1,-1);
+    UC.mat[1] = complex(1,-2);
+    UC.mat[2] = complex(1,-3);
+    UC.mat[3] = complex(2,-1);
+    UC.mat[4] = complex(2,-2);
+    UC.mat[5] = complex(2,-3);
+    UC.mat[6] = complex(3,-1);
+    UC.mat[7] = complex(3,-2);
+    UC.mat[8] = complex(3,-3);
     U3.copy(U1);
     U3.conjugate();
-    U3.print();
+    if (compareSU3(U3,UC)) {
+        cout << "Matrix conjugation passed" << endl;
+    }
+    else {
+        cout << "Matrix conjugation failed" << endl;
+        U3.print();
+        UC.print();
+    }
     U3.zeros();
     // Transpose
-    cout << "Testing SU3 matrix transposing" << endl;
+    UT.mat[0] = complex(1,1);
+    UT.mat[1] = complex(2,1);
+    UT.mat[2] = complex(3,1);
+    UT.mat[3] = complex(1,2);
+    UT.mat[4] = complex(2,2);
+    UT.mat[5] = complex(3,2);
+    UT.mat[6] = complex(1,3);
+    UT.mat[7] = complex(2,3);
+    UT.mat[8] = complex(3,3);
     U3.copy(U1);
     U3.transpose();
+    if (compareSU3(U3,UT)) {
+        cout << "Matrix transposing passed" << endl;
+    }
+    else {
+        cout << "Matrix transposing failed" << endl;
+        U3.print();
+        UT.print();
+    }
     U3.zeros();
     // Conjugate transpose
-    cout << "Testing SU3 matrix conjugate transpose" << endl;
+    UCT.mat[0] = complex(1,-1);
+    UCT.mat[1] = complex(2,-1);
+    UCT.mat[2] = complex(3,-1);
+    UCT.mat[3] = complex(1,-2);
+    UCT.mat[4] = complex(2,-2);
+    UCT.mat[5] = complex(3,-2);
+    UCT.mat[6] = complex(1,-3);
+    UCT.mat[7] = complex(2,-3);
+    UCT.mat[8] = complex(3,-3);
     U3.copy(U1);
     U3.conjugate();
     U3.transpose();
-    U3.print();
+    if (compareSU3(U3,UCT)) {
+        cout << "Matrix conjugate transpose passed" << endl;
+    }
+    else {
+        cout << "Matrix conjugate transpose failed" << endl;
+        U3.print();
+        UCT.print();
+    }
 }
 
 bool SU2UnitTest(complex * r, complex * s, complex * t)

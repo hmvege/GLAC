@@ -22,10 +22,11 @@ using std::endl;
  * [x] Create method for loading lattice configuration
  * [x] Fix bug in matrices
  * [x] Find bug so that N != N_T works.
- * [ ] Add write each Plaquette/observable to file-function.
+ * [x] Add write each Plaquette/observable to file-function.
+ * [x] Finish SU3 basic properties unit testing such that I dont have to compare by hand
  * [ ] Switch to CORRECT method syntax, foo --> m_foo
  * [ ] Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
- * [ ] Finish SU3 basic properties unit testing such that I dont have to compare by hand
+ * [ ] Add parallelization
  */
 
 int main()
@@ -42,8 +43,9 @@ int main()
     double seed     = std::time(nullptr);
     double metropolisSeed = std::time(nullptr) + 1;
 
+//    testMatrixSU3Properties();
 //    runMatrixPerformanceTest(SU3Eps, seed, 1e8,false,true);
-//    exit(1);
+    exit(1);
     clock_t programStart, programEnd;
     programStart = clock();
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);

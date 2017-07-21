@@ -10,5 +10,6 @@ void lorentzIndex(int mu, int *lorentzIndices);
 complex SU3Determinant(SU3 U);
 SU3 inverse(SU3 U);
 SU2 SU2Inverse(SU2 U);
+bool compareSU3(SU3 A, SU3 B);
 
 #endif // FUNCTIONS_H

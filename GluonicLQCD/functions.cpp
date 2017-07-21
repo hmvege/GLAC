@@ -74,3 +74,13 @@ complex SU3Determinant(SU3 U)
     det += U[8]*(U[0]*U[4] - U[3]*U[1]);
     return det;
 }
+
+bool compareSU3(SU3 A, SU3 B)
+{
+    for (int i = 0; i < 9; i++) {
+        if ((A.mat[i].re != B.mat[i].re) || (A.mat[i].im != B.mat[i].im)) {
+            return false;
+        }
+    }
+    return true;
+}
