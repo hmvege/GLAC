@@ -45,7 +45,7 @@ int main()
 
 //    testMatrixSU3Properties();
 //    runMatrixPerformanceTest(SU3Eps, seed, 1e8,false,true);
-    exit(1);
+//    exit(1);
     clock_t programStart, programEnd;
     programStart = clock();
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
