@@ -18,12 +18,18 @@ private:
     int m_NCor;
     int m_NTherm;
     int m_nUpdates = 10; // N updates before calculating the action, as that is costly
+    int m_subLatticeDimensions[4];
     double m_epsilon;
     double m_a; // Lattice spacing
     double m_L; // Lattice size
     // For handling the acceptance rate
     int m_acceptanceCounter = 0;
     double getAcceptanceRate();
+
+    // Paralellization setup
+    int m_numprocs;
+    int m_processRank;
+    void subLatticeDimensionsSetup();
 
     // Lattice constants
     int m_latticeSize;
@@ -63,10 +69,10 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 public:
-    Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S);
+    Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
     ~Metropolis();
-    void latticeSetup(SU3MatrixGenerator *SU3Generator);
     void runMetropolis(bool storePreObservables);
+    void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
     void getStatistics();
     // Data outputters
 //    void writeStatisticsToFile(const char *filename);

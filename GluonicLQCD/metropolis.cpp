@@ -18,7 +18,7 @@
 using std::cout;
 using std::endl;
 
-Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S)
+Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S, int numprocs, int processRank)
 {
     /*
      * Class for calculating correlators using the Metropolis algorithm.
@@ -32,6 +32,8 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
     m_NTherm = NTherm;
     m_a = a;
     m_L = L;
+    m_numprocs = numprocs;
+    m_processRank = processRank;
     setAction(S);
     setCorrelator(correlator);
     m_lattice = new Links[m_latticeSize]; // Lattice, contigious memory allocation
@@ -61,19 +63,78 @@ Metropolis::~Metropolis()
     delete [] m_GammaSquared;
 }
 
-void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
+void Metropolis::subLatticeDimensionsSetup()
+{
+    /*
+     * Sets up the sub-lattices. Adds +2 in every direction to account for sharing of phases.
+     */
+    if (m_numprocs % 2 != 0) {
+        cout << "Error: odd number of processors --> exiting." << endl;
+        exit(1);
+    }
+    if (m_numprocs == 2) {
+        // Special case of only 2 processors
+        m_subLatticeDimensions[0] = m_N / 2 + 2;
+        m_subLatticeDimensions[1] = m_N + 2;
+        m_subLatticeDimensions[2] = m_N + 2;
+        m_subLatticeDimensions[3] = m_N_T + 2;
+    }
+    else if (m_numprocs == 4) {
+        // Special case of 4 processors
+        m_subLatticeDimensions[0] = m_N / 2 + 2;
+        m_subLatticeDimensions[1] = m_N / 2 + 2;
+        m_subLatticeDimensions[2] = m_N + 2;
+        m_subLatticeDimensions[3] = m_N_T + 2;
+    }
+    else if (m_numprocs == 8) {
+        // Special case of 8 processors
+        m_subLatticeDimensions[0] = m_N / 2 + 2;
+        m_subLatticeDimensions[1] = m_N / 2 + 2;
+        m_subLatticeDimensions[2] = m_N / 2 + 2;
+        m_subLatticeDimensions[3] = m_N_T + 2;
+    }
+    else {
+        m_subLatticeDimensions[0] = m_N / 2 + 2;
+        m_subLatticeDimensions[1] = m_N / 2 + 2;
+        m_subLatticeDimensions[2] = m_N / 2 + 2;
+        m_subLatticeDimensions[3] = m_N_T / 2 + 2;
+    }
+    cout << "Processor: " << m_processRank << endl;
+    for (int i = 0; i < 4; i++) {
+        cout << m_subLatticeDimensions[i] << endl;
+    }
+
+    cout << "EXITS AT SUB LATTICE DIM SETTUP" << endl;
+    exit(1);
+}
+
+void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
 {
     /*
      * Sets up the lattice and its matrices.
      */
+    // PARALLELIZE HERE?? TIME IT!
+    subLatticeDimensionsSetup();
+    // Also, set up blocks to use!!
     m_SU3Generator = SU3Generator;
-    for (int i = 0; i < m_latticeSize; i++)
-    {
-        for (int mu = 0; mu < 4; mu++)
+    if (hotStart) {
+        // All starts with a completely random matrix.
+        for (int i = 0; i < m_latticeSize; i++)
         {
-//            m_lattice[i].U[mu] = m_SU3Generator->generateRandom();
-            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
-//            m_lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
+            for (int mu = 0; mu < 4; mu++)
+            {
+                m_lattice[i].U[mu] = m_SU3Generator->generateRandom();
+//            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
+            }
+        }
+    } else {
+        for (int i = 0; i < m_latticeSize; i++)
+        {
+            for (int mu = 0; mu < 4; mu++)
+            {
+                // All starts with a completely random matrix. Observable should be 1.
+                m_lattice[i].U[mu] = m_SU3Generator->generateIdentity();
+            }
         }
     }
 }
@@ -97,6 +158,7 @@ void Metropolis::update()
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
+    // PARALLELIZE HERE
     for (int x = 0; x < m_N; x++) {
         for (int y = 0; y < m_N; y++) {
             for (int z = 0; z < m_N; z++) {
@@ -142,6 +204,8 @@ void Metropolis::runMetropolis(bool storePreObservables)
     }
     cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor + 1] << endl;
     cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
+    delete [] m_GammaPreThermalization; // De-allocating as this is not needed anymore
+
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
     // Main part of algorithm
@@ -189,7 +253,8 @@ void Metropolis::writeDataToFile(std::string filename, bool preThermalizationGam
     /*
      * For writing the raw Gamma data to file.
      * Arguments:
-     * - filename
+     *  filename                : to write stats to
+     *  preThermalizationGamma  : if we are writing the gama
      */
     for (int i = 0; i < m_NCf; i++) {
         cout << m_Gamma[i] << endl;

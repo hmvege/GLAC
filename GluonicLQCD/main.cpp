@@ -5,6 +5,7 @@
 #include "actions/wilsongaugeaction.h"
 #include "correlators/plaquette.h"
 #include "matrices/su3matrixgenerator.h"
+#include "mpi.h"
 
 #include "unittests.h"
 
@@ -29,10 +30,10 @@ using std::endl;
  * [ ] Add parallelization
  */
 
-int main()
+int main(int numberOfArguments, char* cmdLineArguments[])
 {
-    int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
-    int N_T         = 8;            // Time dimension
+    int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
+    int N_T         = 16;            // Time dimension
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path
@@ -43,17 +44,25 @@ int main()
     double seed     = std::time(nullptr);
     double metropolisSeed = std::time(nullptr) + 1;
     bool storeThermalizationPlaquettes = true;
+    bool hotStart   = false;
 
 //    testMatrixSU3Properties();
 //    runMatrixPerformanceTest(SU3Eps, seed, 1e8,false,true);
 //    exit(1);
+
+    // Initializing parallelization
+    int numprocs, processRank;
+    MPI_Init (&numberOfArguments, &cmdLineArguments);
+    MPI_Comm_size (MPI_COMM_WORLD, &numprocs);
+    MPI_Comm_rank (MPI_COMM_WORLD, &processRank);
+
     clock_t programStart, programEnd;
     programStart = clock();
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     Plaquette G(N, N_T);
     WilsonGaugeAction S(N, N_T, beta);
-    Metropolis pureGauge(N, N_T, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S);
-    pureGauge.latticeSetup(&SU3Gen);
+    Metropolis pureGauge(N, N_T, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S, numprocs, processRank);
+    pureGauge.latticeSetup(&SU3Gen, hotStart);
     pureGauge.runMetropolis(storeThermalizationPlaquettes);
     pureGauge.getStatistics();
     pureGauge.printAcceptanceRate();
