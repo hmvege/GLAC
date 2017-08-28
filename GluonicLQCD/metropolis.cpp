@@ -35,7 +35,8 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
     setAction(S);
     setCorrelator(correlator);
     m_lattice = new Links[m_latticeSize]; // Lattice, contigious memory allocation
-    m_GammaPreThermalization = new double[m_NTherm*m_NCor/10];
+//    m_GammaPreThermalization = new double[m_NTherm*m_NCor/10];
+    m_GammaPreThermalization = new double[m_NTherm*m_NCor+1];
     m_Gamma = new double[m_NCf]; // Correlator values
     m_GammaSquared = new double[m_NCf];
 
@@ -71,8 +72,8 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
         for (int mu = 0; mu < 4; mu++)
         {
 //            m_lattice[i].U[mu] = m_SU3Generator->generateRandom();
-//            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
-            m_lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
+            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
+//            m_lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
         }
     }
 }
@@ -123,20 +124,23 @@ void Metropolis::update()
 }
 
 
-void Metropolis::runMetropolis()
+void Metropolis::runMetropolis(bool storePreObservables)
 {
 //    loadFieldConfiguration("conf0.bin");
-    cout << "Pre-thermialization correlator:  " << m_correlator->calculate(m_lattice) << endl;
+    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
     // Running thermalization
-    for (int i = 0; i < m_NTherm * m_NCor; i++)
+    for (int i = 0; i < m_NTherm*m_NCor; i++)
     {
         update();
-        // Print correlator every somehting
-        if ((i+1) % 10 == 0) {
-            m_GammaPreThermalization[int((i+1)/10.0)] = m_correlator->calculate(m_lattice);
+        // Print correlator every somehting or store them all(useful when doing the thermalization)
+        if (storePreObservables) {
+            m_GammaPreThermalization[i+1] = m_correlator->calculate(m_lattice);
+        } else if ((i+1) % 10 == 0) {
+            m_GammaPreThermalization[int((i+1)/10.0)+1] = m_correlator->calculate(m_lattice);
         }
     }
-    cout << "Post-thermialization correlator: " << m_correlator->calculate(m_lattice) << endl;
+    cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor + 1] << endl;
     cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
@@ -180,7 +184,6 @@ void Metropolis::getStatistics()
     cout << m_averagedGamma << ", std = " << m_stdGamma << ", variance = " << m_varianceGamma << endl;
 }
 
-
 void Metropolis::writeDataToFile(std::string filename, bool preThermalizationGamma)
 {
     /*
@@ -188,6 +191,9 @@ void Metropolis::writeDataToFile(std::string filename, bool preThermalizationGam
      * Arguments:
      * - filename
      */
+    for (int i = 0; i < m_NCf; i++) {
+        cout << m_Gamma[i] << endl;
+    }
     std::ofstream file;
     file.open(filename + ".dat");
     file << "acceptanceCounter " << getAcceptanceRate() << endl;
@@ -198,7 +204,8 @@ void Metropolis::writeDataToFile(std::string filename, bool preThermalizationGam
     file << "VarianceGamma " << m_varianceGamma << endl;
     file << "stdGamma " << m_stdGamma << endl;
     if (preThermalizationGamma) {
-        for (int i = 0; i < m_NTherm*m_NCor/10; i++) {
+//        for (int i = 0; i < m_NTherm*m_NCor/10; i++) {
+        for (int i = 0; i < m_NTherm*m_NCor+1; i++) {
             file << m_GammaPreThermalization[i] << endl;
         }
     }

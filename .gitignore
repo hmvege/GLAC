@@ -4,6 +4,7 @@
 # Output files
 output/*
 *.txt
+*.dat
 
 # Input files
 input/*

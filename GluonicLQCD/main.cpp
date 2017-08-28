@@ -42,6 +42,7 @@ int main()
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr);
     double metropolisSeed = std::time(nullptr) + 1;
+    bool storeThermalizationPlaquettes = true;
 
 //    testMatrixSU3Properties();
 //    runMatrixPerformanceTest(SU3Eps, seed, 1e8,false,true);
@@ -53,11 +54,11 @@ int main()
     WilsonGaugeAction S(N, N_T, beta);
     Metropolis pureGauge(N, N_T, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S);
     pureGauge.latticeSetup(&SU3Gen);
-    pureGauge.runMetropolis();
+    pureGauge.runMetropolis(storeThermalizationPlaquettes);
     pureGauge.getStatistics();
     pureGauge.printAcceptanceRate();
     pureGauge.writeConfigurationToFile("configs_profiling_run");
-    pureGauge.writeDataToFile("../output/pureGauge1");
+    pureGauge.writeDataToFile("../output/correlatorData.dat");
 
     programEnd = clock();
     cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;

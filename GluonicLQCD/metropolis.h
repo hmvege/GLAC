@@ -56,10 +56,6 @@ private:
     std::string m_inputFolder = "../input/";
     std::string m_outputFolder = "../output/";
 
-    // Correlator output
-    std::ofstream *correlatorOutput;
-    void writeObservableToFile(double observable);
-
     // SU3 generator
     SU3MatrixGenerator *m_SU3Generator = nullptr;
 
@@ -70,13 +66,13 @@ public:
     Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S);
     ~Metropolis();
     void latticeSetup(SU3MatrixGenerator *SU3Generator);
-    void runMetropolis();
+    void runMetropolis(bool storePreObservables);
     void getStatistics();
     // Data outputters
 //    void writeStatisticsToFile(const char *filename);
-    void writeDataToFile(std::__1::string filename, bool preThermalizationGamma = true);
-    void writeConfigurationToFile(std::__1::string filename);
-    void loadFieldConfiguration(std::__1::string filename);
+    void writeDataToFile(std::string filename, bool preThermalizationGamma = true);
+    void writeConfigurationToFile(std::string filename);
+    void loadFieldConfiguration(std::string filename);
 
     // Setters
     void setAction(Action *S) { m_S = S; }
