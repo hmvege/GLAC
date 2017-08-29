@@ -11,6 +11,7 @@
 #include "functions.h"
 #include "links.h"
 #include "matrices/su3matrixgenerator.h"
+#include "mpi.h"
 
 //TEMP
 #include "unittests.h"
@@ -36,7 +37,7 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
     m_processRank = processRank;
     setAction(S);
     setCorrelator(correlator);
-    m_lattice = new Links[m_latticeSize]; // Lattice, contigious memory allocation
+//    m_lattice = new Links[m_latticeSize]; // Lattice, contigious memory allocation
 //    m_GammaPreThermalization = new double[m_NTherm*m_NCor/10];
     m_GammaPreThermalization = new double[m_NTherm*m_NCor+1];
     m_Gamma = new double[m_NCf]; // Correlator values
@@ -61,6 +62,7 @@ Metropolis::~Metropolis()
     delete [] m_lattice;
     delete [] m_Gamma;
     delete [] m_GammaSquared;
+    delete [] m_neighbourLists;
 }
 
 void Metropolis::subLatticeDimensionsSetup()
@@ -72,39 +74,68 @@ void Metropolis::subLatticeDimensionsSetup()
         cout << "Error: odd number of processors --> exiting." << endl;
         exit(1);
     }
-    if (m_numprocs == 2) {
-        // Special case of only 2 processors
-        m_subLatticeDimensions[0] = m_N / 2 + 2;
-        m_subLatticeDimensions[1] = m_N + 2;
-        m_subLatticeDimensions[2] = m_N + 2;
-        m_subLatticeDimensions[3] = m_N_T + 2;
+    int restProc = m_numprocs;
+
+    // Sets up sub lattice dimensionality without any splitting
+    for (int i = 0; i < 3; i++) {
+        m_subLatticeDimensions[i] = m_N;
     }
-    else if (m_numprocs == 4) {
-        // Special case of 4 processors
-        m_subLatticeDimensions[0] = m_N / 2 + 2;
-        m_subLatticeDimensions[1] = m_N / 2 + 2;
-        m_subLatticeDimensions[2] = m_N + 2;
-        m_subLatticeDimensions[3] = m_N_T + 2;
+    m_subLatticeDimensions[3] = m_N_T;
+
+
+    // TEST==========================================================
+    if (m_processRank == 0) {
+        cout << "Processor: " << m_processRank << endl;
+        for (int i = 0; i < 4; i++) {
+            cout << m_subLatticeDimensions[i] << endl;
+        }
     }
-    else if (m_numprocs == 8) {
-        // Special case of 8 processors
-        m_subLatticeDimensions[0] = m_N / 2 + 2;
-        m_subLatticeDimensions[1] = m_N / 2 + 2;
-        m_subLatticeDimensions[2] = m_N / 2 + 2;
-        m_subLatticeDimensions[3] = m_N_T + 2;
+    MPI_Barrier(MPI_COMM_WORLD);
+    // ==============================================================
+
+    // Iteratively finds the lattice cube sizes
+    while (restProc >= 2) {
+//        for (int i = 3; i > 0; i--) {
+        for (int i = 0; i < 4; i++) {
+            m_subLatticeDimensions[i] /= 2;
+            restProc /= 2;
+            if (restProc < 2) break;
+        }
     }
-    else {
-        m_subLatticeDimensions[0] = m_N / 2 + 2;
-        m_subLatticeDimensions[1] = m_N / 2 + 2;
-        m_subLatticeDimensions[2] = m_N / 2 + 2;
-        m_subLatticeDimensions[3] = m_N_T / 2 + 2;
+    m_subLatticeSize = 1;
+    for (int i = 0; i < 4; i++) {
+        m_subLatticeSize *= m_subLatticeDimensions[i];
     }
+    m_latticeSize = m_subLatticeSize; // OK TO DO THIS? CREATE GLOBAL SUB LATTICE CONSTANTS ECT?
+
+    // Adds a phase
+    for (int i = 0; i < 4; i++) {
+        m_subLatticeDimensions[i] += 2;
+    }
+
+    m_lattice = new Links[m_subLatticeSize];
+    m_neighbourLists = new int[8];
+    /*
+     * Neighbour list values defined as:
+     * x-1 | x+1
+     * y-1 | y+1
+     * z-1 | z+1
+     * t-1 | t+1
+     */
+
+    // Assign x direction neighbours
+    m_neighbourLists[0] =
+    // Assign y direction neighbours
+    // Assign z direction neighbours
+    // Assign t direction neighbours
+
+    // PRINTS
     cout << "Processor: " << m_processRank << endl;
     for (int i = 0; i < 4; i++) {
         cout << m_subLatticeDimensions[i] << endl;
     }
-
     cout << "EXITS AT SUB LATTICE DIM SETTUP" << endl;
+    MPI_Barrier(MPI_COMM_WORLD);
     exit(1);
 }
 
@@ -119,7 +150,8 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
     m_SU3Generator = SU3Generator;
     if (hotStart) {
         // All starts with a completely random matrix.
-        for (int i = 0; i < m_latticeSize; i++)
+//        for (int i = 0; i < m_latticeSize; i++)
+        for (int i = 0; i < m_subLatticeSize; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {
@@ -128,7 +160,8 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
             }
         }
     } else {
-        for (int i = 0; i < m_latticeSize; i++)
+//        for (int i = 0; i < m_latticeSize; i++)
+        for (int i = 0; i < m_subLatticeSize; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {

@@ -19,6 +19,10 @@ int index(int i, int j, int k, int l, int N, int N_T)
     return returnVal;
 }
 
+int subLatticeNeighbourListIndex() {
+
+}
+
 SU3 inverse(SU3 U)
 {
     /*

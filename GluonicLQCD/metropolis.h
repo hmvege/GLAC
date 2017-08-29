@@ -31,9 +31,11 @@ private:
     int m_processRank;
     void subLatticeDimensionsSetup();
 
-    // Lattice constants
+    // Lattice variables
     int m_latticeSize;
+    int m_subLatticeSize;
     Links * m_lattice;
+    int * m_neighbourLists;
     SU3 m_updatedMatrix;
 
     // Variables used to perform statistics
