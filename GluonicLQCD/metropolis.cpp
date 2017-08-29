@@ -116,7 +116,11 @@ void Metropolis::subLatticeDimensionsSetup()
     cout << "m_subLatticeSize = " << m_subLatticeSize << endl;
     cout << "m_trueSubLatticeSize = " << m_trueSubLatticeSize << endl;
 
-    int processorsPerDimension[4];
+    // Sets up number of processors per dimension
+    for (int i = 0; i < 3; i++) {
+        m_processorsPerDimension[i] = m_N / m_subLatticeDimensions[i];
+    }
+    m_processorsPerDimension[3] = m_N_T / m_subLatticeDimensions[3];
 
     /*
      * Neighbour list values defined as:

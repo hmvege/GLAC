@@ -42,7 +42,7 @@ for i in xrange(4):
 		Np = i+j
 		# print "i = %5d. i-1=%5d" % (Np, (Np/Nx-1)%Nx * Ny )
 		# if ( Np/(Nx*Ny) %  )
-		print Np/(Nx)
+		print (Np/Nx - 1) % Ny 
 		# print "i = %5d. i-1=%5d" % (Np, Np - Nx)
 		# if ((Np/Nx-1) % Ny) == 0:
 		# 	print "i = %5d. i+1=%5d" % (Np, Np % Ny)
