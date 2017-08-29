@@ -19,6 +19,7 @@ private:
     int m_NTherm;
     int m_nUpdates = 10; // N updates before calculating the action, as that is costly
     int m_subLatticeDimensions[4];
+    int m_trueSubLatticeDimensions[4]; // With phases
     double m_epsilon;
     double m_a; // Lattice spacing
     double m_L; // Lattice size
@@ -29,11 +30,13 @@ private:
     // Paralellization setup
     int m_numprocs;
     int m_processRank;
+    int m_processorsPerDimension[4];
     void subLatticeDimensionsSetup();
 
     // Lattice variables
     int m_latticeSize;
     int m_subLatticeSize;
+    int m_trueSubLatticeSize; // With phases
     Links * m_lattice;
     int * m_neighbourLists;
     SU3 m_updatedMatrix;

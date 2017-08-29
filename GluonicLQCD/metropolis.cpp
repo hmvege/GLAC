@@ -83,15 +83,15 @@ void Metropolis::subLatticeDimensionsSetup()
     m_subLatticeDimensions[3] = m_N_T;
 
 
-    // TEST==========================================================
-    if (m_processRank == 0) {
-        cout << "Processor: " << m_processRank << endl;
-        for (int i = 0; i < 4; i++) {
-            cout << m_subLatticeDimensions[i] << endl;
-        }
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
-    // ==============================================================
+//    // TEST==========================================================
+//    if (m_processRank == 0) {
+//        cout << "Processor: " << m_processRank << endl;
+//        for (int i = 0; i < 4; i++) {
+//            cout << m_subLatticeDimensions[i] << endl;
+//        }
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    // ==============================================================
 
     // Iteratively finds the lattice cube sizes
     while (restProc >= 2) {
@@ -103,18 +103,21 @@ void Metropolis::subLatticeDimensionsSetup()
         }
     }
     m_subLatticeSize = 1;
+    m_trueSubLatticeSize = 1;
     for (int i = 0; i < 4; i++) {
-        m_subLatticeSize *= m_subLatticeDimensions[i];
+        m_subLatticeSize *= m_subLatticeDimensions[i]; // Gets the total size of the sub-lattice(without phases)
+        m_trueSubLatticeDimensions[i] = m_subLatticeDimensions[i] + 2; // Adds a phase
+        m_trueSubLatticeSize *= m_trueSubLatticeDimensions[i]; // Gets the total size of the sub-lattice(with phases)
     }
     m_latticeSize = m_subLatticeSize; // OK TO DO THIS? CREATE GLOBAL SUB LATTICE CONSTANTS ECT?
-
-    // Adds a phase
-    for (int i = 0; i < 4; i++) {
-        m_subLatticeDimensions[i] += 2;
-    }
-
-    m_lattice = new Links[m_subLatticeSize];
+    m_lattice = new Links[m_trueSubLatticeSize];
     m_neighbourLists = new int[8];
+    cout << "Process rank: " << m_processRank << endl;
+    cout << "m_subLatticeSize = " << m_subLatticeSize << endl;
+    cout << "m_trueSubLatticeSize = " << m_trueSubLatticeSize << endl;
+
+    int processorsPerDimension[4];
+
     /*
      * Neighbour list values defined as:
      * x-1 | x+1
@@ -124,16 +127,21 @@ void Metropolis::subLatticeDimensionsSetup()
      */
 
     // Assign x direction neighbours
-    m_neighbourLists[0] =
+    if ((m_processRank + 1) % m_subLatticeDimensions[0] == 0) {
+        m_neighbourLists[0] = (m_processRank + 1) % m_subLatticeDimensions[0];
+    }
     // Assign y direction neighbours
     // Assign z direction neighbours
     // Assign t direction neighbours
 
-    // PRINTS
-    cout << "Processor: " << m_processRank << endl;
-    for (int i = 0; i < 4; i++) {
-        cout << m_subLatticeDimensions[i] << endl;
-    }
+    // PRINTS ===========================================================
+//    cout << "Processor: " << m_processRank << endl;
+//    for (int i = 0; i < 4; i++) {
+//        cout << "m_dim     = " << m_subLatticeDimensions[i] << endl;
+//        cout << "m_trueDim = " << m_trueSubLatticeDimensions[i] << endl;
+//    }
+//    // ==================================================================
+
     cout << "EXITS AT SUB LATTICE DIM SETTUP" << endl;
     MPI_Barrier(MPI_COMM_WORLD);
     exit(1);
