@@ -38,7 +38,8 @@ private:
     int m_subLatticeSize;
     int m_trueSubLatticeSize; // With phases
     Links * m_lattice;
-    int * m_neighbourLists;
+    int * m_neighbourList;
+    int ** m_allNeighbourLists;
     SU3 m_updatedMatrix;
 
     // Variables used to perform statistics

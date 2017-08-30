@@ -62,7 +62,7 @@ Metropolis::~Metropolis()
     delete [] m_lattice;
     delete [] m_Gamma;
     delete [] m_GammaSquared;
-    delete [] m_neighbourLists;
+    delete [] m_neighbourList;
 }
 
 void Metropolis::subLatticeDimensionsSetup()
@@ -81,7 +81,6 @@ void Metropolis::subLatticeDimensionsSetup()
         m_subLatticeDimensions[i] = m_N;
     }
     m_subLatticeDimensions[3] = m_N_T;
-
 
 //    // TEST==========================================================
 //    if (m_processRank == 0) {
@@ -111,7 +110,7 @@ void Metropolis::subLatticeDimensionsSetup()
     }
     m_latticeSize = m_subLatticeSize; // OK TO DO THIS? CREATE GLOBAL SUB LATTICE CONSTANTS ECT?
     m_lattice = new Links[m_trueSubLatticeSize];
-    m_neighbourLists = new int[8];
+
     cout << "Process rank: " << m_processRank << endl;
     cout << "m_subLatticeSize = " << m_subLatticeSize << endl;
     cout << "m_trueSubLatticeSize = " << m_trueSubLatticeSize << endl;
@@ -132,9 +131,11 @@ void Metropolis::subLatticeDimensionsSetup()
      * t-1 | t+1
      */
 
-    // Assign x direction neighbours
+    // Sets up neighbour lists
+    m_neighbourList = new int[8];
+
     if ((m_processRank + 1) % m_subLatticeDimensions[0] == 0) {
-        m_neighbourLists[0] = (m_processRank + 1) % m_subLatticeDimensions[0];
+        m_neighbourList[0] = (m_processRank + 1) % m_subLatticeDimensions[0];
     }
     // Assign y direction neighbours
     // Assign z direction neighbours
