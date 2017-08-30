@@ -122,6 +122,8 @@ void Metropolis::subLatticeDimensionsSetup()
     }
     m_processorsPerDimension[3] = m_N_T / m_subLatticeDimensions[3];
 
+    // TODO: Create function that takes Npx,Npy,Npz,Npt as arguments(that is, processors in each direction)
+
     /*
      * Neighbour list values defined as:
      * x-1 | x+1
