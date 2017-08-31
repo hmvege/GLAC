@@ -1,5 +1,5 @@
-#ifndef METROPOLIS_H
-#define METROPOLIS_H
+#ifndef SYSTEM_H
+#define SYSTEM_H
 
 #include <random>
 #include "actions/action.h"
@@ -9,7 +9,7 @@
 
 class Action;
 
-class Metropolis
+class System
 {
 private:
     int m_N;
@@ -77,8 +77,8 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 public:
-    Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
-    ~Metropolis();
+    System(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
+    ~System();
     void runMetropolis(bool storePreObservables);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
     void getStatistics();

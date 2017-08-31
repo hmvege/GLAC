@@ -1,6 +1,6 @@
 #include <iostream>
 #include <ctime>
-#include "metropolis.h"
+#include "system.h"
 #include "actions/action.h"
 #include "actions/wilsongaugeaction.h"
 #include "correlators/plaquette.h"
@@ -62,7 +62,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     Plaquette G(N, N_T);
     WilsonGaugeAction S(N, N_T, beta);
-    Metropolis pureGauge(N, N_T, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S, numprocs, processRank);
+    System pureGauge(N, N_T, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S, numprocs, processRank);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     pureGauge.runMetropolis(storeThermalizationPlaquettes);
     pureGauge.getStatistics();

@@ -20,9 +20,9 @@ public:
     // Neighbour list
     int getNeighbour();
 
-    inline int getAllNeighbourListsIndex(int rank) {
-        return
-    }
+//    inline int getAllNeighbourListsIndex(int rank) {
+//        return
+//    }
 };
 
 #endif // NEIGHBOURS_H

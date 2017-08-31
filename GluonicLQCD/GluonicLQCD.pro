@@ -4,7 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    metropolis.cpp \
+    system.cpp \
     actions/action.cpp \
     functions.cpp \
     links.cpp \
@@ -20,7 +20,7 @@ SOURCES += main.cpp \
     parallelization/neighbourlist.cpp
 
 HEADERS += \
-    metropolis.h \
+    system.h \
     actions/action.h \
     functions.h \
     links.h \
