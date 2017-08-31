@@ -6,6 +6,7 @@
 #include "correlators/correlator.h"
 #include "links.h"
 #include "matrices/su3matrixgenerator.h"
+#include "parallelization/neighbours.h"
 
 class Action;
 
@@ -41,7 +42,7 @@ private:
     SU3 m_updatedMatrix;
 
     // Parallelization variables
-    //    int * m_neighbourList;
+    Neighbours * m_neighbourLists;
 //    int * m_allNeighbourLists;
 
     // Variables used to perform statistics

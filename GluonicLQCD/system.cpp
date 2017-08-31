@@ -91,7 +91,7 @@ void System::subLatticeDimensionsSetup()
 //    MPI_Barrier(MPI_COMM_WORLD);
 //    // ==============================================================
 
-    // Iteratively finds the lattice cube sizes
+    // Iteratively finds and sets the sub-lattice cube sizes
     while (restProc >= 2) {
 //        for (int i = 3; i > 0; i--) {
         for (int i = 0; i < 4; i++) {
@@ -107,12 +107,9 @@ void System::subLatticeDimensionsSetup()
         m_trueSubLatticeDimensions[i] = m_subLatticeDimensions[i] + 2; // Adds a phase
         m_trueSubLatticeSize *= m_trueSubLatticeDimensions[i]; // Gets the total size of the sub-lattice(with phases)
     }
-    m_latticeSize = m_subLatticeSize; // OK TO DO THIS? CREATE GLOBAL SUB LATTICE CONSTANTS ECT?
+    m_latticeSize = m_subLatticeSize;
     m_lattice = new Links[m_trueSubLatticeSize];
 
-    cout << "Process rank: " << m_processRank << endl;
-    cout << "m_subLatticeSize = " << m_subLatticeSize << endl;
-    cout << "m_trueSubLatticeSize = " << m_trueSubLatticeSize << endl;
 
     // Sets up number of processors per dimension
     for (int i = 0; i < 3; i++) {
@@ -120,38 +117,25 @@ void System::subLatticeDimensionsSetup()
     }
     m_processorsPerDimension[3] = m_N_T / m_subLatticeDimensions[3];
 
-    // TODO: Create function that takes Npx,Npy,Npz,Npt as arguments(that is, processors in each direction)
+    m_neighbourLists = new Neighbours(m_processRank, m_numprocs, m_processorsPerDimension);
 
-    /*
-     * Neighbour list values defined as:
-     * 0: x-1 | 1: x+1
-     * 2: y-1 | 3: y+1
-     * 4: z-1 | 5: z+1
-     * 6: t-1 | 7: t+1
-     */
-
-    // Sets up neighbour lists
-//    m_neighbourList = new int[8];
-//    m_allNeighbourLists = new int[8*m_numprocs];
-//    neighbourIndex(m_processRank, , m_numprocs);
-//    fillNeighbourLists();
-
-    // Assign x direction neighbours
-    // Assign y direction neighbours
-    // Assign z direction neighbours
-    // Assign t direction neighbours
 
     // PRINTS ===========================================================
+//    cout << "Process rank: " << m_processRank << endl;
+//    cout << "m_subLatticeSize = " << m_subLatticeSize << endl;
+//    cout << "m_trueSubLatticeSize = " << m_trueSubLatticeSize << endl;
+//    if (m_processRank==0) {
+//        for (int i = 0; i < 4; i++) {
+//            cout << "Dim: " << i << " processors: " << m_processorsPerDimension[i] << endl;
+//        }
+//        m_neighbourLists->getNeighbours(m_processRank).print();
+//    }
 //    cout << "Processor: " << m_processRank << endl;
 //    for (int i = 0; i < 4; i++) {
 //        cout << "m_dim     = " << m_subLatticeDimensions[i] << endl;
 //        cout << "m_trueDim = " << m_trueSubLatticeDimensions[i] << endl;
 //    }
 //    // ==================================================================
-
-//    cout << "EXITS AT SUB LATTICE DIM SETTUP" << endl;
-    MPI_Barrier(MPI_COMM_WORLD);
-    exit(1);
 }
 
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
@@ -185,6 +169,8 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
             }
         }
     }
+    MPI_Barrier(MPI_COMM_WORLD);
+    exit(1);
 }
 
 void System::updateLink(int latticeIndex, int mu)

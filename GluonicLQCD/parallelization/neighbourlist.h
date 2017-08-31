@@ -8,7 +8,9 @@ public:
     NeighbourList();
     ~NeighbourList();
     // Neighbour list:
-    int *m_list;
+    int *list;
+    int rank;
+    void print();
 };
 
 #endif // NEIGHBOURLIST_H

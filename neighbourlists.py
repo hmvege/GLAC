@@ -1,8 +1,10 @@
+import numpy as np
+
 # Processors in one dimension
 Nx = 4
-Ny = 4
-Nz = 4
-Nt = 8
+Ny = 2
+Nz = 2
+Nt = 2
 
 N = Nx*Ny
 
@@ -149,9 +151,28 @@ def print_processor_lattice():
 		elif (Np+1) % Nx == 0:
 			print ""
 
-# print_X_neighbours()
-# print_Y_neighbours()
-# print_Z_neighbours()
-# print_T_neighbours()
+def getNeighbourLists():
+	n_lists = []
+	for Np in xrange(Nt*Nz*Ny*Nx):
+		n_lists.append([	getXMinusOne(Np),getXPlusOne(Np),
+						getYMinusOne(Np),getYPlusOne(Np),
+						getZMinusOne(Np),getZPlusOne(Np),
+						getTMinusOne(Np),getTPlusOne(Np)])
+	return n_lists
 
+
+def print_neighbours(n_lists,Np):
+	n_list = n_lists[Np]
+	print "Process rank = %d" % Np
+	print "x-1 = %2d x+1 = %2d" % (n_list[0],n_list[1])
+	print "y-1 = %2d y+1 = %2d" % (n_list[2],n_list[3])
+	print "z-1 = %2d z+1 = %2d" % (n_list[4],n_list[5])
+	print "t-1 = %2d t+1 = %2d" % (n_list[6],n_list[7])
+
+print_X_neighbours()
+print_Y_neighbours()
+print_Z_neighbours()
+print_T_neighbours()
+neighbour_lists = getNeighbourLists()
 # print_processor_lattice()
+print_neighbours(neighbour_lists,0)
