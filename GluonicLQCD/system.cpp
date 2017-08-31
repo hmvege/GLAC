@@ -5,13 +5,13 @@
 #include <iostream>
 #include <cstdio>   // For io C-style handling.
 #include <cstdlib>
+#include <mpi.h>
 #include "system.h"
 #include "actions/action.h"
 #include "correlators/correlator.h"
 #include "functions.h"
 #include "links.h"
 #include "matrices/su3matrixgenerator.h"
-#include "mpi.h"
 
 //TEMP
 #include "unittests.h"
@@ -67,7 +67,7 @@ System::~System()
 void System::subLatticeDimensionsSetup()
 {
     /*
-     * Sets up the sub-lattices. Adds +2 in every direction to account for sharing of phases.
+     * Sets up the sub-lattices. Adds +2 in every direction to account for sharing of s.
      */
     if (m_numprocs % 2 != 0) {
         cout << "Error: odd number of processors --> exiting." << endl;
@@ -103,9 +103,9 @@ void System::subLatticeDimensionsSetup()
     m_subLatticeSize = 1;
     m_trueSubLatticeSize = 1;
     for (int i = 0; i < 4; i++) {
-        m_subLatticeSize *= m_subLatticeDimensions[i]; // Gets the total size of the sub-lattice(without phases)
-        m_trueSubLatticeDimensions[i] = m_subLatticeDimensions[i] + 2; // Adds a phase
-        m_trueSubLatticeSize *= m_trueSubLatticeDimensions[i]; // Gets the total size of the sub-lattice(with phases)
+        m_subLatticeSize *= m_subLatticeDimensions[i]; // Gets the total size of the sub-lattice(without faces)
+        m_trueSubLatticeDimensions[i] = m_subLatticeDimensions[i] + 2; // Adds a face
+        m_trueSubLatticeSize *= m_trueSubLatticeDimensions[i]; // Gets the total size of the sub-lattice(with faces)
     }
     m_latticeSize = m_subLatticeSize;
     m_lattice = new Links[m_trueSubLatticeSize];
@@ -150,7 +150,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
     if (hotStart) {
         // All starts with a completely random matrix.
 //        for (int i = 0; i < m_latticeSize; i++)
-        for (int i = 0; i < m_subLatticeSize; i++)
+        for (int i = 1; i < m_trueSubLatticeSize-1; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {
@@ -160,7 +160,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
         }
     } else {
 //        for (int i = 0; i < m_latticeSize; i++)
-        for (int i = 0; i < m_subLatticeSize; i++)
+        for (int i = 1; i < m_trueSubLatticeSize-1; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {
@@ -169,9 +169,26 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
             }
         }
     }
+    // SHARE FACES HERE
     MPI_Barrier(MPI_COMM_WORLD);
     exit(1);
 }
+
+//void System::shareFaces()
+//{
+//    /*
+//     * Function for sharing faces of the hypercubes
+//     */
+//    // Share x=0
+//    // Share x=Nx
+//    // Share y=0
+//    // Share y=Ny
+//    // Share z=0
+//    // Share z=Nz
+//    // Share t=0
+//    // Share t=Nt
+//    // Edges?
+//}
 
 void System::updateLink(int latticeIndex, int mu)
 {
@@ -192,7 +209,7 @@ void System::update()
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
-    // PARALLELIZE HERE
+//     PARALLELIZE HERE
     for (int x = 0; x < m_N; x++) {
         for (int y = 0; y < m_N; y++) {
             for (int z = 0; z < m_N; z++) {
@@ -248,6 +265,7 @@ void System::runMetropolis(bool storePreObservables)
         for (int i = 0; i < m_NCor; i++) // Updating NCor times before updating the Gamma function
         {
             update();
+            // SHARE FACES HERE!?!
         }
         m_Gamma[alpha] = m_correlator->calculate(m_lattice);
     }

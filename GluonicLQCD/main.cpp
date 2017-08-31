@@ -72,5 +72,6 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     programEnd = clock();
     cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
+    MPI_Finalize();
     return 0;
 }
