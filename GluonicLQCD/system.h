@@ -32,7 +32,7 @@ private:
     int m_numprocs;
     int m_processRank;
     int m_processorsPerDimension[4];
-    void subLatticeDimensionsSetup();
+    void subLatticeSetup();
 
     // Lattice variables
     int m_latticeSize;

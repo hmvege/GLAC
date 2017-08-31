@@ -64,7 +64,7 @@ System::~System()
     delete [] m_GammaSquared;
 }
 
-void System::subLatticeDimensionsSetup()
+void System::subLatticeSetup()
 {
     /*
      * Sets up the sub-lattices. Adds +2 in every direction to account for sharing of s.
