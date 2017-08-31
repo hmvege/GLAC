@@ -12,4 +12,6 @@ SU3 inverse(SU3 U);
 SU2 SU2Inverse(SU2 U);
 bool compareSU3(SU3 A, SU3 B);
 
+//int neighbourIndex(int proc, int direction, int numprocs);
+
 #endif // FUNCTIONS_H

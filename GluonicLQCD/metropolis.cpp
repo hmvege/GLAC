@@ -62,7 +62,6 @@ Metropolis::~Metropolis()
     delete [] m_lattice;
     delete [] m_Gamma;
     delete [] m_GammaSquared;
-    delete [] m_neighbourList;
 }
 
 void Metropolis::subLatticeDimensionsSetup()
@@ -125,18 +124,19 @@ void Metropolis::subLatticeDimensionsSetup()
 
     /*
      * Neighbour list values defined as:
-     * x-1 | x+1
-     * y-1 | y+1
-     * z-1 | z+1
-     * t-1 | t+1
+     * 0: x-1 | 1: x+1
+     * 2: y-1 | 3: y+1
+     * 4: z-1 | 5: z+1
+     * 6: t-1 | 7: t+1
      */
 
     // Sets up neighbour lists
-    m_neighbourList = new int[8];
+//    m_neighbourList = new int[8];
+//    m_allNeighbourLists = new int[8*m_numprocs];
+//    neighbourIndex(m_processRank, , m_numprocs);
+//    fillNeighbourLists();
 
-    if ((m_processRank + 1) % m_subLatticeDimensions[0] == 0) {
-        m_neighbourList[0] = (m_processRank + 1) % m_subLatticeDimensions[0];
-    }
+    // Assign x direction neighbours
     // Assign y direction neighbours
     // Assign z direction neighbours
     // Assign t direction neighbours
@@ -149,7 +149,7 @@ void Metropolis::subLatticeDimensionsSetup()
 //    }
 //    // ==================================================================
 
-    cout << "EXITS AT SUB LATTICE DIM SETTUP" << endl;
+//    cout << "EXITS AT SUB LATTICE DIM SETTUP" << endl;
     MPI_Barrier(MPI_COMM_WORLD);
     exit(1);
 }

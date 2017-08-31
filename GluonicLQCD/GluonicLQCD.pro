@@ -15,7 +15,9 @@ SOURCES += main.cpp \
     actions/wilsongaugeaction.cpp \
     matrices/su2.cpp \
     matrices/su3.cpp \
-    matrices/su3matrixgenerator.cpp
+    matrices/su3matrixgenerator.cpp \
+    parallelization/neighbours.cpp \
+    parallelization/neighbourlist.cpp
 
 HEADERS += \
     metropolis.h \
@@ -29,7 +31,9 @@ HEADERS += \
     actions/wilsongaugeaction.h \
     matrices/su2.h \
     matrices/su3.h \
-    matrices/su3matrixgenerator.h
+    matrices/su3matrixgenerator.h \
+    parallelization/neighbours.h \
+    parallelization/neighbourlist.h
 
 #LIBS += -llapack -lblas -larmadillo
 

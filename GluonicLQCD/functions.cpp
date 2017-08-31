@@ -19,9 +19,18 @@ int index(int i, int j, int k, int l, int N, int N_T)
     return returnVal;
 }
 
-int subLatticeNeighbourListIndex() {
+//int neighbourIndex(int proc, int direction, int numprocs) {
+//    int returnVal = (numprocs*proc + direction);
+//    return returnVal;
+//}
 
-}
+////void fillNeighbourLists(int * neighbourLists, numprocs) {
+
+////}
+
+//int subLatticeNeighbourListIndex() {
+
+//}
 
 SU3 inverse(SU3 U)
 {
