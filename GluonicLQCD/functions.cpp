@@ -19,18 +19,13 @@ int index(int i, int j, int k, int l, int N, int N_T)
     return returnVal;
 }
 
-//int neighbourIndex(int proc, int direction, int numprocs) {
-//    int returnVal = (numprocs*proc + direction);
-//    return returnVal;
-//}
-
-////void fillNeighbourLists(int * neighbourLists, numprocs) {
-
-////}
-
-//int subLatticeNeighbourListIndex() {
-
-//}
+int indexSpecific(int i, int j, int k, int l, int Ny, int Nz, int Nt)
+{
+    /*
+     * Function for contigious memory allocation for uneven dimensions
+     */
+    return (Nt*(Nz*(Ny*i + j) + k) + l);
+}
 
 SU3 inverse(SU3 U)
 {

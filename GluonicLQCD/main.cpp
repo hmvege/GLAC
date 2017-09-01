@@ -25,16 +25,16 @@ using std::endl;
  * [x] Find bug so that N != N_T works.
  * [x] Add write each Plaquette/observable to file-function.
  * [x] Finish SU3 basic properties unit testing such that I dont have to compare by hand
+ * [x] Rename metropolis.cpp --> system.cpp
  * [ ] Switch to CORRECT method syntax, foo --> m_foo
  * [ ] Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
- * [ ] Rename metropolis.cpp --> system.cpp
  * [ ] Add parallelization
  */
 
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
-    int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
-    int N_T         = 16;            // Time dimension
+    int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
+    int N_T         = 8;            // Time dimension
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path

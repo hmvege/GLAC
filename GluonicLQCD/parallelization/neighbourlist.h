@@ -9,6 +9,8 @@ public:
     ~NeighbourList();
     // Neighbour list:
     int *list;
+
+//    int *dimensionsToCubesToShareWithNeighbour;
     int rank;
     void print();
 };

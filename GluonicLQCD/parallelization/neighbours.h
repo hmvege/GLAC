@@ -5,6 +5,8 @@
 
 #include "neighbourlist.h"
 
+typedef int (*indexCubeFinderArray) (int n1, int n2, int n3);
+
 class Neighbours
 {
 private:
@@ -17,6 +19,26 @@ private:
     void generateNeighbourList();
     NeighbourList * neighbourLists;
 
+    // Contigious index finder for cubes
+    /*
+     * Neighbour list values defined as:
+     * 0: x-1 | 1: x+1
+     * 2: y-1 | 3: y+1
+     * 4: z-1 | 5: z+1
+     * 6: t-1 | 7: t+1
+     */
+    static int indexCube0(int n1, int n2, int n3) { return (Nt*(Nz*(Ny*i + j) + k) + l); } // x-1
+    static int indexCube1(int n1, int n2, int n3) { return 0; } // x+1
+    static int indexCube2(int n1, int n2, int n3) { return 0; } // y-1
+    static int indexCube3(int n1, int n2, int n3) { return 0; } // y+1
+    static int indexCube4(int n1, int n2, int n3) { return 0; } // z-1
+    static int indexCube5(int n1, int n2, int n3) { return 0; } // z+1
+    static int indexCube6(int n1, int n2, int n3) { return 0; } // t-1
+    static int indexCube7(int n1, int n2, int n3) { return 0; } // t+1
+
+
+
+    // Functions for finding correct direction of neighbouring lattices
     inline int getXPlusOne(int Np) {
         if (((Np + 1) % m_Nx) == 0) {
             return (Np/m_Nx) * m_Nx;
@@ -83,10 +105,16 @@ private:
         return x_count + y_count + z_count + t_count;
     }
 public:
-    Neighbours(int processRank, int numproc, int *processorsPerDim);
+    Neighbours();
     ~Neighbours();
 
-    NeighbourList getNeighbours(int Np) { return neighbourLists[Np]; }
+    void initialize(int processRank, int numproc, int * processorsPerDim);
+
+    // Index function for specific face
+    indexCubeFinderArray *cubeIndexFunctions;
+
+    NeighbourList* getNeighbours(int Np);
+    int getListLength() { return m_numproc; }
 };
 
 #endif // NEIGHBOURS_H

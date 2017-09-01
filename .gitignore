@@ -16,3 +16,6 @@ build/
 # Other qt files
 *.user*
 *.autosave
+
+# Files not of importance
+dim_sketch.py

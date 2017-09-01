@@ -41,9 +41,9 @@ private:
     Links * m_lattice;
     SU3 m_updatedMatrix;
 
-    // Parallelization variables
-    Neighbours * m_neighbourLists;
-//    int * m_allNeighbourLists;
+    // Parallelization variables and functions
+    Neighbours * m_neighbourLists = nullptr;
+    void shareFaces();
 
     // Variables used to perform statistics
     double * m_Gamma;

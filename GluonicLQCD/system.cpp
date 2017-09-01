@@ -12,6 +12,8 @@
 #include "functions.h"
 #include "links.h"
 #include "matrices/su3matrixgenerator.h"
+#include "parallelization/neighbourlist.h"
+#include "parallelization/neighbours.h"
 
 //TEMP
 #include "unittests.h"
@@ -42,6 +44,10 @@ System::System(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L
     m_GammaPreThermalization = new double[m_NTherm*m_NCor+1];
     m_Gamma = new double[m_NCf]; // Correlator values
     m_GammaSquared = new double[m_NCf];
+
+    // For parallelization
+//    Neighbours neighbourLists;
+    m_neighbourLists = new Neighbours;
 
     std::mt19937_64 gen(seed); // Starting up the Mersenne-Twister19937 function
     std::uniform_real_distribution<double> uni_dist(0,1);
@@ -110,20 +116,18 @@ void System::subLatticeSetup()
     m_latticeSize = m_subLatticeSize;
     m_lattice = new Links[m_trueSubLatticeSize];
 
-
     // Sets up number of processors per dimension
     for (int i = 0; i < 3; i++) {
         m_processorsPerDimension[i] = m_N / m_subLatticeDimensions[i];
     }
     m_processorsPerDimension[3] = m_N_T / m_subLatticeDimensions[3];
-
-    m_neighbourLists = new Neighbours(m_processRank, m_numprocs, m_processorsPerDimension);
-
+    m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
 
     // PRINTS ===========================================================
 //    cout << "Process rank: " << m_processRank << endl;
 //    cout << "m_subLatticeSize = " << m_subLatticeSize << endl;
 //    cout << "m_trueSubLatticeSize = " << m_trueSubLatticeSize << endl;
+
 //    if (m_processRank==0) {
 //        for (int i = 0; i < 4; i++) {
 //            cout << "Dim: " << i << " processors: " << m_processorsPerDimension[i] << endl;
@@ -144,7 +148,8 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
      * Sets up the lattice and its matrices.
      */
     // PARALLELIZE HERE?? TIME IT!
-    subLatticeDimensionsSetup();
+    subLatticeSetup();
+
     // Also, set up blocks to use!!
     m_SU3Generator = SU3Generator;
     if (hotStart) {
@@ -169,26 +174,146 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
             }
         }
     }
-    // SHARE FACES HERE
-    MPI_Barrier(MPI_COMM_WORLD);
-    exit(1);
+
+    shareFaces();
 }
 
-//void System::shareFaces()
-//{
-//    /*
-//     * Function for sharing faces of the hypercubes
-//     */
-//    // Share x=0
-//    // Share x=Nx
-//    // Share y=0
-//    // Share y=Ny
-//    // Share z=0
-//    // Share z=Nz
-//    // Share t=0
-//    // Share t=Nt
-//    // Edges?
-//}
+void System::shareFaces()
+{
+    /*
+     * Function for sharing faces, edges and vertexes of the hypercubes of the different processors.
+     */
+    /*
+     * Neighbour list values defined as:
+     * 0: x-1 | 1: x+1
+     * 2: y-1 | 3: y+1
+     * 4: z-1 | 5: z+1
+     * 6: t-1 | 7: t+1
+     */
+    // Cubes, 8
+    for (int i = 0; i < 8; i++) {
+
+        if (m_processRank == 0) {
+            cout << i << " rank=" << m_processRank<< endl;
+
+            cout << m_neighbourLists->getNeighbours(m_processRank)->list[i] << endl;
+//            list = m_neighbourLists->getNeighbours(m_processRank);
+        }
+        // Share cube
+        for (int n1 = 0; n1 < m_neighbourLists->cubeIndex[i][0]; n1++) {
+            for (int n2 = 0; n2 < m_neighbourLists->cubeIndex[i][1]; n2++) {
+                for (int n3 = 0; n3 < m_neighbourLists->cubeIndex[i][2]; n3++) {
+                    for (int mu = 0; mu < 4; mu++) { // Sharing matrix
+                        for (int c = 0; c < 9; c++) { // Sharing complex number
+                            MPI_Sendrecv(m_lattice[m_neighbourLists->cubeIndexFunctions[i]].U[mu].mat[c].re,
+                                    1,
+                                    MPI_DOUBLE,
+                                    m_neighbourLists->getNeighbours(m_processRank).list[i]);
+                        }
+                    }
+                }
+            }
+        }
+//        for (int y = 0; y < Ny; y++) {
+//            for (int z = 0; z < Nz; z++) {
+//                for (int t = 0; t < Nt; t++) {
+//                    for (int mu = 0; mu < 4; mu++) { // Sharing matrix
+//                        for (int c = 0; c < 9; c++) { // Sharing complex number
+//                            MPI_Sendrecv(m_lattice[indexSpecific(Nx,Ny,z,t,Ny,Nz,Nt)].U[mu].mat[c].re,
+//                                    1,
+//                                    MPI_DOUBLE,
+//                                    m_neighbourLists->getNeighbours(m_processRank).list[i]);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        // Share 4 faces
+    }
+
+    // Faces, 24
+//    if (m_processRank == 0) {
+//        for (int i = 0; i<4;i++) {
+//            cout<< m_subLatticeDimensions[i]<<endl;
+//        }
+//    }
+//    int Nx = 0; // Side one to be frozen when sharing a face
+//    int Ny = 0; // Side two to be frozen when sharing a face
+//    int Nz = 0;
+//    int Nt = 0;
+//    for (int i = 0; i < 2; i++) {
+//        for (int j = 0; j < 2; j++) {
+//            // XY
+//            Nx = i % m_subLatticeDimensions[0] * m_subLatticeDimensions[0];
+//            Ny = j % m_subLatticeDimensions[1] * m_subLatticeDimensions[1];
+//            Nz = m_subLatticeDimensions[2];
+//            Nt = m_subLatticeDimensions[3];
+//            for (int z = 0; z < Nz; z++) {
+//                for (int t = 0; t < Nt; t++) {
+//                    for (int mu = 0; mu < 4; mu++) { // Sharing matrix
+//                        for (int c = 0; c < 9; c++) { // Sharing complex number
+//                            MPI_Sendrecv(m_lattice[indexSpecific(Nx,Ny,z,t,Ny,Nz,Nt)].U[mu].mat[c].re,
+//                                    1,
+//                                    MPI_DOUBLE,
+//                                    m_neighbourLists->getNeighbours(m_processRank).list[]);
+
+//                        }
+//                    }
+//                }
+//            }
+            // XZ
+            // XT
+            // YZ
+            // YT
+            // ZT
+//        }
+//    }
+
+//    for (int i = 0; i < 3; i++) // Loops over x,y,z
+//    {
+//        N1 = m_subLatticeDimensions[i];
+//        for (int j = i+1; j < 4; j++) { // Loops over y,z,t. Produces xy, xz, xt, yz, yt, zt directions.
+//            N2 = m_subLatticeDimensions[j];
+//            N3 = m_subLatticeDimensions[(i+1) % 3];
+//            N4 = m_subLatticeDimensions[(j+1) % 4];
+//            for (int k = 0; k < 2; k++) {
+//                for (int m = 0; m < 2; m++) {
+//                    // Dimensions share faces with: N1, N2
+//                    if (m_processRank==0) {
+////                        cout << i << " " << j << " " << (i+j-1+3)%3 << " " << (i+j+1) % 4 << endl;
+//                        cout << k % N1 * N1 << "   " << m % N2 * N2 << "   " << N3 << "   " << N4 << endl;
+//        //                cout << "i="<<i<<" j="<<j<<endl;
+//                    }
+//                    for (int n3 = 0; n3 < N3; n3++) {
+//                        for (int n4 = 0; n4 < N4; n4++) {
+//                            for (int mu = 0; mu < 4; mu++) { // Sharing matrix
+//                                for (int c = 0; c < 9; c++) { // Sharing complex number
+//                                    MPI_Sendrecv(m_lattice[indexSpecific()]);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    if(m_processRank==0) cout << "Exiting at shareFaces" <<endl;
+    exit(1);
+
+    // Share x=0
+    // Share x=Nx
+    // Share y=0
+    // Share y=Ny
+    // Share z=0
+    // Share z=Nz
+    // Share t=0
+    // Share t=Nt
+
+    // Edges, 32 NOT NEED AS WE ONLY NEED +1 +1
+    // Corners, 16 NOT NEED AS WE ONLY NEED +1 +1
+}
 
 void System::updateLink(int latticeIndex, int mu)
 {

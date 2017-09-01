@@ -3,8 +3,10 @@
 // TEMP DIAGNOSTICS
 #include <iostream>
 #include <iomanip>
+using std::cout;
+using std::endl;
 
-NeighbourList::NeighbourList()
+NeighbourList:: NeighbourList()
 {
     /*
      * Neighbour list values defined as:
@@ -18,14 +20,21 @@ NeighbourList::NeighbourList()
 
 NeighbourList::~NeighbourList()
 {
+    cout << "DELETING" << endl;
     delete [] list;
 }
 
 void NeighbourList::print()
 {
-    std::cout << "\nProcess rank = " << rank << std::endl;
-    std::cout << "x-1 = " << list[0] << " x+1 = " << list[1] << std::endl;
-    std::cout << "y-1 = " << list[2] << " y+1 = " << list[3] << std::endl;
-    std::cout << "z-1 = " << list[4] << " z+1 = " << list[5] << std::endl;
-    std::cout << "t-1 = " << list[6] << " t+1 = " << list[7] << "\n" << std::endl;
+    for (int i = 0; i < 8; i++) {
+//        if (list.at(i) != NULL) {
+//            cout << "Segfault at i = " << i << endl;
+            cout << "list["<<i<<"] = "<<list[i]<<endl;
+//        }
+    }
+    cout << "\nProcess rank = " << rank << endl;
+    cout << "x-1 = " << list[0] << " x+1 = " << list[1] << endl;
+    cout << "y-1 = " << list[2] << " y+1 = " << list[3] << endl;
+    cout << "z-1 = " << list[4] << " z+1 = " << list[5] << endl;
+    cout << "t-1 = " << list[6] << " t+1 = " << list[7] << "\n" << endl;
 }
