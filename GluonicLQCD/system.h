@@ -13,14 +13,16 @@ class Action;
 class System
 {
 private:
+    // Lattice sizes
     int m_N;
     int m_N_T;
+    int m_subLatticeDimensions[4];
+    int m_trueSubLatticeDimensions[4]; // With phases
+    // Updating constants
     int m_NCf;
     int m_NCor;
     int m_NTherm;
     int m_nUpdates = 10; // N updates before calculating the action, as that is costly
-    int m_subLatticeDimensions[4];
-    int m_trueSubLatticeDimensions[4]; // With phases
     double m_epsilon;
     double m_a; // Lattice spacing
     double m_L; // Lattice size

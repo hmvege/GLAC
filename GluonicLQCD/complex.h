@@ -15,6 +15,9 @@ public:
 //    double *reim;
     double im;
     double re;
+//    double re() { return reim[0]; }
+//    double im() { return reim[1]; }
+
     complex &operator+=(complex b);
     complex &operator-=(complex b);
     complex &operator*=(complex b);

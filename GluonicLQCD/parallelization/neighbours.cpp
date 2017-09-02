@@ -20,6 +20,11 @@ Neighbours::Neighbours()
 Neighbours::~Neighbours()
 {
     delete [] neighbourLists;
+//    for (int i = 0; i < 4; i++) {
+//        delete [] cubeIndex[i];
+//    }
+//    delete [] cubeIndex;
+//    delete [] cubeIndexFunctions;
 }
 
 void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim) {
@@ -31,7 +36,46 @@ void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim
     m_Nt = processorsPerDim[3];
     neighbourLists = new NeighbourList[m_numproc];
     generateNeighbourList();
+//    generateCubeIndexFunctionList();
+//    generateCubeIndexes();
 }
+
+//void Neighbours::generateCubeIndexes()
+//{
+//    cubeIndex = new int*[4];
+//    for (int i = 0; i < 4; i++) {
+//        cubeIndex[i] = new int[3];
+//    }
+//    // x-direction
+//    cubeIndex[0][0] = m_Ny;
+//    cubeIndex[0][1] = m_Nz;
+//    cubeIndex[0][2] = m_Nt;
+//    // y-direction
+//    cubeIndex[1][0] = m_Nx;
+//    cubeIndex[1][1] = m_Nz;
+//    cubeIndex[1][2] = m_Nt;
+//    // y-direction
+//    cubeIndex[2][0] = m_Nx;
+//    cubeIndex[2][1] = m_Ny;
+//    cubeIndex[2][2] = m_Nt;
+//    // y-direction
+//    cubeIndex[3][0] = m_Nx;
+//    cubeIndex[3][1] = m_Ny;
+//    cubeIndex[3][2] = m_Nz;
+//}
+
+//void Neighbours::generateCubeIndexFunctionList()
+//{
+//    cubeIndexFunctions = new indexCubeFinderArray[8];
+//    cubeIndexFunctions[0] = &indexCube0;
+//    cubeIndexFunctions[1] = &indexCube1;
+//    cubeIndexFunctions[2] = &indexCube2;
+//    cubeIndexFunctions[3] = &indexCube3;
+//    cubeIndexFunctions[4] = &indexCube4;
+//    cubeIndexFunctions[5] = &indexCube5;
+//    cubeIndexFunctions[6] = &indexCube6;
+//    cubeIndexFunctions[7] = &indexCube7;
+//}
 
 void Neighbours::generateNeighbourList()
 {

@@ -17,7 +17,7 @@ complex::complex()
 
 complex::~complex()
 {
-
+//    delete [] reim;
 }
 
 double complex::norm()

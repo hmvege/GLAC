@@ -190,6 +190,7 @@ void System::shareFaces()
      * 4: z-1 | 5: z+1
      * 6: t-1 | 7: t+1
      */
+    cout<<"prepping to share"<<endl;
     // Cubes, 8
     for (int i = 0; i < 8; i++) {
 
@@ -200,20 +201,17 @@ void System::shareFaces()
 //            list = m_neighbourLists->getNeighbours(m_processRank);
         }
         // Share cube
-        for (int n1 = 0; n1 < m_neighbourLists->cubeIndex[i][0]; n1++) {
-            for (int n2 = 0; n2 < m_neighbourLists->cubeIndex[i][1]; n2++) {
-                for (int n3 = 0; n3 < m_neighbourLists->cubeIndex[i][2]; n3++) {
-                    for (int mu = 0; mu < 4; mu++) { // Sharing matrix
-                        for (int c = 0; c < 9; c++) { // Sharing complex number
-                            MPI_Sendrecv(m_lattice[m_neighbourLists->cubeIndexFunctions[i]].U[mu].mat[c].re,
-                                    1,
-                                    MPI_DOUBLE,
-                                    m_neighbourLists->getNeighbours(m_processRank).list[i]);
-                        }
-                    }
-                }
-            }
-        }
+//        for (int n1 = 0; n1 < m_neighbourLists->cubeIndex[i][0]; n1++) {
+//            for (int n2 = 0; n2 < m_neighbourLists->cubeIndex[i][1]; n2++) {
+//                for (int n3 = 0; n3 < m_neighbourLists->cubeIndex[i][2]; n3++) {
+//                    MPI_Sendrecv(   &m_lattice[m_neighbourLists->cubeIndexFunctions[i](n1,n2,n3)].U[0].mat[0].re,
+//                                    72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[i],0,
+//                                    &m_lattice[m_neighbourLists->cubeIndexFunctions[i](n1,n2,n3)].U[0].mat[0].re,
+//                                    72,MPI_DOUBLE,m_processRank,0,MPI_COMM_WORLD,MPI_STATUSES_IGNORE);
+//                }
+//            }
+//        }
+
 //        for (int y = 0; y < Ny; y++) {
 //            for (int z = 0; z < Nz; z++) {
 //                for (int t = 0; t < Nt; t++) {
@@ -229,6 +227,18 @@ void System::shareFaces()
 //            }
 //        }
         // Share 4 faces
+    }
+
+    // x-1 direction
+    for (int y = 1; y < m_trueSubLatticeDimensions[1]; y++) {
+        for (int z = 1; z < m_trueSubLatticeDimensions[2]; z++) {
+            for (int t = 1; t < m_trueSubLatticeDimensions[3]; t++) {
+                MPI_Sendrecv(   &m_lattice[indexSpecific(m_subLatticeDimensions[0],y,z,t,m_subLatticeDimensions[1],m_subLatticeDimensions[2],m_subLatticeDimensions[3])].U[0].mat[0].re,
+                                72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,
+                                &m_lattice[indexSpecific(0,y,z,t,m_subLatticeDimensions[1],m_subLatticeDimensions[2],m_subLatticeDimensions[3])].U[0].mat[0].re,
+                                72,MPI_DOUBLE,m_processRank,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            }
+        }
     }
 
     // Faces, 24
