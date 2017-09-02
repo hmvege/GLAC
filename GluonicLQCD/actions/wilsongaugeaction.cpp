@@ -29,7 +29,7 @@ double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int 
     tr = (UPrime - lattice[index(i,j,k,l,m_N,m_N_T)].U[mu])*m_staple;
     for (int n = 0; n < 3; n++)
     {
-        S += tr.mat[n*3+n].re;
+        S += tr.mat[n*3+n].re();
     }
     return -m_beta*S/3.0; // Should be N=3 as in the Gauge symmetry
 }

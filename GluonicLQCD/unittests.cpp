@@ -21,9 +21,17 @@ void SU3BaseTests()
      */
     complex a = complex(1,1);
     complex b = complex(2,2);
+    complex c = complex(1,1);
+    complex d = complex(2,2);
+    cout << a << endl;
+    cout << b << endl;
     a *= b;
     cout << a << endl;
     cout << a.conjugate() << endl;
+    cout << "1+1j + 2+2j = ";
+    c = c + d;
+    cout << c << endl;
+
     SU3 A, B, C, D;
     for (int i = 0; i < 3; i++)
     {
@@ -37,17 +45,22 @@ void SU3BaseTests()
     }
 
     cout << endl;
+    cout << "Printing A" << endl;
     A.print();
     cout << endl;
+    cout << "Printing B" << endl;
     B.print();
+    cout << "Getting middle element of A" << endl;
     cout << A.get(1,1) << endl;
+    C += A;
     C = A + B;
     D = A * B;
+    cout << "Printing D" << endl;
     D.print();
     cout << endl;
     cout << "Printing the first column of matrix D: " << endl;
     for (int i = 0; i < 3; i++) {
-        cout << "D[" <<i<<"] = "<< D.mat[3*i].re << " + i" << D.mat[i].im << endl;
+        cout << "D[" <<i<<"] = "<< D.mat[3*i].re() << " + i" << D.mat[i].im() << endl;
     }
     cout << endl;
     cout << "SU3 base test completed." << endl;
@@ -93,9 +106,9 @@ bool testOrthogonality(SU3 H, bool verbose)
         cout << "Column 1 and 3: " << c13dot << endl;
         cout << "Column 2 and 3: " << c23dot << endl;
     }
-    if ((fabs(c12dot.re) > eps) || (fabs(c12dot.im) > eps)) testPassed = false;
-    if ((fabs(c13dot.re) > eps) || (fabs(c13dot.im) > eps)) testPassed = false;
-    if ((fabs(c23dot.re) > eps) || (fabs(c23dot.im) > eps)) testPassed = false;
+    if ((fabs(c12dot.re()) > eps) || (fabs(c12dot.im()) > eps)) testPassed = false;
+    if ((fabs(c13dot.re()) > eps) || (fabs(c13dot.im()) > eps)) testPassed = false;
+    if ((fabs(c23dot.re()) > eps) || (fabs(c23dot.im()) > eps)) testPassed = false;
 
     if (testPassed) {
         cout << "PASSED: Columns is orthogonal." << endl;
@@ -129,16 +142,16 @@ bool testHermicity(SU3 H, bool verbose)
     }
     for (int i = 0; i < 3; i++) {
         for (int j = 0; i < j; j++) {
-            if ((fabs(I[i*3+j].re) > eps) || (fabs(I[i*3+j].im) > eps)) {
+            if ((fabs(I[i*3+j].re()) > eps) || (fabs(I[i*3+j].im()) > eps)) {
                 testPassed = false;
             }
-            if ((fabs(I[j*3+i].re) > eps) || (fabs(I[j*3+i].im) > eps)) {
+            if ((fabs(I[j*3+i].re()) > eps) || (fabs(I[j*3+i].im()) > eps)) {
                 testPassed = false;
             }
         }
     }
     for (int i = 0; i < 3; i++) {
-        if ((fabs(I[3*i+i].re - 1) > eps) || (fabs(I[3*i+i].im) > eps)) {
+        if ((fabs(I[3*i+i].re() - 1) > eps) || (fabs(I[3*i+i].im()) > eps)) {
             testPassed = false;
         }
     }
@@ -175,25 +188,25 @@ void testMatrixMultiplication()
 {
     SU3 A,B,C;
     // Setting A values
-    A.mat[0].re = 1;
-    A.mat[1].re = 0;
-    A.mat[2].re = 0;
-    A.mat[3].re = 0;
-    A.mat[4].re = 0;
-    A.mat[5].re = 0;
-    A.mat[6].re = 1;
-    A.mat[7].re = 0;
-    A.mat[8].re = 0;
+    A.mat[0].setRe(1);
+    A.mat[1].setRe(0);
+    A.mat[2].setRe(0);
+    A.mat[3].setRe(0);
+    A.mat[4].setRe(0);
+    A.mat[5].setRe(0);
+    A.mat[6].setRe(1);
+    A.mat[7].setRe(0);
+    A.mat[8].setRe(0);
     // Setting B values
-    B.mat[0].re = 0;
-    B.mat[1].re = 1;
-    B.mat[2].re = 0;
-    B.mat[3].re = 0;
-    B.mat[4].re = 0;
-    B.mat[5].re = 0;
-    B.mat[6].re = 0;
-    B.mat[7].re = 0;
-    B.mat[8].re = 0;
+    B.mat[0].setRe(0);
+    B.mat[1].setRe(1);
+    B.mat[2].setRe(0);
+    B.mat[3].setRe(0);
+    B.mat[4].setRe(0);
+    B.mat[5].setRe(0);
+    B.mat[6].setRe(0);
+    B.mat[7].setRe(0);
+    B.mat[8].setRe(0);
     C = A*B;
     printf("Matrix A: \n");
     A.print();
@@ -399,17 +412,17 @@ bool SU2UnitTest(complex * r, complex * s, complex * t)
 
     for (int i = 0; i < 2; i++) {
         for (int j = 0; i < j; j++) {
-            if ((fabs(I[i*2+j].re) > eps) || (fabs(I[i*2+j].im) > eps)) {
+            if ((fabs(I[i*2+j].re()) > eps) || (fabs(I[i*2+j].im()) > eps)) {
                 testPassed = false;
             }
-            if ((fabs(I[j*2+i].re) > eps) || (fabs(I[j*2+i].im) > eps)) {
+            if ((fabs(I[j*2+i].re()) > eps) || (fabs(I[j*2+i].im()) > eps)) {
                 testPassed = false;
             }
         }
     }
 
     for (int i = 0; i < 2; i++) {
-        if ((fabs(I[2*i+i].re - 1) > eps) || (fabs(I[2*i+i].im) > eps)) {
+        if ((fabs(I[2*i+i].re() - 1) > eps) || (fabs(I[2*i+i].im()) > eps)) {
             testPassed = false;
         }
     }
@@ -438,7 +451,7 @@ bool SU2UnitTest(complex * r, complex * s, complex * t)
 void testDeterminant(SU3 U) {
     double eps = 1e-16;
     complex det = SU3Determinant(U);
-    if (((det.re - 1) < eps) && (det.im < eps)) {
+    if (((det.re() - 1) < eps) && (det.im() < eps)) {
         cout << "PASSED: the determinant of the SU3 matrix is 1." << endl;
     } else {
         cout << "FAILED: the determinant of the SU3 matrix differs from 1." << endl;
@@ -468,8 +481,8 @@ void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatr
         clock_t programStart, programEnd;
         programStart = clock();
         for (int i = 0; i < NTests; i++) {
-            c2.re = uni_dist(gen);
-            c2.im = uni_dist(gen);
+            c2.setRe(uni_dist(gen));
+            c2.setIm(uni_dist(gen));
             c1 *= c2;
         }
         programEnd = clock();
@@ -507,4 +520,18 @@ void checkDim(int N, int N_T) {
         cout << "Error" << endl;
         exit(1);
     }
+}
+
+void runTestSuite() {
+    // For testing different basic operations
+    cout << "==== RUNNING TESTS ====" << endl;
+    SU3BaseTests();
+    testMatrixSU3Properties();
+    testMatrixMultiplication();
+//    testMatrixAddition();
+//    testMatrixSubtraction();
+//    testMatrixConjugation();
+//    testMatrixTranspose();
+//    testMatrixDagger();
+
 }

@@ -30,14 +30,22 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     SU2_uniform_distribution = uni_dist_SU2;
     // Setting up Pauli matrices
     sigma = new SU2[3];
-    sigma[0].mat[1].re = 1;
-    sigma[0].mat[2].re = 1;
-    sigma[1].mat[1].im = -1;
-    sigma[1].mat[2].im = 1;
-    sigma[2].mat[0].re = 1;
-    sigma[2].mat[3].re = -1;
-    su2Identity[0].re = 1;
-    su2Identity[3].re = 1;
+//    sigma[0].mat[1].re = 1;
+//    sigma[0].mat[2].re = 1;
+//    sigma[1].mat[1].im = -1;
+//    sigma[1].mat[2].im = 1;
+//    sigma[2].mat[0].re = 1;
+//    sigma[2].mat[3].re = -1;
+//    su2Identity[0].re = 1;
+//    su2Identity[3].re = 1;
+    sigma[0].mat[1].setRe(1);
+    sigma[0].mat[2].setRe(1);
+    sigma[1].mat[1].setIm(-1);
+    sigma[1].mat[2].setIm(1);
+    sigma[2].mat[0].setRe(1);
+    sigma[2].mat[3].setRe(-1);
+    su2Identity[0].setRe(1);
+    su2Identity[3].setRe(1);
 }
 
 SU3MatrixGenerator::~SU3MatrixGenerator()
@@ -60,8 +68,8 @@ SU3 SU3MatrixGenerator::generateRandom()
     {
         for (int j = 0; j < 2; j++)
         {
-            H[3*i + j].re = uniform_distribution(generator);
-            H[3*i + j].im = uniform_distribution(generator);
+            H[3*i + j].setRe(uniform_distribution(generator));
+            H[3*i + j].setIm(uniform_distribution(generator));
         }
     }
     // Normalizing first column
@@ -119,13 +127,13 @@ SU3 SU3MatrixGenerator::generateIdentity()
         {
             if (i==j)
             {
-                H[3*i+j].re = 1;
-                H[3*i+j].im = 0;
+                H[3*i+j].setRe(1);
+                H[3*i+j].setIm(0);
             }
             else
             {
-                H[3*i+j].re = 0;
-                H[3*i+j].im = 0;
+                H[3*i+j].setRe(0);
+                H[3*i+j].setIm(0);
             }
         }
     }
@@ -170,8 +178,8 @@ SU2 SU3MatrixGenerator::generateSU2()
     U += su2Identity*x[0];
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 4; j++) {
-            U.mat[j].re += - x[i+1]*sigma[i].mat[j].im;
-            U.mat[j].im += x[i+1]*sigma[i].mat[j].re;
+            U.mat[j].setRe(U.mat[j].re() - x[i+1]*sigma[i].mat[j].im());
+            U.mat[j].setIm(U.mat[j].im() + x[i+1]*sigma[i].mat[j].re());
         }
     }
     return U;
@@ -201,17 +209,17 @@ SU3 SU3MatrixGenerator::generateRST()
     R.mat[1] = r.mat[1];
     R.mat[3] = r.mat[2];
     R.mat[4] = r.mat[3];
-    R.mat[8].re = 1;
+    R.mat[8].setRe(1);
     S.mat[0] = s.mat[0];
     S.mat[2] = s.mat[1];
     S.mat[6] = s.mat[2];
     S.mat[8] = s.mat[3];
-    S.mat[4].re = 1;
+    S.mat[4].setRe(1);
     T.mat[4] = t.mat[0];
     T.mat[5] = t.mat[1];
     T.mat[7] = t.mat[2];
     T.mat[8] = t.mat[3];
-    T.mat[0].re = 1;
+    T.mat[0].setRe(1);
     // Creates the return matrix, which is close to unity
     X = R*S*T;
     // Equal probability of returning X and X inverse

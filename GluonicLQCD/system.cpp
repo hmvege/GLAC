@@ -99,8 +99,8 @@ void System::subLatticeSetup()
 
     // Iteratively finds and sets the sub-lattice cube sizes
     while (restProc >= 2) {
-//        for (int i = 3; i > 0; i--) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 3; i > 0; i--) {
+//        for (int i = 0; i < 4; i++) {
             m_subLatticeDimensions[i] /= 2;
             restProc /= 2;
             if (restProc < 2) break;
@@ -113,7 +113,6 @@ void System::subLatticeSetup()
         m_trueSubLatticeDimensions[i] = m_subLatticeDimensions[i] + 2; // Adds a face
         m_trueSubLatticeSize *= m_trueSubLatticeDimensions[i]; // Gets the total size of the sub-lattice(with faces)
     }
-    m_latticeSize = m_subLatticeSize;
     m_lattice = new Links[m_trueSubLatticeSize];
 
     // Sets up number of processors per dimension
@@ -124,6 +123,7 @@ void System::subLatticeSetup()
     m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
 
     // PRINTS ===========================================================
+//    MPI_Barrier(MPI_COMM_WORLD);
 //    cout << "Process rank: " << m_processRank << endl;
 //    cout << "m_subLatticeSize = " << m_subLatticeSize << endl;
 //    cout << "m_trueSubLatticeSize = " << m_trueSubLatticeSize << endl;
@@ -132,13 +132,13 @@ void System::subLatticeSetup()
 //        for (int i = 0; i < 4; i++) {
 //            cout << "Dim: " << i << " processors: " << m_processorsPerDimension[i] << endl;
 //        }
-//        m_neighbourLists->getNeighbours(m_processRank).print();
+//        m_neighbourLists->getNeighbours(m_processRank)->print();
 //    }
 //    cout << "Processor: " << m_processRank << endl;
 //    for (int i = 0; i < 4; i++) {
 //        cout << "m_dim     = " << m_subLatticeDimensions[i] << endl;
 //        cout << "m_trueDim = " << m_trueSubLatticeDimensions[i] << endl;
-//    }
+//    }exit(1);
 //    // ==================================================================
 }
 
@@ -155,7 +155,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
     if (hotStart) {
         // All starts with a completely random matrix.
 //        for (int i = 0; i < m_latticeSize; i++)
-        for (int i = 1; i < m_trueSubLatticeSize-1; i++)
+        for (int i = 0; i < m_trueSubLatticeSize; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {
@@ -165,7 +165,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
         }
     } else {
 //        for (int i = 0; i < m_latticeSize; i++)
-        for (int i = 1; i < m_trueSubLatticeSize-1; i++)
+        for (int i = 0; i < m_trueSubLatticeSize; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {
@@ -174,7 +174,21 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
             }
         }
     }
-
+//    for (int x = 0; x < m_trueSubLatticeDimensions[0]; x++) {
+//        for (int y = 0; y < m_trueSubLatticeDimensions[1]; y++) {
+//            for (int z = 0; z < m_trueSubLatticeDimensions[2]; z++) {
+//                for (int t = 0; t < m_trueSubLatticeDimensions[3]; t++) {
+//                    for (int mu = 0; mu < 4; mu++) { // Sharing matrix
+//                        for (int c = 0; c < 9; c++) { // Sharing complex number
+//                            cout << m_lattice[indexSpecific(x,y,z,t,m_trueSubLatticeDimensions[1],m_trueSubLatticeDimensions[2],m_trueSubLatticeDimensions[3])].U[mu].mat[c].re() << endl;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }exit(1);
+//    runTestSuite();
+//    exit(1);
     shareFaces();
 }
 
@@ -190,16 +204,15 @@ void System::shareFaces()
      * 4: z-1 | 5: z+1
      * 6: t-1 | 7: t+1
      */
-    cout<<"prepping to share"<<endl;
+//    cout<<"prepping to share"<<endl;
     // Cubes, 8
-    for (int i = 0; i < 8; i++) {
+//    for (int i = 0; i < 8; i++) {
+//        if (m_processRank == 0) {
+//            cout << i << " rank=" << m_processRank<< endl;
 
-        if (m_processRank == 0) {
-            cout << i << " rank=" << m_processRank<< endl;
-
-            cout << m_neighbourLists->getNeighbours(m_processRank)->list[i] << endl;
-//            list = m_neighbourLists->getNeighbours(m_processRank);
-        }
+//            cout << m_neighbourLists->getNeighbours(m_processRank)->list[i] << endl;
+////            list = m_neighbourLists->getNeighbours(m_processRank);
+//        }
         // Share cube
 //        for (int n1 = 0; n1 < m_neighbourLists->cubeIndex[i][0]; n1++) {
 //            for (int n2 = 0; n2 < m_neighbourLists->cubeIndex[i][1]; n2++) {
@@ -227,19 +240,47 @@ void System::shareFaces()
 //            }
 //        }
         // Share 4 faces
-    }
-
-    // x-1 direction
-    for (int y = 1; y < m_trueSubLatticeDimensions[1]; y++) {
-        for (int z = 1; z < m_trueSubLatticeDimensions[2]; z++) {
-            for (int t = 1; t < m_trueSubLatticeDimensions[3]; t++) {
-                MPI_Sendrecv(   &m_lattice[indexSpecific(m_subLatticeDimensions[0],y,z,t,m_subLatticeDimensions[1],m_subLatticeDimensions[2],m_subLatticeDimensions[3])].U[0].mat[0].re,
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    cout << m_processRank << "   " << m_neighbourLists->getNeighbours(m_processRank)->list[0] << endl;
+//    exit(0);
+//    if (m_processRank == 0) {
+//        cout<<"rank 0"<<endl;
+//        cout << m_subLatticeSize<<endl;
+//        cout << (m_trueSubLatticeDimensions[1]-2) * (m_trueSubLatticeDimensions[2]-2) * (m_trueSubLatticeDimensions[3]-2) << endl;
+//        cout << (m_subLatticeDimensions[1]*m_subLatticeDimensions[2]*m_subLatticeDimensions[3]) << endl;
+//    }
+    // Share x=0 (x-1 direction)
+    for (int y = 1; y < m_trueSubLatticeDimensions[1]-1; y++) {
+        for (int z = 1; z < m_trueSubLatticeDimensions[2]-1; z++) {
+            for (int t = 1; t < m_trueSubLatticeDimensions[3]-1; t++) {
+//                cout << "Sharing from " << m_processRank << " to " << m_neighbourLists->getNeighbours(m_processRank)->list[0] << endl;
+//                cout << m_lattice[indexSpecific(1,y,z,t,m_trueSubLatticeDimensions[1],m_trueSubLatticeDimensions[2],m_trueSubLatticeDimensions[3])].U[0].mat[0].z[0] << " <-- "
+//                     << m_lattice[indexSpecific(m_trueSubLatticeDimensions[0]-1,y,z,t,m_trueSubLatticeDimensions[1],m_trueSubLatticeDimensions[2],m_trueSubLatticeDimensions[3])].U[0].mat[0].z[0] << endl;
+                MPI_Sendrecv(   &m_lattice[indexSpecific(1,y,z,t,m_trueSubLatticeDimensions[1],m_trueSubLatticeDimensions[2],m_trueSubLatticeDimensions[3])].U[0].mat[0].z[0],
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,
-                                &m_lattice[indexSpecific(0,y,z,t,m_subLatticeDimensions[1],m_subLatticeDimensions[2],m_subLatticeDimensions[3])].U[0].mat[0].re,
+                                &m_lattice[indexSpecific(m_trueSubLatticeDimensions[0]-1,y,z,t,m_trueSubLatticeDimensions[1],m_trueSubLatticeDimensions[2],m_trueSubLatticeDimensions[3])].U[0].mat[0].z[0],
                                 72,MPI_DOUBLE,m_processRank,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+//                MPI_Sendrecv(   &m_lattice[indexSpecific(m_trueSubLatticeDimensions[0]-1,y,z,t,m_trueSubLatticeDimensions[1],m_trueSubLatticeDimensions[2],m_trueSubLatticeDimensions[3])].U[0].mat[0].z[0],
+//                                72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,
+//                                &m_lattice[indexSpecific(1,y,z,t,m_trueSubLatticeDimensions[1],m_trueSubLatticeDimensions[2],m_trueSubLatticeDimensions[3])].U[0].mat[0].z[0],
+//                                72,MPI_DOUBLE,m_processRank,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             }
         }
     }
+
+
+    // Share x=Nx (x+1 direction)
+    // Share y=0  (y-1 direction)
+    // Share y=Ny (y+1 direction)
+    // Share z=0  (z-1 direction)
+    // Share z=Nz (z+1 direction)
+    // Share t=0  (t-1 direction)
+    // Share t=Nt (t+1 direction)
+
+
+
+    cout << "SHARING COMPLETE" << endl;
 
     // Faces, 24
 //    if (m_processRank == 0) {
@@ -311,15 +352,6 @@ void System::shareFaces()
     MPI_Barrier(MPI_COMM_WORLD);
     if(m_processRank==0) cout << "Exiting at shareFaces" <<endl;
     exit(1);
-
-    // Share x=0
-    // Share x=Nx
-    // Share y=0
-    // Share y=Ny
-    // Share z=0
-    // Share z=Nz
-    // Share t=0
-    // Share t=Nt
 
     // Edges, 32 NOT NEED AS WE ONLY NEED +1 +1
     // Corners, 16 NOT NEED AS WE ONLY NEED +1 +1

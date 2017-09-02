@@ -86,7 +86,7 @@ complex SU3Determinant(SU3 U)
 bool compareSU3(SU3 A, SU3 B)
 {
     for (int i = 0; i < 9; i++) {
-        if ((A.mat[i].re != B.mat[i].re) || (A.mat[i].im != B.mat[i].im)) {
+        if ((A.mat[i].re() != B.mat[i].re()) || (A.mat[i].im() != B.mat[i].im())) {
             return false;
         }
     }

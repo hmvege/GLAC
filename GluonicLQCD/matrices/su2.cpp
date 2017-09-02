@@ -87,8 +87,9 @@ SU2 &SU2::operator*=(SU2 B)
 SU2 &SU2::operator*=(double b)
 {
     for (int i = 0; i < 4; i++) {
-        mat[i].re *= b;
-        mat[i].im *= b;
+//        mat[i].re *= b;
+//        mat[i].im *= b;
+        mat[i] *= b;
     }
     return *this;
 }
@@ -106,8 +107,8 @@ void SU2::zeros()
 {
     for (int i = 0; i < 4; i++)
     {
-        mat[i].re = 0;
-        mat[i].im = 0;
+        mat[i].setRe(0);
+        mat[i].setIm(0);
     }
 }
 

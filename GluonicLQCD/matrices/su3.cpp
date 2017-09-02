@@ -51,6 +51,17 @@ void SU3::copy(SU3 B)
     }
 }
 
+SU3 &SU3::operator=(const SU3 &B)
+{
+//    if (this == &B)
+//        return *this;
+
+    for (int i = 0; i < 9; i++) {
+        mat[i] = B.mat[i];
+    }
+    return *this;
+}
+
 SU3 &SU3::operator+=(SU3 B)
 {
     for (int i = 0; i < 9; i++)
@@ -100,8 +111,8 @@ void SU3::zeros()
 {
     for (int i = 0; i < 9; i++)
     {
-        mat[i].re = 0;
-        mat[i].im = 0;
+        mat[i].setRe(0);
+        mat[i].setIm(0);
     }
 }
 

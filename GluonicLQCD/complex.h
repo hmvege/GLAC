@@ -12,15 +12,22 @@ public:
     ~complex();
     complex(double real, double imag);
 
-//    double *reim;
-    double im;
-    double re;
-//    double re() { return reim[0]; }
-//    double im() { return reim[1]; }
+    complex (const complex &b); // Copy constructor
 
+    double *z;
+//    double im;
+//    double re;
+    double re() const { return z[0]; } // But why constant?
+    double im() const { return z[1]; }
+    void setRe(double re) { z[0] = re; }
+    void setIm(double im) { z[1] = im; }
+//    void set(complex a);
+
+    complex &operator =(const complex& b);
     complex &operator+=(complex b);
     complex &operator-=(complex b);
     complex &operator*=(complex b);
+    complex &operator*=(double b);
     complex &operator/=(complex b);
     complex &operator/=(double b);
 
@@ -45,6 +52,12 @@ inline complex operator-(complex a, complex b)
 }
 
 inline complex operator*(complex a, complex b)
+{
+    a *= b;
+    return a;
+}
+
+inline complex operator*(complex a, double b)
 {
     a *= b;
     return a;

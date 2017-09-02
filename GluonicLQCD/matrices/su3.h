@@ -19,6 +19,8 @@ public:
     void conjugate();
     complex &operator[](int i) { return mat[i]; }
 
+    SU3 &operator =(const SU3 &B);
+
     SU3 &operator+=(SU3 B);
     SU3 &operator-=(SU3 B);
     SU3 &operator*=(SU3 B);
