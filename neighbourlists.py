@@ -1,10 +1,10 @@
 import numpy as np
 
 # Processors in one dimension
-Nx = 2
-Ny = 2
+Nx = 1
+Ny = 1
 Nz = 1
-Nt = 1
+Nt = 2
 
 N = Nx*Ny
 
