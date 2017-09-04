@@ -87,12 +87,9 @@ SU3 &SU3::operator*=(SU3 B)
             }
         }
     }
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 9; i++)
     {
-        for (int j = 0; j < 3; j++)
-        {
-            mat[(i*3+j)] = temp[(i*3+j)];
-        }
+        mat[i] = temp[i];
     }
     delete [] temp;
     return *this;

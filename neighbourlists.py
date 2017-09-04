@@ -2,8 +2,8 @@ import numpy as np
 
 # Processors in one dimension
 Nx = 1
-Ny = 1
-Nz = 1
+Ny = 2
+Nz = 2
 Nt = 2
 
 N = Nx*Ny
@@ -176,3 +176,4 @@ print_T_neighbours()
 neighbour_lists = getNeighbourLists()
 # print_processor_lattice()
 print_neighbours(neighbour_lists,0)
+# print_neighbours(neighbour_lists[0],0)

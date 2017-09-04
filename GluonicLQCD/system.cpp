@@ -99,8 +99,8 @@ void System::subLatticeSetup()
 
     // Iteratively finds and sets the sub-lattice cube sizes
     while (restProc >= 2) {
-        for (int i = 3; i > 0; i--) {
-//        for (int i = 0; i < 4; i++) {
+        for (int i = 3; i > 0; i--) { // Counts from t to x
+//        for (int i = 0; i < 4; i++) { // Conts from x to t
             m_subLatticeDimensions[i] /= 2;
             restProc /= 2;
             if (restProc < 2) break;
@@ -123,22 +123,21 @@ void System::subLatticeSetup()
     m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
 
     // PRINTS ===========================================================
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    cout << "Process rank: " << m_processRank << endl;
-//    cout << "m_subLatticeSize = " << m_subLatticeSize << endl;
-//    cout << "m_trueSubLatticeSize = " << m_trueSubLatticeSize << endl;
+    MPI_Barrier(MPI_COMM_WORLD);
 
-//    if (m_processRank==0) {
-//        for (int i = 0; i < 4; i++) {
-//            cout << "Dim: " << i << " processors: " << m_processorsPerDimension[i] << endl;
-//        }
-//        m_neighbourLists->getNeighbours(m_processRank)->print();
-//    }
-//    cout << "Processor: " << m_processRank << endl;
-//    for (int i = 0; i < 4; i++) {
-//        cout << "m_dim     = " << m_subLatticeDimensions[i] << endl;
-//        cout << "m_trueDim = " << m_trueSubLatticeDimensions[i] << endl;
-//    }exit(1);
+    if (m_processRank==0) {
+        cout << "Process rank: " << m_processRank << endl;
+        cout << "m_subLatticeSize = " << m_subLatticeSize << endl;
+        cout << "m_trueSubLatticeSize = " << m_trueSubLatticeSize << endl;
+        for (int i = 0; i < 4; i++) {
+            cout << "Dim: " << i << " processors: " << m_processorsPerDimension[i] << endl;
+        }
+        m_neighbourLists->getNeighbours(m_processRank)->print();
+        cout << "Processor: " << m_processRank << endl;
+        for (int i = 0; i < 4; i++) {
+            cout << "direction " << i << " | m_dim     = " << m_subLatticeDimensions[i] << " | m_trueDim = " << m_trueSubLatticeDimensions[i] << endl;
+    }
+    }exit(1);
 //    // ==================================================================
 }
 
@@ -154,8 +153,8 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
     m_SU3Generator = SU3Generator;
     if (hotStart) {
         // All starts with a completely random matrix.
-//        for (int i = 0; i < m_latticeSize; i++)
-        for (int i = 0; i < m_trueSubLatticeSize; i++)
+        for (int i = 0; i < m_latticeSize; i++)
+//        for (int i = 0; i < m_trueSubLatticeSize; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {
@@ -164,26 +163,25 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
             }
         }
     } else {
-//        for (int i = 0; i < m_latticeSize; i++)
-        for (int x = 1; x < m_trueSubLatticeDimensions[0]-1; x++) {
-            for (int y = 1; y < m_trueSubLatticeDimensions[1]-1; y++) {
-                for (int z = 1; z < m_trueSubLatticeDimensions[2]-1; z++) {
-                    for (int t = 1; t < m_trueSubLatticeDimensions[3]-1; t++) {
-                        for (int mu = 0; mu < 4; mu++) {
-                            m_lattice[indexSpecific(x,y,z,t,m_trueSubLatticeDimensions[1],m_trueSubLatticeDimensions[2],m_trueSubLatticeDimensions[3])].U[mu] = m_SU3Generator->generateIdentity();
-                        }
-                    }
-                }
-            }
-        }
-//        for (int i = 0; i < m_trueSubLatticeSize; i++)
-//        {
-//            for (int mu = 0; mu < 4; mu++)
-//            {
-//                // All starts with a completely random matrix. Observable should be 1.
-//                m_lattice[i].U[mu] = m_SU3Generator->generateIdentity();
+//        for (int x = 1; x < m_trueSubLatticeDimensions[0]-1; x++) {
+//            for (int y = 1; y < m_trueSubLatticeDimensions[1]-1; y++) {
+//                for (int z = 1; z < m_trueSubLatticeDimensions[2]-1; z++) {
+//                    for (int t = 1; t < m_trueSubLatticeDimensions[3]-1; t++) {
+//                        for (int mu = 0; mu < 4; mu++) {
+//                            m_lattice[indexSpecific(x,y,z,t,m_trueSubLatticeDimensions[1],m_trueSubLatticeDimensions[2],m_trueSubLatticeDimensions[3])].U[mu] = m_SU3Generator->generateIdentity();
+//                        }
+//                    }
+//                }
 //            }
 //        }
+        for (int i = 0; i < m_trueSubLatticeSize; i++)
+        {
+            for (int mu = 0; mu < 4; mu++)
+            {
+                // All starts with a completely random matrix. Observable should be 1.
+                m_lattice[i].U[mu] = m_SU3Generator->generateIdentity();
+            }
+        }
     }
 //    for (int x = 0; x < m_trueSubLatticeDimensions[0]; x++) {
 //        for (int y = 0; y < m_trueSubLatticeDimensions[1]; y++) {
@@ -201,6 +199,9 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
 //    runTestSuite();
 //    exit(1);
     shareFaces();
+    if (m_processRank == 0) {
+        cout << "Lattice setup complete" << endl;
+    }
 }
 
 void System::shareFaces()
@@ -261,34 +262,34 @@ void System::shareFaces()
 //        cout << (m_trueSubLatticeDimensions[1]-2) * (m_trueSubLatticeDimensions[2]-2) * (m_trueSubLatticeDimensions[3]-2) << endl;
 //        cout << (m_subLatticeDimensions[1]*m_subLatticeDimensions[2]*m_subLatticeDimensions[3]) << endl;
 //    }
-    if (m_processRank==0) {
-        int counter = 0;
-        int n1,n2,n3,n4;
-        int N1,N2,N3,N4;
-        for (int i = 0; i < 8; i++) { // Running over adjacent cube in each direction
-            cout <<"neighbours of neighbour in direction" << i << ":"<<endl;
-            for (int j = 0; j < 8; j++) { // Running over faces of cube to share(everyone exept the direction of the cube)
-                if (i/2 != j/2) {
-                    cout << "("<<i<<"/2) % 2=" << (i/2)%2<<endl;
-//                    for (int n1 = 0; n1 < m_trueSubLatticeDimensions[]; n1++) {
-//                        for (int n2 = 0; n2 < m_trueSubLatticeDimensions[]; n2++) {
-//                            MPI_Sendrecv(   &m_lattice[].U[0].mat[0].z[0],
-//                                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[i])->list[j],0,
-//                                            &m_lattice[].U[0].mat[0].z[0],
-//                                            72,MPI_DOUBLE,m_processRank,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-//                        }
-//                    }
-//                    cout << "i=" << i << " i/2=" << i / 2 << " | j=" << j << " j/2=" << j/2 << endl;
-                    cout << m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[i])->list[j] << endl;
-                    counter++;
-//                    cout << i / 2 << " | " << j/2 << endl;
-                }
-            }
-        }
-        cout << counter << endl;
-    }
+//    if (m_processRank==0) {
+//        int counter = 0;
+//        int n1,n2,n3,n4;
+//        int N1,N2,N3,N4;
+//        for (int i = 0; i < 8; i++) { // Running over adjacent cube in each direction
+//            cout <<"neighbours of neighbour in direction" << i << ":"<<endl;
+//            for (int j = 0; j < 8; j++) { // Running over faces of cube to share(everyone exept the direction of the cube)
+//                if (i/2 != j/2) {
+//                    cout << "("<<i<<"/2) % 2=" << (i/2)%2<<endl;
+////                    for (int n1 = 0; n1 < m_trueSubLatticeDimensions[]; n1++) {
+////                        for (int n2 = 0; n2 < m_trueSubLatticeDimensions[]; n2++) {
+////                            MPI_Sendrecv(   &m_lattice[].U[0].mat[0].z[0],
+////                                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[i])->list[j],0,
+////                                            &m_lattice[].U[0].mat[0].z[0],
+////                                            72,MPI_DOUBLE,m_processRank,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+////                        }
+////                    }
+////                    cout << "i=" << i << " i/2=" << i / 2 << " | j=" << j << " j/2=" << j/2 << endl;
+//                    cout << m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[i])->list[j] << endl;
+//                    counter++;
+////                    cout << i / 2 << " | " << j/2 << endl;
+//                }
+//            }
+//        }
+//        cout << counter << endl;
+//    }
 
-    exit(1);
+//    exit(1);
     for (int y = 1; y < m_trueSubLatticeDimensions[1]-1; y++) {
         for (int z = 1; z < m_trueSubLatticeDimensions[2]-1; z++) {
             for (int t = 1; t < m_trueSubLatticeDimensions[3]-1; t++) {
@@ -310,6 +311,7 @@ void System::shareFaces()
             }
         }
     }
+    if (m_processRank == 0) cout << "X-sharing complete" << endl;
 
     for (int x = 1; x < m_trueSubLatticeDimensions[0]-1; x++) {
         for (int z = 1; z < m_trueSubLatticeDimensions[2]-1; z++) {
@@ -327,6 +329,7 @@ void System::shareFaces()
             }
         }
     }
+    if (m_processRank == 0) cout << "Y-sharing complete" << endl;
 
     for (int x = 1; x < m_trueSubLatticeDimensions[0]-1; x++) {
         for (int y = 1; y < m_trueSubLatticeDimensions[1]-1; y++) {
@@ -344,6 +347,7 @@ void System::shareFaces()
             }
         }
     }
+    if (m_processRank == 0) cout << "Z-sharing complete" << endl;
 
     for (int x = 1; x < m_trueSubLatticeDimensions[0]-1; x++) {
         for (int y = 1; y < m_trueSubLatticeDimensions[1]-1; y++) {
@@ -361,6 +365,7 @@ void System::shareFaces()
             }
         }
     }
+    if (m_processRank == 0) cout << "T-sharing complete" << endl;
 
     // Faces, 24
 //    if (m_processRank == 0) {
@@ -488,11 +493,14 @@ void System::runMetropolis(bool storePreObservables)
 {
 //    loadFieldConfiguration("conf0.bin");
     m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
-    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
+    if (m_processRank == 0) {
+        cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
+    }
     // Running thermalization
     for (int i = 0; i < m_NTherm*m_NCor; i++)
     {
         update();
+        shareFaces();
         // Print correlator every somehting or store them all(useful when doing the thermalization)
         if (storePreObservables) {
             m_GammaPreThermalization[i+1] = m_correlator->calculate(m_lattice);
@@ -500,10 +508,13 @@ void System::runMetropolis(bool storePreObservables)
             m_GammaPreThermalization[int((i+1)/10.0)+1] = m_correlator->calculate(m_lattice);
         }
     }
-    cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor + 1] << endl;
-    cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
+    if (m_processRank == 0) {
+        cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor + 1] << endl;
+        cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
+    }
     delete [] m_GammaPreThermalization; // De-allocating as this is not needed anymore
-
+    cout << "EXITING AT RUNMETROPOLIS.CPP" << endl;
+    exit(1);
     // Setting the System acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
     // Main part of algorithm
@@ -513,6 +524,7 @@ void System::runMetropolis(bool storePreObservables)
         {
             update();
             // SHARE FACES HERE!?!
+            shareFaces();
         }
         m_Gamma[alpha] = m_correlator->calculate(m_lattice);
     }
