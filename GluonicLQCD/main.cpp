@@ -34,7 +34,7 @@ using std::endl;
 
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
-    int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
+    int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;            // Time dimension
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
@@ -68,8 +68,8 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     pureGauge.runMetropolis(storeThermalizationPlaquettes);
     pureGauge.getStatistics();
     pureGauge.printAcceptanceRate();
-    pureGauge.writeConfigurationToFile("configs_profiling_run");
-    pureGauge.writeDataToFile("../output/correlatorData.dat");
+//    pureGauge.writeConfigurationToFile("configs_profiling_run");
+//    pureGauge.writeDataToFile("../output/correlatorData.dat");
 
     programEnd = clock();
     cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;

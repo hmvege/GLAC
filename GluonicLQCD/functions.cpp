@@ -61,7 +61,8 @@ int stapleIndex(int i, int j, int k, int l, int *N)
      * N[2] = z-direction
      * N[3] = t-direction
      */
-    return getIndex((i+N[0]) % N[0], (j+N[1]) % N[1], (k+N[2]) % N[2], (l+N[3]) % N[3], N[1], N[2], N[3]);;
+//    return getIndex((i+N[0]-2) % (N[0]-2), (j+N[1]-2) % (N[1]-2), (k+N[2]-2) % (N[2]-2), (l+N[3]-2) % (N[3]-2), N[1], N[2], N[3]);
+    return getIndex((i+N[0]) % N[0], (j+N[1]) % N[1], (k+N[2]) % N[2], (l+N[3]) % N[3], N[1], N[2], N[3]);
 }
 
 void lorentzIndex(int mu, int *lorentzIndices)
