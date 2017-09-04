@@ -3,7 +3,8 @@
 #include "links.h"
 #include "functions.h"
 
-Plaquette::Plaquette(int N, int N_T) : Correlator(N, N_T)
+Plaquette::Plaquette() : Correlator()
+//Plaquette::Plaquette(int N, int N_T) : Correlator(N, N_T)
 {
     muIndex = new int[4];
     nuIndex = new int[4];
@@ -24,18 +25,36 @@ double Plaquette::calculate(Links *lattice)
     double gamma = 0;
     SU3 P;
     // PARALLELIZE HERE
-    for (int i = 0; i < m_N; i++) {
-        for (int j = 0; j < m_N; j++) {
-            for (int k = 0; k < m_N; k++) {
-                for (int l = 0; l < m_N_T; l++) {
+//    for (int i = 0; i < m_N; i++) {
+//        for (int j = 0; j < m_N; j++) {
+//            for (int k = 0; k < m_N; k++) {
+//                for (int l = 0; l < m_N_T; l++) {
+//                    for (int mu = 0; mu < 4; mu++) {
+//                        for (int nu = mu+1; nu < 4; nu++) {
+//                            lorentzIndex(mu,muIndex);
+//                            lorentzIndex(nu,nuIndex);
+//                            P += lattice[stapleIndex(i,j,k,l,m_N,m_N_T)].U[mu]
+//                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N,m_N_T)].U[nu]
+//                                    *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N,m_N_T)].U[mu])
+//                                    *inverse(lattice[stapleIndex(i,j,k,l,m_N,m_N_T)].U[nu]);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+    for (int i = 1; i < m_N[0]-1; i++) {
+        for (int j = 1; j < m_N[1]-1; j++) {
+            for (int k = 1; k < m_N[2]-1; k++) {
+                for (int l = 1; l < m_N[3]-1; l++) {
                     for (int mu = 0; mu < 4; mu++) {
                         for (int nu = mu+1; nu < 4; nu++) {
                             lorentzIndex(mu,muIndex);
                             lorentzIndex(nu,nuIndex);
-                            P += lattice[stapleIndex(i,j,k,l,m_N,m_N_T)].U[mu]
-                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N,m_N_T)].U[nu]
-                                    *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N,m_N_T)].U[mu])
-                                    *inverse(lattice[stapleIndex(i,j,k,l,m_N,m_N_T)].U[nu]);
+                            P += lattice[stapleIndex(i,j,k,l,m_N)].U[mu]
+                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N)].U[nu]
+                                    *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N)].U[mu])
+                                    *inverse(lattice[stapleIndex(i,j,k,l,m_N)].U[nu]);
                         }
                     }
                 }

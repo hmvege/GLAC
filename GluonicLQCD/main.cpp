@@ -34,7 +34,7 @@ using std::endl;
 
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
-    int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
+    int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;            // Time dimension
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
@@ -61,8 +61,8 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     clock_t programStart, programEnd;
     programStart = clock();
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
-    Plaquette G(N, N_T);
-    WilsonGaugeAction S(N, N_T, beta);
+    Plaquette G;
+    WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S, numprocs, processRank);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     pureGauge.runMetropolis(storeThermalizationPlaquettes);

@@ -9,7 +9,8 @@ private:
     double m_beta;
     SU3 m_staple;
 public:
-    WilsonGaugeAction(int N, int N_T, double beta);
+    WilsonGaugeAction(double beta);
+//    WilsonGaugeAction(int *N, double beta);
     ~WilsonGaugeAction();
     double getDeltaAction(Links *lattice, SU3 UPrime, int i, int j, int k, int l, int mu);
     void computeStaple(Links *lattice, int i, int j, int k, int l, int mu);

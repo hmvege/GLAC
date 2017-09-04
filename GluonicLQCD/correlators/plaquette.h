@@ -10,7 +10,8 @@ private:
     int *muIndex;
     int *nuIndex;
 public:
-    Plaquette(int N, int N_T);
+//    Plaquette(int N, int N_T);
+    Plaquette();
     ~Plaquette();
     double calculate(Links *lattice);
 };
