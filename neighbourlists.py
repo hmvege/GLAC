@@ -1,7 +1,7 @@
 import numpy as np
 
 # Processors in one dimension
-Nx = 1
+Nx = 2
 Ny = 2
 Nz = 2
 Nt = 2
@@ -96,8 +96,17 @@ def print_Y_neighbours():
 #### Z-Direction ###############################################################################################
 def getZPlusOne(Np):
 	if (((Np/(Nx*Ny) + 1) % Nz) == 0):
-		return Np % Nx + (Np/Nx) % Ny * Nx
+		x_count = Np % Nx
+		y_count = (Np/Nx) % Ny * Nx
+		# y_count = (Np / (Ny*Nx)) * (Nx*Ny)
+		# x_count = 0
+		# y_count = 0
+		z_count = 0
+		# z_count = (Np/(Nx*Ny)) % Nz * (Nx*Ny)
+		t_count = Np/(Nx*Ny*Nz) % Nt * (Nx*Ny*Nz)
+		return x_count + y_count + z_count + t_count
 	else:
+		# return 0
 		return Np + Nx*Ny
 
 def getZMinusOne(Np):
@@ -129,8 +138,8 @@ def getTPlusOne(Np):
 
 def getTMinusOne(Np):
 	x_count = Np % Nx
-	y_count = Np / Nx % Ny * Nx
-	z_count = Np/(Nx*Ny) % Nz * (Nx*Ny)
+	y_count = ((Np / Nx) % Ny) * Nx
+	z_count = (Np/(Nx*Ny) % Nz) * (Nx*Ny)
 	t_count = (Np/(Nx*Ny*Nz) - 1) % Nt * (Nx*Ny*Nz)
 	return x_count + y_count + z_count + t_count
 
@@ -144,9 +153,11 @@ def print_T_neighbours():
 ################################################################################################################
 
 def print_processor_lattice():
-	for Np in xrange(Nz*Ny*Nx):
+	for Np in xrange(Nz*Ny*Nx*Nt):
 		print "%2d" % Np,
-		if (Np+1) % (Nx*Ny) == 0:
+		if (Np+1) % (Nx*Ny*Nz) == 0:
+			print "\n"+6*"="
+		elif (Np+1) % (Nx*Ny) == 0:
 			print "\n"
 		elif (Np+1) % Nx == 0:
 			print ""
@@ -169,11 +180,28 @@ def print_neighbours(n_lists,Np):
 	print "z-1 = %2d z+1 = %2d" % (n_list[4],n_list[5])
 	print "t-1 = %2d t+1 = %2d" % (n_list[6],n_list[7])
 
-print_X_neighbours()
-print_Y_neighbours()
+# print_X_neighbours()
+# print_Y_neighbours()
 print_Z_neighbours()
 print_T_neighbours()
 neighbour_lists = getNeighbourLists()
 # print_processor_lattice()
+
 print_neighbours(neighbour_lists,0)
+print_neighbours(neighbour_lists,1)
+print_neighbours(neighbour_lists,2)
+print_neighbours(neighbour_lists,3)
+print_neighbours(neighbour_lists,4)
+print_neighbours(neighbour_lists,5)
+print_neighbours(neighbour_lists,6)
+print_neighbours(neighbour_lists,7)
+print_neighbours(neighbour_lists,8)
+print_neighbours(neighbour_lists,9)
+print_neighbours(neighbour_lists,10)
+print_neighbours(neighbour_lists,11)
+print_neighbours(neighbour_lists,12)
+print_neighbours(neighbour_lists,13)
+print_neighbours(neighbour_lists,14)
+print_neighbours(neighbour_lists,15)
+
 # print_neighbours(neighbour_lists[0],0)

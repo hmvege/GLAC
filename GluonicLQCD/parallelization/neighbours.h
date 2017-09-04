@@ -72,7 +72,11 @@ private:
 
     inline int getZPlusOne(int Np) {
         if (((Np/(m_Nx*m_Ny) + 1) % m_Nz) == 0) {
-            return Np % m_Nx + ((Np/m_Nx) % m_Ny) * m_Nx;
+            int x_count = Np % m_Nx;
+            int y_count = ((Np/m_Nx) % m_Ny) * m_Nx;
+            int t_count = ((Np/(m_Nx*m_Ny*m_Nz)) % m_Nz) * (m_Nx*m_Ny*m_Nt);
+//            return Np % m_Nx + ((Np/m_Nx) % m_Ny) * m_Nx;
+            return x_count + y_count + t_count;
         } else {
             return Np + m_Nx*m_Ny;
         }

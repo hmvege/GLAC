@@ -16,8 +16,8 @@ private:
     // Lattice sizes
     int m_N;
     int m_N_T;
-    int m_subLatticeDimensions[4];
-    int m_trueSubLatticeDimensions[4]; // With phases
+    int m_dim[4];
+    int m_extendedDim[4]; // With phases
     // Updating constants
     int m_NCf;
     int m_NCor;

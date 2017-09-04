@@ -26,12 +26,12 @@ NeighbourList::~NeighbourList()
 
 void NeighbourList::print()
 {
-    for (int i = 0; i < 8; i++) {
-//        if (list.at(i) != NULL) {
-//            cout << "Segfault at i = " << i << endl;
-            cout << "list["<<i<<"] = "<<list[i]<<endl;
-//        }
-    }
+//    for (int i = 0; i < 8; i++) {
+////        if (list.at(i) != NULL) {
+////            cout << "Segfault at i = " << i << endl;
+//            cout << "list["<<i<<"] = "<<list[i]<<endl;
+////        }
+//    }
     cout << "\nProcess rank = " << rank << endl;
     cout << "x-1 = " << list[0] << " x+1 = " << list[1] << endl;
     cout << "y-1 = " << list[2] << " y+1 = " << list[3] << endl;
