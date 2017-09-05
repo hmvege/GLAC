@@ -35,7 +35,7 @@ using std::endl;
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
     int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
-    int N_T         = 8;            // Time dimension
+    int N_T         = 4;            // Time dimension
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path

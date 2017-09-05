@@ -23,9 +23,6 @@ public:
     SU3 generateRandom();
     SU3 generateIdentity();
     SU3 generateRST();
-    void generateHermitian();
-
-
     SU2 generateSU2();
 
     // Setters

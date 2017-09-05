@@ -32,6 +32,7 @@ public:
     complex &operator/=(double b);
 
     double norm();
+    double normSquared();
     complex conjugate();
     complex c();
 

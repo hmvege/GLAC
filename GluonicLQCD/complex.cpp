@@ -8,8 +8,6 @@ using std::fabs;
 
 complex::complex() // Non-assigning constructor
 {
-//    re = 0;
-//    im = 0;
     z = new double[2];
     z[0] = 0; // re
     z[1] = 0; // im
@@ -25,8 +23,6 @@ complex::complex(double real, double imag) // Value specific constructor
     z = new double[2];
     z[0] = real;
     z[1] = imag;
-//    re = real;
-//    im = imag;
 }
 
 complex::complex(const complex &b ) { // Copy constructor
@@ -37,39 +33,45 @@ complex::complex(const complex &b ) { // Copy constructor
 
 double complex::norm()
 {
-//    return re*re + im*im;
+    return sqrt(z[0]*z[0] + z[1]*z[1]);
+}
+
+double complex::normSquared()
+{
     return z[0]*z[0] + z[1]*z[1];
 }
 
-complex &complex::operator=(const complex &b)
-{
-//    if (this == &b)
-//        return *this;
-
-//    if (z) delete [] z; // Freeing up memory for new asignement
-//    z = new double[2];
-
-    z[0] = b.re();
-    z[1] = b.im();
-    return *this;
-}
-
-
 complex complex::conjugate()
 {
-//    im = -im;
+    /*
+     * Returns the complex conjugate of the object instance.
+     */
     z[1] = -z[1];
     return *this;
 }
 
 complex complex::c()
 {
+//    z[1] = -z[1];
+//    return *this;
     return complex(z[0],-z[1]);
-//    return complex(re,-im);
+}
+
+complex &complex::operator=(const complex &b)
+{
+    /*
+     * Equality overloading(copy operator).
+     */
+    z[0] = b.re();
+    z[1] = b.im();
+    return *this;
 }
 
 complex &complex::operator+=(complex b)
 {
+    /*
+     * Adding two complex numbers, this and b.
+     */
 //    re += b.re;
 //    im += b.im;
     z[0] += b.z[0];
@@ -80,6 +82,7 @@ complex &complex::operator+=(complex b)
 complex &complex::operator*=(complex b)
 {
     /*
+     * Multiplying this by complex number b.
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
      */
 //    double prev_re = re;
@@ -94,6 +97,7 @@ complex &complex::operator*=(complex b)
 complex &complex::operator*=(double b)
 {
     /*
+     * Multiplying this by double b.
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
      */
 //    double prev_re = re;
@@ -107,14 +111,15 @@ complex &complex::operator*=(double b)
 complex &complex::operator/=(complex b)
 {
     /*
-     * Dividing this/b
+     * Dividing this by complex number b.
      */
 //    double prev_re = re;
 //    double divisor = b.re*b.re + b.im*b.im;
 //    re = (re*b.re + im*b.im)/divisor;
 //    im = (im*b.re - prev_re*b.im)/divisor;
     double prev_re = z[0];
-    double divisor = b.re()*b.re() + b.im()*b.im();
+//    double divisor = b.re()*b.re() + b.im()*b.im();
+    double divisor = b.normSquared();
     z[0] = (z[0]*b.re() + z[1]*b.im())/divisor;
     z[1] = (z[1]*b.re() - prev_re*b.im())/divisor;
     return *this;
@@ -123,7 +128,7 @@ complex &complex::operator/=(complex b)
 complex &complex::operator/=(double b)
 {
     /*
-     * Dividing this/b
+     * Dividing this by double b.
      */
     z[0] /= b;
     z[1] /= b;
@@ -132,12 +137,14 @@ complex &complex::operator/=(double b)
 
 complex &complex::operator-=(complex b)
 {
+    /*
+     * Subtracting this by complex number b.
+     */
     z[0] -= b.re();
     z[1] -= b.im();
     return *this;
 }
 
-// TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
 std::ostream &operator<<(std::ostream &os, const complex &a)
 {
     if (a.z[1] < 0) {

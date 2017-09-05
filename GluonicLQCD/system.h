@@ -45,8 +45,9 @@ private:
 
     // Parallelization variables and functions
     Neighbours * m_neighbourLists = nullptr;
+    void share();
     void shareFaces();
-    void shareCorners();
+    void shareEdges();
 
     // Variables used to perform statistics
     double * m_Gamma;

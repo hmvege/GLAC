@@ -36,7 +36,7 @@ SU3 inverse(SU3 U)
     /*
      * Gets the inverse of a SU3 matrix, MAKE CLASS BASED?!
      */
-    SU3 UInverse;
+    SU3 UInverse; // OPTIMIZE HERE?
     UInverse.copy(U);
     UInverse.conjugate();
     UInverse.transpose();

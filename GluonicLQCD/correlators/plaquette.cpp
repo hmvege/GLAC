@@ -48,8 +48,8 @@ double Plaquette::calculate(Links *lattice)
             for (int k = 1; k < m_N[2]-1; k++) {
                 for (int l = 1; l < m_N[3]-1; l++) {
                     for (int mu = 0; mu < 4; mu++) {
+                        lorentzIndex(mu,muIndex); // Saves quite a few flops by not figuring out the mu index every time
                         for (int nu = mu+1; nu < 4; nu++) {
-                            lorentzIndex(mu,muIndex);
                             lorentzIndex(nu,nuIndex);
                             P += lattice[stapleIndex(i,j,k,l,m_N)].U[mu]
                                     *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N)].U[nu]
@@ -65,5 +65,6 @@ double Plaquette::calculate(Links *lattice)
     {
         gamma += P.mat[i*3+i].re();
     }
-    return gamma/3.0/6.0/m_latticeSize; // 3 from SU3, 6 from number of plaquettes
+    return gamma/18.0/m_latticeSize; // 3 from SU3, 6 from number of plaquettes, 3*6=18
+//    return gamma/3.0/6.0/m_latticeSize; // 3 from SU3, 6 from number of plaquettes
 }

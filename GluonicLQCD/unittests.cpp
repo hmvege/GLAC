@@ -156,13 +156,12 @@ bool testHermicity(SU3 H, bool verbose)
         }
     }
     if (testPassed) {
-//        cout << "PASSED: matrix is hermitian." << endl;
+        cout << "PASSED: matrix is hermitian." << endl;
         return true;
     }
     else {
         cout << "FAILED: matrix is not hermitian." << endl;
-        I.print();
-        exit(1);
+        if (verbose) I.print();
         return false;
     }
 }
@@ -172,7 +171,7 @@ bool testNorm(int col, SU3 H)
     // TEST: Finding length of column
     double s=0;
     for (int i = 0; i < 3; i++) {
-        s += H[3*i+col].norm();
+        s += H[3*i+col].normSquared();
     }
     if (fabs(s-1) < 1e-15) {
         cout << "PASSED: length = " << s << endl;

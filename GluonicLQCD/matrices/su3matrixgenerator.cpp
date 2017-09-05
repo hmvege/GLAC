@@ -76,7 +76,7 @@ SU3 SU3MatrixGenerator::generateRandom()
     double columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
-        columnLength += H[3*i].norm();
+        columnLength += H[3*i].normSquared();
     }
     columnLength = sqrt(columnLength);
     for (int i = 0; i < 3; i++)
@@ -97,7 +97,7 @@ SU3 SU3MatrixGenerator::generateRandom()
     columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
-        columnLength += H[3*i+1].norm();
+        columnLength += H[3*i+1].normSquared();
     }
     columnLength = sqrt(columnLength);
     for (int i = 0; i < 3; i++)
@@ -108,7 +108,7 @@ SU3 SU3MatrixGenerator::generateRandom()
     H[2] = H[3].c()*H[7].c() - H[6].c()*H[4].c();
     H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();
     H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();
-//    testOrthogonality(H,true);
+//    testOrthogonality(H,false);
 //    testNorm(0,H);
 //    testNorm(1,H);
 //    testNorm(2,H);
