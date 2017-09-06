@@ -220,7 +220,7 @@ void System::shareFaces()
             for (int t = 1; t < m_extendedDim[3]-1; t++) {
                 MPI_Sendrecv(   m_lattice[getIndex(1,y,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,
-                                &m_lattice[getIndex(m_extendedDim[0]-1,y,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                                m_lattice[getIndex(m_extendedDim[0]-1,y,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             }
         }
@@ -233,9 +233,9 @@ void System::shareFaces()
     for (int y = 1; y < m_extendedDim[1]-1; y++) {
         for (int z = 1; z < m_extendedDim[2]-1; z++) {
             for (int t = 1; t < m_extendedDim[3]-1; t++) {
-                MPI_Sendrecv(   &m_lattice[getIndex(m_extendedDim[0]-2,y,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                MPI_Sendrecv(   m_lattice[getIndex(m_extendedDim[0]-2,y,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
-                                &m_lattice[getIndex(0,y,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                                m_lattice[getIndex(0,y,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             }
         }
@@ -245,9 +245,9 @@ void System::shareFaces()
     for (int x = 1; x < m_extendedDim[0]-1; x++) {
         for (int z = 1; z < m_extendedDim[2]-1; z++) {
             for (int t = 1; t < m_extendedDim[3]-1; t++) {
-                MPI_Sendrecv(   &m_lattice[getIndex(x,1,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0], // Send
+                MPI_Sendrecv(   m_lattice[getIndex(x,1,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // Send
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,
-                                &m_lattice[getIndex(x,m_extendedDim[1]-1,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0], // Recieve
+                                m_lattice[getIndex(x,m_extendedDim[1]-1,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // Recieve
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,
                         MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             }
@@ -258,9 +258,9 @@ void System::shareFaces()
     for (int x = 1; x < m_extendedDim[0]-1; x++) {
         for (int z = 1; z < m_extendedDim[2]-1; z++) {
             for (int t = 1; t < m_extendedDim[3]-1; t++) {
-                MPI_Sendrecv(   &m_lattice[getIndex(x,m_extendedDim[1]-2,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                MPI_Sendrecv(   m_lattice[getIndex(x,m_extendedDim[1]-2,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,
-                                &m_lattice[getIndex(x,0,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                                m_lattice[getIndex(x,0,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             }
         }
@@ -270,9 +270,9 @@ void System::shareFaces()
     for (int x = 1; x < m_extendedDim[0]-1; x++) {
         for (int y = 1; y < m_extendedDim[1]-1; y++) {
             for (int t = 1; t < m_extendedDim[3]-1; t++) {
-                MPI_Sendrecv(   &m_lattice[getIndex(x,y,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0], // send
+                MPI_Sendrecv(   m_lattice[getIndex(x,y,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // send
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[4],0,
-                                &m_lattice[getIndex(x,y,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0], // receive
+                                m_lattice[getIndex(x,y,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // receive
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[5],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             }
         }
@@ -282,9 +282,9 @@ void System::shareFaces()
     for (int x = 1; x < m_extendedDim[0]-1; x++) {
         for (int y = 1; y < m_extendedDim[1]-1; y++) {
             for (int t = 1; t < m_extendedDim[3]-1; t++) {
-                MPI_Sendrecv(   &m_lattice[getIndex(x,y,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                MPI_Sendrecv(   m_lattice[getIndex(x,y,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[5],0,
-                                &m_lattice[getIndex(x,y,0,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                                m_lattice[getIndex(x,y,0,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[4],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             }
         }
@@ -294,9 +294,9 @@ void System::shareFaces()
     for (int x = 1; x < m_extendedDim[0]-1; x++) {
         for (int y = 1; y < m_extendedDim[1]-1; y++) {
             for (int z = 1; z < m_extendedDim[2]-1; z++) {
-                MPI_Sendrecv(   &m_lattice[getIndex(x,y,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                MPI_Sendrecv(   m_lattice[getIndex(x,y,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[6],0,
-                                &m_lattice[getIndex(x,y,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                                m_lattice[getIndex(x,y,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[7],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             }
         }
@@ -306,9 +306,9 @@ void System::shareFaces()
     for (int x = 1; x < m_extendedDim[0]-1; x++) {
         for (int y = 1; y < m_extendedDim[1]-1; y++) {
             for (int z = 1; z < m_extendedDim[2]-1; z++) {
-                MPI_Sendrecv(   &m_lattice[getIndex(x,y,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                MPI_Sendrecv(   m_lattice[getIndex(x,y,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[7],0,
-                                &m_lattice[getIndex(x,y,z,0,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
+                                m_lattice[getIndex(x,y,z,0,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
                                 72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[6],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             }
         }
@@ -324,7 +324,7 @@ void System::shareEdges()
     // zt faces, xy constant
     for (int z = 1; z < m_extendedDim[2]-1; z++) {
         for (int t = 1; t < m_extendedDim[3]-1; t++) {
-//            // x = 0, y=1->Ny-1
+//            // x = 0, y=1->Ny-1 // Giovanni method
 //            MPI_Sendrecv(   &m_lattice[getIndex(0,1,z,t,                    m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
 //                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[0])->list[2],0,
 //                            &m_lattice[getIndex(0,m_extendedDim[1]-1,z,t,   m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
@@ -345,26 +345,26 @@ void System::shareEdges()
 //                            &m_lattice[getIndex(m_extendedDim[0]-1,0,z,t,                   m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
 //                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[1])->list[2],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 
-//            // x = 0, y=1->Ny-1
-//            MPI_Sendrecv(   &m_lattice[getIndex(1,0,z,t,                    m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-//                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
-//                            &m_lattice[getIndex(m_extendedDim[0]-1,0,z,t,   m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-//                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-//            // x = 0, y=Ny-2->0
-//            MPI_Sendrecv(   &m_lattice[getIndex(1,m_extendedDim[1]-1,z,t,  m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-//                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,
-//                            &m_lattice[getIndex(m_extendedDim[0]-1,m_extendedDim[1]-1,z,t,                   m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-//                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-//            // x = Nx, y=1->Ny-1
-//            MPI_Sendrecv(   &m_lattice[getIndex(m_extendedDim[0]-2,0,z,t,                   m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-//                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
-//                            &m_lattice[getIndex(0,0,z,t,                                    m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-//                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-//            // x = Nx, y=Ny-2->0
-//            MPI_Sendrecv(   &m_lattice[getIndex(m_extendedDim[0]-2,m_extendedDim[1]-1,z,t,  m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-//                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
-//                            &m_lattice[getIndex(0,m_extendedDim[1]-1,z,t,                   m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-//                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            // x = 0, y=1->Ny-1
+            MPI_Sendrecv(   m_lattice[getIndex(0,1,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // send
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+                            m_lattice[getIndex(0,m_extendedDim[1]-1,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // recieve
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            // x = 0, y=Ny-2->0
+            MPI_Sendrecv(   m_lattice[getIndex(0,m_extendedDim[1]-2,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,
+                            m_lattice[getIndex(0,0,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            // x = Nx, y=1->Ny-1
+            MPI_Sendrecv(   m_lattice[getIndex(m_extendedDim[0]-1,1,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+                            m_lattice[getIndex(m_extendedDim[0]-1,m_extendedDim[1]-1,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            // x = Nx, y=Ny-2->0
+            MPI_Sendrecv(   m_lattice[getIndex(m_extendedDim[0]-1,m_extendedDim[1]-2,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+                            m_lattice[getIndex(m_extendedDim[0]-1,0,z,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         }
     }
 
@@ -372,104 +372,103 @@ void System::shareEdges()
     for (int y = 1; y < m_extendedDim[1]-1; y++) {
         for (int t = 1; t < m_extendedDim[3]-1; t++) {
             // x = 0;  z=1->Nz-1
-            MPI_Sendrecv(   &m_lattice[getIndex(1,y,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[0])->list[4],0,
-                            &m_lattice[getIndex(1,y,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[0])->list[5],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(0,y,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // send
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+                            m_lattice[getIndex(0,y,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // recieve
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // x = 0,  z=Nz-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(1,y,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[0])->list[5],0,
-                            &m_lattice[getIndex(1,y,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[0])->list[4],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(0,y,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,
+                            m_lattice[getIndex(0,y,0,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // x = Nx, z=1->Nz-1
-            MPI_Sendrecv(   &m_lattice[getIndex(m_extendedDim[0]-2,y,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[1])->list[4],0,
-                            &m_lattice[getIndex(m_extendedDim[0]-2,y,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                           72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[1])->list[5],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(m_extendedDim[0]-1,y,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+                            m_lattice[getIndex(m_extendedDim[0]-1,y,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // x = Nx, z=Nz-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(m_extendedDim[0]-2,y,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[1])->list[5],0,
-                            &m_lattice[getIndex(m_extendedDim[0]-2,y,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[1])->list[4],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(m_extendedDim[0]-1,y,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+                            m_lattice[getIndex(m_extendedDim[0]-1,y,0,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         }
-    }
+    }//0.532476
 
     // yz faces, xt constant
     for (int y = 1; y < m_extendedDim[1]-1; y++) {
         for (int z = 1; z < m_extendedDim[2]-1; z++) {
             // x = 0;  t=1->Nt-1
-            MPI_Sendrecv(   &m_lattice[getIndex(1,y,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[0])->list[6],0,
-                            &m_lattice[getIndex(1,y,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[0])->list[7],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(0,y,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // send
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+                            m_lattice[getIndex(0,y,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // recieve
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // x = 0,  t=Nt-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(1,y,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[0])->list[7],0,
-                            &m_lattice[getIndex(1,y,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[0])->list[6],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(0,y,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,
+                            m_lattice[getIndex(0,y,z,0,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // x = Nx, t=1->Nt-1
-            MPI_Sendrecv(   &m_lattice[getIndex(m_extendedDim[0]-2,y,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[1])->list[6],0,
-                            &m_lattice[getIndex(m_extendedDim[0]-2,y,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[1])->list[7],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(m_extendedDim[0]-1,y,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+                            m_lattice[getIndex(m_extendedDim[0]-1,y,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // x = Nx, t=Nt-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(m_extendedDim[0]-2,y,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[1])->list[7],0,
-                            &m_lattice[getIndex(m_extendedDim[0]-2,y,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[1])->list[6],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(m_extendedDim[0]-1,y,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+                            m_lattice[getIndex(m_extendedDim[0]-1,y,z,0,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         }
-    }
+    }//0.569487
 
     // xt faces, yz constant
     for (int x = 1; x < m_extendedDim[0]-1; x++) {
         for (int t = 1; t < m_extendedDim[3]-1; t++) {
             // y = 0;  t=1->Nt-1
-            MPI_Sendrecv(   &m_lattice[getIndex(x,1,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[2])->list[6],0,
-                            &m_lattice[getIndex(x,1,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[2])->list[7],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,0,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // send
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,
+                            m_lattice[getIndex(x,0,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // recieve
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // y = 0,  t=Nt-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(x,1,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[2])->list[7],0,
-                            &m_lattice[getIndex(x,1,1,m_extendedDim[1],t,m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[2])->list[6],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,0,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,
+                            m_lattice[getIndex(x,0,0,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // y = Ny, t=1->Nt-1
-            MPI_Sendrecv(   &m_lattice[getIndex(x,m_extendedDim[1]-2,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[3])->list[6],0,
-                            &m_lattice[getIndex(x,m_extendedDim[1]-2,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[3])->list[7],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,m_extendedDim[1]-1,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,
+                            m_lattice[getIndex(x,m_extendedDim[1]-1,m_extendedDim[2]-1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // y = Ny, t=Nt-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(x,m_extendedDim[1]-2,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[3])->list[7],0,
-                            &m_lattice[getIndex(x,m_extendedDim[1]-2,1,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[3])->list[6],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,m_extendedDim[1]-1,m_extendedDim[2]-2,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,
+                            m_lattice[getIndex(x,m_extendedDim[1]-1,0,t,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         }
-    }
+    }//0.586596
 
     // xz faces, yt constant
     for (int x = 1; x < m_extendedDim[0]-1; x++) {
         for (int z = 1; z < m_extendedDim[2]-1; z++) {
             // y = 0;  z=1->Nz-1
-            MPI_Sendrecv(   &m_lattice[getIndex(x,1,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[2])->list[4],0,
-                            &m_lattice[getIndex(x,1,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[2])->list[5],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,0,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // send
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,
+                            m_lattice[getIndex(x,0,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // recieve
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // y = 0,  z=Nz-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(x,1,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[2])->list[5],0,
-                            &m_lattice[getIndex(x,1,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[2])->list[4],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,0,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // send
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,
+                            m_lattice[getIndex(x,0,z,0,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // recieve
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // y = Ny, z=1->Nz-1
-            MPI_Sendrecv(   &m_lattice[getIndex(x,m_extendedDim[1]-2,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[3])->list[4],0,
-                            &m_lattice[getIndex(x,m_extendedDim[1]-2,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[3])->list[5],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,m_extendedDim[1]-1,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,
+                            m_lattice[getIndex(x,m_extendedDim[1]-1,z,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // y = Ny, z=Nz-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(x,m_extendedDim[1]-2,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[3])->list[5],0,
-                            &m_lattice[getIndex(x,m_extendedDim[1]-2,z,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[3])->list[4],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-
+            MPI_Sendrecv(   m_lattice[getIndex(x,m_extendedDim[1]-1,z,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[3],0,
+                            m_lattice[getIndex(x,m_extendedDim[1]-1,z,0,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         }
     }
 
@@ -477,65 +476,28 @@ void System::shareEdges()
     for (int x = 1; x < m_extendedDim[0]-1; x++) {
         for (int y = 1; y < m_extendedDim[1]-1; y++) {
             // z = 0;  t=1->Nt-1
-            MPI_Sendrecv(   &m_lattice[getIndex(x,y,1,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[4])->list[6],0,
-                            &m_lattice[getIndex(x,y,1,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[4])->list[7],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,y,0,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // send
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[5],0,
+                            m_lattice[getIndex(x,y,0,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // recieve
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[4],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // z = 0,  t=Nt-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(x,y,1,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[4])->list[7],0,
-                            &m_lattice[getIndex(x,y,1,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[4])->list[6],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,y,0,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // send
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[4],0,
+                            m_lattice[getIndex(x,y,0,0,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U, // recieve
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[5],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // z = Nz, t=1->Nt-1
-            MPI_Sendrecv(   &m_lattice[getIndex(x,y,m_extendedDim[2]-2,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[5])->list[6],0,
-                            &m_lattice[getIndex(x,y,m_extendedDim[2]-2,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[5])->list[7],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,y,m_extendedDim[2]-1,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[5],0,
+                            m_lattice[getIndex(x,y,m_extendedDim[2]-1,m_extendedDim[3]-1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[4],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
             // z = Nz, t=Nt-2->0
-            MPI_Sendrecv(   &m_lattice[getIndex(x,y,m_extendedDim[2]-2,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[5])->list[7],0,
-                            &m_lattice[getIndex(x,y,m_extendedDim[2]-2,1,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U[0].mat[0].z[0],
-                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[5])->list[6],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            MPI_Sendrecv(   m_lattice[getIndex(x,y,m_extendedDim[2]-1,m_extendedDim[3]-2,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[5],0,
+                            m_lattice[getIndex(x,y,m_extendedDim[2]-1,0,m_extendedDim[1],m_extendedDim[2],m_extendedDim[3])].U,
+                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[4],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         }
     }
 
-//    exit(0);
-    // Share x=Nx (x-1 direction)
-    // Share y=0  (y-1 direction)
-    // Share y=Ny (y+1 direction)
-    // Share z=0  (z-1 direction)
-    // Share z=Nz (z+1 direction)
-    // Share t=0  (t-1 direction)
-    // Share t=Nt (t+1 direction)
-
-//    cout << m_processRank << "   " << m_neighbourLists->getNeighbours(m_processRank)->list[0] << endl;
-//    exit(0);
-//    if (m_processRank==0) {
-//        int counter = 0;
-//        int n1,n2,n3,n4;
-//        int N1,N2,N3,N4;
-//        for (int i = 0; i < 8; i++) { // Running over adjacent cube in each direction
-//            cout <<"neighbours of neighbour in direction" << i << ":"<<endl;
-//            for (int j = 0; j < 8; j++) { // Running over faces of cube to share(everyone exept the direction of the cube)
-//                if (i/2 != j/2) {
-//                    cout << "("<<i<<"/2) % 2=" << (i/2)%2<<endl;
-//                    for (int n1 = 0; n1 < m_extendedDim[]; n1++) {
-//                        for (int n2 = 0; n2 < m_extendedDim[]; n2++) {
-//                            MPI_Sendrecv(   &m_lattice[].U[0].mat[0].z[0],
-//                                            72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[i])->list[j],0,
-//                                            &m_lattice[].U[0].mat[0].z[0],
-//                                            72,MPI_DOUBLE,m_processRank,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-//                        }
-//                    }
-//                    cout << "i=" << i << " i/2=" << i / 2 << " | j=" << j << " j/2=" << j/2 << endl;
-//                    cout << m_neighbourLists->getNeighbours(m_neighbourLists->getNeighbours(m_processRank)->list[i])->list[j] << endl;
-//                    counter++;
-//                    cout << i / 2 << " | " << j/2 << endl;
-//                }
-//            }
-//        }
-//        cout << counter << endl;
-//    }
 }
 
 void System::updateLink(int latticeIndex, int mu)
@@ -674,7 +636,7 @@ void System::getStatistics()
     averagedGammaSquared /= double(m_NCf);
     m_varianceGamma = (averagedGammaSquared - m_averagedGamma*m_averagedGamma)/double(m_NCf);
     m_stdGamma = sqrt(m_varianceGamma);
-    if (m_processRank) cout << m_averagedGamma << ", std = " << m_stdGamma << ", variance = " << m_varianceGamma << endl;
+    if (m_processRank == 0) cout << m_averagedGamma << ", std = " << m_stdGamma << ", variance = " << m_varianceGamma << endl;
 }
 
 void System::writeDataToFile(std::string filename, bool preThermalizationGamma)

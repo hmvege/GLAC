@@ -39,7 +39,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path
-    int NCf         = 10;          // Number of configurations to retrieve
+    int NCf         = 100;          // Number of configurations to retrieve
     double a        = L/double(N);  // Lattice spacing
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
