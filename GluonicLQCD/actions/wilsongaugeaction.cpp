@@ -3,22 +3,13 @@
 #include "functions.h"
 
 // TEMP
-#include "unittests.h"
-
-//WilsonGaugeAction::WilsonGaugeAction(int *N, double beta): Action(*N)
-//{
-//    m_beta = beta;
-//    muIndex = new int[4];
-//    nuIndex = new int[4];
-//    for (int i = 0; i < 4; i++) {
-//        muIndex[i] = 0;
-//        nuIndex[i] = 0;
-//    }
-//}
+#include <cmath>
+#include <iostream>
 
 WilsonGaugeAction::WilsonGaugeAction(double beta): Action()
 {
     m_beta = beta;
+    multiplicationFactor = -m_beta/3.0;
     muIndex = new int[4];
     nuIndex = new int[4];
     for (int i = 0; i < 4; i++) {
@@ -42,23 +33,46 @@ double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int 
     {
         S += tr.mat[n*3+n].re();
     }
-    return -m_beta*S/3.0; // Should be N=3 as in the Gauge symmetry
+    return S*multiplicationFactor; // Should be N=3 as in the Gauge symmetry
 }
 
 void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l, int mu)
 {
     m_staple.zeros();
+//    SU3 temp;
+//    temp.zeros();
+    lorentzIndex(mu,muIndex);
     for (int nu = 0; nu < 4; nu++)
     {
         if (mu == nu) continue;
-        lorentzIndex(mu,muIndex);
         lorentzIndex(nu,nuIndex);
-        m_staple += lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N)].U[nu] // Gattinger using verbatim staple definition
-                *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N)].U[mu])
-                *inverse(lattice[stapleIndex(i,j,k,l,m_N)].U[nu])
-                + inverse(lattice[stapleIndex(i+muIndex[0]-nuIndex[0],j+muIndex[1]-nuIndex[1],k+muIndex[2]-nuIndex[2],l+muIndex[3]-nuIndex[3],m_N)].U[nu])
-                *inverse(lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N)].U[mu])
-                *lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N)].U[nu];
+        m_staple += lattice[getIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N[1],m_N[2],m_N[3])].U[nu] // Gattinger using verbatim staple definition OLD METHOD
+                *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
+                *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv()
+                + lattice[getIndex(i+muIndex[0]-nuIndex[0],j+muIndex[1]-nuIndex[1],k+muIndex[2]-nuIndex[2],l+muIndex[3]-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[nu].inv()
+                *lattice[getIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
+                *lattice[getIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[nu];
+
+
+//        m_staple += lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N)].U[nu] // Gattinger using verbatim staple definition OLD METHOD
+//                *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N)].U[mu])
+//                *inverse(lattice[stapleIndex(i,j,k,l,m_N)].U[nu])
+//                + inverse(lattice[stapleIndex(i+muIndex[0]-nuIndex[0],j+muIndex[1]-nuIndex[1],k+muIndex[2]-nuIndex[2],l+muIndex[3]-nuIndex[3],m_N)].U[nu])
+//                *inverse(lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N)].U[mu])
+//                *lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N)].U[nu];
+
+//        temp = lattice[getIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N[1],m_N[2],m_N[3])].U[nu] // Gattinger using verbatim staple definition OLD METHOD
+//                *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
+//                *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv()
+//                + lattice[getIndex(i+muIndex[0]-nuIndex[0],j+muIndex[1]-nuIndex[1],k+muIndex[2]-nuIndex[2],l+muIndex[3]-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[nu].inv()
+//                *lattice[getIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
+//                *lattice[getIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[nu];
+
+//        m_staple += temp;
+//        if ((fabs(temp.mat[0].re()) + fabs(temp.mat[4].re()) + fabs(temp.mat[8].re())) < 1e-16) {
+//             std::cout << "ERROR!" << std::endl;
+//             exit(1);
+//        }
     }
 
 }

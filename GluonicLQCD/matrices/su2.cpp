@@ -9,17 +9,16 @@ using std::endl;
 
 SU2::SU2()
 {
-//    mat = new complex[4];
 }
 
 SU2::~SU2()
 {
-//    delete [] mat;
 }
 
 void SU2::transpose()
 {
     complex *temp = new complex[4];
+    cout<< "SU2 TRANSPOSE IS USED"<<endl;
     for (int i = 0; i < 4; i++) { temp[i] = mat[i]; }
     for (int i = 0; i < 2; i++)
     {
@@ -62,7 +61,7 @@ SU2 &SU2::operator*=(SU2 B)
     /*
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
      */
-    complex *temp = new complex[4];
+    complex temp[4];
     for (int i = 0; i < 2; i++)
     {
         for (int j = 0; j < 2; j++)
@@ -73,25 +72,23 @@ SU2 &SU2::operator*=(SU2 B)
             }
         }
     }
-    for (int i = 0; i < 4; i++) {
-        mat[i] = temp[i];
-    }
-    for (int i = 0; i < 2; i++)
+//    for (int i = 0; i < 4; i++) {
+//        mat[i] = temp[i];
+//    }
+    for (int i = 0; i < 2; i++) // ..this is faster?
     {
         for (int j = 0; j < 2; j++)
         {
             mat[(i*2+j)] = temp[(i*2+j)];
         }
     }
-    delete [] temp;
+//    delete [] temp;
     return *this;
 }
 
 SU2 &SU2::operator*=(double b)
 {
     for (int i = 0; i < 4; i++) {
-//        mat[i].re *= b;
-//        mat[i].im *= b;
         mat[i] *= b;
     }
     return *this;

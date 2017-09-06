@@ -14,6 +14,7 @@ public:
     complex get(int i, int j) { return mat[(3*i + j)]; }
 
     void copy(SU3 B);
+    SU3 inv();
     void zeros();
     void transpose();
     void conjugate();

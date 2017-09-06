@@ -18,6 +18,11 @@ Correlator::Correlator()
     }
 }
 
+void Correlator::setLatticeSize(int latticeSize)
+{
+    m_latticeSize = double(latticeSize);
+}
+
 Correlator::~Correlator()
 {
     delete [] m_N;

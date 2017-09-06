@@ -14,18 +14,16 @@ class System
 {
 private:
     // Lattice sizes
-    int m_N;
-    int m_N_T;
-    int m_dim[4];
-    int m_extendedDim[4]; // With phases
+    int m_NSpatial;
+    int m_NTemporal;
+    int m_NTrue[4];
+    int m_N[4]; // With phases
     // Updating constants
     int m_NCf;
     int m_NCor;
     int m_NTherm;
     int m_nUpdates = 10; // N updates before calculating the action, as that is costly
     double m_epsilon;
-    double m_a; // Lattice spacing
-    double m_L; // Lattice size
     // For handling the acceptance rate
     int m_acceptanceCounter = 0;
     double getAcceptanceRate();
@@ -82,13 +80,12 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 public:
-    System(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
+    System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
     ~System();
     void runMetropolis(bool storePreObservables);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
     void getStatistics();
     // Data outputters
-//    void writeStatisticsToFile(const char *filename);
     void writeDataToFile(std::string filename, bool preThermalizationGamma = true);
     void writeConfigurationToFile(std::string filename);
     void loadFieldConfiguration(std::string filename);
@@ -96,15 +93,15 @@ public:
     // Setters
     void setAction(Action *S) { m_S = S; }
     void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
-    void setN(int N) { m_N = N; }
-    void setNT(int N_T) { m_N_T = N_T; }
+    void setN(int NSpatial) { m_NSpatial = NSpatial; }
+    void setNT(int NTemporal) { m_NTemporal = NTemporal; }
     void setNCf(int NCf) { m_NCf = NCf; }
     void setEpsilon(double epsilon) { m_epsilon = epsilon; }
     void setUpdateFrequency(int nUpdates) { m_nUpdates = nUpdates; }
 
     // Getters
-    int getN() { return m_N; }
-    int getNT() { return m_N; }
+    int getNSpatial() { return m_NSpatial; }
+    int getNNTemporal() { return m_NTemporal; }
     int getNCf() { return m_NCf; }
     int getEpsilon() { return m_epsilon; }
 

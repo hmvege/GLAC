@@ -133,10 +133,11 @@ bool testHermicity(SU3 H, bool verbose)
     }
     SU3 I;
     I = H*inverse(H);
+    I = H*H.inv();
     if (verbose) {
         cout << "\nInverse matrix = "<< endl;
         inverse(H).print();
-        cout << "\nUnit matrix = " << endl;
+        cout << "\nIdentity matrix = " << endl;
         I.print();
         cout << endl;
     }
@@ -161,7 +162,8 @@ bool testHermicity(SU3 H, bool verbose)
     }
     else {
         cout << "FAILED: matrix is not hermitian." << endl;
-        if (verbose) I.print();
+//        if (verbose) I.print();
+        I.print();
         return false;
     }
 }
@@ -488,6 +490,40 @@ void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatr
         cout << "Complex multiplication performance test completed. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
     }
 
+}
+
+void inversePerformanceTest(double eps, double seed, int NTests)
+{
+    std::mt19937_64 gen(seed);
+    SU3 U, I;
+    SU3MatrixGenerator SU3Gen(eps, seed);
+    clock_t oldStart, oldEnd;
+    oldStart = clock();
+    // Old inversion method
+    for (int i = 0; i < NTests; i++) {
+        U = SU3Gen.generateRandom();
+        I = U*inverse(U);
+    }
+    oldEnd = clock();
+    // New inversion method
+    clock_t newStart, newEnd;
+    newStart = clock();
+    for (int i = 0; i < NTests; i++) {
+        U = SU3Gen.generateRandom();
+        I = U*U.inv();
+    }
+    newEnd = clock();
+    cout << "OLD METHOD. Time used: " << ((oldEnd - oldStart)/((double)CLOCKS_PER_SEC)) << endl;
+    cout << "NEW METHOD. Time used: " << ((newEnd - newStart)/((double)CLOCKS_PER_SEC)) << endl;
+    cout << "Improvement: " << ((oldEnd - oldStart)/((double)CLOCKS_PER_SEC))/((newEnd - newStart)/((double)CLOCKS_PER_SEC)) << endl;
+}
+
+void testInverseMatrix(double eps, double seed, int nTests, bool verbose) {
+    std::mt19937_64 gen(seed);
+    SU3MatrixGenerator SU3Gen(eps, seed);
+    for (int i = 0; i < nTests; i++) {
+        if (!testHermicity(SU3Gen.generateRandom(), verbose)) exit(0);
+    }
 }
 
 //bool checkGauge(Links *lattice, int N, SU3MatrixGenerator *SU3Generator) {

@@ -50,11 +50,26 @@ void SU3::copy(SU3 B)
     }
 }
 
+SU3 SU3::inv()
+{
+    SU3 R;
+    // Upper triangular
+    R.mat[3] = mat[1].c();
+    R.mat[6] = mat[2].c();
+    R.mat[7] = mat[5].c();
+    // Upper triangular
+    R.mat[1] = mat[3].c();
+    R.mat[2] = mat[6].c();
+    R.mat[5] = mat[7].c();
+    // Diagonals
+    R.mat[0] = mat[0].c();
+    R.mat[4] = mat[4].c();
+    R.mat[8] = mat[8].c();
+    return R;
+}
+
 SU3 &SU3::operator=(const SU3 &B)
 {
-//    if (this == &B)
-//        return *this;
-
     for (int i = 0; i < 9; i++) {
         mat[i] = B.mat[i];
     }
@@ -74,9 +89,21 @@ SU3 &SU3::operator*=(SU3 B)
 {
     /*
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
+     * 0 1 2   11 12 13
+     * 3 4 5 = 21 22 23
+     * 6 7 8   31 32 33
      */
     complex temp[9];
-    for (int i = 0; i < 3; i++)
+//    temp[0] = mat[0]*B.mat[0] + mat[1]*B.mat[3] + mat[2]*B.mat[6]; // Slow method for some reason?
+//    temp[1] = mat[0]*B.mat[1] + mat[1]*B.mat[4] + mat[2]*B.mat[7];
+//    temp[2] = mat[0]*B.mat[2] + mat[1]*B.mat[5] + mat[2]*B.mat[8];
+//    temp[3] = mat[3]*B.mat[0] + mat[4]*B.mat[3] + mat[5]*B.mat[6];
+//    temp[4] = mat[3]*B.mat[1] + mat[3]*B.mat[4] + mat[5]*B.mat[7];
+//    temp[5] = mat[3]*B.mat[2] + mat[3]*B.mat[5] + mat[5]*B.mat[8];
+//    temp[6] = mat[6]*B.mat[0] + mat[7]*B.mat[3] + mat[8]*B.mat[6];
+//    temp[7] = mat[6]*B.mat[1] + mat[7]*B.mat[4] + mat[8]*B.mat[7];
+//    temp[8] = mat[6]*B.mat[2] + mat[7]*B.mat[5] + mat[8]*B.mat[8];
+    for (int i = 0; i < 3; i++) // This is the fastest method for some reason
     {
         for (int j = 0; j < 3; j++)
         {

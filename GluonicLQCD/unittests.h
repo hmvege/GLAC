@@ -10,9 +10,12 @@ bool testNorm(int col, SU3 H);
 bool SU2UnitTest(complex * r, complex * s, complex * t);
 void testDeterminant(SU3 U);
 void checkDim(int N, int N_T);
+void testInverseMatrix(double eps, double seed, int nTests, bool verbose);
 // For testing different basic operations
 void testMatrixSU3Properties();
+// Performance tests
 void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatrix, bool testComplex);
+void inversePerformanceTest(double eps, double seed, int NTests);
 
 void testMatrixMultiplication();
 void testMatrixAddition();

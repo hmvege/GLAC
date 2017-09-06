@@ -121,22 +121,17 @@ SU3 SU3MatrixGenerator::generateRandom()
 SU3 SU3MatrixGenerator::generateIdentity()
 {
     SU3 H;
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 9; i++)
     {
-        for (int j = 0; j < 3; j++)
-        {
-            if (i==j)
-            {
-                H[3*i+j].setRe(1);
-                H[3*i+j].setIm(0);
-            }
-            else
-            {
-                H[3*i+j].setRe(0);
-                H[3*i+j].setIm(0);
-            }
-        }
+        H[i].setRe(0);
+        H[i].setIm(0);
     }
+    H.mat[0].setRe(1);
+    H.mat[0].setIm(0);
+    H.mat[4].setRe(1);
+    H.mat[4].setIm(0);
+    H.mat[8].setRe(1);
+    H.mat[8].setIm(0);
     return H;
 }
 
@@ -146,7 +141,6 @@ SU2 SU3MatrixGenerator::generateSU2()
     double r[4];
     double x[4];
     double rNorm = 0;
-//    double eps = 0.01;
     // Generating 4 r random numbers
     for (int i = 0; i < 4; i++) {
         r[i] = SU2_uniform_distribution(generator);
@@ -224,7 +218,7 @@ SU3 SU3MatrixGenerator::generateRST()
     X = R*S*T;
     // Equal probability of returning X and X inverse
     if (SU2_uniform_distribution(generator) < 0) {
-        return inverse(X);
+        return X.inv();
     } else {
         return X;
     }

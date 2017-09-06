@@ -15,8 +15,8 @@ public:
     Correlator();
     ~Correlator();
     virtual double calculate(Links *lattice);
+    virtual void setLatticeSize(int latticeSize);
     void setN(int *N);
-    void setLatticeSize(int latticeSize) { m_latticeSize = double(latticeSize); }
 };
 
 #endif // CORRELATOR_H
