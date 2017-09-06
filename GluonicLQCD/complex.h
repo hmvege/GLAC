@@ -14,7 +14,7 @@ public:
 
     complex (const complex &b); // Copy constructor
 
-    double *z;
+    double z[2];
 //    double im;
 //    double re;
     double re() const { return z[0]; } // But why constant?

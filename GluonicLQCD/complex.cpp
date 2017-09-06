@@ -8,25 +8,25 @@ using std::fabs;
 
 complex::complex() // Non-assigning constructor
 {
-    z = new double[2];
+    //z = new double[2];
     z[0] = 0; // re
     z[1] = 0; // im
 }
 
 complex::~complex()
 {
-    delete [] z;
+    //delete [] z;
 }
 complex::complex(double real, double imag) // Value specific constructor
 
 {
-    z = new double[2];
+    //z = new double[2];
     z[0] = real;
     z[1] = imag;
 }
 
 complex::complex(const complex &b ) { // Copy constructor
-    z = new double[2];
+    //z = new double[2];
     z[0] = b.re();
     z[1] = b.im();
 }

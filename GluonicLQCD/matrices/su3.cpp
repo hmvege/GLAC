@@ -22,7 +22,7 @@ SU3::~SU3()
 
 void SU3::transpose()
 {
-    complex *temp = new complex[9];
+    complex temp[9];
     for (int i = 0; i < 9; i++) { temp[i] = mat[i]; }
     for (int i = 0; i < 3; i++)
     {
@@ -32,7 +32,6 @@ void SU3::transpose()
             mat[j*3+i] = temp[i*3+j];
         }
     }
-    delete [] temp;
 }
 
 void SU3::conjugate()
@@ -76,7 +75,7 @@ SU3 &SU3::operator*=(SU3 B)
     /*
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
      */
-    complex *temp = new complex[9];
+    complex temp[9];
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
@@ -91,7 +90,6 @@ SU3 &SU3::operator*=(SU3 B)
     {
         mat[i] = temp[i];
     }
-    delete [] temp;
     return *this;
 }
 

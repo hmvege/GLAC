@@ -9,7 +9,7 @@ public:
     Links();
     ~Links();
     // Link variables being the matrices
-    SU3 * U;
+    SU3 U[4];
 };
 
 #endif // LINKS_H

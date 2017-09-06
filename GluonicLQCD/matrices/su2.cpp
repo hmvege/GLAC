@@ -76,13 +76,13 @@ SU2 &SU2::operator*=(SU2 B)
     for (int i = 0; i < 4; i++) {
         mat[i] = temp[i];
     }
-//    for (int i = 0; i < 2; i++)
-//    {
-//        for (int j = 0; j < 2; j++)
-//        {
-//            mat[(i*2+j)] = temp[(i*2+j)];
-//        }
-//    }
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            mat[(i*2+j)] = temp[(i*2+j)];
+        }
+    }
     delete [] temp;
     return *this;
 }
