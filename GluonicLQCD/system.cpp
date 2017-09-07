@@ -548,50 +548,58 @@ void System::runMetropolis(bool storePreObservables)
 {
 //    loadFieldConfiguration("conf0.bin");
     clock_t preUpdate, postUpdate;
-
+    // Calculating correlator before any updates have began.
     m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+    // Summing and sharing correlator to all processors before any updates has begun
     MPI_Allreduce(&m_GammaPreThermalization[0], &m_GammaPreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    // Dividing by the number of processors in order to get the correlator.
     m_GammaPreThermalization[0] /= double(m_numprocs);
+
     if (m_processRank == 0) {
         cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
     }
-    double updateStorer = 0;
+
+    double updateStorer = 0; // Variable for printing performance every something update.
+
     // Running thermalization
     for (int i = 0; i < m_NTherm*m_NCor; i++)
     {
         preUpdate = clock();
         update();
         postUpdate = clock();
-        if (m_processRank == 0) cout << "Mid update:  " << ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC)) << endl;
+//        if (m_processRank == 0) cout << "Mid update:  " << ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC)) << endl;
         updateStorer += ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC));
         if ((i-1) % 20 == 0) {
             if (m_processRank == 0) {
-                cout << "Avg every 20th update: " << updateStorer/(i+1) << endl;
+                cout << "Avg. time per update every 20th update(pre-sharing): " << updateStorer/(i+1) << " sec" << endl;
             }
         }
         share();
         postUpdate = clock();
-        if (m_processRank == 0) cout << "Post update: " << ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC)) << endl;
+//        if (m_processRank == 0) cout << "Post update: " << ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC)) << endl;
         // Print correlator every somehting or store them all(useful when doing the thermalization)
         if (storePreObservables) {
+            // Calculating the correlator
             m_GammaPreThermalization[i+1] = m_correlator->calculate(m_lattice);
+            // Summing and sharing results across the processors
             MPI_Allreduce(&m_GammaPreThermalization[i+1], &m_GammaPreThermalization[i+1], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+            // Averaging the results
             m_GammaPreThermalization[i+1] /= double(m_numprocs);
-            if (m_processRank == 0) cout << i << " " << m_GammaPreThermalization[i+1] << endl;
+            if (m_processRank == 0) cout << i << " " << m_GammaPreThermalization[i+1] << endl; // Printing evolution of system
         } else if ((i+1) % 10 == 0) {
             m_GammaPreThermalization[int((i+1)/10.0)+1] = m_correlator->calculate(m_lattice);
             MPI_Allreduce(&m_GammaPreThermalization[int((i+1)/10.0)+1], &m_GammaPreThermalization[int((i+1)/10.0)+1], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
             m_GammaPreThermalization[int((i+1)/10.0)+1] /= double(m_numprocs);
         }
     }
+    // Taking the average of the acceptance rate across the processors.
+    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
+    m_acceptanceCounter = int(double(m_acceptanceCounter)/double(m_numprocs));
 
     if (m_processRank == 0) {
         cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor] << endl;
-        // Make an gather for the acceptance counter?
         cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
     }
-
-//    delete [] m_GammaPreThermalization; // De-allocating as this is not needed anymore
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
@@ -607,6 +615,9 @@ void System::runMetropolis(bool storePreObservables)
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_Gamma[alpha] /= double(m_numprocs);
     }
+    // Taking the average of the acceptance rate across the processors.
+    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
+    m_acceptanceCounter = int(double(m_acceptanceCounter)/double(m_numprocs));
     if (m_processRank == 0) {
         cout << "System completed." << endl;
     }

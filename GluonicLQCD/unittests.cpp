@@ -132,11 +132,10 @@ bool testHermicity(SU3 H, bool verbose)
         H.print();
     }
     SU3 I;
-    I = H*inverse(H);
     I = H*H.inv();
     if (verbose) {
         cout << "\nInverse matrix = "<< endl;
-        inverse(H).print();
+        H.inv().print();
         cout << "\nIdentity matrix = " << endl;
         I.print();
         cout << endl;
@@ -432,6 +431,7 @@ bool SU2UnitTest(complex * r, complex * s, complex * t)
     delete [] t_inv;
     if (testPassed) {
         cout << "PASSED: SU2 matrix is hermitian." << endl;
+        delete [] I;
         return true;
     } else {
         cout << "FAILED: SU2 matrix is not hermitian." << endl;
@@ -502,7 +502,7 @@ void inversePerformanceTest(double eps, double seed, int NTests)
     // Old inversion method
     for (int i = 0; i < NTests; i++) {
         U = SU3Gen.generateRandom();
-        I = U*inverse(U);
+        I = U*U.inv();
     }
     oldEnd = clock();
     // New inversion method

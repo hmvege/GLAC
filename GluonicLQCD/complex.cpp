@@ -7,8 +7,11 @@ using std::fabs; // Used for printing
  * For storing complex numbers in the SU3 matrix class
  */
 
-complex::complex() // Non-assigning constructor
+complex::complex()
 {
+    /*
+     * Non-assigning constructor. Sets values to 0 per default.
+     */
     z[0] = 0; // re
     z[1] = 0; // im
 }
@@ -17,9 +20,11 @@ complex::~complex()
 {
 }
 
-complex::complex(double real, double imag) // Value specific constructor
-
+complex::complex(double real, double imag)
 {
+    /*
+     * Value specific constructor.
+     */
     z[0] = real;
     z[1] = imag;
 }
@@ -35,11 +40,17 @@ complex::complex(const complex &b )
 
 double complex::norm()
 {
+    /*
+     * Returns the norm of the complex number.
+     */
     return sqrt(z[0]*z[0] + z[1]*z[1]);
 }
 
 double complex::normSquared()
 {
+    /*
+     * Returns the norm squared of the complex number.
+     */
     return z[0]*z[0] + z[1]*z[1];
 }
 
@@ -53,6 +64,9 @@ complex complex::conjugate()
 
 complex complex::c()
 {
+    /*
+     * Returns the complex conjugate of the object instance.
+     */
     return complex(z[0],-z[1]);
 }
 
@@ -138,6 +152,9 @@ complex &complex::operator-=(complex b)
 
 std::ostream &operator<<(std::ostream &os, const complex &a)
 {
+    /*
+     * Function for enabling cout << z << endl type expressions.
+     */
     if (a.z[1] < 0) {
         os << a.z[0] << " - " << fabs(a.z[1]) << "i";
     }

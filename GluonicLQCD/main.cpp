@@ -43,10 +43,10 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     // Constants
     int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
-    int N_T         = 16;            // Time dimension
+    int N_T         = 8;            // Time dimension
     int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path
-    int NCf         = 10;          // Number of configurations to retrieve
+    int NCf         = 20;          // Number of configurations to retrieve
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr) + processRank;

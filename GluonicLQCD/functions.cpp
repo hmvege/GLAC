@@ -16,27 +16,6 @@ int getIndex(int i, int j, int k, int l, int Ny, int Nz, int Nt)
     return (Nt*(Nz*(Ny*i + j) + k) + l);
 }
 
-SU3 inverse(SU3 U)
-{
-    /*
-     * Gets the inverse of a SU3 matrix, MAKE CLASS BASED?!
-     */
-    SU3 UInverse;
-    UInverse.copy(U);
-    UInverse.conjugate();
-    UInverse.transpose();
-    return UInverse;
-}
-
-SU2 SU2Inverse(SU2 U)
-{
-    SU2 UInverse;
-    UInverse.copy(U);
-    UInverse.conjugate();
-    UInverse.transpose();
-    return UInverse;
-}
-
 int stapleIndex(int i, int j, int k, int l, int *N)
 {
     /*
