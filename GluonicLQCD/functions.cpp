@@ -4,6 +4,7 @@
 // TESTING
 #include <iostream>
 
+
 int getIndex(int i, int j, int k, int l, int Ny, int Nz, int Nt)
 {
     /*
@@ -13,6 +14,15 @@ int getIndex(int i, int j, int k, int l, int Ny, int Nz, int Nt)
      * N[3] = t-direction
      * Function for contigious memory allocation for uneven dimensions
      */
+     // TEST: TO ENSURE WE ARE ACTUALLY REACHING THE CORRECT CORNERS
+//    if ((i < 0) || (j < 0) || (k < 0) || (l < 0) || (i > N) || (j > N) || (k > N) || (l > N)) { //TEST FOR ENSURING CORRECT INDICES
+//        std::cout << "Index error!" << std::endl;
+//        exit(1);
+//    }
+//    if (returnVal == (N*N*N*2*N)) {
+//        std::cout << "good" << std::endl;
+//        exit(1);
+//    }
     return (Nt*(Nz*(Ny*i + j) + k) + l);
 }
 
