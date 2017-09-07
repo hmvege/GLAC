@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstdio>   // For io C-style handling.
 #include <cstdlib>
-#include "metropolis.h"
+#include "system.h"
 #include "actions/action.h"
 #include "correlators/correlator.h"
 #include "functions.h"
@@ -18,10 +18,10 @@
 using std::cout;
 using std::endl;
 
-Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S)
+System::System(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S)
 {
     /*
-     * Class for calculating correlators using the Metropolis algorithm.
+     * Class for calculating correlators using the metropolis algorithm.
      * Takes an action object as well as a Gamma functional to be used in the action.
      */
     m_N = N; // Spatial dimensions
@@ -51,7 +51,7 @@ Metropolis::Metropolis(int N, int N_T, int NCf, int NCor, int NTherm, double a, 
     }
 }
 
-Metropolis::~Metropolis()
+System::~System()
 {
     /*
      * Class destructor
@@ -61,7 +61,7 @@ Metropolis::~Metropolis()
     delete [] m_GammaSquared;
 }
 
-void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
+void System::latticeSetup(SU3MatrixGenerator *SU3Generator)
 {
     /*
      * Sets up the lattice and its matrices.
@@ -78,7 +78,7 @@ void Metropolis::latticeSetup(SU3MatrixGenerator *SU3Generator)
     }
 }
 
-void Metropolis::updateLink(int latticeIndex, int mu)
+void System::updateLink(int latticeIndex, int mu)
 {
     /*
      * Private function used for updating our system. Updates a single gauge link.
@@ -92,7 +92,7 @@ void Metropolis::updateLink(int latticeIndex, int mu)
     m_updatedMatrix = m_SU3Generator->generateRST()*m_lattice[latticeIndex].U[mu]; // Shorter method of updating matrix
 }
 
-void Metropolis::update()
+void System::update()
 {
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
@@ -124,7 +124,7 @@ void Metropolis::update()
 }
 
 
-void Metropolis::runMetropolis(bool storePreObservables)
+void System::runMetropolis(bool storePreObservables)
 {
 //    loadFieldConfiguration("conf0.bin");
     m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
@@ -142,7 +142,7 @@ void Metropolis::runMetropolis(bool storePreObservables)
     }
     cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor] << endl;
     cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
-    // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
+    // Setting the metropolis acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
     // Main part of algorithm
     for (int alpha = 0; alpha < m_NCf; alpha++)
@@ -156,7 +156,7 @@ void Metropolis::runMetropolis(bool storePreObservables)
     cout << "Metropolis completed." << endl;
 }
 
-void Metropolis::sampleSystem()
+void System::sampleSystem()
 {
     /*
      * For sampling statistics/getting correlators
@@ -164,7 +164,7 @@ void Metropolis::sampleSystem()
     cout << "Not implemented yet." << endl;
 }
 
-void Metropolis::getStatistics()
+void System::getStatistics()
 {
     /*
      * Class instance for sampling statistics from our system.
@@ -183,7 +183,7 @@ void Metropolis::getStatistics()
     cout << m_averagedGamma << ", std = " << m_stdGamma << ", variance = " << m_varianceGamma << endl;
 }
 
-void Metropolis::writeDataToFile(std::string filename, bool preThermalizationGamma)
+void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
 {
     /*
      * For writing the raw Gamma data to file.
@@ -213,23 +213,23 @@ void Metropolis::writeDataToFile(std::string filename, bool preThermalizationGam
 }
 
 
-void Metropolis::printAcceptanceRate()
+void System::printAcceptanceRate()
 {
     /*
-     * Returns the acceptance ratio of the main run of the Metropolis algorithm.
+     * Returns the acceptance ratio of the main run of the metropolis algorithm.
      */
     printf("Acceptancerate: %.16f \n", getAcceptanceRate()); // Times 4 from the Lorentz indices
 }
 
-double Metropolis::getAcceptanceRate()
+double System::getAcceptanceRate()
 {
     /*
-     * Returns the acceptance ratio of the main run of the Metropolis algorithm.
+     * Returns the acceptance ratio of the main run of the metropolis algorithm.
      */
     return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_nUpdates*m_latticeSize*4);
 }
 
-void Metropolis::writeConfigurationToFile(std::string filename)
+void System::writeConfigurationToFile(std::string filename)
 {
     /*
      * C-method for writing out configuration to file.
@@ -253,7 +253,7 @@ void Metropolis::writeConfigurationToFile(std::string filename)
     cout << m_outputFolder + filename  + " written" << endl;
 }
 
-void Metropolis::loadFieldConfiguration(std::string filename)
+void System::loadFieldConfiguration(std::string filename)
 {
     /*
      * Method for loading a field configuration and running the plaquettes on them.
