@@ -67,6 +67,18 @@ complex SU3Determinant(SU3 U)
     return det;
 }
 
+SU3 inverse(SU3 U)
+{
+    /*
+     * Gets the inverse of a SU3 matrix, MAKE CLASS BASED?!
+     */
+    SU3 UInverse; // OPTIMIZE HERE?
+    UInverse.copy(U);
+    UInverse.conjugate();
+    UInverse.transpose();
+    return UInverse;
+}
+
 bool compareSU3(SU3 A, SU3 B)
 {
     for (int i = 0; i < 9; i++) {

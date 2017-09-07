@@ -23,14 +23,12 @@ void SU3BaseTests()
     complex b = complex(2,2);
     complex c = complex(1,1);
     complex d = complex(2,2);
-    cout << a << endl;
-    cout << b << endl;
+    cout << "a = " << a << endl;
+    cout << "b = " << b << endl;
     a *= b;
-    cout << a << endl;
-    cout << a.conjugate() << endl;
-    cout << "1+1j + 2+2j = ";
-    c = c + d;
-    cout << c << endl;
+    cout << "a*b = " << a << endl;
+    cout << "conjugate(a) = " << a.conjugate() << endl;
+    cout << "1+1j + 2+2j = " << c + d << endl;
 
     SU3 A, B, C, D;
     for (int i = 0; i < 3; i++)
@@ -126,7 +124,7 @@ bool testHermicity(SU3 H, bool verbose)
      * Small test for testing if we have Hermicity.
      */
     bool testPassed = true;
-    double eps = 1e-15;
+    double eps = 1e-14;
     if (verbose) {
         cout << "Matrix = " << endl;
         H.print();
@@ -156,7 +154,7 @@ bool testHermicity(SU3 H, bool verbose)
         }
     }
     if (testPassed) {
-        cout << "PASSED: matrix is hermitian." << endl;
+        if (verbose) cout << "PASSED: matrix is hermitian." << endl;
         return true;
     }
     else {
@@ -310,7 +308,9 @@ void testMatrixSU3Properties() {
     }
     else {
         cout << "Matrix multiplication failed" << endl;
+        cout << "U3 = " << endl;
         U3.print();
+        cout << "UMul = " << endl;
         UMul.print();
     }
     U3.zeros();
@@ -331,7 +331,9 @@ void testMatrixSU3Properties() {
     }
     else {
         cout << "Matrix conjugation failed" << endl;
+        cout << "U3 = " << endl;
         U3.print();
+        cout << "UC = " << endl;
         UC.print();
     }
     U3.zeros();
@@ -502,7 +504,7 @@ void inversePerformanceTest(double eps, double seed, int NTests)
     // Old inversion method
     for (int i = 0; i < NTests; i++) {
         U = SU3Gen.generateRandom();
-        I = U*U.inv();
+        I = U*inverse(U);
     }
     oldEnd = clock();
     // New inversion method
@@ -563,6 +565,7 @@ void runTestSuite() {
     SU3BaseTests();
     testMatrixSU3Properties();
     testMatrixMultiplication();
+    cout << "==== TESTS COMPLETE ===" << endl;
 //    testMatrixAddition();
 //    testMatrixSubtraction();
 //    testMatrixConjugation();

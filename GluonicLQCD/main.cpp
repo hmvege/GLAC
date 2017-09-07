@@ -49,14 +49,15 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     int NCf         = 20;          // Number of configurations to retrieve
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
-    double seed     = std::time(nullptr) + processRank;
-    double metropolisSeed = std::time(nullptr) + 1 + processRank;
+    double seed     = std::time(nullptr) + double(processRank);
+    double metropolisSeed = std::time(nullptr) + 1.0 + double(processRank);
     bool storeThermalizationPlaquettes = true;
     bool hotStart   = false;
 
 //    if (processRank == 0) {
 //        testInverseMatrix(SU3Eps, seed, 1e3, false);
-//        inversePerformanceTest(SU3Eps,seed,1e7);
+//        inversePerformanceTest(SU3Eps,seed,1e5);
+//        runTestSuite();
 //        MPI_Finalize();
 //        exit(0);
 //    }

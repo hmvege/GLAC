@@ -59,7 +59,9 @@ complex complex::conjugate()
     /*
      * Returns the complex conjugate of the object instance.
      */
-    return complex(z[0],-z[1]);
+    z[1] = -z[1];
+    return *this;
+//    return complex(z[0],-z[1]);
 }
 
 complex complex::c()
