@@ -57,8 +57,8 @@ int main()
     pureGauge.runMetropolis(storeThermalizationPlaquettes);
     pureGauge.getStatistics();
     pureGauge.printAcceptanceRate();
-    pureGauge.writeConfigurationToFile("configs_profiling_run");
-    pureGauge.writeDataToFile("../output/correlatorData.dat");
+//    pureGauge.writeConfigurationToFile("configs_profiling_run");
+//    pureGauge.writeDataToFile("../output/correlatorData.dat");
 
     programEnd = clock();
     cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;

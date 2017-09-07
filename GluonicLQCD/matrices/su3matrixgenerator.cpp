@@ -135,8 +135,8 @@ SU3 SU3MatrixGenerator::generateIdentity()
 SU2 SU3MatrixGenerator::generateSU2()
 {
     SU2 U;
-    double *r = new double[4];
-    double *x = new double[4];
+    double r[4];
+    double x[4];
     double rNorm = 0;
 //    double eps = 0.01;
     // Generating 4 r random numbers

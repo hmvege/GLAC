@@ -140,7 +140,7 @@ void Metropolis::runMetropolis(bool storePreObservables)
             m_GammaPreThermalization[int((i+1)/10.0)+1] = m_correlator->calculate(m_lattice);
         }
     }
-    cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor + 1] << endl;
+    cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor] << endl;
     cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
     // Setting the Metropolis acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
@@ -154,7 +154,6 @@ void Metropolis::runMetropolis(bool storePreObservables)
         m_Gamma[alpha] = m_correlator->calculate(m_lattice);
     }
     cout << "Metropolis completed." << endl;
-    cout << m_correlator->calculate(m_lattice) << endl;
 }
 
 void Metropolis::sampleSystem()
@@ -191,9 +190,6 @@ void Metropolis::writeDataToFile(std::string filename, bool preThermalizationGam
      * Arguments:
      * - filename
      */
-    for (int i = 0; i < m_NCf; i++) {
-        cout << m_Gamma[i] << endl;
-    }
     std::ofstream file;
     file.open(filename + ".dat");
     file << "acceptanceCounter " << getAcceptanceRate() << endl;
