@@ -121,17 +121,9 @@ SU3 SU3MatrixGenerator::generateRandom()
 SU3 SU3MatrixGenerator::generateIdentity()
 {
     SU3 H;
-    for (int i = 0; i < 9; i++)
-    {
-        H[i].setRe(0);
-        H[i].setIm(0);
-    }
     H.mat[0].setRe(1);
-    H.mat[0].setIm(0);
     H.mat[4].setRe(1);
-    H.mat[4].setIm(0);
     H.mat[8].setRe(1);
-    H.mat[8].setIm(0);
     return H;
 }
 
