@@ -19,8 +19,6 @@ private:
     int m_NTherm;
     int m_nUpdates = 10; // N updates before calculating the action, as that is costly
     double m_epsilon;
-    double m_a; // Lattice spacing
-    double m_L; // Lattice size
     // For handling the acceptance rate
     int m_acceptanceCounter = 0;
     double getAcceptanceRate();
@@ -63,7 +61,7 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 public:
-    System(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S);
+    System(int N, int N_T, int NCf, int NCor, int NTherm, double seed, Correlator *correlator, Action *S);
     ~System();
     void latticeSetup(SU3MatrixGenerator *SU3Generator);
     void runMetropolis(bool storePreObservables);

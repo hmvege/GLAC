@@ -18,7 +18,7 @@
 using std::cout;
 using std::endl;
 
-System::System(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L, double seed, Correlator *correlator, Action *S)
+System::System(int N, int N_T, int NCf, int NCor, int NTherm, double seed, Correlator *correlator, Action *S)
 {
     /*
      * Class for calculating correlators using the metropolis algorithm.
@@ -30,8 +30,6 @@ System::System(int N, int N_T, int NCf, int NCor, int NTherm, double a, double L
     m_NCf = NCf; // Number of configurations to run for
     m_NCor = NCor;
     m_NTherm = NTherm;
-    m_a = a;
-    m_L = L;
     setAction(S);
     setCorrelator(correlator);
     m_lattice = new Links[m_latticeSize]; // Lattice, contigious memory allocation

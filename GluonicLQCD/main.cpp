@@ -33,11 +33,9 @@ int main()
 {
     int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;            // Time dimension
-    double L        = 2.0;          // Length of lattice in fermi
     int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path
     int NCf         = 100;          // Number of configurations to retrieve
-    double a        = L/double(N);  // Lattice spacing
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr);
@@ -52,7 +50,7 @@ int main()
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     Plaquette G(N, N_T);
     WilsonGaugeAction S(N, N_T, beta);
-    System pureGauge(N, N_T, NCf, NCor, NTherm, a, L, metropolisSeed, &G, &S);
+    System pureGauge(N, N_T, NCf, NCor, NTherm, metropolisSeed, &G, &S);
     pureGauge.latticeSetup(&SU3Gen);
     pureGauge.runMetropolis(storeThermalizationPlaquettes);
     pureGauge.getStatistics();

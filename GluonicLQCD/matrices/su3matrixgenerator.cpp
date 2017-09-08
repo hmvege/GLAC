@@ -113,22 +113,9 @@ SU3 SU3MatrixGenerator::generateRandom()
 SU3 SU3MatrixGenerator::generateIdentity()
 {
     SU3 H;
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            if (i==j)
-            {
-                H[3*i+j].re = 1;
-                H[3*i+j].im = 0;
-            }
-            else
-            {
-                H[3*i+j].re = 0;
-                H[3*i+j].im = 0;
-            }
-        }
-    }
+    H[0].re = 1;
+    H[4].re = 1;
+    H[8].re = 1;
     return H;
 }
 
