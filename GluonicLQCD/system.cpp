@@ -537,8 +537,32 @@ void System::update()
                             }
                         }
                     }
+                    if (t == 1) {
+                        // Update the edge
+                    }
+                    else if (t == m_N[3]-2) {
+                        // Update
+                    }
+                }
+                if (z == 1) {
+                    // Update the edge
+                }
+                else if (z == m_N[2]-2) {
+                    // Update
                 }
             }
+            if (y == 1) {
+                // Update the edge
+            }
+            else if (y == m_N[1]-2) {
+                // Update
+            }
+        }
+        if (x == 1) {
+            // Update the edge
+        }
+        else if (x == m_N[0]-2) {
+            // Update
         }
     }
 }
