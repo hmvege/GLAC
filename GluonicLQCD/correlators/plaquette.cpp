@@ -3,6 +3,9 @@
 #include "links.h"
 #include "functions.h"
 
+// Hmmm
+//#include "parallelization/indexorganiser.h"
+
 Plaquette::Plaquette() : Correlator()
 {
     muIndex = new int[4];
@@ -59,6 +62,9 @@ double Plaquette::calculate(Links *lattice)
 //                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N)].U[nu]
 //                                    *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N)].U[mu])
 //                                    *inverse(lattice[stapleIndex(i,j,k,l,m_N)].U[nu]);
+
+                            // Need to fix the index back to stapleIndex-like function/class!!
+
                             P += lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[mu]
                                     *lattice[getIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N[1],m_N[2],m_N[3])].U[nu]
                                     *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()

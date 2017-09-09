@@ -39,13 +39,14 @@ double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int 
 void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l, int mu)
 {
     m_staple.zeros();
-//    SU3 temp;
-//    temp.zeros();
     lorentzIndex(mu,muIndex);
     for (int nu = 0; nu < 4; nu++)
     {
         if (mu == nu) continue;
         lorentzIndex(nu,nuIndex);
+
+        // Need to fix the index back to stapleIndex-like function/class!!
+
         m_staple += lattice[getIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N[1],m_N[2],m_N[3])].U[nu] // Gattinger using verbatim staple definition OLD METHOD
                 *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
                 *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv()
@@ -53,26 +54,12 @@ void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l
                 *lattice[getIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
                 *lattice[getIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[nu];
 
-
 //        m_staple += lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N)].U[nu] // Gattinger using verbatim staple definition OLD METHOD
 //                *inverse(lattice[stapleIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N)].U[mu])
 //                *inverse(lattice[stapleIndex(i,j,k,l,m_N)].U[nu])
 //                + inverse(lattice[stapleIndex(i+muIndex[0]-nuIndex[0],j+muIndex[1]-nuIndex[1],k+muIndex[2]-nuIndex[2],l+muIndex[3]-nuIndex[3],m_N)].U[nu])
 //                *inverse(lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N)].U[mu])
 //                *lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N)].U[nu];
-
-//        temp = lattice[getIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N[1],m_N[2],m_N[3])].U[nu] // Gattinger using verbatim staple definition OLD METHOD
-//                *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
-//                *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv()
-//                + lattice[getIndex(i+muIndex[0]-nuIndex[0],j+muIndex[1]-nuIndex[1],k+muIndex[2]-nuIndex[2],l+muIndex[3]-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[nu].inv()
-//                *lattice[getIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
-//                *lattice[getIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N[1],m_N[2],m_N[3])].U[nu];
-
-//        m_staple += temp;
-//        if ((fabs(temp.mat[0].re()) + fabs(temp.mat[4].re()) + fabs(temp.mat[8].re())) < 1e-16) {
-//             std::cout << "ERROR!" << std::endl;
-//             exit(1);
-//        }
     }
 
 }

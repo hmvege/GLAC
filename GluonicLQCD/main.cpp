@@ -26,7 +26,7 @@ using std::endl;
  * [x] Add write each Plaquette/observable to file-function.
  * [x] Finish SU3 basic properties unit testing such that I dont have to compare by hand
  * [x] Rename metropolis.cpp --> system.cpp
- * [x] Add parallelization
+ * [ ] Add shifting parallelization
  * [ ] Update functions for reading and writing sublattices
  * [ ] Switch to CORRECT method syntax, foo --> m_foo
  * [ ] Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!

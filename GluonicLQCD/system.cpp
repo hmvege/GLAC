@@ -96,7 +96,6 @@ void System::subLatticeSetup()
 
     // Iteratively finds and sets the sub-lattice cube sizes
     while (restProc >= 2) {
-//        for (int i = 3; i > 0; i--) { // Counts from t to x
         for (int i = 0; i < 4; i++) { // Conts from x to t
             m_NTrue[i] /= 2;
             restProc /= 2;
@@ -156,7 +155,6 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
     if (hotStart) {
         // All starts with a completely random matrix.
         for (int i = 0; i < m_latticeSize; i++)
-//        for (int i = 0; i < m_trueSubLatticeSize; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {
@@ -505,32 +503,8 @@ void System::update()
                             }
                         }
                     }
-                    if (t == 1) {
-                        // Update the edge
-                    }
-                    else if (t == m_N[3]-2) {
-                        // Update
-                    }
-                }
-                if (z == 1) {
-                    // Update the edge
-                }
-                else if (z == m_N[2]-2) {
-                    // Update
                 }
             }
-            if (y == 1) {
-                // Update the edge
-            }
-            else if (y == m_N[1]-2) {
-                // Update
-            }
-        }
-        if (x == 1) {
-            // Update the edge
-        }
-        else if (x == m_N[0]-2) {
-            // Update
         }
     }
 }
