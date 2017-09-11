@@ -203,7 +203,7 @@ SU3 SU3MatrixGenerator::generateRST()
     X = R*S*T;
     // Equal probability of returning X and X inverse
     if (SU2_uniform_distribution(generator) < 0) {
-        return inverse(X);
+        return X.inv();
     } else {
         return X;
     }

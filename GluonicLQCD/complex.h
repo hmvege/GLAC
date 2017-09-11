@@ -12,7 +12,6 @@ public:
     ~complex();
     complex(double real, double imag);
 
-//    double *reim;
     double im;
     double re;
     complex &operator+=(complex b);
@@ -25,7 +24,6 @@ public:
     complex conjugate();
     complex c();
 
-    // TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
     friend std::ostream& operator<<(std::ostream& os, const complex& a); // Allows cout << myVector << endl;
 };
 

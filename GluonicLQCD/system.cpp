@@ -127,10 +127,18 @@ void System::runMetropolis(bool storePreObservables)
 //    loadFieldConfiguration("conf0.bin");
     m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
     cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
+    clock_t preUpdate, postUpdate;
+    double updateStorer = 0;
     // Running thermalization
     for (int i = 0; i < m_NTherm*m_NCor; i++)
     {
+        preUpdate = clock();
         update();
+        postUpdate = clock();
+        updateStorer += ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC));
+        if ((i-1) % 20 == 0) {
+            cout << "Avg. time after " << (i - 1 + 20) << " updates (pre-sharing): " << updateStorer/(i+1) << " sec" << endl;
+        }
         // Print correlator every somehting or store them all(useful when doing the thermalization)
         if (storePreObservables) {
             m_GammaPreThermalization[i+1] = m_correlator->calculate(m_lattice);

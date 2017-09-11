@@ -10,9 +10,6 @@ complex::complex()
 {
     re = 0;
     im = 0;
-//    reim = new double[2];
-//    reim[0] = 0; // re
-//    reim[1] = 0; // im
 }
 
 complex::~complex()
@@ -89,7 +86,6 @@ complex &complex::operator-=(complex b)
     return *this;
 }
 
-// TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
 std::ostream &operator<<(std::ostream &os, const complex &a)
 {
     if (a.im < 0) {

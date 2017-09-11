@@ -119,10 +119,10 @@ bool testHermicity(SU3 H, bool verbose)
         H.print();
     }
     SU3 I;
-    I = H*inverse(H);
+    I = H*H.inv();
     if (verbose) {
         cout << "\nInverse matrix = "<< endl;
-        inverse(H).print();
+        H.inv().print();
         cout << "\nUnit matrix = " << endl;
         I.print();
         cout << endl;

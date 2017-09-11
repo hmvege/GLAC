@@ -12,13 +12,38 @@ using std::endl;
 
 SU3::SU3()
 {
-//    mat = new complex[9];
 }
 
 SU3::~SU3()
 {
-//    delete [] mat;
 }
+
+SU3 SU3::inv()
+{
+    SU3 R;
+    // Upper triangular
+    R.mat[3] = mat[1].c();
+    R.mat[6] = mat[2].c();
+    R.mat[7] = mat[5].c();
+    // Upper triangular
+    R.mat[1] = mat[3].c();
+    R.mat[2] = mat[6].c();
+    R.mat[5] = mat[7].c();
+    // Diagonals
+    R.mat[0] = mat[0].c();
+    R.mat[4] = mat[4].c();
+    R.mat[8] = mat[8].c();
+    return R;
+}
+
+SU3 &SU3::operator=(const SU3 &B)
+{
+    for (int i = 0; i < 9; i++) {
+        mat[i] = B.mat[i];
+    }
+    return *this;
+}
+
 
 void SU3::transpose()
 {

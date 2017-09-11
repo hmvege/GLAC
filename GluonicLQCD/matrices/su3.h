@@ -8,7 +8,7 @@ class SU3
 public:
     SU3();
     ~SU3();
-//    complex *mat;
+    SU3 &operator =(const SU3 &B);
     complex mat[9];
     void print(); // TEMP, remove or comment out when program is done.
     complex get(int i, int j) { return mat[(3*i + j)]; }
@@ -17,6 +17,7 @@ public:
     void zeros();
     void transpose();
     void conjugate();
+    SU3 inv();
     complex &operator[](int i) { return mat[i]; }
 
     SU3 &operator+=(SU3 B);
