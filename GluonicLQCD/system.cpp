@@ -108,9 +108,6 @@ void System::update()
                             if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             {
                                 m_lattice[index(x, y, z, t, m_N, m_N_T)].U[mu].copy(m_updatedMatrix);
-                            }
-                            else
-                            {
                                 m_acceptanceCounter++;
                             }
                         }
