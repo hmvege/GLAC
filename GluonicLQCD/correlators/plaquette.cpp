@@ -2,10 +2,8 @@
 #include "correlator.h"
 #include "links.h"
 #include "functions.h"
+#include "parallelization/indexorganiser.h"
 #include <vector>
-
-// Hmmm
-//#include "parallelization/indexorganiser.h"
 
 Plaquette::Plaquette() : Correlator()
 {
@@ -20,6 +18,7 @@ Plaquette::Plaquette() : Correlator()
 
 Plaquette::~Plaquette()
 {
+    delete [] m_N;
     delete [] muIndex;
     delete [] nuIndex;
 }
@@ -68,9 +67,16 @@ double Plaquette::calculate(Links *lattice)
 
                             // Need to fix the index back to stapleIndex-like function/class!!
 
+//                            P += lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[mu]
+//                                    *lattice[getIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N[1],m_N[2],m_N[3])].U[nu]
+//                                    *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
+//                                    *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv();
+
                             P += lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[mu]
-                                    *lattice[getIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N[1],m_N[2],m_N[3])].U[nu]
-                                    *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
+                                    *m_Index->getPositiveLink(lattice,indexes,mu,muIndex,nu)
+                                    *m_Index->getPositiveLink(lattice,indexes,nu,nuIndex,mu).inv()
+//                                    *lattice[getIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N[1],m_N[2],m_N[3])].U[nu]
+//                                    *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
                                     *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv();
                         }
                     }

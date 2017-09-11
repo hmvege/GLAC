@@ -6,7 +6,7 @@
 #include "matrices/su3.h"
 #include <vector>
 
-class indexOrganiser
+class IndexOrganiser
 {
 private:
     int m_numprocs;
@@ -19,16 +19,16 @@ private:
     void MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
     void MPIfetchSU3Negative(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
 public:
-    indexOrganiser(int numprocs, int processRank, Neighbours neighbourLists);
-    ~indexOrganiser();
+    IndexOrganiser(int numprocs, int processRank, Neighbours *neighbourLists, int *N);
+    ~IndexOrganiser();
 
     // Index getter
     int getIndex(int i, int j, int k, int l);
 
     // Link getters
-    SU3 getPositiveLink(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
-    SU3 getNegativeLink(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
-    SU3 getNeighboursNeighbourLink(Links * lattice, std::vector<int> n , int mu, int nu, int SU3Dir);
+    SU3 getPositiveLink(Links *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir);
+    SU3 getNegativeLink(Links *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir);
+    SU3 getNeighboursNeighbourLink(Links * lattice, std::vector<int> n , int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir);
 
     // Setters
     void setN(int *N);

@@ -1,11 +1,12 @@
 #include <iostream>
 #include <ctime>
+#include <mpi.h>
 #include "system.h"
 #include "actions/action.h"
 #include "actions/wilsongaugeaction.h"
 #include "correlators/plaquette.h"
 #include "matrices/su3matrixgenerator.h"
-#include "mpi.h"
+#include "parallelization/indexorganiser.h"
 
 #include "unittests.h"
 
@@ -70,7 +71,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     System pureGauge(N, N_T, NCf, NCor, NTherm, metropolisSeed, &G, &S, numprocs, processRank);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     pureGauge.runMetropolis(storeThermalizationPlaquettes);
-    pureGauge.getStatistics();
+    pureGauge.runBasicStatistics();
     pureGauge.printAcceptanceRate();
 //    pureGauge.writeConfigurationToFile("configs_profiling_run");
 //    pureGauge.writeDataToFile("../output/correlatorData.dat");

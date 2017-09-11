@@ -1,17 +1,9 @@
 #include "correlator.h"
 #include <iostream>
 
-//Correlator::Correlator(int N, int N_T)
-//{
-//    m_N = N;
-//    m_N_T = N_T;
-//    m_latticeSize = N*N*N*N_T;
-//}
+
 Correlator::Correlator()
 {
-//    m_N = N;
-//    m_N_T = N_T;
-//    m_latticeSize = N*N*N*N_T;
     m_N = new int[4];
     for (int i = 0; i < 4; i++) {
         m_N[i] = 0;

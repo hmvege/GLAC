@@ -124,6 +124,9 @@ void System::subLatticeSetup()
     m_processorsPerDimension[3] = m_NTemporal / m_NTrue[3];
     m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
 
+    IndexOrganiser indexHandler(m_numprocs, m_processRank, m_neighbourLists, m_NTrue);
+    setIndexHandler(&indexHandler);
+
     // PRINTS ===========================================================
 //    MPI_Barrier(MPI_COMM_WORLD);
 //    if (m_processRank==0) {
@@ -145,6 +148,13 @@ void System::subLatticeSetup()
     // ==================================================================
 }
 
+void System::setIndexHandler(IndexOrganiser *indexHandler)
+{
+    m_indexHandler = indexHandler;
+    m_S->setIndexOrganiser(m_indexHandler);
+    m_correlator->setIndexOrganiser(m_indexHandler);
+}
+
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
 {
     /*
@@ -152,7 +162,6 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
      */
     subLatticeSetup();
 
-    // Also, set up blocks to use!!
     m_SU3Generator = SU3Generator;
     if (hotStart) {
         // All starts with a completely random matrix.
@@ -160,11 +169,12 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
         {
             for (int mu = 0; mu < 4; mu++)
             {
-                m_lattice[i].U[mu] = m_SU3Generator->generateRandom();
-//            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
+                m_lattice[i].U[mu] = m_SU3Generator->generateRandom(); // Fully random
+//            m_lattice[i].U[mu] = m_SU3Generator->generateRST(); // Random close to unity
             }
         }
     } else {
+        // Cold start: everything starts out at unity.
         for (int x = 0; x < m_NTrue[0]; x++) {
             for (int y = 0; y < m_NTrue[1]; y++) {
                 for (int z = 0; z < m_NTrue[2]; z++) {
@@ -177,7 +187,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
             }
         }
     }
-    share();
+//    share();
     if (m_processRank == 0) {
         cout << "Lattice setup complete" << endl;
     }
@@ -498,9 +508,6 @@ void System::update()
                             if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             {
                                 m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu].copy(m_updatedMatrix);
-                            }
-                            else
-                            {
                                 m_acceptanceCounter++;
                             }
                         }
@@ -539,10 +546,10 @@ void System::runMetropolis(bool storePreObservables)
         updateStorer += ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC));
         if ((i-1) % 20 == 0) {
             if (m_processRank == 0) {
-                cout << "Avg. time per update every 20th update(pre-sharing): " << updateStorer/(i+1) << " sec" << endl;
+                cout << "Avg. time per update every 20th update: " << updateStorer/(i+1) << " sec" << endl;
             }
         }
-        share();
+//        share();
         postUpdate = clock();
 //        if (m_processRank == 0) cout << "Post update: " << ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC)) << endl;
         // Print correlator every somehting or store them all(useful when doing the thermalization)
@@ -577,7 +584,7 @@ void System::runMetropolis(bool storePreObservables)
         for (int i = 0; i < m_NCor; i++) // Updating NCor times before updating the Gamma function
         {
             update();
-            share();
+//            share();
         }
         m_Gamma[alpha] = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -599,7 +606,7 @@ void System::sampleSystem()
     cout << "Not implemented yet." << endl;
 }
 
-void System::getStatistics()
+void System::runBasicStatistics()
 {
     /*
      * Class instance for sampling statistics from our system.

@@ -13,16 +13,6 @@ Action::Action()
     m_N = new int[4];
 }
 
-//Action::Action(int *N)
-//{
-////    m_N = N;
-////    m_N_T = N_T;
-//    m_N = new int[4];
-//    for (int i = 0; i < 4; i++) {
-//        m_N[i] = N[i];
-//    }
-//}
-
 Action::~Action()
 {
     delete [] m_N;

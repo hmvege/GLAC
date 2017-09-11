@@ -7,6 +7,7 @@
 #include "links.h"
 #include "matrices/su3matrixgenerator.h"
 #include "parallelization/neighbours.h"
+#include "parallelization/indexorganiser.h"
 
 class Action;
 
@@ -33,6 +34,8 @@ private:
     int m_processRank;
     int m_processorsPerDimension[4];
     void subLatticeSetup();
+    IndexOrganiser * m_indexHandler;
+    void setIndexHandler(IndexOrganiser *indexHandler);
 
     // Lattice variables
     int m_latticeSize;
@@ -84,7 +87,8 @@ public:
     ~System();
     void runMetropolis(bool storePreObservables);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
-    void getStatistics();
+    void runBasicStatistics();
+
     // Data outputters
     void writeDataToFile(std::string filename, bool preThermalizationGamma = true);
     void writeConfigurationToFile(std::string filename);
