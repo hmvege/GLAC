@@ -15,6 +15,9 @@ private:
     Neighbours * m_neighbourLists = nullptr;
     SU3 exchangeU;
 
+    // Private fetchSU3 functions
+    void MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
+    void MPIfetchSU3Negative(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
 public:
     indexOrganiser(int numprocs, int processRank, Neighbours neighbourLists);
     ~indexOrganiser();
@@ -23,9 +26,9 @@ public:
     int getIndex(int i, int j, int k, int l);
 
     // Link getters
-    SU3 getPositiveLink(Links *lattice, std::vector<int> n, int *muIndex, int mu);
-    SU3 getNegativeLink(Links *lattice, std::vector<int> n, int *muIndex, int mu);
-    SU3 getNeighboursNeighbourLink(Links * lattice, std::vector<int> n , int *muIndex, int *nuIndex, int mu, int nu);
+    SU3 getPositiveLink(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
+    SU3 getNegativeLink(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
+    SU3 getNeighboursNeighbourLink(Links * lattice, std::vector<int> n , int mu, int nu, int SU3Dir);
 
     // Setters
     void setN(int *N);
