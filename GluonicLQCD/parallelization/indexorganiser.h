@@ -14,17 +14,18 @@ private:
     int m_N[4];
     Neighbours * m_neighbourLists = nullptr;
     SU3 exchangeU;
+
 public:
-    indexOrganiser(int numprocs, int processRank);
+    indexOrganiser(int numprocs, int processRank, Neighbours neighbourLists);
     ~indexOrganiser();
 
     // Index getter
     int getIndex(int i, int j, int k, int l);
 
     // Link getters
-    SU3 getPositiveLink(Links *lattice, std::__1::vector<bool, _Allocator> indexes, int *mu);
-    Links getNegativeLink(Links *lattice, std::__1::vector<bool, _Allocator> indexes, int *mu);
-    Links getNeighboursNeighbourLink(Links * lattice, std::__1::vector<bool, _Allocator> indexes , int *mu, int *nu);
+    SU3 getPositiveLink(Links *lattice, std::vector<int> n, int *muIndex, int mu);
+    SU3 getNegativeLink(Links *lattice, std::vector<int> n, int *muIndex, int mu);
+    SU3 getNeighboursNeighbourLink(Links * lattice, std::vector<int> n , int *muIndex, int *nuIndex, int mu, int nu);
 
     // Setters
     void setN(int *N);

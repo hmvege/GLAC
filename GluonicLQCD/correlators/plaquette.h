@@ -3,6 +3,7 @@
 
 #include "correlator.h"
 #include "links.h"
+#include <vector>
 
 class Plaquette : public Correlator
 {
