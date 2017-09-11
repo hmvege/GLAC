@@ -5,10 +5,20 @@
 #include <mpi.h>
 #include <vector>
 
-IndexOrganiser::IndexOrganiser(int numprocs, int processRank, Neighbours *neighbourLists, int *N) : m_numprocs(numprocs), m_processRank(processRank)
+// TEMP
+#include <iostream>
+using std::cout;
+using std::endl;
+
+IndexOrganiser::IndexOrganiser(int processRank) : m_processRank(processRank)
 {
-    setNeighbourList(neighbourLists);
-    setN(N);
+//    m_N = new int[4];
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    for (int i = 0; i < 4; i++) {
+//        cout << N[i] << endl;
+//        m_N[i] = N[i];
+//    }
+//    cout << "INITIALIZATION COMPELTE" << endl;
     // Shorthand should be n()
 }
 
@@ -28,9 +38,17 @@ void IndexOrganiser::MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int
      *  SU3Dir      : SU3 matrix direction at link
      */
 //    exchangeU = lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir];
-    MPI_Sendrecv(&lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,   // Send
-            &exchangeU,18,MPI_DOUBLE,m_processRank,0,                    // Receive
+    MPI_Barrier(MPI_COMM_WORLD);
+    cout << "MPI SENDING" << endl;
+//    MPI_Sendrecv(&lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,       // Send
+//            &exchangeU,18,MPI_DOUBLE,m_processRank,0,    // Receive
+//            MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+    DOUBLE CHECK THIS ON PAPER!!
+    MPI_Sendrecv(&lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,       // Send
+            &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,    // Receive
             MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+    cout << "MPI COMPLETE" << endl;
+    exit(1);
 }
 
 void IndexOrganiser::MPIfetchSU3Negative(Links *lattice, std::vector<int> n, int mu, int SU3Dir)
@@ -63,13 +81,26 @@ SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, 
      * IDEA: make (for single shift) one function for positive direction and one for negative direction
      */
     // IDEA: TAKE A VECTOR OF n AND MAKE IT ACCESSIBLE BY MU IN ORDER TO FIGURE OUT IF WE ARE AT AN EDGE OR NOT
-    if (n[mu] % m_N[mu] == 0) {
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    cout << "INSIDE INDEXORGANISER " << n[mu] << " " << mu << " " << muIndex[mu] << endl;
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    for (int i = 0; i < 4; i++) {
+//        cout << "i = " << i << " muIndex[" << i << "] = " << muIndex[i] << " n[" << i << "] = " << n[i] << " N[" << i << "] = " << m_N[i] << endl;
+//    }
+//    exit(1);
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    lattice[getIndex(n[0]+muIndex[0], n[1]+muIndex[1], n[2]+muIndex[2], n[3]+muIndex[3])].U[SU3Dir].print(); // ERROR IN ACCESSING THIS ELEMENT!
+    cout << n[mu]<<endl;
+    if ((n[mu]+muIndex[mu]) % m_N[mu] == 0) {
 //        exchangeU = lattice[getIndex(n[0],n[1],n[2],n[3])].U[mu];
 //        MPI_Sendrecv(&exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,   // Send
 //                &lattice[getIndex(n[0],n[1],n[2],n[3])].U[mu],18,MPI_DOUBLE,m_processRank,0,                    // Receive
 //                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         n[mu] = 0;
+        MPI_Barrier(MPI_COMM_WORLD);
         MPIfetchSU3Positive(lattice,n,mu,SU3Dir);
+        cout << "INSIDE INDEXORGANISER: AFTER MPI" << endl;
+        exit(1);
         return exchangeU;
     }
     else {
@@ -79,13 +110,13 @@ SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, 
 
 SU3 IndexOrganiser::getNegativeLink(Links *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
 {
-    if ((n[mu] + m_N[mu]) % m_N[mu] == (m_N[mu] - 1)) {
+    if ((n[mu] - muIndex[mu] + m_N[mu]) % m_N[mu] == (m_N[mu] - 1)) {
         n[mu] = m_N[mu] - 1;
         MPIfetchSU3Negative(lattice,n,mu,SU3Dir);
         return exchangeU;
     }
     else {
-        return lattice[getIndex(n[0]+muIndex[0], n[1]+muIndex[1], n[2]+muIndex[2], n[3]+muIndex[3])].U[SU3Dir];
+        return lattice[getIndex(n[0]-muIndex[0], n[1]-muIndex[1], n[2]-muIndex[2], n[3]-muIndex[3])].U[SU3Dir];
     }
 }
 
@@ -94,8 +125,8 @@ SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int>
     /*
      * For our program, mu is always in the positive direction and nu is always in the negative direction.
      */
-    bool muDir = n[mu] % m_N[mu] == 0;
-    bool nuDir = (n[nu] + m_N[nu]) % m_N[nu] == (m_N[nu] - 1);
+    bool muDir = (n[mu] + muIndex[mu]) % m_N[mu] == 0;
+    bool nuDir = (n[nu] - nuIndex[nu] + m_N[nu]) % m_N[nu] == (m_N[nu] - 1);
     if (muDir) {
         // Single mpi call?
         n[mu] = 0;
@@ -119,7 +150,7 @@ SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int>
         return exchangeU;
     }
     else {
-        return lattice[getIndex(n[0]+muIndex[0], n[1]+muIndex[1], n[2]+muIndex[2], n[3]+muIndex[3])].U[SU3Dir];
+        return lattice[getIndex(n[0]+muIndex[0]-nuIndex[0], n[1]+muIndex[1]-nuIndex[1], n[2]+muIndex[2]-nuIndex[2], n[3]+muIndex[3]-nuIndex[2])].U[SU3Dir];
     }
     // Position of targeted neighbour
 //    m_neighbourLists->getNeighbours((m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1]))->list[2*nu];

@@ -3,6 +3,7 @@
 
 #include "links.h"
 #include "parallelization/indexorganiser.h"
+#include "parallelization/neighbours.h"
 #include <vector>
 
 class Correlator
@@ -13,7 +14,7 @@ protected:
     double m_latticeSize;
     // For handling the shift-method in parallelization
     std::vector<int> indexes;
-    IndexOrganiser *m_Index;
+    IndexOrganiser *m_Index = nullptr;
 public:
 //    Correlator(int N, int N_T);
     Correlator();
@@ -22,7 +23,7 @@ public:
     virtual void setLatticeSize(int latticeSize);
     // Setters
     void setN(int *N);
-    void setIndexOrganiser(IndexOrganiser *Index) { m_Index = Index; }
+    void initializeIndexHandler(IndexOrganiser *Index);
 };
 
 #endif // CORRELATOR_H

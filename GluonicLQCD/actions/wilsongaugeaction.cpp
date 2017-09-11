@@ -18,7 +18,6 @@ WilsonGaugeAction::WilsonGaugeAction(double beta): Action()
         muIndex[i] = 0;
         nuIndex[i] = 0;
     }
-    indexes = std::vector<int>(4);
 }
 
 WilsonGaugeAction::~WilsonGaugeAction()
@@ -44,7 +43,10 @@ void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l
 {
     m_staple.zeros();
     lorentzIndex(mu,muIndex);
-    indexes = {i,j,k,l};
+    indexes[0] = i;
+    indexes[1] = j;
+    indexes[2] = k;
+    indexes[3] = l;
     for (int nu = 0; nu < 4; nu++)
     {
         if (mu == nu) continue;

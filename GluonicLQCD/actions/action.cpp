@@ -2,6 +2,8 @@
 #include "links.h"
 #include "matrices/su3.h"
 #include "functions.h"
+#include "parallelization/indexorganiser.h"
+#include "parallelization/neighbours.h"
 
 // TEMP
 #include <iostream>
@@ -11,6 +13,10 @@ using std::endl;
 Action::Action()
 {
     m_N = new int[4];
+    for (int i = 0; i < 4; i++) {
+        m_N[i] = 0;
+    }
+    indexes = std::vector<int>(4,0);
 }
 
 Action::~Action()
@@ -36,4 +42,9 @@ void Action::setN(int *N)
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];
     }
+}
+
+void Action::initializeIndexHandler(IndexOrganiser *Index)
+{
+    m_Index = Index;
 }

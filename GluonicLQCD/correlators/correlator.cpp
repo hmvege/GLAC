@@ -1,4 +1,6 @@
 #include "correlator.h"
+#include "parallelization/indexorganiser.h"
+#include "parallelization/neighbours.h"
 #include <iostream>
 
 
@@ -8,6 +10,7 @@ Correlator::Correlator()
     for (int i = 0; i < 4; i++) {
         m_N[i] = 0;
     }
+    indexes = std::vector<int>(4,0);
 }
 
 void Correlator::setLatticeSize(int latticeSize)
@@ -34,4 +37,9 @@ void Correlator::setN(int *N)
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];
     }
+}
+
+void Correlator::initializeIndexHandler(IndexOrganiser *Index)
+{
+    m_Index = Index;
 }

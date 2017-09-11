@@ -9,7 +9,6 @@
 class IndexOrganiser
 {
 private:
-    int m_numprocs;
     int m_processRank;
     int m_N[4];
     Neighbours * m_neighbourLists = nullptr;
@@ -19,7 +18,7 @@ private:
     void MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
     void MPIfetchSU3Negative(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
 public:
-    IndexOrganiser(int numprocs, int processRank, Neighbours *neighbourLists, int *N);
+    IndexOrganiser(int processRank);
     ~IndexOrganiser();
 
     // Index getter

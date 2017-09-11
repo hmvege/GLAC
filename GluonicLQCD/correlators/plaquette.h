@@ -12,15 +12,12 @@ private:
     int *muIndex;
     int *nuIndex;
     double multiplicationFactor;
-    std::vector<int> indexes;
-    IndexOrganiser *m_Index;
 public:
 //    Plaquette(int N, int N_T);
     Plaquette();
     ~Plaquette();
     double calculate(Links *lattice);
     void setLatticeSize(int latticeSize);
-    void setIndexOrganiser(IndexOrganiser *Index) { m_Index = Index; }
 };
 
 #endif // PLAQUETTE_H

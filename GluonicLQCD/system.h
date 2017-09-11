@@ -18,7 +18,7 @@ private:
     int m_NSpatial;
     int m_NTemporal;
     int m_NTrue[4];
-    int m_N[4]; // With phases
+//    int m_N[4]; // With phases
     // Updating constants
     int m_NCf;
     int m_NCor;
@@ -34,8 +34,8 @@ private:
     int m_processRank;
     int m_processorsPerDimension[4];
     void subLatticeSetup();
-    IndexOrganiser * m_indexHandler;
-    void setIndexHandler(IndexOrganiser *indexHandler);
+//    IndexOrganiser * m_indexHandler = nullptr;
+//    void setIndexHandler(IndexOrganiser *indexHandler);
 
     // Lattice variables
     int m_latticeSize;
@@ -46,6 +46,7 @@ private:
 
     // Parallelization variables and functions
     Neighbours * m_neighbourLists = nullptr;
+    IndexOrganiser * m_indexHandler = nullptr;
     void share();
     void shareFaces();
     void shareEdges();
