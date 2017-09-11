@@ -10,6 +10,7 @@ private:
     int *muIndex;
     int *nuIndex;
     double multiplicationFactor;
+    std::vector<int> indexes;
 public:
 //    Plaquette(int N, int N_T);
     Plaquette();

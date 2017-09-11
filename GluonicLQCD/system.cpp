@@ -15,6 +15,8 @@
 #include "parallelization/neighbourlist.h"
 #include "parallelization/neighbours.h"
 
+#include "parallelization/indexorganiser.h"
+
 //TEMP
 #include "unittests.h"
 
@@ -111,8 +113,8 @@ void System::subLatticeSetup()
     }
     m_lattice = new Links[m_trueSubLatticeSize];
     // Passes around updated indexes for the sublattices
-    m_S->setN(m_N);
-    m_correlator->setN(m_N);
+    m_S->setN(m_NTrue);
+    m_correlator->setN(m_NTrue);
     m_correlator->setLatticeSize(m_subLatticeSize);
 
     // Sets up number of processors per dimension
@@ -163,10 +165,10 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
             }
         }
     } else {
-        for (int x = 1; x < m_N[0]-1; x++) {
-            for (int y = 1; y < m_N[1]-1; y++) {
-                for (int z = 1; z < m_N[2]-1; z++) {
-                    for (int t = 1; t < m_N[3]-1; t++) {
+        for (int x = 0; x < m_NTrue[0]; x++) {
+            for (int y = 0; y < m_NTrue[1]; y++) {
+                for (int z = 0; z < m_NTrue[2]; z++) {
+                    for (int t = 0; t < m_NTrue[3]; t++) {
                         for (int mu = 0; mu < 4; mu++) {
                             m_lattice[getIndex(x,y,z,t,m_N[1],m_N[2],m_N[3])].U[mu] = m_SU3Generator->generateIdentity();
                         }
@@ -483,10 +485,10 @@ void System::update()
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
-    for (int x = 1; x < m_N[0]-1; x++) {
-        for (int y = 1; y < m_N[1]-1; y++) {
-            for (int z = 1; z < m_N[2]-1; z++) {
-                for (int t = 1; t < m_N[3]-1; t++) {
+    for (int x = 0; x < m_NTrue[0]; x++) {
+        for (int y = 0; y < m_NTrue[1]; y++) {
+            for (int z = 0; z < m_NTrue[2]; z++) {
+                for (int t = 0; t < m_NTrue[3]; t++) {
                     for (int mu = 0; mu < 4; mu++) {
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
                         for (int n = 0; n < m_nUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts

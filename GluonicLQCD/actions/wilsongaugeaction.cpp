@@ -2,6 +2,8 @@
 #include "action.h"
 #include "functions.h"
 
+#include <vector>
+
 // TEMP
 #include <cmath>
 #include <iostream>
@@ -16,6 +18,7 @@ WilsonGaugeAction::WilsonGaugeAction(double beta): Action()
         muIndex[i] = 0;
         nuIndex[i] = 0;
     }
+    indexes = std::vector<int>(4);
 }
 
 WilsonGaugeAction::~WilsonGaugeAction()
@@ -40,6 +43,7 @@ void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l
 {
     m_staple.zeros();
     lorentzIndex(mu,muIndex);
+    indexes = {i,j,k,l};
     for (int nu = 0; nu < 4; nu++)
     {
         if (mu == nu) continue;
@@ -61,5 +65,4 @@ void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l
 //                *inverse(lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N)].U[mu])
 //                *lattice[stapleIndex(i-nuIndex[0],j-nuIndex[1],k-nuIndex[2],l-nuIndex[3],m_N)].U[nu];
     }
-
 }

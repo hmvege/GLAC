@@ -2,6 +2,7 @@
 #define WILSONGAUGEACTION_H
 
 #include "action.h"
+#include <vector>
 
 class WilsonGaugeAction : public Action
 {
@@ -9,6 +10,7 @@ private:
     double m_beta;
     double multiplicationFactor;
     SU3 m_staple;
+    std::vector<int> indexes;
 public:
     WilsonGaugeAction(double beta);
     ~WilsonGaugeAction();

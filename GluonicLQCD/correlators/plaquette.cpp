@@ -2,6 +2,7 @@
 #include "correlator.h"
 #include "links.h"
 #include "functions.h"
+#include <vector>
 
 // Hmmm
 //#include "parallelization/indexorganiser.h"
@@ -14,6 +15,7 @@ Plaquette::Plaquette() : Correlator()
         muIndex[i] = 0;
         nuIndex[i] = 0;
     }
+    indexes = std::vector<int>(4);
 }
 
 Plaquette::~Plaquette()
@@ -50,13 +52,14 @@ double Plaquette::calculate(Links *lattice)
 //            }
 //        }
 //    }
-    for (int i = 1; i < m_N[0]-1; i++) {
-        for (int j = 1; j < m_N[1]-1; j++) {
-            for (int k = 1; k < m_N[2]-1; k++) {
-                for (int l = 1; l < m_N[3]-1; l++) {
+    for (int i = 0; i < m_N[0]; i++) {
+        for (int j = 0; j < m_N[1]; j++) {
+            for (int k = 0; k < m_N[2]; k++) {
+                for (int l = 0; l < m_N[3]; l++) {
                     for (int mu = 0; mu < 4; mu++) {
                         lorentzIndex(mu,muIndex); // Saves quite a few flops by not figuring out the mu index every time
                         for (int nu = mu+1; nu < 4; nu++) {
+                            indexes = {i,j,k,l};
                             lorentzIndex(nu,nuIndex);
 //                            P += lattice[stapleIndex(i,j,k,l,m_N)].U[mu]
 //                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N)].U[nu]
