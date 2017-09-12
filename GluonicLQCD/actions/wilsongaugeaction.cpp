@@ -57,8 +57,8 @@ void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l
                 *m_Index->getPositiveLink(lattice,indexes,nu,nuIndex,mu).inv()
                 *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv()
                 + m_Index->getNeighboursNeighbourLink(lattice,indexes,mu,muIndex,nu,nuIndex,nu).inv()
-                *m_Index->getNegativeLink(lattice,indexes,mu,nuIndex,mu).inv()
-                *m_Index->getNegativeLink(lattice,indexes,mu,muIndex,mu);
+                *m_Index->getNegativeLink(lattice,indexes,nu,nuIndex,mu).inv()
+                *m_Index->getNegativeLink(lattice,indexes,nu,nuIndex,nu);
 
 //        m_staple += lattice[getIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N[1],m_N[2],m_N[3])].U[nu] // Gattinger using verbatim staple definition OLD METHOD
 //                *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()

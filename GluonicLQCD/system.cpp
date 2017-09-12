@@ -557,7 +557,7 @@ void System::runMetropolis(bool storePreObservables)
                 cout << "Avg. time per update every 20th update: " << updateStorer/(i+1) << " sec" << endl;
             }
         }
-        if ((i+1) % 35 == 0) exit(1);
+//        if ((i+1) % 35 == 0) exit(1);
 //        share();
         postUpdate = clock();
 //        if (m_processRank == 0) cout << "Post update: " << ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC)) << endl;
