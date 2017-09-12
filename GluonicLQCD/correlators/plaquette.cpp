@@ -27,7 +27,7 @@ void Plaquette::setLatticeSize(int latticeSize) {
 
 double Plaquette::calculate(Links *lattice)
 {
-    double gamma = 0;
+//    double gamma = 0;
     SU3 P;
     for (int i = 0; i < m_N; i++) {
         for (int j = 0; j < m_N; j++) {
@@ -47,9 +47,9 @@ double Plaquette::calculate(Links *lattice)
             }
         }
     }
-    for (int i = 0; i < 3; i++)
-    {
-        gamma += P.mat[i*3+i].re;
-    }
-    return gamma*m_multiplicationFactor; // 3 from SU3, 6 from number of plaquettes
+//    for (int i = 0; i < 3; i++)
+//    {
+//        gamma += P.mat[i*3+i].re;
+//    }
+    return (P.mat[0].re + P.mat[4].re + P.mat[8].re)*m_multiplicationFactor; // 3 from SU3, 6 from number of plaquettes, traced P
 }
