@@ -18,13 +18,14 @@ private:
     int m_NSpatial;
     int m_NTemporal;
     int m_NTrue[4];
-//    int m_N[4]; // With phases
+
     // Updating constants
     int m_NCf;
     int m_NCor;
     int m_NTherm;
     int m_nUpdates = 10; // N updates before calculating the action, as that is costly
     double m_epsilon;
+
     // For handling the acceptance rate
     int m_acceptanceCounter = 0;
     double getAcceptanceRate();
@@ -33,23 +34,17 @@ private:
     int m_numprocs;
     int m_processRank;
     int m_processorsPerDimension[4];
+    int m_subLatticeSize;
     void subLatticeSetup();
-//    IndexOrganiser * m_indexHandler = nullptr;
-//    void setIndexHandler(IndexOrganiser *indexHandler);
 
     // Lattice variables
     int m_latticeSize;
-    int m_subLatticeSize;
-//    int m_trueSubLatticeSize; // With phases
     Links * m_lattice;
     SU3 m_updatedMatrix;
 
     // Parallelization variables and functions
     Neighbours * m_neighbourLists = nullptr;
     IndexOrganiser * m_indexHandler = nullptr;
-    void share();
-    void shareFaces();
-    void shareEdges();
 
     // Variables used to perform statistics
     double * m_Gamma;

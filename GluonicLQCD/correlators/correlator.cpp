@@ -3,7 +3,6 @@
 #include "parallelization/neighbours.h"
 #include <iostream>
 
-
 Correlator::Correlator()
 {
     m_N = new int[4];

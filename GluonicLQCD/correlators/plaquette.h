@@ -13,7 +13,6 @@ private:
     int *nuIndex;
     double multiplicationFactor;
 public:
-//    Plaquette(int N, int N_T);
     Plaquette();
     ~Plaquette();
     double calculate(Links *lattice);

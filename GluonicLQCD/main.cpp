@@ -27,7 +27,7 @@ using std::endl;
  * [x] Add write each Plaquette/observable to file-function.
  * [x] Finish SU3 basic properties unit testing such that I dont have to compare by hand
  * [x] Rename metropolis.cpp --> system.cpp
- * [ ] Add shifting parallelization
+ * [x] Add shifting parallelization
  * [ ] Update functions for reading and writing sublattices
  * [ ] Switch to CORRECT method syntax, foo --> m_foo
  * [ ] Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
@@ -45,9 +45,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Constants
     int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;            // Time dimension
-    int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
+    int NTherm      = 2;           // Number of times we are to thermalize, that is NTherm * NCor. Should increase to 30 at least.
     int NCor        = 10;           // Only keeping every 20th path
-    int NCf         = 20;          // Number of configurations to retrieve
+    int NCf         = 10;          // Number of configurations to retrieve
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr) + double(processRank);
@@ -79,5 +79,6 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     programEnd = clock();
     if (processRank == 0) cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
     MPI_Finalize();
+    cout << "MPI FINALIZE COMPLETE" << endl;
     return 0;
 }

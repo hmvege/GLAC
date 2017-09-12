@@ -1,12 +1,7 @@
 #include "wilsongaugeaction.h"
 #include "action.h"
 #include "functions.h"
-
 #include <vector>
-
-// TEMP
-#include <cmath>
-#include <iostream>
 
 WilsonGaugeAction::WilsonGaugeAction(double beta): Action()
 {
@@ -22,7 +17,6 @@ WilsonGaugeAction::WilsonGaugeAction(double beta): Action()
 
 WilsonGaugeAction::~WilsonGaugeAction()
 {
-    delete [] m_N;
     delete [] muIndex;
     delete [] nuIndex;
 }
