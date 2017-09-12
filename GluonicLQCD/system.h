@@ -40,7 +40,7 @@ private:
     // Lattice variables
     int m_latticeSize;
     int m_subLatticeSize;
-    int m_trueSubLatticeSize; // With phases
+//    int m_trueSubLatticeSize; // With phases
     Links * m_lattice;
     SU3 m_updatedMatrix;
 

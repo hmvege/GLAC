@@ -106,7 +106,7 @@ void System::subLatticeSetup()
         }
     }
     m_subLatticeSize = 1;
-    m_trueSubLatticeSize = 1;
+//    m_trueSubLatticeSize = 1;
     for (int i = 0; i < 4; i++) {
         m_subLatticeSize *= m_NTrue[i]; // Gets the total size of the sub-lattice(without faces)
 //        m_N[i] = m_NTrue[i] + 2; // Adds a face
@@ -534,19 +534,14 @@ void System::runMetropolis(bool storePreObservables)
 //    loadFieldConfiguration("conf0.bin");
     clock_t preUpdate, postUpdate;
     // Calculating correlator before any updates have began.
-    MPI_Barrier(MPI_COMM_WORLD);
     m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
-    if (m_processRank == 0) cout << "============================== OK SO FAR 2 ==============================" << endl;
     // Summing and sharing correlator to all processors before any updates has begun
     MPI_Allreduce(&m_GammaPreThermalization[0], &m_GammaPreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     // Dividing by the number of processors in order to get the correlator.
     m_GammaPreThermalization[0] /= double(m_numprocs);
-    cout << "exiting after 1 correlator calculation" << endl;
-    exit(1);
     if (m_processRank == 0) {
         cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
     }
-
     double updateStorer = 0; // Variable for printing performance every something update.
 
     // Running thermalization
@@ -562,6 +557,7 @@ void System::runMetropolis(bool storePreObservables)
                 cout << "Avg. time per update every 20th update: " << updateStorer/(i+1) << " sec" << endl;
             }
         }
+        if ((i+1) % 35 == 0) exit(1);
 //        share();
         postUpdate = clock();
 //        if (m_processRank == 0) cout << "Post update: " << ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC)) << endl;
