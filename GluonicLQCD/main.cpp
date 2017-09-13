@@ -52,8 +52,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr) + double(processRank);
     double metropolisSeed = std::time(nullptr) + 1.0 + double(processRank);
-    bool storeThermalizationPlaquettes = true;
-    bool hotStart   = false;
+    bool storeConfigs                   = true;
+    bool storeThermalizationPlaquettes  = true;
+    bool hotStart                       = false;
 
 //    if (processRank == 0) {
 //        testInverseMatrix(SU3Eps, seed, 1e3, false);
@@ -68,12 +69,12 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     Plaquette G;
     WilsonGaugeAction S(beta);
-    System pureGauge(N, N_T, NCf, NCor, NTherm, metropolisSeed, &G, &S, numprocs, processRank);
+    System pureGauge(N, N_T, NCf, NCor, NTherm, beta, metropolisSeed, &G, &S, numprocs, processRank);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
-    pureGauge.runMetropolis(storeThermalizationPlaquettes);
+    pureGauge.runMetropolis(storeThermalizationPlaquettes,storeConfigs);
     pureGauge.runBasicStatistics();
     pureGauge.printAcceptanceRate();
-//    pureGauge.writeConfigurationToFile("configs_profiling_run");
+    pureGauge.setConfigBatchName("configs_profiling_run");
 //    pureGauge.writeDataToFile("../output/correlatorData.dat");
 
     programEnd = clock();

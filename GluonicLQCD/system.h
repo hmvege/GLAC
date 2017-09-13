@@ -19,6 +19,9 @@ private:
     int m_NTemporal;
     int m_NTrue[4];
 
+    // Beta value constant
+    double m_beta;
+
     // Updating constants
     int m_NCf;
     int m_NCor;
@@ -69,6 +72,7 @@ private:
     void updateLink(int latticeIndex, int mu);
 
     // Input/output locations
+    std::string m_filename = "";
     std::string m_inputFolder = "../input/";
     std::string m_outputFolder = "../output/";
 
@@ -79,20 +83,21 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 public:
-    System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
+    System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
     ~System();
-    void runMetropolis(bool storePreObservables);
+    void runMetropolis(bool storePreObservables, bool storeConfigs);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
     void runBasicStatistics();
 
     // Data outputters
     void writeDataToFile(std::string filename, bool preThermalizationGamma = true);
-    void writeConfigurationToFile(std::string filename);
+    void writeConfigurationToFile();
     void loadFieldConfiguration(std::string filename);
 
     // Setters
     void setAction(Action *S) { m_S = S; }
     void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
+    void setConfigBatchName(std::string filename) { m_filename = filename; }
     void setN(int NSpatial) { m_NSpatial = NSpatial; }
     void setNT(int NTemporal) { m_NTemporal = NTemporal; }
     void setNCf(int NCf) { m_NCf = NCf; }
