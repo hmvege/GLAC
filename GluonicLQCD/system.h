@@ -39,6 +39,7 @@ private:
     int m_processorsPerDimension[4];
     int m_subLatticeSize;
     void subLatticeSetup();
+    int m_V[4]; // Volumes, used when writing to file
 
     // Lattice variables
     int m_latticeSize;

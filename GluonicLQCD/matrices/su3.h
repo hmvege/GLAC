@@ -16,6 +16,7 @@ public:
     void copy(SU3 B);
     SU3 inv();
     void zeros();
+    void identity();
     void transpose();
     void conjugate();
     complex &operator[](int i) { return mat[i]; }

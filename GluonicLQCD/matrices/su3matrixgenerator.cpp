@@ -63,7 +63,7 @@ SU3 SU3MatrixGenerator::generateRandom()
      * 3 4 5
      * 6 7 8
      */
-    SU3 H;
+    H.identity();
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 2; j++)
@@ -120,11 +120,12 @@ SU3 SU3MatrixGenerator::generateRandom()
 
 SU3 SU3MatrixGenerator::generateIdentity()
 {
-    SU3 H;
-    H.mat[0].setRe(1);
-    H.mat[4].setRe(1);
-    H.mat[8].setRe(1);
-    return H;
+    std::cout << "SHOULD NOT BE USED" << std::endl,
+    SU3 Htemp;
+    Htemp.mat[0].setRe(1);
+    Htemp.mat[4].setRe(1);
+    Htemp.mat[8].setRe(1);
+    return Htemp;
 }
 
 SU2 SU3MatrixGenerator::generateSU2()
@@ -184,8 +185,8 @@ SU3 SU3MatrixGenerator::generateRST()
      * 3 4 5
      * 6 7 8
      */
-    SU3 X, R, S, T;
-    SU2 r,s,t;
+//    SU3 X, R, S, T; // Change to only have 3 matrices instead of 4, such that one is just R=R*S*T?
+//    SU2 r,s,t;
     // Generates SU2 matrices
     r = generateSU2();
     s = generateSU2();

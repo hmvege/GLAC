@@ -14,6 +14,12 @@ private:
     std::uniform_real_distribution<double> SU2_uniform_distribution;
     void GramSchmitt();
 
+    // Used for creating a random matrix
+    SU3 H;
+    // Used for creating a random matrix close to unity
+    SU3 X, R, S, T;
+    SU2 r,s,t;
+
     SU2 *sigma;
 //    SU2 sigma1, sigma2, sigma3, su2Identity;
     SU2 su2Identity;

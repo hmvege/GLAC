@@ -138,6 +138,20 @@ void SU3::zeros()
     }
 }
 
+void SU3::identity()
+{
+    for (int i = 0; i < 9; i++)
+    {
+        mat[i].setRe(0);
+        mat[i].setIm(0);
+    }
+    mat[0].setRe(1);
+    mat[4].setRe(1);
+    mat[8].setRe(1);
+}
+
+
+
 void SU3::print()
 {
     /*

@@ -51,7 +51,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr) + double(processRank);
-    double metropolisSeed = std::time(nullptr) + 1.0 + double(processRank);
+    double metropolisSeed = std::time(nullptr) + numprocs + double(processRank);
     bool storeConfigs                   = true;
     bool storeThermalizationPlaquettes  = true;
     bool hotStart                       = false;

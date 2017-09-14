@@ -92,9 +92,11 @@ void System::subLatticeSetup()
             if (restProc < 2) break;
         }
     }
+
+    // Gets the total size of the sub-lattice(without faces)
     m_subLatticeSize = 1;
     for (int i = 0; i < 4; i++) {
-        m_subLatticeSize *= m_N[i]; // Gets the total size of the sub-lattice(without faces)
+        m_subLatticeSize *= m_N[i];
     }
     m_lattice = new Links[m_subLatticeSize];
 
@@ -103,15 +105,26 @@ void System::subLatticeSetup()
         m_processorsPerDimension[i] = m_NSpatial / m_N[i];
     }
     m_processorsPerDimension[3] = m_NTemporal / m_N[3];
+
+    // Initializes the neighbour lists
     m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
 
+    // Passes relevant information to the index handler(for the shifts).
     m_indexHandler->setN(m_N);
     m_indexHandler->setNeighbourList(m_neighbourLists);
+
+    // Passes the index handler and dimensionality to the action and correlator classes.
     m_S->initializeIndexHandler(m_indexHandler);
     m_correlator->initializeIndexHandler(m_indexHandler);
     m_S->setN(m_N);
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
+
+    // Sets up the "volumes" of each dimension
+    m_V[0] = m_N[0]; // Side "volume"
+    m_V[1] = m_N[0]*m_N[1]; // Face "volume"
+    m_V[2] = m_N[0]*m_N[1]*m_N[2]; // Cube volume
+    m_V[3] = m_N[0]*m_N[1]*m_N[2]*m_N[3]; // Tesseract volume
 }
 
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
@@ -372,13 +385,13 @@ void System::writeConfigurationToFile(int configNumber)
     MPI_File file;
     MPI_File_open(MPI_COMM_WORLD,
                   m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin",
-                  MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL,file);
+                  MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, file);
 
     int startPoints = 0; // In bytes. LONG INT?
-    int xPoints = 0, yPoints = 0, zPoints = 0, tPoints = 0;
+    int nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (int t = 0; t < m_NTemporal; t++) {
-        tPoints = m_processorsPerDimension[0] ;
+        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * (t % ))
         for (int z = 0; z < m_NSpatial; z++) {
             for (int y = 0; y < m_NSpatial; y++) {
                 for (int x = 0; x < m_NSpatial; x++) {
@@ -386,11 +399,13 @@ void System::writeConfigurationToFile(int configNumber)
 //                    for (int mu = 0; mu < 4; mu++) {
 //                        fwrite(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu],sizeof(SU3),1,file);
 //                    }
-                    MPI_File_write_at()
+                    MPI_File_write_at(file,offset?, m_lattice[something?], 72*sizeof(double), MPI_DOUBLE, MPI_STATUS_IGNORE)
                 }
             }
         }
     }
+
+    MPI_File_close(file);
 
 //    // OLD WRITE TO FILE(SCALAR)
 //    for (int t = 0; t < m_N[3]; t++) {

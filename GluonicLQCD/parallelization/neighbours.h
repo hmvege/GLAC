@@ -12,10 +12,8 @@ class Neighbours
 private:
     int m_processRank;
     int m_numproc;
-    int m_Nx;
-    int m_Ny;
-    int m_Nz;
-    int m_Nt;
+    int m_Nx, m_Ny, m_Nz, m_Nt; // Prosessors per dimension
+    int m_P[4]; // Prosessor coordinate
     void generateNeighbourList();
     NeighbourList * neighbourLists;
 
@@ -103,8 +101,10 @@ public:
 
     void initialize(int processRank, int numproc, int * processorsPerDim);
 
+    // Getters
     NeighbourList* getNeighbours(int Np);
     int getListLength() { return m_numproc; }
+    int getProcessorDimensionPosition(int dim) { return m_P[dim]; }
 };
 
 #endif // NEIGHBOURS_H
