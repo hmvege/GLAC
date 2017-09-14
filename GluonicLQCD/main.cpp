@@ -45,14 +45,15 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Constants
     int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;            // Time dimension
-    int NTherm      = 2;           // Number of times we are to thermalize, that is NTherm * NCor. Should increase to 30 at least.
+    int NTherm      = 2;            // Number of times we are to thermalize, that is NTherm * NCor. Should increase to 30 at least.
     int NCor        = 10;           // Only keeping every 20th path
-    int NCf         = 10;          // Number of configurations to retrieve
+    int NCf         = 10;           // Number of configurations to retrieve
+    int NUpdates    = 10;           // How many sweeps between main update
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr) + double(processRank);
     double metropolisSeed = std::time(nullptr) + numprocs + double(processRank);
-    bool storeConfigs                   = true;
+    bool writeConfigsToFile             = true;
     bool storeThermalizationPlaquettes  = true;
     bool hotStart                       = false;
 
@@ -69,9 +70,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     Plaquette G;
     WilsonGaugeAction S(beta);
-    System pureGauge(N, N_T, NCf, NCor, NTherm, beta, metropolisSeed, &G, &S, numprocs, processRank);
+    System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
-    pureGauge.runMetropolis(storeThermalizationPlaquettes,storeConfigs);
+    pureGauge.runMetropolis(storeThermalizationPlaquettes, writeConfigsToFile);
     pureGauge.runBasicStatistics();
     pureGauge.printAcceptanceRate();
     pureGauge.setConfigBatchName("configs_profiling_run");

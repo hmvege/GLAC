@@ -20,7 +20,7 @@
 using std::cout;
 using std::endl;
 
-System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank)
+System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank)
 {
     /*
      * Class for calculating correlators using the System algorithm.
@@ -32,6 +32,7 @@ System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, doubl
     m_NCf = NCf; // Number of configurations to run for
     m_NCor = NCor;
     m_NTherm = NTherm;
+    m_NUpdates = NUpdates;
     m_beta = beta;
     m_numprocs = numprocs;
     m_processRank = processRank;
@@ -75,6 +76,9 @@ void System::subLatticeSetup()
     if (m_numprocs % 2 != 0) {
         cout << "Error: odd number of processors --> exiting." << endl;
         exit(1);
+    }
+    else if (m_numprocs % 16 != 0) {
+        cout << "Warning: running for an number of prosessors may slow down performance." << endl;
     }
     int restProc = m_numprocs;
 
@@ -120,11 +124,17 @@ void System::subLatticeSetup()
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
 
-    // Sets up the "volumes" of each dimension
-    m_V[0] = m_N[0]; // Side "volume"
-    m_V[1] = m_N[0]*m_N[1]; // Face "volume"
-    m_V[2] = m_N[0]*m_N[1]*m_N[2]; // Cube volume
-    m_V[3] = m_N[0]*m_N[1]*m_N[2]*m_N[3]; // Tesseract volume
+    // Volumes in sub dimension
+    m_VSub[0] = m_N[0]; // X-dimension
+    m_VSub[1] = m_N[0]*m_N[1]; // Y-dimension
+    m_VSub[2] = m_N[0]*m_N[1]*m_N[2]; // Z-dimension
+    m_VSub[3] = m_N[0]*m_N[1]*m_N[2]*m_N[3]; // T-dimension
+
+    // Volumes in total lattice
+    m_V[0] = m_NSpatial; // X volume
+    m_V[1] = m_NSpatial*m_NSpatial; // XY volume
+    m_V[2] = m_NSpatial*m_NSpatial*m_NSpatial; // XYZ Volume
+    m_V[3] = m_NSpatial*m_NSpatial*m_NSpatial*m_NTemporal; // XYZT volume
 }
 
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
@@ -152,7 +162,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
                 for (int z = 0; z < m_N[2]; z++) {
                     for (int t = 0; t < m_N[3]; t++) {
                         for (int mu = 0; mu < 4; mu++) {
-                            m_lattice[getIndex(x,y,z,t,m_N[1],m_N[2],m_N[3])].U[mu] = m_SU3Generator->generateIdentity();
+                            m_lattice[getIndex(x,y,z,t,m_N[1],m_N[2],m_N[3])].U[mu].identity();
                         }
                     }
                 }
@@ -189,7 +199,7 @@ void System::update()
                 for (int t = 0; t < m_N[3]; t++) {
                     for (int mu = 0; mu < 4; mu++) {
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
-                        for (int n = 0; n < m_nUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
+                        for (int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3]), mu);
                             m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
@@ -207,7 +217,7 @@ void System::update()
 }
 
 
-void System::runMetropolis(bool storePreObservables, bool storeConfigs)
+void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
 //    loadFieldConfiguration("conf0.bin");
     // Variables for checking performance of the update.
@@ -261,7 +271,7 @@ void System::runMetropolis(bool storePreObservables, bool storeConfigs)
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
         cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor] << endl;
-        cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
+        cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_NUpdates*m_NTherm*m_NCor) << endl;
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -279,7 +289,7 @@ void System::runMetropolis(bool storePreObservables, bool storeConfigs)
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_Gamma[alpha] /= double(m_numprocs);
         // Writing to file
-        if (m_processRank == 0 && storeConfigs) writeConfigurationToFile(alpha);
+        if (m_processRank == 0 && writeConfigsToFile) writeConfigurationToFile(alpha);
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
@@ -362,7 +372,7 @@ double System::getAcceptanceRate()
     /*
      * Returns the acceptance ratio of the main run of the System algorithm.
      */
-    return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_nUpdates*m_latticeSize*4); // Times 4 from the Lorentz indices
+    return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_NUpdates*m_latticeSize*4); // Times 4 from the Lorentz indices
 }
 
 void System::writeConfigurationToFile(int configNumber)
@@ -372,40 +382,35 @@ void System::writeConfigurationToFile(int configNumber)
      * Arguments:
      * - filename
      */
+    if (m_processRank == 0) cout << "Writing configuration number " << configNumber << " to file." << endl;
 
-    // IMPLEMENT FULL WRITE TO FILE FOR LATTICE HERE
-//    FILE *file; // C method
-//    file = fopen((m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin").c_str(), "wb");
-
-    // buffer?
-
-//    MPI_Cart_create(MPI_COMM_WORLD,4);
-//    MPI_Datatype view;
-    // TRYING TO IMPLEMENT MPI_CREATE_SUB_LATTICE
     MPI_File file;
+    std::string fname = m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin";
     MPI_File_open(MPI_COMM_WORLD,
-                  m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin",
-                  MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, file);
+                  fname.c_str(),
+                  MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 
-    int startPoints = 0; // In bytes. LONG INT?
+    MPI_Offset startPoints = 0; // In bytes. LONG INT?
     int nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (int t = 0; t < m_NTemporal; t++) {
-        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * (t % ))
+        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_VSub[3] + t) * linkSize;
         for (int z = 0; z < m_NSpatial; z++) {
+            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_VSub[2] + z) * linkSize + nt;
             for (int y = 0; y < m_NSpatial; y++) {
+                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_VSub[1] + y) * linkSize + nz;
                 for (int x = 0; x < m_NSpatial; x++) {
-//                    fwrite(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])],sizeof(Links),1,file);
-//                    for (int mu = 0; mu < 4; mu++) {
-//                        fwrite(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu],sizeof(SU3),1,file);
-//                    }
-                    MPI_File_write_at(file,offset?, m_lattice[something?], 72*sizeof(double), MPI_DOUBLE, MPI_STATUS_IGNORE)
+                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_VSub[0] + x) * linkSize + ny;
+                    startPoints = nx;
+                    MPI_File_write_at(file,startPoints, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], 72*sizeof(double), MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
         }
     }
 
-    MPI_File_close(file);
+    MPI_File_close(&file);
+
+    if (m_processRank == 0) cout << "Configuration number " << configNumber << " written to file." << endl;
 
 //    // OLD WRITE TO FILE(SCALAR)
 //    for (int t = 0; t < m_N[3]; t++) {

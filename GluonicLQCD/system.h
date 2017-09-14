@@ -26,7 +26,7 @@ private:
     int m_NCf;
     int m_NCor;
     int m_NTherm;
-    int m_nUpdates = 10; // N updates before calculating the action, as that is costly
+    int m_NUpdates; // N updates before calculating the action, as that is costly
     double m_epsilon;
 
     // For handling the acceptance rate
@@ -39,7 +39,9 @@ private:
     int m_processorsPerDimension[4];
     int m_subLatticeSize;
     void subLatticeSetup();
-    int m_V[4]; // Volumes, used when writing to file
+    int m_V[4]; // Sub-volumes, used when writing to file
+    int m_VSub[4]; // Total lattice volumes
+    int linkSize = 72*sizeof(double);
 
     // Lattice variables
     int m_latticeSize;
@@ -84,9 +86,9 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 public:
-    System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
+    System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
     ~System();
-    void runMetropolis(bool storePreObservables, bool storeConfigs);
+    void runMetropolis(bool storePreObservables, bool writeConfigsToFile);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
     void runBasicStatistics();
 
@@ -103,7 +105,7 @@ public:
     void setNT(int NTemporal) { m_NTemporal = NTemporal; }
     void setNCf(int NCf) { m_NCf = NCf; }
     void setEpsilon(double epsilon) { m_epsilon = epsilon; }
-    void setUpdateFrequency(int nUpdates) { m_nUpdates = nUpdates; }
+    void setUpdateFrequency(int NUpdates) { m_NUpdates = NUpdates; }
 
     // Getters
     int getNSpatial() { return m_NSpatial; }

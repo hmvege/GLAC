@@ -120,7 +120,7 @@ SU3 SU3MatrixGenerator::generateRandom()
 
 SU3 SU3MatrixGenerator::generateIdentity()
 {
-    std::cout << "SHOULD NOT BE USED" << std::endl,
+    std::cout << "SHOULD NOT BE USED" << std::endl;
     SU3 Htemp;
     Htemp.mat[0].setRe(1);
     Htemp.mat[4].setRe(1);
