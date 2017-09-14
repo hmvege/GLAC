@@ -80,37 +80,37 @@ void System::subLatticeSetup()
 
     // Sets up sub lattice dimensionality without any splitting
     for (int i = 0; i < 3; i++) {
-        m_NTrue[i] = m_NSpatial;
+        m_N[i] = m_NSpatial;
     }
-    m_NTrue[3] = m_NTemporal;
+    m_N[3] = m_NTemporal;
 
     // Iteratively finds and sets the sub-lattice cube sizes
     while (restProc >= 2) {
         for (int i = 0; i < 4; i++) { // Conts from x to t
-            m_NTrue[i] /= 2;
+            m_N[i] /= 2;
             restProc /= 2;
             if (restProc < 2) break;
         }
     }
     m_subLatticeSize = 1;
     for (int i = 0; i < 4; i++) {
-        m_subLatticeSize *= m_NTrue[i]; // Gets the total size of the sub-lattice(without faces)
+        m_subLatticeSize *= m_N[i]; // Gets the total size of the sub-lattice(without faces)
     }
     m_lattice = new Links[m_subLatticeSize];
 
     // Sets up number of processors per dimension
     for (int i = 0; i < 3; i++) {
-        m_processorsPerDimension[i] = m_NSpatial / m_NTrue[i];
+        m_processorsPerDimension[i] = m_NSpatial / m_N[i];
     }
-    m_processorsPerDimension[3] = m_NTemporal / m_NTrue[3];
+    m_processorsPerDimension[3] = m_NTemporal / m_N[3];
     m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
 
-    m_indexHandler->setN(m_NTrue);
+    m_indexHandler->setN(m_N);
     m_indexHandler->setNeighbourList(m_neighbourLists);
     m_S->initializeIndexHandler(m_indexHandler);
     m_correlator->initializeIndexHandler(m_indexHandler);
-    m_S->setN(m_NTrue);
-    m_correlator->setN(m_NTrue);
+    m_S->setN(m_N);
+    m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
 }
 
@@ -134,12 +134,12 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
         }
     } else {
         // Cold start: everything starts out at unity.
-        for (int x = 0; x < m_NTrue[0]; x++) {
-            for (int y = 0; y < m_NTrue[1]; y++) {
-                for (int z = 0; z < m_NTrue[2]; z++) {
-                    for (int t = 0; t < m_NTrue[3]; t++) {
+        for (int x = 0; x < m_N[0]; x++) {
+            for (int y = 0; y < m_N[1]; y++) {
+                for (int z = 0; z < m_N[2]; z++) {
+                    for (int t = 0; t < m_N[3]; t++) {
                         for (int mu = 0; mu < 4; mu++) {
-                            m_lattice[getIndex(x,y,z,t,m_NTrue[1],m_NTrue[2],m_NTrue[3])].U[mu] = m_SU3Generator->generateIdentity();
+                            m_lattice[getIndex(x,y,z,t,m_N[1],m_N[2],m_N[3])].U[mu] = m_SU3Generator->generateIdentity();
                         }
                     }
                 }
@@ -170,19 +170,19 @@ void System::update()
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
-    for (int x = 0; x < m_NTrue[0]; x++) {
-        for (int y = 0; y < m_NTrue[1]; y++) {
-            for (int z = 0; z < m_NTrue[2]; z++) {
-                for (int t = 0; t < m_NTrue[3]; t++) {
+    for (int x = 0; x < m_N[0]; x++) {
+        for (int y = 0; y < m_N[1]; y++) {
+            for (int z = 0; z < m_N[2]; z++) {
+                for (int t = 0; t < m_N[3]; t++) {
                     for (int mu = 0; mu < 4; mu++) {
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
                         for (int n = 0; n < m_nUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
-                            updateLink(getIndex(x, y, z, t, m_NTrue[1], m_NTrue[2], m_NTrue[3]), mu);
+                            updateLink(getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3]), mu);
                             m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
                             if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             {
-                                m_lattice[getIndex(x, y, z, t, m_NTrue[1], m_NTrue[2], m_NTrue[3])].U[mu].copy(m_updatedMatrix);
+                                m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu].copy(m_updatedMatrix);
                                 m_acceptanceCounter++;
                             }
                         }
@@ -266,7 +266,7 @@ void System::runMetropolis(bool storePreObservables, bool storeConfigs)
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_Gamma[alpha] /= double(m_numprocs);
         // Writing to file
-        if (m_processRank == 0) writeConfigurationToFile();
+        if (m_processRank == 0 && storeConfigs) writeConfigurationToFile(alpha);
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
@@ -352,48 +352,61 @@ double System::getAcceptanceRate()
     return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_nUpdates*m_latticeSize*4); // Times 4 from the Lorentz indices
 }
 
-void System::writeConfigurationToFile()
+void System::writeConfigurationToFile(int configNumber)
 {
     /*
      * C-method for writing out configuration to file.
      * Arguments:
      * - filename
      */
+
     // IMPLEMENT FULL WRITE TO FILE FOR LATTICE HERE
 //    FILE *file; // C method
 //    file = fopen((m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin").c_str(), "wb");
 
     // buffer?
 
-    MPI_Datatype view;
+//    MPI_Cart_create(MPI_COMM_WORLD,4);
+//    MPI_Datatype view;
     // TRYING TO IMPLEMENT MPI_CREATE_SUB_LATTICE
+    MPI_File file;
+    MPI_File_open(MPI_COMM_WORLD,
+                  m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin",
+                  MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL,file);
+
+    int startPoints = 0; // In bytes. LONG INT?
+    int xPoints = 0, yPoints = 0, zPoints = 0, tPoints = 0;
 
     for (int t = 0; t < m_NTemporal; t++) {
+        tPoints = m_processorsPerDimension[0] ;
         for (int z = 0; z < m_NSpatial; z++) {
             for (int y = 0; y < m_NSpatial; y++) {
                 for (int x = 0; x < m_NSpatial; x++) {
-                    for (int mu = 0; mu < 4; mu++) {
-                        fwrite(&m_lattice[getIndex(x, y, z, t, m_NTrue[1], m_NTrue[2], m_NTrue[3])].U[mu],sizeof(SU3),1,file);
-                    }
+//                    fwrite(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])],sizeof(Links),1,file);
+//                    for (int mu = 0; mu < 4; mu++) {
+//                        fwrite(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu],sizeof(SU3),1,file);
+//                    }
+                    MPI_File_write_at()
                 }
             }
         }
     }
 
 //    // OLD WRITE TO FILE(SCALAR)
-//    for (int t = 0; t < m_NTrue[3]; t++) {
-//        for (int z = 0; z < m_NTrue[2]; z++) {
-//            for (int y = 0; y < m_NTrue[1]; y++) {
-//                for (int x = 0; x < m_NTrue[0]; x++) {
+//    for (int t = 0; t < m_N[3]; t++) {
+//        for (int z = 0; z < m_N[2]; z++) {
+//            for (int y = 0; y < m_N[1]; y++) {
+//                for (int x = 0; x < m_N[0]; x++) {
 //                    for (int mu = 0; mu < 4; mu++) {
-//                        fwrite(&m_lattice[getIndex(x, y, z, t, m_NTrue[1], m_NTrue[2], m_NTrue[3])].U[mu],sizeof(SU3),1,file);
+//                        fwrite(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu],sizeof(SU3),1,file);
 //                    }
 //                }
 //            }
 //        }
 //    }
 //    fclose(file);
-    cout << m_outputFolder + m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin"  + " written" << endl;
+
+    cout << m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin"  + " written" << endl;
 }
 
 void System::loadFieldConfiguration(std::string filename)
@@ -406,12 +419,12 @@ void System::loadFieldConfiguration(std::string filename)
     // IMPLEMENT LOAD FROM FILE FOR LATTICE HERE
     FILE *file; // C method
     file = fopen((m_inputFolder +"_p" + std::to_string(m_processRank) + filename).c_str(), "rb");
-    for (int t = 0; t < m_NTrue[3]; t++) {
-        for (int z = 0; z < m_NTrue[2]; z++) {
-            for (int y = 0; y < m_NTrue[1]; y++) {
-                for (int x = 0; x < m_NTrue[0]; x++) {
+    for (int t = 0; t < m_N[3]; t++) {
+        for (int z = 0; z < m_N[2]; z++) {
+            for (int y = 0; y < m_N[1]; y++) {
+                for (int x = 0; x < m_N[0]; x++) {
                     for (int mu = 0; mu < 4; mu++) {
-                        fread(&m_lattice[getIndex(x, y, z, t, m_NTrue[1], m_NTrue[2], m_NTrue[3])].U[mu],sizeof(SU3),1,file);
+                        fread(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu],sizeof(SU3),1,file);
                     }
                 }
             }

@@ -17,7 +17,7 @@ private:
     // Lattice sizes
     int m_NSpatial;
     int m_NTemporal;
-    int m_NTrue[4];
+    int m_N[4];
 
     // Beta value constant
     double m_beta;
@@ -91,7 +91,7 @@ public:
 
     // Data outputters
     void writeDataToFile(std::string filename, bool preThermalizationGamma = true);
-    void writeConfigurationToFile();
+    void writeConfigurationToFile(int configNumber);
     void loadFieldConfiguration(std::string filename);
 
     // Setters
