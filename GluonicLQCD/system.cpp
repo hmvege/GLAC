@@ -90,7 +90,7 @@ void System::subLatticeSetup()
 
     // Iteratively finds and sets the sub-lattice cube sizes
     while (restProc >= 2) {
-        for (int i = 0; i < 4; i++) { // Conts from x to t
+        for (int i = 0; i < 4; i++) { // Counts from x to t
             m_N[i] /= 2;
             restProc /= 2;
             if (restProc < 2) break;

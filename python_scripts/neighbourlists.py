@@ -165,7 +165,7 @@ def print_processor_lattice():
 def getNeighbourLists():
 	n_lists = []
 	for Np in xrange(Nt*Nz*Ny*Nx):
-		n_lists.append([	getXMinusOne(Np),getXPlusOne(Np),
+		n_lists.append([getXMinusOne(Np),getXPlusOne(Np),
 						getYMinusOne(Np),getYPlusOne(Np),
 						getZMinusOne(Np),getZPlusOne(Np),
 						getTMinusOne(Np),getTPlusOne(Np)])
