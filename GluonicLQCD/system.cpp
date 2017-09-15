@@ -219,7 +219,8 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
-//    loadFieldConfiguration("conf0.bin");
+//    loadFieldConfiguration("input/beta6.000000_config0.bin");
+//    exit(1);
     // Variables for checking performance of the update.
     clock_t preUpdate, postUpdate;
     double updateStorer = 0;
@@ -290,8 +291,17 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         m_Gamma[alpha] /= double(m_numprocs);
         // Writing to file
         if (writeConfigsToFile) writeConfigurationToFile(alpha);
-        if (m_processRank) cout << "Plaquette value: " << m_Gamma[alpha] << endl;
+        if (m_processRank == 0) cout << "Plaquette value: " << m_Gamma[alpha] << endl;
+//        exit(1);
+        // TEST ============================================================
+        MPI_Barrier(MPI_COMM_WORLD);
+        loadFieldConfiguration("output/beta6.000000_config0.bin");
+        MPI_Barrier(MPI_COMM_WORLD);
+        double corr = m_correlator->calculate(m_lattice);
+        MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        if (m_processRank == 0) cout << "Plaquette value: " << corr;
         exit(1);
+        // =================================================================
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
@@ -394,7 +404,7 @@ void System::writeConfigurationToFile(int configNumber)
                   MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset startPoints = 0; // In bytes. LONG INT?
 
-    MPI_File_set_view(file, m_processRank*m_subLatticeSize*sizeof(double), MPI_DOUBLE, MPI_DOUBLE, "native", MPI_INFO_NULL);
+//    MPI_File_set_view(file, m_processRank*m_subLatticeSize*sizeof(double), MPI_DOUBLE, MPI_DOUBLE, "native", MPI_INFO_NULL);
     int nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (int t = 0; t < m_NTemporal; t++) {
@@ -440,20 +450,47 @@ void System::loadFieldConfiguration(std::string filename)
      * Arguments:
      * - filename
      */
-    // IMPLEMENT LOAD FROM FILE FOR LATTICE HERE
-    FILE *file; // C method
-    file = fopen((m_inputFolder +"_p" + std::to_string(m_processRank) + filename).c_str(), "rb");
-    for (int t = 0; t < m_N[3]; t++) {
-        for (int z = 0; z < m_N[2]; z++) {
-            for (int y = 0; y < m_N[1]; y++) {
-                for (int x = 0; x < m_N[0]; x++) {
-                    for (int mu = 0; mu < 4; mu++) {
-                        fread(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu],sizeof(SU3),1,file);
-                    }
+    MPI_File file;
+    if (m_processRank == 0) cout << "FILENAME " << filename << endl;
+    MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+    MPI_Offset startPoints = 0; // In bytes. LONG INT?
+
+//    MPI_File_set_view(file, m_processRank*m_subLatticeSize*sizeof(double), MPI_DOUBLE, MPI_DOUBLE, "native", MPI_INFO_NULL);
+    int nt = 0, nz = 0, ny = 0, nx = 0;
+
+    for (int t = 0; t < m_NTemporal; t++) {
+        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_VSub[3] + t) * linkSize;
+        for (int z = 0; z < m_NSpatial; z++) {
+            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_VSub[2] + z) * linkSize + nt;
+            for (int y = 0; y < m_NSpatial; y++) {
+                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_VSub[1] + y) * linkSize + nz;
+                for (int x = 0; x < m_NSpatial; x++) {
+                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_VSub[0] + x) * linkSize + ny;
+                    startPoints = nx;
+                    MPI_File_read_at(file,startPoints, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], 72*sizeof(double), MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
         }
     }
-    fclose(file);
-    cout << m_inputFolder + filename  + " loaded" << endl;
+
+    MPI_File_close(&file);
+
+    if (m_processRank == 0) cout << "Configuration "<< filename << " loaded." << endl;
+
+//    // IMPLEMENT LOAD FROM FILE FOR LATTICE HERE
+//    FILE *file; // C method
+//    file = fopen((m_inputFolder +"_p" + std::to_string(m_processRank) + filename).c_str(), "rb");
+//    for (int t = 0; t < m_N[3]; t++) {
+//        for (int z = 0; z < m_N[2]; z++) {
+//            for (int y = 0; y < m_N[1]; y++) {
+//                for (int x = 0; x < m_N[0]; x++) {
+//                    for (int mu = 0; mu < 4; mu++) {
+//                        fread(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu],sizeof(SU3),1,file);
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    fclose(file);
+//    cout << m_inputFolder + filename  + " loaded" << endl;
 }

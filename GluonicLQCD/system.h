@@ -76,8 +76,8 @@ private:
 
     // Input/output locations
     std::string m_filename = "";
-    std::string m_inputFolder = "../input/";
-    std::string m_outputFolder = "../output/";
+    std::string m_inputFolder = "input/";
+    std::string m_outputFolder = "output/";
 
     // SU3 generator
     SU3MatrixGenerator *m_SU3Generator = nullptr;
