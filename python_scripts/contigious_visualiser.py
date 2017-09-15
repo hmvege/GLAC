@@ -142,13 +142,13 @@ class SubLattice:
 									(rank / self.VProc[2]) % self.procsPerDim[3]]
 			self.processor_coordinates.append(processor_coordinate)
 
-		print "Lattice dimensions: ", self.N
-		print "Volumes of lattice: ", self.V
-		print "Sub-lattice dimensions: ", self.NSub
-		print "Volumes of sub-lattice: ", self.VSub
-		print "Number of processsors: ", self.numprocs
-		print "Processors per dimension: ", self.procsPerDim
-		print "Volumes of processsors: ", self.VProc
+		print "Lattice dimensions(self.N): ", self.N
+		print "Volumes of lattice(self.V): ", self.V
+		print "Sub-lattice dimensions(self.NSub): ", self.NSub
+		print "Volumes of sub-lattice(self.VSub): ", self.VSub
+		print "Number of processsors(self.numprocs): ", self.numprocs
+		print "Processors per dimension(self.procsPerDim): ", self.procsPerDim
+		print "Volumes of processsors(self.VProc): ", self.VProc
 		# print "Processor coordinates: \n",self.processor_coordinates
 
 	def printTotalLattice(self):
@@ -169,19 +169,6 @@ class SubLattice:
 			str_header = "="*str_len + msg + "="*(str_len+1)
 			print str_header
 
-# nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_VSub[3] + t) * linkSize;
-#         for (int z = 0; z < m_NSpatial; z++) {
-#             nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_VSub[2] + z) * linkSize + nt;
-#             for (int y = 0; y < m_NSpatial; y++) {
-#                 ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_VSub[1] + y) * linkSize + nz;
-#                 for (int x = 0; x < m_NSpatial; x++) {
-#                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_VSub[0] + x) * linkSize + ny;
-#                     startPoints = nx;
-#                     MPI_File_write_at(file,startPoints, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], 72*sizeof(double), MPI_DOUBLE, MPI_STATUS_IGNORE);
-#                 }
-#             }
-#         }
-
 			for t in xrange(self.NSub[3]):
 				t_offset = self.V[2] * (self.processor_coordinates[prosessor][3] * self.NSub[3] + t)
 				str_t_cord = "T = %d," % t
@@ -194,7 +181,8 @@ class SubLattice:
 						y_offset = self.V[0] * (self.processor_coordinates[prosessor][1] * self.NSub[1] + y) + z_offset
 						for x in xrange(self.NSub[0]):
 							x_offset = self.processor_coordinates[prosessor][0] * self.NSub[0] + x + y_offset
-							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,x_offset) # Memory positions
+							memory_position_string.append(x_offset)
+							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1]) # Memory positions
 							print print_string,
 						if ((x+1)%(self.NSub[0]) == 0 and (y+1)%(self.NSub[1]) == 0 and (z+1)%(self.NSub[2]) == 0 and (t+1)%(self.NSub[3]) == 0):
 							print "\n","="*(scr_len-1)
@@ -202,9 +190,9 @@ class SubLattice:
 					print "\n",
 				print "\n",
 
-		self.memory_position_string = memory_position_string
 		sys.stdout = orig_stdout
 		f.close()
+		self.memory_position_string = memory_position_string
 
 
 	def printSubLattice(self, reversed = False):
@@ -306,6 +294,11 @@ def main():
 	sublattice = SubLattice(dimensions,numprocs)
 	# sublattice.printSubLattice()
 	sublattice.printTotalLattice()
+	
+	for x,y in zip(sublattice.memory_position_string,lattice.memory_position_string):
+		print "Parallel: %3d Scalar: %3d" % (x,y)
+	
+	# Testing if we are mapping parallel prosessors to scalar memory allocation
 	if sublattice.memory_position_string == lattice.memory_position_string:
 		print "Success"
 	else:

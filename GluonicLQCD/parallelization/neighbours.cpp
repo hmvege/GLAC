@@ -1,6 +1,11 @@
 #include "neighbours.h"
 #include "neighbourlist.h"
 
+//TEMP
+#include <iostream>
+using std::cout;
+using std::endl;
+
 Neighbours::Neighbours()
 {
 }
@@ -19,10 +24,16 @@ void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim
     m_Nt = processorsPerDim[3];
     neighbourLists = new NeighbourList[m_numproc];
     generateNeighbourList();
-    m_P[0] = processRank % m_Nx; // This is probably wrong!! :(
-    m_P[1] = processRank % m_Ny;
-    m_P[2] = processRank % m_Nz;
-    m_P[3] = processRank % m_Nt;
+    m_P[0] = processRank % m_Nx;
+    m_P[1] = (processRank / m_Nx) % m_Ny;
+    m_P[2] = (processRank / (m_Nx * m_Ny)) % m_Nz;
+    m_P[3] = (processRank / (m_Nx * m_Ny * m_Nz)) % m_Nt;
+    cout << "P = " << m_processRank << endl;
+    for (int i = 0; i < 4; i++) {
+        cout << m_P[0];
+    }
+    FEIL LIGGER HER!!
+    cout << endl;
 }
 
 void Neighbours::generateNeighbourList()

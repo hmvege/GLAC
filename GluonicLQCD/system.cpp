@@ -88,7 +88,7 @@ void System::subLatticeSetup()
     }
     m_N[3] = m_NTemporal;
 
-    // Iteratively finds and sets the sub-lattice cube sizes
+    // Iteratively finds and sets the sub-lattice dimensions
     while (restProc >= 2) {
         for (int i = 0; i < 4; i++) { // Counts from x to t
             m_N[i] /= 2;
@@ -143,6 +143,8 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
      * Sets up the lattice and its matrices.
      */
     subLatticeSetup();
+    cout << "EXITING AT LATTICE SETUP" << endl;
+    exit(1);
 
     m_SU3Generator = SU3Generator;
     if (hotStart) {
@@ -408,13 +410,13 @@ void System::writeConfigurationToFile(int configNumber)
     int nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (int t = 0; t < m_NTemporal; t++) {
-        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_VSub[3] + t) * linkSize;
+        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t) * linkSize;
         for (int z = 0; z < m_NSpatial; z++) {
-            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_VSub[2] + z) * linkSize + nt;
+            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) * linkSize + nt;
             for (int y = 0; y < m_NSpatial; y++) {
-                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_VSub[1] + y) * linkSize + nz;
+                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) * linkSize + nz;
                 for (int x = 0; x < m_NSpatial; x++) {
-                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_VSub[0] + x) * linkSize + ny;
+                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) * linkSize + ny;
                     startPoints = nx;
                     MPI_File_write_at(file,startPoints, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], 72*sizeof(double), MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
@@ -456,18 +458,18 @@ void System::loadFieldConfiguration(std::string filename)
     MPI_Offset startPoints = 0; // In bytes. LONG INT?
 
 //    MPI_File_set_view(file, m_processRank*m_subLatticeSize*sizeof(double), MPI_DOUBLE, MPI_DOUBLE, "native", MPI_INFO_NULL);
-    int nt = 0, nz = 0, ny = 0, nx = 0;
+    MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (int t = 0; t < m_NTemporal; t++) {
-        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_VSub[3] + t) * linkSize;
+        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
         for (int z = 0; z < m_NSpatial; z++) {
-            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_VSub[2] + z) * linkSize + nt;
+            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
             for (int y = 0; y < m_NSpatial; y++) {
-                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_VSub[1] + y) * linkSize + nz;
+                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
                 for (int x = 0; x < m_NSpatial; x++) {
-                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_VSub[0] + x) * linkSize + ny;
-                    startPoints = nx;
-                    MPI_File_read_at(file,startPoints, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], 72*sizeof(double), MPI_DOUBLE, MPI_STATUS_IGNORE);
+                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
+                    startPoints = nx*linkSize;
+                    MPI_File_read_at(file,startPoints, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkSize, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
         }
