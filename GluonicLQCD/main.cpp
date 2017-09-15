@@ -45,7 +45,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Constants
     int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;            // Time dimension
-    int NTherm      = 2;            // Number of times we are to thermalize, that is NTherm * NCor. Should increase to 30 at least.
+    int NTherm      = 1;            // Number of times we are to thermalize, that is NTherm * NCor. Should increase to 30 at least.
     int NCor        = 10;           // Only keeping every 20th path
     int NCf         = 10;           // Number of configurations to retrieve
     int NUpdates    = 10;           // How many sweeps between main update

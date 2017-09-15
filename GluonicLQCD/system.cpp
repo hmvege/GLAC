@@ -78,7 +78,7 @@ void System::subLatticeSetup()
         exit(1);
     }
     else if (m_numprocs % 16 != 0) {
-        cout << "Warning: running for an number of prosessors may slow down performance." << endl;
+        if (m_processRank == 0) cout << "Warning: running for an number of prosessors may slow down performance." << endl;
     }
     int restProc = m_numprocs;
 
@@ -289,7 +289,9 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_Gamma[alpha] /= double(m_numprocs);
         // Writing to file
-        if (m_processRank == 0 && writeConfigsToFile) writeConfigurationToFile(alpha);
+        if (writeConfigsToFile) writeConfigurationToFile(alpha);
+        if (m_processRank) cout << "Plaquette value: " << m_Gamma[alpha] << endl;
+        exit(1);
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
@@ -385,12 +387,14 @@ void System::writeConfigurationToFile(int configNumber)
     if (m_processRank == 0) cout << "Writing configuration number " << configNumber << " to file." << endl;
 
     MPI_File file;
-    std::string fname = m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin";
+    std::string filename = m_outputFolder + m_filename + "beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin";
+    if (m_processRank == 0) cout << "FILENAME " << filename << endl;
     MPI_File_open(MPI_COMM_WORLD,
-                  fname.c_str(),
+                  filename.c_str(),
                   MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
-
     MPI_Offset startPoints = 0; // In bytes. LONG INT?
+
+    MPI_File_set_view(file, m_processRank*m_subLatticeSize*sizeof(double), MPI_DOUBLE, MPI_DOUBLE, "native", MPI_INFO_NULL);
     int nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (int t = 0; t < m_NTemporal; t++) {
@@ -410,6 +414,7 @@ void System::writeConfigurationToFile(int configNumber)
 
     MPI_File_close(&file);
 
+    if (m_processRank == 0) cout << filename << " written." << endl;
     if (m_processRank == 0) cout << "Configuration number " << configNumber << " written to file." << endl;
 
 //    // OLD WRITE TO FILE(SCALAR)
@@ -426,7 +431,6 @@ void System::writeConfigurationToFile(int configNumber)
 //    }
 //    fclose(file);
 
-    cout << m_outputFolder + "/" + m_filename + "_beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin"  + " written" << endl;
 }
 
 void System::loadFieldConfiguration(std::string filename)
