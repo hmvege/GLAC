@@ -19,7 +19,7 @@ void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim
     m_Nt = processorsPerDim[3];
     neighbourLists = new NeighbourList[m_numproc];
     generateNeighbourList();
-    m_P[0] = processRank % m_Nx;
+    m_P[0] = processRank % m_Nx; // This is probably wrong!! :(
     m_P[1] = processRank % m_Ny;
     m_P[2] = processRank % m_Nz;
     m_P[3] = processRank % m_Nt;

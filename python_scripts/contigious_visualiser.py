@@ -134,13 +134,22 @@ class SubLattice:
 		# 14 15 # y = 1
 
 		# Sets up processor positions in the lattice
-		self.Np = []
+		self.processor_coordinates = []
 		for rank in range(numprocs):
 			processor_coordinate = [rank % self.procsPerDim[0],
 									(rank / self.VProc[0]) % self.procsPerDim[1],
 									(rank / self.VProc[1]) % self.procsPerDim[2],
 									(rank / self.VProc[2]) % self.procsPerDim[3]]
-			self.Np.append(processor_coordinate)
+			self.processor_coordinates.append(processor_coordinate)
+
+		print "Lattice dimensions: ", self.N
+		print "Volumes of lattice: ", self.V
+		print "Sub-lattice dimensions: ", self.NSub
+		print "Volumes of sub-lattice: ", self.VSub
+		print "Number of processsors: ", self.numprocs
+		print "Processors per dimension: ", self.procsPerDim
+		print "Volumes of processsors: ", self.VProc
+		# print "Processor coordinates: \n",self.processor_coordinates
 
 	def printTotalLattice(self):
 		# Redirecting output
@@ -158,7 +167,6 @@ class SubLattice:
 			scr_len = len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.nSub([1,1,1,1])))*self.NSub[0]+self.NSub[0]
 			str_len = ((len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.nSub([1,1,1,1])))*self.NSub[0]+1) - len(msg))/2
 			str_header = "="*str_len + msg + "="*(str_len+1)
-			# file.write(str_header)
 			print str_header
 
 # nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_VSub[3] + t) * linkSize;
@@ -175,19 +183,17 @@ class SubLattice:
 #         }
 
 			for t in xrange(self.NSub[3]):
-				t_offset = self.V[2] * (self.Np[prosessor][3] * self.VSub[3] + t)
+				t_offset = self.V[2] * (self.processor_coordinates[prosessor][3] * self.NSub[3] + t)
 				str_t_cord = "T = %d," % t
 				print str_t_cord,
-				# file.write(str_t_cord)
 				for z in xrange(self.NSub[2]):
-					z_offset = self.V[1] * (self.Np[prosessor][2] * self.VSub[2] + z) + t_offset
+					z_offset = self.V[1] * (self.processor_coordinates[prosessor][2] * self.NSub[2] + z) + t_offset
 					str_z_cord = "Z = %d" % z
 					print str_z_cord
 					for y in xrange(self.NSub[1]):
-						y_offset = self.V[0] * (self.Np[prosessor][1] * self.VSub[1] + y) + z_offset
+						y_offset = self.V[0] * (self.processor_coordinates[prosessor][1] * self.NSub[1] + y) + z_offset
 						for x in xrange(self.NSub[0]):
-							x_offset = self.Np[prosessor][0] * self.VSub[0] + x + y_offset
-							# print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,self.nSub([x,y,z,t])) # With contiguous 
+							x_offset = self.processor_coordinates[prosessor][0] * self.NSub[0] + x + y_offset
 							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,x_offset) # Memory positions
 							print print_string,
 						if ((x+1)%(self.NSub[0]) == 0 and (y+1)%(self.NSub[1]) == 0 and (z+1)%(self.NSub[2]) == 0 and (t+1)%(self.NSub[3]) == 0):
@@ -300,6 +306,10 @@ def main():
 	sublattice = SubLattice(dimensions,numprocs)
 	# sublattice.printSubLattice()
 	sublattice.printTotalLattice()
+	if sublattice.memory_position_string == lattice.memory_position_string:
+		print "Success"
+	else:
+		print "Not equal memory positions"
 
 if __name__ == '__main__':
 	main()
