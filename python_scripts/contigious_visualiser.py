@@ -1,4 +1,5 @@
 import numpy as np, sys
+from operator import itemgetter
 
 class Index: # General method for getting contiguous memory allocation
 	def __init__(self,N):
@@ -8,6 +9,7 @@ class Index: # General method for getting contiguous memory allocation
 	def __call__(self,indices):
 		if len(indices) != self.N_length:
 			raise ValueError("Number of indices %d do not correspond with number of dimensions %d." % (len(indices),self.N_length))
+		return self.N[3]*(self.N[2]*(self.N[1]*indices[0] + indices[1]) + indices[2]) + indices[3]
 		offset = int(0);
 		for i in range(self.N_length):
 			prod = 1
@@ -53,8 +55,8 @@ class Lattice:
 					print "Y = %d" % y
 					for z in xrange(self.N[2]):
 						for t in xrange(self.N[3]):
-							memory_position_string.append(n([x,y,z,t]))
-							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1])
+							memory_position_string.append([n([x,y,z,t]),(x,y,z,t)])
+							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1][0])
 							print print_string,
 						if ((x+1)%(self.N[0]) == 0 and (y+1)%(self.N[1]) == 0 and (z+1)%(self.N[2]) == 0 and (t+1)%(self.N[3]) == 0):
 							print "\n","="*(scr_len-1)
@@ -68,8 +70,8 @@ class Lattice:
 					print "Z = %d" % z
 					for y in xrange(self.N[1]):
 						for x in xrange(self.N[0]):
-							memory_position_string.append(n([x,y,z,t]))
-							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1])
+							memory_position_string.append([n([x,y,z,t]),(x,y,z,t)])
+							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1][0])
 							print print_string,
 						if ((x+1)%(self.N[0]) == 0 and (y+1)%(self.N[1]) == 0 and (z+1)%(self.N[2]) == 0 and (t+1)%(self.N[3]) == 0):
 							print "\n","="*(scr_len-1)
@@ -118,7 +120,7 @@ class SubLattice:
 			self.VSub.append(self.NSub[i]*self.VSub[-1])
 			self.VProc.append(self.procsPerDim[i]*self.VProc[-1])
 
-		# Map for 2^4 prosessors
+		# Map for 2^4 processors
 		# t=0, z = 0
 		#  0  1 # y = 0
 		#  2  3 # y = 1
@@ -142,6 +144,16 @@ class SubLattice:
 									(rank / self.VProc[2]) % self.procsPerDim[3]]
 			self.processor_coordinates.append(processor_coordinate)
 
+		# # Small diagnostics
+		# for p in range(numprocs):
+		# 	print "===== Processor: %2d =====" % p
+		# 	for i in range(4):
+		# 		print "Dimension: ", i,
+		# 		print "Processor cord: ", self.processor_coordinates[p][i],
+		# 		print "Sublattice length: ", self.NSub[i],
+		# 		print "Total volume: ", self.V[i]
+		# 	print "="*25,"\n"
+
 		print "Lattice dimensions(self.N): ", self.N
 		print "Volumes of lattice(self.V): ", self.V
 		print "Sub-lattice dimensions(self.NSub): ", self.NSub
@@ -158,10 +170,11 @@ class SubLattice:
 		sys.stdout = f
 
 		memory_position_string = [] # This can be compared later with the scalar version. If they are equal, the methods are working and the bug is not due to wrong memory placement.
+		value_position_string = []
 		x_offset, y_offset, z_offset, t_offset = 0,0,0,0
 
-		for prosessor in range(self.numprocs):
-			str_processor =  "Prosessor: %2d" % prosessor
+		for processor in range(self.numprocs):
+			str_processor =  "Processor: %2d" % processor
 			print str_processor
 			msg = "TZYX order"
 			scr_len = len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.nSub([1,1,1,1])))*self.NSub[0]+self.NSub[0]
@@ -170,19 +183,21 @@ class SubLattice:
 			print str_header
 
 			for t in xrange(self.NSub[3]):
-				t_offset = self.V[2] * (self.processor_coordinates[prosessor][3] * self.NSub[3] + t)
+				t_offset = (self.processor_coordinates[processor][3] * self.NSub[3] + t)
 				str_t_cord = "T = %d," % t
 				print str_t_cord,
 				for z in xrange(self.NSub[2]):
-					z_offset = self.V[1] * (self.processor_coordinates[prosessor][2] * self.NSub[2] + z) + t_offset
+					z_offset = self.V[0] * (self.processor_coordinates[processor][2] * self.NSub[2] + z) + t_offset
 					str_z_cord = "Z = %d" % z
 					print str_z_cord
 					for y in xrange(self.NSub[1]):
-						y_offset = self.V[0] * (self.processor_coordinates[prosessor][1] * self.NSub[1] + y) + z_offset
+						y_offset = self.V[1] * (self.processor_coordinates[processor][1] * self.NSub[1] + y) + z_offset
 						for x in xrange(self.NSub[0]):
-							x_offset = self.processor_coordinates[prosessor][0] * self.NSub[0] + x + y_offset
-							memory_position_string.append(x_offset)
-							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1]) # Memory positions
+							x_offset = self.V[2] * (self.processor_coordinates[processor][0] * self.NSub[0] + x) + y_offset
+							memory_position_string.append([x_offset,(x+self.NSub[0]*self.processor_coordinates[processor][0],y+self.NSub[1]*self.processor_coordinates[processor][1],z+self.NSub[2]*self.processor_coordinates[processor][2],t+self.NSub[3]*self.processor_coordinates[processor][3]),processor])
+							value_position_string.append(self.n([x,y,z,t]))
+
+							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1][0]) # Memory positions
 							print print_string,
 						if ((x+1)%(self.NSub[0]) == 0 and (y+1)%(self.NSub[1]) == 0 and (z+1)%(self.NSub[2]) == 0 and (t+1)%(self.NSub[3]) == 0):
 							print "\n","="*(scr_len-1)
@@ -193,6 +208,7 @@ class SubLattice:
 		sys.stdout = orig_stdout
 		f.close()
 		self.memory_position_string = memory_position_string
+		self.value_position_string = value_position_string
 
 
 	def printSubLattice(self, reversed = False):
@@ -201,8 +217,8 @@ class SubLattice:
 		f = open('sublattice.txt', 'w')
 		sys.stdout = f
 
-		for prosessor in range(self.numprocs):
-			print "Prosessor: ", prosessor
+		for processor in range(self.numprocs):
+			print "Processor: ", processor
 			if not reversed:
 				msg = "XYZT order"
 			else:
@@ -287,22 +303,46 @@ def new_index_test(N):
 def main():
 	# old_index_test()
 	# new_index_test([3,3,3])
-	dimensions = [4,4,4,4]
-	numprocs = 16
+	dimensions = [8,8,8,8]
+	numprocs = 8
 	lattice = Lattice(dimensions)
 	lattice.printLattice(True)
 	sublattice = SubLattice(dimensions,numprocs)
 	# sublattice.printSubLattice()
 	sublattice.printTotalLattice()
 	
-	for x,y in zip(sublattice.memory_position_string,lattice.memory_position_string):
-		print "Parallel: %3d Scalar: %3d" % (x,y)
-	
-	# Testing if we are mapping parallel prosessors to scalar memory allocation
-	if sublattice.memory_position_string == lattice.memory_position_string:
-		print "Success"
+	max_index = np.prod(dimensions)
+	index_ceiling = max_index
+
+	parallelIndexes = np.asarray([i[1] for i in sublattice.memory_position_string])
+	parallelLocations = np.asarray([i[0] for i in sublattice.memory_position_string])
+	scalarIndexes = np.asarray([i[1] for i in lattice.memory_position_string])
+	scalarLocations = np.asarray([i[0] for i in lattice.memory_position_string])
+
+	# Sorting positions
+	mega_list = zip([i[1] for i in sublattice.memory_position_string],parallelLocations,[i[-1] for i in sublattice.memory_position_string])
+	mega_array = np.asarray(sorted(mega_list,key=lambda i: itemgetter(0)(i)[::-1])) # Sorting the index ordering
+
+	for i,P,parallelIndex,x,scalarIndex,y in zip(	range(index_ceiling),
+												mega_array[:,-1], # Processor who performed calculation
+												mega_array[:,0], # Parallel index
+												mega_array[:,1], # Parallel mem loc
+												scalarIndexes[:index_ceiling], # Scalar index
+												scalarLocations[:index_ceiling]): # Scalar mem loc
+		print "%3d:   Parallel(P:%4d xyzt index: %s): %4d  ||  Scalar(xyzt index: %s: %4d" % (i,P,parallelIndex,x,scalarIndex,y)
+
+	bool_sums_equal = sum(parallelLocations) == sum(scalarLocations)
+	bool_elements_equal = (sum([True if i in scalarLocations else False for i in parallelLocations]) == len(sublattice.memory_position_string))
+	if bool_sums_equal and bool_sums_equal:
+		print "Success: Equal number of elements accessed."
 	else:
-		print "Not equal memory positions"
+		print "Failure: Unequal number of elements accessed"
+	
+	# Testing if we are mapping parallel processors to scalar memory allocation
+	if sum([True if i==j else False for i,j in zip(scalarLocations, mega_array[:,1])]) == len(mega_array[:,1]):
+		print "Success: Equal memory positions."
+	else:
+		print "Failure: Not equal memory positions."
 
 if __name__ == '__main__':
 	main()

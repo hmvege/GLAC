@@ -41,7 +41,8 @@ private:
     void subLatticeSetup();
     int m_VSub[4]; // Sub-volumes, used when writing to file
     int m_V[4]; // Total lattice volumes
-    int linkSize = 72*sizeof(double);
+    int linkDoubles = 72;
+    int linkSize = linkDoubles*sizeof(double);
 
     // Lattice variables
     int m_latticeSize;
@@ -100,7 +101,7 @@ public:
     // Setters
     void setAction(Action *S) { m_S = S; }
     void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
-    void setConfigBatchName(std::string filename) { m_filename = filename; }
+    void setConfigBatchName(std::string filename) { m_filename = filename + "_"; }
     void setN(int NSpatial) { m_NSpatial = NSpatial; }
     void setNT(int NTemporal) { m_NTemporal = NTemporal; }
     void setNCf(int NCf) { m_NCf = NCf; }

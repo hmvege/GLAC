@@ -53,7 +53,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr) + double(processRank);
-    double metropolisSeed = std::time(nullptr) + numprocs + double(processRank);
+    double metropolisSeed = std::time(nullptr) + double(numprocs) + double(processRank);
     bool writeConfigsToFile             = true;
     bool storeThermalizationPlaquettes  = true;
     bool hotStart                       = false;
@@ -73,10 +73,10 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
+    pureGauge.setConfigBatchName("configs_profiling_run");
     pureGauge.runMetropolis(storeThermalizationPlaquettes, writeConfigsToFile);
     pureGauge.runBasicStatistics();
     pureGauge.printAcceptanceRate();
-    pureGauge.setConfigBatchName("configs_profiling_run");
 //    pureGauge.writeDataToFile("../output/correlatorData.dat");
 
     programEnd = clock();

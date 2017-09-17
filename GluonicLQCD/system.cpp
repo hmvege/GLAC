@@ -143,8 +143,6 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
      * Sets up the lattice and its matrices.
      */
     subLatticeSetup();
-    cout << "EXITING AT LATTICE SETUP" << endl;
-    exit(1);
 
     m_SU3Generator = SU3Generator;
     if (hotStart) {
@@ -292,16 +290,17 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_Gamma[alpha] /= double(m_numprocs);
         // Writing to file
-        if (writeConfigsToFile) writeConfigurationToFile(alpha);
         if (m_processRank == 0) cout << "Plaquette value: " << m_Gamma[alpha] << endl;
-//        exit(1);
+        if (writeConfigsToFile) writeConfigurationToFile(alpha);
         // TEST ============================================================
         MPI_Barrier(MPI_COMM_WORLD);
-        loadFieldConfiguration("output/beta6.000000_config0.bin");
+        loadFieldConfiguration("output/configs_profiling_run_beta6.000000_config0.bin");
         MPI_Barrier(MPI_COMM_WORLD);
         double corr = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        if (m_processRank == 0) cout << "Plaquette value: " << corr;
+        corr /= double(m_numprocs);
+        if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+        MPI_Barrier(MPI_COMM_WORLD);
         exit(1);
         // =================================================================
     }
@@ -394,31 +393,24 @@ void System::writeConfigurationToFile(int configNumber)
     /*
      * C-method for writing out configuration to file.
      * Arguments:
-     * - filename
+     *  configNumber   : (int) configuration number
      */
     if (m_processRank == 0) cout << "Writing configuration number " << configNumber << " to file." << endl;
 
     MPI_File file;
     std::string filename = m_outputFolder + m_filename + "beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin";
-    if (m_processRank == 0) cout << "FILENAME " << filename << endl;
-    MPI_File_open(MPI_COMM_WORLD,
-                  filename.c_str(),
-                  MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
-    MPI_Offset startPoints = 0; // In bytes. LONG INT?
+    MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+    MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
-//    MPI_File_set_view(file, m_processRank*m_subLatticeSize*sizeof(double), MPI_DOUBLE, MPI_DOUBLE, "native", MPI_INFO_NULL);
-    int nt = 0, nz = 0, ny = 0, nx = 0;
-
-    for (int t = 0; t < m_NTemporal; t++) {
-        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t) * linkSize;
-        for (int z = 0; z < m_NSpatial; z++) {
-            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) * linkSize + nt;
-            for (int y = 0; y < m_NSpatial; y++) {
-                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) * linkSize + nz;
-                for (int x = 0; x < m_NSpatial; x++) {
-                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) * linkSize + ny;
-                    startPoints = nx;
-                    MPI_File_write_at(file,startPoints, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], 72*sizeof(double), MPI_DOUBLE, MPI_STATUS_IGNORE);
+    for (int t = 0; t < m_N[3]; t++) {
+        nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
+        for (int z = 0; z < m_N[2]; z++) {
+            nz = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
+            for (int y = 0; y < m_N[1]; y++) {
+                ny = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
+                for (int x = 0; x < m_N[0]; x++) {
+                    nx = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
+                    MPI_File_write_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
         }
@@ -428,21 +420,6 @@ void System::writeConfigurationToFile(int configNumber)
 
     if (m_processRank == 0) cout << filename << " written." << endl;
     if (m_processRank == 0) cout << "Configuration number " << configNumber << " written to file." << endl;
-
-//    // OLD WRITE TO FILE(SCALAR)
-//    for (int t = 0; t < m_N[3]; t++) {
-//        for (int z = 0; z < m_N[2]; z++) {
-//            for (int y = 0; y < m_N[1]; y++) {
-//                for (int x = 0; x < m_N[0]; x++) {
-//                    for (int mu = 0; mu < 4; mu++) {
-//                        fwrite(&m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu],sizeof(SU3),1,file);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    fclose(file);
-
 }
 
 void System::loadFieldConfiguration(std::string filename)
@@ -453,23 +430,18 @@ void System::loadFieldConfiguration(std::string filename)
      * - filename
      */
     MPI_File file;
-    if (m_processRank == 0) cout << "FILENAME " << filename << endl;
     MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-    MPI_Offset startPoints = 0; // In bytes. LONG INT?
-
-//    MPI_File_set_view(file, m_processRank*m_subLatticeSize*sizeof(double), MPI_DOUBLE, MPI_DOUBLE, "native", MPI_INFO_NULL);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
-    for (int t = 0; t < m_NTemporal; t++) {
-        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (int z = 0; z < m_NSpatial; z++) {
-            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
-            for (int y = 0; y < m_NSpatial; y++) {
-                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
-                for (int x = 0; x < m_NSpatial; x++) {
-                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
-                    startPoints = nx*linkSize;
-                    MPI_File_read_at(file,startPoints, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkSize, MPI_DOUBLE, MPI_STATUS_IGNORE);
+    for (int t = 0; t < m_N[3]; t++) {
+        nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
+        for (int z = 0; z < m_N[2]; z++) {
+            nz = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
+            for (int y = 0; y < m_N[1]; y++) {
+                ny = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
+                for (int x = 0; x < m_N[0]; x++) {
+                    nx = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
+                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
         }

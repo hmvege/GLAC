@@ -28,12 +28,6 @@ void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim
     m_P[1] = (processRank / m_Nx) % m_Ny;
     m_P[2] = (processRank / (m_Nx * m_Ny)) % m_Nz;
     m_P[3] = (processRank / (m_Nx * m_Ny * m_Nz)) % m_Nt;
-    cout << "P = " << m_processRank << endl;
-    for (int i = 0; i < 4; i++) {
-        cout << m_P[0];
-    }
-    FEIL LIGGER HER!!
-    cout << endl;
 }
 
 void Neighbours::generateNeighbourList()
