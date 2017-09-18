@@ -219,15 +219,15 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
-    MPI_Barrier(MPI_COMM_WORLD);
-    loadFieldConfiguration("../../config1.bin");
-    MPI_Barrier(MPI_COMM_WORLD);
-    double corr = m_correlator->calculate(m_lattice);
-    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-    corr /= double(m_numprocs);
-    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-    MPI_Barrier(MPI_COMM_WORLD);
-    exit(1);
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    loadFieldConfiguration("../output/config2.bin");
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    double corr = m_correlator->calculate(m_lattice);
+//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//    corr /= double(m_numprocs);
+//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    exit(1);
     // Variables for checking performance of the update.
     clock_t preUpdate, postUpdate;
     double updateStorer = 0;
@@ -300,15 +300,15 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         if (m_processRank == 0) cout << "Plaquette value: " << m_Gamma[alpha] << endl;
         if (writeConfigsToFile) writeConfigurationToFile(alpha);
         // TEST ============================================================
-        MPI_Barrier(MPI_COMM_WORLD);
-        loadFieldConfiguration("output/configs_profiling_run_beta6.000000_config0.bin");
-        MPI_Barrier(MPI_COMM_WORLD);
-        double corr = m_correlator->calculate(m_lattice);
-        MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        corr /= double(m_numprocs);
-        if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-        MPI_Barrier(MPI_COMM_WORLD);
-        exit(1);
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        loadFieldConfiguration("output/configs_profiling_run_beta6.000000_config0.bin");
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        double corr = m_correlator->calculate(m_lattice);
+//        MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//        corr /= double(m_numprocs);
+//        if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        exit(1);
         // =================================================================
     }
     // Taking the average of the acceptance rate across the processors.

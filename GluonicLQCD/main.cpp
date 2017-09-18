@@ -46,9 +46,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Constants
     int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;            // Time dimension
-    int NTherm      = 1;            // Number of times we are to thermalize, that is NTherm * NCor. Should increase to 30 at least.
+    int NTherm      = 30;            // Number of times we are to thermalize, that is NTherm * NCor. Should increase to 30 at least.
     int NCor        = 10;           // Only keeping every 20th path
-    int NCf         = 10;           // Number of configurations to retrieve
+    int NCf         = 20;           // Number of configurations to retrieve
     int NUpdates    = 10;           // How many sweeps between main update
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
@@ -82,6 +82,5 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     programEnd = clock();
     if (processRank == 0) cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
     MPI_Finalize();
-    cout << "MPI FINALIZE COMPLETE" << endl;
     return 0;
 }
