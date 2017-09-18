@@ -253,10 +253,6 @@ void System::writeConfigurationToFile(std::string filename)
     }
     fclose(file);
     cout << m_outputFolder + filename  + " written" << endl;
-
-    // TEMP
-    loadFieldConfiguration(filename);
-    cout << "Correlator: " << m_correlator->calculate(m_lattice) << endl;
 }
 
 void System::loadFieldConfiguration(std::string filename)
@@ -267,16 +263,19 @@ void System::loadFieldConfiguration(std::string filename)
      * - filename
      */
     FILE *file; // C method
-    file = fopen((m_outputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
+//    file = fopen((m_outputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
+    file = fopen((m_inputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
     for (int t = 0; t < m_N_T; t++) {
         for (int z = 0; z < m_N; z++) {
             for (int y = 0; y < m_N; y++) {
                 for (int x = 0; x < m_N; x++) {
+//                    cout << "Index: " << x << " " << y << " " << z << " " << t << " Mem.pos.: " << index(x,y,z,t,m_N,m_N_T) << endl;
                     fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)],sizeof(Links),1,file);
                 }
             }
         }
     }
     fclose(file);
-    cout << m_outputFolder + filename  + " loaded" << endl;
+//    cout << m_outputFolder + filename  + " loaded" << endl;
+    cout << m_inputFolder + filename  + " loaded" << endl;
 }
