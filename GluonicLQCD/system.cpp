@@ -220,7 +220,7 @@ void System::update()
 void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
     MPI_Barrier(MPI_COMM_WORLD);
-    loadFieldConfiguration("../output/config3.bin");
+    loadFieldConfiguration("config3.bin");
     MPI_Barrier(MPI_COMM_WORLD);
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -446,7 +446,7 @@ void System::writeConfigurationToFile(int configNumber)
     }
 
     MPI_File_close(&file);
-    if (m_processRank == 0) cout << filename << " written." << endl;
+    if (m_processRank == 0) cout << m_outputFolder + filename << " written." << endl;
     if (m_processRank == 0) cout << "Configuration number " << configNumber << " written to file." << endl;
 }
 
@@ -458,7 +458,7 @@ void System::loadFieldConfiguration(std::string filename)
      * - filename
      */
     MPI_File file;
-    MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(MPI_COMM_WORLD, (m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (int t = 0; t < m_N[3]; t++) {
@@ -476,7 +476,7 @@ void System::loadFieldConfiguration(std::string filename)
     }
 
     MPI_File_close(&file);
-    if (m_processRank == 0) cout << "Configuration "<< filename << " loaded." << endl;
+    if (m_processRank == 0) cout << "Configuration " << m_outputFolder + filename << " loaded." << endl;
 
 //    // IMPLEMENT LOAD FROM FILE FOR LATTICE HERE
 //    FILE *file; // C method
