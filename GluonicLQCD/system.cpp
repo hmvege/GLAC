@@ -129,7 +129,7 @@ void System::runMetropolis(bool storePreObservables)
     for (int i = 0; i < m_latticeSize; i++) {
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 9; k++) {
-                if (fabs(m_lattice[i].U[j].mat[k].re - 0.783843) < 1e-12)
+                if ((fabs(m_lattice[i].U[j].mat[k].re - 0.783843) < 1e-12) || (fabs(m_lattice[i].U[j].mat[k].im - 0.783843) < 1e-12))
                     cout << "matching element at position: " << i << endl;
             }
         }
@@ -283,7 +283,7 @@ void System::loadFieldConfiguration(std::string filename)
                 for (int x = 0; x < m_N; x++) {
 //                    cout << "Index: " << x << " " << y << " " << z << " " << t << " Mem.pos.: " << index(x,y,z,t,m_N,m_N_T) << endl;
                     fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)],sizeof(Links),1,file);
-                    if (feof(file)) exit(1);
+                    if (feof(file)) exit(0);
                 }
             }
         }
