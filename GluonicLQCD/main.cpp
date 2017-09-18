@@ -31,11 +31,11 @@ using std::endl;
 
 int main()
 {
-    int N           = 4;            // Points for each lattice dimension, 8 points in time dimension
+    int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;            // Time dimension
-    int NTherm      = 22;           // Number of times we are to thermalize, that is NTherm * NCor
+    int NTherm      = 25;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path
-    int NCf         = 100;          // Number of configurations to retrieve
+    int NCf         = 10;          // Number of configurations to retrieve
     double beta     = 6;            // Should be
     double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
     double seed     = std::time(nullptr);
@@ -55,7 +55,7 @@ int main()
     pureGauge.runMetropolis(storeThermalizationPlaquettes);
     pureGauge.getStatistics();
     pureGauge.printAcceptanceRate();
-//    pureGauge.writeConfigurationToFile("configs_profiling_run");
+    pureGauge.writeConfigurationToFile("config2");
 //    pureGauge.writeDataToFile("../output/correlatorData.dat");
 
     programEnd = clock();
