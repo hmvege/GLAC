@@ -121,11 +121,16 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables)
 {
-    loadFieldConfiguration("configs_profiling_run_beta6.000000_config0.bin");
+    loadFieldConfiguration("config3.bin");
     m_lattice[0].U[0].print();
-//    m_lattice[0].U[1].print();
+    m_lattice[8*8*8*8-1].U[3].print();
 //    m_lattice[0].U[2].print();
 //    m_lattice[0].U[3].print();
+    /*
+     * -0.42257 + 0.197831i        -0.8282 + 0.235684i      -0.179341 - 0.093121i
+     * -0.730676 - 0.197141i       0.472453 + 0.162543i      -0.324172 - 0.269311i
+     * -0.219787 - 0.401546i     -0.0537256 + 0.0775807i     -0.0337171 + 0.88341i
+     */
     for (int i = 0; i < m_latticeSize; i++) {
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 9; k++) {
