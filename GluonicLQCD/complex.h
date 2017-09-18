@@ -12,8 +12,8 @@ public:
     ~complex();
     complex(double real, double imag);
 
-    double im;
     double re;
+    double im;
     complex &operator+=(complex b);
     complex &operator-=(complex b);
     complex &operator*=(complex b);

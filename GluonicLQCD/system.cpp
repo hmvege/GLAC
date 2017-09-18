@@ -121,10 +121,22 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables)
 {
-//    loadFieldConfiguration("configs_profiling_run_beta6.000000_config19.bin");
-//    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
-//    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
-//    exit(1);
+    loadFieldConfiguration("configs_profiling_run_beta6.000000_config0.bin");
+    m_lattice[0].U[0].print();
+//    m_lattice[0].U[1].print();
+//    m_lattice[0].U[2].print();
+//    m_lattice[0].U[3].print();
+    for (int i = 0; i < m_latticeSize; i++) {
+        for (int j = 0; j < 4; j++) {
+            for (int k = 0; k < 9; k++) {
+                if (fabs(m_lattice[i].U[j].mat[k].re - 0.783843) < 1e-12)
+                    cout << "matching element at position: " << i << endl;
+            }
+        }
+    }
+    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
+    exit(1);
     clock_t preUpdate, postUpdate;
     double updateStorer = 0;
     // Running thermalization
@@ -263,19 +275,20 @@ void System::loadFieldConfiguration(std::string filename)
      * - filename
      */
     FILE *file; // C method
-//    file = fopen((m_outputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
-    file = fopen((m_inputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
+    file = fopen((m_outputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
+//    file = fopen((m_inputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
     for (int t = 0; t < m_N_T; t++) {
         for (int z = 0; z < m_N; z++) {
             for (int y = 0; y < m_N; y++) {
                 for (int x = 0; x < m_N; x++) {
 //                    cout << "Index: " << x << " " << y << " " << z << " " << t << " Mem.pos.: " << index(x,y,z,t,m_N,m_N_T) << endl;
                     fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)],sizeof(Links),1,file);
+                    if (feof(file)) exit(1);
                 }
             }
         }
     }
     fclose(file);
-//    cout << m_outputFolder + filename  + " loaded" << endl;
-    cout << m_inputFolder + filename  + " loaded" << endl;
+    cout << m_outputFolder + filename  + " loaded" << endl;
+//    cout << m_inputFolder + filename  + " loaded" << endl;
 }
