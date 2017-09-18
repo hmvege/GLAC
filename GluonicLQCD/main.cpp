@@ -33,7 +33,7 @@ int main()
 {
     int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
     int N_T         = 8;            // Time dimension
-    int NTherm      = 25;           // Number of times we are to thermalize, that is NTherm * NCor
+    int NTherm      = 50;           // Number of times we are to thermalize, that is NTherm * NCor
     int NCor        = 10;           // Only keeping every 20th path
     int NCf         = 100;          // Number of configurations to retrieve
     double beta     = 6;            // Should be
@@ -55,7 +55,7 @@ int main()
     pureGauge.runMetropolis(storeThermalizationPlaquettes);
     pureGauge.getStatistics();
     pureGauge.printAcceptanceRate();
-    pureGauge.writeConfigurationToFile("config2.bin");
+    pureGauge.writeConfigurationToFile("config3.bin");
 //    pureGauge.writeDataToFile("../output/correlatorData.dat");
 
     programEnd = clock();

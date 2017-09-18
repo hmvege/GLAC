@@ -121,10 +121,10 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables)
 {
-    loadFieldConfiguration("config2.bin");
-    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
-    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
-    exit(1);
+//    loadFieldConfiguration("configs_profiling_run_beta6.000000_config19.bin");
+//    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+//    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
+//    exit(1);
     clock_t preUpdate, postUpdate;
     double updateStorer = 0;
     // Running thermalization
@@ -241,20 +241,22 @@ void System::writeConfigurationToFile(std::string filename)
      * - filename
      */
     FILE *file; // C method
-    file = fopen((m_outputFolder+filename).c_str(), "wb");
+    file = fopen((m_outputFolder + filename).c_str(), "wb");
     for (int t = 0; t < m_N_T; t++) {
         for (int z = 0; z < m_N; z++) {
             for (int y = 0; y < m_N; y++) {
                 for (int x = 0; x < m_N; x++) {
-                    for (int mu = 0; mu < 4; mu++) {
-                        fwrite(&m_lattice[index(x,y,z,t,m_N,m_N_T)].U[mu],sizeof(SU3),1,file);
-                    }
+                    fwrite(&m_lattice[index(x,y,z,t,m_N,m_N_T)],sizeof(Links),1,file);
                 }
             }
         }
     }
     fclose(file);
     cout << m_outputFolder + filename  + " written" << endl;
+
+    // TEMP
+    loadFieldConfiguration(filename);
+    cout << "Correlator: " << m_correlator->calculate(m_lattice) << endl;
 }
 
 void System::loadFieldConfiguration(std::string filename)
@@ -270,9 +272,7 @@ void System::loadFieldConfiguration(std::string filename)
         for (int z = 0; z < m_N; z++) {
             for (int y = 0; y < m_N; y++) {
                 for (int x = 0; x < m_N; x++) {
-                    for (int mu = 0; mu < 4; mu++) {
-                        fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)].U[mu],sizeof(SU3),1,file);
-                    }
+                    fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)],sizeof(Links),1,file);
                 }
             }
         }
