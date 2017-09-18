@@ -5,6 +5,7 @@
 output/*
 *.txt
 *.dat
+*.bin
 
 # Input files
 input/*

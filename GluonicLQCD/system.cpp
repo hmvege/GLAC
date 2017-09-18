@@ -121,10 +121,10 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables)
 {
-//    loadFieldConfiguration("../../config1.bin");
+    loadFieldConfiguration("config2.bin");
     m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
     cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
-//    exit(1);
+    exit(1);
     clock_t preUpdate, postUpdate;
     double updateStorer = 0;
     // Running thermalization
@@ -265,7 +265,7 @@ void System::loadFieldConfiguration(std::string filename)
      * - filename
      */
     FILE *file; // C method
-    file = fopen(filename.c_str(), "rb");
+    file = fopen((m_outputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
     for (int t = 0; t < m_N_T; t++) {
         for (int z = 0; z < m_N; z++) {
             for (int y = 0; y < m_N; y++) {
@@ -278,5 +278,5 @@ void System::loadFieldConfiguration(std::string filename)
         }
     }
     fclose(file);
-    cout << m_inputFolder + filename  + " loaded" << endl;
+    cout << m_outputFolder + filename  + " loaded" << endl;
 }
