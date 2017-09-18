@@ -226,9 +226,14 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     corr /= double(m_numprocs);
     if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-    MPI_Barrier(MPI_COMM_WORLD);
-    if (m_processRank == 0) m_lattice[0].U[0].print();
-    if (m_processRank == 15) m_lattice[m_subLatticeSize-1].U[3].print();
+    if (m_processRank == 0) {
+        cout << "proc 0:" << endl;
+        m_lattice[0].U[0].print();
+    }
+    if (m_processRank == 15) {
+        cout << "proc 15:" << endl;
+        m_lattice[m_subLatticeSize-1].U[3].print();
+    }
     for (int i = 0; i < m_subLatticeSize; i++) {
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 9; k++) {
@@ -237,6 +242,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
             }
         }
     }
+    MPI_Barrier(MPI_COMM_WORLD);
     /*
      * PARA CONFIG 0
        0.783843 - 0.531915i      0.0821734 - 0.027753i     -0.0843221 + 0.296687i
