@@ -135,6 +135,27 @@ void System::subLatticeSetup()
     m_V[1] = m_NSpatial*m_NSpatial; // XY volume
     m_V[2] = m_NSpatial*m_NSpatial*m_NSpatial; // XYZ Volume
     m_V[3] = m_NSpatial*m_NSpatial*m_NSpatial*m_NTemporal; // XYZT volume
+
+    // TESTS ====================================================================================
+    if (m_processRank == 0) {
+        cout << "Processsors per dimension: " << endl;
+        for (int i = 0; i < 4; i++) {
+            cout << m_processorsPerDimension[i] << " ";
+        }
+        cout << endl;
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
+    cout << "Printing neighbours for " << m_processRank << endl;
+    m_neighbourLists->getNeighbours(m_processRank)->print();
+    cout << "Neighbourlist coordinates: " << endl;
+    for (int i = 0; i < 4; i++) {
+        cout << m_neighbourLists->getProcessorDimensionPosition(i) << " ";
+    }
+    cout << endl;
+    MPI_Barrier(MPI_COMM_WORLD);
+    exit(0);
+    // ==========================================================================================
+
 }
 
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)

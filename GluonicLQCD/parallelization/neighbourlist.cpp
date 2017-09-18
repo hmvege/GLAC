@@ -20,7 +20,7 @@ NeighbourList:: NeighbourList()
 
 NeighbourList::~NeighbourList()
 {
-    cout << "DELETING" << endl;
+    cout << "DELETING!!!" << endl;
     delete [] list;
 }
 
