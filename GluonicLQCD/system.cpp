@@ -219,15 +219,31 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    loadFieldConfiguration("../output/config3.bin");
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    double corr = m_correlator->calculate(m_lattice);
-//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//    corr /= double(m_numprocs);
-//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    exit(1);
+    MPI_Barrier(MPI_COMM_WORLD);
+    loadFieldConfiguration("../output/config3.bin");
+    MPI_Barrier(MPI_COMM_WORLD);
+    double corr = m_correlator->calculate(m_lattice);
+    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    corr /= double(m_numprocs);
+    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+    MPI_Barrier(MPI_COMM_WORLD);
+    if (m_processRank == 0) m_lattice[0].U[0].print();
+    if (m_processRank == 15) m_lattice[m_subLatticeSize-1].U[3].print();
+    for (int i = 0; i < m_subLatticeSize; i++) {
+        for (int j = 0; j < 4; j++) {
+            for (int k = 0; k < 9; k++) {
+                if ((fabs(m_lattice[i].U[j].mat[k].re() - 0.472453) < 1e-10) || (fabs(m_lattice[i].U[j].mat[k].im() - 0.472453) < 1e-10))
+                    cout << "matching element at position: " << i << endl;
+            }
+        }
+    }
+    /*
+     * PARA CONFIG 0
+       0.783843 - 0.531915i      0.0821734 - 0.027753i     -0.0843221 + 0.296687i
+      -0.108416 - 0.0502368i       0.932431 + 0.304803i      -0.135058 - 0.0717626i
+       0.155966 + 0.253088i       0.168083 + 0.0435185i       0.903312 + 0.255937i
+     * */
+    exit(1);
     // Variables for checking performance of the update.
     clock_t preUpdate, postUpdate;
     double updateStorer = 0;
@@ -424,7 +440,6 @@ void System::writeConfigurationToFile(int configNumber)
     }
 
     MPI_File_close(&file);
-    if (m_processRank == 0) m_lattice[0].U[0].print();
     if (m_processRank == 0) cout << filename << " written." << endl;
     if (m_processRank == 0) cout << "Configuration number " << configNumber << " written to file." << endl;
 }
@@ -455,7 +470,6 @@ void System::loadFieldConfiguration(std::string filename)
     }
 
     MPI_File_close(&file);
-    if (m_processRank == 0) m_lattice[0].U[0].print();
     if (m_processRank == 0) cout << "Configuration "<< filename << " loaded." << endl;
 
 //    // IMPLEMENT LOAD FROM FILE FOR LATTICE HERE
