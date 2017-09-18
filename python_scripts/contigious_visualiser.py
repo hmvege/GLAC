@@ -327,6 +327,8 @@ def main():
 	scalarIndexes = np.asarray([i[1] for i in lattice.memory_position_string])
 	scalarLocations = np.asarray([i[0] for i in lattice.memory_position_string])
 
+	scalarVersionIndices = np.loadtxt("indexes_scalar.txt",usecols=(1,2,3,4,6),dtype=int)
+
 	# Sorting positions
 	mega_list = zip(parallelIndexes,parallelLocations,[i[-1] for i in sublattice.memory_position_string])
 	mega_array = np.asarray(sorted(mega_list,key=lambda i: itemgetter(0)(i)[::-1])) # Sorting the index ordering
@@ -351,6 +353,12 @@ def main():
 		print "Success: Equal memory positions."
 	else:
 		print "Failure: Not equal memory positions."
+
+	# Comparing memory locations to the parallel and scalar branch of program
+	if sum([True if i==j else False for i,j in zip(scalarVersionIndices[:,-1], mega_array[:,1])]) == len(mega_array[:,1]):
+		print "Success: Equal memory positions."
+	else:
+		print "Failure: Not equal memory positions."		
 
 if __name__ == '__main__':
 	main()
