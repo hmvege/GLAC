@@ -122,6 +122,7 @@ void System::update()
 void System::runMetropolis(bool storePreObservables)
 {
     loadFieldConfiguration("config3.bin");
+//    loadFieldConfiguration("configs_profiling_run_beta6.000000_config0.bin");
     m_lattice[0].U[0].print();
     m_lattice[8*8*8*8-1].U[3].print();
 //    m_lattice[0].U[2].print();
@@ -283,31 +284,31 @@ void System::loadFieldConfiguration(std::string filename)
     file = fopen((m_outputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
 //    file = fopen((m_inputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
 
-    for (int t = 0; t < m_N_T; t++) {
-        for (int z = 0; z < m_N; z++) {
-            for (int y = 0; y < m_N; y++) {
-                for (int x = 0; x < m_N; x++) {
-//                    cout << "Index: " << x << " " << y << " " << z << " " << t << " Mem.pos.: " << index(x,y,z,t,m_N,m_N_T) << endl;
-                    fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)],sizeof(Links),1,file);
-                    if (feof(file)) exit(0);
-                }
-            }
-        }
-    }
-
-//    for (int x = 0; x < m_N; x++) {
-//        for (int y = 0; y < m_N; y++) {
-//            for (int z = 0; z < m_N; z++) {
-//                for (int t = 0; t < m_N_T; t++) {
-//                    for (int mu = 4; mu > 0; mu--) {
+//    for (int t = 0; t < m_N_T; t++) {
+//        for (int z = 0; z < m_N; z++) {
+//            for (int y = 0; y < m_N; y++) {
+//                for (int x = 0; x < m_N; x++) {
 ////                    cout << "Index: " << x << " " << y << " " << z << " " << t << " Mem.pos.: " << index(x,y,z,t,m_N,m_N_T) << endl;
-//                    fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)].U[mu],sizeof(SU3),1,file);
+//                    fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)],sizeof(Links),1,file);
 //                    if (feof(file)) exit(0);
-//                    }
 //                }
 //            }
 //        }
 //    }
+
+    for (int x = m_N - 1; x >= 0; x--) {
+        for (int y = m_N - 1; y >= 0; y--) {
+            for (int z = m_N - 1; z >= 0; z--) {
+                for (int t = m_N_T - 1; t >= 0; t--) {
+                    for (int mu = 3; mu >= 0; mu--) {
+//                    cout << "Index: " << x << " " << y << " " << z << " " << t << " Mem.pos.: " << index(x,y,z,t,m_N,m_N_T) << endl;
+                    fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)].U[mu],sizeof(SU3),1,file);
+                    if (feof(file)) exit(0);
+                    }
+                }
+            }
+        }
+    }
 
     fclose(file);
     cout << m_outputFolder + filename  + " loaded" << endl;
