@@ -32,11 +32,12 @@ class Lattice:
 		if type(N) != list: raise ValueError("Dimension to be passed as elements in a list.")
 		self.N = N
 
-	def printLattice(self,reversed=False):
+	def printLattice(self,reversed=False,storeInFile=True):
 		# Redirecting output
-		orig_stdout = sys.stdout
-		f = open('lattice.txt', 'w')
-		sys.stdout = f
+		if storeInFile:
+			orig_stdout = sys.stdout
+			f = open('lattice.txt', 'w')
+			sys.stdout = f
 
 		n = Index(self.N)
 		memory_position_string = []
@@ -80,8 +81,9 @@ class Lattice:
 				print "\n",
 		
 		# Closing output file
-		sys.stdout = orig_stdout
-		f.close()
+		if storeInFile:
+			sys.stdout = orig_stdout
+			f.close()
 
 		# Storing memory string
 		self.memory_position_string = memory_position_string
@@ -163,11 +165,12 @@ class SubLattice:
 		print "Volumes of processsors(self.VProc): ", self.VProc
 		# print "Processor coordinates: \n",self.processor_coordinates
 
-	def printTotalLattice(self):
+	def printTotalLattice(self,storeInFile=True):
 		# Redirecting output
-		orig_stdout = sys.stdout
-		f = open('all_sub_lattices.txt', 'w')
-		sys.stdout = f
+		if storeInFile:
+			orig_stdout = sys.stdout
+			f = open('all_sub_lattices.txt', 'w')
+			sys.stdout = f
 
 		memory_position_string = [] # This can be compared later with the scalar version. If they are equal, the methods are working and the bug is not due to wrong memory placement.
 		value_position_string = []
@@ -205,17 +208,20 @@ class SubLattice:
 					print "\n",
 				print "\n",
 
-		sys.stdout = orig_stdout
-		f.close()
+		if storeInFile:
+			sys.stdout = orig_stdout
+			f.close()
+
 		self.memory_position_string = memory_position_string
 		self.value_position_string = value_position_string
 
 
-	def printSubLattice(self, reversed = False):
+	def printSubLattice(self, reversed = False, storeInFile = True):
 		# Redirecting output
-		orig_stdout = sys.stdout
-		f = open('sublattice.txt', 'w')
-		sys.stdout = f
+		if storeInFile:
+			orig_stdout = sys.stdout
+			f = open('sublattice.txt', 'w')
+			sys.stdout = f
 
 		for processor in range(self.numprocs):
 			print "Processor: ", processor
@@ -256,8 +262,9 @@ class SubLattice:
 						print "\n",
 					print "\n",
 
-		sys.stdout = orig_stdout
-		f.close()
+		if storeInFile:
+			sys.stdout = orig_stdout
+			f.close()
 
 
 def old_index_test(N=3):
@@ -305,22 +312,23 @@ def main():
 	# new_index_test([3,3,3])
 	dimensions = [8,8,8,8]
 	numprocs = 8
+	storeOutput = True
 	lattice = Lattice(dimensions)
-	lattice.printLattice(True)
+	lattice.printLattice(True, storeInFile = storeOutput)
 	sublattice = SubLattice(dimensions,numprocs)
-	# sublattice.printSubLattice()
-	sublattice.printTotalLattice()
+	# sublattice.printSubLattice(storeInFile = storeOutput)
+	sublattice.printTotalLattice(storeInFile = storeOutput)
 	
 	max_index = np.prod(dimensions)
-	index_ceiling = max_index
+	index_ceiling = max_index/128
 
-	parallelIndexes = np.asarray([i[1] for i in sublattice.memory_position_string])
+	parallelIndexes = [i[1] for i in sublattice.memory_position_string]
 	parallelLocations = np.asarray([i[0] for i in sublattice.memory_position_string])
 	scalarIndexes = np.asarray([i[1] for i in lattice.memory_position_string])
 	scalarLocations = np.asarray([i[0] for i in lattice.memory_position_string])
 
 	# Sorting positions
-	mega_list = zip([i[1] for i in sublattice.memory_position_string],parallelLocations,[i[-1] for i in sublattice.memory_position_string])
+	mega_list = zip(parallelIndexes,parallelLocations,[i[-1] for i in sublattice.memory_position_string])
 	mega_array = np.asarray(sorted(mega_list,key=lambda i: itemgetter(0)(i)[::-1])) # Sorting the index ordering
 
 	for i,P,parallelIndex,x,scalarIndex,y in zip(	range(index_ceiling),
@@ -329,7 +337,7 @@ def main():
 												mega_array[:,1], # Parallel mem loc
 												scalarIndexes[:index_ceiling], # Scalar index
 												scalarLocations[:index_ceiling]): # Scalar mem loc
-		print "%3d:   Parallel(P:%4d xyzt index: %s): %4d  ||  Scalar(xyzt index: %s: %4d" % (i,P,parallelIndex,x,scalarIndex,y)
+		print "%4d:   Parallel(P:%4d xyzt index: %s): %4d  ||  Scalar(xyzt index: %s: %4d" % (i,P,parallelIndex,x,scalarIndex,y)
 
 	bool_sums_equal = sum(parallelLocations) == sum(scalarLocations)
 	bool_elements_equal = (sum([True if i in scalarLocations else False for i in parallelLocations]) == len(sublattice.memory_position_string))
