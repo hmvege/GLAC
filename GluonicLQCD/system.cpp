@@ -147,12 +147,13 @@ void System::subLatticeSetup()
     MPI_Barrier(MPI_COMM_WORLD);
     cout << "Printing neighbours for " << m_processRank << endl;
     m_neighbourLists->getNeighbours(m_processRank)->print();
-    cout << "Neighbourlist coordinates: " << endl;
+    cout << "Neighbourlist coordinates for P = " << m_processRank << " is: ";
     for (int i = 0; i < 4; i++) {
         cout << m_neighbourLists->getProcessorDimensionPosition(i) << " ";
     }
     cout << endl;
     MPI_Barrier(MPI_COMM_WORLD);
+    if (m_processRank == 0) cout << "Exits at neighbour lists" << endl;
     exit(0);
     // ==========================================================================================
 
