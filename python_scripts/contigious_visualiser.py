@@ -7,15 +7,17 @@ class Index: # General method for getting contiguous memory allocation
 		self.N_length = len(N)
 		
 	def __call__(self,indices):
-		if len(indices) != self.N_length:
-			raise ValueError("Number of indices %d do not correspond with number of dimensions %d." % (len(indices),self.N_length))
-		return self.N[3]*(self.N[2]*(self.N[1]*indices[0] + indices[1]) + indices[2]) + indices[3]
-		offset = int(0);
-		for i in range(self.N_length):
-			prod = 1
-			for j in range(i+1,self.N_length):
-				prod *= self.N[j]
-			offset += indices[i]*prod
+		# if len(indices) != self.N_length:
+		# 	raise ValueError("Number of indices %d do not correspond with number of dimensions %d." % (len(indices),self.N_length))
+		# return self.N[3]*(self.N[2]*(self.N[1]*indices[0] + indices[1]) + indices[2]) + indices[3]
+		# offset = int(0);
+		# for i in range(self.N_length):
+		# 	prod = 1
+		# 	for j in range(i+1,self.N_length):
+		# 		prod *= self.N[j]
+		# 	offset += indices[i]*prod
+
+		offset = self.N[3]*(self.N[2]*(self.N[1]*indices[0] + indices[1]) + indices[2]) + indices[3]
 		return offset
 
 class IndexOld: # Old method
@@ -107,6 +109,11 @@ class SubLattice:
 				self.NSub[i] /= 2;
 				restProc /= 2;
 				if (restProc < 2): break
+		
+		for dim in self.NSub: # Error checking
+			if dim <= 2:
+				print "Error: sublattice dimension less than 2:", self.NSub
+				exit(1)
 
 		# Sets up processors per dimension
 		self.procsPerDim = []
@@ -114,29 +121,12 @@ class SubLattice:
 			self.procsPerDim.append(self.N[i] / self.NSub[i])
 
 		# Sets up the volumes
-		self.V, self.VSub, self.VProc, = [],[],[]
-		self.V.append(self.N[0])
-		self.VSub.append(self.NSub[0])
-		self.VProc.append(self.procsPerDim[0])
-		for i in range(3):
-			self.V.append(self.N[i]*self.V[-1])
-			self.VSub.append(self.NSub[i]*self.VSub[-1])
-			self.VProc.append(self.procsPerDim[i]*self.VProc[-1])
-
-		# Map for 2^4 processors
-		# t=0, z = 0
-		#  0  1 # y = 0
-		#  2  3 # y = 1
-		# z = 1
-		#  4  5 # y = 0
-		#  6  7 # y = 1
-
-		# t = 1, z = 0
-		#  8  9 # y = 0
-		# 10 11 # y = 1
-		# z = 1
-		# 12 13 # y = 0
-		# 14 15 # y = 1
+		self.VSub = [self.NSub[0], self.NSub[1]*self.NSub[0],self.NSub[2]*self.NSub[1]*self.NSub[0],self.NSub[3]*self.NSub[2]*self.NSub[1]*self.NSub[0]]
+		self.V = [self.N[0], self.N[0]*self.N[1], self.N[0]*self.N[1]*self.N[2], self.N[0]*self.N[1]*self.N[2]*self.N[3]]
+		self.VProc = [	self.procsPerDim[0], 
+						self.procsPerDim[0]*self.procsPerDim[1],
+						self.procsPerDim[0]*self.procsPerDim[1]*self.procsPerDim[2],
+						self.procsPerDim[0]*self.procsPerDim[1]*self.procsPerDim[2]*self.procsPerDim[3]]
 
 		# Sets up processor positions in the lattice
 		self.processor_coordinates = []
@@ -174,32 +164,34 @@ class SubLattice:
 			sys.stdout = f
 
 		memory_position_string = [] # This can be compared later with the scalar version. If they are equal, the methods are working and the bug is not due to wrong memory placement.
-		value_position_string = []
 		x_offset, y_offset, z_offset, t_offset = 0,0,0,0
 
 		for processor in range(self.numprocs):
 			str_processor =  "Processor: %2d" % processor
 			print str_processor
 			msg = "TZYX order"
-			scr_len = len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.indexSub([1,1,1,1])))*self.NSub[0]+self.NSub[0]
-			str_len = ((len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.indexSub([1,1,1,1])))*self.NSub[0]+1) - len(msg))/2
+			scr_len = len("[%4d,%4d,%4d,%4d = %5d]" % (0,0,0,0,self.indexSub([1,1,1,1])))*self.NSub[0]+self.NSub[0]
+			str_len = ((len("[%4d,%4d,%4d,%4d = %5d]" % (0,0,0,0,self.indexSub([1,1,1,1])))*self.NSub[0]+1) - len(msg))/2
 			str_header = "="*str_len + msg + "="*(str_len+1)
 			print str_header
 
 			for t in xrange(self.NSub[3]):
 				t_offset = (self.processor_coordinates[processor][3] * self.NSub[3] + t)
+				# t_offset = self.V[2] * (self.processor_coordinates[processor][3] * self.NSub[3] + t)
 				str_t_cord = "T = %d," % t
 				print str_t_cord,
 				for z in xrange(self.NSub[2]):
 					z_offset = self.V[0] * (self.processor_coordinates[processor][2] * self.NSub[2] + z) + t_offset
+					# z_offset = self.V[1] * (self.processor_coordinates[processor][2] * self.NSub[2] + z) + t_offset
 					str_z_cord = "Z = %d" % z
 					print str_z_cord
 					for y in xrange(self.NSub[1]):
 						y_offset = self.V[1] * (self.processor_coordinates[processor][1] * self.NSub[1] + y) + z_offset
+						# y_offset = self.V[0] * (self.processor_coordinates[processor][1] * self.NSub[1] + y) + z_offset
 						for x in xrange(self.NSub[0]):
 							x_offset = self.V[2] * (self.processor_coordinates[processor][0] * self.NSub[0] + x) + y_offset
+							# x_offset = (self.processor_coordinates[processor][0] * self.NSub[0] + x) + y_offset
 							memory_position_string.append([x_offset,(x+self.NSub[0]*self.processor_coordinates[processor][0],y+self.NSub[1]*self.processor_coordinates[processor][1],z+self.NSub[2]*self.processor_coordinates[processor][2],t+self.NSub[3]*self.processor_coordinates[processor][3]),processor])
-							value_position_string.append(self.indexTot([x,y,z,t]))
 
 							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1][0]) # Memory positions
 							print print_string,
@@ -214,7 +206,6 @@ class SubLattice:
 			f.close()
 
 		self.memory_position_string = memory_position_string
-		self.value_position_string = value_position_string
 
 
 	def printSubLattice(self, reversed = False, storeInFile = True):
@@ -267,68 +258,26 @@ class SubLattice:
 			sys.stdout = orig_stdout
 			f.close()
 
-
-def old_index_test(N=3):
-	print "Old index test"
-	n = IndexOld(N,N,N)
-	M = np.zeros((N,N,N,3),dtype=tuple)
-	for i in xrange(N):
-		for j in xrange(N):
-			for k in xrange(N):
-				M[i,j,k] = (i,j,k)
-				# print n(i,j,k)
-	
-	for i in xrange(N): # X
-		for j in xrange(N): # Y
-			print "[",
-			for k in xrange(N): # Z
-				print "%d %d %d: n=%2d" % (M[i,j,k][0],M[i,j,k][1],M[i,j,k][2],n(i,j,k)),
-				if k < N-1: print ",",
-			print "]\n",
-		print ""
-
-def new_index_test(N):
-	if type(N) != list: raise TypeError("Please provide a list of dimension sizes.")
-	print "New index test"
-	n = Index(N)
-	M = np.zeros((N[0],N[1],N[2],3),dtype=tuple)
-	for i in xrange(N[0]):
-		for j in xrange(N[1]):
-			for k in xrange(N[2]):
-				M[i,j,k] = (i,j,k)
-				# print n(i,j,k)
-	
-	for i in xrange(N[0]): # X
-		for j in xrange(N[1]): # Y
-			print "[",
-			for k in xrange(N[2]): # Z
-				print "%d %d %d: n=%2d" % (M[i,j,k][0],M[i,j,k][1],M[i,j,k][2],n([i,j,k])),
-				if k < N[2]-1: print ",",
-			print "]\n",
-		print ""
-
-
 def main():
-	# old_index_test()
-	# new_index_test([3,3,3])
-	dimensions = [4,4,4,4]; dimensions = map(lambda x: 2*x, dimensions)
-	numprocs = 32
+	# CONSTANTS
+	dimensions = [2,2,2,4]
+	dimensions = map(lambda x: 4*x, dimensions)
+	numprocs = 16
 	storeOutput = True
+	max_index = np.prod(dimensions)
+	index_ceiling = max_index
+
 	lattice = Lattice(dimensions)
 	lattice.printLattice(True, storeInFile = storeOutput)
 	sublattice = SubLattice(dimensions,numprocs)
 	# sublattice.printSubLattice(storeInFile = storeOutput)
 	sublattice.printTotalLattice(storeInFile = storeOutput)
 	
-	max_index = np.prod(dimensions)
-	index_ceiling = max_index/128
 
 	parallelIndexes = [i[1] for i in sublattice.memory_position_string]
 	parallelLocations = np.asarray([i[0] for i in sublattice.memory_position_string])
 	scalarIndexes = np.asarray([i[1] for i in lattice.memory_position_string])
 	scalarLocations = np.asarray([i[0] for i in lattice.memory_position_string])
-
-	scalarVersionIndices = np.loadtxt("indexes_scalar.txt",usecols=(1,2,3,4,6),dtype=int)
 
 	# Sorting positions
 	mega_list = zip(parallelIndexes,parallelLocations,[i[-1] for i in sublattice.memory_position_string])
@@ -340,7 +289,7 @@ def main():
 												mega_array[:,0], # Parallel index
 												mega_array[:,1], # Parallel mem loc
 												scalarIndexes[:index_ceiling], # Scalar index
-												scalarLocations[:index_ceiling]): # Scalar mem loc
+												scalarLocations[:index_ceiling]): # Scalar memloc
 		print "%4d:   Parallel(P:%4d xyzt index: %s): %4d  ||  Scalar(xyzt index: %s: %4d" % (i,P,parallelIndex,x,scalarIndex,y)
 
 	bool_sums_equal = sum(parallelLocations) == sum(scalarLocations)
@@ -356,11 +305,13 @@ def main():
 	else:
 		print "Failure: Not equal memory positions."
 
-	# Comparing memory locations to the parallel and scalar branch of program
-	if sum([True if i==j else False for i,j in zip(scalarVersionIndices[:,-1], mega_array[:,1])]) == len(mega_array[:,1]):
-		print "Success: Equal memory positions."
-	else:
-		print "Failure: Not equal memory positions."		
+	if (sum(dimensions) == 32):
+		# Comparing memory locations to the parallel and scalar branch of program run on a 8**4 lattice
+		scalarVersionIndices = np.loadtxt("indexes_scalar.txt",usecols=(1,2,3,4,6),dtype=int) # Only for 8**4 lattice
+		if sum([True if i==j else False for i,j in zip(scalarVersionIndices[:,-1], mega_array[:,1])]) == len(mega_array[:,1]):
+			print "Success: Equal memory positions."
+		else:
+			print "Failure: Not equal memory positions."
 
 if __name__ == '__main__':
 	main()

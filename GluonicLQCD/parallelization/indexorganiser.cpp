@@ -143,7 +143,8 @@ int IndexOrganiser::getIndex(int i, int j, int k, int l)
      *  l   : t position
      */
     return (m_N[3]*(m_N[2]*(m_N[1]*i + j) + k) + l); // OLD
-//    return (m_N[2]*(m_N[1]*(m_N[0]*j + i) + k) + l); // NEW
+//    return l + m_N[3]*(k + m_N[2]*(j + m_N[1]*i)); // same as old
+//    return (m_N[2]*(m_N[1]*(m_N[0]*j + i) + k) + l); // NEW, correct?!
 }
 
 void IndexOrganiser::setN(int *N)

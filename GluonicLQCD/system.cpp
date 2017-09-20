@@ -104,6 +104,21 @@ void System::subLatticeSetup()
     }
     m_lattice = new Links[m_subLatticeSize];
 
+    // If has a size of 2, we exit as that may produce poor results.
+    for (int i = 0; i < 4; i++) {
+        if (m_N[i] <= 2) {
+            if (m_processRank == 0) {
+                cout << "Error: bad sub lattice size: ";
+                for (int j = 0; j < 4; j++) {
+                    cout << m_N[j] << " ";
+                }
+                cout << " --> exiting."<< endl;
+            }
+            MPI_Barrier(MPI_COMM_WORLD);
+            exit(0);
+        }
+    }
+
     // Sets up number of processors per dimension
     for (int i = 0; i < 3; i++) {
         m_processorsPerDimension[i] = m_NSpatial / m_N[i];
