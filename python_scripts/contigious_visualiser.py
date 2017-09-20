@@ -39,14 +39,14 @@ class Lattice:
 			f = open('lattice.txt', 'w')
 			sys.stdout = f
 
-		n = Index(self.N)
+		index = Index(self.N)
 		memory_position_string = []
 		if not reversed:
 			msg = "XYZT order"
 		else:
 			msg = "TZYX order"
-		scr_len = len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,n([0,0,0,0])))*4+4
-		str_len = ((len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,n([0,0,0,0])))*4+3) - len(msg))/2
+		scr_len = len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,index([0,0,0,0])))*4+4
+		str_len = ((len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,index([0,0,0,0])))*4+3) - len(msg))/2
 		print "="*str_len + msg + "="*(str_len+1)
 
 		if not reversed:
@@ -56,7 +56,7 @@ class Lattice:
 					print "Y = %d" % y
 					for z in xrange(self.N[2]):
 						for t in xrange(self.N[3]):
-							memory_position_string.append([n([x,y,z,t]),(x,y,z,t)])
+							memory_position_string.append([index([x,y,z,t]),(x,y,z,t)])
 							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1][0])
 							print print_string,
 						if ((x+1)%(self.N[0]) == 0 and (y+1)%(self.N[1]) == 0 and (z+1)%(self.N[2]) == 0 and (t+1)%(self.N[3]) == 0):
@@ -71,7 +71,7 @@ class Lattice:
 					print "Z = %d" % z
 					for y in xrange(self.N[1]):
 						for x in xrange(self.N[0]):
-							memory_position_string.append([n([x,y,z,t]),(x,y,z,t)])
+							memory_position_string.append([index([x,y,z,t]),(x,y,z,t)])
 							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1][0])
 							print print_string,
 						if ((x+1)%(self.N[0]) == 0 and (y+1)%(self.N[1]) == 0 and (z+1)%(self.N[2]) == 0 and (t+1)%(self.N[3]) == 0):
@@ -93,12 +93,13 @@ class Lattice:
 class SubLattice:
 	def __init__(self,N,numprocs):
 		if type(N) != list: raise ValueError("Dimension to be passed as elements in a list.")
-		self.N = [n for n in N]
+		self.N = [n for n in N] # Lattice dimensions
 		self.NSub = [n for n in N]
+
 		self.numprocs = numprocs
 		restProc = numprocs
-		self.nSub = Index(self.NSub)
-		self.n = Index(self.N)
+		self.indexSub = Index(self.NSub)
+		self.indexTot = Index(self.N)
 
 		# Sets up the sub-lattice dimensions
 		while restProc >= 2:
@@ -156,13 +157,13 @@ class SubLattice:
 		# 		print "Total volume: ", self.V[i]
 		# 	print "="*25,"\n"
 
-		print "Lattice dimensions(self.N): ", self.N
-		print "Volumes of lattice(self.V): ", self.V
-		print "Sub-lattice dimensions(self.NSub): ", self.NSub
-		print "Volumes of sub-lattice(self.VSub): ", self.VSub
-		print "Number of processsors(self.numprocs): ", self.numprocs
+		print "Lattice dimensions(self.N):                 ", self.N
+		print "Volumes of lattice(self.V):                 ", self.V
+		print "Sub-lattice dimensions(self.NSub):          ", self.NSub
+		print "Volumes of sub-lattice(self.VSub):          ", self.VSub
+		print "Number of processsors(self.numprocs):       ", self.numprocs
 		print "Processors per dimension(self.procsPerDim): ", self.procsPerDim
-		print "Volumes of processsors(self.VProc): ", self.VProc
+		print "Volumes of processsors(self.VProc):         ", self.VProc
 		# print "Processor coordinates: \n",self.processor_coordinates
 
 	def printTotalLattice(self,storeInFile=True):
@@ -180,8 +181,8 @@ class SubLattice:
 			str_processor =  "Processor: %2d" % processor
 			print str_processor
 			msg = "TZYX order"
-			scr_len = len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.nSub([1,1,1,1])))*self.NSub[0]+self.NSub[0]
-			str_len = ((len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.nSub([1,1,1,1])))*self.NSub[0]+1) - len(msg))/2
+			scr_len = len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.indexSub([1,1,1,1])))*self.NSub[0]+self.NSub[0]
+			str_len = ((len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.indexSub([1,1,1,1])))*self.NSub[0]+1) - len(msg))/2
 			str_header = "="*str_len + msg + "="*(str_len+1)
 			print str_header
 
@@ -198,7 +199,7 @@ class SubLattice:
 						for x in xrange(self.NSub[0]):
 							x_offset = self.V[2] * (self.processor_coordinates[processor][0] * self.NSub[0] + x) + y_offset
 							memory_position_string.append([x_offset,(x+self.NSub[0]*self.processor_coordinates[processor][0],y+self.NSub[1]*self.processor_coordinates[processor][1],z+self.NSub[2]*self.processor_coordinates[processor][2],t+self.NSub[3]*self.processor_coordinates[processor][3]),processor])
-							value_position_string.append(self.n([x,y,z,t]))
+							value_position_string.append(self.indexTot([x,y,z,t]))
 
 							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1][0]) # Memory positions
 							print print_string,
@@ -229,8 +230,8 @@ class SubLattice:
 				msg = "XYZT order"
 			else:
 				msg = "TZYX order"
-			scr_len = len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.nSub([0,0,0,0])))*self.NSub[0]+self.NSub[0]
-			str_len = ((len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.nSub([0,0,0,0])))*self.NSub[0]+1) - len(msg))/2
+			scr_len = len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.indexSub([0,0,0,0])))*self.NSub[0]+self.NSub[0]
+			str_len = ((len("[%d,%d,%d,%d = %3d]" % (0,0,0,0,self.indexSub([0,0,0,0])))*self.NSub[0]+1) - len(msg))/2
 			print "="*str_len + msg + "="*(str_len+1)
 
 			if not reversed:
@@ -240,7 +241,7 @@ class SubLattice:
 						print "Y = %d" % y
 						for z in xrange(self.NSub[2]):
 							for t in xrange(self.NSub[3]):
-								print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,self.nSub([x,y,z,t]))
+								print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,self.indexSub([x,y,z,t]))
 								print print_string,
 							if ((x+1)%(self.NSub[0]) == 0 and (y+1)%(self.NSub[1]) == 0 and (z+1)%(self.NSub[2]) == 0 and (t+1)%(self.NSub[3]) == 0):
 								print "\n","="*(scr_len-1)
@@ -254,7 +255,7 @@ class SubLattice:
 						print "Z = %d" % z
 						for y in xrange(self.NSub[1]):
 							for x in xrange(self.NSub[0]):
-								print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,self.nSub([x,y,z,t]))
+								print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,self.indexSub([x,y,z,t]))
 								print print_string,
 							if ((x+1)%(self.NSub[0]) == 0 and (y+1)%(self.NSub[1]) == 0 and (z+1)%(self.NSub[2]) == 0 and (t+1)%(self.NSub[3]) == 0):
 								print "\n","="*(scr_len-1)
@@ -310,8 +311,8 @@ def new_index_test(N):
 def main():
 	# old_index_test()
 	# new_index_test([3,3,3])
-	dimensions = [8,8,8,8]
-	numprocs = 8
+	dimensions = [4,4,4,4]; dimensions = map(lambda x: 2*x, dimensions)
+	numprocs = 32
 	storeOutput = True
 	lattice = Lattice(dimensions)
 	lattice.printLattice(True, storeInFile = storeOutput)
@@ -333,6 +334,7 @@ def main():
 	mega_list = zip(parallelIndexes,parallelLocations,[i[-1] for i in sublattice.memory_position_string])
 	mega_array = np.asarray(sorted(mega_list,key=lambda i: itemgetter(0)(i)[::-1])) # Sorting the index ordering
 
+	print "Printing the parallel and scalar memory positions: "
 	for i,P,parallelIndex,x,scalarIndex,y in zip(	range(index_ceiling),
 												mega_array[:,-1], # Processor who performed calculation
 												mega_array[:,0], # Parallel index

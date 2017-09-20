@@ -130,43 +130,51 @@ SU3 SU3MatrixGenerator::generateIdentity()
 
 SU2 SU3MatrixGenerator::generateSU2()
 {
-    SU2 U;
-    double r[4];
-    double x[4];
-    double rNorm = 0;
+//    SU2 U;
+//    double _r[4];
+//    double _x[4];
+//    double _rNorm = 0;
+    U.zeros();
+    _rNorm = 0;
     // Generating 4 r random numbers
     for (int i = 0; i < 4; i++) {
-        r[i] = SU2_uniform_distribution(generator);
+        _r[i] = SU2_uniform_distribution(generator);
     }
     // Populating the x-vector
-    if (r[0] < 0) {
-        x[0] = - sqrt(1 - epsilon*epsilon);
+    if (_r[0] < 0) {
+        _x[0] = - sqrt(1 - epsilon*epsilon);
     }
     else {
-        x[0] = sqrt(1 - epsilon*epsilon);
+        _x[0] = sqrt(1 - epsilon*epsilon);
     }
-    for (int i = 0; i < 3; i++) {
-        rNorm += r[i+1]*r[i+1];
+//    for (int i = 0; i < 3; i++) {
+//        _rNorm += _r[i+1]*_r[i+1];
+//    }
+    for (int i = 1; i < 4; i++) {
+        _rNorm += _r[i]*_r[i];
     }
-    rNorm = sqrt(rNorm);
-    for (int i = 0; i < 3; i++) {
-        x[i+1] = epsilon*r[i+1]/rNorm;
+    _rNorm = sqrt(_rNorm);
+//    for (int i = 0; i < 3; i++) {
+//        _x[i+1] = epsilon*_r[i+1]/_rNorm;
+//    }
+    for (int i = 1; i < 4; i++) {
+        _x[i] = epsilon*_r[i]/_rNorm;
     }
     // Imposing unity
-    rNorm = 0;
+    _rNorm = 0;
     for (int i = 0; i < 4; i++) {
-        rNorm += x[i]*x[i];
+        _rNorm += _x[i]*_x[i];
     }
-    rNorm = sqrt(rNorm);
+    _rNorm = sqrt(_rNorm);
     for (int i = 0; i < 4; i++) {
-        x[i] /= rNorm;
+        _x[i] /= _rNorm;
     }
     // Generating the SU2 matrix close to unity
-    U += su2Identity*x[0];
+    U += su2Identity*_x[0];
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 4; j++) {
-            U.mat[j].setRe(U.mat[j].re() - x[i+1]*sigma[i].mat[j].im());
-            U.mat[j].setIm(U.mat[j].im() + x[i+1]*sigma[i].mat[j].re());
+            U.mat[j].setRe(U.mat[j].re() - _x[i+1]*sigma[i].mat[j].im());
+            U.mat[j].setIm(U.mat[j].im() + _x[i+1]*sigma[i].mat[j].re());
         }
     }
     return U;
@@ -192,6 +200,9 @@ SU3 SU3MatrixGenerator::generateRST()
     s = generateSU2();
     t = generateSU2();
     // Populates R,S,T matrices
+    R.identity();
+    S.identity();
+    T.identity();
     R.mat[0] = r.mat[0];
     R.mat[1] = r.mat[1];
     R.mat[3] = r.mat[2];

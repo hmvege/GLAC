@@ -20,6 +20,12 @@ private:
     SU3 X, R, S, T;
     SU2 r,s,t;
 
+    // Used for generating SU2 matrices
+    SU2 U;
+    double _r[4];
+    double _x[4];
+    double _rNorm = 0;
+
     SU2 *sigma;
 //    SU2 sigma1, sigma2, sigma3, su2Identity;
     SU2 su2Identity;

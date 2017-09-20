@@ -35,13 +35,13 @@ double Plaquette::calculate(Links *lattice)
         for (int j = 0; j < m_N[1]; j++) {
             for (int k = 0; k < m_N[2]; k++) {
                 for (int l = 0; l < m_N[3]; l++) {
+                    indexes[0] = i;
+                    indexes[1] = j;
+                    indexes[2] = k;
+                    indexes[3] = l;
                     for (int mu = 0; mu < 4; mu++) {
                         lorentzIndex(mu,muIndex); // Saves quite a few flops by not figuring out the mu index every time
                         for (int nu = mu+1; nu < 4; nu++) {
-                            indexes[0] = i;
-                            indexes[1] = j;
-                            indexes[2] = k;
-                            indexes[3] = l;
                             lorentzIndex(nu,nuIndex);
 //                            P += lattice[stapleIndex(i,j,k,l,m_N)].U[mu]
 //                                    *lattice[stapleIndex(i+muIndex[0],j+muIndex[1],k+muIndex[2],l+muIndex[3],m_N)].U[nu]
@@ -65,10 +65,10 @@ double Plaquette::calculate(Links *lattice)
             }
         }
     }
-    for (int i = 0; i < 3; i++)
-    {
-        gamma += P.mat[i*3+i].re();
-    }
-//    return (P.mat[0].re() + P.mat[4].re() + P.mat[8].re())/multiplicationFactor; // 3 from SU3, 6 from number of plaquettes, 3*6=18
-    return gamma/multiplicationFactor; // 3 from SU3, 6 from number of plaquettes, 3*6=18
+//    for (int i = 0; i < 3; i++)
+//    {
+//        gamma += P.mat[i*3+i].re();
+//    }
+//    return gamma/multiplicationFactor; // 3 from SU3, 6 from number of plaquettes, 3*6=18
+    return (P.mat[0].re() + P.mat[4].re() + P.mat[8].re())/multiplicationFactor; // 3 from SU3, 6 from number of plaquettes, 3*6=18
 }

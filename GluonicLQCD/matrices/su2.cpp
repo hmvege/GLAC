@@ -112,6 +112,18 @@ void SU2::zeros()
     }
 }
 
+void SU2::identity()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        mat[i].setIm(0);
+    }
+    mat[0].setRe(1);
+    mat[1].setRe(0);
+    mat[2].setRe(0);
+    mat[3].setRe(1);
+}
+
 void SU2::print()
 {
     /*

@@ -5,6 +5,11 @@
 #include <mpi.h>
 #include <vector>
 
+// TEMP TESTS
+#include <iostream>
+using std::cout;
+using std::endl;
+
 IndexOrganiser::IndexOrganiser(int processRank) : m_processRank(processRank)
 {
     /*
@@ -137,8 +142,8 @@ int IndexOrganiser::getIndex(int i, int j, int k, int l)
      *  k   : z position
      *  l   : t position
      */
-//    return (m_N[3]*(m_N[2]*(m_N[1]*i + j) + k) + l);
-    return (m_N[2]*(m_N[1]*(m_N[0]*j + i) + k) + l);
+    return (m_N[3]*(m_N[2]*(m_N[1]*i + j) + k) + l); // OLD
+//    return (m_N[2]*(m_N[1]*(m_N[0]*j + i) + k) + l); // NEW
 }
 
 void IndexOrganiser::setN(int *N)
@@ -150,5 +155,12 @@ void IndexOrganiser::setN(int *N)
      */
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];
+    }
+    if (m_processRank == 0) {
+        cout << "Setting the sub lattice size in indexOrganizer: ";
+        for (int i = 0; i < 4; i++) {
+            cout << m_N[i];
+        }
+        cout << endl;
     }
 }

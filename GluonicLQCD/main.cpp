@@ -47,7 +47,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Constants by default initialization
     int N           = 8;            // Spatial lattice points.
     int N_T         = 8;            // Temporal lattice points.
-    int NTherm      = 10;           // Thermalization.
+    int NTherm      = 200;           // Thermalization.
     int NCor        = 1;            // Correlation updates.
     int NCf         = 20;           // Number of configurations to generate.
     int NUpdates    = 10;           // Number of link updates before moving on.
@@ -65,13 +65,13 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     if (numberOfArguments > 2) { // Time dimension.
         N_T         = atoi(cmdLineArguments[3]);
     }
-    if (numberOfArguments > 3) { // Number of times we will thermalize.
+    if (numberOfArguments > 3) { // Number of times we will thermalize. In production runs this should be around 2000,
         NTherm      = atoi(cmdLineArguments[4]);
     }
     if (numberOfArguments > 4) { // Only keeping every 20th path. In production runs this will be 200.
         NCor        = atoi(cmdLineArguments[5]);
     }
-    if (numberOfArguments > 5) { // Number of field configurations that will be generated.
+    if (numberOfArguments > 5) { // Number of field configurations that will be generated. In production runs, this should be around 1000 for the smallest, 500 for the others.
         NCf         = atoi(cmdLineArguments[6]);
     }
     if (numberOfArguments > 6) { // Number of times a link will be updated. Because of the 10% acceptance ratio, 10 times means about 1 update.

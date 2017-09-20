@@ -13,6 +13,7 @@ public:
     void print();
     void copy(SU2 B);
     void zeros();
+    void identity();
 
     // Matrix operations
     void transpose();
