@@ -78,7 +78,7 @@ void System::subLatticeSetup()
         exit(1);
     }
     else if (m_numprocs % 16 != 0) {
-        if (m_processRank == 0) cout << "Warning: running for an number of prosessors may slow down performance." << endl;
+        if (m_processRank == 0) cout << "Warning: running for an number of prosessors not divisible by 16 may slow down performance due to the geometry of the lattice." << endl;
     }
     int restProc = m_numprocs;
 
@@ -137,24 +137,23 @@ void System::subLatticeSetup()
     m_V[3] = m_NSpatial*m_NSpatial*m_NSpatial*m_NTemporal; // XYZT volume
 
     // TESTS ====================================================================================
-    if (m_processRank == 0) {
-        cout << "Processsors per dimension: " << endl;
-        for (int i = 0; i < 4; i++) {
-            cout << m_processorsPerDimension[i] << " ";
-        }
-        cout << endl;
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
-    cout << "Printing neighbours for " << m_processRank << endl;
-    m_neighbourLists->getNeighbours(m_processRank)->print();
-    cout << "Neighbourlist coordinates for P = " << m_processRank << " is: ";
-    for (int i = 0; i < 4; i++) {
-        cout << m_neighbourLists->getProcessorDimensionPosition(i) << " ";
-    }
-    cout << endl;
-    MPI_Barrier(MPI_COMM_WORLD);
-    if (m_processRank == 0) cout << "Exits at neighbour lists" << endl;
-    exit(0);
+//    if (m_processRank == 0) {
+//        cout << "Processsors per dimension: " << endl;
+//        for (int i = 0; i < 4; i++) {
+//            cout << m_processorsPerDimension[i] << " ";
+//        }
+//        cout << endl;
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    m_neighbourLists->getNeighbours(m_processRank)->print();
+//    cout << "Neighbourlist coordinates for P = " << m_processRank << " is: ";
+//    for (int i = 0; i < 4; i++) {
+//        cout << m_neighbourLists->getProcessorDimensionPosition(i) << " ";
+//    }
+//    cout << endl;
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    if (m_processRank == 0) cout << "Exits at neighbour lists" << endl;
+//    exit(0);
     // ==========================================================================================
 
 }
@@ -184,7 +183,8 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
                 for (int z = 0; z < m_N[2]; z++) {
                     for (int t = 0; t < m_N[3]; t++) {
                         for (int mu = 0; mu < 4; mu++) {
-                            m_lattice[getIndex(x,y,z,t,m_N[1],m_N[2],m_N[3])].U[mu].identity();
+//                            m_lattice[getIndex(x,y,z,t,m_N[1],m_N[2],m_N[3])].U[mu].identity();
+                            m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[mu].identity();
                         }
                     }
                 }
@@ -223,11 +223,13 @@ void System::update()
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
                         for (int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
-                            updateLink(getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3]), mu);
+//                            updateLink(getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3]), mu);
+                            updateLink(m_indexHandler->getIndex(x,y,z,t), mu);
                             m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
                             if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             {
-                                m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu].copy(m_updatedMatrix);
+//                                m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu].copy(m_updatedMatrix);
+                                m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[mu].copy(m_updatedMatrix);
                                 m_acceptanceCounter++;
                             }
                         }
@@ -241,37 +243,42 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
+    // TESTS ==============================================================================
     MPI_Barrier(MPI_COMM_WORLD);
-    loadFieldConfiguration("config3.bin");
+    loadFieldConfiguration("16CoreRun.bin");
+//    loadFieldConfiguration("config3.bin"); // From scalar program version
     MPI_Barrier(MPI_COMM_WORLD);
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     corr /= double(m_numprocs);
     if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-    if (m_processRank == 0) {
-        cout << "proc 0:" << endl;
-        m_lattice[0].U[0].print();
-    }
-    if (m_processRank == 15) {
-        cout << "proc 15:" << endl;
-        m_lattice[m_subLatticeSize-1].U[3].print();
-    }
-    for (int i = 0; i < m_subLatticeSize; i++) {
-        for (int j = 0; j < 4; j++) {
-            for (int k = 0; k < 9; k++) {
-                if ((fabs(m_lattice[i].U[j].mat[k].re() - 0.472453) < 1e-10) || (fabs(m_lattice[i].U[j].mat[k].im() - 0.472453) < 1e-10))
-                    cout << "matching element at position: " << i << endl;
-            }
-        }
-    }
     MPI_Barrier(MPI_COMM_WORLD);
-    /*
-     * PARA CONFIG 0
-       0.783843 - 0.531915i      0.0821734 - 0.027753i     -0.0843221 + 0.296687i
-      -0.108416 - 0.0502368i       0.932431 + 0.304803i      -0.135058 - 0.0717626i
-       0.155966 + 0.253088i       0.168083 + 0.0435185i       0.903312 + 0.255937i
-     * */
+//    if (m_processRank == 0) {
+//        cout << "proc 0:" << endl;
+//        m_lattice[0].U[0].print();
+//    }
+//    if (m_processRank == 15) {
+//        cout << "proc 15:" << endl;
+//        m_lattice[m_subLatticeSize-1].U[3].print();
+//    }
+//    for (int i = 0; i < m_subLatticeSize; i++) {
+//        for (int j = 0; j < 4; j++) {
+//            for (int k = 0; k < 9; k++) {
+//                if ((fabs(m_lattice[i].U[j].mat[k].re() - 0.472453) < 1e-10) || (fabs(m_lattice[i].U[j].mat[k].im() - 0.472453) < 1e-10))
+//                    cout << "matching element at position: " << i << endl;
+//            }
+//        }
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    /*
+//     * PARA CONFIG 0
+//       0.783843 - 0.531915i      0.0821734 - 0.027753i     -0.0843221 + 0.296687i
+//      -0.108416 - 0.0502368i       0.932431 + 0.304803i      -0.135058 - 0.0717626i
+//       0.155966 + 0.253088i       0.168083 + 0.0435185i       0.903312 + 0.255937i
+//     * */
     exit(1);
+    // ===================================================================================
+
     // Variables for checking performance of the update.
     clock_t preUpdate, postUpdate;
     double updateStorer = 0;
@@ -287,7 +294,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
     if (m_processRank == 0) cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
 
     // Running thermalization
-    for (int i = 0; i < m_NTherm*m_NCor; i++)
+    for (int i = 0; i < m_NTherm; i++)
     {
         preUpdate = clock();
         update();
@@ -322,8 +329,8 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
-        cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor] << endl;
-        cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_NUpdates*m_NTherm*m_NCor) << endl;
+        cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm] << endl;
+        cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_NUpdates*m_NTherm) << endl;
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -468,7 +475,7 @@ void System::writeConfigurationToFile(int configNumber)
     }
 
     MPI_File_close(&file);
-    if (m_processRank == 0) cout << m_outputFolder + filename << " written." << endl;
+    if (m_processRank == 0) cout << filename << " written." << endl;
     if (m_processRank == 0) cout << "Configuration number " << configNumber << " written to file." << endl;
 }
 

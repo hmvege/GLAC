@@ -55,10 +55,10 @@ double Plaquette::calculate(Links *lattice)
 //                                    *lattice[getIndex(i+nuIndex[0],j+nuIndex[1],k+nuIndex[2],l+nuIndex[3],m_N[1],m_N[2],m_N[3])].U[mu].inv()
 //                                    *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv();
 
-                            P += lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[mu]
+                            P += lattice[m_Index->getIndex(i,j,k,l)].U[mu]
                                     *m_Index->getPositiveLink(lattice,indexes,mu,muIndex,nu)
                                     *m_Index->getPositiveLink(lattice,indexes,nu,nuIndex,mu).inv()
-                                    *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv();
+                                    *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv();
                         }
                     }
                 }

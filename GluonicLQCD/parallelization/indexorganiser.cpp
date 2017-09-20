@@ -137,7 +137,8 @@ int IndexOrganiser::getIndex(int i, int j, int k, int l)
      *  k   : z position
      *  l   : t position
      */
-    return (m_N[3]*(m_N[2]*(m_N[1]*i + j) + k) + l);
+//    return (m_N[3]*(m_N[2]*(m_N[1]*i + j) + k) + l);
+    return (m_N[2]*(m_N[1]*(m_N[0]*j + i) + k) + l);
 }
 
 void IndexOrganiser::setN(int *N)

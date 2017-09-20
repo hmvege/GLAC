@@ -25,7 +25,7 @@ double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int 
 {
     double S = 0;
     SU3 tr;
-    tr = (UPrime - lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[mu])*m_staple;
+    tr = (UPrime - lattice[m_Index->getIndex(i,j,k,l)].U[mu])*m_staple;
     for (int n = 0; n < 3; n++)
     {
         S += tr.mat[n*3+n].re();
@@ -49,7 +49,7 @@ void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l
         // Need to fix the index back to stapleIndex-like function/class!!
         m_staple += m_Index->getPositiveLink(lattice,indexes,mu,muIndex,nu)
                 *m_Index->getPositiveLink(lattice,indexes,nu,nuIndex,mu).inv()
-                *lattice[getIndex(i,j,k,l,m_N[1],m_N[2],m_N[3])].U[nu].inv()
+                *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv()
                 + m_Index->getNeighboursNeighbourLink(lattice,indexes,mu,muIndex,nu,nuIndex,nu).inv()
                 *m_Index->getNegativeLink(lattice,indexes,nu,nuIndex,mu).inv()
                 *m_Index->getNegativeLink(lattice,indexes,nu,nuIndex,nu);

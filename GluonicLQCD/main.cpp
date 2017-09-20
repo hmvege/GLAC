@@ -28,11 +28,12 @@ using std::endl;
  * [x] Finish SU3 basic properties unit testing such that I dont have to compare by hand
  * [x] Rename metropolis.cpp --> system.cpp
  * [x] Add shifting parallelization
- * [ ] Update functions for reading and writing sublattices
+ * [x] Update functions for reading and writing sublattices
  * [ ] Enforce sub lattice cubes when possible(when allocating dimensions)
  * [ ] Switch to CORRECT method syntax, foo --> m_foo
  * [ ] Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
  * [ ] Add better test suites, one that prints FAIL if test fails!!
+ * [ ] Redo preGammaThermalization
  */
 
 int main(int numberOfArguments, char* cmdLineArguments[])
@@ -43,20 +44,66 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     MPI_Comm_size (MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank (MPI_COMM_WORLD, &processRank);
 
-    // Constants
-    int N           = 8;            // Points for each lattice dimension, 8 points in time dimension
-    int N_T         = 8;            // Time dimension
-    int NTherm      = 3;            // Number of times we are to thermalize, that is NTherm * NCor. Should increase to 30 at least.
-    int NCor        = 1;           // Only keeping every 20th path
-    int NCf         = 20;           // Number of configurations to retrieve
-    int NUpdates    = 10;           // How many sweeps between main update
-    double beta     = 6;            // Should be
-    double SU3Eps   = 0.24;         // Epsilon used for generating SU(3) matrices
-    double seed     = std::time(nullptr) + double(processRank);
-    double metropolisSeed = std::time(nullptr) + double(numprocs) + double(processRank);
+    // Constants by default initialization
+    int N           = 8;            // Spatial lattice points.
+    int N_T         = 8;            // Temporal lattice points.
+    int NTherm      = 10;           // Thermalization.
+    int NCor        = 1;            // Correlation updates.
+    int NCf         = 20;           // Number of configurations to generate.
+    int NUpdates    = 10;           // Number of link updates before moving on.
+    double beta     = 6.0;          // Beta value(connected to the lattice spacing a).
+    double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
+    double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
+    double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
     bool writeConfigsToFile             = true;
     bool storeThermalizationPlaquettes  = true;
     bool hotStart                       = false;
+
+    if (numberOfArguments > 1) { // Points for each lattice dimension.
+        N           = atoi(cmdLineArguments[2]);
+    }
+    if (numberOfArguments > 2) { // Time dimension.
+        N_T         = atoi(cmdLineArguments[3]);
+    }
+    if (numberOfArguments > 3) { // Number of times we will thermalize.
+        NTherm      = atoi(cmdLineArguments[4]);
+    }
+    if (numberOfArguments > 4) { // Only keeping every 20th path. In production runs this will be 200.
+        NCor        = atoi(cmdLineArguments[5]);
+    }
+    if (numberOfArguments > 5) { // Number of field configurations that will be generated.
+        NCf         = atoi(cmdLineArguments[6]);
+    }
+    if (numberOfArguments > 6) { // Number of times a link will be updated. Because of the 10% acceptance ratio, 10 times means about 1 update.
+        NUpdates    = atoi(cmdLineArguments[7]);
+    }
+    if (numberOfArguments > 7) { // Beta value, phenomelogically connected to lattice spacing a.
+        beta        = atof(cmdLineArguments[8]);
+    }
+    if (numberOfArguments > 8) { // Epsilon used for generating SU(3) matrices
+        SU3Eps      = atof(cmdLineArguments[9]);
+    }
+    if (numberOfArguments > 9) {
+        if (atoi(cmdLineArguments[10]) == 0) {
+            writeConfigsToFile = false;
+        }
+    }
+    if (numberOfArguments > 10) {
+        if (atoi(cmdLineArguments[11]) == 0) {
+            storeThermalizationPlaquettes = false;
+        }
+    }
+    if (numberOfArguments > 11) {
+        if (atoi(cmdLineArguments[12]) == 1) {
+            hotStart = true;
+        }
+    }
+    if (numberOfArguments > 12) { //
+        seed = atof(cmdLineArguments[13]) + double(processRank);
+    }
+    if (numberOfArguments > 13) { // Metrolis seed.
+        metropolisSeed = atof(cmdLineArguments[14]) + double(numprocs) + double(processRank);
+    }
 
 //    if (processRank == 0) {
 //        testInverseMatrix(SU3Eps, seed, 1e3, false);
