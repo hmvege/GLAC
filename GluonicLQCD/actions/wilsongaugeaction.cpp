@@ -23,7 +23,7 @@ WilsonGaugeAction::~WilsonGaugeAction()
 
 double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int j, int k, int l, int mu)
 {
-    double S = 0;
+//    double S = 0;
     SU3 tr;
     tr = (UPrime - lattice[m_Index->getIndex(i,j,k,l)].U[mu])*m_staple;
 //    for (int n = 0; n < 3; n++)

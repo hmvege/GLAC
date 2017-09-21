@@ -29,7 +29,7 @@ void Plaquette::setLatticeSize(int latticeSize)
 
 double Plaquette::calculate(Links *lattice)
 {
-    double gamma = 0;
+//    double gamma = 0;
     SU3 P;
     for (int i = 0; i < m_N[0]; i++) {
         for (int j = 0; j < m_N[1]; j++) {

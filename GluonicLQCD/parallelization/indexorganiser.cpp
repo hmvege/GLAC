@@ -147,6 +147,18 @@ int IndexOrganiser::getIndex(int i, int j, int k, int l)
 //    return (m_N[2]*(m_N[1]*(m_N[0]*j + i) + k) + l); // NEW, correct?!
 }
 
+int IndexOrganiser::getGlobalIndex(int i, int j, int k, int l)
+{
+    /*
+     * Function for retrieving global lattice position.
+     *  i   : x position
+     *  j   : y position
+     *  k   : z position
+     *  l   : t position
+     */
+    return (m_NTot[3]*(m_NTot[2]*(m_NTot[1]*i + j) + k) + l);
+}
+
 void IndexOrganiser::setN(int *N)
 {
     /*
@@ -164,4 +176,17 @@ void IndexOrganiser::setN(int *N)
         }
         cout << endl;
     }
+}
+
+void IndexOrganiser::setNTot(int NSpatial, int NTemporal)
+{
+    /*
+     * Function for setting the dimensionality of the total lattice.
+     * Takes:
+     *  N       : an array of ints of length 4, where each element is the dimension size of either x,y,z or t
+     */
+    for (int i = 0; i < 3; i++) {
+        m_NTot[i] = NSpatial;
+    }
+    m_NTot[3] = NTemporal;
 }

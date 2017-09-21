@@ -108,7 +108,7 @@ void System::subLatticeSetup()
     for (int i = 0; i < 4; i++) {
         if (m_N[i] <= 2) {
             if (m_processRank == 0) {
-                cout << "Error: bad sub lattice size: ";
+                cout << "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
                 for (int j = 0; j < 4; j++) {
                     cout << m_N[j] << " ";
                 }
@@ -130,6 +130,7 @@ void System::subLatticeSetup()
 
     // Passes relevant information to the index handler(for the shifts).
     m_indexHandler->setN(m_N);
+    m_indexHandler->setNTot(m_NSpatial, m_NTemporal);
     m_indexHandler->setNeighbourList(m_neighbourLists);
 
     // Passes the index handler and dimensionality to the action and correlator classes.
@@ -260,8 +261,8 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
     // TESTS ==============================================================================
     MPI_Barrier(MPI_COMM_WORLD);
-    loadFieldConfiguration("16CoreRun.bin");
-//    loadFieldConfiguration("config3.bin"); // From scalar program version
+//    loadFieldConfiguration("16CoreRun.bin");
+    loadFieldConfiguration("config3.bin"); // From scalar program version
     MPI_Barrier(MPI_COMM_WORLD);
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -478,12 +479,12 @@ void System::writeConfigurationToFile(int configNumber)
     for (int t = 0; t < m_N[3]; t++) {
         nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
         for (int z = 0; z < m_N[2]; z++) {
-            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
+            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
             for (int y = 0; y < m_N[1]; y++) {
-                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
+                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (int x = 0; x < m_N[0]; x++) {
-                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
-                    MPI_File_write_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
+                    MPI_File_write_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
         }
@@ -521,12 +522,12 @@ void System::loadFieldConfiguration(std::string filename)
     for (int t = 0; t < m_N[3]; t++) {
         nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
         for (int z = 0; z < m_N[2]; z++) {
-            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
+            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
             for (int y = 0; y < m_N[1]; y++) {
-                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
+                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (int x = 0; x < m_N[0]; x++) {
-                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
-                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
+                    MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
         }

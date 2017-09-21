@@ -11,6 +11,7 @@ class IndexOrganiser
 private:
     int m_processRank;
     int m_N[4];
+    int m_NTot[4];
     Neighbours * m_neighbourLists = nullptr;
     SU3 exchangeU;
 
@@ -23,6 +24,7 @@ public:
 
     // Index getter
     int getIndex(int i, int j, int k, int l);
+    int getGlobalIndex(int i, int j, int k, int l);
 
     // Link getters
     SU3 getPositiveLink(Links *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir);
@@ -31,6 +33,7 @@ public:
 
     // Setters
     void setN(int *N);
+    void setNTot(int NSpatial, int NTemporal);
     void setNeighbourList(Neighbours *neighbourLists) { m_neighbourLists = neighbourLists; }
 };
 
