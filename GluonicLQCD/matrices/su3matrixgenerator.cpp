@@ -134,7 +134,7 @@ SU2 SU3MatrixGenerator::generateSU2()
 //    double _r[4];
 //    double _x[4];
 //    double _rNorm = 0;
-    U.zeros();
+    U.identity();
     _rNorm = 0;
     // Generating 4 r random numbers
     for (int i = 0; i < 4; i++) {
@@ -170,7 +170,7 @@ SU2 SU3MatrixGenerator::generateSU2()
         _x[i] /= _rNorm;
     }
     // Generating the SU2 matrix close to unity
-    U += su2Identity*_x[0];
+    U *= _x[0];
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 4; j++) {
             U.mat[j].setRe(U.mat[j].re() - _x[i+1]*sigma[i].mat[j].im());
@@ -219,11 +219,11 @@ SU3 SU3MatrixGenerator::generateRST()
     T.mat[8] = t.mat[3];
     T.mat[0].setRe(1);
     // Creates the return matrix, which is close to unity
-    X = R*S*T;
+//    X = R*S*T;
     // Equal probability of returning X and X inverse
     if (SU2_uniform_distribution(generator) < 0) {
-        return X.inv();
+        return (R*S*T).inv();
     } else {
-        return X;
+        return R*S*T;
     }
 }

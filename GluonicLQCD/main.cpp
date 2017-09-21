@@ -45,8 +45,8 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     MPI_Comm_rank (MPI_COMM_WORLD, &processRank);
 
     // Constants by default initialization
-    int N           = 8;            // Spatial lattice points.
-    int N_T         = 8;            // Temporal lattice points.
+    int N           = 16;            // Spatial lattice points.
+    int N_T         = 16;            // Temporal lattice points.
     int NTherm      = 200;           // Thermalization.
     int NCor        = 1;            // Correlation updates.
     int NCf         = 20;           // Number of configurations to generate.

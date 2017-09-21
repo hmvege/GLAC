@@ -17,7 +17,7 @@ SU2::~SU2()
 
 void SU2::transpose()
 {
-    complex *temp = new complex[4];
+    complex temp[4];
     cout<< "SU2 TRANSPOSE IS USED"<<endl;
     for (int i = 0; i < 4; i++) { temp[i] = mat[i]; }
     for (int i = 0; i < 2; i++)
@@ -28,7 +28,6 @@ void SU2::transpose()
             mat[j*2+i] = temp[i*2+j];
         }
     }
-    delete [] temp;
 }
 
 void SU2::conjugate()
@@ -72,17 +71,16 @@ SU2 &SU2::operator*=(SU2 B)
             }
         }
     }
-//    for (int i = 0; i < 4; i++) {
-//        mat[i] = temp[i];
-//    }
-    for (int i = 0; i < 2; i++) // ..this is faster?
-    {
-        for (int j = 0; j < 2; j++)
-        {
-            mat[(i*2+j)] = temp[(i*2+j)];
-        }
+    for (int i = 0; i < 4; i++) {
+        mat[i] = temp[i];
     }
-//    delete [] temp;
+//    for (int i = 0; i < 2; i++) // ..this is faster?
+//    {
+//        for (int j = 0; j < 2; j++)
+//        {
+//            mat[(i*2+j)] = temp[(i*2+j)];
+//        }
+//    }
     return *this;
 }
 

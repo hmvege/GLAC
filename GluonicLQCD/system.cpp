@@ -262,7 +262,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
     // TESTS ==============================================================================
     MPI_Barrier(MPI_COMM_WORLD);
 //    loadFieldConfiguration("16CoreRun.bin");
-    loadFieldConfiguration("config3.bin"); // From scalar program version
+    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
     MPI_Barrier(MPI_COMM_WORLD);
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -476,19 +476,6 @@ void System::writeConfigurationToFile(int configNumber)
     MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
-    for (int t = 0; t < m_N[3]; t++) {
-        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (int z = 0; z < m_N[2]; z++) {
-            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (int y = 0; y < m_N[1]; y++) {
-                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (int x = 0; x < m_N[0]; x++) {
-                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
-                    MPI_File_write_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
-                }
-            }
-        }
-    }
 
 //    for (int t = 0; t < m_N[3]; t++) {
 //        nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
@@ -503,6 +490,23 @@ void System::writeConfigurationToFile(int configNumber)
 //            }
 //        }
 //    }
+    for (int t = 0; t < m_N[3]; t++) {
+        nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
+        for (int z = 0; z < m_N[2]; z++) {
+//            nz = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
+            nz = (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
+            for (int y = 0; y < m_N[1]; y++) {
+//                ny = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
+                ny = (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
+                for (int x = 0; x < m_N[0]; x++) {
+//                    nx = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
+//                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
+                    MPI_File_write_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                }
+            }
+        }
+    }
 
     MPI_File_close(&file);
     if (m_processRank == 0) cout << "Configuration number " << configNumber << " written to " << filename << endl;
@@ -520,32 +524,22 @@ void System::loadFieldConfiguration(std::string filename)
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (int t = 0; t < m_N[3]; t++) {
-        nt = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
+        nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
         for (int z = 0; z < m_N[2]; z++) {
-            nz = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
+//            nz = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
+            nz = (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
             for (int y = 0; y < m_N[1]; y++) {
-                ny = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
+//                ny = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
+                ny = (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (int x = 0; x < m_N[0]; x++) {
+//                    nx = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
+//                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
                     MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
         }
     }
-
-//    for (int t = 0; t < m_N[3]; t++) {
-//        nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
-//        for (int z = 0; z < m_N[2]; z++) {
-//            nz = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
-//            for (int y = 0; y < m_N[1]; y++) {
-//                ny = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
-//                for (int x = 0; x < m_N[0]; x++) {
-//                    nx = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
-//                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
-//                }
-//            }
-//        }
-//    }
 
     MPI_File_close(&file);
     if (m_processRank == 0) cout << "Configuration " << m_outputFolder + filename << " loaded." << endl;

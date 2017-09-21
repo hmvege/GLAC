@@ -20,15 +20,6 @@ class Index: # General method for getting contiguous memory allocation
 		offset = self.N[3]*(self.N[2]*(self.N[1]*indices[0] + indices[1]) + indices[2]) + indices[3]
 		return offset
 
-class IndexOld: # Old method
-	def __init__(self,Nx,Ny,Nz):
-		self.Nx = Nx
-		self.Ny = Ny
-		self.Nz = Nz
-
-	def __call__(self,i,j,k):
-		return self.Nz*(self.Ny*i+j)+k
-
 class Lattice:
 	def __init__(self,N):
 		if type(N) != list: raise ValueError("Dimension to be passed as elements in a list.")
@@ -147,9 +138,9 @@ class SubLattice:
 		# 		print "Total volume: ", self.V[i]
 		# 	print "="*25,"\n"
 
-		print "t: ", self.NSub[3] / self.NSub[2]
-		print "z: ", self.NSub[2] / self.NSub[1]
-		print "y: ", self.NSub[1] / self.NSub[0]
+		# print "t: ", self.NSub[3] / self.NSub[2]
+		# print "z: ", self.NSub[2] / self.NSub[1]
+		# print "y: ", self.NSub[1] / self.NSub[0]
 
 		print "Lattice dimensions(self.N):                 ", self.N
 		print "Volumes of lattice(self.V):                 ", self.V
@@ -180,28 +171,30 @@ class SubLattice:
 			print str_header
 
 			for t in xrange(self.NSub[3]):
-				# t_offset = (self.processor_coordinates[processor][3] * self.NSub[3] + t) * self.procsPerDim[3]
 				t_offset = (self.processor_coordinates[processor][3] * self.NSub[3] + t)
+				# t_offset = (self.processor_coordinates[processor][3] * self.NSub[3] + t) * self.procsPerDim[3]
 				# t_offset = self.V[2] * (self.processor_coordinates[processor][3] * self.NSub[3] + t)
 				str_t_cord = "T = %d," % t
 				print str_t_cord,
 				for z in xrange(self.NSub[2]):
+					z_offset = self.V[0] * (self.processor_coordinates[processor][2] * self.NSub[2] + z)
 					# z_offset = self.V[0] * (self.processor_coordinates[processor][2] * self.NSub[2] + z) * self.procsPerDim[2] + t_offset
-					z_offset = self.V[0] * (self.processor_coordinates[processor][2] * self.NSub[2] + z) * self.NSub[1] / self.NSub[0] + t_offset
+					# z_offset = self.V[0] * (self.processor_coordinates[processor][2] * self.NSub[2] + z) * self.NSub[1] / self.NSub[0] + t_offset
 					# z_offset = self.V[1] * (self.processor_coordinates[processor][2] * self.NSub[2] + z) + t_offset
 					str_z_cord = "Z = %d" % z
 					print str_z_cord
 					for y in xrange(self.NSub[1]):
+						y_offset = self.V[1] * (self.processor_coordinates[processor][1] * self.NSub[1] + y)
 						# y_offset = self.V[1] * (self.processor_coordinates[processor][1] * self.NSub[1] + y) * self.procsPerDim[1] + z_offset
-						y_offset = self.V[1] * (self.processor_coordinates[processor][1] * self.NSub[1] + y) * self.NSub[2] / self.NSub[1] * self.NSub[2] / self.NSub[0]+ z_offset
+						# y_offset = self.V[1] * (self.processor_coordinates[processor][1] * self.NSub[1] + y) * self.NSub[2] / self.NSub[1] * self.NSub[2] / self.NSub[0]+ z_offset
 						# y_offset = self.V[0] * (self.processor_coordinates[processor][1] * self.NSub[1] + y) + z_offset
 						for x in xrange(self.NSub[0]):
-							# x_offset = self.V[2] * (self.processor_coordinates[processor][0] * self.NSub[0] + x) * self.procsPerDim[0] + y_offset
-							x_offset = self.V[2] * (self.processor_coordinates[processor][0] * self.NSub[0] + x) * self.NSub[3] / self.NSub[2] * self.NSub[2] / self.NSub[1] * self.NSub[1] / self.NSub[0] + y_offset
+							x_offset = self.V[2] * (self.processor_coordinates[processor][0] * self.NSub[0] + x)
+							offset = t_offset + z_offset + y_offset + x_offset
+							# x_offset = self.V[2] * (self.processor_coordinates[processor][0] * self.NSub[0] + x) * self.NSub[3] / self.NSub[2] * self.NSub[2] / self.NSub[1] * self.NSub[1] / self.NSub[0] + y_offset
 							# x_offset = (self.processor_coordinates[processor][0] * self.NSub[0] + x) + y_offset
-							# memory_position_string.append([x_offset,(x+self.NSub[0]*self.processor_coordinates[processor][0],y+self.NSub[1]*self.processor_coordinates[processor][1],z+self.NSub[2]*self.processor_coordinates[processor][2],t+self.NSub[3]*self.processor_coordinates[processor][3]),processor])
-							pos = self.indexTot([x+self.NSub[0]*self.processor_coordinates[processor][0],y+self.NSub[1]*self.processor_coordinates[processor][1],z+self.NSub[2]*self.processor_coordinates[processor][2],t+self.NSub[3]*self.processor_coordinates[processor][3]])
-							memory_position_string.append([pos,(x+self.NSub[0]*self.processor_coordinates[processor][0],y+self.NSub[1]*self.processor_coordinates[processor][1],z+self.NSub[2]*self.processor_coordinates[processor][2],t+self.NSub[3]*self.processor_coordinates[processor][3]),processor])
+							memory_position_string.append([self.indexTot([x+self.NSub[0]*self.processor_coordinates[processor][0],y+self.NSub[1]*self.processor_coordinates[processor][1],z+self.NSub[2]*self.processor_coordinates[processor][2],t+self.NSub[3]*self.processor_coordinates[processor][3]]),(x+self.NSub[0]*self.processor_coordinates[processor][0],y+self.NSub[1]*self.processor_coordinates[processor][1],z+self.NSub[2]*self.processor_coordinates[processor][2],t+self.NSub[3]*self.processor_coordinates[processor][3]),processor])
+							# memory_position_string.append([self.indexTot([x_offset,y_offset,z_offset,t_offset]),(x+self.NSub[0]*self.processor_coordinates[processor][0],y+self.NSub[1]*self.processor_coordinates[processor][1],z+self.NSub[2]*self.processor_coordinates[processor][2],t+self.NSub[3]*self.processor_coordinates[processor][3]),processor])
 							print_string = "[%d,%d,%d,%d = %3d]" % (x,y,z,t,memory_position_string[-1][0]) # Memory positions
 							print print_string,
 						if ((x+1)%(self.NSub[0]) == 0 and (y+1)%(self.NSub[1]) == 0 and (z+1)%(self.NSub[2]) == 0 and (t+1)%(self.NSub[3]) == 0):
@@ -269,9 +262,9 @@ class SubLattice:
 
 def main():
 	# CONSTANTS
-	dimensions = [2,2,2,16]
-	dimensions = map(lambda x: 4*x, dimensions)
-	numprocs = 16
+	dimensions = [2,2,2,2]
+	dimensions = map(lambda x: 8*x, dimensions)
+	numprocs = 32
 	storeOutput = True
 	max_index = np.prod(dimensions)
 	index_ceiling = max_index/8
@@ -293,15 +286,15 @@ def main():
 	mega_array = np.asarray(sorted(mega_list,key=lambda i: itemgetter(0)(i)[::-1])) # Sorting the index ordering
 	memoryDifferences = mega_array[:,1] - scalarLocations[:]
 
-	print "Printing the parallel and scalar memory positions: "
-	for i,P,parallelIndex,x,scalarIndex,y,memDiff in zip(	range(index_ceiling),
-												mega_array[:,-1], # Processor who performed calculation
-												mega_array[:,0], # Parallel index
-												mega_array[:,1], # Parallel mem loc
-												scalarIndexes[:index_ceiling], # Scalar index
-												scalarLocations[:index_ceiling],
-												memoryDifferences): # Scalar memloc
-		print "%4d: Parallel(P: %2d xyzt index: %16s): %6d || Scalar(xyzt index: %16s: %6d || Mem.diff: %4d" % (i,P,parallelIndex,x,scalarIndex,y,memDiff)
+	# print "Printing the parallel and scalar memory positions: "
+	# for i,P,parallelIndex,x,scalarIndex,y,memDiff in zip(	range(index_ceiling),
+	# 											mega_array[:,-1], # Processor who performed calculation
+	# 											mega_array[:,0], # Parallel index
+	# 											mega_array[:,1], # Parallel mem loc
+	# 											scalarIndexes[:index_ceiling], # Scalar index
+	# 											scalarLocations[:index_ceiling],
+	# 											memoryDifferences): # Scalar memloc
+	# 	print "%4d: Parallel(P: %2d xyzt index: %16s): %6d || Scalar(xyzt index: %16s: %6d || Mem.diff: %4d" % (i,P,parallelIndex,x,scalarIndex,y,memDiff)
 
 	bool_sums_equal = sum(parallelLocations) == sum(scalarLocations)
 	bool_elements_equal = (sum([True if i in scalarLocations else False for i in parallelLocations]) == len(sublattice.memory_position_string))
