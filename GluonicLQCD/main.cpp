@@ -48,7 +48,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     int N           = 16;            // Spatial lattice points.
     int N_T         = 16;            // Temporal lattice points.
     int NTherm      = 200;           // Thermalization.
-    int NCor        = 1;            // Correlation updates.
+    int NCor        = 20;            // Correlation updates.
     int NCf         = 20;           // Number of configurations to generate.
     int NUpdates    = 10;           // Number of link updates before moving on.
     double beta     = 6.0;          // Beta value(connected to the lattice spacing a).

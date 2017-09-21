@@ -153,21 +153,32 @@ void System::subLatticeSetup()
     m_V[3] = m_NSpatial*m_NSpatial*m_NSpatial*m_NTemporal; // XYZT volume
 
     // TESTS ====================================================================================
-//    if (m_processRank == 0) {
-//        cout << "Processsors per dimension: " << endl;
-//        for (int i = 0; i < 4; i++) {
-//            cout << m_processorsPerDimension[i] << " ";
-//        }
-//        cout << endl;
-//    }
-//    MPI_Barrier(MPI_COMM_WORLD);
+    if (m_processRank == 0) {
+        cout << "Processsors per dimension: ";
+        for (int i = 0; i < 4; i++) {
+            cout << m_processorsPerDimension[i] << " ";
+        }
+        cout << endl;
+        cout << "Lattice volumes: ";
+        for (int i = 0; i < 4; i++) {
+            cout << m_V[i] << " ";
+        }
+        cout << endl;
+        cout << "Sub-lattice volumes: ";
+        for (int i = 0; i < 4; i++) {
+            cout << m_VSub[i] << " ";
+        }
+        cout << endl;
+
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
 //    m_neighbourLists->getNeighbours(m_processRank)->print();
-//    cout << "Neighbourlist coordinates for P = " << m_processRank << " is: ";
-//    for (int i = 0; i < 4; i++) {
-//        cout << m_neighbourLists->getProcessorDimensionPosition(i) << " ";
-//    }
-//    cout << endl;
-//    MPI_Barrier(MPI_COMM_WORLD);
+    cout << "Neighbourlist coordinates for P = " << m_processRank << " is: ";
+    for (int i = 0; i < 4; i++) {
+        cout << m_neighbourLists->getProcessorDimensionPosition(i) << " ";
+    }
+    cout << endl;
+    MPI_Barrier(MPI_COMM_WORLD);
 //    if (m_processRank == 0) cout << "Exits at neighbour lists" << endl;
 //    exit(0);
     // ==========================================================================================
@@ -260,39 +271,16 @@ void System::update()
 void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
     // TESTS ==============================================================================
-    MPI_Barrier(MPI_COMM_WORLD);
-//    loadFieldConfiguration("16CoreRun.bin");
-    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
-    MPI_Barrier(MPI_COMM_WORLD);
-    double corr = m_correlator->calculate(m_lattice);
-    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-    corr /= double(m_numprocs);
-    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-    MPI_Barrier(MPI_COMM_WORLD);
-//    if (m_processRank == 0) {
-//        cout << "proc 0:" << endl;
-//        m_lattice[0].U[0].print();
-//    }
-//    if (m_processRank == 15) {
-//        cout << "proc 15:" << endl;
-//        m_lattice[m_subLatticeSize-1].U[3].print();
-//    }
-//    for (int i = 0; i < m_subLatticeSize; i++) {
-//        for (int j = 0; j < 4; j++) {
-//            for (int k = 0; k < 9; k++) {
-//                if ((fabs(m_lattice[i].U[j].mat[k].re() - 0.472453) < 1e-10) || (fabs(m_lattice[i].U[j].mat[k].im() - 0.472453) < 1e-10))
-//                    cout << "matching element at position: " << i << endl;
-//            }
-//        }
-//    }
 //    MPI_Barrier(MPI_COMM_WORLD);
-//    /*
-//     * PARA CONFIG 0
-//       0.783843 - 0.531915i      0.0821734 - 0.027753i     -0.0843221 + 0.296687i
-//      -0.108416 - 0.0502368i       0.932431 + 0.304803i      -0.135058 - 0.0717626i
-//       0.155966 + 0.253088i       0.168083 + 0.0435185i       0.903312 + 0.255937i
-//     * */
-    exit(1);
+////    loadFieldConfiguration("16CoreRun.bin");
+//    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    double corr = m_correlator->calculate(m_lattice);
+//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//    corr /= double(m_numprocs);
+//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    exit(1);
     // ===================================================================================
 
     // Variables for checking performance of the update.
@@ -368,7 +356,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         if (writeConfigsToFile) writeConfigurationToFile(alpha);
         // TEST ============================================================
         MPI_Barrier(MPI_COMM_WORLD);
-        loadFieldConfiguration("output/configs_profiling_run_beta6.000000_config0.bin");
+        loadFieldConfiguration("configs_profiling_run_beta6.000000_config0.bin");
         MPI_Barrier(MPI_COMM_WORLD);
         double corr = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -425,6 +413,7 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
         }
         std::ofstream file;
         file.open(filename + ".dat");
+        file << "beta" << m_beta << endl;
         file << "acceptanceCounter " << getAcceptanceRate() << endl;
         file << "NCor " << m_NCor << endl;
         file << "NCf " << m_NCf << endl;
@@ -519,6 +508,7 @@ void System::loadFieldConfiguration(std::string filename)
      * Arguments:
      * - filename
      */
+
     MPI_File file;
     MPI_File_open(MPI_COMM_WORLD, (m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
@@ -536,6 +526,7 @@ void System::loadFieldConfiguration(std::string filename)
 //                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
                     MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+//                    cout << m_indexHandler->getGlobalIndex(nx,ny,nz,nt) << endl;
                 }
             }
         }

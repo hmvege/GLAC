@@ -17,7 +17,8 @@ class Index: # General method for getting contiguous memory allocation
 		# 		prod *= self.N[j]
 		# 	offset += indices[i]*prod
 
-		offset = self.N[3]*(self.N[2]*(self.N[1]*indices[0] + indices[1]) + indices[2]) + indices[3]
+		# offset = self.N[3]*(self.N[2]*(self.N[1]*indices[0] + indices[1]) + indices[2]) + indices[3]
+		offset = indices[0] + self.N[0]*(indices[1] + self.N[1]*(indices[2] + self.N[2]*indices[3]))
 		return offset
 
 class Lattice:
@@ -260,6 +261,12 @@ class SubLattice:
 			sys.stdout = orig_stdout
 			f.close()
 
+def testIfEqualMemoryPositions(arr1,arr2):
+	if sum([True if i==j else False for i,j in zip(arr1, arr2)]) == len(arr2):
+		print "Success: Equal memory positions."
+	else:
+		print "Failure: Not equal memory positions."
+
 def main():
 	# CONSTANTS
 	dimensions = [2,2,2,2]
@@ -285,6 +292,7 @@ def main():
 	mega_list = zip(parallelIndexes,parallelLocations,[i[-1] for i in sublattice.memory_position_string])
 	mega_array = np.asarray(sorted(mega_list,key=lambda i: itemgetter(0)(i)[::-1])) # Sorting the index ordering
 	memoryDifferences = mega_array[:,1] - scalarLocations[:]
+	
 
 	# print "Printing the parallel and scalar memory positions: "
 	# for i,P,parallelIndex,x,scalarIndex,y,memDiff in zip(	range(index_ceiling),
@@ -304,10 +312,11 @@ def main():
 		print "Failure: Unequal number of elements accessed"
 	
 	# Testing if we are mapping parallel processors to scalar memory allocation
-	if sum([True if i==j else False for i,j in zip(scalarLocations, mega_array[:,1])]) == len(mega_array[:,1]):
-		print "Success: Equal memory positions."
-	else:
-		print "Failure: Not equal memory positions."
+	testIfEqualMemoryPositions(scalarLocations,mega_array[:,1])
+	# if sum([True if i==j else False for i,j in zip(scalarLocations, mega_array[:,1])]) == len(mega_array[:,1]):
+	# 	print "Success: Equal memory positions."
+	# else:
+	# 	print "Failure: Not equal memory positions."
 
 	if (sum(dimensions) == 32):
 		# Comparing memory locations to the parallel and scalar branch of program run on a 8**4 lattice

@@ -142,9 +142,9 @@ int IndexOrganiser::getIndex(int i, int j, int k, int l)
      *  k   : z position
      *  l   : t position
      */
-    return (m_N[3]*(m_N[2]*(m_N[1]*i + j) + k) + l); // OLD
-//    return l + m_N[3]*(k + m_N[2]*(j + m_N[1]*i)); // same as old
-//    return (m_N[2]*(m_N[1]*(m_N[0]*j + i) + k) + l); // NEW, correct?!
+//    return (m_N[3]*(m_N[2]*(m_N[1]*i + j) + k) + l); // row major
+//    return l + m_N[3]*(k + m_N[2]*(j + m_N[1]*i)); // same as old, row major
+    return i + m_N[0]*(j + m_N[1]*(k + m_N[2]*l)); // column-major
 }
 
 int IndexOrganiser::getGlobalIndex(int i, int j, int k, int l)
@@ -156,7 +156,8 @@ int IndexOrganiser::getGlobalIndex(int i, int j, int k, int l)
      *  k   : z position
      *  l   : t position
      */
-    return (m_NTot[3]*(m_NTot[2]*(m_NTot[1]*i + j) + k) + l);
+    return i + m_NTot[0]*(j + m_NTot[1]*(k + m_NTot[2]*l)); // column-major
+//    return (m_NTot[3]*(m_NTot[2]*(m_NTot[1]*i + j) + k) + l); // row-major
 }
 
 void IndexOrganiser::setN(int *N)
