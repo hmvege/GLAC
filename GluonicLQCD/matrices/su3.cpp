@@ -125,10 +125,21 @@ void SU3::zeros()
     }
 }
 
+void SU3::identity()
+{
+    for (int i = 0; i < 9; i++) {
+        mat[i].re = 0;
+        mat[i].im = 0;
+    }
+    mat[0].re = 1;
+    mat[4].re = 1;
+    mat[8].re = 1;
+}
+
 void SU3::print()
 {
     /*
-     * Temporary class for printing matrix. Might remove in the future to get better performance
+     * For printing the SU3 matrix.
      */
     for (int i = 0; i < 3; i++)
     {

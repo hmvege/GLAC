@@ -15,6 +15,7 @@ public:
 
     void copy(SU3 B);
     void zeros();
+    void identity();
     void transpose();
     void conjugate();
     SU3 inv();

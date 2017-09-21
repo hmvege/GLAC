@@ -25,15 +25,17 @@ WilsonGaugeAction::~WilsonGaugeAction()
 
 double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int j, int k, int l, int mu)
 {
-    double S = 0;
-    SU3 tr;
+//    double S = 0;
+//    SU3 tr;
     tr = (UPrime - lattice[index(i,j,k,l,m_N,m_N_T)].U[mu])*m_staple;
 //    for (int n = 0; n < 3; n++)
 //    {
 //        S += tr.mat[n*3+n].re;
 //    }
-    S = tr.mat[0].re + tr.mat[4].re + tr.mat[8].re;
-    return -S*multiplicationFactor; // Should be N=3 as in the Gauge symmetry
+//    S = tr.mat[0].re + tr.mat[4].re + tr.mat[8].re;
+//    return -S*multiplicationFactor; // Should be N=3 as in the Gauge symmetry
+//    S = tr.mat[0].re + tr.mat[4].re + tr.mat[8].re;
+    return -(tr.mat[0].re + tr.mat[4].re + tr.mat[8].re)*multiplicationFactor; // Should be N=3 as in the Gauge symmetry
 }
 
 void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l, int mu)

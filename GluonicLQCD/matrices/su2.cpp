@@ -19,7 +19,7 @@ SU2::~SU2()
 
 void SU2::transpose()
 {
-    complex *temp = new complex[4];
+    complex temp[4];
     for (int i = 0; i < 4; i++) { temp[i] = mat[i]; }
     for (int i = 0; i < 2; i++)
     {
@@ -29,7 +29,6 @@ void SU2::transpose()
             mat[j*2+i] = temp[i*2+j];
         }
     }
-    delete [] temp;
 }
 
 void SU2::conjugate()
@@ -62,7 +61,7 @@ SU2 &SU2::operator*=(SU2 B)
     /*
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
      */
-    complex *temp = new complex[4];
+    complex temp[4];
     for (int i = 0; i < 2; i++)
     {
         for (int j = 0; j < 2; j++)
@@ -73,14 +72,10 @@ SU2 &SU2::operator*=(SU2 B)
             }
         }
     }
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 4; i++)
     {
-        for (int j = 0; j < 2; j++)
-        {
-            mat[(i*2+j)] = temp[(i*2+j)];
-        }
+        mat[i] = temp[i];
     }
-    delete [] temp;
     return *this;
 }
 
@@ -111,10 +106,22 @@ void SU2::zeros()
     }
 }
 
+void SU2::identity()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        mat[i].im = 0;
+    }
+    mat[0].re = 1;
+    mat[1].re = 0;
+    mat[2].re = 0;
+    mat[3].re = 1;
+}
+
 void SU2::print()
 {
     /*
-     * Temporary class for printing matrix. Might remove in the future to get better performance
+     * For printing the SU2 matrix.
      */
     for (int i = 0; i < 2; i++)
     {

@@ -8,6 +8,7 @@ class WilsonGaugeAction : public Action
 private:
     double m_beta;
     SU3 m_staple;
+    SU3 tr;
     double multiplicationFactor;
 public:
     WilsonGaugeAction(int N, int N_T, double beta);

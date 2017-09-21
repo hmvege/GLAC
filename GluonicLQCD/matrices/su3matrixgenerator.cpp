@@ -36,8 +36,6 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     sigma[1].mat[2].im = 1;
     sigma[2].mat[0].re = 1;
     sigma[2].mat[3].re = -1;
-    su2Identity[0].re = 1;
-    su2Identity[3].re = 1;
 }
 
 SU3MatrixGenerator::~SU3MatrixGenerator()
@@ -55,7 +53,7 @@ SU3 SU3MatrixGenerator::generateRandom()
      * 3 4 5
      * 6 7 8
      */
-    SU3 H;
+    H.zeros();
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 2; j++)
@@ -110,55 +108,50 @@ SU3 SU3MatrixGenerator::generateRandom()
     return H;
 }
 
-SU3 SU3MatrixGenerator::generateIdentity()
-{
-    SU3 H;
-    H[0].re = 1;
-    H[4].re = 1;
-    H[8].re = 1;
-    return H;
-}
-
 SU2 SU3MatrixGenerator::generateSU2()
 {
-    SU2 U;
-    double r[4];
-    double x[4];
-    double rNorm = 0;
+    U.identity();
+    _rNorm = 0;
 //    double eps = 0.01;
     // Generating 4 r random numbers
     for (int i = 0; i < 4; i++) {
-        r[i] = SU2_uniform_distribution(generator);
+        _r[i] = SU2_uniform_distribution(generator);
     }
     // Populating the x-vector
-    if (r[0] < 0) {
-        x[0] = - sqrt(1 - epsilon*epsilon);
+    if (_r[0] < 0) {
+        _x[0] = - sqrt(1 - epsilon*epsilon);
     }
     else {
-        x[0] = sqrt(1 - epsilon*epsilon);
+        _x[0] = sqrt(1 - epsilon*epsilon);
     }
-    for (int i = 0; i < 3; i++) {
-        rNorm += r[i+1]*r[i+1];
+//    for (int i = 0; i < 3; i++) {
+//        _rNorm += _r[i+1]*_r[i+1];
+//    }
+    for (int i = 1; i < 4; i++) {
+        _rNorm += _r[i]*_r[i];
     }
-    rNorm = sqrt(rNorm);
-    for (int i = 0; i < 3; i++) {
-        x[i+1] = epsilon*r[i+1]/rNorm;
+    _rNorm = sqrt(_rNorm);
+//    for (int i = 0; i < 3; i++) {
+//        _x[i+1] = epsilon*_r[i+1]/rNorm;
+//    }
+    for (int i = 1; i < 4; i++) {
+        _x[i] = epsilon*_r[i]/_rNorm;
     }
     // Imposing unity
-    rNorm = 0;
+    _rNorm = 0;
     for (int i = 0; i < 4; i++) {
-        rNorm += x[i]*x[i];
+        _rNorm += _x[i]*_x[i];
     }
-    rNorm = sqrt(rNorm);
+    _rNorm = sqrt(_rNorm);
     for (int i = 0; i < 4; i++) {
-        x[i] /= rNorm;
+        _x[i] /= _rNorm;
     }
     // Generating the SU2 matrix close to unity
-    U += su2Identity*x[0];
+    U *= _x[0];
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 4; j++) {
-            U.mat[j].re += - x[i+1]*sigma[i].mat[j].im;
-            U.mat[j].im += x[i+1]*sigma[i].mat[j].re;
+            U.mat[j].re += - _x[i+1]*sigma[i].mat[j].im;
+            U.mat[j].im += _x[i+1]*sigma[i].mat[j].re;
         }
     }
     return U;
@@ -177,8 +170,10 @@ SU3 SU3MatrixGenerator::generateRST()
      * 3 4 5
      * 6 7 8
      */
-    SU3 X, R, S, T;
-    SU2 r,s,t;
+    // Sets to identity
+    R.identity();
+    S.identity();
+    T.identity();
     // Generates SU2 matrices
     r = generateSU2();
     s = generateSU2();
@@ -200,11 +195,11 @@ SU3 SU3MatrixGenerator::generateRST()
     T.mat[8] = t.mat[3];
     T.mat[0].re = 1;
     // Creates the return matrix, which is close to unity
-    X = R*S*T;
+//    X = R*S*T;
     // Equal probability of returning X and X inverse
     if (SU2_uniform_distribution(generator) < 0) {
-        return X.inv();
+        return (R*S*T).inv();
     } else {
-        return X;
+        return R*S*T;
     }
 }

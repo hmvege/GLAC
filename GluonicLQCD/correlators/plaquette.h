@@ -10,6 +10,7 @@ private:
     int *muIndex;
     int *nuIndex;
     double m_multiplicationFactor;
+    SU3 P;
 public:
     Plaquette(int N, int N_T);
     ~Plaquette();

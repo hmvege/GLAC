@@ -70,8 +70,8 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator)
         for (int mu = 0; mu < 4; mu++)
         {
 //            m_lattice[i].U[mu] = m_SU3Generator->generateRandom();
-            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
-//            m_lattice[i].U[mu] = m_SU3Generator->generateIdentity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
+//            m_lattice[i].U[mu] = m_SU3Generator->generateRST();
+            m_lattice[i].U[mu].identity(); // GENERATES IDENTITY FOR TEST! ONE OBSERVABLE SHOULD EQUAL 1!!
         }
     }
 }
@@ -121,10 +121,10 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables)
 {
-    loadFieldConfiguration("config3.bin");
+//    loadFieldConfiguration("config3.bin");
 //    loadFieldConfiguration("configs_profiling_run_beta6.000000_config0.bin");
-    m_lattice[0].U[0].print();
-    m_lattice[8*8*8*8-1].U[3].print();
+//    m_lattice[0].U[0].print();
+//    m_lattice[8*8*8*8-1].U[3].print();
 //    m_lattice[0].U[2].print();
 //    m_lattice[0].U[3].print();
     /*
@@ -132,38 +132,44 @@ void System::runMetropolis(bool storePreObservables)
      * -0.730676 - 0.197141i       0.472453 + 0.162543i      -0.324172 - 0.269311i
      * -0.219787 - 0.401546i     -0.0537256 + 0.0775807i     -0.0337171 + 0.88341i
      */
-    for (int i = 0; i < m_latticeSize; i++) {
-        for (int j = 0; j < 4; j++) {
-            for (int k = 0; k < 9; k++) {
-                if ((fabs(m_lattice[i].U[j].mat[k].re - 0.783843) < 1e-12) || (fabs(m_lattice[i].U[j].mat[k].im - 0.783843) < 1e-12))
-                    cout << "matching element at position: " << i << endl;
-            }
-        }
-    }
-    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
-    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
-    exit(1);
+//    for (int i = 0; i < m_latticeSize; i++) {
+//        for (int j = 0; j < 4; j++) {
+//            for (int k = 0; k < 9; k++) {
+//                if ((fabs(m_lattice[i].U[j].mat[k].re - 0.783843) < 1e-12) || (fabs(m_lattice[i].U[j].mat[k].im - 0.783843) < 1e-12))
+//                    cout << "matching element at position: " << i << endl;
+//            }
+//        }
+//    }
+//    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+//    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
+//    exit(1);
     clock_t preUpdate, postUpdate;
     double updateStorer = 0;
     // Running thermalization
-    for (int i = 0; i < m_NTherm*m_NCor; i++)
+    for (int i = 0; i < m_NTherm; i++)
     {
         preUpdate = clock();
         update();
         postUpdate = clock();
         updateStorer += ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC));
         if ((i-1) % 20 == 0) {
-            cout << "Avg. time after " << (i - 1 + 20) << " updates (pre-sharing): " << updateStorer/(i+1) << " sec" << endl;
+            cout << "Avg. time after " << (i - 1 + 20) << " updates: " << updateStorer/double(i+1) << " sec. ";
         }
-        // Print correlator every somehting or store them all(useful when doing the thermalization)
         if (storePreObservables) {
             m_GammaPreThermalization[i+1] = m_correlator->calculate(m_lattice);
+            if ((i-1) % 20 == 0) {
+                cout << "Correlator: " << m_GammaPreThermalization[i+1] << endl;
+            }
         } else if ((i+1) % 10 == 0) {
             m_GammaPreThermalization[int((i+1)/10.0)+1] = m_correlator->calculate(m_lattice);
+            if ((i-1) % 20 == 0) {
+                cout << "Correlator: " << m_GammaPreThermalization[int((i+1)/10.0)+1] << endl;
+            }
         }
+        // Print correlator every somehting or store them all(useful when doing the thermalization)
     }
-    cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm*m_NCor] << endl;
-    cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm*m_NCor) << endl;
+    cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm] << endl;
+    cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm) << endl;
     // Setting the metropolis acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
     // Main part of algorithm
@@ -213,7 +219,7 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
      * - filename
      */
     std::ofstream file;
-    file.open(filename + ".dat");
+    file.open(m_outputFolder + filename + ".dat");
     file << "acceptanceCounter " << getAcceptanceRate() << endl;
     file << "NCor " << m_NCor << endl;
     file << "NCf " << m_NCf << endl;
@@ -231,7 +237,7 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
         file << m_Gamma[i] << endl;
     }
     file.close();
-    cout << filename << " written" << endl;
+    cout << m_outputFolder + filename + ".dat" << " written" << endl;
 }
 
 
@@ -259,7 +265,7 @@ void System::writeConfigurationToFile(std::string filename)
      * - filename
      */
     FILE *file; // C method
-    file = fopen((m_outputFolder + filename).c_str(), "wb");
+    file = fopen((m_outputFolder + filename + ".bin").c_str(), "wb");
     for (int t = 0; t < m_N_T; t++) {
         for (int z = 0; z < m_N; z++) {
             for (int y = 0; y < m_N; y++) {
@@ -270,7 +276,7 @@ void System::writeConfigurationToFile(std::string filename)
         }
     }
     fclose(file);
-    cout << m_outputFolder + filename  + " written" << endl;
+    cout << m_outputFolder + filename + ".bin" + " written" << endl;
 }
 
 void System::loadFieldConfiguration(std::string filename)
@@ -281,7 +287,7 @@ void System::loadFieldConfiguration(std::string filename)
      * - filename
      */
     FILE *file; // C method
-    file = fopen((m_outputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
+    file = fopen((m_outputFolder + filename + ".bin").c_str(), "rb"); // CAREFULL HERE!
 //    file = fopen((m_inputFolder + filename).c_str(), "rb"); // CAREFULL HERE!
 
 //    for (int t = 0; t < m_N_T; t++) {
@@ -311,6 +317,6 @@ void System::loadFieldConfiguration(std::string filename)
     }
 
     fclose(file);
-    cout << m_outputFolder + filename  + " loaded" << endl;
+    cout << m_outputFolder + filename + ".bin" + " loaded" << endl;
 //    cout << m_inputFolder + filename  + " loaded" << endl;
 }
