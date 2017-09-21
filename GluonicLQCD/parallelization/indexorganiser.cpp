@@ -173,7 +173,7 @@ void IndexOrganiser::setN(int *N)
     if (m_processRank == 0) {
         cout << "Setting the sub lattice size in indexOrganizer: ";
         for (int i = 0; i < 4; i++) {
-            cout << m_N[i];
+            cout << m_N[i] << " ";
         }
         cout << endl;
     }
