@@ -281,7 +281,16 @@ def main():
 	sublattice = SubLattice(dimensions,numprocs)
 	# sublattice.printSubLattice(storeInFile = storeOutput)
 	sublattice.printTotalLattice(storeInFile = storeOutput)
-	
+
+	parallel32core = np.loadtxt("parallel_index_file_32cores.txt",dtype=int)
+	parallel32core = np.asarray(sorted(parallel32core,key=itemgetter(3,2,1,0)))
+
+	parallel16core = np.loadtxt("parallel_index_file_16cores.txt",dtype=int)
+	parallel16core = np.asarray(sorted(parallel16core,key=itemgetter(3,2,1,0)))
+	para_sum = sum(parallel32core[:,-1] == parallel16core[:,-1])
+	print para_sum
+	print para_sum == (len(parallel32core) and len(parallel16core))
+
 
 	parallelIndexes = [i[1] for i in sublattice.memory_position_string]
 	parallelLocations = np.asarray([i[0] for i in sublattice.memory_position_string])
@@ -297,21 +306,24 @@ def main():
 	# print "Printing the parallel and scalar memory positions: "
 	# for i,P,parallelIndex,x,scalarIndex,y,memDiff in zip(	range(index_ceiling),
 	# 											mega_array[:,-1], # Processor who performed calculation
-	# 											mega_array[:,0], # Parallel index
-	# 											mega_array[:,1], # Parallel mem loc
+	# 											# mega_array[:,0], # Parallel index
+	# 											# mega_array[:,1], # Parallel mem loc
+	# 											parallel32core[:index_ceiling,0:4], # Parallel mem loc
+	# 											parallel32core[:index_ceiling,-1], # Parallel index
 	# 											scalarIndexes[:index_ceiling], # Scalar index
 	# 											scalarLocations[:index_ceiling],
 	# 											memoryDifferences): # Scalar memloc
 	# 	print "%4d: Parallel(P: %2d xyzt index: %16s): %6d || Scalar(xyzt index: %16s: %6d || Mem.diff: %4d" % (i,P,parallelIndex,x,scalarIndex,y,memDiff)
 
-	bool_sums_equal = sum(parallelLocations) == sum(scalarLocations)
-	bool_elements_equal = (sum([True if i in scalarLocations else False for i in parallelLocations]) == len(sublattice.memory_position_string))
-	if bool_sums_equal and bool_sums_equal:
-		print "Success: Equal number of elements accessed."
-	else:
-		print "Failure: Unequal number of elements accessed"
-	
+	# bool_sums_equal = sum(parallelLocations) == sum(scalarLocations)
+	# bool_elements_equal = (sum([True if i in scalarLocations else False for i in parallelLocations]) == len(sublattice.memory_position_string))
+	# if bool_sums_equal and bool_sums_equal:
+	# 	print "Success: Equal number of elements accessed."
+	# else:
+	# 	print "Failure: Unequal number of elements accessed"
+
 	# Testing if we are mapping parallel processors to scalar memory allocation
+	testIfEqualMemoryPositions(parallel32core[:,-1],mega_array[:,1])
 	testIfEqualMemoryPositions(scalarLocations,mega_array[:,1])
 
 	# Comparing memory locations to the parallel and scalar branch of program run on a 8**4 lattice

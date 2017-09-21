@@ -156,8 +156,8 @@ int IndexOrganiser::getGlobalIndex(int i, int j, int k, int l)
      *  k   : z position
      *  l   : t position
      */
-    return i + m_NTot[0]*(j + m_NTot[1]*(k + m_NTot[2]*l)); // column-major
 //    return (m_NTot[3]*(m_NTot[2]*(m_NTot[1]*i + j) + k) + l); // row-major
+    return i + m_NTot[0]*(j + m_NTot[1]*(k + m_NTot[2]*l)); // column-major
 }
 
 void IndexOrganiser::setN(int *N)
