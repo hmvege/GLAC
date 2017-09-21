@@ -123,7 +123,8 @@ void System::runMetropolis(bool storePreObservables)
 {
     // TESTS ==============================================================================================
 //    loadFieldConfiguration("scalar16cubed16run1");
-    loadFieldConfiguration("parallel8core16cube16");
+//    loadFieldConfiguration("parallel8core16cube16");
+    loadFieldConfiguration("parallel32core16cube_plaquette0594052");
     m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
     cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
     exit(1);
@@ -274,7 +275,7 @@ void System::loadFieldConfiguration(std::string filename)
         for (int z = 0; z < m_N; z++) {
             for (int y = 0; y < m_N; y++) {
                 for (int x = 0; x < m_N; x++) {
-                    cout << "Index: " << x << " " << y << " " << z << " " << t << " Mem.pos.: " << index(x,y,z,t,m_N,m_N_T) << endl;
+//                    cout << "Index: " << x << " " << y << " " << z << " " << t << " Mem.pos.: " << index(x,y,z,t,m_N,m_N_T) << endl;
                     fread(&m_lattice[index(x,y,z,t,m_N,m_N_T)],sizeof(Links),1,file);
                     if (feof(file)) {
                         cout << "EOF!" << endl;
