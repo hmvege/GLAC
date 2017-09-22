@@ -12,6 +12,7 @@ private:
     int *muIndex;
     int *nuIndex;
     double multiplicationFactor;
+    SU3 P;
 public:
     Plaquette();
     ~Plaquette();

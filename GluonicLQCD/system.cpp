@@ -135,8 +135,8 @@ void System::subLatticeSetup()
 
     // Passes the index handler and dimensionality to the action and correlator classes.
     m_S->initializeIndexHandler(m_indexHandler);
-    m_correlator->initializeIndexHandler(m_indexHandler);
     m_S->setN(m_N);
+    m_correlator->initializeIndexHandler(m_indexHandler);
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
 
@@ -169,7 +169,6 @@ void System::subLatticeSetup()
             cout << m_VSub[i] << " ";
         }
         cout << endl;
-
     }
     MPI_Barrier(MPI_COMM_WORLD);
 //    m_neighbourLists->getNeighbours(m_processRank)->print();
@@ -221,12 +220,6 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
     if (m_processRank == 0) {
         cout << "Lattice setup complete" << endl;
     }
-    if (m_processRank==1) {
-        m_lattice[m_indexHandler->getIndex(m_N[0]-1,m_N[1]-1,m_N[2]-1,m_N[3]-1)].U[4].print();
-    }
-    cout << "SEEMS THERE IS A BUG WITH THE EDGES!! WHYYY? NEED TO CHECK IF THIS IS TRUE FOR 16 PROCESSORS AS WELL"
-    MPI_Barrier(MPI_COMM_WORLD);
-    exit(1);
 }
 
 void System::updateLink(int latticeIndex, int mu)
@@ -278,9 +271,9 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
     // TESTS ==============================================================================
     MPI_Barrier(MPI_COMM_WORLD);
-//    loadFieldConfiguration("parallel32core16cube_plaquette0594052.bin"); // From parallel program version, 32 cores
+    loadFieldConfiguration("parallel32core16cube_plaquette0594052.bin"); // From parallel program version, 32 cores
 //    loadFieldConfiguration("parallel8core16cube16.bin"); // From parallel program version, 8 cores
-    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
+//    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
     MPI_Barrier(MPI_COMM_WORLD);
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -522,7 +515,8 @@ void System::loadFieldConfiguration(std::string filename)
 
 //    std::ofstream indexFile;
 //    indexFile.open("../python_scripts/parallel_16core_index_file_rank" + std::to_string(m_processRank) + ".dat");
-
+    int counter1 = 0;
+    unsigned int counter2 = 0;
     for (int t = 0; t < m_N[3]; t++) {
         nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
         for (int z = 0; z < m_N[2]; z++) {
@@ -535,19 +529,26 @@ void System::loadFieldConfiguration(std::string filename)
 //                    nx = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
 //                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
+                    counter2 = m_indexHandler->getGlobalIndex(nx,ny,nz,nt);
+                    counter1 = m_indexHandler->getGlobalIndex(nx,ny,nz,nt);
+                    if (counter1 != counter2) {
+                        cout << "INTEGER OVERFLOW" << endl;
+                        cout << "Int: " << counter1 << " unsigned int: " << counter2 << endl;
+                    }
                     MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
 //                    indexFile << nx << " " << ny << " " << nz << " " << nt << " " << m_indexHandler->getGlobalIndex(nx,ny,nz,nt) << endl;
                 }
             }
         }
     }
-
-//    if (m_processRank==0) {
-//        m_lattice[m_indexHandler->getIndex(0,0,0,0)].U[0].print();
-//    }
-//    if (m_processRank==m_numprocs-1) {
-    if (m_processRank==1) {
-        m_lattice[m_indexHandler->getIndex(m_N[0]-1,m_N[1]-1,m_N[2]-1,m_N[3]-1)].U[4].print();
+    if (m_processRank==0) {
+        cout << "First link: " << endl;
+        m_lattice[m_indexHandler->getIndex(0,0,0,0)].U[0].print();
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
+    if (m_processRank==m_numprocs-1) {
+        cout << "Last link: " << endl;
+        m_lattice[m_indexHandler->getIndex(m_N[0]-1,m_N[1]-1,m_N[2]-1,m_N[3]-1)].U[3].print();
     }
 
 //    indexFile.close();
