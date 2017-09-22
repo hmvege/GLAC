@@ -12,7 +12,7 @@ using std::endl;
 
 Action::Action()
 {
-    m_N = new int[4];
+    m_N = new unsigned int[4];
     for (int i = 0; i < 4; i++) {
         m_N[i] = 0;
     }
@@ -37,7 +37,7 @@ void Action::computeStaple(Links *lattice, int i, int j, int k, int l, int mu)
     exit(1);
 }
 
-void Action::setN(int *N)
+void Action::setN(unsigned int *N)
 {
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];

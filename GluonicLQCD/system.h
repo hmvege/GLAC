@@ -17,7 +17,7 @@ private:
     // Lattice sizes
     int m_NSpatial;
     int m_NTemporal;
-    int m_N[4];
+    unsigned int m_N[4];
 
     // Beta value constant
     double m_beta;

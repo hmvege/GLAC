@@ -11,7 +11,7 @@ class Action
 {
 protected:
     // Index length array
-    int *m_N;
+    unsigned int *m_N;
     // For handling the shift-method in parallelization
     std::vector<int> indexes;
     IndexOrganiser *m_Index = nullptr;
@@ -22,7 +22,7 @@ public:
     virtual double getDeltaAction(Links * lattice, SU3 U, int i, int j, int k, int l, int mu);
     virtual void computeStaple(Links *lattice, int i, int j, int k, int l, int mu);
     // Setters
-    void setN(int *N);
+    void setN(unsigned int *N);
     void initializeIndexHandler(IndexOrganiser *Index);
 };
 

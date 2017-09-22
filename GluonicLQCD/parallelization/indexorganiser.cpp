@@ -133,7 +133,7 @@ SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int>
     }
 }
 
-int IndexOrganiser::getIndex(int i, int j, int k, int l)
+unsigned int IndexOrganiser::getIndex(unsigned int i, unsigned int j, unsigned int k, unsigned int l)
 {
     /*
      * Function for retrieving lattice position in contigious memory allocation.
@@ -147,7 +147,7 @@ int IndexOrganiser::getIndex(int i, int j, int k, int l)
     return i + m_N[0]*(j + m_N[1]*(k + m_N[2]*l)); // column-major
 }
 
-int IndexOrganiser::getGlobalIndex(int i, int j, int k, int l)
+unsigned int IndexOrganiser::getGlobalIndex(unsigned int i, unsigned int j, unsigned int k, unsigned int l)
 {
     /*
      * Function for retrieving global lattice position.
@@ -160,7 +160,7 @@ int IndexOrganiser::getGlobalIndex(int i, int j, int k, int l)
     return i + m_NTot[0]*(j + m_NTot[1]*(k + m_NTot[2]*l)); // column-major
 }
 
-void IndexOrganiser::setN(int *N)
+void IndexOrganiser::setN(unsigned int *N)
 {
     /*
      * Function for setting the dimensionality of the sublattice.
@@ -187,7 +187,7 @@ void IndexOrganiser::setNTot(int NSpatial, int NTemporal)
      *  N       : an array of ints of length 4, where each element is the dimension size of either x,y,z or t
      */
     for (int i = 0; i < 3; i++) {
-        m_NTot[i] = NSpatial;
+        m_NTot[i] = (unsigned int) NSpatial;
     }
-    m_NTot[3] = NTemporal;
+    m_NTot[3] = (unsigned int) NTemporal;
 }

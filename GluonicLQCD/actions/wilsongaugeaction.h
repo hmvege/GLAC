@@ -17,8 +17,8 @@ private:
 public:
     WilsonGaugeAction(double beta);
     ~WilsonGaugeAction();
-    double getDeltaAction(Links *lattice, SU3 UPrime, int i, int j, int k, int l, int mu);
-    void computeStaple(Links *lattice, int i, int j, int k, int l, int mu);
+    double getDeltaAction(Links *lattice, SU3 UPrime, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    void computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
 };
 
 #endif // WILSONGAUGEACTION_H

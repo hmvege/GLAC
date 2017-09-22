@@ -91,6 +91,7 @@ void System::subLatticeSetup()
     // Iteratively finds and sets the sub-lattice dimensions
     while (restProc >= 2) {
         for (int i = 0; i < 4; i++) { // Counts from x to t
+//        for (int i = 4; i > 0; i--) { // Counts from x to t
             m_N[i] /= 2;
             restProc /= 2;
             if (restProc < 2) break;
@@ -204,11 +205,11 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
         }
     } else {
         // Cold start: everything starts out at unity.
-        for (int x = 0; x < m_N[0]; x++) {
-            for (int y = 0; y < m_N[1]; y++) {
-                for (int z = 0; z < m_N[2]; z++) {
-                    for (int t = 0; t < m_N[3]; t++) {
-                        for (int mu = 0; mu < 4; mu++) {
+        for (unsigned int x = 0; x < m_N[0]; x++) {
+            for (unsigned int y = 0; y < m_N[1]; y++) {
+                for (unsigned int z = 0; z < m_N[2]; z++) {
+                    for (unsigned int t = 0; t < m_N[3]; t++) {
+                        for (unsigned int mu = 0; mu < 4; mu++) {
 //                            m_lattice[getIndex(x,y,z,t,m_N[1],m_N[2],m_N[3])].U[mu].identity();
                             m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[mu].identity();
                         }
@@ -241,11 +242,11 @@ void System::update()
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
-    for (int x = 0; x < m_N[0]; x++) {
-        for (int y = 0; y < m_N[1]; y++) {
-            for (int z = 0; z < m_N[2]; z++) {
-                for (int t = 0; t < m_N[3]; t++) {
-                    for (int mu = 0; mu < 4; mu++) {
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
                         for (int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
@@ -271,8 +272,8 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
     // TESTS ==============================================================================
     MPI_Barrier(MPI_COMM_WORLD);
-    loadFieldConfiguration("parallel32core16cube_plaquette0594052.bin"); // From parallel program version, 32 cores
-//    loadFieldConfiguration("parallel8core16cube16.bin"); // From parallel program version, 8 cores
+//    loadFieldConfiguration("parallel32core16cube_plaquette0594052.bin"); // From parallel program version, 32 cores
+    loadFieldConfiguration("parallel8core16cube16.bin"); // From parallel program version, 8 cores
 //    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
     MPI_Barrier(MPI_COMM_WORLD);
     double corr = m_correlator->calculate(m_lattice);
@@ -479,15 +480,15 @@ void System::writeConfigurationToFile(int configNumber)
 //            }
 //        }
 //    }
-    for (int t = 0; t < m_N[3]; t++) {
+    for (unsigned int t = 0; t < m_N[3]; t++) {
         nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (int z = 0; z < m_N[2]; z++) {
+        for (unsigned int z = 0; z < m_N[2]; z++) {
 //            nz = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
             nz = (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (int y = 0; y < m_N[1]; y++) {
+            for (unsigned int y = 0; y < m_N[1]; y++) {
 //                ny = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
                 ny = (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (int x = 0; x < m_N[0]; x++) {
+                for (unsigned int x = 0; x < m_N[0]; x++) {
 //                    nx = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
 //                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
@@ -515,25 +516,28 @@ void System::loadFieldConfiguration(std::string filename)
 
 //    std::ofstream indexFile;
 //    indexFile.open("../python_scripts/parallel_16core_index_file_rank" + std::to_string(m_processRank) + ".dat");
+
     int counter1 = 0;
     unsigned int counter2 = 0;
-    for (int t = 0; t < m_N[3]; t++) {
+    unsigned long int counter3 = 0;
+    for (unsigned int t = 0; t < m_N[3]; t++) {
         nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (int z = 0; z < m_N[2]; z++) {
+        for (unsigned int z = 0; z < m_N[2]; z++) {
 //            nz = m_V[0] * (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z) + nt;
             nz = (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (int y = 0; y < m_N[1]; y++) {
+            for (unsigned int y = 0; y < m_N[1]; y++) {
 //                ny = m_V[1] * (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y) + nz;
                 ny = (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (int x = 0; x < m_N[0]; x++) {
+                for (unsigned int x = 0; x < m_N[0]; x++) {
 //                    nx = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
 //                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
+                    counter3 = m_indexHandler->getGlobalIndex(nx,ny,nz,nt);
                     counter2 = m_indexHandler->getGlobalIndex(nx,ny,nz,nt);
                     counter1 = m_indexHandler->getGlobalIndex(nx,ny,nz,nt);
-                    if (counter1 != counter2) {
+                    if (counter1 != counter2 || counter1 != counter3) {
                         cout << "INTEGER OVERFLOW" << endl;
-                        cout << "Int: " << counter1 << " unsigned int: " << counter2 << endl;
+                        cout << "Int: " << counter1 << " unsigned int: " << counter2 << "unsigned long int: " << counter3 << endl;
                     }
                     MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
 //                    indexFile << nx << " " << ny << " " << nz << " " << nt << " " << m_indexHandler->getGlobalIndex(nx,ny,nz,nt) << endl;

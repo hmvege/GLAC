@@ -5,7 +5,7 @@
 
 Correlator::Correlator()
 {
-    m_N = new int[4];
+    m_N = new unsigned int[4];
     for (int i = 0; i < 4; i++) {
         m_N[i] = 0;
     }
@@ -31,7 +31,7 @@ double Correlator::calculate(Links * lattice)
     return 1.0;
 }
 
-void Correlator::setN(int *N)
+void Correlator::setN(unsigned int *N)
 {
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];

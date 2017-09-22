@@ -21,7 +21,7 @@ WilsonGaugeAction::~WilsonGaugeAction()
     delete [] nuIndex;
 }
 
-double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int j, int k, int l, int mu)
+double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
 //    double S = 0;
 //    SU3 tr;
@@ -33,7 +33,7 @@ double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, int i, int 
     return (tr.mat[0].re() + tr.mat[4].re() + tr.mat[8].re())*multiplicationFactor; // Should be N=3 as in the Gauge symmetry
 }
 
-void WilsonGaugeAction::computeStaple(Links *lattice, int i, int j, int k, int l, int mu)
+void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     staple.zeros();
     lorentzIndex(mu,muIndex);

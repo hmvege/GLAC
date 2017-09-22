@@ -31,10 +31,10 @@ double Plaquette::calculate(Links *lattice)
 {
 //    double gamma = 0;
 //    SU3 P;
-    for (int i = 0; i < m_N[0]; i++) {
-        for (int j = 0; j < m_N[1]; j++) {
-            for (int k = 0; k < m_N[2]; k++) {
-                for (int l = 0; l < m_N[3]; l++) {
+    for (unsigned int i = 0; i < m_N[0]; i++) {
+        for (unsigned int j = 0; j < m_N[1]; j++) {
+            for (unsigned int k = 0; k < m_N[2]; k++) {
+                for (unsigned int l = 0; l < m_N[3]; l++) {
                     indexes[0] = i;
                     indexes[1] = j;
                     indexes[2] = k;

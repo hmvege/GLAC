@@ -292,6 +292,16 @@ def main():
 	print para_sum == (len(parallel32core) and len(parallel16core))
 
 
+	parallel32core = np.loadtxt("para32ranks.txt",dtype=int)
+	parallel32core = np.asarray(sorted(parallel32core,key=itemgetter(3,2,1,0)))
+
+	parallel16core = np.loadtxt("para16ranks.txt",dtype=int)
+	parallel16core = np.asarray(sorted(parallel16core,key=itemgetter(3,2,1,0)))
+	para_sum = sum(parallel32core[:,-1] == parallel16core[:,-1])
+	print para_sum
+	print para_sum == (len(parallel32core) and len(parallel16core))
+
+
 	parallelIndexes = [i[1] for i in sublattice.memory_position_string]
 	parallelLocations = np.asarray([i[0] for i in sublattice.memory_position_string])
 	scalarIndexes = np.asarray([i[1] for i in lattice.memory_position_string])

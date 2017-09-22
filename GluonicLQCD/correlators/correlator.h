@@ -10,7 +10,7 @@ class Correlator
 {
 protected:
     // Index length array
-    int *m_N;
+    unsigned int *m_N;
     double m_latticeSize;
 
     // For handling the shift-method in parallelization
@@ -23,7 +23,7 @@ public:
     virtual void setLatticeSize(int latticeSize);
 
     // Setters
-    void setN(int *N);
+    void setN(unsigned int *N);
     void initializeIndexHandler(IndexOrganiser *Index);
 };
 
