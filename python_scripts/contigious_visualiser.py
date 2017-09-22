@@ -312,6 +312,21 @@ def main():
 	mega_array = np.asarray(sorted(mega_list,key=lambda i: itemgetter(0)(i)[::-1])) # Sorting the index ordering
 	memoryDifferences = mega_array[:,1] - scalarLocations[:]
 	
+	# Comparing para32 proc positions with what we should have
+	para32WithProcNames = np.loadtxt("para32withProcNames.txt",dtype=int)
+	para32WithProcNames = np.asarray(sorted(para32WithProcNames,key=itemgetter(3,2,1,0)))
+
+	counter = 0
+	for elem1, elem2 in zip(para32WithProcNames,mega_array):
+		for index1,index2 in zip(elem1[0:4],elem2[0]):
+			if index1 != index2:
+				print "Error in index position!"
+				counter += 1
+		if elem1[-1] != elem2[-1]:
+			print "Error in processor position!"
+	if counter != 0:
+		print counter
+
 
 	# print "Printing the parallel and scalar memory positions: "
 	# for i,P,parallelIndex,x,scalarIndex,y,memDiff in zip(	range(index_ceiling),
@@ -325,12 +340,12 @@ def main():
 	# 											memoryDifferences): # Scalar memloc
 	# 	print "%4d: Parallel(P: %2d xyzt index: %16s): %6d || Scalar(xyzt index: %16s: %6d || Mem.diff: %4d" % (i,P,parallelIndex,x,scalarIndex,y,memDiff)
 
-	# bool_sums_equal = sum(parallelLocations) == sum(scalarLocations)
-	# bool_elements_equal = (sum([True if i in scalarLocations else False for i in parallelLocations]) == len(sublattice.memory_position_string))
-	# if bool_sums_equal and bool_sums_equal:
-	# 	print "Success: Equal number of elements accessed."
-	# else:
-	# 	print "Failure: Unequal number of elements accessed"
+	bool_sums_equal = sum(parallelLocations) == sum(scalarLocations)
+	bool_elements_equal = (sum([True if i in scalarLocations else False for i in parallelLocations]) == len(sublattice.memory_position_string))
+	if bool_sums_equal and bool_sums_equal:
+		print "Success: Equal number of elements accessed."
+	else:
+		print "Failure: Unequal number of elements accessed"
 
 	# Testing if we are mapping parallel processors to scalar memory allocation
 	testIfEqualMemoryPositions(parallel32core[:,-1],mega_array[:,1])

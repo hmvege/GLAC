@@ -68,6 +68,7 @@ SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, 
     if ((n[mu]+muIndex[mu]) % m_N[mu] == 0) {
         n[mu] = 0;
         MPIfetchSU3Positive(lattice,n,mu,SU3Dir);
+//        exchangeU.identity(); // NOT PASSING CORRECTLY?
         return exchangeU;
     }
     else {
@@ -171,7 +172,7 @@ void IndexOrganiser::setN(unsigned int *N)
         m_N[i] = N[i];
     }
     if (m_processRank == 0) {
-        cout << "Setting the sub lattice size in indexOrganizer: ";
+        cout << "Setting up the sublattice(indexOrganizer.cpp): ";
         for (int i = 0; i < 4; i++) {
             cout << m_N[i] << " ";
         }

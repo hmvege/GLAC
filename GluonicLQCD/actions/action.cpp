@@ -24,14 +24,14 @@ Action::~Action()
     delete [] m_N;
 }
 
-double Action::getDeltaAction(Links * lattice, SU3 U, int i, int j, int k, int l, int mu)
+double Action::getDeltaAction(Links * lattice, SU3 U, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     cout << "In Action::getDeltaAction: If you are seeing this, something is wrong!" << endl;
     exit(1);
     return 1.0;
 }
 
-void Action::computeStaple(Links *lattice, int i, int j, int k, int l, int mu)
+void Action::computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     cout << "In Action::computeStaple: If you are seeing this, something is wrong!" << endl;
     exit(1);

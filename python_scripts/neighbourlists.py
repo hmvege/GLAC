@@ -1,12 +1,10 @@
 import numpy as np
 
 # Processors in one dimension
-Nx = 2
+Nx = 4
 Ny = 2
 Nz = 2
 Nt = 2
-
-N = Nx*Ny
 
 def print_break(Np, neighbours_string):
 	if (Np+1) % (Nx*Ny*Nz) == 0:
