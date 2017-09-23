@@ -273,8 +273,11 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
     // TESTS ==============================================================================
     MPI_Barrier(MPI_COMM_WORLD);
+    writeConfigurationToFile(0);
+    exit(1);
+//    loadFieldConfiguration("");
 //    loadFieldConfiguration("parallel32core16cube_plaquette0594052.bin"); // From parallel program version, 32 cores
-    loadFieldConfiguration("config32updated0612263.bin"); // From parallel program version, 32 cores
+//    loadFieldConfiguration("config32updated0612263.bin"); // From parallel program version, 32 cores
 //    output/config32updated.bin
 //    loadFieldConfiguration("parallel8core16cube16.bin"); // From parallel program version, 8 cores
 //    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
