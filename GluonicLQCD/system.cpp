@@ -124,7 +124,9 @@ void System::runMetropolis(bool storePreObservables)
     // TESTS ==============================================================================================
 //    loadFieldConfiguration("scalar16cubed16run1");
 //    loadFieldConfiguration("parallel8core16cube16");
-    loadFieldConfiguration("parallel32core16cube_plaquette0594052");
+    writeConfigurationToFile("unityScalar");
+//    loadFieldConfiguration("parallel32core16cube_plaquette0594052");
+    loadFieldConfiguration("unityScalar");
     m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
     cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
     exit(1);
