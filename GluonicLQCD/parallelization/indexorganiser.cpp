@@ -67,8 +67,31 @@ SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, 
      */
     if ((n[mu]+muIndex[mu]) % m_N[mu] == 0) {
         n[mu] = 0;
+
+        //// ARE WE SHARING CORRECT?!
+        Continue here
+        MPI_Barrier(MPI_COMM_WORLD);
+        if (m_processRank==0) {
+            for (int i = 0; i < 4; i++) cout << n[0];
+            cout << " mu = " << mu << endl;
+            cout << "Process 0, positive direction, before sharing." << endl;
+//            lattice[getIndex(m_N[0]-1,)]
+            exchangeU.print();
+        }
+        if (m_processRank==1) {
+            cout << "Process 1, process we are fetching from." << endl;
+            lattice[getIndex(0,0,0,0)].U[SU3Dir].print();
+        }
         MPIfetchSU3Positive(lattice,n,mu,SU3Dir);
 //        exchangeU.identity(); // NOT PASSING CORRECTLY?
+
+        if (m_processRank==0) {
+            cout << "Process 0, positive direction, after sharing" << endl;
+            exchangeU.print();
+        }
+        MPI_Barrier(MPI_COMM_WORLD);
+        MPI_Finalize();exit(1);
+
         return exchangeU;
     }
     else {
