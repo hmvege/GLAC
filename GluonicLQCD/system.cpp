@@ -38,7 +38,7 @@ System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int N
     m_processRank = processRank;
     setAction(S);
     setCorrelator(correlator);
-    m_GammaPreThermalization = new double[m_NTherm*m_NCor+1];
+    m_GammaPreThermalization = new double[m_NTherm+1];
     m_Gamma = new double[m_NCf]; // Correlator values
     m_GammaSquared = new double[m_NCf];
 
@@ -91,7 +91,7 @@ void System::subLatticeSetup()
     // Iteratively finds and sets the sub-lattice dimensions
     while (restProc >= 2) {
         for (int i = 0; i < 4; i++) { // Counts from x to t
-//        for (int i = 4; i > 0; i--) { // Counts from x to t
+//        for (int i = 4; i >= 0; i--) { // Counts from x to t
             m_N[i] /= 2;
             restProc /= 2;
             if (restProc < 2) break;
@@ -161,9 +161,15 @@ void System::subLatticeSetup()
             cout << m_processorsPerDimension[i] << " ";
         }
         cout << endl;
+        cout << "Lattice dimensions: N = " << m_NSpatial << " N_T = " << m_NTemporal << endl;
         cout << "Lattice volumes: ";
         for (int i = 0; i < 4; i++) {
             cout << m_V[i] << " ";
+        }
+        cout << endl;
+        cout << "Sub lattice dimensions: ";
+        for (int i = 0; i < 4; i++) {
+            cout << m_N[i] << " ";
         }
         cout << endl;
         cout << "Sub-lattice volumes: ";
@@ -171,8 +177,10 @@ void System::subLatticeSetup()
             cout << m_VSub[i] << " ";
         }
         cout << endl;
+        cout << "Sub lattice size: " << m_subLatticeSize << endl;
+        cout << "Link size: " << linkSize << endl;
     }
-//    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
 //    m_neighbourLists->getNeighbours(m_processRank)->print();
 //    cout << "Neighbourlist coordinates for P = " << m_processRank << " is: ";
 //    for (int i = 0; i < 4; i++) {
@@ -181,7 +189,7 @@ void System::subLatticeSetup()
 //    cout << endl;
 //    MPI_Barrier(MPI_COMM_WORLD);
 //    if (m_processRank == 0) cout << "Exits at neighbour lists" << endl;
-//    exit(0);
+//    MPI_Finalize(); exit(0);
     // ==========================================================================================
 
 }
@@ -271,15 +279,52 @@ void System::update()
 
 void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
-    // TESTS ==============================================================================
+    //// TESTS ==============================================================================
     MPI_Barrier(MPI_COMM_WORLD);
-//    writeConfigurationToFile(0);
+//    writeConfigurationToFile(0); // Writing initial config to file.
+    loadFieldConfiguration("para8core061102.bin");
+//    loadFieldConfiguration("para32core0.627734.bin");
+    // "para8to32core0563387.bin"
+//    writeConfigurationToFile(1);
+//    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    //// PRINTS LATTICES AT EDGES IN ORDER TO CHECK THAT WE HAVE CORRECT LATTICE ORDERING
+//    if (m_processRank==0) { // CHECK THAT THE CORRECT LINKS ARE WHERE THE SHOULD BE
+//        cout << "Rank " << m_processRank << endl;
+//        m_lattice[m_indexHandler->getIndex(m_N[0]-1,0,0,0)].U[0].print();
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    if (m_processRank==0) { // CHECK THAT THE CORRECT LINKS ARE WHERE THE SHOULD BE
+//        cout << "Rank " << m_processRank << " half of P=0 (should equal the P=1 end link for 32 procs." << endl;
+//        m_lattice[m_indexHandler->getIndex(m_N[0]/2-1,0,0,0)].U[0].print();
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    if (m_processRank==1) {
+//        cout << "Rank " << m_processRank << endl;
+//        m_lattice[m_indexHandler->getIndex(m_N[0]-1,0,0,0)].U[0].print();
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    if (m_processRank==2) {
+//        cout << "Rank " << m_processRank << endl;
+//        m_lattice[m_indexHandler->getIndex(m_N[0]-1,0,0,0)].U[0].print();
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    if (m_processRank==1) {
+//        cout << "Rank " << m_processRank << " half of P=1 (should equal the P=2 end link for 32 procs." << endl;
+//        m_lattice[m_indexHandler->getIndex(m_N[0]/2-1,0,0,0)].U[0].print();
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    if (m_processRank==3) {
+//        cout << "Rank " << m_processRank << " should equal last of P=1 for 16 procs." << endl;
+//        m_lattice[m_indexHandler->getIndex(m_N[0]-1,0,0,0)].U[0].print();
+//    }
+
 //    loadFieldConfiguration("unityScalar.bin");
 //    loadFieldConfiguration("unity16cores.bin");
 //    loadFieldConfiguration("unity32cores.bin");
 //    loadFieldConfiguration("parallel32core16cube_plaquette0594052.bin"); // From parallel program version, 32 cores
 //    loadFieldConfiguration("config32updated0612263.bin"); // From parallel program version, 32 cores
-//    output/config32updated.bin
 //    loadFieldConfiguration("parallel8core16cube16.bin"); // From parallel program version, 8 cores
 //    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
     MPI_Barrier(MPI_COMM_WORLD);
@@ -288,8 +333,15 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
     corr /= double(m_numprocs);
     if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
     MPI_Barrier(MPI_COMM_WORLD);
-    exit(1);
-    // ===================================================================================
+
+    writeConfigurationToFile(1);
+    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
+    corr = m_correlator->calculate(m_lattice);
+    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    corr /= double(m_numprocs);
+    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+    MPI_Finalize(); exit(1);
+    //// ===================================================================================
 
     // Variables for checking performance of the update.
     clock_t preUpdate, postUpdate;
@@ -303,7 +355,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 
     // Dividing by the number of processors in order to get the correlator.
     m_GammaPreThermalization[0] /= double(m_numprocs);
-    if (m_processRank == 0) cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
+    if (m_processRank == 0) cout << "Pre-thermialization correlator: " << m_GammaPreThermalization[0] << endl;
 
     // Running thermalization
     for (int i = 0; i < m_NTherm; i++)
@@ -328,21 +380,17 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
             // Averaging the results
             m_GammaPreThermalization[i+1] /= double(m_numprocs);
             if (m_processRank == 0) cout << i << " " << m_GammaPreThermalization[i+1] << endl; // Printing evolution of system
-        } else if ((i+1) % 10 == 0) {
-            m_GammaPreThermalization[int((i+1)/10.0)+1] = m_correlator->calculate(m_lattice);
-            MPI_Allreduce(&m_GammaPreThermalization[int((i+1)/10.0)+1], &m_GammaPreThermalization[int((i+1)/10.0)+1], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-            m_GammaPreThermalization[int((i+1)/10.0)+1] /= double(m_numprocs);
         }
     }
 
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
-    m_acceptanceCounter = int(double(m_acceptanceCounter)/double(m_numprocs));
+//    m_acceptanceCounter = double(m_acceptanceCounter)/double(m_numprocs);
 
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
+        cout << "Termalization complete. Acceptance rate: " << double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm) << endl;
         cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm] << endl;
-        cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_NUpdates*m_NTherm) << endl;
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -371,12 +419,12 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         corr /= double(m_numprocs);
         if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
         MPI_Barrier(MPI_COMM_WORLD);
-        exit(1);
+        MPI_Finalize(); exit(1);
         // =================================================================
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
-    m_acceptanceCounter = int(double(m_acceptanceCounter)/double(m_numprocs));
+    m_acceptanceCounter = double(m_acceptanceCounter)/double(m_numprocs);
     if (m_processRank == 0) cout << "System completed." << endl;
 }
 
@@ -430,7 +478,7 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
         file << "VarianceGamma " << m_varianceGamma << endl;
         file << "stdGamma " << m_stdGamma << endl;
         if (preThermalizationGamma) {
-            for (int i = 0; i < m_NTherm*m_NCor+1; i++) {
+            for (int i = 0; i < m_NTherm+1; i++) {
                 file << m_GammaPreThermalization[i] << endl;
             }
         }
@@ -543,13 +591,15 @@ void System::loadFieldConfiguration(std::string filename)
 //                    nx = m_V[2] * (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x) + ny;
 //                    MPI_File_read_at(file, nx*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
+
                     counter3 = m_indexHandler->getGlobalIndex(nx,ny,nz,nt);
                     counter2 = m_indexHandler->getGlobalIndex(nx,ny,nz,nt);
                     counter1 = m_indexHandler->getGlobalIndex(nx,ny,nz,nt);
-                    if (counter1 != counter2 || counter1 != counter3 || counter2 != counter3) {
+                    if ((unsigned int) counter1 != counter2 || (unsigned long int) counter1 != counter3 || (unsigned long int) counter2 != counter3) {
                         cout << "INTEGER OVERFLOW" << endl;
                         cout << "Int: " << counter1 << " unsigned int: " << counter2 << "unsigned long int: " << counter3 << endl;
                     }
+
                     MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     if (writePythonFile) {
                         indexFile << nx << " " << ny << " " << nz << " " << nt << " " << m_indexHandler->getGlobalIndex(nx,ny,nz,nt) << " " << m_processRank << endl;
@@ -558,15 +608,15 @@ void System::loadFieldConfiguration(std::string filename)
             }
         }
     }
-    if (m_processRank==0) {
-        cout << "First link: " << endl;
-        m_lattice[m_indexHandler->getIndex(0,0,0,0)].U[0].print();
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
-    if (m_processRank==m_numprocs-1) {
-        cout << "Last link: " << endl;
-        m_lattice[m_indexHandler->getIndex(m_N[0]-1,m_N[1]-1,m_N[2]-1,m_N[3]-1)].U[3].print();
-    }
+//    if (m_processRank==0) { // Sanity check
+//        cout << "First link: " << endl;
+//        m_lattice[m_indexHandler->getIndex(0,0,0,0)].U[0].print();
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    if (m_processRank==m_numprocs-1) { // Sanity check
+//        cout << "Last link: " << endl;
+//        m_lattice[m_indexHandler->getIndex(m_N[0]-1,m_N[1]-1,m_N[2]-1,m_N[3]-1)].U[3].print();
+//    }
 
     if (writePythonFile) {
         indexFile.close();

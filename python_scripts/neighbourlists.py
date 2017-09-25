@@ -37,18 +37,6 @@ def print_X_neighbours():
 		print neighbours_string,
 		print_break(Np, neighbours_string)
 	print "\n"
-
-	## OLD METHOD
-	# for Np in xrange(Nx*Ny):
-	# 	# Method for +1
-	# 	if ((Np + 1) % Nx) == 0:
-	# 		print "i = %2d, i+1 = %2d," % (Np, (Np/Nx * Nx)),
-	# 	else:
-	# 		print "i = %2d, i+1 = %2d," % (Np, Np+1),
-	# 	# Method for -1
-	# 	print "i-1 = %2d" % ((Np-1)%Nx + Np/Nx * Nx)
-	# 	if (Np+1) % Nx == 0:
-	# 		print ""
 ################################################################################################################
 
 
@@ -70,24 +58,10 @@ def getYMinusOne(Np):
 def print_Y_neighbours():
 	print "\nY-DIRECTION"
 	for Np in xrange(Nx*Ny*Nz*Nt):
-		# Method for +1
 		neighbours_string = "|| %3d: y+1: %3d y-1: %3d" % (Np,getYPlusOne(Np),getYMinusOne(Np))
 		print neighbours_string,
 		print_break(Np, neighbours_string)
 	print "\n"
-
-	## OLD METHOD
-	# for i in xrange(4):
-	# 	for j in xrange(0,13,4):
-	# 		Np = i+j
-	# 		# Method for +1
-	# 		if ((Np/Nx+1) % Ny) == 0:
-	# 			print "i = %2d, i+1 = %2d" % (Np, Np % Ny),
-	# 		else:
-	# 			print "i = %2d, i+1 = %2d" % (Np, Np+Nx),
-	# 		# Method for -1
-	# 		print "i-1 = %2d" % ((Np/Nx - 1) % Nx * Ny + (Np - Nx) % Ny)
-	# 	print ""
 ################################################################################################################
 
 
@@ -96,11 +70,7 @@ def getZPlusOne(Np):
 	if (((Np/(Nx*Ny) + 1) % Nz) == 0):
 		x_count = Np % Nx
 		y_count = (Np/Nx) % Ny * Nx
-		# y_count = (Np / (Ny*Nx)) * (Nx*Ny)
-		# x_count = 0
-		# y_count = 0
 		z_count = 0
-		# z_count = (Np/(Nx*Ny)) % Nz * (Nx*Ny)
 		t_count = Np/(Nx*Ny*Nz) % Nt * (Nx*Ny*Nz)
 		return x_count + y_count + z_count + t_count
 	else:
@@ -169,7 +139,6 @@ def getNeighbourLists():
 						getTMinusOne(Np),getTPlusOne(Np)])
 	return n_lists
 
-
 def print_neighbours(n_lists,Np):
 	n_list = n_lists[Np]
 	print "Process rank = %d" % Np
@@ -178,28 +147,20 @@ def print_neighbours(n_lists,Np):
 	print "z-1 = %2d z+1 = %2d" % (n_list[4],n_list[5])
 	print "t-1 = %2d t+1 = %2d" % (n_list[6],n_list[7])
 
-print_X_neighbours()
-print_Y_neighbours()
-print_Z_neighbours()
-print_T_neighbours()
-neighbour_lists = getNeighbourLists()
-# print_processor_lattice()
+def main():
+	# ## Printing neighbour-lists
+	# print_X_neighbours()
+	# print_Y_neighbours()
+	# print_Z_neighbours()
+	# print_T_neighbours()
 
-# print_neighbours(neighbour_lists,0)
-# print_neighbours(neighbour_lists,1)
-# print_neighbours(neighbour_lists,2)
-# print_neighbours(neighbour_lists,3)
-# print_neighbours(neighbour_lists,4)
-# print_neighbours(neighbour_lists,5)
-# print_neighbours(neighbour_lists,6)
-# print_neighbours(neighbour_lists,7)
-# print_neighbours(neighbour_lists,8)
-# print_neighbours(neighbour_lists,9)
-# print_neighbours(neighbour_lists,10)
-# print_neighbours(neighbour_lists,11)
-# print_neighbours(neighbour_lists,12)
-# print_neighbours(neighbour_lists,13)
-# print_neighbours(neighbour_lists,14)
-# print_neighbours(neighbour_lists,15)
+	neighbour_lists = getNeighbourLists()
+	# print_processor_lattice()
 
-# print_neighbours(neighbour_lists[0],0)
+	for i in range(Nx*Ny*Nz*Nt):
+		print_neighbours(neighbour_lists,i)
+
+	# print_neighbours(neighbour_lists[0],0)
+
+if __name__ == '__main__':
+	main()

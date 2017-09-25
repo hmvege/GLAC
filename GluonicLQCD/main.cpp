@@ -48,16 +48,16 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     int N           = 16;            // Spatial lattice points.
     int N_T         = 16;            // Temporal lattice points.
     int NTherm      = 10;           // Thermalization.
-    int NCor        = 20;            // Correlation updates.
+    int NCor        = 10;            // Correlation updates.
     int NCf         = 20;           // Number of configurations to generate.
     int NUpdates    = 10;           // Number of link updates before moving on.
     double beta     = 6.0;          // Beta value(connected to the lattice spacing a).
     double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
-    double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
-    double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
     bool writeConfigsToFile             = true;
     bool storeThermalizationPlaquettes  = true;
     bool hotStart                       = false;
+    double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
+    double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
 
     if (numberOfArguments > 1) { // Points for each lattice dimension.
         N           = atoi(cmdLineArguments[2]);
@@ -83,22 +83,22 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     if (numberOfArguments > 8) { // Epsilon used for generating SU(3) matrices
         SU3Eps      = atof(cmdLineArguments[9]);
     }
-    if (numberOfArguments > 9) {
+    if (numberOfArguments > 9) { // If we are to write the configurations to file. Default is TRUE.
         if (atoi(cmdLineArguments[10]) == 0) {
             writeConfigsToFile = false;
         }
     }
-    if (numberOfArguments > 10) {
+    if (numberOfArguments > 10) { // If we are to store the plaquettes from the thermalization. Default is TRUE.
         if (atoi(cmdLineArguments[11]) == 0) {
             storeThermalizationPlaquettes = false;
         }
     }
-    if (numberOfArguments > 11) {
+    if (numberOfArguments > 11) { // Hot start/cold start. Default is cold start.
         if (atoi(cmdLineArguments[12]) == 1) {
             hotStart = true;
         }
     }
-    if (numberOfArguments > 12) { //
+    if (numberOfArguments > 12) { // RNG Seed.
         seed = atof(cmdLineArguments[13]) + double(processRank);
     }
     if (numberOfArguments > 13) { // Metrolis seed.

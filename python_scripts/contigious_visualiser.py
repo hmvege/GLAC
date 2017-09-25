@@ -282,24 +282,24 @@ def main():
 	# sublattice.printSubLattice(storeInFile = storeOutput)
 	sublattice.printTotalLattice(storeInFile = storeOutput)
 
-	parallel32core = np.loadtxt("parallel_index_file_32cores.txt",dtype=int)
-	parallel32core = np.asarray(sorted(parallel32core,key=itemgetter(3,2,1,0)))
+	# parallel32core = np.loadtxt("parallel_index_file_32cores.txt",dtype=int)
+	# parallel32core = np.asarray(sorted(parallel32core,key=itemgetter(3,2,1,0)))
 
-	parallel16core = np.loadtxt("parallel_index_file_16cores.txt",dtype=int)
-	parallel16core = np.asarray(sorted(parallel16core,key=itemgetter(3,2,1,0)))
-	para_sum = sum(parallel32core[:,-1] == parallel16core[:,-1])
-	print para_sum
-	print para_sum == (len(parallel32core) and len(parallel16core))
+	# parallel16core = np.loadtxt("parallel_index_file_16cores.txt",dtype=int)
+	# parallel16core = np.asarray(sorted(parallel16core,key=itemgetter(3,2,1,0)))
+	# para_sum = sum(parallel32core[:,-1] == parallel16core[:,-1])
+	# print para_sum
+	# print para_sum == (len(parallel32core) and len(parallel16core))
 
 
-	parallel32core = np.loadtxt("para32ranks.txt",dtype=int)
-	parallel32core = np.asarray(sorted(parallel32core,key=itemgetter(3,2,1,0)))
+	# parallel32core = np.loadtxt("para32ranks.txt",dtype=int)
+	# parallel32core = np.asarray(sorted(parallel32core,key=itemgetter(3,2,1,0)))
 
-	parallel16core = np.loadtxt("para16ranks.txt",dtype=int)
-	parallel16core = np.asarray(sorted(parallel16core,key=itemgetter(3,2,1,0)))
-	para_sum = sum(parallel32core[:,-1] == parallel16core[:,-1])
-	print para_sum
-	print para_sum == (len(parallel32core) and len(parallel16core))
+	# parallel16core = np.loadtxt("para16ranks.txt",dtype=int)
+	# parallel16core = np.asarray(sorted(parallel16core,key=itemgetter(3,2,1,0)))
+	# para_sum = sum(parallel32core[:,-1] == parallel16core[:,-1])
+	# print para_sum
+	# print para_sum == (len(parallel32core) and len(parallel16core))
 
 
 	parallelIndexes = [i[1] for i in sublattice.memory_position_string]
@@ -311,21 +311,21 @@ def main():
 	mega_list = zip(parallelIndexes,parallelLocations,[i[-1] for i in sublattice.memory_position_string])
 	mega_array = np.asarray(sorted(mega_list,key=lambda i: itemgetter(0)(i)[::-1])) # Sorting the index ordering
 	memoryDifferences = mega_array[:,1] - scalarLocations[:]
-	
-	# Comparing para32 proc positions with what we should have
-	para32WithProcNames = np.loadtxt("para32withProcNames.txt",dtype=int)
-	para32WithProcNames = np.asarray(sorted(para32WithProcNames,key=itemgetter(3,2,1,0)))
 
-	counter = 0
-	for elem1, elem2 in zip(para32WithProcNames,mega_array):
-		for index1,index2 in zip(elem1[0:4],elem2[0]):
-			if index1 != index2:
-				print "Error in index position!"
-				counter += 1
-		if elem1[-1] != elem2[-1]:
-			print "Error in processor position!"
-	if counter != 0:
-		print counter
+	# # Comparing para32 proc positions with what we should have
+	# para32WithProcNames = np.loadtxt("para32withProcNames.txt",dtype=int)
+	# para32WithProcNames = np.asarray(sorted(para32WithProcNames,key=itemgetter(3,2,1,0)))
+
+	# counter = 0
+	# for elem1, elem2 in zip(para32WithProcNames,mega_array):
+	# 	for index1,index2 in zip(elem1[0:4],elem2[0]):
+	# 		if index1 != index2:
+	# 			print "Error in index position!"
+	# 			counter += 1
+	# 	if elem1[-1] != elem2[-1]:
+	# 		print "Error in processor position!"
+	# if counter != 0:
+	# 	print counter
 
 
 	# print "Printing the parallel and scalar memory positions: "
@@ -348,8 +348,8 @@ def main():
 		print "Failure: Unequal number of elements accessed"
 
 	# Testing if we are mapping parallel processors to scalar memory allocation
-	testIfEqualMemoryPositions(parallel32core[:,-1],mega_array[:,1])
-	testIfEqualMemoryPositions(scalarLocations,mega_array[:,1])
+	# testIfEqualMemoryPositions(parallel32core[:,-1],mega_array[:,1])
+	# testIfEqualMemoryPositions(scalarLocations,mega_array[:,1])
 
 	# Comparing memory locations to the parallel and scalar branch of program run on a 8**4 lattice
 	# scalarVersionIndices = np.loadtxt("scalar16cubed16_indexes.txt",usecols=(1,2,3,4,6),dtype=int) # Only for 8**4 lattice

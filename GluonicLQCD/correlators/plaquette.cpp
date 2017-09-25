@@ -24,6 +24,7 @@ Plaquette::~Plaquette()
 void Plaquette::setLatticeSize(int latticeSize)
 {
     m_latticeSize = double(latticeSize);
+//    std::cout << "lattice size: " << m_latticeSize << std::endl;
     multiplicationFactor = 18.0*m_latticeSize;
 }
 
