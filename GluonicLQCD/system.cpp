@@ -283,7 +283,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
     MPI_Barrier(MPI_COMM_WORLD);
 //    writeConfigurationToFile(0); // Writing initial config to file.
     loadFieldConfiguration("para8core061102.bin");
-//    loadFieldConfiguration("para32core0.627734.bin");
+//    loadFieldConfiguration("para32core0627734.bin");
     // "para8to32core0563387.bin"
 //    writeConfigurationToFile(1);
 //    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
@@ -327,6 +327,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 //    loadFieldConfiguration("config32updated0612263.bin"); // From parallel program version, 32 cores
 //    loadFieldConfiguration("parallel8core16cube16.bin"); // From parallel program version, 8 cores
 //    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
+
     MPI_Barrier(MPI_COMM_WORLD);
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);

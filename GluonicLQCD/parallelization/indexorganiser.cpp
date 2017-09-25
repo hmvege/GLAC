@@ -68,29 +68,45 @@ SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, 
     if ((n[mu]+muIndex[mu]) % m_N[mu] == 0) {
         n[mu] = 0;
 
-        //// ARE WE SHARING CORRECT?!
-        Continue here
-        MPI_Barrier(MPI_COMM_WORLD);
-        if (m_processRank==0) {
-            for (int i = 0; i < 4; i++) cout << n[0];
-            cout << " mu = " << mu << endl;
-            cout << "Process 0, positive direction, before sharing." << endl;
-//            lattice[getIndex(m_N[0]-1,)]
-            exchangeU.print();
+        //// ARE WE SHARING CORRECT?! --> Yes we are, apperantely. But can we make a test to ensure this is true?
+
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        if (m_processRank==0) {
+//            for (int i = 0; i < 4; i++) cout << n[0];
+//            cout << "Process 0, positive direction " << "mu = " << 2*SU3Dir+1 << ", before sharing with processor " << m_neighbourLists->getNeighbours(0)->list[2*mu+1] << endl;
+//            exchangeU.print();
+//        }
+//        int p=0;
+        double compareValue = 0;
+        int errCounter = 0;
+        if (m_processRank==m_neighbourLists->getNeighbours(p)->list[2*mu+1]) {
+            cout << "Process " << m_neighbourLists->getNeighbours(p)->list[2*mu+1] << " we are fetching SU3 matrix from for process 0." << endl;
+            lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].print();
         }
-        if (m_processRank==1) {
-            cout << "Process 1, process we are fetching from." << endl;
-            lattice[getIndex(0,0,0,0)].U[SU3Dir].print();
-        }
+
+        MPI_Sendrecv(&lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].mat[0],1,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,&compareValue,1,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+
         MPIfetchSU3Positive(lattice,n,mu,SU3Dir);
+        MPI_Barrier(MPI_COMM_WORLD);
+        if (compareValue != lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].mat[0].re()) {
+            errCounter++;
+            cout << compareValue << endl;
+            lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].print();
+            exit(1);
+        }
+
+        if (errCounter != 0) {
+            cout << "Alert! Errors(?) detected: " << errCounter << endl;
+        }
 //        exchangeU.identity(); // NOT PASSING CORRECTLY?
 
-        if (m_processRank==0) {
-            cout << "Process 0, positive direction, after sharing" << endl;
-            exchangeU.print();
-        }
-        MPI_Barrier(MPI_COMM_WORLD);
-        MPI_Finalize();exit(1);
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        if (m_processRank==p) {
+//            cout << "Process " << p << ", positive direction " << "mu = " << 2*SU3Dir+1 << ", after sharing with " << m_neighbourLists->getNeighbours(p)->list[2*mu+1] << endl;
+//            exchangeU.print();
+//        }
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        MPI_Finalize();exit(1);
 
         return exchangeU;
     }
