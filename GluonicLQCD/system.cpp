@@ -281,13 +281,24 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
     //// TESTS ==============================================================================
     MPI_Barrier(MPI_COMM_WORLD);
-//    writeConfigurationToFile(0); // Writing initial config to file.
-    loadFieldConfiguration("para8core061102.bin");
+    // Ubuntu files
+//    loadFieldConfiguration("parallel16core16cube_plaquette0594806.bin");
+//    loadFieldConfiguration("config32updated0612263.bin"); // From parallel program version, 32 cores
+    loadFieldConfiguration("parallel8core16cube16.bin"); // From parallel program version, 8 cores
+//    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
+
+    // Mac files
+//    loadFieldConfiguration("para8core061102.bin");
 //    loadFieldConfiguration("para32core0627734.bin");
-    // "para8to32core0563387.bin"
+
+    // Common files
+    // loadFieldConfiguration("unityScalar.bin");
+//     loadFieldConfiguration("unity16cores.bin");
+//     loadFieldConfiguration("unity32cores.bin");
+
 //    writeConfigurationToFile(1);
 //    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
-    MPI_Barrier(MPI_COMM_WORLD);
+//    MPI_Barrier(MPI_COMM_WORLD);
 
     //// PRINTS LATTICES AT EDGES IN ORDER TO CHECK THAT WE HAVE CORRECT LATTICE ORDERING
 //    if (m_processRank==0) { // CHECK THAT THE CORRECT LINKS ARE WHERE THE SHOULD BE
@@ -320,13 +331,10 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 //        m_lattice[m_indexHandler->getIndex(m_N[0]-1,0,0,0)].U[0].print();
 //    }
 
-//    loadFieldConfiguration("unityScalar.bin");
-//    loadFieldConfiguration("unity16cores.bin");
-//    loadFieldConfiguration("unity32cores.bin");
-//    loadFieldConfiguration("parallel32core16cube_plaquette0594052.bin"); // From parallel program version, 32 cores
-//    loadFieldConfiguration("config32updated0612263.bin"); // From parallel program version, 32 cores
-//    loadFieldConfiguration("parallel8core16cube16.bin"); // From parallel program version, 8 cores
-//    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
+    if (m_processRank==1) { // CHECK THAT THE CORRECT LINKS ARE WHERE THE SHOULD BE
+        cout << "Rank " << m_processRank << endl;
+        m_lattice[m_indexHandler->getIndex(0,0,0,0)].U[0].print();
+    }
 
     MPI_Barrier(MPI_COMM_WORLD);
     double corr = m_correlator->calculate(m_lattice);
@@ -335,12 +343,12 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
     if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
     MPI_Barrier(MPI_COMM_WORLD);
 
-    writeConfigurationToFile(1);
-    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
-    corr = m_correlator->calculate(m_lattice);
-    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-    corr /= double(m_numprocs);
-    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+//    writeConfigurationToFile(1);
+//    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
+//    corr = m_correlator->calculate(m_lattice);
+//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//    corr /= double(m_numprocs);
+//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
     MPI_Finalize(); exit(1);
     //// ===================================================================================
 

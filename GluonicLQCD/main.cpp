@@ -47,7 +47,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Constants by default initialization
     int N           = 16;            // Spatial lattice points.
     int N_T         = 16;            // Temporal lattice points.
-    int NTherm      = 10;           // Thermalization.
+    int NTherm      = 400;           // Thermalization.
     int NCor        = 10;            // Correlation updates.
     int NCf         = 20;           // Number of configurations to generate.
     int NUpdates    = 10;           // Number of link updates before moving on.

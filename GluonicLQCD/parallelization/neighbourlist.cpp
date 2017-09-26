@@ -1,6 +1,4 @@
 #include "neighbourlist.h"
-
-// TEMP DIAGNOSTICS
 #include <iostream>
 #include <iomanip>
 using std::cout;
@@ -15,13 +13,13 @@ NeighbourList:: NeighbourList()
      * 4: z-1 | 5: z+1
      * 6: t-1 | 7: t+1
      */
-    list = new int[8];
+//    list = new int[8];
 }
 
 NeighbourList::~NeighbourList()
 {
-    cout << "DELETING!!!" << endl;
-    delete [] list;
+//    cout << "DELETING!!!" << endl;
+//    delete [] list;
 }
 
 void NeighbourList::print()

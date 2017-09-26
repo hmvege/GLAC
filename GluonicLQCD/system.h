@@ -78,7 +78,7 @@ private:
     // Input/output locations
     std::string m_filename = "";
     std::string m_inputFolder = "../input/";
-    std::string m_outputFolder = "output/"; // On mac, do not need ../
+    std::string m_outputFolder = "../output/"; // On mac, do not need ../
 
     // SU3 generator
     SU3MatrixGenerator *m_SU3Generator = nullptr;

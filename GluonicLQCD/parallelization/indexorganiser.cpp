@@ -34,8 +34,8 @@ void IndexOrganiser::MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int
      *  mu          : lorentz index for shift direction(always negative in either x,y,z or t direction)
      *  SU3Dir      : SU3 matrix direction at link
      */
-    MPI_Sendrecv(&lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0, // Send
-            &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,                                               // Receive
+    MPI_Sendrecv(&lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0, // Send
+            &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,                                               // Receive
             MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 }
 
@@ -65,10 +65,26 @@ SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, 
      *  muIndex     : lorentz "vector"
      *  SU3Dir      : which of the four SU3 matrices which we need
      */
+
+    //    if (mu < 0 || mu > 3) {
+//        cout << "ERROR" << endl;
+//        exit(1);
+//    }
+//    for (int i = 0; i < 4; i++) {
+//        if (n[i] < 0 || n[i] > m_N[i]) {
+//            cout << "ERROR IN n" << endl;
+//            exit(1);
+//        }
+//    }
+
     if ((n[mu]+muIndex[mu]) % m_N[mu] == 0) {
         n[mu] = 0;
 
         //// ARE WE SHARING CORRECT?! --> Yes we are, apperantely. But can we make a test to ensure this is true?
+
+        // Process rank sending to N+1 and receiving from N-1.
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        cout << m_processRank << " " << 2*mu+1 << " " << m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1] << " " << 2*mu << " " << m_neighbourLists->getNeighbours(m_processRank)->list[2*mu] << endl;
 
 //        MPI_Barrier(MPI_COMM_WORLD);
 //        if (m_processRank==0) {
@@ -77,28 +93,47 @@ SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, 
 //            exchangeU.print();
 //        }
 //        int p=0;
-        double compareValue = 0;
-        int errCounter = 0;
-        if (m_processRank==m_neighbourLists->getNeighbours(p)->list[2*mu+1]) {
-            cout << "Process " << m_neighbourLists->getNeighbours(p)->list[2*mu+1] << " we are fetching SU3 matrix from for process 0." << endl;
-            lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].print();
-        }
+//        double compareValue = 0;
+//        int errCounter = 0;
+//        if (m_processRank==m_neighbourLists->getNeighbours(p)->list[2*mu+1]) {
+//            cout << "Process " << m_neighbourLists->getNeighbours(p)->list[2*mu+1] << " we are fetching SU3 matrix from for process 0." << endl;
+//            lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].print();
+//        }
 
-        MPI_Sendrecv(&lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].mat[0],1,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,&compareValue,1,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+//        MPI_Sendrecv(&lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].mat[0],1,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,&compareValue,1,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+
+        /*
+     MPI_Sendrecv(   m_lattice[getIndex(m_N[0]-2,y,z,t,m_N[1],m_N[2],m_N[3])].U,
+    -                                72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[1],0,
+    -                                m_lattice[getIndex(0,y,z,t,m_N[1],m_N[2],m_N[3])].U,
+    -                                72,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[0],0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+
+    */
 
         MPIfetchSU3Positive(lattice,n,mu,SU3Dir);
-        MPI_Barrier(MPI_COMM_WORLD);
-        if (compareValue != lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].mat[0].re()) {
-            errCounter++;
-            cout << compareValue << endl;
-            lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].print();
-            exit(1);
+
+//        if (SU3Dir==0 && m_processRank==0 && n[1] == 0 && n[2] == 0 && n[3] == 0) {
+//            exchangeU.print();
+//        }
+        if (m_processRank) {
+            if (exchangeU.mat[0].re() == 0.00719493) {
+                cout << "Exchanged matrix at rank: " << m_processRank << endl;
+                exchangeU.print();}
         }
 
-        if (errCounter != 0) {
-            cout << "Alert! Errors(?) detected: " << errCounter << endl;
-        }
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        if (compareValue != lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].mat[0].re()) {
+//            errCounter++;
+//            cout << compareValue << endl;
+//            lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir].print();
+//            exit(1);
+//        }
+
+//        if (errCounter != 0) {
+//            cout << "Alert! Errors(?) detected: " << errCounter << endl;
+//        }
 //        exchangeU.identity(); // NOT PASSING CORRECTLY?
+//        exchangeU.zeros();
 
 //        MPI_Barrier(MPI_COMM_WORLD);
 //        if (m_processRank==p) {

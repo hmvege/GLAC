@@ -12,6 +12,7 @@ Neighbours::Neighbours()
 
 Neighbours::~Neighbours()
 {
+    cout << "DELETING NEIGHBOR LISTS." << endl;
     delete [] neighbourLists;
 }
 

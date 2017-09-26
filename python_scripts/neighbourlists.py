@@ -155,10 +155,10 @@ def main():
 	# print_T_neighbours()
 
 	neighbour_lists = getNeighbourLists()
-	# print_processor_lattice()
+	print_processor_lattice()
 
-	for i in range(Nx*Ny*Nz*Nt):
-		print_neighbours(neighbour_lists,i)
+	# for i in range(Nx*Ny*Nz*Nt):
+	# 	print_neighbours(neighbour_lists,i)
 
 	# print_neighbours(neighbour_lists[0],0)
 
