@@ -55,7 +55,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
     std::string batchName               = "configs";
     bool writeConfigsToFile             = true;
-    bool storeThermalizationPlaquettes  = true;
+    bool storeThermalizationPlaquettes  = false;
     bool hotStart                       = false;
     double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
     double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
