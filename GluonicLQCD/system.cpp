@@ -3,6 +3,7 @@
 #include <cmath>    // For exp()
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 #include <cstdio>   // For io C-style handling.
 #include <cstdlib>
 #include <mpi.h>
@@ -280,15 +281,7 @@ void System::update()
 void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 {
     //// TESTS ==============================================================================
-    MPI_Barrier(MPI_COMM_WORLD);
-    // Ubuntu files
-    loadFieldConfiguration("configs_profiling_run_beta6.000000_config0.bin");
-//    loadFieldConfiguration("scalar16cubed16run1.bin"); // From scalar program version
-
-    // Mac files
-//    loadFieldConfiguration("para8core061102.bin");
-//    loadFieldConfiguration("para32core0627734.bin");
-
+//    MPI_Barrier(MPI_COMM_WORLD);
     // Common files
     // loadFieldConfiguration("unityScalar.bin");
 //     loadFieldConfiguration("unity16cores.bin");
@@ -298,12 +291,12 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 //    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
 //    MPI_Barrier(MPI_COMM_WORLD);
 
-    MPI_Barrier(MPI_COMM_WORLD);
-    double corr = m_correlator->calculate(m_lattice);
-    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-    corr /= double(m_numprocs);
-    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-    MPI_Barrier(MPI_COMM_WORLD);
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    double corr = m_correlator->calculate(m_lattice);
+//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//    corr /= double(m_numprocs);
+//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+//    MPI_Barrier(MPI_COMM_WORLD);
 
 //    writeConfigurationToFile(1);
 //    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
@@ -311,7 +304,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 //    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //    corr /= double(m_numprocs);
 //    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-    MPI_Finalize(); exit(1);
+//    MPI_Finalize(); exit(1);
     //// ===================================================================================
 
     // Variables for checking performance of the update.
@@ -341,13 +334,15 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
             }
         }
         postUpdate = clock();
-        // ========= REDO THIS =========
+
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (storePreObservables) {
             // Calculating the correlator
             m_GammaPreThermalization[i+1] = m_correlator->calculate(m_lattice);
+
             // Summing and sharing results across the processors
             MPI_Allreduce(&m_GammaPreThermalization[i+1], &m_GammaPreThermalization[i+1], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
             // Averaging the results
             m_GammaPreThermalization[i+1] /= double(m_numprocs);
             if (m_processRank == 0) cout << i << " " << m_GammaPreThermalization[i+1] << endl; // Printing evolution of system
@@ -356,7 +351,6 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
-//    m_acceptanceCounter = double(m_acceptanceCounter)/double(m_numprocs);
 
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
@@ -445,16 +439,16 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
         file << "NCor " << m_NCor << endl;
         file << "NCf " << m_NCf << endl;
         file << "NTherm " << m_NTherm << endl;
-        file << "AverageGamma " << m_averagedGamma << endl;
-        file << "VarianceGamma " << m_varianceGamma << endl;
-        file << "stdGamma " << m_stdGamma << endl;
+        file << std::setprecision(15) << "AverageGamma " << m_averagedGamma << endl;
+        file << std::setprecision(15) << "VarianceGamma " << m_varianceGamma << endl;
+        file << std::setprecision(15) << "stdGamma " << m_stdGamma << endl;
         if (preThermalizationGamma) {
             for (int i = 0; i < m_NTherm+1; i++) {
-                file << m_GammaPreThermalization[i] << endl;
+                file << std::setprecision(15) << m_GammaPreThermalization[i] << endl;
             }
         }
         for (int i = 0; i < m_NCf; i++) {
-            file << m_Gamma[i] << endl;
+            file << std::setprecision(15) << m_Gamma[i] << endl;
         }
         file.close();
         cout << filename << " written" << endl;
