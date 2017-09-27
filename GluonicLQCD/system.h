@@ -30,7 +30,9 @@ private:
     double m_epsilon;
 
     // For handling the acceptance rate
-    int m_acceptanceCounter = 0;
+    unsigned long int m_acceptanceCounter = 0;
+    unsigned long int m_temporaryAcceptanceCounter = 0;
+    double m_acceptanceRatio = 0;
     double getAcceptanceRate();
 
     // Paralellization setup
@@ -65,9 +67,6 @@ private:
     Action *m_S = nullptr;
     double m_deltaS;
 
-    // For sampling the system(lattice)
-    void sampleSystem();
-
     // Correlator
     Correlator * m_correlator = nullptr;
 
@@ -101,7 +100,7 @@ public:
     // Setters
     void setAction(Action *S) { m_S = S; }
     void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
-    void setConfigBatchName(std::string filename) { m_filename = filename + "_"; }
+    void setConfigBatchName(std::string filename) { m_filename = filename; }
     void setN(int NSpatial) { m_NSpatial = NSpatial; }
     void setNT(int NTemporal) { m_NTemporal = NTemporal; }
     void setNCf(int NCf) { m_NCf = NCf; }
@@ -115,6 +114,7 @@ public:
     int getEpsilon() { return m_epsilon; }
 
     // Printers
+    void printRunInfo(bool verbose);
     void printEnergies();
     void printAcceptanceRate();
 };

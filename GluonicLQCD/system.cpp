@@ -153,46 +153,6 @@ void System::subLatticeSetup()
     m_V[1] = m_NSpatial*m_NSpatial; // XY volume
     m_V[2] = m_NSpatial*m_NSpatial*m_NSpatial; // XYZ Volume
     m_V[3] = m_NSpatial*m_NSpatial*m_NSpatial*m_NTemporal; // XYZT volume
-
-    // TESTS ====================================================================================
-    if (m_processRank == 0) {
-        cout << m_numprocs << " number of threads" << endl;
-        cout << "Processsors per dimension: ";
-        for (int i = 0; i < 4; i++) {
-            cout << m_processorsPerDimension[i] << " ";
-        }
-        cout << endl;
-        cout << "Lattice dimensions: N = " << m_NSpatial << " N_T = " << m_NTemporal << endl;
-        cout << "Lattice volumes: ";
-        for (int i = 0; i < 4; i++) {
-            cout << m_V[i] << " ";
-        }
-        cout << endl;
-        cout << "Sub lattice dimensions: ";
-        for (int i = 0; i < 4; i++) {
-            cout << m_N[i] << " ";
-        }
-        cout << endl;
-        cout << "Sub-lattice volumes: ";
-        for (int i = 0; i < 4; i++) {
-            cout << m_VSub[i] << " ";
-        }
-        cout << endl;
-        cout << "Sub lattice size: " << m_subLatticeSize << endl;
-        cout << "Link size: " << linkSize << endl;
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
-//    m_neighbourLists->getNeighbours(m_processRank)->print();
-//    cout << "Neighbourlist coordinates for P = " << m_processRank << " is: ";
-//    for (int i = 0; i < 4; i++) {
-//        cout << m_neighbourLists->getProcessorDimensionPosition(i) << " ";
-//    }
-//    cout << endl;
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    if (m_processRank == 0) cout << "Exits at neighbour lists" << endl;
-//    MPI_Finalize(); exit(0);
-    // ==========================================================================================
-
 }
 
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
@@ -229,7 +189,38 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
         }
     }
     if (m_processRank == 0) {
-        cout << "Lattice setup complete" << endl;
+        cout << "\nLattice setup complete\n" << endl;
+    }
+}
+
+void System::printRunInfo(bool verbose) {
+    if (m_processRank == 0) {
+        for (int i = 0; i < 50; i++) cout << "=";
+        cout << endl;
+        cout << "Threads:                           " << m_numprocs << endl;
+        if (verbose) cout << "Lattice size:                      " << m_latticeSize << endl;
+        cout << "Lattice dimensions:                " << m_NSpatial << " " << m_NTemporal << endl;
+        cout << "N configurations:                  " << m_NCf << endl;
+        cout << "N correlation updates:             " << m_NCor << endl;
+        cout << "N thermalization updates:          " << m_NTherm << endl;
+        cout << "N link updates:                    " << m_NUpdates << endl;
+        cout << "Beta:                              " << m_beta << endl;
+        if (verbose) {
+            cout << "SU3Eps:                            " << m_SU3Generator->getEpsilon() << endl;
+            cout << "Sub lattice Size:                  " << m_subLatticeSize << endl;
+            cout << "Sub latticedimensions:             ";
+            for (int i = 0; i < 4; i++) {
+                cout << m_N[i] << " ";
+            }
+            cout << endl;
+            cout << "Processsors per dimension:         ";
+            for (int i = 0; i < 4; i++) {
+                cout << m_processorsPerDimension[i] << " ";
+            }
+            cout << endl;
+        }
+        for (int i = 0; i < 50; i++) cout << "=";
+        cout << endl;
     }
 }
 
@@ -286,26 +277,17 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
     // loadFieldConfiguration("unityScalar.bin");
 //     loadFieldConfiguration("unity16cores.bin");
 //     loadFieldConfiguration("unity32cores.bin");
-
-//    writeConfigurationToFile(1);
-//    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
-//    MPI_Barrier(MPI_COMM_WORLD);
-
 //    MPI_Barrier(MPI_COMM_WORLD);
 //    double corr = m_correlator->calculate(m_lattice);
 //    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //    corr /= double(m_numprocs);
 //    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-//    MPI_Barrier(MPI_COMM_WORLD);
-
-//    writeConfigurationToFile(1);
-//    loadFieldConfiguration("configs_profiling_run_beta6.000000_config1.bin");
-//    corr = m_correlator->calculate(m_lattice);
-//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//    corr /= double(m_numprocs);
-//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
 //    MPI_Finalize(); exit(1);
     //// ===================================================================================
+    if (m_processRank == 0) {
+        if (storePreObservables) cout << "Store thermalization observables:  TRUE" << endl;
+        if (writeConfigsToFile) cout << "Store configurations:              TRUE" << endl;
+    }
 
     // Variables for checking performance of the update.
     clock_t preUpdate, postUpdate;
@@ -319,8 +301,10 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 
     // Dividing by the number of processors in order to get the correlator.
     m_GammaPreThermalization[0] /= double(m_numprocs);
-    if (m_processRank == 0) cout << "Pre-thermialization correlator: " << m_GammaPreThermalization[0] << endl;
-
+    if (m_processRank == 0) {
+        cout << "\nPre-thermialization correlator: " << m_GammaPreThermalization[0] << endl;
+        cout << "i  Correlator" << endl;
+    }
     // Running thermalization
     for (int i = 0; i < m_NTherm; i++)
     {
@@ -354,12 +338,14 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
-        cout << "Termalization complete. Acceptance rate: " << double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm) << endl;
-        cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm] << endl;
+        m_acceptanceRatio = double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm);
+        cout << "Termalization complete. Acceptance rate: " << m_acceptanceRatio << endl;
+        cout << "i  Correlator  Accept/reject" << endl;
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
+    m_temporaryAcceptanceCounter = 0;
 
     // Main part of algorithm
     for (int alpha = 0; alpha < m_NCf; alpha++)
@@ -373,32 +359,36 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_Gamma[alpha] /= double(m_numprocs);
         // Writing to file
-        if (m_processRank == 0) cout << "Plaquette value: " << m_Gamma[alpha] << endl;
+        if (m_processRank == 0) cout << alpha << " " << m_Gamma[alpha];
+
+        // Printing accept/reject rate every 20th update.
+        m_temporaryAcceptanceCounter = m_acceptanceCounter;
+        MPI_Allreduce(&m_temporaryAcceptanceCounter,&m_temporaryAcceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
+        if (m_processRank == 0) {
+            if (alpha % 10 == 0) {
+                cout << " " << double(m_temporaryAcceptanceCounter)/double(4*m_latticeSize*(alpha+1)*m_NUpdates*m_NCor) << endl;
+            } else {
+                cout << endl;
+            }
+        }
+
         if (writeConfigsToFile) writeConfigurationToFile(alpha);
         // TEST ============================================================
-        MPI_Barrier(MPI_COMM_WORLD);
-        loadFieldConfiguration("configs_profiling_run_beta6.000000_config0.bin");
-        MPI_Barrier(MPI_COMM_WORLD);
-        double corr = m_correlator->calculate(m_lattice);
-        MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        corr /= double(m_numprocs);
-        if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-        MPI_Barrier(MPI_COMM_WORLD);
-        MPI_Finalize(); exit(1);
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        loadFieldConfiguration("configs_profiling_run_beta6.000000_config0.bin");
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        double corr = m_correlator->calculate(m_lattice);
+//        MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//        corr /= double(m_numprocs);
+//        if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        MPI_Finalize(); exit(1);
         // =================================================================
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
-    m_acceptanceCounter = double(m_acceptanceCounter)/double(m_numprocs);
-    if (m_processRank == 0) cout << "System completed." << endl;
-}
-
-void System::sampleSystem()
-{
-    /*
-     * For sampling statistics/getting correlators
-     */
-    cout << "Not implemented yet." << endl;
+//    m_acceptanceRatio = double(m_acceptanceCounter)/double(m_numprocs);
+    if (m_processRank == 0) cout << "System completed.\n" << endl;
 }
 
 void System::runBasicStatistics()
@@ -417,7 +407,15 @@ void System::runBasicStatistics()
     averagedGammaSquared /= double(m_NCf);
     m_varianceGamma = (averagedGammaSquared - m_averagedGamma*m_averagedGamma)/double(m_NCf);
     m_stdGamma = sqrt(m_varianceGamma);
-    if (m_processRank == 0) cout << m_averagedGamma << ", std = " << m_stdGamma << ", variance = " << m_varianceGamma << endl;
+    if (m_processRank == 0) {
+        for (int i = 0; i < 50; i++) cout << "=";
+        cout << endl;
+        cout << "Average plaqutte:      " << m_averagedGamma << endl;
+        cout << "Standard deviation:    " << m_stdGamma << endl;
+        cout << "Variance:              " << m_varianceGamma << endl;
+        for (int i = 0; i < 50; i++) cout << "=";
+        cout << endl;
+    }
 }
 
 void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
@@ -429,11 +427,8 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
      *  preThermalizationGamma  : if we are writing the gama
      */
     if (m_processRank == 0) {
-        for (int i = 0; i < m_NCf; i++) {
-            cout << m_Gamma[i] << endl;
-        }
         std::ofstream file;
-        file.open(filename + ".dat");
+        file.open(m_outputFolder + filename + ".dat");
         file << "beta" << m_beta << endl;
         file << "acceptanceCounter " << getAcceptanceRate() << endl;
         file << "NCor " << m_NCor << endl;
@@ -446,12 +441,13 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
             for (int i = 0; i < m_NTherm+1; i++) {
                 file << std::setprecision(15) << m_GammaPreThermalization[i] << endl;
             }
+            file << endl;
         }
         for (int i = 0; i < m_NCf; i++) {
             file << std::setprecision(15) << m_Gamma[i] << endl;
         }
         file.close();
-        cout << filename << " written" << endl;
+        cout << filename << " written." << endl;
     }
 }
 
@@ -479,10 +475,14 @@ void System::writeConfigurationToFile(int configNumber)
      * Arguments:
      *  configNumber   : (int) configuration number
      */
-    if (m_processRank == 0) cout << "Writing configuration number " << configNumber << " to file." << endl;
 
     MPI_File file;
-    std::string filename = m_outputFolder + m_filename + "beta" + std::to_string(m_beta) + "_config" + std::to_string(configNumber) + ".bin";
+    std::string filename = m_outputFolder   + m_filename
+                                            + "_beta" + std::to_string(m_beta)
+                                            + "_spatial" + std::to_string(m_NSpatial)
+                                            + "_temporal" + std::to_string(m_NTemporal)
+                                            + "_threads" + std::to_string(m_numprocs)
+                                            + "_config" + std::to_string(configNumber) + ".bin";
     MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
@@ -499,9 +499,7 @@ void System::writeConfigurationToFile(int configNumber)
             }
         }
     }
-
     MPI_File_close(&file);
-    if (m_processRank == 0) cout << "Configuration number " << configNumber << " written to " << filename << endl;
 }
 
 void System::loadFieldConfiguration(std::string filename)

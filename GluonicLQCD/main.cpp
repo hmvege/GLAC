@@ -53,55 +53,59 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     int NUpdates    = 10;           // Number of link updates before moving on.
     double beta     = 6.0;          // Beta value(connected to the lattice spacing a).
     double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
+    std::string batchName               = "configs";
     bool writeConfigsToFile             = true;
     bool storeThermalizationPlaquettes  = true;
     bool hotStart                       = false;
     double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
     double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
 
-    if (numberOfArguments > 1) { // Points for each lattice dimension.
+    if (numberOfArguments > 1) {
+        batchName = cmdLineArguments[1];
+    }
+    if (numberOfArguments > 2) { // Points for each lattice dimension.
         N           = atoi(cmdLineArguments[2]);
     }
-    if (numberOfArguments > 2) { // Time dimension.
+    if (numberOfArguments > 3) { // Time dimension.
         N_T         = atoi(cmdLineArguments[3]);
     }
-    if (numberOfArguments > 3) { // Number of times we will thermalize. In production runs this should be around 2000,
+    if (numberOfArguments > 4) { // Number of times we will thermalize. In production runs this should be around 2000,
         NTherm      = atoi(cmdLineArguments[4]);
     }
-    if (numberOfArguments > 4) { // Only keeping every 20th path. In production runs this will be 200.
+    if (numberOfArguments > 5) { // Only keeping every 20th path. In production runs this will be 200.
         NCor        = atoi(cmdLineArguments[5]);
     }
-    if (numberOfArguments > 5) { // Number of field configurations that will be generated. In production runs, this should be around 1000 for the smallest, 500 for the others.
+    if (numberOfArguments > 6) { // Number of field configurations that will be generated. In production runs, this should be around 1000 for the smallest, 500 for the others.
         NCf         = atoi(cmdLineArguments[6]);
     }
-    if (numberOfArguments > 6) { // Number of times a link will be updated. Because of the 10% acceptance ratio, 10 times means about 1 update.
+    if (numberOfArguments > 7) { // Number of times a link will be updated. Because of the 10% acceptance ratio, 10 times means about 1 update.
         NUpdates    = atoi(cmdLineArguments[7]);
     }
-    if (numberOfArguments > 7) { // Beta value, phenomelogically connected to lattice spacing a.
+    if (numberOfArguments > 8) { // Beta value, phenomelogically connected to lattice spacing a.
         beta        = atof(cmdLineArguments[8]);
     }
-    if (numberOfArguments > 8) { // Epsilon used for generating SU(3) matrices
+    if (numberOfArguments > 9) { // Epsilon used for generating SU(3) matrices
         SU3Eps      = atof(cmdLineArguments[9]);
     }
-    if (numberOfArguments > 9) { // If we are to write the configurations to file. Default is TRUE.
+    if (numberOfArguments > 10) { // If we are to write the configurations to file. Default is TRUE.
         if (atoi(cmdLineArguments[10]) == 0) {
             writeConfigsToFile = false;
         }
     }
-    if (numberOfArguments > 10) { // If we are to store the plaquettes from the thermalization. Default is TRUE.
+    if (numberOfArguments > 11) { // If we are to store the plaquettes from the thermalization. Default is TRUE.
         if (atoi(cmdLineArguments[11]) == 0) {
             storeThermalizationPlaquettes = false;
         }
     }
-    if (numberOfArguments > 11) { // Hot start/cold start. Default is cold start.
+    if (numberOfArguments > 12) { // Hot start/cold start. Default is cold start.
         if (atoi(cmdLineArguments[12]) == 1) {
             hotStart = true;
         }
     }
-    if (numberOfArguments > 12) { // RNG Seed.
+    if (numberOfArguments > 13) { // RNG Seed.
         seed = atof(cmdLineArguments[13]) + double(processRank);
     }
-    if (numberOfArguments > 13) { // Metrolis seed.
+    if (numberOfArguments > 14) { // Metrolis seed.
         metropolisSeed = atof(cmdLineArguments[14]) + double(numprocs) + double(processRank);
     }
 
@@ -120,11 +124,12 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
-    pureGauge.setConfigBatchName("configs_profiling_run");
+    pureGauge.setConfigBatchName(batchName);
+    pureGauge.printRunInfo(true);
     pureGauge.runMetropolis(storeThermalizationPlaquettes, writeConfigsToFile);
     pureGauge.runBasicStatistics();
     pureGauge.printAcceptanceRate();
-//    pureGauge.writeDataToFile("../output/correlatorData.dat");
+    pureGauge.writeDataToFile(batchName);
 
     programEnd = clock();
     if (processRank == 0) cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;

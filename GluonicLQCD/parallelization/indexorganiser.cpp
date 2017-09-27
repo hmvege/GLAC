@@ -5,11 +5,6 @@
 #include <mpi.h>
 #include <vector>
 
-// TEMP TESTS
-#include <iostream>
-using std::cout;
-using std::endl;
-
 IndexOrganiser::IndexOrganiser(int processRank) : m_processRank(processRank)
 {
     /*
@@ -166,13 +161,6 @@ void IndexOrganiser::setN(unsigned int *N)
      */
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];
-    }
-    if (m_processRank == 0) {
-        cout << "Setting up the sublattice(indexOrganizer.cpp): ";
-        for (int i = 0; i < 4; i++) {
-            cout << m_N[i] << " ";
-        }
-        cout << endl;
     }
 }
 
