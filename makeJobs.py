@@ -13,6 +13,7 @@ class Slurm:
         for job_config in job_configurations:
             # Retrieving config contents
             binary_filename = job_config["bin_fn"]
+            runName = job_config["runName"]
             threads = job_config["threads"]
             beta = job_config["beta"]
             NSpatial = job_config["N"]
@@ -28,8 +29,8 @@ class Slurm:
 #SBATCH --ntasks=64  
 #SBATCH --time=01:00:00
 #SBATCH --job-name=%3.2fbeta_%dcube%d_%dthreads
-mpirun -n %d %s %d %d %d %d %d %d %.2f %.2f
-        '''%(self.partition,beta,NSpatial,NTemporal,threads,threads,binary_filename,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps)
+mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f
+        '''%(self.partition,beta,NSpatial,NTemporal,threads,threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps)
             job = 'jobfile.slurm'
             outfile  = open(job, 'w')
             outfile.write(content)
@@ -71,7 +72,8 @@ mpirun -n %d %s %d %d %d %d %d %d %.2f %.2f
 
 if __name__ == '__main__':
     # Variables
-    job_configuration1 = {  "bin_fn"    : "%s/../build/GluonicLQCD" % os.getcwd(), # Do I need the os.getcwd()?
+    job_configuration1 = {  "bin_fn"    : "%s/build/GluonicLQCD" % os.getcwd(), # Do I need the os.getcwd()?
+                            "runName"   : "testRun1",
                             "beta"      : 6.0,
                             "N"         : 16,
                             "NT"        : 32,
