@@ -317,7 +317,6 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
                 cout << "Avg. time per update every 20th update: " << updateStorer/(i+1) << " sec" << endl;
             }
         }
-        postUpdate = clock();
 
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (storePreObservables) {
@@ -325,7 +324,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
             m_GammaPreThermalization[i+1] = m_correlator->calculate(m_lattice);
 
             // Summing and sharing results across the processors
-            MPI_Allreduce(&m_GammaPreThermalization[i+1], &m_GammaPreThermalization[i+1], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+            MPI_Allreduce(&m_GammaPreThermalization[i+1], &m_GammaPreThermalization[i+1], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
 
             // Averaging the results
             m_GammaPreThermalization[i+1] /= double(m_numprocs);
@@ -362,8 +361,8 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         if (m_processRank == 0) cout << alpha << " " << m_Gamma[alpha];
 
         // Printing accept/reject rate every 20th update.
-        m_temporaryAcceptanceCounter = m_acceptanceCounter;
-        MPI_Allreduce(&m_temporaryAcceptanceCounter,&m_temporaryAcceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
+        m_temporaryAcceptanceCounter = 0;
+        MPI_Allreduce(&m_acceptanceCounter,&m_temporaryAcceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD); // Not needed?
         if (m_processRank == 0) {
             if (alpha % 10 == 0) {
                 cout << " " << double(m_temporaryAcceptanceCounter)/double(4*m_latticeSize*(alpha+1)*m_NUpdates*m_NCor) << endl;
@@ -386,7 +385,7 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         // =================================================================
     }
     // Taking the average of the acceptance rate across the processors.
-    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
+    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
 //    m_acceptanceRatio = double(m_acceptanceCounter)/double(m_numprocs);
     if (m_processRank == 0) cout << "System completed.\n" << endl;
 }
