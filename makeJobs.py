@@ -39,7 +39,7 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
             tmp = proc.stdout.read()
             ID = int(tmp.split()[-1])               # ID of job
-            self.jobs[ID] = [threads]
+            self.jobs[ID] = [runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,threads]
             os.system('mv %s job_%d.sh'%(job, ID))  # Change name of jobScript
         self.updateIdFile()
 
@@ -57,7 +57,7 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f
 
     def showIDwithNb(self):
         colWidth = 12
-        print '{0:<{w}} {1:<{w}} {2:<{w}} {3:<{w}} {4:<{w}} {5:<{w}} {6:<{w}} {7:<{w}}'.format('ID', 'Model', 'Nh', 'Nb', 'var', 'precision', 'degree', 'threads', w=colWidth)
+        print '{0:<{w}} {1:<{w}} {2:<{w}} {3:<{w}} {4:<{w}} {5:<{w}} {6:<{w}} {7:<{w}}'.format('ID', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'SU3Eps', 'threads', w=colWidth)
         for i in sorted(self.jobs):
             print '{0:<{w}}'.format(i, w=colWidth),
             for j in xrange(len(self.jobs[i])):
@@ -72,21 +72,21 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f
 
 if __name__ == '__main__':
     # Variables
-    job_configuration1 = {  "bin_fn"    : "%s/build/GluonicLQCD" % os.getcwd(), # Do I need the os.getcwd()?
+    job_configuration1 = {  "bin_fn"    : "%s/build/GluonicLQCD" % os.getcwd(),
                             "runName"   : "testRun1",
                             "beta"      : 6.0,
-                            "N"         : 16,
-                            "NT"        : 32,
-                            "NTherm"    : 2000, # Check this
-                            "NCor"      : 200, # Check this
-                            "NCf"       : 1000, # Check this
-                            "NUpdates"  : 10, # Check this
+                            "N"         : 24,
+                            "NT"        : 48,
+                            "NTherm"    : 200,
+                            "NCor"      : 20,
+                            "NCf"       : 100,
+                            "NUpdates"  : 10,
                             "SU3Eps"    : 0.24,
                             "threads"   : 64}
 
     job_configuration2 = {}
 
-    s = Slurm("smaug-b")
+    s = Slurm("normal")
     s.submitJob([job_configuration1])
     #s.cancelAllJobs()
     s.showIDwithNb()
