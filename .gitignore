@@ -20,3 +20,6 @@ build/
 # Files not of importance
 dim_sketch.py
 test_env
+
+# Smaug files
+*.slurm

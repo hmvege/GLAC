@@ -11,7 +11,6 @@ class Slurm:
 
     def submitJob(self, job_configurations):
         for job_config in job_configurations:
-            print job_config
             # Retrieving config contents
             binary_filename = job_config["bin_fn"]
             threads = job_config["threads"]
@@ -35,10 +34,8 @@ mpirun -n %d %s %d %d %d %d %d %d %.2f %.2f
             outfile  = open(job, 'w')
             outfile.write(content)
             outfile.close()
-            print content
-            cmd = ['sbatch', job]
-            # proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-            print cmd
+            cmd = ['sbatch', os.getcwd() + "/" + job] # Do I need the os.getcwd()?
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
             tmp = proc.stdout.read()
             ID = int(tmp.split()[-1])               # ID of job
             self.jobs[ID] = [threads]
@@ -74,7 +71,7 @@ mpirun -n %d %s %d %d %d %d %d %d %.2f %.2f
 
 if __name__ == '__main__':
     # Variables
-    job_configuration1 = {  "bin_fn"    : "GluonicLQCD",
+    job_configuration1 = {  "bin_fn"    : "%s/../build/GluonicLQCD" % os.getcwd(), # Do I need the os.getcwd()?
                             "beta"      : 6.0,
                             "N"         : 16,
                             "NT"        : 32,
