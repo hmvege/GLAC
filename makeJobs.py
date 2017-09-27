@@ -1,31 +1,47 @@
 import os, subprocess, time
 
 class Slurm:
-    def __init__(self):
+    def __init__(self, partition):
+        self.partition = partition
         self.idFilesName = '.ids.txt'
         if os.path.isfile(self.idFilesName):
             self.jobs =  eval(open(self.idFilesName,"r").read())
         else:
             self.jobs = {}
 
-    def submitJob(self, partition, beta, NSpatial, NTemporal, threads, binary_filename):
-        for Nb in range(minNb, maxNb):
+    def submitJob(self, job_configurations):
+        for job_config in job_configurations:
+            print job_config
+            # Retrieving config contents
+            binary_filename = job_config["bin_fn"]
+            threads = job_config["threads"]
+            beta = job_config["beta"]
+            NSpatial = job_config["N"]
+            NTemporal = job_config["NT"]
+            NTherm = job_config["NTherm"]
+            NCor = job_config["NCor"] 
+            NCf = job_config["NCf"]
+            NUpdates = job_config["NUpdates"]
+            SU3Eps = job_config["SU3Eps"]
+
             content ='''#!/bin/bash
 #SBATCH --partition=%s
 #SBATCH --ntasks=64  
 #SBATCH --time=01:00:00
 #SBATCH --job-name=%3.2fbeta_%dcube%d_%dthreads
 mpirun -n %d %s %d %d %d %d %d %d %.2f %.2f
-        '''%(partition,beta,NSpatial,NTemporal,threads,binary_filename,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps)
+        '''%(self.partition,beta,NSpatial,NTemporal,threads,threads,binary_filename,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps)
             job = 'jobfile.slurm'
             outfile  = open(job, 'w')
             outfile.write(content)
             outfile.close()
+            print content
             cmd = ['sbatch', job]
-            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+            # proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+            print cmd
             tmp = proc.stdout.read()
             ID = int(tmp.split()[-1])               # ID of job
-            self.jobs[ID] = [ threads]
+            self.jobs[ID] = [threads]
             os.system('mv %s job_%d.sh'%(job, ID))  # Change name of jobScript
         self.updateIdFile()
 
@@ -58,9 +74,20 @@ mpirun -n %d %s %d %d %d %d %d %d %.2f %.2f
 
 if __name__ == '__main__':
     # Variables
-    job_configuration = {""}
-    
-    s = Slurm()
-    s.submitJob(10,11)
+    job_configuration1 = {  "bin_fn"    : "GluonicLQCD",
+                            "beta"      : 6.0,
+                            "N"         : 16,
+                            "NT"        : 32,
+                            "NTherm"    : 2000, # Check this
+                            "NCor"      : 200, # Check this
+                            "NCf"       : 1000, # Check this
+                            "NUpdates"  : 10, # Check this
+                            "SU3Eps"    : 0.24,
+                            "threads"   : 64}
+
+    job_configuration2 = {}
+
+    s = Slurm("smaug-b")
+    s.submitJob([job_configuration1])
     #s.cancelAllJobs()
     s.showIDwithNb()

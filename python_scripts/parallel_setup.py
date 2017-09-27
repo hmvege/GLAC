@@ -14,7 +14,8 @@ class color:
 	UNDERLINE = '\033[4m'
 	END = '\033[0m'
 
-class Index: # General method for getting contiguous memory allocation
+class Index: 
+	# General method for getting contiguous memory allocation
 	def __init__(self,N):
 		self.N = N
 		self.N_length = len(N)
@@ -24,8 +25,7 @@ class Index: # General method for getting contiguous memory allocation
 		return offset
 
 class Processor:
-	def __init__(self, rank):
-		# self.numprocs = numprocs
+	def __init__(self, rank):		
 		self.rank = rank
 
 	def set_neighbor_list(self, neighbor_list):
@@ -39,14 +39,6 @@ class Processor:
 		self.proc_pos = proc_pos
 
 	def __str__(self):
-		# string = "Rank %2d || x-1 = %2d x+1 = %2d || y-1 = %2d y+1 = %2d || z-1 = %2d z+1 = %2d || t-1 = %2d t+1 = %2d" % (self.rank,self.neighbor_list[0],
-		# 																															self.neighbor_list[1],
-		# 																															self.neighbor_list[2],
-		# 																															self.neighbor_list[3],
-		# 																															self.neighbor_list[4],
-		# 																															self.neighbor_list[5],
-		# 																															self.neighbor_list[6],
-		# 																															self.neighbor_list[7])
 		string = "Rank %2d || x-1 = %2d x+1 = %2d || y-1 = %2d y+1 = %2d || z-1 = %2d z+1 = %2d || t-1 = %2d t+1 = %2d" % tuple([self.rank] + self.neighbor_list)
 		return string
 
