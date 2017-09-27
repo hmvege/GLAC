@@ -180,7 +180,6 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
                 for (unsigned int z = 0; z < m_N[2]; z++) {
                     for (unsigned int t = 0; t < m_N[3]; t++) {
                         for (unsigned int mu = 0; mu < 4; mu++) {
-//                            m_lattice[getIndex(x,y,z,t,m_N[1],m_N[2],m_N[3])].U[mu].identity();
                             m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[mu].identity();
                         }
                     }
@@ -232,9 +231,7 @@ void System::updateLink(int latticeIndex, int mu)
      *  i   : spacetime getIndex
      *  mu  : Lorentz getIndex
      */
-//    SU3 X = m_SU3Generator->generateRandom(); // Generates a random matrix, SHOULD BE MODIFIED TO X = RST, page 83 Gattinger & Lang
-//    SU3 X = m_SU3Generator->generateRST();
-//    m_updatedMatrix = X*m_lattice[latticeIndex].U[mu];
+//    m_updatedMatrix = m_SU3Generator->generateRandom()*m_lattice[latticeIndex].U[mu]; // Shorter method of updating matrix
     m_updatedMatrix = m_SU3Generator->generateRST()*m_lattice[latticeIndex].U[mu]; // Shorter method of updating matrix
 }
 
@@ -251,12 +248,10 @@ void System::update()
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
                         for (int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
-//                            updateLink(getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3]), mu);
                             updateLink(m_indexHandler->getIndex(x,y,z,t), mu);
                             m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
                             if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             {
-//                                m_lattice[getIndex(x, y, z, t, m_N[1], m_N[2], m_N[3])].U[mu].copy(m_updatedMatrix);
                                 m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[mu].copy(m_updatedMatrix);
                                 m_acceptanceCounter++;
                             }
@@ -372,21 +367,9 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         }
 
         if (writeConfigsToFile) writeConfigurationToFile(alpha);
-        // TEST ============================================================
-//        MPI_Barrier(MPI_COMM_WORLD);
-//        loadFieldConfiguration("configs_profiling_run_beta6.000000_config0.bin");
-//        MPI_Barrier(MPI_COMM_WORLD);
-//        double corr = m_correlator->calculate(m_lattice);
-//        MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        corr /= double(m_numprocs);
-//        if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-//        MPI_Barrier(MPI_COMM_WORLD);
-//        MPI_Finalize(); exit(1);
-        // =================================================================
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
-//    m_acceptanceRatio = double(m_acceptanceCounter)/double(m_numprocs);
     if (m_processRank == 0) cout << "System completed.\n" << endl;
 }
 
