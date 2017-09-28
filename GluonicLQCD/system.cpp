@@ -117,14 +117,32 @@ void System::subLatticeSetup()
         if (m_N[i] <= 2) {
             if (m_processRank == 0) {
                 cout << "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
-                for (int j = 0; j < 4; j++) {
-                    cout << m_N[j] << " ";
-                }
+                for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
                 cout << " --> exiting."<< endl;
             }
             MPI_Barrier(MPI_COMM_WORLD);
             exit(0);
         }
+    }
+
+    // Checking if the sub lattice size acutally divide the lattice correctly.
+    bool latticeSizeError = false;
+    for (int i = 0; i < 3; i++) {
+        if (m_NSpatial % m_N[i] != 0) {
+            latticeSizeError = true;
+        }
+    }
+    if (m_NTemporal % m_N[3] != 0) {
+        latticeSizeError = true;
+    }
+    if (latticeSizeError) {
+        if (m_processRank == 0) {
+            cout << "Error: sub-lattice size invalid: ";
+            for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
+            cout << " --> exiting."<< endl;
+        }
+        MPI_Barrier(MPI_COMM_WORLD);
+        exit(0);
     }
 
     // Sets up number of processors per dimension

@@ -29,10 +29,12 @@ class Slurm:
             for dim in subDims:
                 if dim <= 2: exit("Error: %d is not a valid dimension" % dim)
 
+            # #SBATCH --exclude=smaug-b2 excludes an unstable node
             content ='''#!/bin/bash
 #SBATCH --partition=%s
 #SBATCH --ntasks=64  
 #SBATCH --time=01:00:00
+#SBATCH --exclude=smaug-b2
 #SBATCH --job-name=%3.2fbeta_%dcube%d_%dthreads
 mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d %s
         '''%(partition,beta,NSpatial,NTemporal,threads,threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)))
