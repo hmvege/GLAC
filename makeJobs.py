@@ -1,4 +1,4 @@
-import os, subprocess, time
+import os, subprocess, time, sys
 
 class Slurm:
     def __init__(self):
@@ -82,7 +82,10 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d %s
 
 if __name__ == '__main__':
     # Variables
-    partition = "normal"
+    if len(sys.argv) > 1:
+        partition = str(sys.argv[1])
+    else:
+        partition = "normal"
 
     # sub_lattice_dimensions = [12,12,12,6]
     job_configuration1 = {  "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
