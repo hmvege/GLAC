@@ -1,5 +1,5 @@
 #include <random>   // For Mersenne-Twister19937
-#include <ctime>    // For random seed
+#include <chrono>
 #include <cmath>    // For exp()
 #include <fstream>
 #include <iostream>
@@ -17,6 +17,10 @@
 
 using std::cout;
 using std::endl;
+using std::chrono::steady_clock;
+using std::chrono::duration_cast;
+using std::chrono::duration;
+
 
 System::System(int N, int N_T, int NCf, int NCor, int NTherm, double seed, Correlator *correlator, Action *S)
 {
@@ -33,7 +37,6 @@ System::System(int N, int N_T, int NCf, int NCor, int NTherm, double seed, Corre
     setAction(S);
     setCorrelator(correlator);
     m_lattice = new Links[m_latticeSize]; // Lattice, contigious memory allocation
-//    m_GammaPreThermalization = new double[m_NTherm*m_NCor/10];
     m_GammaPreThermalization = new double[m_NTherm+1];
     m_Gamma = new double[m_NCf]; // Correlator values
     m_GammaSquared = new double[m_NCf];
@@ -119,39 +122,46 @@ void System::update()
 }
 
 
-void System::runMetropolis(bool storePreObservables)
+void System::runMetropolis(bool storeThermalizationObservables)
 {
     // TESTS ==============================================================================================
 //    loadFieldConfiguration("scalar16cubed16run1");
 //    loadFieldConfiguration("parallel8core16cube16");
-    writeConfigurationToFile("unityScalar");
+//    writeConfigurationToFile("unityScalar");
 //    loadFieldConfiguration("parallel32core16cube_plaquette0594052");
-    loadFieldConfiguration("unityScalar");
-    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
-    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
-    exit(1);
+//    loadFieldConfiguration("unityScalar");
+//    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+//    cout << "Pre-thermialization correlator:  " << m_GammaPreThermalization[0] << endl;
+//    exit(1);
     // ====================================================================================================
+    m_storeThermalizationObservables = storeThermalizationObservables;
 
     // Timer variables
-    clock_t preUpdate, postUpdate;
+    steady_clock::time_point preUpdate, postUpdate;
+    duration<double> updateTime;
     double updateStorer = 0;
 
     // Running thermalization
     for (int i = 0; i < m_NTherm; i++)
     {
-        preUpdate = clock();
+        preUpdate = steady_clock::now();
+
         update();
-        postUpdate = clock();
-        updateStorer += ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC));
-        if (storePreObservables) {
+
+        postUpdate = steady_clock::now();
+        updateTime = duration_cast<duration<double>>(postUpdate-preUpdate);
+        updateStorer += updateTime.count();
+
+        if (m_storeThermalizationObservables) {
             m_GammaPreThermalization[i+1] = m_correlator->calculate(m_lattice);
             cout << i << " Correlator: " << m_GammaPreThermalization[i+1] << endl;
         }
-        if ((i-1) % 20 == 0) {
-            cout << "Avg. time after " << (i - 1 + 20) << " updates: " << updateStorer/double(i+1) << " sec. ";
+
+        if (i % 20 == 0) { // Avg. time per update every 20th update
+            cout << "Avgerage update time: " << updateStorer/double(i+1) << " sec" << endl;
         }
     }
-    cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm] << endl;
+    if (m_storeThermalizationObservables) cout << "Post-thermialization correlator: " << m_GammaPreThermalization[m_NTherm] << endl;
     cout << "Termalization complete. Acceptance rate: " << m_acceptanceCounter/double(4*m_latticeSize*m_nUpdates*m_NTherm) << endl;
 
     // Setting the metropolis acceptance counter to 0 in order not to count the thermalization
@@ -167,14 +177,6 @@ void System::runMetropolis(bool storePreObservables)
         m_Gamma[alpha] = m_correlator->calculate(m_lattice);
     }
     cout << "Metropolis completed." << endl;
-}
-
-void System::sampleSystem()
-{
-    /*
-     * For sampling statistics/getting correlators
-     */
-    cout << "Not implemented yet." << endl;
 }
 
 void System::getStatistics()
@@ -196,7 +198,7 @@ void System::getStatistics()
     cout << m_averagedGamma << ", std = " << m_stdGamma << ", variance = " << m_varianceGamma << endl;
 }
 
-void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
+void System::writeDataToFile(std::string filename)
 {
     /*
      * For writing the raw Gamma data to file.
@@ -212,7 +214,7 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
     file << "AverageGamma " << m_averagedGamma << endl;
     file << "VarianceGamma " << m_varianceGamma << endl;
     file << "stdGamma " << m_stdGamma << endl;
-    if (preThermalizationGamma) {
+    if (m_storeThermalizationObservables) {
         for (int i = 0; i < m_NTherm+1; i++) {
             file << m_GammaPreThermalization[i] << endl;
         }

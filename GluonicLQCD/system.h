@@ -22,6 +22,7 @@ private:
     // For handling the acceptance rate
     int m_acceptanceCounter = 0;
     double getAcceptanceRate();
+    bool m_storeThermalizationObservables = false;
 
     // Lattice constants
     int m_latticeSize;
@@ -39,9 +40,6 @@ private:
     // Storing the action as a pointer
     Action *m_S = nullptr;
     double m_deltaS;
-
-    // For sampling the system(lattice)
-    void sampleSystem();
 
     // Correlator
     Correlator * m_correlator = nullptr;
@@ -64,11 +62,11 @@ public:
     System(int N, int N_T, int NCf, int NCor, int NTherm, double seed, Correlator *correlator, Action *S);
     ~System();
     void latticeSetup(SU3MatrixGenerator *SU3Generator);
-    void runMetropolis(bool storePreObservables);
+    void runMetropolis(bool storeThermalizationObservables);
     void getStatistics();
     // Data outputters
 //    void writeStatisticsToFile(const char *filename);
-    void writeDataToFile(std::string filename, bool preThermalizationGamma = true);
+    void writeDataToFile(std::string filename);
     void writeConfigurationToFile(std::string filename);
     void loadFieldConfiguration(std::string filename);
 
