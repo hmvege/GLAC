@@ -1,5 +1,4 @@
 #include <random>   // For Mersenne-Twister19937
-//#include <ctime>    // For random seed
 #include <chrono>
 #include <cmath>    // For exp()
 #include <fstream>
@@ -160,7 +159,11 @@ void System::subLatticeSetup()
 
 void System::setSubLatticeDimensions(int *NSub)
 {
-
+    /*
+     * Function for specifying sub-lattice dimensions.
+     * Arguments:
+     *  (int*) NSub     : takes 4 integers, one integer for each sub-lattice dimension.
+     */
 }
 
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
@@ -390,17 +393,6 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
                 cout << endl;
             }
         }
-
-        // Printing accept/reject rate every 20th update.
-//        m_temporaryAcceptanceCounter = 0;
-//        MPI_Allreduce(&m_acceptanceCounter,&m_temporaryAcceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD); // Not needed?
-//        if (m_processRank == 0) {
-//            if (alpha % 10 == 0) {
-//                cout << " " << double(m_temporaryAcceptanceCounter)/double(4*m_latticeSize*(alpha+1)*m_NUpdates*m_NCor) << endl;
-//            } else {
-//                cout << endl;
-//            }
-//        }
 
         // Writing field config to file
         if (writeConfigsToFile) writeConfigurationToFile(alpha);

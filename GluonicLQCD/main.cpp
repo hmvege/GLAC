@@ -20,6 +20,7 @@ using std::chrono::duration;
 /*
  * TODO:
  * [ ] Enforce sub lattice cubes when possible(when allocating dimensions)
+ * [ ] Add function for loading fields? Or make a seperate program? Should probably be done here.
  * [ ] (optional) Switch to CORRECT method syntax, foo --> m_foo
  * [ ] (optional) Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
  * [ ] (optional) Add better test suites, one that prints FAIL if test fails!!
