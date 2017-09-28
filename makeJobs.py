@@ -1,7 +1,7 @@
 import os, subprocess, time
 
 class Slurm:
-    def __init__(self, partition):
+    def __init__(self):
         self.idFilesName = '.ids.txt'
         if os.path.isfile(self.idFilesName):
             self.jobs =  eval(open(self.idFilesName,"r").read())
@@ -31,8 +31,8 @@ class Slurm:
 #SBATCH --ntasks=64  
 #SBATCH --time=01:00:00
 #SBATCH --job-name=%3.2fbeta_%dcube%d_%dthreads
-mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d
-        '''%(self.partition,beta,NSpatial,NTemporal,threads,threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart)
+mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d
+        '''%(partition,beta,NSpatial,NTemporal,threads,threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart)
             job = 'jobfile.slurm'
             outfile  = open(job, 'w')
             outfile.write(content)
@@ -41,7 +41,8 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
             tmp = proc.stdout.read()
             ID = int(tmp.split()[-1])               # ID of job
-            self.jobs[ID] = [runName,partition,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart)]
+            ID = 0
+            self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart)]
             os.system('mv %s job_%d.sh'%(job, ID))  # Change name of jobScript
         self.updateIdFile()
 
@@ -58,13 +59,16 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d
             os.system('scancel %d'%i)
 
     def showIDwithNb(self):
-        colWidth = 12
-        print '{0:<{w}} {1:<{w}} {2:<{w}} {3:<{w}} {4:<{w}} {5:<{w}} {6:<{w}} {7:<{w} {8:<{w}} {9:<{w}} {10:<{w}} {11:<{w}} {12:<{w}} {13:<{w}} {14:<{w}} {15:<{w}}}'.format(
-            'ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart', w=colWidth)
+        header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart']
+        widthChoser = lambda s: 7 if len(s) <= 6 else len(s)+4
+        colWidths = [widthChoser(i) for i in header_labels]
+        for label,colWidth in zip(header_labels,colWidths):
+            print '{0:<{w}}'.format(label, w=colWidth),
+        print
         for i in sorted(self.jobs):
-            print '{0:<{w}}'.format(i, w=colWidth),
+            print '{0:<{w}}'.format(i, w=colWidths[0]),
             for j in xrange(len(self.jobs[i])):
-                print '{0:<{w}}'.format(self.jobs[i][j], w=colWidth),
+                print '{0:<{w}}'.format(self.jobs[i][j], w=colWidths[j+1]),
             print
 
     def clearIdFile(self):
@@ -76,6 +80,7 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d
 if __name__ == '__main__':
     # Variables
     partition = "normal"
+    # sub_lattice_dimensions = [12,12,12,6]
     job_configuration1 = {  "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
                             "runName"       : "testRun1",
                             "beta"          : 6.0,
@@ -87,8 +92,8 @@ if __name__ == '__main__':
                             "NUpdates"      : 10,
                             "SU3Eps"        : 0.24,
                             "threads"       : 64,
-                            "storeCfg"      : 1,
-                            "storeThermCfg" : 0,
+                            "storeCfgs"     : 1,
+                            "storeThermCfgs": 0,
                             "hotStart"      : 0}
 
     job_configuration2 = {}
