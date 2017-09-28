@@ -85,19 +85,22 @@ void System::subLatticeSetup()
     }
     int restProc = m_numprocs;
 
-    // Sets up sub lattice dimensionality without any splitting
-    for (int i = 0; i < 3; i++) {
-        m_N[i] = m_NSpatial;
-    }
-    m_N[3] = m_NTemporal;
+    // Only finds the sub lattice size iteratively if no preset value has been defined.
+    if (!m_subLatticeSizePreset) {
+        // Sets up sub lattice dimensionality without any splitting
+        for (int i = 0; i < 3; i++) {
+            m_N[i] = m_NSpatial;
+        }
+        m_N[3] = m_NTemporal;
 
-    // Iteratively finds and sets the sub-lattice dimensions
-    while (restProc >= 2) {
-        for (int i = 0; i < 4; i++) { // Counts from x to t
-//        for (int i = 4; i >= 0; i--) { // Counts from x to t
-            m_N[i] /= 2;
-            restProc /= 2;
-            if (restProc < 2) break;
+        // Iteratively finds and sets the sub-lattice dimensions
+        while (restProc >= 2) {
+            for (int i = 0; i < 4; i++) { // Counts from x to t
+                //        for (int i = 4; i >= 0; i--) { // Counts from x to t
+                m_N[i] /= 2;
+                restProc /= 2;
+                if (restProc < 2) break;
+            }
         }
     }
 
@@ -164,6 +167,10 @@ void System::setSubLatticeDimensions(int *NSub)
      * Arguments:
      *  (int*) NSub     : takes 4 integers, one integer for each sub-lattice dimension.
      */
+    for (int i = 0; i < 4; i++) {
+        m_N[i] = NSub[i];
+    }
+    m_subLatticeSizePreset = true;
 }
 
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)

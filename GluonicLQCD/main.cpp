@@ -107,6 +107,8 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 //        exit(0);
 //    }
 
+    int NSub[4] = {4,4,4,8};
+
     // Program timers
     steady_clock::time_point programStart, programEnd;
     duration<double> programTime;
@@ -117,6 +119,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Plaquette G;
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
+//    pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     pureGauge.setConfigBatchName(batchName);
     pureGauge.printRunInfo(true); // Always print run info

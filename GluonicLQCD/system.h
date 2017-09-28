@@ -36,6 +36,9 @@ private:
     unsigned long int m_acceptanceCounter = 0;
     double getAcceptanceRate();
 
+    // Variable for storing if the sub lattice size has been preset.
+    bool m_subLatticeSizePreset = false;
+
     // Paralellization setup
     int m_numprocs;
     int m_processRank;
