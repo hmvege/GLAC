@@ -51,6 +51,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
     double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
 
+    // Only needed if numberOfArguments > 13.
+    int NSub[4];
+
     if (numberOfArguments > 1) {
         batchName = cmdLineArguments[1];
     }
@@ -93,12 +96,20 @@ int main(int numberOfArguments, char* cmdLineArguments[])
             hotStart = true;
         }
     }
-    if (numberOfArguments > 13) { // RNG Seed.
-        seed = atof(cmdLineArguments[13]) + double(processRank);
+
+    if (numberOfArguments > 13) {
+        for (int i = 13; i < 17; i++) {
+            NSub[i % 13] = atoi(cmdLineArguments[i]);
+        }
+
     }
-    if (numberOfArguments > 14) { // Metrolis seed.
-        metropolisSeed = atof(cmdLineArguments[14]) + double(numprocs) + double(processRank);
-    }
+
+//    if (numberOfArguments > 13) { // RNG Seed.
+//        seed = atof(cmdLineArguments[13]) + double(processRank);
+//    }
+//    if (numberOfArguments > 14) { // Metrolis seed.
+//        metropolisSeed = atof(cmdLineArguments[14]) + double(numprocs) + double(processRank);
+//    }
 
 //    if (processRank == 0) {
 //        testInverseMatrix(SU3Eps, seed, 1e3, false);
@@ -108,7 +119,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 //        exit(0);
 //    }
 
-    int NSub[4] = {8,8,8,8};
+//    int NSub[4] = {8,8,8,8};
 
     // Program timers
     steady_clock::time_point programStart, programEnd;
@@ -120,7 +131,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Plaquette G;
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
-//    pureGauge.setSubLatticeDimensions(NSub);
+    if (numberOfArguments > 13) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     pureGauge.setConfigBatchName(batchName);
     pureGauge.printRunInfo(true); // Always print run info

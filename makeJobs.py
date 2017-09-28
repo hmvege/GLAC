@@ -25,14 +25,17 @@ class Slurm:
             storeCfgs = job_config["storeCfgs"]
             storeThermCfgs = job_config["storeThermCfgs"]
             hotStart = job_config["hotStart"]
+            subDims = job_config["subDims"]
+            for dim in subDims:
+                if dim <= 2: exit("Error: %d is not a valid dimension" % dim)
 
             content ='''#!/bin/bash
 #SBATCH --partition=%s
 #SBATCH --ntasks=64  
 #SBATCH --time=01:00:00
 #SBATCH --job-name=%3.2fbeta_%dcube%d_%dthreads
-mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d
-        '''%(partition,beta,NSpatial,NTemporal,threads,threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart)
+mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d %s
+        '''%(partition,beta,NSpatial,NTemporal,threads,threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)))
             job = 'jobfile.slurm'
             outfile  = open(job, 'w')
             outfile.write(content)
@@ -42,7 +45,7 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d
             tmp = proc.stdout.read()
             ID = int(tmp.split()[-1])               # ID of job
             ID = 0
-            self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart)]
+            self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims))]
             os.system('mv %s job_%d.sh'%(job, ID))  # Change name of jobScript
         self.updateIdFile()
 
@@ -59,7 +62,7 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d
             os.system('scancel %d'%i)
 
     def showIDwithNb(self):
-        header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart']
+        header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart','subDims']
         widthChoser = lambda s: 7 if len(s) <= 6 else len(s)+4
         colWidths = [widthChoser(i) for i in header_labels]
         for label,colWidth in zip(header_labels,colWidths):
@@ -80,6 +83,7 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d
 if __name__ == '__main__':
     # Variables
     partition = "normal"
+
     # sub_lattice_dimensions = [12,12,12,6]
     job_configuration1 = {  "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
                             "runName"       : "testRun1",
@@ -94,8 +98,8 @@ if __name__ == '__main__':
                             "threads"       : 64,
                             "storeCfgs"     : 1,
                             "storeThermCfgs": 0,
-                            "hotStart"      : 0}
-
+                            "hotStart"      : 0,
+                            "subDims"       : [12,12,12,6]}
     job_configuration2 = {}
 
     s = Slurm()
