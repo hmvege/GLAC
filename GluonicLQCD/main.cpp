@@ -119,8 +119,6 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 //        exit(0);
 //    }
 
-//    int NSub[4] = {8,8,8,8};
-
     // Program timers
     steady_clock::time_point programStart, programEnd;
     duration<double> programTime;
