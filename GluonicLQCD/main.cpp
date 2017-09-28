@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctime>
+#include <chrono>
 #include <mpi.h>
 #include "system.h"
 #include "actions/action.h"
@@ -12,28 +13,16 @@
 
 using std::cout;
 using std::endl;
+using std::chrono::steady_clock;
+using std::chrono::duration_cast;
+using std::chrono::duration;
 
 /*
  * TODO:
- * [x] Add plaquette correlator
- * [x] Make actions more general!! Aka, create a Wilson action
- * [x] Change to updating random matrices by X=RST
- * [x] Change to such that time dimension is 2N
- * [x] Add determinant for SU3 matrices
- * [x] Create method for saving lattice configuration
- * [x] Create method for loading lattice configuration
- * [x] Fix bug in matrices
- * [x] Find bug so that N != N_T works.
- * [x] Add write each Plaquette/observable to file-function.
- * [x] Finish SU3 basic properties unit testing such that I dont have to compare by hand
- * [x] Rename metropolis.cpp --> system.cpp
- * [x] Add shifting parallelization
- * [x] Update functions for reading and writing sublattices
  * [ ] Enforce sub lattice cubes when possible(when allocating dimensions)
- * [ ] Switch to CORRECT method syntax, foo --> m_foo
- * [ ] Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
- * [ ] Add better test suites, one that prints FAIL if test fails!!
- * [ ] Redo preGammaThermalization
+ * [ ] (optional) Switch to CORRECT method syntax, foo --> m_foo
+ * [ ] (optional) Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
+ * [ ] (optional) Add better test suites, one that prints FAIL if test fails!!
  */
 
 int main(int numberOfArguments, char* cmdLineArguments[])
@@ -45,15 +34,15 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     MPI_Comm_rank (MPI_COMM_WORLD, &processRank);
 
     // Constants by default initialization
-    int N           = 16;            // Spatial lattice points.
-    int N_T         = 16;            // Temporal lattice points.
-    int NTherm      = 200;           // Thermalization.
+    int N           = 8;            // Spatial lattice points.
+    int N_T         = 8;            // Temporal lattice points.
+    int NTherm      = 100;           // Thermalization.
     int NCor        = 10;            // Correlation updates.
     int NCf         = 20;           // Number of configurations to generate.
     int NUpdates    = 10;           // Number of link updates before moving on.
     double beta     = 6.0;          // Beta value(connected to the lattice spacing a).
     double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
-    std::string batchName               = "configs";
+    std::string batchName               = "TEST_RUN_CONFIG";
     bool writeConfigsToFile             = true;
     bool storeThermalizationPlaquettes  = false;
     bool hotStart                       = false;
@@ -93,8 +82,8 @@ int main(int numberOfArguments, char* cmdLineArguments[])
         }
     }
     if (numberOfArguments > 11) { // If we are to store the plaquettes from the thermalization. Default is TRUE.
-        if (atoi(cmdLineArguments[11]) == 0) {
-            storeThermalizationPlaquettes = false;
+        if (atoi(cmdLineArguments[11]) == 1) {
+            storeThermalizationPlaquettes = true;
         }
     }
     if (numberOfArguments > 12) { // Hot start/cold start. Default is cold start.
@@ -117,22 +106,29 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 //        exit(0);
 //    }
 
-    clock_t programStart, programEnd;
-    programStart = clock();
+    // Program timers
+    steady_clock::time_point programStart, programEnd;
+    duration<double> programTime;
+    programStart = steady_clock::now();
+
+    // Main program part
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     Plaquette G;
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     pureGauge.setConfigBatchName(batchName);
-    pureGauge.printRunInfo(true);
+    pureGauge.printRunInfo(true); // Always print run info
     pureGauge.runMetropolis(storeThermalizationPlaquettes, writeConfigsToFile);
     pureGauge.runBasicStatistics();
     pureGauge.printAcceptanceRate();
     pureGauge.writeDataToFile(batchName);
 
-    programEnd = clock();
-    if (processRank == 0) cout << "Program complete. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
+    // Finalizing and printing time taken
+    programEnd = steady_clock::now();
+    programTime = duration_cast<duration<double>>(programEnd-programStart);
+    if (processRank == 0) cout << "Program complete. Time used: " << programTime.count() << " sec" << endl;
+
     MPI_Finalize();
     return 0;
 }

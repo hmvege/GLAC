@@ -1,5 +1,6 @@
 #include <random>   // For Mersenne-Twister19937
-#include <ctime>    // For random seed
+//#include <ctime>    // For random seed
+#include <chrono>
 #include <cmath>    // For exp()
 #include <fstream>
 #include <iostream>
@@ -17,9 +18,11 @@
 #include "parallelization/neighbours.h"
 #include "parallelization/indexorganiser.h"
 
-
 using std::cout;
 using std::endl;
+using std::chrono::steady_clock;
+using std::chrono::duration_cast;
+using std::chrono::duration;
 
 System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank)
 {
@@ -155,6 +158,11 @@ void System::subLatticeSetup()
     m_V[3] = m_NSpatial*m_NSpatial*m_NSpatial*m_NTemporal; // XYZT volume
 }
 
+void System::setSubLatticeDimensions(int *NSub)
+{
+
+}
+
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
 {
     /*
@@ -194,31 +202,31 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
 
 void System::printRunInfo(bool verbose) {
     if (m_processRank == 0) {
-        for (int i = 0; i < 50; i++) cout << "=";
+        for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
-        cout << "Threads:                           " << m_numprocs << endl;
-        if (verbose) cout << "Lattice size:                      " << m_latticeSize << endl;
-        cout << "Lattice dimensions:                " << m_NSpatial << " " << m_NTemporal << endl;
-        cout << "N configurations:                  " << m_NCf << endl;
-        cout << "N correlation updates:             " << m_NCor << endl;
-        cout << "N thermalization updates:          " << m_NTherm << endl;
-        cout << "N link updates:                    " << m_NUpdates << endl;
-        cout << "Beta:                              " << m_beta << endl;
+        cout << "Threads:                               " << m_numprocs << endl;
+        if (verbose) cout << "Lattice size:                          " << m_latticeSize << endl;
+        cout << "Lattice dimensions(spatial, temporal): " << m_NSpatial << " " << m_NTemporal << endl;
+        cout << "N configurations:                      " << m_NCf << endl;
+        cout << "N correlation updates:                 " << m_NCor << endl;
+        cout << "N thermalization updates:              " << m_NTherm << endl;
+        cout << "N link updates:                        " << m_NUpdates << endl;
+        cout << "Beta:                                  " << m_beta << endl;
         if (verbose) {
-            cout << "SU3Eps:                            " << m_SU3Generator->getEpsilon() << endl;
-            cout << "Sub lattice Size:                  " << m_subLatticeSize << endl;
-            cout << "Sub latticedimensions:             ";
+            cout << "SU3Eps:                                " << m_SU3Generator->getEpsilon() << endl;
+            cout << "Sub lattice Size:                      " << m_subLatticeSize << endl;
+            cout << "Sub latticedimensions:                 ";
             for (int i = 0; i < 4; i++) {
                 cout << m_N[i] << " ";
             }
             cout << endl;
-            cout << "Processsors per dimension:         ";
+            cout << "Processsors per dimension:             ";
             for (int i = 0; i < 4; i++) {
                 cout << m_processorsPerDimension[i] << " ";
             }
             cout << endl;
         }
-        for (int i = 0; i < 50; i++) cout << "=";
+        for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
     }
 }
@@ -264,8 +272,9 @@ void System::update()
 }
 
 
-void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
+void System::runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile)
 {
+    m_storeThermalizationObservables = storeThermalizationObservables;
     //// TESTS ==============================================================================
 //    MPI_Barrier(MPI_COMM_WORLD);
     // Common files
@@ -280,50 +289,70 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 //    MPI_Finalize(); exit(1);
     //// ===================================================================================
     if (m_processRank == 0) {
-        if (storePreObservables) cout << "Store thermalization observables:  TRUE" << endl;
-        if (writeConfigsToFile) cout << "Store configurations:              TRUE" << endl;
+        cout << "Store thermalization observables:      ";
+        if (m_storeThermalizationObservables) {
+            cout << "TRUE" << endl;
+        } else {
+            cout << "FALSE" << endl;
+        }
+        cout << "Store configurations:                  ";
+        if (writeConfigsToFile) {
+            cout << "TRUE" << endl;
+        } else {
+            cout << "FALSE" << endl;
+        }
     }
 
     // Variables for checking performance of the update.
-    clock_t preUpdate, postUpdate;
+    steady_clock::time_point preUpdate, postUpdate;
+    duration<double> updateTime;
     double updateStorer = 0;
 
-    // Calculating correlator before any updates have began.
-    m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+//    clock_t preUpdate, postUpdate;
 
-    // Summing and sharing correlator to all processors before any updates has begun
-    MPI_Allreduce(&m_GammaPreThermalization[0], &m_GammaPreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    if (m_storeThermalizationObservables) {
+        // Calculating correlator before any updates have began.
+        m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
 
-    // Dividing by the number of processors in order to get the correlator.
-    m_GammaPreThermalization[0] /= double(m_numprocs);
-    if (m_processRank == 0) {
-        cout << "\nPre-thermialization correlator: " << m_GammaPreThermalization[0] << endl;
-        cout << "i  Correlator" << endl;
+        // Summing and sharing correlator to all processors before any updates has begun
+        MPI_Allreduce(&m_GammaPreThermalization[0], &m_GammaPreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
+        // Dividing by the number of processors in order to get the correlator.
+        m_GammaPreThermalization[0] /= double(m_numprocs);
+        if (m_processRank == 0) {
+            cout << "i  Plaquette" << endl;
+            cout << 0 << " " << m_GammaPreThermalization[0] << endl;
+        }
     }
+
     // Running thermalization
-    for (int i = 0; i < m_NTherm; i++)
+    for (int i = 1; i < m_NTherm+1; i++)
     {
-        preUpdate = clock();
+        // Pre timer
+        preUpdate = steady_clock::now();
         update();
-        postUpdate = clock();
-        updateStorer += ((postUpdate - preUpdate)/((double)CLOCKS_PER_SEC));
-        if ((i-1) % 20 == 0) {
+
+        // Post timer
+        postUpdate = steady_clock::now();
+        updateTime = duration_cast<duration<double>>(postUpdate-preUpdate);
+        updateStorer += updateTime.count();
+        if (i % 20 == 0) { // Avg. time per update every 20th update
             if (m_processRank == 0) {
-                cout << "Avg. time per update every 20th update: " << updateStorer/(i+1) << " sec" << endl;
+                cout << "Avgerage update time: " << updateStorer/double(i) << " sec" << endl;
             }
         }
 
         // Print correlator every somehting or store them all(useful when doing the thermalization).
-        if (storePreObservables) {
+        if (m_storeThermalizationObservables) {
             // Calculating the correlator
-            m_GammaPreThermalization[i+1] = m_correlator->calculate(m_lattice);
+            m_GammaPreThermalization[i] = m_correlator->calculate(m_lattice);
 
             // Summing and sharing results across the processors
-            MPI_Allreduce(&m_GammaPreThermalization[i+1], &m_GammaPreThermalization[i+1], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
+            MPI_Allreduce(&m_GammaPreThermalization[i], &m_GammaPreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
 
             // Averaging the results
-            m_GammaPreThermalization[i+1] /= double(m_numprocs);
-            if (m_processRank == 0) cout << i << " " << m_GammaPreThermalization[i+1] << endl; // Printing evolution of system
+            m_GammaPreThermalization[i] /= double(m_numprocs);
+            if (m_processRank == 0) cout << i << " " << m_GammaPreThermalization[i] << endl; // Printing evolution of system
         }
     }
 
@@ -332,14 +361,12 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
 
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
-        m_acceptanceRatio = double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm);
-        cout << "Termalization complete. Acceptance rate: " << m_acceptanceRatio << endl;
-        cout << "i  Correlator  Accept/reject" << endl;
+        cout << "Termalization complete. Acceptance rate: " << double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm) << endl;
+        cout << "i  Plaquette  Accept/reject" << endl;
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
-    m_temporaryAcceptanceCounter = 0;
 
     // Main part of algorithm
     for (int alpha = 0; alpha < m_NCf; alpha++)
@@ -352,20 +379,30 @@ void System::runMetropolis(bool storePreObservables, bool writeConfigsToFile)
         m_Gamma[alpha] = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_Gamma[alpha] /= double(m_numprocs);
-        // Writing to file
-        if (m_processRank == 0) cout << alpha << " " << m_Gamma[alpha];
 
-        // Printing accept/reject rate every 20th update.
-        m_temporaryAcceptanceCounter = 0;
-        MPI_Allreduce(&m_acceptanceCounter,&m_temporaryAcceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD); // Not needed?
+        // Printing plaquette value
+        if (m_processRank == 0) cout << alpha << " " << m_Gamma[alpha];
+        // Adding the acceptance ratio
         if (m_processRank == 0) {
             if (alpha % 10 == 0) {
-                cout << " " << double(m_temporaryAcceptanceCounter)/double(4*m_latticeSize*(alpha+1)*m_NUpdates*m_NCor) << endl;
+                cout << " " << double(m_acceptanceCounter)/double(4*m_subLatticeSize*(alpha+1)*m_NUpdates*m_NCor) << endl;
             } else {
                 cout << endl;
             }
         }
 
+        // Printing accept/reject rate every 20th update.
+//        m_temporaryAcceptanceCounter = 0;
+//        MPI_Allreduce(&m_acceptanceCounter,&m_temporaryAcceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD); // Not needed?
+//        if (m_processRank == 0) {
+//            if (alpha % 10 == 0) {
+//                cout << " " << double(m_temporaryAcceptanceCounter)/double(4*m_latticeSize*(alpha+1)*m_NUpdates*m_NCor) << endl;
+//            } else {
+//                cout << endl;
+//            }
+//        }
+
+        // Writing field config to file
         if (writeConfigsToFile) writeConfigurationToFile(alpha);
     }
     // Taking the average of the acceptance rate across the processors.
@@ -390,28 +427,27 @@ void System::runBasicStatistics()
     m_varianceGamma = (averagedGammaSquared - m_averagedGamma*m_averagedGamma)/double(m_NCf);
     m_stdGamma = sqrt(m_varianceGamma);
     if (m_processRank == 0) {
-        for (int i = 0; i < 50; i++) cout << "=";
+        for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
         cout << "Average plaqutte:      " << m_averagedGamma << endl;
         cout << "Standard deviation:    " << m_stdGamma << endl;
         cout << "Variance:              " << m_varianceGamma << endl;
-        for (int i = 0; i < 50; i++) cout << "=";
+        for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
     }
 }
 
-void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
+void System::writeDataToFile(std::string filename)
 {
     /*
      * For writing the raw Gamma data to file.
      * Arguments:
      *  filename                : to write stats to
-     *  preThermalizationGamma  : if we are writing the gama
      */
     if (m_processRank == 0) {
         std::ofstream file;
         file.open(m_outputFolder + filename + ".dat");
-        file << "beta" << m_beta << endl;
+        file << "beta " << m_beta << endl;
         file << "acceptanceCounter " << getAcceptanceRate() << endl;
         file << "NCor " << m_NCor << endl;
         file << "NCf " << m_NCf << endl;
@@ -419,7 +455,7 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
         file << std::setprecision(15) << "AverageGamma " << m_averagedGamma << endl;
         file << std::setprecision(15) << "VarianceGamma " << m_varianceGamma << endl;
         file << std::setprecision(15) << "stdGamma " << m_stdGamma << endl;
-        if (preThermalizationGamma) {
+        if (m_storeThermalizationObservables) {
             for (int i = 0; i < m_NTherm+1; i++) {
                 file << std::setprecision(15) << m_GammaPreThermalization[i] << endl;
             }
@@ -429,7 +465,7 @@ void System::writeDataToFile(std::string filename, bool preThermalizationGamma)
             file << std::setprecision(15) << m_Gamma[i] << endl;
         }
         file.close();
-        cout << filename << " written." << endl;
+        cout << m_outputFolder << filename << ".dat written." << endl;
     }
 }
 

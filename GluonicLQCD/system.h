@@ -22,6 +22,9 @@ private:
     // Beta value constant
     double m_beta;
 
+    // Variable for storing the thermalization observables
+    bool m_storeThermalizationObservables = false;
+
     // Updating constants
     int m_NCf;
     int m_NCor;
@@ -31,8 +34,6 @@ private:
 
     // For handling the acceptance rate
     unsigned long int m_acceptanceCounter = 0;
-    unsigned long int m_temporaryAcceptanceCounter = 0;
-    double m_acceptanceRatio = 0;
     double getAcceptanceRate();
 
     // Paralellization setup
@@ -88,12 +89,12 @@ private:
 public:
     System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
     ~System();
-    void runMetropolis(bool storePreObservables, bool writeConfigsToFile);
+    void runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
     void runBasicStatistics();
 
     // Data outputters
-    void writeDataToFile(std::string filename, bool preThermalizationGamma = true);
+    void writeDataToFile(std::string filename);
     void writeConfigurationToFile(int configNumber);
     void loadFieldConfiguration(std::string filename);
 
@@ -103,6 +104,7 @@ public:
     void setConfigBatchName(std::string filename) { m_filename = filename; }
     void setN(int NSpatial) { m_NSpatial = NSpatial; }
     void setNT(int NTemporal) { m_NTemporal = NTemporal; }
+    void setSubLatticeDimensions(int *NSub);
     void setNCf(int NCf) { m_NCf = NCf; }
     void setEpsilon(double epsilon) { m_epsilon = epsilon; }
     void setUpdateFrequency(int NUpdates) { m_NUpdates = NUpdates; }
