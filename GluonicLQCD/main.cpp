@@ -20,6 +20,7 @@ using std::chrono::duration;
 /*
  * TODO:
  * [ ] Enforce sub lattice cubes when possible(when allocating dimensions)
+ * [ ] Add lattice cube sizes manually from cmd line
  * [ ] Add function for loading fields? Or make a seperate program? Should probably be done here.
  * [ ] (optional) Switch to CORRECT method syntax, foo --> m_foo
  * [ ] (optional) Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
@@ -35,8 +36,8 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     MPI_Comm_rank (MPI_COMM_WORLD, &processRank);
 
     // Constants by default initialization
-    int N           = 8;            // Spatial lattice points.
-    int N_T         = 8;            // Temporal lattice points.
+    int N           = 16;            // Spatial lattice points.
+    int N_T         = 32;            // Temporal lattice points.
     int NTherm      = 100;           // Thermalization.
     int NCor        = 10;            // Correlation updates.
     int NCf         = 20;           // Number of configurations to generate.
@@ -107,7 +108,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 //        exit(0);
 //    }
 
-    int NSub[4] = {4,4,4,8};
+    int NSub[4] = {8,8,8,8};
 
     // Program timers
     steady_clock::time_point programStart, programEnd;
