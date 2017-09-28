@@ -19,8 +19,9 @@ using std::chrono::duration;
 
 /*
  * TODO:
+ * [x] Add lattice cube sizes manually from cmd line
  * [ ] Enforce sub lattice cubes when possible(when allocating dimensions)
- * [ ] Add lattice cube sizes manually from cmd line
+ * [ ] Add security checks for making sure that lattice sizes are correct in regards to the total lattice.
  * [ ] Add function for loading fields? Or make a seperate program? Should probably be done here.
  * [ ] (optional) Switch to CORRECT method syntax, foo --> m_foo
  * [ ] (optional) Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!

@@ -29,15 +29,7 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     uniform_distribution = uni_dist;
     SU2_uniform_distribution = uni_dist_SU2;
     // Setting up Pauli matrices
-    sigma = new SU2[3];
-//    sigma[0].mat[1].re = 1;
-//    sigma[0].mat[2].re = 1;
-//    sigma[1].mat[1].im = -1;
-//    sigma[1].mat[2].im = 1;
-//    sigma[2].mat[0].re = 1;
-//    sigma[2].mat[3].re = -1;
-//    su2Identity[0].re = 1;
-//    su2Identity[3].re = 1;
+    sigma = new SU2[3]; // WOULD THIS BE FASTER IF I USED MEMORY ON STACK?
     sigma[0].mat[1].setRe(1);
     sigma[0].mat[2].setRe(1);
     sigma[1].mat[1].setIm(-1);
