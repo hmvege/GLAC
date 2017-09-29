@@ -1,5 +1,14 @@
 import os, subprocess, time, sys
 
+'''
+TODO: 
+[ ] Creat command-line tools!
+[ ] Add Abel usability and Smaug usability.
+[ ] make command line such that I can show .ids.txt
+[ ] Add pwd in path to avoid any confusion
+[ ] Create folders needed
+'''
+
 class Slurm:
     def __init__(self):
         self.idFilesName = '.ids.txt'
@@ -29,11 +38,29 @@ class Slurm:
             for dim in subDims:
                 if dim <= 2: exit("Error: %d is not a valid dimension" % dim)
 
+            content ='''
+#!/bin/bash
+#SBATCH --job-name=%s_Nb%d
+#SBATCH --account=nn2977k
+#SBATCH --time=3-00:00:00
+#SBATCH --mem-per-cpu=3800M
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+source /cluster/bin/jobsetup
+module purge
+module load openmpi.gnu
+set -o errexit
+cp build/GluonicLQCD $SCRATCH
+chkfile output.txt
+cd $SCRATCH
+./CCD "%s" %d %d %.02f %.02e %d %d
+            '''
+
             # #SBATCH --exclude=smaug-b2 excludes an unstable node
             content ='''#!/bin/bash
 #SBATCH --partition=%s
 #SBATCH --ntasks=%d
-#SBATCH --time=01:00:00
+#SBATCH --time=12:00:00
 #SBATCH --job-name=%3.2fbeta_%dcube%d_%dthreads
 mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d %s
         '''%(partition,threads,beta,NSpatial,NTemporal,threads,threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)))
@@ -45,7 +72,6 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d %s
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
             tmp = proc.stdout.read()
             ID = int(tmp.split()[-1])               # ID of job
-            ID = 0
             self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims))]
             os.system('mv %s job_%d.sh'%(job, ID))  # Change name of jobScript
         self.updateIdFile()
