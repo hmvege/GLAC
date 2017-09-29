@@ -79,6 +79,7 @@ void System::subLatticeSetup()
      */
     if (m_numprocs % 2 != 0) {
         cout << "Error: odd number of processors --> exiting." << endl;
+        MPI_Finalize();
         exit(1);
     }
     else if (m_numprocs % 16 != 0) {
@@ -120,7 +121,7 @@ void System::subLatticeSetup()
                 for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
                 cout << " --> exiting."<< endl;
             }
-            MPI_Barrier(MPI_COMM_WORLD);
+            MPI_Finalize();
             exit(0);
         }
     }
@@ -132,6 +133,9 @@ void System::subLatticeSetup()
             latticeSizeError = true;
         }
     }
+    if (m_subLatticeSize*m_numprocs != m_latticeSize) {
+        latticeSizeError = true;
+    }
     if (m_NTemporal % m_N[3] != 0) {
         latticeSizeError = true;
     }
@@ -141,7 +145,7 @@ void System::subLatticeSetup()
             for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
             cout << " --> exiting."<< endl;
         }
-        MPI_Barrier(MPI_COMM_WORLD);
+        MPI_Finalize();
         exit(0);
     }
 
