@@ -61,6 +61,8 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d %s
 #SBATCH --mem-per-cpu=3800M
 #SBATCH --partition=%s
 #SBATCH --ntasks=%d
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=16
 ## #SBATCH --cpus-per-task=16
 
 source /cluster/bin/jobsetup
@@ -99,7 +101,10 @@ mpirun -n %d %s %s %d %d %d %d %d %d %.2f %.2f %1d %1d %1d %s
             else:
                 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
                 tmp = proc.stdout.read()
-                ID = int(tmp.split()[-1])               # ID of job
+                try:
+                    ID = int(tmp.split()[-1])               # ID of job
+                except IndexError:
+                    print "IndexError for line: \n", tmp
 
             self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims))]
             
