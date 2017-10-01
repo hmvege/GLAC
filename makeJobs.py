@@ -220,10 +220,10 @@ def main(args):
     # Job control
     sbatch_parser = subparser.add_parser('sbatch', help='Views, stops, clears and list jobs.')
     sbatch_group = sbatch_parser.add_mutually_exclusive_group(required=True)
-    sbatch_group.add_argument('--scancel',    default=False,      type=int,help='Cancel a job of given ID.')
-    sbatch_group.add_argument('--scancel_all',default=False,      action='store_true',help='Cancel all jobs')
-    sbatch_group.add_argument('--list_jobs',  default=False,      action='store_true',help='List all jobs currently running.')
-    sbatch_group.add_argument('--clearIDFile',default=False,      action='store_true',help='Clears the job ID file.')
+    sbatch_group.add_argument('--scancel',          default=False,      type=int,help='Cancel a job of given ID.')
+    sbatch_group.add_argument('--scancel_all',      default=False,      action='store_true',help='Cancel all jobs')
+    sbatch_group.add_argument('--list_jobs',        default=False,      action='store_true',help='List all jobs currently running.')
+    sbatch_group.add_argument('--clearIDFile',      default=False,      action='store_true',help='Clears the job ID file.')
 
     # Job setup
     job_parser = subparser.add_parser('setup', help='Sets up the job.')
@@ -248,11 +248,13 @@ def main(args):
     job_parser.add_argument('--cpu_memory',         default=False,      type=int,help='CPU memory to be allocated to each core')
     job_parser.add_argument('--account_name',       default=False,      type=str,help='Account name associated to the abel cluster')
 
-    load_config_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
-    load_config_parser.add_argument('file', default=False, type=str, nargs='+', help='Loads config file.')
+    load_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
+    load_parser.add_argument('file',                default=False,      type=str, nargs='+', help='Loads config file')
+    load_parser.add_argument('-s','--system',       default=False,      type=str, required=True,choices=['smaug','abel'],help='Cluster name')
+    load_parser.add_argument('-p','--partition',    default="normal",   type=str, help='Partition to run on')
 
-    # args = parser.parse_args(["load","test_config_file.py"])
-    args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
+    args = parser.parse_args(["--dryrun","load","config_folder/test_config_file.py","--system","abel"])
+    # args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
 
     # Retrieves dryrun bool
     dryrun = args.dryrun
@@ -262,7 +264,8 @@ def main(args):
 
     # Loads a configuration into the world.
     if args.subparser == 'load':
-        files = [eval(open(load_argument,"r").read()) for load_argument in args.file]
+        configurations = [eval(open(load_argument,"r").read()) for load_argument in args.file]
+        s.submitJob(configurations,args.system,args.partition)
     elif args.subparser == 'setup':
         # Note: with setup, can only submit a single job at the time
         partition = "normal"
