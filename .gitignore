@@ -6,6 +6,9 @@ output/*
 *.txt
 *.dat
 
+# Config folder
+config_folder
+
 # Input files
 input/*
 

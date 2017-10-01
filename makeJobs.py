@@ -1,26 +1,15 @@
 import os, subprocess, time, sys, argparse
 
-'''
-TODO: 
-[ ] Create command-line tools!
-[ ] Add Abel usability and Smaug usability.
-[ ] make command line such that I can show .ids.txt
-[x] Add pwd in path to avoid any confusion
-[ ] Create folders needed
-[ ] Fix specifying dimensions (C++).
-[ ] Fix writing out to file functions (C++).
-'''
-
 class Slurm:
     def __init__(self, dryrun):
         self.dryrun = dryrun
-
+        self.CURRENT_PATH = os.getcwd()
         # Checking that we have an output folder.
-        if not os.path.isdir('%s/output' % os.getcwd()):
+        if not os.path.isdir('%s/output' % self.CURRENT_PATH):
             if self.dryrun:
-                print '> mkdir %s/output' % os.getcwd()
+                print '> mkdir %s/output' % self.CURRENT_PATH
             else:
-                os.mkdir('%s/output' % os.getcwd())
+                os.mkdir('%s/output' % self.CURRENT_PATH)
 
         # Checking the .ids.txt file for previous jobs and storing them in job-list.
         self.idFilesName = '.ids.txt'
@@ -29,7 +18,7 @@ class Slurm:
         else:
             self.jobs = {}
 
-    def submitJob(self, system, job_configurations, partition):
+    def submitJob(self, job_configurations, system, partition):
         for job_config in job_configurations:
             # Retrieving config contents
             binary_filename     = job_config["bin_fn"]
@@ -49,7 +38,7 @@ class Slurm:
             subDims             = job_config["subDims"]
             cpu_approx_runtime  = job_config["cpu_approx_runtime"]
             
-            # Error catching before submitting job is nice.
+            # Error catching before submitting job is nice. MIGHT ADD MORE
             for dim in subDims:
                 if dim <= 2: exit("Error: %d is not a valid dimension" % dim)
 
@@ -77,8 +66,8 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
                 account_name = "nn2977k"
                 tasks_per_node = 16 # Maximum number of threads per node
                 if threads > tasks_per_node:
-                    nodes = tasks / tasks_per_node
-                    if tasks % tasks_per_node != 0:
+                    nodes = threads / tasks_per_node
+                    if threads % tasks_per_node != 0:
                         raise ValueError("Tasks(number of threads) have to be divisible by 16.")
 
                 # Bash file to run on Abel
@@ -108,10 +97,10 @@ set -o errexit               # exit on errors
 #cd $SCRATCH
 #mkdir output
 
-mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {20:<s}
+mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {26:<s} {20:<s}
 '''.format(beta,NSpatial,NTemporal,threads,partition,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime,cpu_memory,account_name,nodes,tasks_per_node)
+                cpu_approx_runtime,cpu_memory,account_name,nodes,tasks_per_node,self.CURRENT_PATH)
 
             job = 'jobfile.slurm'
 
@@ -119,7 +108,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
             if self.dryrun:
                 print "Writing %s to slurm batch file: \n\n" % job, content, "\n"
             else:
-                outfile  = open(job, 'w')
+                outfile = open(job, 'w')
                 outfile.write(content)
                 outfile.close()
 
@@ -192,16 +181,39 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
 #------------------------------------------------------------------------------#
 
 def main(args):
+    # Default configuration file.
+    if not os.path.isdir(os.getcwd() + "/build"):
+        raise EnvironmentError("Build folder is not present at location %s." % (os.getcwd() + "/build"))
+
+    # Default config
+    config_default = {  "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
+                        "runName"       : "defaultTestRun",
+                        "beta"          : 6.0,
+                        "N"             : 24,
+                        "NT"            : 48,
+                        "NTherm"        : 200,
+                        "NCor"          : 20,
+                        "NCf"           : 100,
+                        "NUpdates"      : 10,
+                        "SU3Eps"        : 0.24,
+                        "threads"       : 64,
+                        "storeCfgs"     : 1,
+                        "storeThermCfgs": 0,
+                        "hotStart"      : 0,
+                        "subDims"       : [],
+                        "cpu_approx_runtime": 2,
+                        "cpu_memory"    : 3800,
+                        "account_name"  : "nn2977k"}
+
+    # Initiating command line parser.
     description_string = '''
     Program for starting large parallel Lattice Quantum Chromo Dynamics jobs.
-
-    TODO: 
     '''
     parser = argparse.ArgumentParser(prog='GluonicLQCD job creator', description=description_string)
 
     # Prints program version if prompted
     parser.add_argument('--version', action='version', version='%(prog)s 1.0.1')
-    parser.add_argument('--dryrun', default=False, action='store_true',help='Dryrun to no perform any critical actions.')
+    parser.add_argument('--dryrun', default=False, action='store_true', help='Dryrun to no perform any critical actions.')
 
     subparser = parser.add_subparsers(dest='subparser')
 
@@ -225,9 +237,22 @@ def main(args):
     job_parser.add_argument('-NUp', '--NUpdates',   default=False,      type=int,help='number of updates per link')
     job_parser.add_argument('-NCf', '--NConfigs',   default=False,      type=int,help='number of configurations to generate')
     job_parser.add_argument('-b',   '--beta',       default=False,      type=float,help='beta value')
-    job_parser.add_argument('--SU3',                default=False,      type=float,help='SU3 value')
+    job_parser.add_argument('-SU3', '--SU3Eps',     default=False,      type=float,help='SU3 value')
 
-    args = parser.parse_args()
+    job_parser.add_argument('-hs', '--hotStart',    default=False,      type=bool,help='Hot start or cold start')
+    job_parser.add_argument('-subN', '--subDims',   default=False,      type=int,nargs=4,help='List of sub lattice dimension sizes, length 4')
+    job_parser.add_argument('--storeCfgs',          default=True,       type=bool,help='Specifying if we are to store configurations')
+    job_parser.add_argument('--storeThermCfgs',     default=False,      type=bool,help='Specifies if we are to store the thermalization plaquettes')
+    job_parser.add_argument('--cpu_approx_runtime', default=False,      type=int,help='Approximate cpu time that will be used')
+    # Only to be used at abel
+    job_parser.add_argument('--cpu_memory',         default=False,      type=int,help='CPU memory to be allocated to each core')
+    job_parser.add_argument('--account_name',       default=False,      type=str,help='Account name associated to the abel cluster')
+
+    load_config_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
+    load_config_parser.add_argument('file', default=False, type=str, nargs='+', help='Loads config file.')
+
+    # args = parser.parse_args(["load","test_config_file.py"])
+    args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
 
     # Retrieves dryrun bool
     dryrun = args.dryrun
@@ -235,9 +260,47 @@ def main(args):
     # Initiates Slurm class for running jobs ect
     s = Slurm(dryrun)
 
-    print args
-    if args.subparser == 'setup':
-        s.submitJob()
+    # Loads a configuration into the world.
+    if args.subparser == 'load':
+        files = [eval(open(load_argument,"r").read()) for load_argument in args.file]
+    elif args.subparser == 'setup':
+        # Note: with setup, can only submit a single job at the time
+        partition = "normal"
+        system = args.system
+        if args.run_name:
+            config_default["runName"] = args.run_name
+        if args.partition:
+            partition = args.partition
+        if args.threads:
+            config_default["threads"] = args.threads
+        if args.NSpatial:
+            config_default["N"] = args.NSpatial
+        if args.NTemporal:
+            config_default["NT"] = args.NTemporal
+        if args.NTherm:
+            config_default["NTherm"] = args.NTherm
+        if args.NUpdates:
+            config_default["NUpdates"] = args.NUpdates
+        if args.NConfigs:
+            config_default["NCf"] = args.NConfigs
+        if args.beta:
+            config_default["beta"] = args.beta
+        if args.SU3Eps:
+            config_default["SU3Eps"] = args.SU3Eps
+        if args.hotStart:
+            config_default["hotStart"] = int(args.hotStart)
+        if args.subDims:
+            if len(args.subDims) != 4 and sum([type(i) == int for i in args.subDims]) != 4:
+                raise ValueError("%g is not a valid set of sub dimensions." % args.subDims)
+            config_default["subDims"] = args.subDims
+        if args.storeCfgs:
+            config_default["storeCfgs"] = args.storeCfgs
+        if args.cpu_approx_runtime and system == "abel":
+            config_default["cpu_approx_runtime"] = args.cpu_approx_runtime
+        if args.account_name and system == "abel":
+            config_default["account_name"] = args.account_name
+        # Submitting job
+        s.submitJob([config_default],system,partition)
     elif args.subparser == 'sbatch':
         if args.scancel:
             s.cancelJob(args.scancel)
@@ -248,11 +311,24 @@ def main(args):
         if args.clearIDFile:
             s.clearIdFile()
     else:
-        print 'Parse error:', args
+        print 'Parse error: %s \n--> exiting' % args
         exit(0)
 
 if __name__ == '__main__':
+
+    # print '''TODO: 
+    # [x] Create command-line tools!
+    # [x] Add Abel usability and Smaug usability.
+    # [ ] Fix user specific dimensions not working.
+    # [x] make command line such that I can show .ids.txt
+    # [x] Add pwd in path to avoid any confusion
+    # [x] Create folders needed
+    # [x] Fix specifying dimensions (C++).
+    # [x] Fix writing out to file functions (C++).'''
+
     main(sys.argv[1:])
+
+    # OLD METHOD
     # Variables
     # exit(0)
     # system = "abel"
