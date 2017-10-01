@@ -46,6 +46,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double beta     = 6.0;          // Beta value(connected to the lattice spacing a).
     double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
     std::string batchName               = "TEST_RUN_CONFIG";
+    std::string pwd                     = "";
     bool writeConfigsToFile             = true;
     bool storeThermalizationPlaquettes  = false;
     bool hotStart                       = false;
@@ -99,10 +100,14 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     }
 
     if (numberOfArguments > 13) {
-        for (int i = 13; i < 17; i++) {
-            NSub[i % 13] = atoi(cmdLineArguments[i]);
+        pwd = cmdLineArguments[13];
+        cout << pwd << endl;
+    }
+    if (numberOfArguments > 14) {
+        for (int i = 14; i < 18; i++) {
+            NSub[i % 14] = atoi(cmdLineArguments[i]);
+            cout << cmdLineArguments[i]<<endl;
         }
-        cout << cmdLineArguments[13]<<endl;
 
     }
 
@@ -131,8 +136,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Plaquette G;
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
-    if (numberOfArguments > 13) pureGauge.setSubLatticeDimensions(NSub);
+    if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
+    pureGauge.setProgramPath(pwd);
     pureGauge.setConfigBatchName(batchName);
     pureGauge.printRunInfo(true); // Always print run info
     pureGauge.runMetropolis(storeThermalizationPlaquettes, writeConfigsToFile);

@@ -468,7 +468,8 @@ void System::writeDataToFile(std::string filename)
      */
     if (m_processRank == 0) {
         std::ofstream file;
-        file.open(m_outputFolder + filename + ".dat");
+        std::string fname = m_pwd + m_outputFolder + filename + ".dat";
+        file.open(fname);
         file << "beta " << m_beta << endl;
         file << "acceptanceCounter " << getAcceptanceRate() << endl;
         file << "NCor " << m_NCor << endl;
@@ -487,7 +488,7 @@ void System::writeDataToFile(std::string filename)
             file << std::setprecision(15) << m_Gamma[i] << endl;
         }
         file.close();
-        cout << m_outputFolder << filename << ".dat written." << endl;
+        cout << fname << ".dat written." << endl;
     }
 }
 
@@ -517,12 +518,17 @@ void System::writeConfigurationToFile(int configNumber)
      */
 
     MPI_File file;
-    std::string filename = m_outputFolder   + m_filename
+    std::string filename = m_pwd + m_outputFolder + m_filename
                                             + "_beta" + std::to_string(m_beta)
                                             + "_spatial" + std::to_string(m_NSpatial)
                                             + "_temporal" + std::to_string(m_NTemporal)
                                             + "_threads" + std::to_string(m_numprocs)
                                             + "_config" + std::to_string(configNumber) + ".bin";
+
+    // TEMP =====================================================================================================
+    if (m_processRank == 0) cout << "Writing filename: " << filename << endl;
+    // ==========================================================================================================
+
     MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
@@ -550,7 +556,7 @@ void System::loadFieldConfiguration(std::string filename)
      * - filename
      */
     MPI_File file;
-    MPI_File_open(MPI_COMM_WORLD, (m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(MPI_COMM_WORLD, (m_pwd + m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned int t = 0; t < m_N[3]; t++) {

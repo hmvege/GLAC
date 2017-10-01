@@ -79,9 +79,10 @@ private:
     void updateLink(int latticeIndex, int mu);
 
     // Input/output locations
+    std::string m_pwd = "";
     std::string m_filename = "";
-    std::string m_inputFolder = "../input/";
-    std::string m_outputFolder = "../output/"; // On mac, do not need ../
+    std::string m_inputFolder = "/input/";
+    std::string m_outputFolder = "/output/"; // On mac, do not need ../
 
     // SU3 generator
     SU3MatrixGenerator *m_SU3Generator = nullptr;
@@ -105,6 +106,7 @@ public:
     void setAction(Action *S) { m_S = S; }
     void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
     void setConfigBatchName(std::string filename) { m_filename = filename; }
+    void setProgramPath(std::string pwd) { m_pwd = pwd; }
     void setN(int NSpatial) { m_NSpatial = NSpatial; }
     void setNT(int NTemporal) { m_NTemporal = NTemporal; }
     void setSubLatticeDimensions(int *NSub);

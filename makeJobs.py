@@ -2,11 +2,13 @@ import os, subprocess, time, sys, argparse
 
 '''
 TODO: 
-[ ] Creat command-line tools!
+[ ] Create command-line tools!
 [ ] Add Abel usability and Smaug usability.
 [ ] make command line such that I can show .ids.txt
-[ ] Add pwd in path to avoid any confusion
+[x] Add pwd in path to avoid any confusion
 [ ] Create folders needed
+[ ] Fix specifying dimensions (C++).
+[ ] Fix writing out to file functions (C++).
 '''
 
 class Slurm:
@@ -30,22 +32,22 @@ class Slurm:
     def submitJob(self, system, job_configurations, partition):
         for job_config in job_configurations:
             # Retrieving config contents
-            binary_filename = job_config["bin_fn"]
-            runName = job_config["runName"]
-            threads = job_config["threads"]
-            beta = job_config["beta"]
-            NSpatial = job_config["N"]
-            NTemporal = job_config["NT"]
-            NTherm = job_config["NTherm"]
-            NCor = job_config["NCor"] 
-            NCf = job_config["NCf"]
-            NUpdates = job_config["NUpdates"]
-            SU3Eps = job_config["SU3Eps"]
-            storeCfgs = job_config["storeCfgs"]
-            storeThermCfgs = job_config["storeThermCfgs"]
-            hotStart = job_config["hotStart"]
-            subDims = job_config["subDims"]
-            cpu_approx_runtime = job_config["cpu_approx_runtime"]
+            binary_filename     = job_config["bin_fn"]
+            runName             = job_config["runName"]
+            threads             = job_config["threads"]
+            beta                = job_config["beta"]
+            NSpatial            = job_config["N"]
+            NTemporal           = job_config["NT"]
+            NTherm              = job_config["NTherm"]
+            NCor                = job_config["NCor"] 
+            NCf                 = job_config["NCf"]
+            NUpdates            = job_config["NUpdates"]
+            SU3Eps              = job_config["SU3Eps"]
+            storeCfgs           = job_config["storeCfgs"]
+            storeThermCfgs      = job_config["storeThermCfgs"]
+            hotStart            = job_config["hotStart"]
+            subDims             = job_config["subDims"]
+            cpu_approx_runtime  = job_config["cpu_approx_runtime"]
             
             # Error catching before submitting job is nice.
             for dim in subDims:
@@ -73,7 +75,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
                 # Abel specific commands
                 cpu_memory = 3800
                 account_name = "nn2977k"
-                tasks_per_node = 16
+                tasks_per_node = 16 # Maximum number of threads per node
                 if threads > tasks_per_node:
                     nodes = tasks / tasks_per_node
                     if tasks % tasks_per_node != 0:
@@ -113,6 +115,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
 
             job = 'jobfile.slurm'
 
+            # Writies slurm file to be submitted
             if self.dryrun:
                 print "Writing %s to slurm batch file: \n\n" % job, content, "\n"
             else:
@@ -122,6 +125,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
 
             cmd = ['sbatch', os.getcwd() + "/" + job]
 
+            # Submits job
             if self.dryrun:
                 print "> %s %s" % tuple(cmd)
                 ID = 0
@@ -133,15 +137,20 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
                 except IndexError:
                     print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
 
+            # Stores job in job dictionary
             self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims)),cpu_approx_runtime]
             
+            # Changes name of job script
             if self.dryrun:
                 print '> mv %s job_%d.sh' % (job, ID)
             else:
-                os.system('mv %s job_%d.sh' % (job, ID))  # Change name of jobScript
+                os.system('mv %s job_%d.sh' % (job, ID))
+
+        # Updates ID file
         self.updateIdFile()
 
     def updateIdFile(self):
+        # Rewrites the .ids.txt file with additional job ID
         if self.dryrun:
             print "Updating %s file." % self.idFilesName
         else:
