@@ -10,8 +10,7 @@ TODO:
 '''
 
 class Slurm:
-    def __init__(self, system, dryrun):
-        self.system = system
+    def __init__(self, dryrun):
         self.dryrun = dryrun
 
         # Checking that we have an output folder.
@@ -28,7 +27,7 @@ class Slurm:
         else:
             self.jobs = {}
 
-    def submitJob(self, job_configurations, partition):
+    def submitJob(self, system, job_configurations, partition):
         for job_config in job_configurations:
             # Retrieving config contents
             binary_filename = job_config["bin_fn"]
@@ -47,18 +46,13 @@ class Slurm:
             hotStart = job_config["hotStart"]
             subDims = job_config["subDims"]
             cpu_approx_runtime = job_config["cpu_approx_runtime"]
-            # Abel specific items
-            cpu_memory = job_config["cpu_memory"]
-            account_name = job_config["account_name"] # Make system specific?
-            nodes = job_config["nodes"]
-            tasks_per_node = job_config["tasks_per_node"]
             
             # Error catching before submitting job is nice.
             for dim in subDims:
                 if dim <= 2: exit("Error: %d is not a valid dimension" % dim)
 
             # Chosing system
-            if self.system == "smaug":
+            if system == "smaug":
                 # Smaug batch file.
             # #SBATCH --exclude=smaug-b2 excludes an unstable node
                 content ='''#!/bin/bash
@@ -70,11 +64,22 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
 '''.format( partition,threads,beta,NSpatial,NTemporal,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
                 cpu_approx_runtime)
-            elif self.system == "abel":
-                # Abel batch file.
-                # threads, 
-                # if threads > 16:
+            elif system == "abel":
+                # cpu_memory = job_config["cpu_memory"]
+                # account_name = job_config["account_name"] # Make system specific?
+                # nodes = job_config["nodes"]
+                # tasks_per_node = job_config["tasks_per_node"]
 
+                # Abel specific commands
+                cpu_memory = 3800
+                account_name = "nn2977k"
+                tasks_per_node = 16
+                if threads > tasks_per_node:
+                    nodes = tasks / tasks_per_node
+                    if tasks % tasks_per_node != 0:
+                        raise ValueError("Tasks(number of threads) have to be divisible by 16.")
+
+                # Bash file to run on Abel
                 content ='''#!/bin/bash
 #SBATCH --job-name={0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads
 #SBATCH --account={23:<s}
@@ -178,74 +183,103 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
 #------------------------------------------------------------------------------#
 
 def main(args):
-    parser = argparse.ArgumentParser(prog='GluonicLQCD job creator', description='Program starting Lattice Quantum Chromo Dynamics.')
+    description_string = '''
+    Program for starting large parallel Lattice Quantum Chromo Dynamics jobs.
+
+    TODO: 
+    '''
+    parser = argparse.ArgumentParser(prog='GluonicLQCD job creator', description=description_string)
 
     # Prints program version if prompted
     parser.add_argument('--version', action='version', version='%(prog)s 1.0.1')
+    parser.add_argument('--dryrun', default=False, action='store_true',help='Dryrun to no perform any critical actions.')
 
-    # # Main argument, must have this one
-    # parser.add_argument('element',                      default=False,  type=str,   nargs=1,    help='takes the type of element. E.g. He')
+    subparser = parser.add_subparsers(dest='subparser')
 
-    # # Possible choices
-    # parser.add_argument('-lf',  '--local_file',         default=None,   type=str,               help='takes a .html file for an atomic spectra from nist.org')
-    # parser.add_argument('-fn',  '--filename',           default=None,   type=str,               help='output filename')
-    # parser.add_argument('-p',   '--parallel',           default=False,  action='store_const',   const=True, help='enables running in parallel')
-    # parser.add_argument('-n',   '--num_processors',     default=4,      type=int,               help='number of processors, default=4')
-    # parser.add_argument('-ln',  '--length',             default=10,     type=float,             help='length in seconds, default=10')
-    # parser.add_argument('-hz',  '--hertz',              default=440,    type=int,               help='frequency, default=440')
-    # parser.add_argument('-amp', '--amplitude',          default=0.01,   type=float,             help='amplitude of track, default=0.01')
-    # parser.add_argument('-sr',  '--sampling_rate',      default=44100,  type=int,               help='sampling rate, default=44100')
-    # parser.add_argument('-cf',  '--convertion_factor',  default=100,    type=float,             help='factor to pitch-shift spectra by, default=100')
-    # parser.add_argument('-wlc', '--wavelength_cutoff',  default=2.5e-1, type=float,             help='inverse wavelength to cutoff lower tones, default=2.5e-1.')
-    # parser.add_argument('-bt',  '--beat_cutoff',        default=1e-2,   type=float,             help='removes one wavelength if two wavelengths have |lambda-lambda_0| > beat_cutoff, default=1e-2')
+    # Job control
+    sbatch_parser = subparser.add_parser('sbatch', help='Views, stops, clears and list jobs.')
+    sbatch_group = sbatch_parser.add_mutually_exclusive_group(required=True)
+    sbatch_group.add_argument('--scancel',    default=False,      type=int,help='Cancel a job of given ID.')
+    sbatch_group.add_argument('--scancel_all',default=False,      action='store_true',help='Cancel all jobs')
+    sbatch_group.add_argument('--list_jobs',  default=False,      action='store_true',help='List all jobs currently running.')
+    sbatch_group.add_argument('--clearIDFile',default=False,      action='store_true',help='Clears the job ID file.')
 
-    # args = parser.parse_args()
-    # element = args.element[0]
-    # if not element_search(element):
-    #     sys.exit('Element %s not found.' % element)
+    # Job setup
+    job_parser = subparser.add_parser('setup', help='Sets up the job.')
+    job_parser.add_argument('system',               default=False,      type=str, choices=['smaug','abel'],help='Specify system we are running on.')
+    job_parser.add_argument('-rn',  '--run_name',   default='run',      type=str,help='Specifiy the run name')
+    job_parser.add_argument('-p',   '--partition',  default="normal",   type=str,help='Specify partition to run program on.')
+    job_parser.add_argument('-t',   '--threads',    default=False,      type=int,help='Number of threads to run on')
+    job_parser.add_argument('-N',   '--NSpatial',   default=False,      type=int,help='spatial lattice dimension')
+    job_parser.add_argument('-NT',  '--NTemporal',  default=False,      type=int,help='temporal lattice dimension')
+    job_parser.add_argument('-NTh', '--NTherm',     default=False,      type=int,help='number of thermalization steps')
+    job_parser.add_argument('-NUp', '--NUpdates',   default=False,      type=int,help='number of updates per link')
+    job_parser.add_argument('-NCf', '--NConfigs',   default=False,      type=int,help='number of configurations to generate')
+    job_parser.add_argument('-b',   '--beta',       default=False,      type=float,help='beta value')
+    job_parser.add_argument('--SU3',                default=False,      type=float,help='SU3 value')
 
-    # Sound = ElementSound(element, args.local_file, args.filename, args.parallel, args.num_processors)
-    # Sound.remove_beat(args.beat_cutoff)
-    # Sound.create_sound(args.length, args.hertz, args.amplitude, args.sampling_rate, args.convertion_factor, args.wavelength_cutoff)
+    args = parser.parse_args()
 
+    # Retrieves dryrun bool
+    dryrun = args.dryrun
+
+    # Initiates Slurm class for running jobs ect
+    s = Slurm(dryrun)
+
+    print args
+    if args.subparser == 'setup':
+        s.submitJob()
+    elif args.subparser == 'sbatch':
+        if args.scancel:
+            s.cancelJob(args.scancel)
+        if args.scancel_all:
+            s.cancelAllJobs()
+        if args.list_jobs:
+            s.showIDwithNb()
+        if args.clearIDFile:
+            s.clearIdFile()
+    else:
+        print 'Parse error:', args
+        exit(0)
 
 if __name__ == '__main__':
-    # main(sys.argv[1:])
+    main(sys.argv[1:])
     # Variables
-    system = "abel"
-    dryrun = True
+    # exit(0)
+    # system = "abel"
+    # dryrun = True
 
-    if len(sys.argv) > 1:
-        partition = str(sys.argv[1])
-    else:
-        partition = "normal"
+    # if len(sys.argv) > 1:
+    #     partition = str(sys.argv[1])
+    # else:
+    #     partition = "normal"
 
-    # sub_lattice_dimensions = [12,12,12,6]
-    job_configuration1 = {  "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
-                            "runName"       : "testRun1",
-                            "beta"          : 6.0,
-                            "N"             : 24,
-                            "NT"            : 48,
-                            "NTherm"        : 200,
-                            "NCor"          : 20,
-                            "NCf"           : 100,
-                            "NUpdates"      : 10,
-                            "SU3Eps"        : 0.24,
-                            "threads"       : 64,
-                            "storeCfgs"     : 1,
-                            "storeThermCfgs": 0,
-                            "hotStart"      : 0,
-                            "subDims"       : [12,12,12,6],
-                            "cpu_approx_runtime": 2,
-                            "cpu_memory"    : 3800,
-                            "account_name"  : "nn2977k",
-                            "nodes"         : 4,
-                            "tasks_per_node": 16}
-    job_configuration2 = {}
+    # # sub_lattice_dimensions = [12,12,12,6]
+    # default_configuration = {  "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
+    #                         "runName"       : "testRun1",
+    #                         "beta"          : 6.0,
+    #                         "N"             : 24,
+    #                         "NT"            : 48,
+    #                         "NTherm"        : 200,
+    #                         "NCor"          : 20,
+    #                         "NCf"           : 100,
+    #                         "NUpdates"      : 10,
+    #                         "SU3Eps"        : 0.24,
+    #                         "threads"       : 64,
+    #                         "storeCfgs"     : 1,
+    #                         "storeThermCfgs": 0,
+    #                         "hotStart"      : 0,
+    #                         "subDims"       : [12,12,12,6],
+    #                         "cpu_approx_runtime": 2,
+    #                         "cpu_memory"    : 3800,
+    #                         "account_name"  : "nn2977k",
+    #                         "nodes"         : 4,
+    #                         "tasks_per_node": 16}
+    # job_configuration2 = {}
 
-    s = Slurm(system, dryrun)
-    s.submitJob([job_configuration1], partition)
-    # s.cancelAllJobs()
-    # s.clearIdFile()
-    # s.cancelJob(ID)
-    s.showIDwithNb()
+    # s = Slurm(dryrun)
+    # s.submitJob(system, [job_configuration1], partition)
+    # # s.cancelAllJobs()
+    # # s.clearIdFile()
+    # # s.cancelJob(ID)
+    # s.showIDwithNb()

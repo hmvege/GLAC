@@ -102,6 +102,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
         for (int i = 13; i < 17; i++) {
             NSub[i % 13] = atoi(cmdLineArguments[i]);
         }
+        cout << cmdLineArguments[13]<<endl;
 
     }
 
