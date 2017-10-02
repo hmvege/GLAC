@@ -1,5 +1,34 @@
 import os, subprocess, time, sys, argparse
 
+def getArgMaxIndex(N):
+    # For getting the maximum index of an list.
+    val = N[0]
+    index = 0
+    for i in xrange(4):
+        if N[i] > val:
+            val = N[i]
+            index = i
+    return index
+
+def createSquare(numprocs,NSpatial,NTemporal):
+    # Create a square sub lattice
+    restProc = numprocs;
+    N = [0,0,0,0]
+    for i in xrange(3):
+        N[i] = NSpatial
+        N[3] = NTemporal;
+    while restProc >= 2:
+        max_index = getArgMaxIndex(N)
+        N[max_index] /= 2
+        restProc /= 2
+        if (restProc < 2):
+            break
+    return N
+
+def checkSubDimViability(subDims):
+    if len(subDims) != 4 and sum([type(i) == int for i in subDims]) != 4:
+        raise ValueError("%g is not a valid set of sub dimensions." % subDims)
+
 class Slurm:
     def __init__(self, dryrun):
         self.dryrun = dryrun
@@ -18,7 +47,10 @@ class Slurm:
         else:
             self.jobs = {}
 
-    def submitJob(self, job_configurations, system, partition):
+    def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
+        if excluded_nodes:
+            sbatch_exclusions = "$SBATCH --exclude=%s" % excluded_nodes
+
         for job_config in job_configurations:
             # Retrieving config contents
             binary_filename     = job_config["bin_fn"]
@@ -51,10 +83,11 @@ class Slurm:
 #SBATCH --partition={0:<s}
 #SBATCH --ntasks={1:<d}
 #SBATCH --time={21:0>2d}:00:00
+{23:<s}
 mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {22:<s} {20:<s}
 '''.format( partition,threads,beta,NSpatial,NTemporal,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime,self.CURRENT_PATH)
+                cpu_approx_runtime,self.CURRENT_PATH,sbatch_exclusions)
             elif system == "abel":
                 # cpu_memory = job_config["cpu_memory"]
                 # account_name = job_config["account_name"] # Make system specific?
@@ -80,6 +113,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
 #SBATCH --ntasks={5:<d}
 #SBATCH --nodes={24:<1d}
 #SBATCH --ntasks-per-node={25:<1d}
+{27:<s}
 
 source /cluster/bin/jobsetup
 
@@ -100,7 +134,7 @@ set -o errexit               # exit on errors
 mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {26:<s} {20:<s}
 '''.format(beta,NSpatial,NTemporal,threads,partition,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime,cpu_memory,account_name,nodes,tasks_per_node,self.CURRENT_PATH)
+                cpu_approx_runtime,cpu_memory,account_name,nodes,tasks_per_node,self.CURRENT_PATH,sbatch_exclusions)
 
             job = 'jobfile.slurm'
 
@@ -238,23 +272,26 @@ def main(args):
     job_parser.add_argument('-NCf', '--NConfigs',   default=False,      type=int,help='number of configurations to generate')
     job_parser.add_argument('-b',   '--beta',       default=False,      type=float,help='beta value')
     job_parser.add_argument('-SU3', '--SU3Eps',     default=False,      type=float,help='SU3 value')
-
     job_parser.add_argument('-hs', '--hotStart',    default=False,      type=bool,help='Hot start or cold start')
-    job_parser.add_argument('-subN', '--subDims',   default=False,      type=int,nargs=4,help='List of sub lattice dimension sizes, length 4')
-    job_parser.add_argument('--storeCfgs',          default=True,       type=bool,help='Specifying if we are to store configurations')
-    job_parser.add_argument('--storeThermCfgs',     default=False,      type=bool,help='Specifies if we are to store the thermalization plaquettes')
-    job_parser.add_argument('--cpu_approx_runtime', default=False,      type=int,help='Approximate cpu time that will be used')
+    job_parser.add_argument('-sd', '--subDims',     default=False,      type=int,nargs=4,help='List of sub lattice dimension sizes, length 4')
+    job_parser.add_argument('-sq', '--square',      default=False,      action='store_true',help='Enforce square sub lattices(or as close as possible).')
+    job_parser.add_argument('-sc','--storeCfgs',    default=True,       type=bool,help='Specifying if we are to store configurations')
+    job_parser.add_argument('-st', '--storeThermCfgs',    default=False,type=bool,help='Specifies if we are to store the thermalization plaquettes')
+    job_parser.add_argument('-c', '--cpu_approx_runtime', default=False,type=int,help='Approximate cpu time that will be used')
+    job_parser.add_argument('-ex','--exclude',      default=False,      type=str,nargs='+',help='Nodes to exclude.')
     # Only to be used at abel
     job_parser.add_argument('--cpu_memory',         default=False,      type=int,help='CPU memory to be allocated to each core')
     job_parser.add_argument('--account_name',       default=False,      type=str,help='Account name associated to the abel cluster')
 
+    # Job load parser
     load_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
     load_parser.add_argument('file',                default=False,      type=str, nargs='+', help='Loads config file')
     load_parser.add_argument('-s','--system',       default=False,      type=str, required=True,choices=['smaug','abel'],help='Cluster name')
     load_parser.add_argument('-p','--partition',    default="normal",   type=str, help='Partition to run on')
 
     args = parser.parse_args()
-    # args = parser.parse_args(["--dryrun","load","config_folder/test_config_file.py","--system","abel"])
+    # args = parser.parse_args(["--dryrun","setup","smaug","-ex","smaug-a[1-8]","smaug-b[1-8]","-sq"])
+    # args = parser.parse_args(["--dryrun","load","config_folder/test_config_file.py","abel"])
     # args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
 
     # Retrieves dryrun bool
@@ -263,7 +300,7 @@ def main(args):
     # Initiates Slurm class for running jobs ect
     s = Slurm(dryrun)
 
-    # Loads a configuration into the world.
+    # Loads a configuration into the world(or multiple!)
     if args.subparser == 'load':
         configurations = [eval(open(load_argument,"r").read()) for load_argument in args.file]
         s.submitJob(configurations,args.system,args.partition)
@@ -294,17 +331,20 @@ def main(args):
         if args.hotStart:
             config_default["hotStart"] = int(args.hotStart)
         if args.subDims:
-            if len(args.subDims) != 4 and sum([type(i) == int for i in args.subDims]) != 4:
-                raise ValueError("%g is not a valid set of sub dimensions." % args.subDims)
+            checkSubDimViability(args.subDims)
             config_default["subDims"] = args.subDims
+        if args.square:
+            config_default["subDims"] = createSquare(config_default["threads"],config_default["N"],config_default["NT"])
         if args.storeCfgs:
             config_default["storeCfgs"] = args.storeCfgs
+        if args.exclude:
+            excluded_nodes = ','.join(args.exclude)
         if args.cpu_approx_runtime and system == "abel":
             config_default["cpu_approx_runtime"] = args.cpu_approx_runtime
         if args.account_name and system == "abel":
             config_default["account_name"] = args.account_name
         # Submitting job
-        s.submitJob([config_default],system,partition)
+        s.submitJob([config_default],system,partition,excluded_nodes)
     elif args.subparser == 'sbatch':
         if args.scancel:
             s.cancelJob(args.scancel)
@@ -319,4 +359,7 @@ def main(args):
         exit(0)
 
 if __name__ == '__main__':
+    """
+    TODO:
+    """
     main(sys.argv[1:])
