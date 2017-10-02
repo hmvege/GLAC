@@ -51,10 +51,10 @@ class Slurm:
 #SBATCH --partition={0:<s}
 #SBATCH --ntasks={1:<d}
 #SBATCH --time={21:0>2d}:00:00
-mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {20:<s}
+mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {22:<s} {20:<s}
 '''.format( partition,threads,beta,NSpatial,NTemporal,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime)
+                cpu_approx_runtime,self.CURRENT_PATH)
             elif system == "abel":
                 # cpu_memory = job_config["cpu_memory"]
                 # account_name = job_config["account_name"] # Make system specific?
@@ -253,7 +253,8 @@ def main(args):
     load_parser.add_argument('-s','--system',       default=False,      type=str, required=True,choices=['smaug','abel'],help='Cluster name')
     load_parser.add_argument('-p','--partition',    default="normal",   type=str, help='Partition to run on')
 
-    args = parser.parse_args(["--dryrun","load","config_folder/test_config_file.py","--system","abel"])
+    args = parser.parse_args()
+    # args = parser.parse_args(["--dryrun","load","config_folder/test_config_file.py","--system","abel"])
     # args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
 
     # Retrieves dryrun bool
