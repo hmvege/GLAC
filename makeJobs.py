@@ -49,7 +49,7 @@ class Slurm:
 
     def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
         if excluded_nodes:
-            sbatch_exclusions = "$SBATCH --exclude=%s" % excluded_nodes
+            sbatch_exclusions = "#SBATCH --exclude=%s" % excluded_nodes
         else:
             sbatch_exclusions = ""
 
