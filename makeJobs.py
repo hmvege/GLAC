@@ -364,5 +364,6 @@ def main(args):
 if __name__ == '__main__':
     """
     TODO:
+    SET UP CONFIG FILES FOR RUNNING BENCHMARKS!! SEE TALK
     """
     main(sys.argv[1:])
