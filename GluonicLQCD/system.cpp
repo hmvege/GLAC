@@ -342,7 +342,6 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     double updateStorer = 0;
 
 //    clock_t preUpdate, postUpdate;
-
     if (m_storeThermalizationObservables) {
         // Calculating correlator before any updates have began.
         m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
@@ -529,7 +528,8 @@ void System::writeConfigurationToFile(int configNumber)
     if (m_processRank == 0) cout << "Writing filename: " << filename << endl;
     // ==========================================================================================================
 
-    MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(MPI_COMM_SELF, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+//    MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned int t = 0; t < m_N[3]; t++) {
@@ -556,7 +556,8 @@ void System::loadFieldConfiguration(std::string filename)
      * - filename
      */
     MPI_File file;
-    MPI_File_open(MPI_COMM_WORLD, (m_pwd + m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(MPI_COMM_SELF, (m_pwd + m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+//    MPI_File_open(MPI_COMM_WORLD, (m_pwd + m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned int t = 0; t < m_N[3]; t++) {

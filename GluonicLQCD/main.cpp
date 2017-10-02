@@ -21,6 +21,7 @@ using std::chrono::duration;
  * TODO:
  * [x] Add lattice cube sizes manually from cmd line
  * [ ] Enforce sub lattice cubes when possible(when allocating dimensions)
+ * [ ] Add batch name to print-out
  * [ ] Add security checks for making sure that lattice sizes are correct in regards to the total lattice.
  * [ ] Add function for loading fields? Or make a seperate program? Should probably be done here.
  * [ ] (optional) Switch to CORRECT method syntax, foo --> m_foo
@@ -98,15 +99,12 @@ int main(int numberOfArguments, char* cmdLineArguments[])
             hotStart = true;
         }
     }
-
-    if (numberOfArguments > 13) {
+    if (numberOfArguments > 13) { // Takes absolute file path
         pwd = cmdLineArguments[13];
-        cout << pwd << endl;
     }
-    if (numberOfArguments > 14) {
+    if (numberOfArguments > 14) { // Takes specific sub lattice dimensions
         for (int i = 14; i < 18; i++) {
             NSub[i % 14] = atoi(cmdLineArguments[i]);
-            cout << cmdLineArguments[i]<<endl;
         }
 
     }

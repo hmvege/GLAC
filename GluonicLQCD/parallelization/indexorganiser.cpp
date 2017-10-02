@@ -60,6 +60,7 @@ SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, 
      *  muIndex     : lorentz "vector"
      *  SU3Dir      : which of the four SU3 matrices which we need
      */
+
     if ((n[mu]+muIndex[mu]) % m_N[mu] == 0) {
         n[mu] = 0;
         MPIfetchSU3Positive(lattice,n,mu,SU3Dir);

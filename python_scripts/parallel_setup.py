@@ -230,18 +230,20 @@ def get_file_length(fname):
 	return i
 
 def main():
-	n_proc_list = [4,2,2,2]
+	n_proc_list = [2,2,2,4]
 	numprocs = np.prod(np.asarray(n_proc_list))
 	neighbors = Neighbors(numprocs, n_proc_list)
 	neighbors.print_basics()
 	neighbors.create_neighbor_lists()
 
-	neighbors.print_processor_positions()
+	for i in range(np.prod(n_proc_list)):
+		neighbors.print_neighbours(i)
+	# neighbors.print_processor_positions()
 
-	neighbors.print_X_neighbors()
-	neighbors.print_Y_neighbors()
-	neighbors.print_Z_neighbors()
-	neighbors.print_T_neighbors()
+	# neighbors.print_X_neighbors()
+	# neighbors.print_Y_neighbors()
+	# neighbors.print_Z_neighbors()
+	# neighbors.print_T_neighbors()
 
 	# # Checking if indexes are correct
 	# s = np.asarray(sorted(np.loadtxt("pros_pos_TEMP.txt",usecols=(1,3),dtype=str), key=lambda i: int(itemgetter(0)(i))))
