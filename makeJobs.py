@@ -50,6 +50,8 @@ class Slurm:
     def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
         if excluded_nodes:
             sbatch_exclusions = "$SBATCH --exclude=%s" % excluded_nodes
+        else:
+            sbatch_exclusions = ""
 
         for job_config in job_configurations:
             # Retrieving config contents
@@ -307,6 +309,7 @@ def main(args):
     elif args.subparser == 'setup':
         # Note: with setup, can only submit a single job at the time
         partition = "normal"
+        excluded_nodes = ""
         system = args.system
         if args.run_name:
             config_default["runName"] = args.run_name
