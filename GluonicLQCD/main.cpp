@@ -19,10 +19,8 @@ using std::chrono::duration;
 
 /*
  * TODO:
- * [x] Add lattice cube sizes manually from cmd line
- * [ ] Enforce sub lattice cubes when possible(when allocating dimensions)
+ * [ ] Enforce sub lattice cubes as standard
  * [ ] Add batch name to print-out
- * [ ] Add security checks for making sure that lattice sizes are correct in regards to the total lattice.
  * [ ] Add function for loading fields? Or make a seperate program? Should probably be done here.
  * [ ] (optional) Switch to CORRECT method syntax, foo --> m_foo
  * [ ] (optional) Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
@@ -147,7 +145,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Finalizing and printing time taken
     programEnd = steady_clock::now();
     programTime = duration_cast<duration<double>>(programEnd-programStart);
-    if (processRank == 0) cout << "Program complete. Time used: " << programTime.count() << " sec" << endl;
+    if (processRank == 0) cout << "Program complete. Time used: " << double(programTime.count())/3600.0 << "hours (" << programTime.count() << " seconds)" << endl;
 
     MPI_Finalize();
     return 0;

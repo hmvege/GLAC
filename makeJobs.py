@@ -23,7 +23,7 @@ def createSquare(numprocs,NSpatial,NTemporal):
         restProc /= 2
         if (restProc < 2):
             break
-    return N
+    return N[::-1] # Reversing seems to be quicker.
 
 def checkSubDimViability(subDims):
     if len(subDims) != 4 and sum([type(i) == int for i in subDims]) != 4:

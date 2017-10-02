@@ -103,16 +103,25 @@ SU3 &SU3::operator*=(SU3 B)
 //    temp[6] = mat[6]*B.mat[0] + mat[7]*B.mat[3] + mat[8]*B.mat[6];
 //    temp[7] = mat[6]*B.mat[1] + mat[7]*B.mat[4] + mat[8]*B.mat[7];
 //    temp[8] = mat[6]*B.mat[2] + mat[7]*B.mat[5] + mat[8]*B.mat[8];
-    for (int i = 0; i < 3; i++) // This is the fastest method for some reason
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            for (int k = 0; k < 3; k++)
-            {
-                temp[3*i+j] += mat[(3*i+k)]*B[(3*k+j)];
-            }
-        }
-    }
+    temp[0] = mat[0]*B.mat[0] + mat[1]*B.mat[3] + mat[2]*B.mat[6];
+    temp[1] = mat[0]*B.mat[1] + mat[1]*B.mat[4] + mat[2]*B.mat[7];
+    temp[2] = mat[0]*B.mat[2] + mat[1]*B.mat[5] + mat[2]*B.mat[8];
+    temp[3] = mat[3]*B.mat[0] + mat[4]*B.mat[3] + mat[5]*B.mat[6];
+    temp[4] = mat[3]*B.mat[1] + mat[4]*B.mat[4] + mat[5]*B.mat[7];
+    temp[5] = mat[3]*B.mat[2] + mat[4]*B.mat[5] + mat[5]*B.mat[8];
+    temp[6] = mat[6]*B.mat[0] + mat[7]*B.mat[3] + mat[8]*B.mat[6];
+    temp[7] = mat[6]*B.mat[1] + mat[7]*B.mat[4] + mat[8]*B.mat[7];
+    temp[8] = mat[6]*B.mat[2] + mat[7]*B.mat[5] + mat[8]*B.mat[8];
+//    for (int i = 0; i < 3; i++) // This is the fastest method for some reason
+//    {
+//        for (int j = 0; j < 3; j++)
+//        {
+//            for (int k = 0; k < 3; k++)
+//            {
+//                temp[3*i+j] += mat[(3*i+k)]*B[(3*k+j)];
+//            }
+//        }
+//    }
     for (int i = 0; i < 9; i++)
     {
         mat[i] = temp[i];

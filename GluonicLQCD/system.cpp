@@ -394,26 +394,32 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
         cout << "Termalization complete. Acceptance rate: " << double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm) << endl;
-        cout << "i  Plaquette  Accept/reject" << endl;
+        cout << "i  Plaquette  Avg.Update-time  Accept/reject" << endl;
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
+
+    // For measuring main program time CPU TIME
+    clock_t preUpdateMain;
+    double avgUpdateMain = 0;
 
     // Main part of algorithm
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
         for (int i = 0; i < m_NCor; i++) // Updating NCor times before updating the Gamma function
         {
+            preUpdateMain = clock();
             update();
         }
+        avgUpdateMain += double(clock()-preUpdateMain)/double(CLOCKS_PER_SEC*m_NCor);
         // Averaging the gamma values
         m_Gamma[alpha] = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_Gamma[alpha] /= double(m_numprocs);
 
         // Printing plaquette value
-        if (m_processRank == 0) cout << alpha << " " << m_Gamma[alpha];
+        if (m_processRank == 0) cout << alpha << " " << m_Gamma[alpha] << avgUpdateMain/double(alpha+1);
         // Adding the acceptance ratio
         if (m_processRank == 0) {
             if (alpha % 10 == 0) {
