@@ -368,9 +368,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         postUpdate = steady_clock::now();
         updateTime = duration_cast<duration<double>>(postUpdate-preUpdate);
         updateStorer += updateTime.count();
-        if (i % 20 == 0) { // Avg. time per update every 20th update
+        if (i % 10 == 0) { // Avg. time per update every 10th update
             if (m_processRank == 0) {
-                cout << "Avgerage update time: " << updateStorer/double(i) << " sec" << endl;
+                cout << "Avgerage update time(every 10th): " << updateStorer/double(i) << " sec" << endl;
             }
         }
 
