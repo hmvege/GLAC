@@ -292,6 +292,7 @@ def main(args):
     load_parser.add_argument('-p','--partition',    default="normal",   type=str, help='Partition to run on')
 
     args = parser.parse_args()
+    # args = parser.parse_args(['python', 'makeJobs.py', 'load', 'config_folder/size_scaling_configs/config_16cube32.py', 'config_folder/size_scaling_configs/config_24cube48.py', 'config_folder/size_scaling_configs/config_28cube56.py', 'config_folder/size_scaling_configs/config_32cube64.py', '-s', 'abel'])
     # args = parser.parse_args(["--dryrun","setup","smaug","-ex","smaug-a[1-8]","smaug-b[1-8]","-sq"])
     # args = parser.parse_args(["--dryrun","load","config_folder/test_config_file.py","abel"])
     # args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
