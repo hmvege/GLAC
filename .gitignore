@@ -7,7 +7,7 @@ output/*
 *.dat
 
 # Config folder
-config_folder
+# config_folder
 
 # Input files
 input/*
