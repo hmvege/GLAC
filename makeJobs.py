@@ -365,5 +365,6 @@ if __name__ == '__main__':
     """
     TODO:
     SET UP CONFIG FILES FOR RUNNING BENCHMARKS!! SEE TALK
+    Run 24x48 for 32, 64, 128, 256 and 512 processors, and make plots
     """
     main(sys.argv[1:])

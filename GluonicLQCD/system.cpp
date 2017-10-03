@@ -412,16 +412,16 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
             preUpdateMain = clock();
             update();
         }
-        avgUpdateMain += double(clock()-preUpdateMain)/double(CLOCKS_PER_SEC*m_NCor);
+        avgUpdateMain += double(clock()-preUpdateMain)/double(CLOCKS_PER_SEC);
         // Averaging the gamma values
         m_Gamma[alpha] = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_Gamma[alpha] /= double(m_numprocs);
 
-        // Printing plaquette value
-        if (m_processRank == 0) cout << alpha << " " << m_Gamma[alpha] << avgUpdateMain/double(alpha+1);
-        // Adding the acceptance ratio
         if (m_processRank == 0) {
+            // Printing plaquette value
+            cout << alpha << " " << m_Gamma[alpha] << " " << avgUpdateMain/double((alpha+1)*m_NCor);
+            // Adding the acceptance ratio
             if (alpha % 10 == 0) {
                 cout << " " << double(m_acceptanceCounter)/double(4*m_subLatticeSize*(alpha+1)*m_NUpdates*m_NCor) << endl;
             } else {
@@ -434,7 +434,14 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
-    if (m_processRank == 0) cout << "System completed.\n" << endl;
+    if (m_processRank == 0) {
+        for (int i = 0; i < 60; i++) cout << "=";
+        printf("\nSystem completed.\n");
+        printf("Average update time: %.6f sec.\n", avgUpdateMain/double(m_NCf*m_NCor));
+        printf("Total update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, avgUpdateMain);
+        for (int i = 0; i < 60; i++) cout << "=";
+        cout << endl;
+    }
 }
 
 void System::runBasicStatistics()
