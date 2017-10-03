@@ -201,6 +201,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
         header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart', 'subDims', 'CPU-estimate[hours]']
         widthChoser = lambda s: 7 if len(s) <= 6 else len(s)+4
         colWidths = [widthChoser(i) for i in header_labels]
+        colWidths[2] = 20
         for label,colWidth in zip(header_labels,colWidths):
             print '{0:<{w}}'.format(label, w=colWidth),
         print

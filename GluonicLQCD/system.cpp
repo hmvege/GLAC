@@ -393,13 +393,12 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     }
 
     // Taking the average of the acceptance rate across the processors.
-    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
+    if (m_NTherm != 0) MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
 
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
-        printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
+        if (m_NTherm != 0) printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
         printf("\ni    Plaquette    Avg.Update-time   Accept/reject");
-
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -465,9 +464,9 @@ void System::runBasicStatistics()
     if (m_processRank == 0) {
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
-        cout << "Average plaqutte:      %f" << m_averagedGamma << endl;
-        cout << "Standard deviation:    %f" << m_stdGamma << endl;
-        cout << "Variance:              %f" << m_varianceGamma << endl;
+        cout << "Average plaqutte:      " << m_averagedGamma << endl;
+        cout << "Standard deviation:    " << m_stdGamma << endl;
+        cout << "Variance:              " << m_varianceGamma << endl;
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
     }
@@ -502,7 +501,7 @@ void System::writeDataToFile(std::string filename)
             file << std::setprecision(15) << m_Gamma[i] << endl;
         }
         file.close();
-        cout << fname << ".dat written." << endl;
+        cout << fname << " written." << endl;
     }
 }
 
