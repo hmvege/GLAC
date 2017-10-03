@@ -393,7 +393,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     }
 
     // Taking the average of the acceptance rate across the processors.
-    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_INT,MPI_SUM,MPI_COMM_WORLD);
+    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
 
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
@@ -442,7 +442,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         for (int i = 0; i < 60; i++) cout << "=";
         printf("\nSystem completed.");
         printf("\nAverage update time: %.6f sec.", avgUpdateMain/double(m_NCf*m_NCor));
-        printf("\nTotal update time for %d updates: %.6f sec.", m_NCf*m_NCor, avgUpdateMain);
+        printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, avgUpdateMain);
     }
 }
 
@@ -465,9 +465,9 @@ void System::runBasicStatistics()
     if (m_processRank == 0) {
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
-        cout << "Average plaqutte:      " << m_averagedGamma << endl;
-        cout << "Standard deviation:    " << m_stdGamma << endl;
-        cout << "Variance:              " << m_varianceGamma << endl;
+        cout << "Average plaqutte:      %f" << m_averagedGamma << endl;
+        cout << "Standard deviation:    %f" << m_stdGamma << endl;
+        cout << "Variance:              %f" << m_varianceGamma << endl;
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
     }

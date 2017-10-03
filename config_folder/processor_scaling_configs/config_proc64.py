@@ -5,7 +5,7 @@
     "NT"            : 48,
     "NTherm"        : 100,
     "NCor"          : 20,
-    "NCf"           : 10,
+    "NCf"           : 100,
     "NUpdates"      : 10,
     "SU3Eps"        : 0.24,
     "threads"       : 64,
