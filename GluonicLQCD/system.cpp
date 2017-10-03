@@ -334,6 +334,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         } else {
             cout << "FALSE" << endl;
         }
+        for (int i = 0; i < 60; i++) cout << "=";
+        cout << endl;
     }
 
     // Variables for checking performance of the update.
@@ -352,8 +354,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         // Dividing by the number of processors in order to get the correlator.
         m_GammaPreThermalization[0] /= double(m_numprocs);
         if (m_processRank == 0) {
-            cout << "i  Plaquette" << endl;
-            cout << 0 << " " << m_GammaPreThermalization[0] << endl;
+            printf("\ni    Plaquette   ");
+            printf("\n%-4d %-12.8f",0,m_GammaPreThermalization[0]);
         }
     }
 
@@ -368,9 +370,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         postUpdate = steady_clock::now();
         updateTime = duration_cast<duration<double>>(postUpdate-preUpdate);
         updateStorer += updateTime.count();
-        if (i % 10 == 0) { // Avg. time per update every 10th update
+        if (i % 20 == 0) { // Avg. time per update every 10th update
             if (m_processRank == 0) {
-                cout << "Avgerage update time(every 10th): " << updateStorer/double(i) << " sec" << endl;
+                printf("\nAvgerage update time(every 10th): %f sec.", updateStorer/double(i));
             }
         }
 
@@ -384,7 +386,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
             // Averaging the results
             m_GammaPreThermalization[i] /= double(m_numprocs);
-            if (m_processRank == 0) cout << i << " " << m_GammaPreThermalization[i] << endl; // Printing evolution of system
+            if (m_processRank == 0) {
+                printf("\n%-4d %-12.8f",i,m_GammaPreThermalization[i]);
+            }
         }
     }
 
@@ -393,8 +397,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
     // Printing post-thermalization correlator and acceptance rate
     if (m_processRank == 0) {
-        cout << "Termalization complete. Acceptance rate: " << double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm) << endl;
-        cout << "i  Plaquette  Avg.Update-time  Accept/reject" << endl;
+        printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
+        printf("\ni    Plaquette    Avg.Update-time   Accept/reject");
+
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -402,6 +407,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
     // For measuring main program time CPU TIME
     clock_t preUpdateMain;
+    preUpdateMain = clock();
     double avgUpdateMain = 0;
 
     // Main part of algorithm
@@ -420,12 +426,10 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
         if (m_processRank == 0) {
             // Printing plaquette value
-            cout << alpha << " " << m_Gamma[alpha] << " " << avgUpdateMain/double((alpha+1)*m_NCor);
+            printf("\n%-4d %-12.8f   %-15.8f",alpha,m_Gamma[alpha],avgUpdateMain/double((alpha+1)*m_NCor));
             // Adding the acceptance ratio
             if (alpha % 10 == 0) {
-                cout << " " << double(m_acceptanceCounter)/double(4*m_subLatticeSize*(alpha+1)*m_NUpdates*m_NCor) << endl;
-            } else {
-                cout << endl;
+                printf(" %-13.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(alpha+1)*m_NUpdates*m_NCor));
             }
         }
 
@@ -436,11 +440,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
     if (m_processRank == 0) {
         for (int i = 0; i < 60; i++) cout << "=";
-        printf("\nSystem completed.\n");
-        printf("Average update time: %.6f sec.\n", avgUpdateMain/double(m_NCf*m_NCor));
-        printf("Total update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, avgUpdateMain);
-        for (int i = 0; i < 60; i++) cout << "=";
-        cout << endl;
+        printf("\nSystem completed.");
+        printf("\nAverage update time: %.6f sec.", avgUpdateMain/double(m_NCf*m_NCor));
+        printf("\nTotal update time for %d updates: %.6f sec.", m_NCf*m_NCor, avgUpdateMain);
     }
 }
 
@@ -538,7 +540,7 @@ void System::writeConfigurationToFile(int configNumber)
                                             + "_config" + std::to_string(configNumber) + ".bin";
 
     // TEMP =====================================================================================================
-    if (m_processRank == 0) cout << "Writing filename: " << filename << endl;
+//    if (m_processRank == 0) cout << "Writing filename: " << filename << endl;
     // ==========================================================================================================
 
     MPI_File_open(MPI_COMM_SELF, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
