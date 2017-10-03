@@ -12,7 +12,7 @@
     "storeCfgs"     : 1,
     "storeThermCfgs": 0,
     "hotStart"      : 0,
-    "subDims"       : [6, 12, 12, 12], # RUN WITH REVERSED LIST AS WELL!
+    "subDims"       : [12, 12, 12, 6], # RUN WITH REVERSED LIST AS WELL!
     "cpu_approx_runtime": 2,
     "cpu_memory"    : 3800,
     "account_name"  : "nn2977k"}

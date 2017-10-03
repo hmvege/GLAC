@@ -94,15 +94,6 @@ SU3 &SU3::operator*=(SU3 B)
      * 6 7 8   31 32 33
      */
     complex temp[9];
-//    temp[0] = mat[0]*B.mat[0] + mat[1]*B.mat[3] + mat[2]*B.mat[6]; // Slow method for some reason?
-//    temp[1] = mat[0]*B.mat[1] + mat[1]*B.mat[4] + mat[2]*B.mat[7];
-//    temp[2] = mat[0]*B.mat[2] + mat[1]*B.mat[5] + mat[2]*B.mat[8];
-//    temp[3] = mat[3]*B.mat[0] + mat[4]*B.mat[3] + mat[5]*B.mat[6];
-//    temp[4] = mat[3]*B.mat[1] + mat[3]*B.mat[4] + mat[5]*B.mat[7];
-//    temp[5] = mat[3]*B.mat[2] + mat[3]*B.mat[5] + mat[5]*B.mat[8];
-//    temp[6] = mat[6]*B.mat[0] + mat[7]*B.mat[3] + mat[8]*B.mat[6];
-//    temp[7] = mat[6]*B.mat[1] + mat[7]*B.mat[4] + mat[8]*B.mat[7];
-//    temp[8] = mat[6]*B.mat[2] + mat[7]*B.mat[5] + mat[8]*B.mat[8];
     temp[0] = mat[0]*B.mat[0] + mat[1]*B.mat[3] + mat[2]*B.mat[6];
     temp[1] = mat[0]*B.mat[1] + mat[1]*B.mat[4] + mat[2]*B.mat[7];
     temp[2] = mat[0]*B.mat[2] + mat[1]*B.mat[5] + mat[2]*B.mat[8];

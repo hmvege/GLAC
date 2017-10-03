@@ -12,7 +12,7 @@
     "storeCfgs"     : 1,
     "storeThermCfgs": 0,
     "hotStart"      : 0,
-    "subDims"       : [8,8,8,8],
+    "subDims"       : [8,8,8,4],
     "cpu_approx_runtime": 1,
     "cpu_memory"    : 3800,
     "account_name"  : "nn2977k"}

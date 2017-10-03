@@ -12,8 +12,8 @@ def getArgMaxIndex(N):
 def main(args):
 	if len(args) == 0:
 		NSpatial = 16
-		NTemporal = 32
-		numprocs = 64
+		NTemporal = 2*NSpatial
+		numprocs = 32
 	else:
 		NSpatial = int(args[0])
 		NTemporal = int(args[1])
