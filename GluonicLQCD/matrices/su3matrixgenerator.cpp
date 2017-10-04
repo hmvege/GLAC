@@ -25,6 +25,7 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     std::uniform_real_distribution<double> uni_dist(-eps,eps);
     std::uniform_real_distribution<double> uni_dist_SU2(-0.5,0.5);
     epsilon = eps;
+    epsilonSquared = eps*eps;
     generator = gen;
     uniform_distribution = uni_dist;
     SU2_uniform_distribution = uni_dist_SU2;
@@ -110,30 +111,23 @@ SU3 SU3MatrixGenerator::generateRandom()
 
 SU2 SU3MatrixGenerator::generateSU2()
 {
-    U.identity();
+    U.zeros();
     _rNorm = 0;
-//    double eps = 0.01;
     // Generating 4 r random numbers
     for (int i = 0; i < 4; i++) {
         _r[i] = SU2_uniform_distribution(generator);
     }
     // Populating the x-vector
     if (_r[0] < 0) {
-        _x[0] = - sqrt(1 - epsilon*epsilon);
+        _x[0] = - sqrt(1 - epsilonSquared);
     }
     else {
-        _x[0] = sqrt(1 - epsilon*epsilon);
+        _x[0] = sqrt(1 - epsilonSquared);
     }
-//    for (int i = 0; i < 3; i++) {
-//        _rNorm += _r[i+1]*_r[i+1];
-//    }
     for (int i = 1; i < 4; i++) {
         _rNorm += _r[i]*_r[i];
     }
     _rNorm = sqrt(_rNorm);
-//    for (int i = 0; i < 3; i++) {
-//        _x[i+1] = epsilon*_r[i+1]/rNorm;
-//    }
     for (int i = 1; i < 4; i++) {
         _x[i] = epsilon*_r[i]/_rNorm;
     }
@@ -147,7 +141,8 @@ SU2 SU3MatrixGenerator::generateSU2()
         _x[i] /= _rNorm;
     }
     // Generating the SU2 matrix close to unity
-    U *= _x[0];
+    U.mat[0].re = _x[0];
+    U.mat[3].re = _x[0];
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 4; j++) {
             U.mat[j].re += - _x[i+1]*sigma[i].mat[j].im;

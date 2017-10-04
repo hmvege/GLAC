@@ -9,6 +9,7 @@ class SU3MatrixGenerator
 {
 private:
     double epsilon;
+    double epsilonSquared;
     std::mt19937_64 generator;
     std::uniform_real_distribution<double> uniform_distribution;
     std::uniform_real_distribution<double> SU2_uniform_distribution;
