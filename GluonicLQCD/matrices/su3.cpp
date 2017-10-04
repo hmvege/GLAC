@@ -12,12 +12,10 @@ using std::endl;
 
 SU3::SU3()
 {
-//    mat = new complex[9];
 }
 
 SU3::~SU3()
 {
-//    delete [] mat;
 }
 
 void SU3::transpose()
@@ -89,29 +87,19 @@ SU3 &SU3::operator*=(SU3 B)
 {
     /*
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
-     * 0 1 2   11 12 13
-     * 3 4 5 = 21 22 23
-     * 6 7 8   31 32 33
+     * 0 1 2   11 12 13   00 01 02
+     * 3 4 5 = 21 22 23 = 10 11 12
+     * 6 7 8   31 32 33   20 21 22
      */
     complex temp[9];
-//    temp[0] = mat[0]*B.mat[0] + mat[1]*B.mat[3] + mat[2]*B.mat[6];
-//    temp[1] = mat[0]*B.mat[1] + mat[1]*B.mat[4] + mat[2]*B.mat[7];
-//    temp[2] = mat[0]*B.mat[2] + mat[1]*B.mat[5] + mat[2]*B.mat[8];
-//    temp[3] = mat[3]*B.mat[0] + mat[4]*B.mat[3] + mat[5]*B.mat[6];
-//    temp[4] = mat[3]*B.mat[1] + mat[4]*B.mat[4] + mat[5]*B.mat[7];
-//    temp[5] = mat[3]*B.mat[2] + mat[4]*B.mat[5] + mat[5]*B.mat[8];
-//    temp[6] = mat[6]*B.mat[0] + mat[7]*B.mat[3] + mat[8]*B.mat[6];
-//    temp[7] = mat[6]*B.mat[1] + mat[7]*B.mat[4] + mat[8]*B.mat[7];
-//    temp[8] = mat[6]*B.mat[2] + mat[7]*B.mat[5] + mat[8]*B.mat[8];
     for (int i = 0; i < 3; i++) // This is the fastest method for some reason
     {
         for (int j = 0; j < 3; j++)
         {
             for (int k = 0; k < 3; k++)
             {
-                temp[3*i+j] += mat[(3*i+k)]*B[(3*k+j)];
+                temp[3*i+j] += mat[(3*i+k)]*B.mat[(3*k+j)];
             }
-//            temp[3*i+j] = mat[3*i]*B[j] + mat[3*i+1]*B[3+j] + mat[3*i+2]*B[6+j];
         }
     }
     for (int i = 0; i < 9; i++)
@@ -150,8 +138,6 @@ void SU3::identity()
     mat[4].setRe(1);
     mat[8].setRe(1);
 }
-
-
 
 void SU3::print()
 {

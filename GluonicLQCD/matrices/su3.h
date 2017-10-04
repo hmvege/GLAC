@@ -8,7 +8,6 @@ class SU3
 public:
     SU3();
     ~SU3();
-//    complex *mat;
     complex mat[9];
     void print(); // TEMP, remove or comment out when program is done.
     complex get(int i, int j) { return mat[(3*i + j)]; }

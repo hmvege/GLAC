@@ -43,3 +43,10 @@ bool compareSU3(SU3 A, SU3 B)
     }
     return true;
 }
+
+double traceRealMultiplication(SU3 A, SU3 B)
+{
+    return ((A.mat[0]*B.mat[0] + A.mat[1]*B.mat[3] + A.mat[2]*B.mat[6]).re() +
+            (A.mat[3]*B.mat[1] + A.mat[4]*B.mat[4] + A.mat[5]*B.mat[7]).re() +
+            (A.mat[6]*B.mat[2] + A.mat[7]*B.mat[5] + A.mat[8]*B.mat[8]).re());
+}
