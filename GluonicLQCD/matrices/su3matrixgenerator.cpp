@@ -56,6 +56,8 @@ SU3 SU3MatrixGenerator::generateRandom()
      * 3 4 5
      * 6 7 8
      */
+    cout << "NOT USING REGULAR RANDOM -> SHOULD NOT BE SEEN!" << endl;
+    exit(1);
     H.identity();
     for (int i = 0; i < 3; i++)
     {
@@ -113,7 +115,7 @@ SU3 SU3MatrixGenerator::generateRandom()
 
 SU3 SU3MatrixGenerator::generateIdentity()
 {
-    std::cout << "SHOULD NOT BE USED" << std::endl;
+    cout << "SHOULD NOT BE USED" << endl;
     SU3 Htemp;
     Htemp.mat[0].setRe(1);
     Htemp.mat[4].setRe(1);
@@ -127,7 +129,7 @@ SU2 SU3MatrixGenerator::generateSU2()
 //    double _r[4];
 //    double _x[4];
 //    double _rNorm = 0;
-    U.identity(); // Not needed?
+    U.zeros(); // Not needed?
     _rNorm = 0;
     // Generating 4 r random numbers
     for (int i = 0; i < 4; i++) {
@@ -201,9 +203,9 @@ SU3 SU3MatrixGenerator::generateRST()
     s = generateSU2();
     t = generateSU2();
     // Populates R,S,T matrices
-    R.identity();
-    S.identity();
-    T.identity();
+    R.zeros(); // No need to populate to unity, as that is covered when populating the SU3 matrices with SU2 matrices.
+    S.zeros();
+    T.zeros();
     R.mat[0] = r.mat[0];
     R.mat[1] = r.mat[1];
     R.mat[3] = r.mat[2];

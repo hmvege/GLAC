@@ -364,6 +364,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     {
         // Pre timer
         preUpdate = steady_clock::now();
+
         update();
 
         // Post timer
