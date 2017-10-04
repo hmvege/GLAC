@@ -54,5 +54,6 @@ double Plaquette::calculate(Links *lattice)
             }
         }
     }
+    // Small redo here!
     return (P.mat[0].re() + P.mat[4].re() + P.mat[8].re())/multiplicationFactor; // 3 from SU3, 6 from number of plaquettes, 3*6=18
 }

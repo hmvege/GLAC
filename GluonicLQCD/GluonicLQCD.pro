@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     matrices/su3matrixgenerator.cpp \
     parallelization/neighbours.cpp \
     parallelization/neighbourlist.cpp \
-    parallelization/indexorganiser.cpp
+    parallelization/indexorganiser.cpp \
+    matrices/_su3.cpp
 
 HEADERS += \
     system.h \
@@ -36,7 +37,8 @@ HEADERS += \
     matrices/su3matrixgenerator.h \
     parallelization/neighbours.h \
     parallelization/neighbourlist.h \
-    parallelization/indexorganiser.h
+    parallelization/indexorganiser.h \
+    matrices/_su3.h
 
 #LIBS += -llapack -lblas -larmadillo
 

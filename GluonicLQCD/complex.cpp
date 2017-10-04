@@ -96,7 +96,7 @@ complex &complex::operator*=(complex b)
 {
     /*
      * Multiplying this by complex number b.
-     * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
+     * zw = (a + bi)(c + id) = ac + iad + ibc - bd = ac - bd + i(ad + bc)
      */
 //    double m1 = b.z[0]*(b.z[0] + b.z[1]);
 //    double m2 = z[0]*(b.z[1] - b.z[0]);

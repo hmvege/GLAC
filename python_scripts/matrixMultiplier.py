@@ -24,18 +24,71 @@ def printRegularMatrix(N=3):
 # 6 7 8   31 32 33   20 21 22
 # 
 
+# zw = (a + bi)(c + id) = ac + iad + ibc - bd = ac - bd + i(ad + bc)
+
+def complexContigiousMultiplication(N,i,j,verbose=False):
+	a = 2*i
+	b = 2*i+1
+	c = 2*j
+	d = 2*j+1
+	msg_real = "mat[%d]*B[%d] - mat[%d]*B[%d]" % (a,c,b,d)
+	msg_imag = "mat[%d]*B[%d] + mat[%d]*B[%d]" % (a,d,b,c)
+	if verbose: print "(Non-contigious) A[%d]*B[%d] = " % (i,j)
+	return msg_real, msg_imag
+
+def complexContigiousAddition(N,i,j,verbose=False):
+	a = 2*i
+	b = 2*i+1
+	c = 2*j
+	d = 2*j+1
+	msg_real = "A[%d] + B[%d]" % (a,c)
+	msg_imag = "A[%d] + B[%d]" % (b,d)
+	if verbose: print "(Non-contigious) A[%d] + B[%d] = " % (i,j)
+	return msg_real, msg_imag
+
+def complexContigiousSubtraction(N,i,j,verbose=False):
+	a = 2*i
+	b = 2*i+1
+	c = 2*j
+	d = 2*j+1
+	msg_real = "A[%d] - B[%d]" % (a,c)
+	msg_imag = "A[%d] - B[%d]" % (b,d)
+	if verbose: print "(Non-contigious) A[%d] - B[%d] = " % (i,j)
+	return msg_real, msg_imag
+
 def printContigiousComplexMatrixMultiplication(N=3):
+	print "COMPLEX SU3 MATRIX: "
 	msg = ""
 	for i in range(N):
 		for j in range(N):
 			# print "M[%d,%d] = %2d |" % (i,j,2*i*N+2*j),
-			msg += "%d: " % (N*i + j)
+			# msg += "%d: " % (N*i + j)
 			for k in range(2): # Complex variables
-				msg += "%3d" % (2*i*N + 2*j + k)
-			if j != (N-1): msg += " | "
-		print msg,""
-		msg = ""
+				msg += "temp[%d] = " % (2*i*N + 2*j + k)
+				for l in range(N):
+					msg += complexContigiousMultiplication(N,i,l)[k]
+					if l != N-1: msg += " + ";
+				msg += ";\n"
+			print msg,
+			msg = ""
+
+	print complexContigiousMultiplication(N,0,3)
+	print complexContigiousAddition(N,0,3)
 
 if __name__ == '__main__':
 	# printRegularMatrix()
 	printContigiousComplexMatrixMultiplication()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
