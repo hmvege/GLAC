@@ -107,21 +107,14 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     }
 
-//    if (numberOfArguments > 13) { // RNG Seed.
-//        seed = atof(cmdLineArguments[13]) + double(processRank);
-//    }
-//    if (numberOfArguments > 14) { // Metrolis seed.
-//        metropolisSeed = atof(cmdLineArguments[14]) + double(numprocs) + double(processRank);
-//    }
-
-    if (processRank == 0) {
+//    if (processRank == 0) {
 //        testInverseMatrix(SU3Eps, seed, 1e3, false);
-        runMatrixPerformanceTest(SU3Eps,seed,5*1e8,false,true);
+//        runMatrixPerformanceTest(SU3Eps,seed,5*1e8,false,true);
 //        inversePerformanceTest(SU3Eps,seed,1e5);
 //        runTestSuite();
-    }
-    MPI_Finalize();
-    exit(0);
+//    }
+//    MPI_Finalize();
+//    exit(0);
 
     // Program timers
     steady_clock::time_point programStart, programEnd;
