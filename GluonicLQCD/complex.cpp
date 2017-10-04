@@ -98,6 +98,16 @@ complex &complex::operator*=(complex b)
      * Multiplying this by complex number b.
      * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
      */
+//    double a,b,c,d,m1,m2,m3;
+//    a = z[0];
+//    b = z[1];
+//    c = b.z[0];
+//    d = b.z[1];
+
+//    double prev_re = z[0];
+//    z[0] = prev_re*b.z[0] - z[1]*b.z[1];
+//    z[1] = prev_re*b.z[1] + z[1]*b.z[0];
+
     double prev_re = z[0];
     z[0] = prev_re*b.re() - z[1]*b.im();
     z[1] = prev_re*b.im() + z[1]*b.re();

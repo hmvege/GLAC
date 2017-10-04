@@ -25,6 +25,19 @@ public:
     // Setters
     void setN(unsigned int *N);
     void initializeIndexHandler(IndexOrganiser *Index);
+
+//    inline void lorentzIndex(int mu, int *lorentzIndices)
+//    {
+//        /*
+//         * Fills the lorentz array with correct indices
+//         */
+//        for (int i = 0; i < 4; i++)
+//        {
+//            lorentzIndices[i] = 0;
+//        }
+//        lorentzIndices[mu] = 1;
+//    }
 };
+
 
 #endif // CORRELATOR_H

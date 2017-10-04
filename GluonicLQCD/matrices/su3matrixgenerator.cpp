@@ -25,6 +25,7 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     std::uniform_real_distribution<double> uni_dist(-eps,eps);
     std::uniform_real_distribution<double> uni_dist_SU2(-0.5,0.5);
     epsilon = eps;
+    epsilonSquared = eps*eps;
     generator = gen;
     uniform_distribution = uni_dist;
     SU2_uniform_distribution = uni_dist_SU2;
@@ -126,7 +127,7 @@ SU2 SU3MatrixGenerator::generateSU2()
 //    double _r[4];
 //    double _x[4];
 //    double _rNorm = 0;
-    U.identity();
+    U.identity(); // Not needed?
     _rNorm = 0;
     // Generating 4 r random numbers
     for (int i = 0; i < 4; i++) {
@@ -134,10 +135,10 @@ SU2 SU3MatrixGenerator::generateSU2()
     }
     // Populating the x-vector
     if (_r[0] < 0) {
-        _x[0] = - sqrt(1 - epsilon*epsilon);
+        _x[0] = - sqrt(1 - epsilonSquared);
     }
     else {
-        _x[0] = sqrt(1 - epsilon*epsilon);
+        _x[0] = sqrt(1 - epsilonSquared);
     }
 //    for (int i = 0; i < 3; i++) {
 //        _rNorm += _r[i+1]*_r[i+1];
@@ -162,13 +163,21 @@ SU2 SU3MatrixGenerator::generateSU2()
         _x[i] /= _rNorm;
     }
     // Generating the SU2 matrix close to unity
-    U *= _x[0];
+    U.mat[0].z[0] = _x[0]; // same as 1*x0
+    U.mat[3].z[0] = _x[0]; // same as 1*x0
+//    U *= _x[0];
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 4; j++) {
             U.mat[j].setRe(U.mat[j].re() - _x[i+1]*sigma[i].mat[j].im());
             U.mat[j].setIm(U.mat[j].im() + _x[i+1]*sigma[i].mat[j].re());
         }
     }
+//    for (int i = 0; i < 3; i++) {
+//        for (int j = 0; j < 4; j++) {
+//            U.mat[j].setRe(U.mat[j].re() - _x[i+1]*sigma[i].mat[j].im());
+//            U.mat[j].setIm(U.mat[j].im() + _x[i+1]*sigma[i].mat[j].re());
+//        }
+//    }
     return U;
 }
 
@@ -210,6 +219,13 @@ SU3 SU3MatrixGenerator::generateRST()
     T.mat[7] = t.mat[2];
     T.mat[8] = t.mat[3];
     T.mat[0].setRe(1);
+//    for (int i = 0; i < 2; i++) {
+//        for (int j = 0; j < 2; j++) {
+//            R.mat[3*i + j] = r.mat[2*i + j];
+//            S.mat[6*i + 2*j] = s.mat[2*i + j];
+//            T.mat[4 + i*3 + j] = t.mat[2*i + j];
+//        }
+//    }
     // Creates the return matrix, which is close to unity
 //    X = R*S*T;
     // Equal probability of returning X and X inverse

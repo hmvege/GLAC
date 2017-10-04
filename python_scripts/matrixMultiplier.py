@@ -1,12 +1,12 @@
 msg = ""
 
+N = 2
 
-
-for i in range(3):
-	for j in range(3):
-		msg += "temp[%d] = " % (3*i+j)
-		for k in range(3):
-			msg += "mat[%d]*B.mat[%d]" % (3*i+k,3*k+j)
-			if k != 2: msg += " + "
+for i in range(N):
+	for j in range(N):
+		msg += "temp[%d] = " % (N*i+j)
+		for k in range(N):
+			msg += "mat[%d]*B.mat[%d]" % (N*i+k,N*k+j)
+			if k != N-1: msg += " + "
 		print msg + ";"
 		msg = ""

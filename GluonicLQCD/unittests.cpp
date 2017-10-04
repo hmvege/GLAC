@@ -465,6 +465,7 @@ void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatr
     /*
      * For running performance tests of the matrix multiplication contained in SU3.
      */
+    cout << "Starting matrix performance test." << endl;
     std::mt19937_64 gen(seed);
     std::uniform_real_distribution<double> uni_dist(0,1);
     if (testMatrix) {

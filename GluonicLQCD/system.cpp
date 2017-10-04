@@ -438,6 +438,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
     if (m_processRank == 0) {
+        printf("\n");
         for (int i = 0; i < 60; i++) cout << "=";
         printf("\nSystem completed.");
         printf("\nAverage update time: %.6f sec.", avgUpdateMain/double(m_NCf*m_NCor));

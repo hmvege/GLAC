@@ -116,11 +116,13 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
 //    if (processRank == 0) {
 //        testInverseMatrix(SU3Eps, seed, 1e3, false);
+//        runMatrixPerformanceTest(SU3Eps,seed,1e7,true,false);
 //        inversePerformanceTest(SU3Eps,seed,1e5);
 //        runTestSuite();
-//        MPI_Finalize();
-//        exit(0);
+//        MPI_Barrier(MPI_COMM_WORLD);
 //    }
+//    MPI_Finalize();
+//    exit(0);
 
     // Program timers
     steady_clock::time_point programStart, programEnd;

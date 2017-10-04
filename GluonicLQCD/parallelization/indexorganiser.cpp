@@ -99,7 +99,7 @@ SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int>
      */
     bool muDir = (n[mu] + muIndex[mu]) % m_N[mu] == 0;
     bool nuDir = (n[nu] - nuIndex[nu] + m_N[nu]) % m_N[nu] == (m_N[nu] - 1);
-    if (muDir && (!nuDir)) {
+    if (muDir && (!nuDir)) { // (muDir & ~nuDir)
         // Positive mu direction
         n[mu] = 0;
         MPI_Sendrecv(&lattice[getIndex(n[0]-nuIndex[0],n[1]-nuIndex[1],n[2]-nuIndex[2],n[3]-nuIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,   // Send
@@ -107,7 +107,7 @@ SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int>
                 MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         return exchangeU;
     }
-    else if (nuDir && (!muDir)) {
+    else if (nuDir && (!muDir)) { // (nuDir & ~muDir)
         // Negative nu direction
         n[nu] = m_N[nu] - 1;
         MPI_Sendrecv(&lattice[getIndex(n[0]+muIndex[0],n[1]+muIndex[1],n[2]+muIndex[2],n[3]+muIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours(m_processRank)->list[2*nu+1],0, // Send
@@ -115,7 +115,7 @@ SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int>
                 MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         return exchangeU;
     }
-    else if (muDir && nuDir) {
+    else if (muDir && nuDir) { // muDir & nuDir
         // True edge case
         n[mu] = 0;
         n[nu] = m_N[nu] - 1;

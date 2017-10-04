@@ -69,8 +69,13 @@ SU2 &SU2::operator*=(SU2 B)
             {
                 temp[2*i+j] += mat[(2*i+k)]*B[(2*k+j)];
             }
+//            temp[2*i+j] = mat[2*i]*B[j] + mat[2*i+1]*B[2+j];
         }
     }
+//    temp[0] = mat[0]*B.mat[0] + mat[1]*B.mat[2];
+//    temp[1] = mat[0]*B.mat[1] + mat[1]*B.mat[3];
+//    temp[2] = mat[2]*B.mat[0] + mat[3]*B.mat[2];
+//    temp[3] = mat[2]*B.mat[1] + mat[3]*B.mat[3];
     for (int i = 0; i < 4; i++) {
         mat[i] = temp[i];
     }
