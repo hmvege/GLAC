@@ -15,14 +15,16 @@ def printRegularMatrix(N=3):
 #temp[8] = mat[6]*B.mat[2] + mat[7]*B.mat[5] + mat[8]*B.mat[8];
 
 ### Complex matrix multiplications
+# 
 # (0  + 1i)  (2  + 3i)  (4  + 5i)
 # (6  + 7i)  (8  + 9i)  (10 + 11i)
 # (12 + 13i) (14 + 15i) (16 + 17i)
-#
 # 0 1 2   11 12 13   00 01 02
 # 3 4 5 = 21 22 23 = 10 11 12
 # 6 7 8   31 32 33   20 21 22
-# 
+
+# 0 1 = 11 12 = 00 01 = (0 + 1i) (2 + 3i)
+# 2 3   21 22   10 11   (4 + 5i) (6 + 7i)
 
 # zw = (a + bi)(c + id) = ac + iad + ibc - bd = ac - bd + i(ad + bc)
 
@@ -77,7 +79,7 @@ def printContigiousComplexMatrixMultiplication(N=3):
 
 if __name__ == '__main__':
 	# printRegularMatrix()
-	printContigiousComplexMatrixMultiplication()
+	printContigiousComplexMatrixMultiplication(2)
 
 
 

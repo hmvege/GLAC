@@ -32,6 +32,7 @@ void SU2::transpose()
 
 void SU2::conjugate()
 {
+    cout << "SU2 CONJUAGTE IS USED" << endl;
     for (int i = 0; i < 4; i++)
     {
         mat[i].conjugate();
@@ -40,6 +41,7 @@ void SU2::conjugate()
 
 void SU2::copy(SU2 B)
 {
+    cout << "SU2 COPY IS USED" << endl;
     for (int i = 0; i < 4; i++)
     {
         mat[i] = B.mat[i];

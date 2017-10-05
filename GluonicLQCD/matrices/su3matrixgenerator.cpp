@@ -3,10 +3,10 @@
 #include <iomanip>
 #include <iostream>
 
-#include "su3.h"
-#include "complex.h"
+#include "_su3.h"
+//#include "complex.h"
 
-#include "su2.h"
+#include "_su2.h"
 #include "functions.h"
 
 // TEMP:

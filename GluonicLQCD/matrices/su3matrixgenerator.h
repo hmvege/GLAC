@@ -2,8 +2,8 @@
 #define SU3MATRIXGENERATOR_H
 
 #include <random>
-#include "su3.h"
-#include "su2.h"
+#include "_su3.h"
+#include "_su2.h"
 
 class SU3MatrixGenerator
 {

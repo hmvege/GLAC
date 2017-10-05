@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     parallelization/neighbours.cpp \
     parallelization/neighbourlist.cpp \
     parallelization/indexorganiser.cpp \
-    matrices/_su3.cpp
+    matrices/_su3.cpp \
+    matrices/_su2.cpp
 
 HEADERS += \
     system.h \
@@ -38,7 +39,8 @@ HEADERS += \
     parallelization/neighbours.h \
     parallelization/neighbourlist.h \
     parallelization/indexorganiser.h \
-    matrices/_su3.h
+    matrices/_su3.h \
+    matrices/_su2.h
 
 #LIBS += -llapack -lblas -larmadillo
 
