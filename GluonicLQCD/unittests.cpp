@@ -302,7 +302,11 @@ void testMatrixSU3Properties() {
     UMul.mat[6] = complex(21,68);
     UMul.mat[7] = complex(15,77);
     UMul.mat[8] = complex(9,86);
+    U1.print();
+    U2.print();
     U3 = U1 * U2;
+    UMul.print();
+    U3.print();
     if (compareSU3(U3,UMul)) {
         cout << "Matrix multiplication passed" << endl;
     }

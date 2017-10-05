@@ -56,8 +56,6 @@ SU3 SU3MatrixGenerator::generateRandom()
      * 3 4 5
      * 6 7 8
      */
-    cout << "NOT USING REGULAR RANDOM -> SHOULD NOT BE SEEN!" << endl;
-    exit(1);
     H.identity();
     for (int i = 0; i < 3; i++)
     {
@@ -111,16 +109,6 @@ SU3 SU3MatrixGenerator::generateRandom()
 //    exit(1);
 
     return H;
-}
-
-SU3 SU3MatrixGenerator::generateIdentity()
-{
-    cout << "SHOULD NOT BE USED" << endl;
-    SU3 Htemp;
-    Htemp.mat[0].setRe(1);
-    Htemp.mat[4].setRe(1);
-    Htemp.mat[8].setRe(1);
-    return Htemp;
 }
 
 SU2 SU3MatrixGenerator::generateSU2()
