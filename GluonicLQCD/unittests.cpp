@@ -35,10 +35,14 @@ void SU3BaseTests()
     {
         for (int j = 0; j < 3; j++)
         {
-            A.mat[(i*3+j)] = complex(i,j);
-            B.mat[(i*3+j)] = complex(i*i,j*j);
-            C.mat[(i*3+j)] = complex(0,0);
-            D.mat[(i*3+j)] = complex(0,0);
+            A.setComplex(complex(i,j), 3*i+j);
+            B.setComplex(complex(i*i,j*j), 3*i+j);
+            C.setComplex(complex(0,0), 3*i+j);
+            D.setComplex(complex(0,0), 3*i+j);
+//            A.mat[(i*3+j)] = complex(i,j);
+//            B.mat[(i*3+j)] = complex(i*i,j*j);
+//            C.mat[(i*3+j)] = complex(0,0);
+//            D.mat[(i*3+j)] = complex(0,0);
         }
     }
 
@@ -58,7 +62,7 @@ void SU3BaseTests()
     cout << endl;
     cout << "Printing the first column of matrix D: " << endl;
     for (int i = 0; i < 3; i++) {
-        cout << "D[" <<i<<"] = "<< D.mat[3*i].re() << " + i" << D.mat[i].im() << endl;
+        cout << "D[" <<i<<"] = "<< D.mat[6*i] << " + i" << D.mat[6*i+1] << endl;
     }
     cout << endl;
     cout << "SU3 base test completed." << endl;
@@ -89,9 +93,9 @@ bool testOrthogonality(SU3 H, bool verbose)
     complex *col2 = new complex[3];
     complex *col3 = new complex[3];
     for (int i = 0; i < 3; i++) {
-        col1[i] = H[3*i];
-        col2[i] = H[3*i+1];
-        col3[i] = H[3*i+2];
+        col1[i] = complex(H[6*i],H[6*i+1]);
+        col2[i] = complex(H[6*i+2],H[6*i+3]);
+        col3[i] = complex(H[6*i+4],H[6*i+5]);
     }
 
     double eps = 1e-15;
@@ -107,6 +111,10 @@ bool testOrthogonality(SU3 H, bool verbose)
     if ((fabs(c12dot.re()) > eps) || (fabs(c12dot.im()) > eps)) testPassed = false;
     if ((fabs(c13dot.re()) > eps) || (fabs(c13dot.im()) > eps)) testPassed = false;
     if ((fabs(c23dot.re()) > eps) || (fabs(c23dot.im()) > eps)) testPassed = false;
+
+    delete [] col1;
+    delete [] col2;
+    delete [] col3;
 
     if (testPassed) {
         cout << "PASSED: Columns is orthogonal." << endl;
@@ -140,16 +148,16 @@ bool testHermicity(SU3 H, bool verbose)
     }
     for (int i = 0; i < 3; i++) {
         for (int j = 0; i < j; j++) {
-            if ((fabs(I[i*3+j].re()) > eps) || (fabs(I[i*3+j].im()) > eps)) {
+            if ((fabs(I[6*i + 2*j]) > eps) || (fabs(I[6*i + 2*j + 1]) > eps)) {
                 testPassed = false;
             }
-            if ((fabs(I[j*3+i].re()) > eps) || (fabs(I[j*3+i].im()) > eps)) {
+            if ((fabs(I[6*j + 2*i]) > eps) || (fabs(I[6*j + 2*i + 1]) > eps)) {
                 testPassed = false;
             }
         }
     }
     for (int i = 0; i < 3; i++) {
-        if ((fabs(I[3*i+i].re() - 1) > eps) || (fabs(I[3*i+i].im()) > eps)) {
+        if ((fabs(I[6*i + 2*i] - 1) > eps) || (fabs(I[6*i + 2*i + 1]) > eps)) {
             testPassed = false;
         }
     }
@@ -170,7 +178,7 @@ bool testNorm(int col, SU3 H)
     // TEST: Finding length of column
     double s=0;
     for (int i = 0; i < 3; i++) {
-        s += H[3*i+col].normSquared();
+        s += H.normSquared(6*i + 2*col);
     }
     if (fabs(s-1) < 1e-15) {
         cout << "PASSED: length = " << s << endl;
@@ -186,25 +194,25 @@ void testMatrixMultiplication()
 {
     SU3 A,B,C;
     // Setting A values
-    A.mat[0].setRe(1);
-    A.mat[1].setRe(0);
-    A.mat[2].setRe(0);
-    A.mat[3].setRe(0);
-    A.mat[4].setRe(0);
-    A.mat[5].setRe(0);
-    A.mat[6].setRe(1);
-    A.mat[7].setRe(0);
-    A.mat[8].setRe(0);
+    A.mat[0] = 1;
+    A.mat[2] = 0;
+    A.mat[4] = 0;
+    A.mat[6] = 0;
+    A.mat[8] = 0;
+    A.mat[10] = 0;
+    A.mat[12] = 1;
+    A.mat[14] = 0;
+    A.mat[16] = 0;
     // Setting B values
-    B.mat[0].setRe(0);
-    B.mat[1].setRe(1);
-    B.mat[2].setRe(0);
-    B.mat[3].setRe(0);
-    B.mat[4].setRe(0);
-    B.mat[5].setRe(0);
-    B.mat[6].setRe(0);
-    B.mat[7].setRe(0);
-    B.mat[8].setRe(0);
+    B.mat[0] = 0;
+    B.mat[2] = 1;
+    B.mat[4] = 0;
+    B.mat[6] = 0;
+    B.mat[8] = 0;
+    B.mat[10] = 0;
+    B.mat[12] = 0;
+    B.mat[14] = 0;
+    B.mat[16] = 0;
     C = A*B;
     printf("Matrix A: \n");
     A.print();
@@ -228,40 +236,40 @@ void testMatrixSU3Properties() {
      */
     SU3 U1, U2, U3, UAdd, USub, UMul, UC, UT, UCT;
     // Setting up matrix U1
-    U1.mat[0] = complex(1,1);
-    U1.mat[1] = complex(1,2);
-    U1.mat[2] = complex(1,3);
-    U1.mat[3] = complex(2,1);
-    U1.mat[4] = complex(2,2);
-    U1.mat[5] = complex(2,3);
-    U1.mat[6] = complex(3,1);
-    U1.mat[7] = complex(3,2);
-    U1.mat[8] = complex(3,3);
+    U1.setComplex(complex(1,1),0);
+    U1.setComplex(complex(1,2),2);
+    U1.setComplex(complex(1,3),4);
+    U1.setComplex(complex(2,1),6);
+    U1.setComplex(complex(2,2),8);
+    U1.setComplex(complex(2,3),10);
+    U1.setComplex(complex(3,1),12);
+    U1.setComplex(complex(3,2),14);
+    U1.setComplex(complex(3,3),16);
     // Setting up matrix U2
-    U2.mat[0] = complex(4,4);
-    U2.mat[1] = complex(4,5);
-    U2.mat[2] = complex(4,6);
-    U2.mat[3] = complex(5,4);
-    U2.mat[4] = complex(5,5);
-    U2.mat[5] = complex(5,6);
-    U2.mat[6] = complex(6,4);
-    U2.mat[7] = complex(6,5);
-    U2.mat[8] = complex(6,6);
+    U2.setComplex(complex(4,4),0);
+    U2.setComplex(complex(4,5),2);
+    U2.setComplex(complex(4,6),4);
+    U2.setComplex(complex(5,4),6);
+    U2.setComplex(complex(5,5),8);
+    U2.setComplex(complex(5,6),10);
+    U2.setComplex(complex(6,4),12);
+    U2.setComplex(complex(6,5),14);
+    U2.setComplex(complex(6,6),16);
     // Original matrices
     cout << "Original matrices\nU1 =" << endl;
     U1.print();
     cout << "U2 =" << endl;
     U2.print();
     // Addition
-    UAdd.mat[0] = complex(5,5);
-    UAdd.mat[1] = complex(5,7);
-    UAdd.mat[2] = complex(5,9);
-    UAdd.mat[3] = complex(7,5);
-    UAdd.mat[4] = complex(7,7);
-    UAdd.mat[5] = complex(7,9);
-    UAdd.mat[6] = complex(9,5);
-    UAdd.mat[7] = complex(9,7);
-    UAdd.mat[8] = complex(9,9);
+    UAdd.setComplex(complex(5,5),0);
+    UAdd.setComplex(complex(5,7),2);
+    UAdd.setComplex(complex(5,9),4);
+    UAdd.setComplex(complex(7,5),6);
+    UAdd.setComplex(complex(7,7),8);
+    UAdd.setComplex(complex(7,9),10);
+    UAdd.setComplex(complex(9,5),12);
+    UAdd.setComplex(complex(9,7),14);
+    UAdd.setComplex(complex(9,9),16);
     U3 = U1 + U2;
     if (compareSU3(U3,UAdd)) {
         cout << "Matrix addition passed" << endl;
@@ -273,15 +281,15 @@ void testMatrixSU3Properties() {
     }
     U3.zeros();
     // Subtraction
-    USub.mat[0] = complex(-3,-3);
-    USub.mat[3] = complex(-3,-3);
-    USub.mat[6] = complex(-3,-3);
-    USub.mat[1] = complex(-3,-3);
-    USub.mat[4] = complex(-3,-3);
-    USub.mat[7] = complex(-3,-3);
-    USub.mat[2] = complex(-3,-3);
-    USub.mat[5] = complex(-3,-3);
-    USub.mat[8] = complex(-3,-3);
+    USub.setComplex(complex(-3,-3),0);
+    USub.setComplex(complex(-3,-3),6);
+    USub.setComplex(complex(-3,-3),12);
+    USub.setComplex(complex(-3,-3),2);
+    USub.setComplex(complex(-3,-3),8);
+    USub.setComplex(complex(-3,-3),14);
+    USub.setComplex(complex(-3,-3),4);
+    USub.setComplex(complex(-3,-3),10);
+    USub.setComplex(complex(-3,-3),16);
     U3 = U1 - U2;
     if (compareSU3(U3,USub)) {
         cout << "Matrix subtraction passed" << endl;
@@ -293,15 +301,15 @@ void testMatrixSU3Properties() {
     }
     U3.zeros();
     // Multiplication
-    UMul.mat[0] = complex(-9,44);
-    UMul.mat[1] = complex(-15,47);
-    UMul.mat[2] = complex(-21,50);
-    UMul.mat[3] = complex(6,56);
-    UMul.mat[4] = complex(0,62);
-    UMul.mat[5] = complex(-6,68);
-    UMul.mat[6] = complex(21,68);
-    UMul.mat[7] = complex(15,77);
-    UMul.mat[8] = complex(9,86);
+    UMul.setComplex(complex(-9,44),0);
+    UMul.setComplex(complex(-15,47),2);
+    UMul.setComplex(complex(-21,50),4);
+    UMul.setComplex(complex(6,56),6);
+    UMul.setComplex(complex(0,62),8);
+    UMul.setComplex(complex(-6,68),10);
+    UMul.setComplex(complex(21,68),12);
+    UMul.setComplex(complex(15,77),14);
+    UMul.setComplex(complex(9,86),16);
     U3 = U1 * U2;
     if (compareSU3(U3,UMul)) {
         cout << "Matrix multiplication passed" << endl;
@@ -315,15 +323,15 @@ void testMatrixSU3Properties() {
     }
     U3.zeros();
     // Conjugation
-    UC.mat[0] = complex(1,-1);
-    UC.mat[1] = complex(1,-2);
-    UC.mat[2] = complex(1,-3);
-    UC.mat[3] = complex(2,-1);
-    UC.mat[4] = complex(2,-2);
-    UC.mat[5] = complex(2,-3);
-    UC.mat[6] = complex(3,-1);
-    UC.mat[7] = complex(3,-2);
-    UC.mat[8] = complex(3,-3);
+    UC.setComplex(complex(1,-1),0);
+    UC.setComplex(complex(1,-2),2);
+    UC.setComplex(complex(1,-3),4);
+    UC.setComplex(complex(2,-1),6);
+    UC.setComplex(complex(2,-2),8);
+    UC.setComplex(complex(2,-3),10);
+    UC.setComplex(complex(3,-1),12);
+    UC.setComplex(complex(3,-2),14);
+    UC.setComplex(complex(3,-3),16);
     U3.copy(U1);
     U3.conjugate();
     if (compareSU3(U3,UC)) {
@@ -338,15 +346,15 @@ void testMatrixSU3Properties() {
     }
     U3.zeros();
     // Transpose
-    UT.mat[0] = complex(1,1);
-    UT.mat[1] = complex(2,1);
-    UT.mat[2] = complex(3,1);
-    UT.mat[3] = complex(1,2);
-    UT.mat[4] = complex(2,2);
-    UT.mat[5] = complex(3,2);
-    UT.mat[6] = complex(1,3);
-    UT.mat[7] = complex(2,3);
-    UT.mat[8] = complex(3,3);
+    UT.setComplex(complex(1,1),0);
+    UT.setComplex(complex(2,1),2);
+    UT.setComplex(complex(3,1),4);
+    UT.setComplex(complex(1,2),6);
+    UT.setComplex(complex(2,2),8);
+    UT.setComplex(complex(3,2),10);
+    UT.setComplex(complex(1,3),12);
+    UT.setComplex(complex(2,3),14);
+    UT.setComplex(complex(3,3),16);
     U3.copy(U1);
     U3.transpose();
     if (compareSU3(U3,UT)) {
@@ -359,15 +367,15 @@ void testMatrixSU3Properties() {
     }
     U3.zeros();
     // Conjugate transpose
-    UCT.mat[0] = complex(1,-1);
-    UCT.mat[1] = complex(2,-1);
-    UCT.mat[2] = complex(3,-1);
-    UCT.mat[3] = complex(1,-2);
-    UCT.mat[4] = complex(2,-2);
-    UCT.mat[5] = complex(3,-2);
-    UCT.mat[6] = complex(1,-3);
-    UCT.mat[7] = complex(2,-3);
-    UCT.mat[8] = complex(3,-3);
+    UCT.setComplex(complex(1,-1),0);
+    UCT.setComplex(complex(2,-1),2);
+    UCT.setComplex(complex(3,-1),4);
+    UCT.setComplex(complex(1,-2),6);
+    UCT.setComplex(complex(2,-2),8);
+    UCT.setComplex(complex(3,-2),10);
+    UCT.setComplex(complex(1,-3),12);
+    UCT.setComplex(complex(2,-3),14);
+    UCT.setComplex(complex(3,-3),16);
     U3.copy(U1);
     U3.conjugate();
     U3.transpose();

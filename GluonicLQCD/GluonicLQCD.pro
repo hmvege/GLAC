@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
-CONFIG += optimize_full # OK?
+#CONFIG += optimize_full # OK?
 
 SOURCES += main.cpp \
     system.cpp \
@@ -20,8 +20,6 @@ SOURCES += main.cpp \
     parallelization/neighbours.cpp \
     parallelization/neighbourlist.cpp \
     parallelization/indexorganiser.cpp \
-    matrices/_su3.cpp \
-    matrices/_su2.cpp
 
 HEADERS += \
     system.h \
@@ -39,8 +37,6 @@ HEADERS += \
     parallelization/neighbours.h \
     parallelization/neighbourlist.h \
     parallelization/indexorganiser.h \
-    matrices/_su3.h \
-    matrices/_su2.h
 
 #LIBS += -llapack -lblas -larmadillo
 

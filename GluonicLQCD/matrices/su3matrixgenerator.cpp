@@ -2,14 +2,9 @@
 #include <random>
 #include <iomanip>
 #include <iostream>
-
-#include "_su3.h"
-//#include "complex.h"
-
-#include "_su2.h"
 #include "functions.h"
 
-// TEMP:
+// For testing
 #include "unittests.h"
 
 using std::cout;
@@ -31,14 +26,13 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     SU2_uniform_distribution = uni_dist_SU2;
     // Setting up Pauli matrices
     sigma = new SU2[3]; // WOULD THIS BE FASTER IF I USED MEMORY ON STACK?
-    sigma[0].mat[1].setRe(1);
-    sigma[0].mat[2].setRe(1);
-    sigma[1].mat[1].setIm(-1);
-    sigma[1].mat[2].setIm(1);
-    sigma[2].mat[0].setRe(1);
-    sigma[2].mat[3].setRe(-1);
-    su2Identity[0].setRe(1);
-    su2Identity[3].setRe(1);
+
+    sigma[0].mat[2] = 1;
+    sigma[0].mat[4] = 1;
+    sigma[1].mat[3] = -1;
+    sigma[1].mat[5] = 1;
+    sigma[2].mat[0] = 1;
+    sigma[2].mat[6] = -1;
 }
 
 SU3MatrixGenerator::~SU3MatrixGenerator()
@@ -63,46 +57,60 @@ SU3 SU3MatrixGenerator::generateRandom()
     {
         for (int j = 0; j < 2; j++)
         {
-            H[3*i + j].setRe(uniform_distribution(generator));
-            H[3*i + j].setIm(uniform_distribution(generator));
+            H[3*i + j] = uniform_distribution(generator);
+            H[3*i + j + 1] = uniform_distribution(generator);
         }
     }
     // Normalizing first column
     double columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
-        columnLength += H[3*i].normSquared();
+//        columnLength += H[3*i].normSquared();
+        columnLength += H.normSquared(6*i);
     }
     columnLength = sqrt(columnLength);
     for (int i = 0; i < 3; i++)
     {
-        H[3*i] /= columnLength;
+        H[6*i] /= columnLength;
     }
     // Using Gram-Schmitt to generate next column
     complex projectionFactor;
     for (int i = 0; i < 3; i++)
     {
-        projectionFactor += H[3*i+1]*H[3*i].c();
+        projectionFactor += complexMultiply(H, H.conjugate(), 6*i+2, 6*i);  // Need complex multiplication here
+//        projectionFactor += H[3*i+1]*H[3*i].c();  // Need complex multiplication here
     }
     for (int i = 0; i < 3; i++)
     {
-        H[3*i+1] = H[3*i+1] - H[3*i]*projectionFactor ;
+        H[6*i+2] = H[6*i+2] - H[6*i]*projectionFactor.re();  // Need complex multiplication here
+        H[6*i+3] = H[6*i+3] - H[6*i+1]*projectionFactor.im();  // Need complex multiplication here
+//        H[3*i+1] = H[3*i+1] - H[3*i]*projectionFactor;  // Need complex multiplication here
     }
     // Normalizing second column
     columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
-        columnLength += H[3*i+1].normSquared();
+        columnLength += H.normSquared(6*i+2);
     }
     columnLength = sqrt(columnLength);
     for (int i = 0; i < 3; i++)
     {
-        H[3*i+1] /= columnLength;
+        H[6*i+2] /= columnLength;
     }
     // Taking cross product to produce the last column of our matrix
-    H[2] = H[3].c()*H[7].c() - H[6].c()*H[4].c();
-    H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();
-    H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();
+//    H[2] = H[3].c()*H[7].c() - H[6].c()*H[4].c();  // Need complex multiplication here
+//    H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();  // Need complex multiplication here
+//    H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();  // Need complex multiplication here
+
+    H[4] = H[6]*H[14] - H[7]*H[15] + H[12]*H[8] - H[13]*H[9];
+    H[5] = -H[6]*H[15] - H[7]*H[14] - H[12]*H[9] - H[13]*H[8];
+
+    H[10] = H[12]*H[2] - H[13]*H[3] + H[0]*H[14] - H[1]*H[15];
+    H[11] = - H[12]*H[3] - H[13]*H[2] - H[0]*H[15] - H[1]*H[14];
+
+    H[16] = H[0]*H[8] - H[1]*H[9] + H[6]*H[2] - H[7]*H[3];
+    H[17] = - H[0]*H[9] - H[1]*H[8] - H[6]*H[3] - H[7]*H[2];
+
 //    testOrthogonality(H,false);
 //    testNorm(0,H);
 //    testNorm(1,H);
@@ -111,16 +119,6 @@ SU3 SU3MatrixGenerator::generateRandom()
 //    exit(1);
 
     return H;
-}
-
-SU3 SU3MatrixGenerator::generateIdentity()
-{
-    cout << "SHOULD NOT BE USED" << endl;
-    SU3 Htemp;
-    Htemp.mat[0].setRe(1);
-    Htemp.mat[4].setRe(1);
-    Htemp.mat[8].setRe(1);
-    return Htemp;
 }
 
 SU2 SU3MatrixGenerator::generateSU2()
@@ -165,13 +163,13 @@ SU2 SU3MatrixGenerator::generateSU2()
         _x[i] /= _rNorm;
     }
     // Generating the SU2 matrix close to unity
-    U.mat[0].z[0] = _x[0]; // same as 1*x0
-    U.mat[3].z[0] = _x[0]; // same as 1*x0
+    U.mat[0] = _x[0]; // same as 1*x0
+    U.mat[6] = _x[0]; // same as 1*x0
 //    U *= _x[0];
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 4; j++) {
-            U.mat[j].setRe(U.mat[j].re() - _x[i+1]*sigma[i].mat[j].im());
-            U.mat[j].setIm(U.mat[j].im() + _x[i+1]*sigma[i].mat[j].re());
+            U[2*j] = U[2*j] - _x[i+1]*sigma[i].mat[2*j+1];
+            U[2*j+1] = U[2*j+1] + _x[i+1]*sigma[i].mat[2*j];
         }
     }
 //    for (int i = 0; i < 3; i++) {
@@ -207,20 +205,20 @@ SU3 SU3MatrixGenerator::generateRST()
     S.zeros();
     T.zeros();
     R.mat[0] = r.mat[0];
-    R.mat[1] = r.mat[1];
-    R.mat[3] = r.mat[2];
-    R.mat[4] = r.mat[3];
-    R.mat[8].setRe(1);
+    R.mat[2] = r.mat[2];
+    R.mat[6] = r.mat[4];
+    R.mat[8] = r.mat[6];
+    R.mat[16] = 1;
     S.mat[0] = s.mat[0];
-    S.mat[2] = s.mat[1];
-    S.mat[6] = s.mat[2];
-    S.mat[8] = s.mat[3];
-    S.mat[4].setRe(1);
-    T.mat[4] = t.mat[0];
-    T.mat[5] = t.mat[1];
-    T.mat[7] = t.mat[2];
-    T.mat[8] = t.mat[3];
-    T.mat[0].setRe(1);
+    S.mat[4] = s.mat[2];
+    S.mat[12] = s.mat[4];
+    S.mat[16] = s.mat[6];
+    S.mat[8] = 1;
+    T.mat[8] = t.mat[0];
+    T.mat[10] = t.mat[2];
+    T.mat[14] = t.mat[4];
+    T.mat[16] = t.mat[6];
+    T.mat[0] = 1;
 //    for (int i = 0; i < 2; i++) {
 //        for (int j = 0; j < 2; j++) {
 //            R.mat[3*i + j] = r.mat[2*i + j];

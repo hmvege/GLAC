@@ -2,8 +2,9 @@
 #define SU3MATRIXGENERATOR_H
 
 #include <random>
-#include "_su3.h"
-#include "_su2.h"
+#include "su3.h"
+#include "su2.h"
+#include "complex.h"
 
 class SU3MatrixGenerator
 {
@@ -28,13 +29,10 @@ private:
     double _rNorm = 0;
 
     SU2 *sigma;
-//    SU2 sigma1, sigma2, sigma3, su2Identity;
-    SU2 su2Identity;
 public:
     SU3MatrixGenerator(double eps, double seed);
     ~SU3MatrixGenerator();
     SU3 generateRandom();
-    SU3 generateIdentity();
     SU3 generateRST();
     SU2 generateSU2();
 
