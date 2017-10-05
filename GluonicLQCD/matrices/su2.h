@@ -5,7 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
-
+#include "complex.h"
 
 class SU2
 {
@@ -19,6 +19,7 @@ public:
     void copy(SU2 B);
     void zeros();
     void identity();
+    void setComplex(complex w, int i);
 
     // Getters, mostly using .mat[]
     double get(int i, int j, int k) { return mat[(4*i + 2*j) + k]; } // k is complex number of a position.

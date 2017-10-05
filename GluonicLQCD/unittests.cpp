@@ -14,6 +14,18 @@ using std::endl;
 using std::setw;
 using std::setprecision;
 
+bool compareSU3(SU3 A, SU3 B)
+{
+    // Redo this as well... with epsilon?
+    for (int i = 0; i < 18; i++) {
+        if (A.mat[i] != B.mat[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
 void SU3BaseTests()
 {
     /*

@@ -54,24 +54,24 @@ SU3 &SU3::operator*=(SU3 B)
      */
     double temp[18];
 
-    temp[0] = mat[0]*B[0] - mat[1]*B[1] + mat[0]*B[2] - mat[1]*B[3] + mat[0]*B[4] - mat[1]*B[5];
-    temp[1] = mat[0]*B[1] + mat[1]*B[0] + mat[0]*B[3] + mat[1]*B[2] + mat[0]*B[5] + mat[1]*B[4];
-    temp[2] = mat[0]*B[0] - mat[1]*B[1] + mat[0]*B[2] - mat[1]*B[3] + mat[0]*B[4] - mat[1]*B[5];
-    temp[3] = mat[0]*B[1] + mat[1]*B[0] + mat[0]*B[3] + mat[1]*B[2] + mat[0]*B[5] + mat[1]*B[4];
-    temp[4] = mat[0]*B[0] - mat[1]*B[1] + mat[0]*B[2] - mat[1]*B[3] + mat[0]*B[4] - mat[1]*B[5];
-    temp[5] = mat[0]*B[1] + mat[1]*B[0] + mat[0]*B[3] + mat[1]*B[2] + mat[0]*B[5] + mat[1]*B[4];
-    temp[6] = mat[2]*B[0] - mat[3]*B[1] + mat[2]*B[2] - mat[3]*B[3] + mat[2]*B[4] - mat[3]*B[5];
-    temp[7] = mat[2]*B[1] + mat[3]*B[0] + mat[2]*B[3] + mat[3]*B[2] + mat[2]*B[5] + mat[3]*B[4];
-    temp[8] = mat[2]*B[0] - mat[3]*B[1] + mat[2]*B[2] - mat[3]*B[3] + mat[2]*B[4] - mat[3]*B[5];
-    temp[9] = mat[2]*B[1] + mat[3]*B[0] + mat[2]*B[3] + mat[3]*B[2] + mat[2]*B[5] + mat[3]*B[4];
-    temp[10] = mat[2]*B[0] - mat[3]*B[1] + mat[2]*B[2] - mat[3]*B[3] + mat[2]*B[4] - mat[3]*B[5];
-    temp[11] = mat[2]*B[1] + mat[3]*B[0] + mat[2]*B[3] + mat[3]*B[2] + mat[2]*B[5] + mat[3]*B[4];
-    temp[12] = mat[4]*B[0] - mat[5]*B[1] + mat[4]*B[2] - mat[5]*B[3] + mat[4]*B[4] - mat[5]*B[5];
-    temp[13] = mat[4]*B[1] + mat[5]*B[0] + mat[4]*B[3] + mat[5]*B[2] + mat[4]*B[5] + mat[5]*B[4];
-    temp[14] = mat[4]*B[0] - mat[5]*B[1] + mat[4]*B[2] - mat[5]*B[3] + mat[4]*B[4] - mat[5]*B[5];
-    temp[15] = mat[4]*B[1] + mat[5]*B[0] + mat[4]*B[3] + mat[5]*B[2] + mat[4]*B[5] + mat[5]*B[4];
-    temp[16] = mat[4]*B[0] - mat[5]*B[1] + mat[4]*B[2] - mat[5]*B[3] + mat[4]*B[4] - mat[5]*B[5];
-    temp[17] = mat[4]*B[1] + mat[5]*B[0] + mat[4]*B[3] + mat[5]*B[2] + mat[4]*B[5] + mat[5]*B[4];
+    temp[0] = mat[0]*B[0] - mat[1]*B[1] + mat[2]*B[6] - mat[3]*B[7] + mat[4]*B[12] - mat[5]*B[13];
+    temp[1] = mat[0]*B[1] + mat[1]*B[0] + mat[2]*B[7] + mat[3]*B[6] + mat[4]*B[13] + mat[5]*B[12];
+    temp[2] = mat[0]*B[2] - mat[1]*B[3] + mat[2]*B[8] - mat[3]*B[9] + mat[4]*B[14] - mat[5]*B[15];
+    temp[3] = mat[0]*B[3] + mat[1]*B[2] + mat[2]*B[9] + mat[3]*B[8] + mat[4]*B[15] + mat[5]*B[14];
+    temp[4] = mat[0]*B[4] - mat[1]*B[5] + mat[2]*B[10] - mat[3]*B[11] + mat[4]*B[16] - mat[5]*B[17];
+    temp[5] = mat[0]*B[5] + mat[1]*B[4] + mat[2]*B[11] + mat[3]*B[10] + mat[4]*B[17] + mat[5]*B[16];
+    temp[6] = mat[6]*B[0] - mat[7]*B[1] + mat[8]*B[6] - mat[9]*B[7] + mat[10]*B[12] - mat[11]*B[13];
+    temp[7] = mat[6]*B[1] + mat[7]*B[0] + mat[8]*B[7] + mat[9]*B[6] + mat[10]*B[13] + mat[11]*B[12];
+    temp[8] = mat[6]*B[2] - mat[7]*B[3] + mat[8]*B[8] - mat[9]*B[9] + mat[10]*B[14] - mat[11]*B[15];
+    temp[9] = mat[6]*B[3] + mat[7]*B[2] + mat[8]*B[9] + mat[9]*B[8] + mat[10]*B[15] + mat[11]*B[14];
+    temp[10] = mat[6]*B[4] - mat[7]*B[5] + mat[8]*B[10] - mat[9]*B[11] + mat[10]*B[16] - mat[11]*B[17];
+    temp[11] = mat[6]*B[5] + mat[7]*B[4] + mat[8]*B[11] + mat[9]*B[10] + mat[10]*B[17] + mat[11]*B[16];
+    temp[12] = mat[12]*B[0] - mat[13]*B[1] + mat[14]*B[6] - mat[15]*B[7] + mat[16]*B[12] - mat[17]*B[13];
+    temp[13] = mat[12]*B[1] + mat[13]*B[0] + mat[14]*B[7] + mat[15]*B[6] + mat[16]*B[13] + mat[17]*B[12];
+    temp[14] = mat[12]*B[2] - mat[13]*B[3] + mat[14]*B[8] - mat[15]*B[9] + mat[16]*B[14] - mat[17]*B[15];
+    temp[15] = mat[12]*B[3] + mat[13]*B[2] + mat[14]*B[9] + mat[15]*B[8] + mat[16]*B[15] + mat[17]*B[14];
+    temp[16] = mat[12]*B[4] - mat[13]*B[5] + mat[14]*B[10] - mat[15]*B[11] + mat[16]*B[16] - mat[17]*B[17];
+    temp[17] = mat[12]*B[5] + mat[13]*B[4] + mat[14]*B[11] + mat[15]*B[10] + mat[16]*B[17] + mat[17]*B[16];
 
     for (int i = 0; i < 18; i++)
     {
@@ -134,7 +134,7 @@ void SU3::identity()
     mat[16] = 1;
 }
 
-void SU3::transpose()
+SU3 SU3::transpose()
 {
     double temp[18];
     for (int i = 0; i < 18; i++) { temp[i] = mat[i]; }
@@ -145,11 +145,12 @@ void SU3::transpose()
         {
             for (int k = 0; k < 2; k++)
             {
-                mat[i*3+j+k] = temp[j*3+i+k];
-                mat[j*3+i+k] = temp[i*3+j+k];
+                mat[i*6+2*j+k] = temp[j*6+2*i+k];
+                mat[j*6+2*i+k] = temp[i*6+2*j+k];
             }
         }
     }
+    return *this;
 }
 
 SU3 SU3::conjugate()
@@ -200,10 +201,8 @@ void SU3::setComplex(complex w, int i)
 
 void SU3::print()
 {
-    cout << "[";
     for (int i = 0; i < 3; i++)
     {
-        cout << "[";
         for (int j = 0; j < 3; j++)
         {
             cout <<std::setw(4) << mat[6*i + 2*j];
@@ -215,9 +214,8 @@ void SU3::print()
             {
                 cout << " + ";
             }
-            cout << std::setw(4) << fabs(mat[6*i + 2*j + 1]) << "i ,  ";
+            cout << std::setw(4) << fabs(mat[6*i + 2*j + 1]) << "i,  ";
         }
-        cout <<"]"<< endl;
+        cout << endl;
     }
-    cout << "]" <<endl;
 }

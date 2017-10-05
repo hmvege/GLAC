@@ -39,16 +39,16 @@ SU3 inverse(SU3 U)
     return UInverse;
 }
 
-bool compareSU3(SU3 A, SU3 B)
-{
-    // Redo this as well... with epsilon?
-    for (int i = 0; i < 18; i++) {
-        if (A.mat[i] != B.mat[i]) {
-            return false;
-        }
-    }
-    return true;
-}
+//bool compareSU3(SU3 A, SU3 B)
+//{
+//    // Redo this as well... with epsilon?
+//    for (int i = 0; i < 18; i++) {
+//        if (A.mat[i] != B.mat[i]) {
+//            return false;
+//        }
+//    }
+//    return true;
+//}
 
 double traceRealMultiplication(SU3 A, SU3 B)
 {

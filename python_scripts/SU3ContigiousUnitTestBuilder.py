@@ -13,4 +13,4 @@ print U1,'\n'
 
 print U2,'\n'
 
-print U1*U2
+print np.dot(U1,U2)

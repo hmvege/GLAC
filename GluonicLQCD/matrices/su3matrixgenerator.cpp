@@ -50,8 +50,6 @@ SU3 SU3MatrixGenerator::generateRandom()
      * 3 4 5
      * 6 7 8
      */
-    cout << "NOT USING REGULAR RANDOM -> SHOULD NOT BE SEEN!" << endl;
-    exit(1);
     H.identity();
     for (int i = 0; i < 3; i++)
     {
@@ -111,12 +109,13 @@ SU3 SU3MatrixGenerator::generateRandom()
     H[16] = H[0]*H[8] - H[1]*H[9] + H[6]*H[2] - H[7]*H[3];
     H[17] = - H[0]*H[9] - H[1]*H[8] - H[6]*H[3] - H[7]*H[2];
 
-//    testOrthogonality(H,false);
-//    testNorm(0,H);
-//    testNorm(1,H);
-//    testNorm(2,H);
-//    testHermicity(H,false);
-//    exit(1);
+    testOrthogonality(H,false);
+    testNorm(0,H);
+    testNorm(1,H);
+    testNorm(2,H);
+    testHermicity(H,false);
+    cout << "Completed SU3 RANDOM test" << endl;
+    exit(1);
 
     return H;
 }
@@ -229,6 +228,16 @@ SU3 SU3MatrixGenerator::generateRST()
     // Creates the return matrix, which is close to unity
 //    X = R*S*T;
     // Equal probability of returning X and X inverse
+
+    SU3 H = R*S*T;
+    testOrthogonality(H,false);
+    testNorm(0,H);
+    testNorm(1,H);
+    testNorm(2,H);
+    testHermicity(H,false);
+    cout << "Completed SU3 RST test" << endl;
+    exit(1);
+
     if (SU2_uniform_distribution(generator) < 0) {
         return (R*S*T).inv();
     } else {

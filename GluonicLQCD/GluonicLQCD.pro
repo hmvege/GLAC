@@ -20,6 +20,7 @@ SOURCES += main.cpp \
     parallelization/neighbours.cpp \
     parallelization/neighbourlist.cpp \
     parallelization/indexorganiser.cpp \
+    testsuite.cpp
 
 HEADERS += \
     system.h \
@@ -37,6 +38,7 @@ HEADERS += \
     parallelization/neighbours.h \
     parallelization/neighbourlist.h \
     parallelization/indexorganiser.h \
+    testsuite.h
 
 #LIBS += -llapack -lblas -larmadillo
 

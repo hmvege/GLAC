@@ -25,7 +25,7 @@ public:
     SU3 inv();
     void zeros();
     void identity();
-    void transpose();
+    SU3 transpose();
     SU3 conjugate();
     void copy(SU3 B);
     void setComplex(complex w, int i);

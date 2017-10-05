@@ -10,6 +10,7 @@
 #include "parallelization/indexorganiser.h"
 
 #include "unittests.h"
+#include "testsuite.h"
 
 using std::cout;
 using std::endl;
@@ -108,7 +109,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     }
 
     if (processRank == 0) {
-        runTestSuite();
+        TestSuite unitTester;
+        unitTester.runFullTestSuite(true);
+//        runTestSuite();
 //        testInverseMatrix(SU3Eps, seed, 1e3, false);
 //        runMatrixPerformanceTest(SU3Eps,seed,5*1e8,false,true);
 //        inversePerformanceTest(SU3Eps,seed,1e5);

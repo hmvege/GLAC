@@ -88,6 +88,12 @@ void SU2::copy(SU2 B)
     }
 }
 
+void SU2::setComplex(complex w, int i)
+{
+    mat[i] = w.z[0];
+    mat[i+1] = w.z[1];
+}
+
 void SU2::print()
 {
     /*

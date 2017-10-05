@@ -28,15 +28,15 @@ def printRegularMatrix(N=3):
 #
 # zw = (a + bi)(c + id) = ac + iad + ibc - bd = ac - bd + i(ad + bc)
 
-def complexContigiousMultiplication(N,i,j,verbose=False):
-	a = 2*i
-	b = 2*i+1
-	c = 2*j
-	d = 2*j+1
-	# msg_real = "mat[%d]*B[%d] - mat[%d]*B[%d]" % (a,c,b,d)
-	# msg_imag = "mat[%d]*B[%d] + mat[%d]*B[%d]" % (a,d,b,c)
-	msg_real = "A[%d]*B[%d] - A[%d]*B[%d]" % (a,c,b,d)
-	msg_imag = "A[%d]*B[%d] + A[%d]*B[%d]" % (a,d,b,c)
+def complexContigiousMultiplication(N,i,j,k,verbose=False):
+	a = 2*N*i + 2*k
+	b = 2*N*i + 2*k + 1
+	c = 2*N*k + 2*j
+	d = 2*N*k + 2*j + 1
+	msg_real = "mat[%d]*B[%d] - mat[%d]*B[%d]" % (a,c,b,d)
+	msg_imag = "mat[%d]*B[%d] + mat[%d]*B[%d]" % (a,d,b,c)
+	# msg_real = "A[%d]*B[%d] - A[%d]*B[%d]" % (a,c,b,d)
+	# msg_imag = "A[%d]*B[%d] + A[%d]*B[%d]" % (a,d,b,c)
 	# msg_real = "H[%d]*H[%d] - H[%d]*H[%d]" % (a,c,b,d)
 	# msg_imag = "H[%d]*H[%d] + H[%d]*H[%d]" % (a,d,b,c)
 	# msg_real = "U[%d]*U[%d] - U[%d]*U[%d]" % (a,c,b,d)
@@ -69,41 +69,39 @@ def printContigiousComplexMatrixMultiplication(N=3):
 	msg = ""
 	for i in range(N):
 		for j in range(N):
-			# print "M[%d,%d] = %2d |" % (i,j,2*i*N+2*j),
-			# msg += "%d: " % (N*i + j)
 			for k in range(2): # Complex variables
 				msg += "temp[%d] = " % (2*i*N + 2*j + k)
 				for l in range(N):
-					msg += complexContigiousMultiplication(N,i,l)[k]
+					msg += complexContigiousMultiplication(N,i,j,l)[k]
 					if l != N-1: msg += " + ";
 				msg += ";\n"
 			print msg,
 			msg = ""
-	print complexContigiousMultiplication(N,0,3)
-	print complexContigiousAddition(N,0,3)
+	
 
-	def printDeterminant():
-		z1 = complexContigiousMultiplication(3,0,0)
-		z2 = complexContigiousMultiplication(3,1,3)
-		z3 = complexContigiousMultiplication(3,2,6)
-		w1 = ' + '.join([z1[0],z2[0],z3[0]])
+def printDeterminant():
+	N = 3
+	z1 = complexContigiousMultiplication(N,0,0)
+	z2 = complexContigiousMultiplication(N,1,3)
+	z3 = complexContigiousMultiplication(N,2,6)
+	w1 = ' + '.join([z1[0],z2[0],z3[0]])
 
-		z4 = complexContigiousMultiplication(3,3,1)
-		z5 = complexContigiousMultiplication(3,4,4)
-		z6 = complexContigiousMultiplication(3,5,7)
-		w2 = ' + '.join([z4[0],z5[0],z6[0]])
+	z4 = complexContigiousMultiplication(N,3,1)
+	z5 = complexContigiousMultiplication(N,4,4)
+	z6 = complexContigiousMultiplication(N,5,7)
+	w2 = ' + '.join([z4[0],z5[0],z6[0]])
 
-		z7 = complexContigiousMultiplication(3,6,2)
-		z8 = complexContigiousMultiplication(3,7,5)
-		z9 = complexContigiousMultiplication(3,8,8)
-		w3 = ' + '.join([z7[0],z8[0],z9[0]])
-		msg = w1 + ' + \n' + w2 + ' + \n' + w3
-		print msg 
+	z7 = complexContigiousMultiplication(N,6,2)
+	z8 = complexContigiousMultiplication(N,7,5)
+	z9 = complexContigiousMultiplication(N,8,8)
+	w3 = ' + '.join([z7[0],z8[0],z9[0]])
+	msg = w1 + ' + \n' + w2 + ' + \n' + w3
+	print msg 
 
 
 if __name__ == '__main__':
 	# a*b = ac - bd + i(ad + bc)
 
 	# printRegularMatrix()
-	# printContigiousComplexMatrixMultiplication(2)
+	printContigiousComplexMatrixMultiplication(3)
 	# printDeterminant()
