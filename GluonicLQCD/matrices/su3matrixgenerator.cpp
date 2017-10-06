@@ -63,7 +63,8 @@ SU3 SU3MatrixGenerator::generateRandom()
     double columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
-        columnLength += H.normSquared(6*i);
+//        columnLength += H.normSquared(6*i);
+        columnLength += H[6*i]*H[6*i] + H[6*i+1]*H[6*i+1];
     }
     columnLength = sqrt(columnLength);
     for (int i = 0; i < 3; i++)
@@ -77,7 +78,7 @@ SU3 SU3MatrixGenerator::generateRandom()
     for (int i = 0; i < 3; i++)
     {
         projectionFactor[0] += H[6*i+2]*H[6*i] + H[6*i+3]*H[6*i+1];
-        projectionFactor[1] += - H[6*i+2]*H[6*i+1] + H[6*i+3]*H[6*i];
+        projectionFactor[1] += -H[6*i+2]*H[6*i+1] + H[6*i+3]*H[6*i];
     }
     for (int i = 0; i < 3; i++)
     {
@@ -88,7 +89,8 @@ SU3 SU3MatrixGenerator::generateRandom()
     columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
-        columnLength += H.normSquared(6*i+2);
+        columnLength += H[6*i+2]*H[6*i+2] + H[6*i+3]*H[6*i+3];
+//        columnLength += H.normSquared(6*i+2);
     }
     columnLength = sqrt(columnLength);
     for (int i = 0; i < 3; i++)
@@ -125,38 +127,41 @@ SU3 SU3MatrixGenerator::generateRandom()
      * 6 7 8   12 13  14 15   16 17
      */
 
-    H[4] = + H[6]*H[14] - H[7]*H[15] - H[12]*H[8] + H[13]*H[9];
-    H[5] = - H[6]*H[15] - H[7]*H[14] + H[12]*H[9] + H[13]*H[8];
-    H[10] = - H[12]*H[8] + H[13]*H[9] - H[0]*H[14] + H[1]*H[15];
-    H[11] = + H[12]*H[9] + H[13]*H[8] + H[0]*H[15] + H[1]*H[14];
-    H[16] = + H[0]*H[8] - H[1]*H[9] - H[6]*H[2] + H[7]*H[3];
-    H[17] = - H[0]*H[9] - H[1]*H[8] + H[6]*H[3] + H[7]*H[2];
 
-//    H[4] =   H[6]*H[14] - H[7]*H[15] - H[12]*H[8] + H[13]*H[9];
-//    H[5] = - H[6]*H[15] - H[7]*H[14] + H[12]*H[9] + H[13]*H[8];
-//    H[10] = - H[12]*H[8] + H[13]*H[9] - H[0]*H[14] + H[1]*H[15];
-//    H[11] =   H[12]*H[9] + H[13]*H[8] + H[0]*H[15] + H[1]*H[14];
-//    H[16] =   H[0]*H[8] - H[1]*H[9] - H[6]*H[2] + H[7]*H[3];
-//    H[17] = - H[0]*H[9] - H[1]*H[8] + H[6]*H[3] + H[7]*H[2];
-    double sumVal = 0;
-    for (int i = 0; i < 3; i++) {
-        sumVal += H.normSquared(6*i);
-    }
-    cout << sqrt(sumVal) << endl;
-    sumVal = 0;
-    // COL 2
-    for (int i = 0; i < 3; i++) {
-        sumVal += H.normSquared(6*i+2);
-    }
-    cout << sqrt(sumVal) << endl;
-    sumVal = 0;
-    for (int i = 0; i < 3; i++) {
-        sumVal += H.normSquared(6*i+4);
-    }
-    cout << sqrt(sumVal) << endl;
-    cout << "Done"<<endl;
+
+//    H[4] = -H[12]*H[8] + H[13]*H[9] + H[14]*H[6] - H[15]*H[7];
+//    H[5] = - H[12]*H[9] - H[13]*H[8] + H[14]*H[7] + H[15]*H[6];
+//    H[10] = -H[0]*H[14] + H[12]*H[2] - H[13]*H[3] + H[15]*H[1];
+//    H[11] = - H[0]*H[15] + H[12]*H[3] + H[13]*H[2] - H[14]*H[1];
+//    H[16] = H[0]*H[8] - H[1]*H[9] - H[2]*H[6] + H[3]*H[7];
+//    H[17] = H[0]*H[9] + H[1]*H[8] - H[2]*H[7] - H[3]*H[6];
+
+    H[4] = + H[6]*H[14] - H[7]*H[15] - H[12]*H[8] + H[13]*H[9];
+    H[5] = + H[6]*H[15] + H[7]*H[14] - H[12]*H[9] - H[13]*H[8];
+    H[10] = + H[12]*H[2] - H[13]*H[3] - H[0]*H[14] + H[1]*H[15];
+    H[11] = + H[12]*H[3] + H[13]*H[2] - H[0]*H[15] - H[1]*H[14];
+    H[16] = + H[0]*H[8] - H[1]*H[9] - H[6]*H[2] + H[7]*H[3];
+    H[17] = + H[0]*H[9] + H[1]*H[8] - H[6]*H[3] - H[7]*H[2];
+
+//    double sumVal = 0;
+//    for (int i = 0; i < 3; i++) {
+//        sumVal += H[6*i]*H[6*i] + H[6*i+1]*H[6*i+1];
+//    }
+//    cout << sqrt(sumVal) << endl;
+//    sumVal = 0;
+//    // COL 2
+//    for (int i = 0; i < 3; i++) {
+//        sumVal += H[6*i+2]*H[6*i+2] + H[6*i+3]*H[6*i+3];
+//    }
+//    cout << sqrt(sumVal) << endl;
+//    sumVal = 0;
+//    for (int i = 0; i < 3; i++) {
+//        sumVal += H[6*i+4]*H[6*i+4] + H[6*i+5]*H[6*i+5];
+//    }
+//    cout << sqrt(sumVal) << endl;
+//    cout << "Done"<<endl;
 //    exit(1);
-//    testOrthogonality(H,true);
+    testOrthogonality(H,true);
 //    testNorm(0,H);
 //    testNorm(1,H);
 //    testNorm(2,H);
