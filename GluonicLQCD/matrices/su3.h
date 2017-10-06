@@ -33,7 +33,8 @@ public:
     // Complex number operations
     double norm(int i);
     double normSquared(int i);
-    void c(int i);
+    complex c(int i);
+//    complex getComplex(int i);
     double re(int i) const { return mat[i]; } // But why constant?
     double im(int i) const { return mat[i+1]; }
     void setRe(int i, double re) { mat[i] = re; } // A bit redundant?

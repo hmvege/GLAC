@@ -130,6 +130,20 @@ def cMult(varName1, varName2, i,j,sign=False,conjugate=False):
 			msg_imag = " + {0:<s}[{2:<d}]*{1:<s}[{5:<d}] + {0:<s}[{3:<d}]*{1:<s}[{4:<d}]".format(varName1,varName2,a,b,c,d)
 	return msg_real,msg_imag
 
+def printSympyCrossProductOld():
+	for i in range(9):
+		print "H%d," % i,
+	print
+	H0, H1, H2, H3, H4, H5, H6, H7, H8 = sp.symbols("H[0], H[1], H[2], H[3], H[4], H[5], H[6], H[7], H[8]")
+	
+	H = sp.Matrix([[H0, H1, H2], [H3, H4, H5], [H6, H7, H8]])
+	H3Crossed = H[:,0].cross(H[:,1])
+	for elem in H3Crossed:
+		print elem
+
+	exit()
+
+
 def printSympyCrossProduct():
  	H0, H2, H4, H6, H8, H10, H12, H14, H16 = sp.symbols("H[0], H[2], H[4], H[6], H[8], H[10], H[12], H[14], H[16]")
  	H1, H3, H5, H7, H9, H11, H13, H15, H17 = sp.symbols("H[1], H[3], H[5], H[7], H[9], H[11], H[13], H[15], H[17]")
@@ -139,34 +153,35 @@ def printSympyCrossProduct():
  					[H6 + H7, H8 + H9, H10 + H11],
  					[H12 + H13, H14 + H15, H16 + H17]])
 
+
 	H3Crossed = H[:,0].cross(H[:,1])
-	print "REAL PARTS OF CROSS PRODUCT: "
+	H3Crossed = sp.expand(H3Crossed)
+	
+	print "//REAL PARTS OF CROSS PRODUCT: "
 	for elem in H3Crossed:
 		print sp.re(elem)
-	print "IMAGINARY PARTS OF CROSS PRODUCT: "
-	for elem in H3Crossed:
-		print sp.im(elem)
-	# print H3Crossed[0]
-	# print H3Crossed[1]
-	print H[:,2]
+	print "//MAGINARY PARTS OF CROSS PRODUCT: "
+
+	
+	# print H[:,2]
 
 	
 def printCrossProduct():
 	# H[2] = H[3].c()*H[7].c() - H[6].c()*H[4].c();  // Need complex multiplication here
  	# H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();  // Need complex multiplication here
  	# H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();  // Need complex multiplication here
- 	c = False
+ 	c = True
  	# print cMult("A","B",0,0,False,c)
  	# for i in range(9):
  	# 	print "H[%d],"%(2*i+1),
  	# print 
 
- 	H3H7 = cMult("H","H",3,7,conjugate=c)
- 	H6H4 = cMult("H","H",6,4,True,conjugate=c)
- 	H6H1 = cMult("H","H",6,1,conjugate=c)
- 	H0H7 = cMult("H","H",0,7,True,conjugate=c)
- 	H0H4 = cMult("H","H",0,4,conjugate=c)
- 	H3H1 = cMult("H","H",3,1,True,conjugate=c)
+ 	H3H7 = cMult("H","H",4,6,conjugate=c)
+ 	H6H4 = cMult("H","H",7,3,True,conjugate=c)
+ 	H6H1 = cMult("H","H",7,0,conjugate=c)
+ 	H0H7 = cMult("H","H",1,6,True,conjugate=c)
+ 	H0H4 = cMult("H","H",1,3,conjugate=c)
+ 	H3H1 = cMult("H","H",4,0,True,conjugate=c)
 
  	H4 = H3H7[0] + H6H4[0]
  	H5 = H3H7[1] + H6H4[1]
@@ -187,6 +202,7 @@ def printCrossProduct():
 
 if __name__ == '__main__':
 	# a*b = ac - bd + i(ad + bc)
+	# printSympyCrossProductOld()
 	printCrossProduct()
 	# printRegularMatrix()
 	# printContigiousComplexMatrixMultiplication(2)

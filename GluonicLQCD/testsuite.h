@@ -66,7 +66,6 @@ private:
     bool testSU3Norm(bool verbose);
     bool testSU3Determinant(bool verbose);
 
-
     // Other tests
     bool testGaugeInvariance(bool verbose);
     bool testSU3TraceMultiplication(bool verbose);
@@ -74,7 +73,7 @@ private:
 
     // Add complex class tests?
 public:
-    TestSuite();
+    TestSuite(SU3MatrixGenerator *SU3Gen);
 
     void runFullTestSuite(bool verbose);
     bool runSU2Tests(bool verbose);

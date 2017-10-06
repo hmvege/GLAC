@@ -3,7 +3,7 @@
 using std::cout;
 using std::endl;
 
-TestSuite::TestSuite()
+TestSuite::TestSuite(SU3MatrixGenerator *SU3Gen)
 {
     /*
      * Class for running unit tests.
@@ -15,8 +15,8 @@ TestSuite::TestSuite()
     m_uniform_distribution = uni_dist;
 
     // Initiating the SU3 Matrix generator
-    SU3MatrixGenerator SU3Gen(0.24, std::time(nullptr)+1);
-    m_SU3Generator = &SU3Gen;
+//    SU3MatrixGenerator SU3Gen(0.24, std::time(nullptr)+1);
+    m_SU3Generator = SU3Gen;
 
     //// 3x3 COMPLEX MATRICES
     // Setting up matrix U1
@@ -411,23 +411,19 @@ bool TestSuite::testSU3Hermicity(bool verbose)
 
 bool TestSuite::checkSU3Hermicity(bool verbose, SU3 H)
 {
-    bool passed;
+    /*
+     * Checks the hermicity of the SU3 matrices.
+     */
+    bool passed = true;
     double eps = 1e-14;
     SU3 I;
     I = H*H.inv();
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; i < j; j++) {
-            if ((fabs(I[6*i + 2*j]) > eps) || (fabs(I[6*i + 2*j + 1]) > eps) || // Upper triangular
-                (fabs(I[6*j + 2*i]) > eps) || (fabs(I[6*j + 2*i + 1]) > eps)) { // Lower triangular
-                passed = false;
-            }
-        }
+    for (int i = 0; i < 18; i++) {
+        if (i==0 || i==8 || i==16) continue;
+        if (fabs(I[i]) > eps) passed = false;
     }
-    for (int i = 0; i < 3; i++) {
-        if ((fabs(I[6*i + 2*i] - 1) > eps) || (fabs(I[6*i + 2*i + 1]) > eps)) {
-            passed = false;
-        }
-    }
+    if ((fabs(I[0] - 1) > eps) || (fabs(I[8] - 1) > eps) || (fabs(I[16] - 1) > eps)) passed = false;
+
     if (passed) {
         return true;
     }

@@ -81,14 +81,23 @@ void SU3BaseTests()
     cout << "SU3 base test completed." << endl;
 }
 
-complex dot(complex * a, complex * b) {
+complex dot(complex a[3], complex b[3]) {
     /*
      * Dot product defined as:
      *  (v,u*) = v*conjugate(u)
      */
     complex returnSum(0,0);
+    complex aConj;
     for (int i = 0; i < 3; i++) {
-        returnSum += a[i]*b[i].c();
+//        cout << a[i].c() << endl;
+//        cout << a[i].conjugate() << endl;
+//        cout << endl;
+//        aConj = a[i];
+//        returnSum += aConj.c()*b[i];
+//        returnSum += a[i].conjugate()*b[i];
+        returnSum += a[i].c()*b[i];
+//        returnSum.z[0] += a[i].c().z[0]*b[i].z[0] - a[i].c().z[1]*b[i].z[1];
+//        returnSum.z[1] += a[i].c().z[0]*b[i].z[1] + a[i].c().z[1]*b[i].z[0];
     }
     return returnSum;
 }
@@ -102,14 +111,23 @@ bool testOrthogonality(SU3 H, bool verbose)
      * 3 4 5
      * 6 7 8
      */
-    complex *col1 = new complex[3];
-    complex *col2 = new complex[3];
-    complex *col3 = new complex[3];
+    complex col1[3];
+    complex col2[3];
+    complex col3[3];
     for (int i = 0; i < 3; i++) {
-        col1[i] = complex(H[6*i],H[6*i+1]);
-        col2[i] = complex(H[6*i+2],H[6*i+3]);
-        col3[i] = complex(H[6*i+4],H[6*i+5]);
+        col1[i].setRe(H.mat[6*i]);
+        col1[i].setIm(H.mat[6*i+1]);
+        col2[i].setRe(H.mat[6*i+2]);
+        col2[i].setIm(H.mat[6*i+3]);
+        col3[i].setRe(H.mat[6*i+4]);
+        col3[i].setIm(H.mat[6*i+5]);
     }
+//    H.print();
+//    for (int i = 0; i < 3; i++) {
+//        cout << col1[i] << ",   ";
+//        cout << col2[i] << ",   ";
+//        cout << col3[i] << endl;
+//    }
 
     double eps = 1e-15;
     bool testPassed = true;
@@ -117,17 +135,13 @@ bool testOrthogonality(SU3 H, bool verbose)
     complex c13dot = dot(col1,col3);
     complex c23dot = dot(col2,col3);
     if (verbose) {
-        cout << "Column 1 and 2: " << c12dot << endl;
-        cout << "Column 1 and 3: " << c13dot << endl;
-        cout << "Column 2 and 3: " << c23dot << endl;
+        cout << "Column 1 and 2: " << std::setprecision(10) << c12dot << endl;
+        cout << "Column 1 and 3: " << std::setprecision(10) << c13dot << endl;
+        cout << "Column 2 and 3: " << std::setprecision(10) << c23dot << endl;
     }
     if ((fabs(c12dot.re()) > eps) || (fabs(c12dot.im()) > eps)) testPassed = false;
     if ((fabs(c13dot.re()) > eps) || (fabs(c13dot.im()) > eps)) testPassed = false;
     if ((fabs(c23dot.re()) > eps) || (fabs(c23dot.im()) > eps)) testPassed = false;
-
-    delete [] col1;
-    delete [] col2;
-    delete [] col3;
 
     if (testPassed) {
         cout << "PASSED: Columns is orthogonal." << endl;
@@ -186,19 +200,19 @@ bool testHermicity(SU3 H, bool verbose)
     }
 }
 
-bool testNorm(int col, SU3 H)
+bool testNorm(int col, SU3 *H)
 {
     // TEST: Finding length of column
     double s=0;
     for (int i = 0; i < 3; i++) {
-        s += H.normSquared(6*i + 2*col);
+        s += H->normSquared(6*i + 2*col);
     }
     if (fabs(s-1) < 1e-15) {
         cout << "PASSED: length = " << s << endl;
         return true;
     }
     else {
-        cout << "FAILED: length = " << setprecision(16) << s << endl;
+        cout << "FAILED: length = " << setprecision(14) << s << endl;
         return false;
     }
 }

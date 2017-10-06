@@ -69,8 +69,10 @@ complex complex::c()
     /*
      * Returns the complex conjugate of the object instance.
      */
-    return complex(z[0],-z[1]);
+    complex a(z[0],-z[1]);
+    return a;
 }
+
 
 complex &complex::operator=(const complex &b)
 {

@@ -25,7 +25,7 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     uniform_distribution = uni_dist;
     SU2_uniform_distribution = uni_dist_SU2;
     // Setting up Pauli matrices
-    sigma = new SU2[3]; // WOULD THIS BE FASTER IF I USED MEMORY ON STACK?
+//    sigma = new SU2[3]; // WOULD THIS BE FASTER IF I USED MEMORY ON STACK?
 
     sigma[0].mat[2] = 1;
     sigma[0].mat[4] = 1;
@@ -37,7 +37,8 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
 
 SU3MatrixGenerator::~SU3MatrixGenerator()
 {
-    delete [] sigma;
+//    cout << "oops"<<endl;
+//    delete [] sigma;
 }
 
 SU3 SU3MatrixGenerator::generateRandom()
@@ -53,7 +54,7 @@ SU3 SU3MatrixGenerator::generateRandom()
     H.zeros();
     for (int i = 0; i < 3; i++)
     {
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < 3; j++)
         {
             H[6*i + 2*j] = uniform_distribution(generator);
             H[6*i + 2*j + 1] = uniform_distribution(generator);
@@ -63,7 +64,6 @@ SU3 SU3MatrixGenerator::generateRandom()
     double columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
-//        columnLength += H.normSquared(6*i);
         columnLength += H[6*i]*H[6*i] + H[6*i+1]*H[6*i+1];
     }
     columnLength = sqrt(columnLength);
@@ -78,19 +78,21 @@ SU3 SU3MatrixGenerator::generateRandom()
     for (int i = 0; i < 3; i++)
     {
         projectionFactor[0] += H[6*i+2]*H[6*i] + H[6*i+3]*H[6*i+1];
-        projectionFactor[1] += -H[6*i+2]*H[6*i+1] + H[6*i+3]*H[6*i];
+        projectionFactor[1] += H[6*i+3]*H[6*i] - H[6*i+2]*H[6*i+1];
     }
     for (int i = 0; i < 3; i++)
     {
-        H[6*i+2] = H[6*i+2] - H[6*i]*projectionFactor[0] + H[6*i+1]*projectionFactor[1];  // Need complex multiplication here
-        H[6*i+3] = H[6*i+3] - H[6*i]*projectionFactor[1] - H[6*i+1]*projectionFactor[0];  // Need complex multiplication here
+//        H[6*i+2] = H[6*i+2] - H[6*i]*projectionFactor[0] + H[6*i+1]*projectionFactor[1];  // Need complex multiplication here
+//        H[6*i+3] = H[6*i+3] - H[6*i]*projectionFactor[1] - H[6*i+1]*projectionFactor[0];  // Need complex multiplication here
+        H[6*i+2] -= H[6*i]*projectionFactor[0] - H[6*i+1]*projectionFactor[1];  // Need complex multiplication here
+        H[6*i+3] -= H[6*i]*projectionFactor[1] + H[6*i+1]*projectionFactor[0];  // Need complex multiplication here
     }
+    H.print();
     // Normalizing second column
     columnLength = 0;
     for (int i = 0; i < 3; i++)
     {
         columnLength += H[6*i+2]*H[6*i+2] + H[6*i+3]*H[6*i+3];
-//        columnLength += H.normSquared(6*i+2);
     }
     columnLength = sqrt(columnLength);
     for (int i = 0; i < 3; i++)
@@ -98,75 +100,21 @@ SU3 SU3MatrixGenerator::generateRandom()
         H[6*i+2] /= columnLength;
         H[6*i+3] /= columnLength;
     }
-
-//    // COL 1
-//    double sumVal = 0;
-//    for (int i = 0; i < 3; i++) {
-//        sumVal += H.normSquared(6*i);
-//    }
-//    cout << sqrt(sumVal) << endl;
-//    sumVal = 0;
-//    // COL 2
-//    for (int i = 0; i < 3; i++) {
-//        sumVal += H.normSquared(6*i+2);
-//    }
-//    cout << sqrt(sumVal) << endl;
-//    H.print();
-//    exit(1);
-
     // Taking cross product to produce the last column of our matrix
-//    H[2] = H[3].c()*H[7].c() - H[6].c()*H[4].c();  // Need complex multiplication here
-//    H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();  // Need complex multiplication here
-//    H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();  // Need complex multiplication here
-    /*
-     * Generatores a random SU3 matrix.
-     * Index map:
-     * H =
-     * 0 1 2    0  1   2  3    4  5
-     * 3 4 5 =  6  7   8  9   10 11
-     * 6 7 8   12 13  14 15   16 17
-     */
+    H[4] = + H[8]*H[12] - H[9]*H[13] - H[14]*H[6] + H[15]*H[7];
+    H[5] = - H[8]*H[13] - H[9]*H[12] + H[14]*H[7] + H[15]*H[6];
+    H[10] = + H[14]*H[0] - H[15]*H[1] - H[2]*H[12] + H[3]*H[13];
+    H[11] = - H[14]*H[1] - H[15]*H[0] + H[2]*H[13] + H[3]*H[12];
+    H[16] = + H[2]*H[6] - H[3]*H[7] - H[8]*H[0] + H[9]*H[1];
+    H[17] = - H[2]*H[7] - H[3]*H[6] + H[8]*H[1] + H[9]*H[0];
 
+//    testNorm(0,&H);
+//    testNorm(1,&H);
+//    testNorm(2,&H);
 
-
-//    H[4] = -H[12]*H[8] + H[13]*H[9] + H[14]*H[6] - H[15]*H[7];
-//    H[5] = - H[12]*H[9] - H[13]*H[8] + H[14]*H[7] + H[15]*H[6];
-//    H[10] = -H[0]*H[14] + H[12]*H[2] - H[13]*H[3] + H[15]*H[1];
-//    H[11] = - H[0]*H[15] + H[12]*H[3] + H[13]*H[2] - H[14]*H[1];
-//    H[16] = H[0]*H[8] - H[1]*H[9] - H[2]*H[6] + H[3]*H[7];
-//    H[17] = H[0]*H[9] + H[1]*H[8] - H[2]*H[7] - H[3]*H[6];
-
-    H[4] = + H[6]*H[14] - H[7]*H[15] - H[12]*H[8] + H[13]*H[9];
-    H[5] = + H[6]*H[15] + H[7]*H[14] - H[12]*H[9] - H[13]*H[8];
-    H[10] = + H[12]*H[2] - H[13]*H[3] - H[0]*H[14] + H[1]*H[15];
-    H[11] = + H[12]*H[3] + H[13]*H[2] - H[0]*H[15] - H[1]*H[14];
-    H[16] = + H[0]*H[8] - H[1]*H[9] - H[6]*H[2] + H[7]*H[3];
-    H[17] = + H[0]*H[9] + H[1]*H[8] - H[6]*H[3] - H[7]*H[2];
-
-//    double sumVal = 0;
-//    for (int i = 0; i < 3; i++) {
-//        sumVal += H[6*i]*H[6*i] + H[6*i+1]*H[6*i+1];
-//    }
-//    cout << sqrt(sumVal) << endl;
-//    sumVal = 0;
-//    // COL 2
-//    for (int i = 0; i < 3; i++) {
-//        sumVal += H[6*i+2]*H[6*i+2] + H[6*i+3]*H[6*i+3];
-//    }
-//    cout << sqrt(sumVal) << endl;
-//    sumVal = 0;
-//    for (int i = 0; i < 3; i++) {
-//        sumVal += H[6*i+4]*H[6*i+4] + H[6*i+5]*H[6*i+5];
-//    }
-//    cout << sqrt(sumVal) << endl;
-//    cout << "Done"<<endl;
-//    exit(1);
-    testOrthogonality(H,true);
-//    testNorm(0,H);
-//    testNorm(1,H);
-//    testNorm(2,H);
-    exit(1);
+//    testOrthogonality(H,true);
 //    testHermicity(H,false);
+//    exit(1);
 //    cout << "Completed SU3 RANDOM test" << endl;
 
     return H;
@@ -245,17 +193,10 @@ SU3 SU3MatrixGenerator::generateRST()
      * 3 4 5
      * 6 7 8
      */
-//    SU3 X, R, S, T; // Change to only have 3 matrices instead of 4, such that one is just R=R*S*T?
-//    SU2 r,s,t;
     // Generates SU2 matrices
     r = generateSU2();
     s = generateSU2();
     t = generateSU2();
-    r.print();
-    s.print();
-    t.print();
-    cout<<"exits at RST"<<endl;
-    exit(1);
     // Populates R,S,T matrices
     R.zeros(); // No need to populate to unity, as that is covered when populating the SU3 matrices with SU2 matrices.
     S.zeros();
@@ -287,17 +228,6 @@ SU3 SU3MatrixGenerator::generateRST()
     T.mat[16] = t.mat[6];
     T.mat[17] = t.mat[7];
     T.mat[0] = 1;
-//    R.print();
-//    for (int i = 0; i < 2; i++) {
-//        for (int j = 0; j < 2; j++) {
-//            R.mat[3*i + j] = r.mat[2*i + j];
-//            S.mat[6*i + 2*j] = s.mat[2*i + j];
-//            T.mat[4 + i*3 + j] = t.mat[2*i + j];
-//        }
-//    }
-    // Creates the return matrix, which is close to unity
-//    X = R*S*T;
-    // Equal probability of returning X and X inverse
 
 //    SU3 H = R*S*T;
 //    testOrthogonality(H,false);
@@ -309,8 +239,21 @@ SU3 SU3MatrixGenerator::generateRST()
 //    exit(1);
 
     if (SU2_uniform_distribution(generator) < 0) {
-        return (R*S*T).inv();
+        return (R*S*T).inv(); // THIS CAN BE MADE INTO TWO RST FUNCTIONS WITH 20 CFLOPS!!
     } else {
         return R*S*T;
     }
+}
+
+SU3 SU3MatrixGenerator::RSTMatrixMultiplication(SU3 R, SU3 S, SU3 T)
+{
+    /*
+     * Generatores a random SU3 matrix.
+     * Index map:
+     * H =
+     * 0 1 2    0  1   2  3    4  5
+     * 3 4 5 =  6  7   8  9   10 11
+     * 6 7 8   12 13  14 15   16 17
+     */
+//    H.mat[]
 }

@@ -28,6 +28,8 @@ using std::chrono::duration;
  * [ ] (optional) Add better test suites, one that prints FAIL if test fails!!
  */
 
+void runUnitTests(SU3MatrixGenerator *SU3Gen);
+
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
     // Initializing parallelization
@@ -108,17 +110,6 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     }
 
-    if (processRank == 0) {
-//        runTestSuite();
-//        exit(1);
-        TestSuite unitTester;
-        unitTester.runFullTestSuite(true);
-//        testInverseMatrix(SU3Eps, seed, 1e3, false);
-//        runMatrixPerformanceTest(SU3Eps,seed,5*1e8,false,true);
-//        inversePerformanceTest(SU3Eps,seed,1e5);
-    }
-    MPI_Finalize();
-    exit(0);
 
     // Program timers
     steady_clock::time_point programStart, programEnd;
@@ -127,6 +118,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     // Main program part
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
+    if (processRank == 0) runUnitTests(&SU3Gen);
     Plaquette G;
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
@@ -147,4 +139,16 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     MPI_Finalize();
     return 0;
+}
+
+void runUnitTests(SU3MatrixGenerator *SU3Gen)
+{
+//    runTestSuite();
+    TestSuite unitTester(SU3Gen);
+    unitTester.runFullTestSuite(true);
+//    testInverseMatrix(SU3Eps, seed, 1e3, false);
+//    runMatrixPerformanceTest(SU3Eps,seed,5*1e8,false,true);
+//    inversePerformanceTest(SU3Eps,seed,1e5);
+    MPI_Finalize();
+    exit(0);
 }

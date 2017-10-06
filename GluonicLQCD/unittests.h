@@ -6,7 +6,7 @@
 void SU3BaseTests();
 bool testOrthogonality(SU3 H, bool verbose);
 bool testHermicity(SU3 H, bool verbose);
-bool testNorm(int col, SU3 H);
+bool testNorm(int col, SU3 *H);
 bool SU2UnitTest(complex * r, complex * s, complex * t);
 void testDeterminant(SU3 U);
 void checkDim(int N, int N_T);

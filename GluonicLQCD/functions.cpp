@@ -62,6 +62,11 @@ double traceRealMultiplication(SU3 A, SU3 B)
 //            (A.mat[6]*B.mat[2] + A.mat[7]*B.mat[5] + A.mat[8]*B.mat[8]).re());
 }
 
+SU3 RSTMatrixMultiplication(SU3 R, SU3 S, SU3 T)
+{
+
+}
+
 complex complexMultiply(SU3 A, SU3 B, int i, int j)
 {
     /*
