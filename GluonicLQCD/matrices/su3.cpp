@@ -47,7 +47,7 @@ SU3 &SU3::operator-=(SU3 B)
 SU3 &SU3::operator*=(SU3 B)
 {
     /*
-     * a*b = (a + bi)(c + id) = a*c + iad + ibc - bd;
+     * ab = (a + bi)(c + id) = ac + iad + ibc - bd = ac - bd + i(ad + bc);
      * 0 1 2   11 12 13   00 01 02
      * 3 4 5 = 21 22 23 = 10 11 12
      * 6 7 8   31 32 33   20 21 22
@@ -93,19 +93,19 @@ SU3 SU3::inv()
 {
     SU3 R;
     // Upper triangular
-    R.mat[6] = mat[2];
-    R.mat[12] = mat[4];
-    R.mat[14] = mat[10];
-    R.mat[6] = mat[3];
-    R.mat[12] = mat[5];
-    R.mat[14] = mat[11];
+    R.mat[6]  =  mat[2];
+    R.mat[7]  = -mat[3];
+    R.mat[12] =  mat[4];
+    R.mat[13] = -mat[5];
+    R.mat[14] =  mat[10];
+    R.mat[15] = -mat[11];
     // Upper triangular
-    R.mat[2] = mat[6];
-    R.mat[3] = mat[7];
-    R.mat[4] = mat[12];
-    R.mat[5] = mat[13];
-    R.mat[10] = mat[14];
-    R.mat[11] = mat[15];
+    R.mat[2]  =  mat[6];
+    R.mat[3]  =  mat[7];
+    R.mat[4]  =  mat[12];
+    R.mat[5]  = -mat[13];
+    R.mat[10] =  mat[14];
+    R.mat[11] = -mat[15];
     // Diagonals
     R.mat[0]  =  mat[0];
     R.mat[1]  = -mat[1];
@@ -156,7 +156,7 @@ SU3 SU3::transpose()
 SU3 SU3::conjugate()
 {
     for (int i = 0; i < 9; i++) {
-        mat[2*i+1] = -mat[2*i+1];
+        mat[2*i+1] *= -1;
     }
     return *this;
 }
@@ -205,7 +205,7 @@ void SU3::print()
     {
         for (int j = 0; j < 3; j++)
         {
-            cout <<std::setw(4) << mat[6*i + 2*j];
+            cout <<std::setw(12) << mat[6*i + 2*j];
             if (mat[6*i + 2*j + 1] < 0)
             {
                 cout << " - ";
@@ -214,7 +214,7 @@ void SU3::print()
             {
                 cout << " + ";
             }
-            cout << std::setw(4) << fabs(mat[6*i + 2*j + 1]) << "i,  ";
+            cout << std::setw(12) << fabs(mat[6*i + 2*j + 1]) << "i,  ";
         }
         cout << endl;
     }

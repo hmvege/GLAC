@@ -21,6 +21,10 @@ public:
     void identity();
     void setComplex(complex w, int i);
 
+    SU2 transpose();
+    SU2 conjugate();
+    SU2 inv();
+
     // Getters, mostly using .mat[]
     double get(int i, int j, int k) { return mat[(4*i + 2*j) + k]; } // k is complex number of a position.
     double &operator[](int i) { return mat[i]; }

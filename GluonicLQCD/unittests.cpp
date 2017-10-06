@@ -40,7 +40,8 @@ void SU3BaseTests()
     a *= b;
     cout << "a*b = " << a << endl;
     cout << "conjugate(a) = " << a.conjugate() << endl;
-    cout << "1+1j + 2+2j = " << c + d << endl;
+    c += d;
+    cout << "1+1j + 2+2j = " << c << endl;
 
     SU3 A, B, C, D;
     for (int i = 0; i < 3; i++)
@@ -584,8 +585,8 @@ void runTestSuite() {
     // For testing different basic operations
     cout << "==== RUNNING TESTS ====" << endl;
     SU3BaseTests();
-    testMatrixSU3Properties();
-    testMatrixMultiplication();
+//    testMatrixSU3Properties();
+//    testMatrixMultiplication();
     cout << "==== TESTS COMPLETE ===" << endl;
 //    testMatrixAddition();
 //    testMatrixSubtraction();

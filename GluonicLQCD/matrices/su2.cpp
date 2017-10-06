@@ -46,14 +46,14 @@ SU2 &SU2::operator*=(SU2 B)
 {
     double temp[8];
 
-    temp[0] = mat[0]*B[0] - mat[1]*B[1] + mat[0]*B[2] - mat[1]*B[3];
-    temp[1] = mat[0]*B[1] + mat[1]*B[0] + mat[0]*B[3] + mat[1]*B[2];
-    temp[2] = mat[0]*B[0] - mat[1]*B[1] + mat[0]*B[2] - mat[1]*B[3];
-    temp[3] = mat[0]*B[1] + mat[1]*B[0] + mat[0]*B[3] + mat[1]*B[2];
-    temp[4] = mat[2]*B[0] - mat[3]*B[1] + mat[2]*B[2] - mat[3]*B[3];
-    temp[5] = mat[2]*B[1] + mat[3]*B[0] + mat[2]*B[3] + mat[3]*B[2];
-    temp[6] = mat[2]*B[0] - mat[3]*B[1] + mat[2]*B[2] - mat[3]*B[3];
-    temp[7] = mat[2]*B[1] + mat[3]*B[0] + mat[2]*B[3] + mat[3]*B[2];
+    temp[0] = mat[0]*B[0] - mat[1]*B[1] + mat[2]*B[4] - mat[3]*B[5];
+    temp[1] = mat[0]*B[1] + mat[1]*B[0] + mat[2]*B[5] + mat[3]*B[4];
+    temp[2] = mat[0]*B[2] - mat[1]*B[3] + mat[2]*B[6] - mat[3]*B[7];
+    temp[3] = mat[0]*B[3] + mat[1]*B[2] + mat[2]*B[7] + mat[3]*B[6];
+    temp[4] = mat[4]*B[0] - mat[5]*B[1] + mat[6]*B[4] - mat[7]*B[5];
+    temp[5] = mat[4]*B[1] + mat[5]*B[0] + mat[6]*B[5] + mat[7]*B[4];
+    temp[6] = mat[4]*B[2] - mat[5]*B[3] + mat[6]*B[6] - mat[7]*B[7];
+    temp[7] = mat[4]*B[3] + mat[5]*B[2] + mat[6]*B[7] + mat[7]*B[6];
 
     for (int i = 0; i < 8; i++)
     {
@@ -113,4 +113,49 @@ void SU2::print()
         }
         cout << endl;
     }
+}
+
+SU2 SU2::inv()
+{
+    SU2 R;
+    R[0] = mat[0];
+    R[1] = -mat[1];
+
+    R[2] = mat[4];
+    R[3] = -mat[5];
+
+    R[4] = mat[2];
+    R[5] = -mat[3];
+
+    R[6] = mat[6];
+    R[7] = -mat[7];
+
+    return R;
+}
+
+SU2 SU2::transpose()
+{
+    double temp[8];
+    for (int i = 0; i < 8; i++) { temp[i] = mat[i]; }
+
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            for (int k = 0; k < 2; k++)
+            {
+                mat[i*4+2*j+k] = temp[j*4+2*i+k];
+                mat[j*4+2*i+k] = temp[i*4+2*j+k];
+            }
+        }
+    }
+    return *this;
+}
+
+SU2 SU2::conjugate()
+{
+    for (int i = 0; i < 4; i++) {
+        mat[2*i+1] = -mat[2*i+1];
+    }
+    return *this;
 }

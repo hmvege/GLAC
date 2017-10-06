@@ -98,10 +98,64 @@ def printDeterminant():
 	msg = w1 + ' + \n' + w2 + ' + \n' + w3
 	print msg 
 
+def cMult(varName1, varName2, i,j,sign=False,conjugate=False):
+	# z*w = ac - bd + i(ad + bc)
+	# conjugate: z*w = ac - bd + i(ad + bc)
+	a = 2*i
+	b = 2*i+1
+	c = 2*j
+	d = 2*j+1
+	if not conjugate:
+		if not sign:
+			msg_real = " + {0:<s}[{2:<d}]*{1:<s}[{4:<d}] - {0:<s}[{3:<d}]*{1:<s}[{5:<d}]".format(varName1,varName2,a,b,c,d)
+			msg_imag = " + {0:<s}[{2:<d}]*{1:<s}[{5:<d}] + {0:<s}[{3:<d}]*{1:<s}[{4:<d}]".format(varName1,varName2,a,b,c,d)
+		else:
+			msg_real = " - {0:<s}[{2:<d}]*{1:<s}[{4:<d}] + {0:<s}[{3:<d}]*{1:<s}[{5:<d}]".format(varName1,varName2,a,b,c,d)
+			msg_imag = " - {0:<s}[{2:<d}]*{1:<s}[{5:<d}] - {0:<s}[{3:<d}]*{1:<s}[{4:<d}]".format(varName1,varName2,a,b,c,d)
+	else:
+		if not sign:
+			msg_real = " + {0:<s}[{2:<d}]*{1:<s}[{4:<d}] - {0:<s}[{3:<d}]*{1:<s}[{5:<d}]".format(varName1,varName2,a,b,c,d)
+			msg_imag = " - {0:<s}[{2:<d}]*{1:<s}[{5:<d}] - {0:<s}[{3:<d}]*{1:<s}[{4:<d}]".format(varName1,varName2,a,b,c,d)
+		else:
+			msg_real = " - {0:<s}[{2:<d}]*{1:<s}[{4:<d}] + {0:<s}[{3:<d}]*{1:<s}[{5:<d}]".format(varName1,varName2,a,b,c,d)
+			msg_imag = " + {0:<s}[{2:<d}]*{1:<s}[{5:<d}] + {0:<s}[{3:<d}]*{1:<s}[{4:<d}]".format(varName1,varName2,a,b,c,d)
+	return msg_real,msg_imag
+
+def printCrossProduct():
+	# H[2] = H[3].c()*H[7].c() - H[6].c()*H[4].c();  // Need complex multiplication here
+ 	# H[5] = H[6].c()*H[1].c() - H[0].c()*H[7].c();  // Need complex multiplication here
+ 	# H[8] = H[0].c()*H[4].c() - H[3].c()*H[1].c();  // Need complex multiplication here
+ 	c = False
+ 	print cMult("A","B",0,0,False,c)
+ 	# exit(1)
+
+ 	H3H7 = cMult("H","H",3,7,conjugate=c)
+ 	H6H4 = cMult("H","H",6,4,True,conjugate=c)
+ 	H6H1 = cMult("H","H",6,1,conjugate=c)
+ 	H0H7 = cMult("H","H",0,7,True,conjugate=c)
+ 	H0H4 = cMult("H","H",0,4,conjugate=c)
+ 	H3H1 = cMult("H","H",3,1,True,conjugate=c)
+
+ 	H4 = H3H7[0] + H6H4[0]
+ 	H5 = H3H7[1] + H6H4[1]
+
+ 	H10 = H6H4[0] + H0H7[0]
+ 	H11 = H6H4[1] + H0H7[1]
+
+ 	H16 = H0H4[0] + H3H1[0]
+ 	H17 = H0H4[1] + H3H1[1]
+ 	print "H[4] =" + H4 + ";"
+ 	print "H[5] =" + H5 + ";"
+ 	print "H[10] =" + H10 + ";"
+ 	print "H[11] =" + H11 + ";"
+ 	print "H[16] =" + H16 + ";"
+ 	print "H[17] =" + H17 + ";"
+ 	
+
 
 if __name__ == '__main__':
 	# a*b = ac - bd + i(ad + bc)
-
+	printCrossProduct()
 	# printRegularMatrix()
-	printContigiousComplexMatrixMultiplication(3)
+	# printContigiousComplexMatrixMultiplication(2)
 	# printDeterminant()

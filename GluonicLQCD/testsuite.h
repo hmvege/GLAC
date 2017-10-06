@@ -34,6 +34,9 @@ private:
     inline bool compareSU3(SU3 A, SU3 B);
     inline bool compareSU2(SU2 A, SU2 B);
 
+    // Inline complex dot product function
+    inline complex dot(complex * a, complex * b);
+
     // Basic SU3 matrix operation tests
     bool testSU3Addition(bool verbose);
     bool testSU3Subtraction(bool verbose);
@@ -46,28 +49,30 @@ private:
     bool testSU2Addition(bool verbose);
     bool testSU2Subtraction(bool verbose);
     bool testSU2Multiplication(bool verbose);
-    // Following not really needed.
-//    bool testSU2Conjugation(bool verbose);
-//    bool testSU2Transpose(bool verbose);
-//    bool testSU2ComplexConjugation(bool verbose);
+    bool testSU2Conjugation(bool verbose);
+    bool testSU2Transpose(bool verbose);
+    bool testSU2ComplexConjugation(bool verbose);
 
     // SU2 matrix tests
     bool testSU2Hermicity(bool verbose);
     bool testSU2Orthogonality(bool verbose);
     bool testSU2Norm(bool verbose);
-    bool testSU2Inverse(bool verbose);
     bool testSU2Determinant(bool verbose);
-    bool testSU2MatrixInverse(bool verbose);
 
-    // SU3 matrix tests
+    // SU3 matrix tests and their sub-functions
     bool testSU3Hermicity(bool verbose);
+    bool checkSU3Hermicity(bool verbose, SU3 H);
     bool testSU3Orthogonality(bool verbose);
     bool testSU3Norm(bool verbose);
-    bool testSU3Inverse(bool verbose);
     bool testSU3Determinant(bool verbose);
-    bool testSU3MatrixInverse(bool verbose);
 
+
+    // Other tests
     bool testGaugeInvariance(bool verbose);
+    bool testSU3TraceMultiplication(bool verbose);
+    bool testRSTMultiplication(bool verbose);
+
+    // Add complex class tests?
 public:
     TestSuite();
 

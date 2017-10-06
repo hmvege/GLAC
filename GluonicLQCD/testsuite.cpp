@@ -99,37 +99,47 @@ TestSuite::TestSuite()
     UCT.setComplex(complex(1,-3),12);
     UCT.setComplex(complex(2,-3),14);
     UCT.setComplex(complex(3,-3),16);
-    //// 2x2 COMPLEX MATRICE
-    /// // Adding
+    /// 2x2 COMPLEX MATRICE
+    // s1
+    s1.setComplex(complex(1,1),0);
+    s1.setComplex(complex(1,2),2);
+    s1.setComplex(complex(2,1),4);
+    s1.setComplex(complex(2,2),6);
+    // s2
+    s2.setComplex(complex(4,4),0);
+    s2.setComplex(complex(4,5),2);
+    s2.setComplex(complex(5,4),4);
+    s2.setComplex(complex(5,5),6);
+    // Adding
     sAdd.setComplex(complex(5,5),0);
     sAdd.setComplex(complex(5,7),2);
-    sAdd.setComplex(complex(7,5),6);
-    sAdd.setComplex(complex(7,7),8);
+    sAdd.setComplex(complex(7,5),4);
+    sAdd.setComplex(complex(7,7),6);
     // Subtracting
     sSub.setComplex(complex(-3,-3),0);
     sSub.setComplex(complex(-3,-3),2);
+    sSub.setComplex(complex(-3,-3),4);
     sSub.setComplex(complex(-3,-3),6);
-    sSub.setComplex(complex(-3,-3),8);
     // Multiplying
     sMul.setComplex(complex(-3,22),0);
     sMul.setComplex(complex(-6,24),2);
-    sMul.setComplex(complex(6,30),6);
-    sMul.setComplex(complex(3,34),8);
+    sMul.setComplex(complex(6,30),4);
+    sMul.setComplex(complex(3,34),6);
     // Conjugate of s1
     sC.setComplex(complex(1,-1),0);
     sC.setComplex(complex(1,-2),2);
-    sC.setComplex(complex(2,-1),6);
-    sC.setComplex(complex(2,-2),8);
+    sC.setComplex(complex(2,-1),4);
+    sC.setComplex(complex(2,-2),6);
     // Transpose of s1
     sT.setComplex(complex(1,1),0);
     sT.setComplex(complex(2,1),2);
-    sT.setComplex(complex(1,2),6);
-    sT.setComplex(complex(2,2),8);
+    sT.setComplex(complex(1,2),4);
+    sT.setComplex(complex(2,2),6);
     // Complex conjugate of s1
     sCT.setComplex(complex(1,-1),0);
     sCT.setComplex(complex(2,-1),2);
-    sCT.setComplex(complex(1,-2),6);
-    sCT.setComplex(complex(2,-2),8);
+    sCT.setComplex(complex(1,-2),4);
+    sCT.setComplex(complex(2,-2),6);
 }
 
 void TestSuite::runFullTestSuite(bool verbose)
@@ -143,7 +153,7 @@ void TestSuite::runFullTestSuite(bool verbose)
         U2.print();
     }
 
-    if (run3x3MatrixTests(verbose) && run2x2MatrixTests(verbose) && runSU2Tests(verbose) && runSU3Tests(verbose)) {
+    if (run3x3MatrixTests(verbose) & run2x2MatrixTests(verbose) & runSU2Tests(verbose) & runSU3Tests(verbose)) {
         cout << "SUCCESS: All tests passed." << endl;
     } else {
         cout << "FAILURE: One or more test(s) failed." << endl;
@@ -152,28 +162,48 @@ void TestSuite::runFullTestSuite(bool verbose)
 
 bool TestSuite::runSU2Tests(bool verbose)
 {
-    bool passed = true;
+    cout << "Running SU2 property tests." << endl;
+    bool passed = (testSU2Hermicity(verbose) && testSU2Orthogonality(verbose) && testSU2Norm(verbose)
+                   && testSU2Determinant(verbose));
+    if (passed) {
+        cout << "PASSED: SU2 properties." << endl;
+    } else {
+        cout << "FAILED: SU2 properties." << endl;
+    }
 
     return passed;
 }
 
 bool TestSuite::runSU3Tests(bool verbose)
 {
-    bool passed = true;
+    cout << "Running SU3 property tests." << endl;
+    bool passed = (testSU3Hermicity(verbose) && testSU3Orthogonality(verbose) && testSU3Norm(verbose)
+                   && testSU3TraceMultiplication(verbose) && testSU3Determinant(verbose));
+    if (passed) {
+        cout << "PASSED: SU3 properties." << endl;
+    } else {
+        cout << "FAILED: SU3 properties." << endl;
+    }
 
     return passed;
 }
 
 bool TestSuite::run2x2MatrixTests(bool verbose)
 {
-    bool passed = true;
-
-
+    cout << "Running basic SU2 matrix tests." << endl;
+    bool passed = (testSU2Addition(verbose) && testSU2Subtraction(verbose) && testSU2Multiplication(verbose)
+                   && testSU2Conjugation(verbose) && testSU2Transpose(verbose));
+    if (passed) {
+        cout << "PASSED: Basic SU2 matrix operations." << endl;
+    } else {
+        cout << "FAILED: Basic SU2 matrix operations." << endl;
+    }
     return passed;
 }
 
 bool TestSuite::run3x3MatrixTests(bool verbose)
 {
+    cout << "Running basic SU3 matrix tests." << endl;
     bool passed = (testSU3Addition(verbose) && testSU3Subtraction(verbose) && testSU3Multiplication(verbose)
                    && testSU3Conjugation(verbose) && testSU3Transpose(verbose));
     if (passed) {
@@ -209,6 +239,19 @@ inline bool TestSuite::compareSU3(SU3 A, SU3 B)
         }
     }
     return true;
+}
+
+// Inline dot product between two columns
+inline complex dot(complex * a, complex * b) {
+    /*
+     * Dot product defined as:
+     *  (v,u*) = v*conjugate(u)
+     */
+    complex returnSum(0,0);
+    for (int i = 0; i < 3; i++) {
+        returnSum += a[i]*b[i].c();
+    }
+    return returnSum;
 }
 
 // Matrix operation tester ================================
@@ -272,24 +315,24 @@ bool TestSuite::testSU2Multiplication(bool verbose)
     return operationSU2Test(verbose,s1*s2,sMul,"multiplication");
 }
 
-//bool TestSuite::testSU2Transpose(bool verbose)
-//{
-//    s3.copy(s1);
-//    return operationSU2Test(verbose,s3.transpose(),sT,"transpose");
-//}
+bool TestSuite::testSU2Transpose(bool verbose)
+{
+    s3.copy(s1);
+    return operationSU2Test(verbose,s3.transpose(),sT,"transpose");
+}
 
-//bool TestSuite::testSU2Conjugation(bool verbose)
-//{
-//    s3.copy(s1);
-//    return operationSU2Test(verbose,s3.conjugate(),sT,"conjugate");
-//}
+bool TestSuite::testSU2Conjugation(bool verbose)
+{
+    s3.copy(s1);
+    return operationSU2Test(verbose,s3.conjugate(),sC,"conjugate");
+}
 
-//bool TestSuite::testSU2ComplexConjugation(bool verbose)
-//{
-//    s3.copy(s1);
-//    s3.conjugate();
-//    return operationSU2Test(verbose,s3.transpose(),sCT,"conjugate transpose");
-//}
+bool TestSuite::testSU2ComplexConjugation(bool verbose)
+{
+    s3.copy(s1);
+    s3.conjugate();
+    return operationSU2Test(verbose,s3.transpose(),sCT,"conjugate transpose");
+}
 
 // 3x3 MATRIX TESTS =======================================
 bool TestSuite::testSU3Addition(bool verbose)
@@ -316,7 +359,7 @@ bool TestSuite::testSU3Transpose(bool verbose)
 bool TestSuite::testSU3Conjugation(bool verbose)
 {
     U3.copy(U1);
-    return operationSU3Test(verbose,U3.conjugate(),UT,"conjugate");
+    return operationSU3Test(verbose,U3.conjugate(),UC,"conjugate");
 }
 
 bool TestSuite::testSU3ComplexConjugation(bool verbose)
@@ -327,19 +370,108 @@ bool TestSuite::testSU3ComplexConjugation(bool verbose)
 }
 
 // SU2 PROPERTIES TESTS ===================================
-bool TestSuite::testSU2Hermicity(bool verbose);
-bool TestSuite::testSU2Orthogonality(bool verbose);
-bool TestSuite::testSU2Norm(bool verbose);
-bool TestSuite::testSU2Inverse(bool verbose);
-bool TestSuite::testSU2Determinant(bool verbose);
-bool TestSuite::testSU2MatrixInverse(bool verbose);
+// Create sub-functions that can take a SU3/SU2 matrix as an parameter and test that manually.
+bool TestSuite::testSU2Hermicity(bool verbose)
+{
 
+}
+
+bool TestSuite::testSU2Orthogonality(bool verbose)
+{
+
+}
+
+bool TestSuite::testSU2Norm(bool verbose)
+{
+
+}
+
+bool TestSuite::testSU2Determinant(bool verbose)
+{
+
+}
 
 // SU3 PROPERTIES TESTS ===================================
-bool TestSuite::testSU3Hermicity(bool verbose);
-bool TestSuite::testSU3Orthogonality(bool verbose);
-bool TestSuite::testSU3Norm(bool verbose);
-bool TestSuite::testSU3Inverse(bool verbose);
-bool TestSuite::testSU3Determinant(bool verbose);
-bool TestSuite::testSU3MatrixInverse(bool verbose);
+bool TestSuite::testSU3Hermicity(bool verbose)
+{
+    bool passed = true;
+    if (!checkSU3Hermicity(verbose, m_SU3Generator->generateRandom())) {
+        cout << "FAILED: SU3 random generator matrix is not hermitian." << endl;
+        passed = false;
+    }
+    if (!checkSU3Hermicity(verbose, m_SU3Generator->generateRST())) {
+        cout << "FAILED: SU3 RST generator matrix is not hermitian." << endl;
+        passed = false;
+    }
+    if (passed) {
+        cout << "SUCCESS: SU3 random matrices are hermitian." << endl;
+    }
+    return passed;
+}
+
+bool TestSuite::checkSU3Hermicity(bool verbose, SU3 H)
+{
+    bool passed;
+    double eps = 1e-14;
+    SU3 I;
+    I = H*H.inv();
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; i < j; j++) {
+            if ((fabs(I[6*i + 2*j]) > eps) || (fabs(I[6*i + 2*j + 1]) > eps) || // Upper triangular
+                (fabs(I[6*j + 2*i]) > eps) || (fabs(I[6*j + 2*i + 1]) > eps)) { // Lower triangular
+                passed = false;
+            }
+        }
+    }
+    for (int i = 0; i < 3; i++) {
+        if ((fabs(I[6*i + 2*i] - 1) > eps) || (fabs(I[6*i + 2*i + 1]) > eps)) {
+            passed = false;
+        }
+    }
+    if (passed) {
+        return true;
+    }
+    else {
+        if (verbose) {
+            cout << "H = " << endl;
+            H.print();
+            cout << "H^-1 = " << endl;
+            H.inv().print();
+            cout << "H^-1*H = " << endl;
+            I.print();
+        }
+        return false;
+    }
+}
+
+bool TestSuite::testSU3Orthogonality(bool verbose)
+{
+
+}
+
+bool TestSuite::testSU3Norm(bool verbose)
+{
+//    double sumVal = 0; // TESTS IF WE HAVE THE NORM = 1
+//    for (int i = 0; i < 3; i++) {
+//        sumVal += H.normSquared(6*i);
+//    }
+//    cout << sqrt(sumVal) << endl;
+//    exit(1);
+}
+
+bool TestSuite::testSU3Determinant(bool verbose)
+{
+
+}
+
+// Other tests
+bool TestSuite::testSU3TraceMultiplication(bool verbose)
+{
+
+}
+
+bool TestSuite::testRSTMultiplication(bool verbose)
+{
+
+}
 
