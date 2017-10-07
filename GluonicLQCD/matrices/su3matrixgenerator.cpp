@@ -27,6 +27,8 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     SU2_uniform_distribution = uni_dist_SU2;
     // Setting up Pauli matrices
 //    sigma = new SU2[3]; // WOULD THIS BE FASTER IF I USED MEMORY ON STACK?
+    H.zeros();
+    X.zeros();
 
     sigma[0].mat[2] = 1;
     sigma[0].mat[4] = 1;
@@ -180,6 +182,10 @@ SU3 SU3MatrixGenerator::generateRST()
      * 0 1 2
      * 3 4 5
      * 6 7 8
+     * H =
+     * 0 1 2    0  1   2  3    4  5
+     * 3 4 5 =  6  7   8  9   10 11
+     * 6 7 8   12 13  14 15   16 17
      */
     // Generates SU2 matrices
     r = generateSU2();
@@ -268,7 +274,7 @@ SU3 SU3MatrixGenerator::RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t)
      * 6 7 8   12 13  14 15   16 17
      */
 //    H.mat[]
-    X.zeros();
+//    X.zeros();
     X[0] = r[0]*s[0] - r[1]*s[1];
     X[1] = r[1]*s[0] + r[0]*s[1];
     X[2] = r[0]*s[2]*t[4] - r[3]*t[1] + r[2]*t[0] - r[1]*s[3]*t[4] - r[1]*s[2]*t[5] - r[0]*s[3]*t[5];

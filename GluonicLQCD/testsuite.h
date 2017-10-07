@@ -16,10 +16,11 @@
 class TestSuite
 {
 private:
-    SU3 U1, U2, U3, UAdd, USub, UMul, UC, UT, UCT;
-    SU2 s1, s2, s3, sAdd, sSub, sMul, sC, sT, sCT;
+    SU3 U1, U2, U3, UAdd, USub, UMul, UC, UT, UCT, UTrace, U_RST;
+    SU2 s1, s2, s3, sAdd, sSub, sMul, sC, sT, sCT, s_r, s_s, s_t;
 
     double m_eps = 1e-15;
+    double m_tracedMatrix;
 
     // SU3 generator
     SU3MatrixGenerator *m_SU3Generator = nullptr;
@@ -38,6 +39,7 @@ private:
 
     // Inline complex dot product function
     inline complex dot(complex * a, complex * b);
+    inline complex dot2(complex * a, complex * b);
 
     // Basic SU3 matrix operation tests
     bool testSU3Addition(bool verbose);
@@ -57,9 +59,13 @@ private:
 
     // SU2 matrix tests
     bool testSU2Hermicity(bool verbose);
+    bool checkSU2Hermicity(bool verbose, SU2 H);
     bool testSU2Orthogonality(bool verbose);
+    bool checkSU2Orthogonality(bool verbose, SU2 H);
     bool testSU2Norm(bool verbose);
+    bool checkSU2Norm(bool verbose, SU2 H);
     bool testSU2Determinant(bool verbose);
+    bool checkSU2Determinant(bool verbose, SU2 H);
 
     // SU3 matrix tests and their sub-functions
     bool testSU3Hermicity(bool verbose);
@@ -72,11 +78,13 @@ private:
     bool checkSU3Determinant(bool verbose, SU3 H);
 
     // Other tests
-    bool testGaugeInvariance(bool verbose);
+//    bool testGaugeInvariance(bool verbose);
     bool testSU3TraceMultiplication(bool verbose);
     bool testRSTMultiplication(bool verbose);
 
     // Add complex class tests?
+
+    // Add performance tests?
 public:
     TestSuite(SU3MatrixGenerator *SU3Gen);
 

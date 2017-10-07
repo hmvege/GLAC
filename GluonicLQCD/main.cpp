@@ -28,7 +28,7 @@ using std::chrono::duration;
  * [ ] (optional) Add better test suites, one that prints FAIL if test fails!!
  */
 
-void runUnitTests(SU3MatrixGenerator *SU3Gen);
+void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose);
 
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
@@ -110,7 +110,6 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     }
 
-
     // Program timers
     steady_clock::time_point programStart, programEnd;
     duration<double> programTime;
@@ -118,7 +117,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     // Main program part
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
-//    if (processRank == 0) runUnitTests(&SU3Gen);
+//    if (processRank == 0) runUnitTests(&SU3Gen, false);
     Plaquette G;
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
@@ -141,11 +140,11 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     return 0;
 }
 
-void runUnitTests(SU3MatrixGenerator *SU3Gen)
+void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose)
 {
 //    runTestSuite();
     TestSuite unitTester(SU3Gen);
-    unitTester.runFullTestSuite(true);
+    unitTester.runFullTestSuite(verbose);
 //    testInverseMatrix(SU3Eps, seed, 1e3, false);
 //    runMatrixPerformanceTest(SU3Eps,seed,5*1e8,false,true);
 //    inversePerformanceTest(SU3Eps,seed,1e5);

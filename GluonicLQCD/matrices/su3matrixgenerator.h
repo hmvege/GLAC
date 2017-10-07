@@ -45,6 +45,9 @@ public:
 
     // Getters
     double getEpsilon() { return m_epsilon; }
+
+    // Testers
+    SU3 testRSTMultiplication(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplication(r,s,t); }
 };
 
 #endif // SU3MATRIXGENERATOR_H

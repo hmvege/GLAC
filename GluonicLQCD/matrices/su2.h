@@ -20,6 +20,7 @@ public:
     void zeros();
     void identity();
     void setComplex(complex w, int i);
+    double normSquared(int i);
 
     SU2 transpose();
     SU2 conjugate();

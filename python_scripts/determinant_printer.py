@@ -3,8 +3,11 @@ import numpy as np
 from sympy.matrices.expressions import Determinant
 import re
 
-H0, H1, H2, H3, H4, H5, H6, H7, H8, H9, H10, H11, H12, H13, H14, H15, H16, H17 = sp.symbols("""H0 H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15 H16 H17""")
-H1, H3, H5, H7, H9, H11, H13, H15, H17 = [i*sp.I for i in [H1, H3, H5, H7, H9, H11, H13, H15, H17]]
+# H0, H1, H2, H3, H4, H5, H6, H7, H8, H9, H10, H11, H12, H13, H14, H15, H16, H17 = sp.symbols("""H0 H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 H15 H16 H17""")
+# H1, H3, H5, H7, H9, H11, H13, H15, H17 = [i*sp.I for i in [H1, H3, H5, H7, H9, H11, H13, H15, H17]]
+
+H0, H1, H2, H3, H4, H5, H6, H7 = sp.symbols("H0, H1, H2, H3, H4, H5, H6, H7")
+H1, H3, H5, H7 = [i*sp.I for i in [H1, H3, H5, H7]]
 
 def print_matrix_line(N=3,print_complex=False):
 	msg = ""
@@ -14,7 +17,7 @@ def print_matrix_line(N=3,print_complex=False):
 				msg += ("H%d, " % (2*N*i + 2*j + 1))
 			else:
 				for k in range(2):
-					msg += ("H%d " % (2*N*i + 2*j + k))
+					msg += ("H%d, " % (2*N*i + 2*j + k))
 	print msg
 
 def print_matrix(N=3):
@@ -38,14 +41,14 @@ def convertToCpp(string):
 	string = string.split(" ")
 	string = [s.split("*") for s in string]
 	for elems in string:
-		print elems
 		for atom in elems:
 			for key in replaceDikt.keys():
 				if key in atom:
 					# print key, atom
 					atom = atom.replace(key,replaceDikt[key])
 			return_values.append(atom)
-	return " ".join([" * ".join(s) for s in string])
+
+	# return " ".join([" * ".join(s) for s in string])
 	return " ".join(return_values)
 
 # Small function for writing out dictionaries in text that can be copied into python as code.
@@ -56,10 +59,11 @@ def convertToCpp(string):
 # s += "}"
 # print s
 
-# print_matrix_line()
-# print_matrix(3)
+# print_matrix_line(2)
+# print_matrix(2)
 
-H = sp.Matrix([[H0+H1,H2+H3,H4+H5],[H6+H7,H8+H9,H10+H11],[H12+H13,H14+H15,H16+H17]])
+# H = sp.Matrix([[H0+H1,H2+H3,H4+H5],[H6+H7,H8+H9,H10+H11],[H12+H13,H14+H15,H16+H17]])
+H = sp.Matrix([[H0+H1,H2+H3],[H4+H5,H6+H7]])
 HDet = H.det()
 
 
@@ -74,8 +78,11 @@ for H_element in H_unsorted:
 	else:
 		H_real.append(" ".join(H_element))
 
+print "det(%s,\n%s);" % (" ".join(H_real)," ".join(H_imag))
 H_str_real = convertToCpp(" ".join(H_real))
 H_str_imag = convertToCpp(" ".join(H_imag))
 
 print "det(%s,\n%s);" % (H_str_real,H_str_imag)
+
+
 

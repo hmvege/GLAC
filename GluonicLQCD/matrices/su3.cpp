@@ -10,9 +10,9 @@ using std::endl;
 SU3::SU3()
 {
     // Remove this! Make user manually fill by zeros! Can save quite some time (y)
-    for (int i = 0; i < 18; i++) {
-        mat[i] = 0;
-    }
+//    for (int i = 0; i < 18; i++) {
+//        mat[i] = 0;
+//    }
 }
 
 SU3::~SU3()
@@ -74,7 +74,7 @@ SU3 &SU3::operator*=(SU3 B)
     temp[16] = mat[12]*B[4] - mat[13]*B[5] + mat[14]*B[10] - mat[15]*B[11] + mat[16]*B[16] - mat[17]*B[17];
     temp[17] = mat[12]*B[5] + mat[13]*B[4] + mat[14]*B[11] + mat[15]*B[10] + mat[16]*B[17] + mat[17]*B[16];
 
-    for (int i = 0; i < 18; i++)
+    for (int i = 0; i < 18; i++) // OPTIMIZATION: can write the last element directly to the mat[18] instead of through temp
     {
         mat[i] = temp[i];
     }

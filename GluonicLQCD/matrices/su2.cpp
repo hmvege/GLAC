@@ -94,6 +94,14 @@ void SU2::setComplex(complex w, int i)
     mat[i+1] = w.z[1];
 }
 
+double SU2::normSquared(int i)
+{
+    /*
+     * Returns the norm squared of the complex number.
+     */
+    return mat[i]*mat[i] + mat[i+1]*mat[i+1];
+}
+
 void SU2::print()
 {
     /*

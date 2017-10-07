@@ -99,6 +99,72 @@ TestSuite::TestSuite(SU3MatrixGenerator *SU3Gen)
     UCT.setComplex(complex(1,-3),12);
     UCT.setComplex(complex(2,-3),14);
     UCT.setComplex(complex(3,-3),16);
+    // RST Matrix multiplier
+    U_RST.setComplex(complex(-8,9),0);
+    U_RST.setComplex(complex(-123,82),2);
+    U_RST.setComplex(complex(-78,83),4);
+    U_RST.setComplex(complex(-20,37),6);
+    U_RST.setComplex(complex(-391,342),8);
+    U_RST.setComplex(complex(-234,319),10);
+    U_RST.setComplex(complex(2,6),12);
+    U_RST.setComplex(complex(48,58),14);
+    U_RST.setComplex(complex(44,35),16);
+    // r SU2 matrix in RST multiplier test
+    s_r.setComplex(complex(1,2),0);
+    s_r.setComplex(complex(3,4),2);
+    s_r.setComplex(complex(5,6),4);
+    s_r.setComplex(complex(7,8),6);
+    // s SU2 matrix in RST multiplier test
+    s_s.setComplex(complex(2,5),0);
+    s_s.setComplex(complex(4,8),2);
+    s_s.setComplex(complex(2,6),4);
+    s_s.setComplex(complex(10,3),6);
+    // t SU2 matrix in RST multiplier test
+    s_t.setComplex(complex(7,2),0);
+    s_t.setComplex(complex(6,1),2);
+    s_t.setComplex(complex(6,4),4);
+    s_t.setComplex(complex(5,2),6);
+//    // R matrix in RST multiplier test
+//    U_R.setComplex(complex(1,2),0);
+//    U_R.setComplex(complex(3,4),2);
+//    U_R.setComplex(complex(0,0),4);
+//    U_R.setComplex(complex(5,6),6);
+//    U_R.setComplex(complex(7,8),8);
+//    U_R.setComplex(complex(0,0),10);
+//    U_R.setComplex(complex(0,0),12);
+//    U_R.setComplex(complex(0,0),14);
+//    U_R.setComplex(complex(1,0),16);
+//    // S matrix in RST multiplier test
+//    U_S.setComplex(complex(2,5),0);
+//    U_S.setComplex(complex(0,0),2);
+//    U_S.setComplex(complex(4,8),4);
+//    U_S.setComplex(complex(0,0),6);
+//    U_S.setComplex(complex(1,0),8);
+//    U_S.setComplex(complex(0,0),10);
+//    U_S.setComplex(complex(2,6),12);
+//    U_S.setComplex(complex(0,0),14);
+//    U_S.setComplex(complex(10,3),16);
+//    // T matrix in RST multiplier test
+//    U_T.setComplex(complex(1,0),0);
+//    U_T.setComplex(complex(0,0),2);
+//    U_T.setComplex(complex(0,0),4);
+//    U_T.setComplex(complex(0,0),6);
+//    U_T.setComplex(complex(7,2),8);
+//    U_T.setComplex(complex(6,1),10);
+//    U_T.setComplex(complex(0,0),12);
+//    U_T.setComplex(complex(6,4),14);
+//    U_T.setComplex(complex(5,2),16);
+    // Traced matrix multiplication
+    m_tracedMatrix = -21.0; // re(tr(U1*U3))
+    UTrace.setComplex(complex(4,4),0);
+    UTrace.setComplex(complex(5,5),2);
+    UTrace.setComplex(complex(2,6),4);
+    UTrace.setComplex(complex(6,4),6);
+    UTrace.setComplex(complex(5,5),8);
+    UTrace.setComplex(complex(1,6),10);
+    UTrace.setComplex(complex(6,4),12);
+    UTrace.setComplex(complex(9,5),14);
+    UTrace.setComplex(complex(2,6),16);
     /// 2x2 COMPLEX MATRICE
     // s1
     s1.setComplex(complex(1,1),0);
@@ -152,7 +218,7 @@ void TestSuite::runFullTestSuite(bool verbose)
         cout << "U2 =" << endl;
         U2.print();
     }
-    if (run3x3MatrixTests(verbose) & run2x2MatrixTests(verbose) & runSU2Tests(verbose) & runSU3Tests(verbose)) {
+    if (run3x3MatrixTests(verbose) & run2x2MatrixTests(verbose) & runSU2Tests(verbose) & runSU3Tests(verbose) & runFunctionsTest(verbose)) {
         cout << "SUCCESS: All tests passed." << endl;
     } else {
         cout << "FAILURE: One or more test(s) failed." << endl;
@@ -220,11 +286,13 @@ bool TestSuite::runFunctionsTest(bool verbose)
     if (testSU3TraceMultiplication(verbose)) {
         cout << "PASSED: matrix trace multiplication test passed." << endl;
     } else {
+        cout << "FAILED: matrix trace multiplication test failed." << endl;
         passed = false;
     }
     if (testRSTMultiplication(verbose)) {
         cout << "PASSED: matrix RST multiplication test passed." << endl;
     } else {
+        cout << "FAILED: matrix RST multiplication test failed." << endl;
         passed = false;
     }
     return passed;
@@ -257,7 +325,7 @@ inline bool TestSuite::compareSU3(SU3 A, SU3 B)
     return true;
 }
 
-// Inline dot product between two columns
+// Inline dot product between two columns of a 3x3 matrix
 inline complex TestSuite::dot(complex * a, complex * b) {
     /*
      * Dot product defined as:
@@ -265,6 +333,19 @@ inline complex TestSuite::dot(complex * a, complex * b) {
      */
     complex returnSum(0,0);
     for (int i = 0; i < 3; i++) {
+        returnSum += a[i].c()*b[i];
+    }
+    return returnSum;
+}
+
+// Inline dot product between two columns of a 2x2 matrix
+inline complex TestSuite::dot2(complex * a, complex * b) {
+    /*
+     * Dot product defined as:
+     *  (v,u*) = v*conjugate(u)
+     */
+    complex returnSum(0,0);
+    for (int i = 0; i < 2; i++) {
         returnSum += a[i].c()*b[i];
     }
     return returnSum;
@@ -389,22 +470,148 @@ bool TestSuite::testSU3ComplexConjugation(bool verbose)
 // Create sub-functions that can take a SU3/SU2 matrix as an parameter and test that manually.
 bool TestSuite::testSU2Hermicity(bool verbose)
 {
+    bool passed = true;
+    if (!checkSU2Hermicity(verbose, m_SU3Generator->generateSU2())) {
+        cout << "FAILED: randomly generated SU2 matrix is not hermitian." << endl;
+        passed = false;
+    }
+    if (passed && verbose) {
+        cout << "SUCCESS: randomly generated SU2 matrix is hermitian." << endl;
+    }
+    return passed;
+}
 
+bool TestSuite::checkSU2Hermicity(bool verbose, SU2 H)
+{
+    /*
+     * Checks the hermicity of the SU3 matrices.
+     * H = 0 1  2 3
+     *     4 5  6 7
+     */
+    bool passed = true;
+    SU2 I;
+    I = H*H.inv();
+    for (int i = 0; i < 8; i++) {
+        if (i==0 || i==6) continue;
+        if (fabs(I[i]) > m_eps) passed = false;
+    }
+    if ((fabs(I[0] - 1) > m_eps) || (fabs(I[6] - 1) > m_eps)) passed = false;
+
+    if (passed) {
+        return true;
+    }
+    else {
+        if (verbose) {
+            cout << "H = " << endl;
+            H.print();
+            cout << "H^-1 = " << endl;
+            H.inv().print();
+            cout << "H^-1*H = " << endl;
+            I.print();
+        }
+        return false;
+    }
 }
 
 bool TestSuite::testSU2Orthogonality(bool verbose)
 {
+    /*
+     * Checks if SU2 matrices generated randomly by RST or Random is orthogonal.
+     */
+    bool passed = true;
+    if (!checkSU2Orthogonality(verbose, m_SU3Generator->generateSU2())) {
+        cout << "FAILED: SU2 randomly generated matrix is not orthogonal." << endl;
+        passed = false;
+    }
+    if (passed && verbose) {
+        cout << "SUCCESS: randomly generated SU2 matrix is orthogonal." << endl;
+    }
+    return passed;
+}
 
+bool TestSuite::checkSU2Orthogonality(bool verbose, SU2 H)
+{
+    /*
+     * Testing the orthogonatility of a SU3 matrix H.
+     */
+    bool passed = true;
+    complex col1[2];
+    complex col2[2];
+    for (int i = 0; i < 2; i++) {
+        col1[i].setRe(H[4*i]);
+        col1[i].setIm(H[4*i+1]);
+        col2[i].setRe(H[4*i+2]);
+        col2[i].setIm(H[4*i+3]);
+    }
+    complex c12dot = dot2(col1,col2);
+    if ((fabs(c12dot.re()) > m_eps) || (fabs(c12dot.im()) > m_eps)) passed = false;
+    if (verbose && !passed) {
+        cout << "Column 1 and 2: " << std::setprecision(10) << c12dot << endl;
+    }
+    return passed;
 }
 
 bool TestSuite::testSU2Norm(bool verbose)
 {
+    /*
+     * Overarching function for testing if the columns of the SU3 matrices
+     * generated by the RST and Random method are at unity.
+     */
+    bool passed = true;
+    if (!checkSU2Norm(verbose, m_SU3Generator->generateSU2())) {
+        cout << "FAILED: columns of a randomly generated SU2 matrix is not at length 1." << endl;
+        passed = false;
+    }
+    if (passed && verbose) {
+        cout << "SUCCESS: randomly generated SU2 matrices have columns of length 1." << endl;
+    }
+    return passed;
+}
 
+bool TestSuite::checkSU2Norm(bool verbose, SU2 H)
+{
+    /*
+     * Function that checks the SU3 norm of a matrix H.
+     */
+    bool passed = true;
+    double sum;
+    for (int col = 0; col < 2; col++) {
+        sum = 0;
+        for (int i = 0; i < 2; i++) {
+            sum += H.normSquared(4*i + 2*col);
+        }
+        sum = sqrt(sum);
+        if (fabs(sqrt(sum) - 1) > m_eps) {
+            if (verbose) cout << "FAILED: norm is not zero: " << sum << endl;
+            return false;
+        }
+    }
+    return passed;
 }
 
 bool TestSuite::testSU2Determinant(bool verbose)
 {
+    bool passed = true;
+    if (!checkSU2Determinant(verbose, m_SU3Generator->generateSU2())) {
+        cout << "FAILED: determinant of randomly generated SU2 matrix is not 1." << endl;
+        passed = false;
+    }
+    if (passed && verbose) {
+        cout << "SUCCESS: random SU2 matrix determinants is 1." << endl;
+    }
+    return passed;
+}
 
+bool TestSuite::checkSU2Determinant(bool verbose, SU2 H)
+{
+    bool passed = true;
+    complex det = SU2Determinant(H);
+//    if (verbose) cout << "Determinant: " << det << endl;
+    if (!((fabs(det.re()) - 1) < m_eps) && !(det.im() < m_eps)) {
+        passed = false;
+        if (verbose)cout << "FAILED: the determinant of the SU2 matrix differs from 1: " << det << endl;
+    }
+    return passed;
 }
 
 // SU3 PROPERTIES TESTS ===================================
@@ -458,7 +665,7 @@ bool TestSuite::checkSU3Hermicity(bool verbose, SU3 H)
 bool TestSuite::testSU3Orthogonality(bool verbose)
 {
     /*
-     * Checks if matrices generated randomly by RST or Random is orthogonal.
+     * Checks if SU3 matrices generated randomly by RST or Random is orthogonal.
      */
     bool passed = true;
     if (!checkSU3Orthogonality(verbose, m_SU3Generator->generateRandom())) {
@@ -540,7 +747,7 @@ bool TestSuite::checkSU3Norm(bool verbose, SU3 H)
             sum += H.normSquared(6*i + 2*col);
         }
         sum = sqrt(sum);
-        if (fabs(sqrt(sum) - 1) > 1e-15) {
+        if (fabs(sqrt(sum) - 1) > m_eps) {
             if (verbose) cout << "FAILED: norm is not zero: " << sum << endl;
             return false;
         }
@@ -580,11 +787,30 @@ bool TestSuite::checkSU3Determinant(bool verbose, SU3 H)
 // Other tests
 bool TestSuite::testSU3TraceMultiplication(bool verbose)
 {
+    bool passed = true;
+    double results = traceRealMultiplication(U1,UTrace);
+    if (results == m_tracedMatrix) {
+        if (verbose) cout << "SUCCESS: traced real results of matrix multiplication are correct." << endl;
 
+    } else {
+        if (verbose) cout << results << endl;
+        cout << "FAILED: traced real results of matrix multiplication are wrong." << endl;
+        passed = false;
+    }
+    return passed;
 }
 
 bool TestSuite::testRSTMultiplication(bool verbose)
 {
+    bool passed = true;
+    SU3 results = m_SU3Generator->testRSTMultiplication(s_r,s_s,s_t);
+    if (compareSU3(results,U_RST)) {
+        if (verbose) cout << "SUCCESS: RST multiplication test passed." << endl;
 
+    } else {
+        if (verbose) results.print();
+        cout << "FAILED: RST multiplication test did not pass." << endl;
+        passed = false;
+    }
+    return passed;
 }
-
