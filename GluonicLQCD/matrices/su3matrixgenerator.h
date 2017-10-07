@@ -14,12 +14,13 @@ private:
     std::mt19937_64 generator;
     std::uniform_real_distribution<double> uniform_distribution;
     std::uniform_real_distribution<double> SU2_uniform_distribution;
-    SU3 RSTMatrixMultiplication(SU3 R, SU3 S, SU3 T);
+    SU3 RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t);
 
     // Used for creating a random matrix
     SU3 H;
     // Used for creating a random matrix close to unity
-    SU3 R, S, T;
+//    SU3 R, S, T;
+    SU3 X;
     SU2 r,s,t;
 
     // Used for generating SU2 matrices

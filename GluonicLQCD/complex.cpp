@@ -69,8 +69,7 @@ complex complex::c()
     /*
      * Returns the complex conjugate of the object instance.
      */
-    complex a(z[0],-z[1]);
-    return a;
+    return complex(z[0],-z[1]);
 }
 
 
@@ -100,26 +99,6 @@ complex &complex::operator*=(complex b)
      * Multiplying this by complex number b.
      * zw = (a + bi)(c + id) = ac + iad + ibc - bd = ac - bd + i(ad + bc)
      */
-//    double m1 = b.z[0]*(b.z[0] + b.z[1]);
-//    double m2 = z[0]*(b.z[1] - b.z[0]);
-//    double m3 = z[1]*(b.z[0] + b.z[1]);
-//    a = z[0];
-//    b = z[1];
-//    c = b.z[0];
-//    d = b.z[1];
-//    m1 = b.z[0]*(b.z[0] + b.z[1]);
-//    m2 = z[0]*(b.z[1] - b.z[0]);
-//    m3 = z[1]*(b.z[0] + b.z[1]);
-//    m1 = c*(c+d);
-//    m2 = a*(d-c);
-//    m3 = b*(c+d);
-//    z[0] = m1 - m3;
-//    z[1] = m1 + m2;
-
-//    double prev_re = z[0];
-//    z[0] = prev_re*b.z[0] - z[1]*b.z[1];
-//    z[1] = prev_re*b.z[1] + z[1]*b.z[0];
-
     double prev_re = z[0];
     z[0] = prev_re*b.re() - z[1]*b.im();
     z[1] = prev_re*b.im() + z[1]*b.re();
@@ -142,12 +121,7 @@ complex &complex::operator/=(complex b)
     /*
      * Dividing this by complex number b.
      */
-//    double prev_re = re;
-//    double divisor = b.re*b.re + b.im*b.im;
-//    re = (re*b.re + im*b.im)/divisor;
-//    im = (im*b.re - prev_re*b.im)/divisor;
     double prev_re = z[0];
-//    double divisor = b.re()*b.re() + b.im()*b.im();
     double divisor = b.normSquared();
     z[0] = (z[0]*b.re() + z[1]*b.im())/divisor;
     z[1] = (z[1]*b.re() - prev_re*b.im())/divisor;

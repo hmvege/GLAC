@@ -152,7 +152,6 @@ void TestSuite::runFullTestSuite(bool verbose)
         cout << "U2 =" << endl;
         U2.print();
     }
-
     if (run3x3MatrixTests(verbose) & run2x2MatrixTests(verbose) & runSU2Tests(verbose) & runSU3Tests(verbose)) {
         cout << "SUCCESS: All tests passed." << endl;
     } else {
@@ -162,7 +161,7 @@ void TestSuite::runFullTestSuite(bool verbose)
 
 bool TestSuite::runSU2Tests(bool verbose)
 {
-    cout << "Running SU2 property tests." << endl;
+    if (verbose) cout << "Running SU2 property tests." << endl;
     bool passed = (testSU2Hermicity(verbose) && testSU2Orthogonality(verbose) && testSU2Norm(verbose)
                    && testSU2Determinant(verbose));
     if (passed) {
@@ -176,7 +175,7 @@ bool TestSuite::runSU2Tests(bool verbose)
 
 bool TestSuite::runSU3Tests(bool verbose)
 {
-    cout << "Running SU3 property tests." << endl;
+    if (verbose) cout << "Running SU3 property tests." << endl;
     bool passed = (testSU3Hermicity(verbose) && testSU3Orthogonality(verbose) && testSU3Norm(verbose)
                    && testSU3TraceMultiplication(verbose) && testSU3Determinant(verbose));
     if (passed) {
@@ -190,7 +189,7 @@ bool TestSuite::runSU3Tests(bool verbose)
 
 bool TestSuite::run2x2MatrixTests(bool verbose)
 {
-    cout << "Running basic SU2 matrix tests." << endl;
+    if (verbose) cout << "Running basic SU2 matrix tests." << endl;
     bool passed = (testSU2Addition(verbose) && testSU2Subtraction(verbose) && testSU2Multiplication(verbose)
                    && testSU2Conjugation(verbose) && testSU2Transpose(verbose));
     if (passed) {
@@ -203,7 +202,7 @@ bool TestSuite::run2x2MatrixTests(bool verbose)
 
 bool TestSuite::run3x3MatrixTests(bool verbose)
 {
-    cout << "Running basic SU3 matrix tests." << endl;
+    if (verbose) cout << "Running basic SU3 matrix tests." << endl;
     bool passed = (testSU3Addition(verbose) && testSU3Subtraction(verbose) && testSU3Multiplication(verbose)
                    && testSU3Conjugation(verbose) && testSU3Transpose(verbose));
     if (passed) {
@@ -242,14 +241,14 @@ inline bool TestSuite::compareSU3(SU3 A, SU3 B)
 }
 
 // Inline dot product between two columns
-inline complex dot(complex * a, complex * b) {
+inline complex TestSuite::dot(complex * a, complex * b) {
     /*
      * Dot product defined as:
      *  (v,u*) = v*conjugate(u)
      */
     complex returnSum(0,0);
     for (int i = 0; i < 3; i++) {
-        returnSum += a[i]*b[i].c();
+        returnSum += a[i].c()*b[i];
     }
     return returnSum;
 }
@@ -403,8 +402,8 @@ bool TestSuite::testSU3Hermicity(bool verbose)
         cout << "FAILED: SU3 RST generator matrix is not hermitian." << endl;
         passed = false;
     }
-    if (passed) {
-        cout << "SUCCESS: SU3 random matrices are hermitian." << endl;
+    if (passed && verbose) {
+        cout << "SUCCESS: random SU3 matrices generated with RST and random methods, are hermitian." << endl;
     }
     return passed;
 }
@@ -415,14 +414,13 @@ bool TestSuite::checkSU3Hermicity(bool verbose, SU3 H)
      * Checks the hermicity of the SU3 matrices.
      */
     bool passed = true;
-    double eps = 1e-14;
     SU3 I;
     I = H*H.inv();
     for (int i = 0; i < 18; i++) {
         if (i==0 || i==8 || i==16) continue;
-        if (fabs(I[i]) > eps) passed = false;
+        if (fabs(I[i]) > m_eps) passed = false;
     }
-    if ((fabs(I[0] - 1) > eps) || (fabs(I[8] - 1) > eps) || (fabs(I[16] - 1) > eps)) passed = false;
+    if ((fabs(I[0] - 1) > m_eps) || (fabs(I[8] - 1) > m_eps) || (fabs(I[16] - 1) > m_eps)) passed = false;
 
     if (passed) {
         return true;
@@ -442,17 +440,95 @@ bool TestSuite::checkSU3Hermicity(bool verbose, SU3 H)
 
 bool TestSuite::testSU3Orthogonality(bool verbose)
 {
+    /*
+     * Checks if matrices generated randomly by RST or Random is orthogonal.
+     */
+    bool passed = true;
+    if (!checkSU3Orthogonality(verbose, m_SU3Generator->generateRandom())) {
+        cout << "FAILED: SU3 random generator matrix is not orthogonal." << endl;
+        passed = false;
+    }
+    if (!checkSU3Orthogonality(verbose, m_SU3Generator->generateRST())) {
+        cout << "FAILED: SU3 RST generator matrix is not orthogonal." << endl;
+        passed = false;
+    }
+    if (passed && verbose) {
+        cout << "SUCCESS: random SU3 matrices generated with RST and random methods are orthogonal matrices." << endl;
+    }
+    return passed;
+}
 
+bool TestSuite::checkSU3Orthogonality(bool verbose, SU3 H)
+{
+    /*
+     * Testing the orthogonatility of a SU3 matrix H.
+     */
+    bool passed = true;
+    complex col1[3];
+    complex col2[3];
+    complex col3[3];
+    for (int i = 0; i < 3; i++) {
+        col1[i].setRe(H[6*i]);
+        col1[i].setIm(H[6*i+1]);
+        col2[i].setRe(H[6*i+2]);
+        col2[i].setIm(H[6*i+3]);
+        col3[i].setRe(H[6*i+4]);
+        col3[i].setIm(H[6*i+5]);
+    }
+    complex c12dot = dot(col1,col2);
+    complex c13dot = dot(col1,col3);
+    complex c23dot = dot(col2,col3);
+    if ((fabs(c12dot.re()) > m_eps) || (fabs(c12dot.im()) > m_eps)) passed = false;
+    if ((fabs(c13dot.re()) > m_eps) || (fabs(c13dot.im()) > m_eps)) passed = false;
+    if ((fabs(c23dot.re()) > m_eps) || (fabs(c23dot.im()) > m_eps)) passed = false;
+    if (verbose && !passed) {
+        cout << "Column 1 and 2: " << std::setprecision(10) << c12dot << endl;
+        cout << "Column 1 and 3: " << std::setprecision(10) << c13dot << endl;
+        cout << "Column 2 and 3: " << std::setprecision(10) << c23dot << endl;
+    }
+    return passed;
 }
 
 bool TestSuite::testSU3Norm(bool verbose)
 {
-//    double sumVal = 0; // TESTS IF WE HAVE THE NORM = 1
-//    for (int i = 0; i < 3; i++) {
-//        sumVal += H.normSquared(6*i);
-//    }
-//    cout << sqrt(sumVal) << endl;
-//    exit(1);
+    /*
+     * Overarching function for testing if the columns of the SU3 matrices
+     * generated by the RST and Random method are at unity.
+     */
+    bool passed = true;
+    if (!checkSU3Orthogonality(verbose, m_SU3Generator->generateRandom())) {
+        cout << "FAILED: columns of SU3 random generator matrix are not of length 1." << endl;
+        passed = false;
+    }
+    if (!checkSU3Orthogonality(verbose, m_SU3Generator->generateRST())) {
+        cout << "FAILED: columns of SU3 RST generator matrix are not of length 1." << endl;
+        passed = false;
+    }
+    if (passed && verbose) {
+        cout << "SUCCESS: random SU3 matrices generated with RST and random methods have columns of length 1." << endl;
+    }
+    return passed;
+}
+
+bool TestSuite::checkSU3Norm(bool verbose, SU3 H)
+{
+    /*
+     * Function that checks the SU3 norm of a matrix H.
+     */
+    bool passed = true;
+    double sum;
+    for (int col = 0; col < 3; col++) {
+        sum = 0;
+        for (int i = 0; i < 3; i++) {
+            sum += H.normSquared(6*i + 2*col);
+        }
+        sum = sqrt(sum);
+        if (fabs(sqrt(sum) - 1) > 1e-15) {
+            if (verbose) cout << "FAILED: norm is not zero: " << sum << endl;
+            return false;
+        }
+    }
+    return passed;
 }
 
 bool TestSuite::testSU3Determinant(bool verbose)

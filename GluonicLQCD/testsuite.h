@@ -19,6 +19,8 @@ private:
     SU3 U1, U2, U3, UAdd, USub, UMul, UC, UT, UCT;
     SU2 s1, s2, s3, sAdd, sSub, sMul, sC, sT, sCT;
 
+    double m_eps = 1e-15;
+
     // SU3 generator
     SU3MatrixGenerator *m_SU3Generator = nullptr;
 
@@ -63,7 +65,9 @@ private:
     bool testSU3Hermicity(bool verbose);
     bool checkSU3Hermicity(bool verbose, SU3 H);
     bool testSU3Orthogonality(bool verbose);
+    bool checkSU3Orthogonality(bool verbose, SU3 H);
     bool testSU3Norm(bool verbose);
+    bool checkSU3Norm(bool verbose, SU3 H);
     bool testSU3Determinant(bool verbose);
 
     // Other tests

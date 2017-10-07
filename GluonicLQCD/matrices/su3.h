@@ -40,13 +40,8 @@ public:
     void setRe(int i, double re) { mat[i] = re; } // A bit redundant?
     void setIm(int i, double im) { mat[i+1] = im; }
 
-//    complex(double real, double imag);
-//    complex (const complex &b); // Copy constructor
-
-
-
 //    // TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
-//    friend std::ostream& operator<<(std::ostream& os, const complex& a); // Allows cout << myVector << endl;
+    friend std::ostream& operator<<(std::ostream& os, const SU3& A); // Allows cout << myVector << endl;
 };
 
 inline SU3 operator+(SU3 A, SU3 B)
