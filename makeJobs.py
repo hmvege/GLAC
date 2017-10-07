@@ -270,9 +270,10 @@ def main(args):
     job_parser.add_argument('-t',   '--threads',    default=False,      type=int,help='Number of threads to run on')
     job_parser.add_argument('-N',   '--NSpatial',   default=False,      type=int,help='spatial lattice dimension')
     job_parser.add_argument('-NT',  '--NTemporal',  default=False,      type=int,help='temporal lattice dimension')
-    job_parser.add_argument('-NTh', '--NTherm',     default=False,      type=int,help='number of thermalization steps')
+    job_parser.add_argument('-NTh', '--NTherm',     default=-1,      type=int,help='number of thermalization steps')
     job_parser.add_argument('-NUp', '--NUpdates',   default=False,      type=int,help='number of updates per link')
     job_parser.add_argument('-NCf', '--NConfigs',   default=False,      type=int,help='number of configurations to generate')
+    job_parser.add_argument('-NCor', '--NCor',      default=False,      type=int,help='number of correlation updates to perform')
     job_parser.add_argument('-b',   '--beta',       default=False,      type=float,help='beta value')
     job_parser.add_argument('-SU3', '--SU3Eps',     default=False,      type=float,help='SU3 value')
     job_parser.add_argument('-hs', '--hotStart',    default=False,      type=bool,help='Hot start or cold start')
@@ -323,10 +324,12 @@ def main(args):
             config_default["N"] = args.NSpatial
         if args.NTemporal:
             config_default["NT"] = args.NTemporal
-        if args.NTherm:
+        if args.NTherm != -1:
             config_default["NTherm"] = args.NTherm
         if args.NUpdates:
             config_default["NUpdates"] = args.NUpdates
+        if args.NCor:
+            config_default["NCor"] = args.NCor
         if args.NConfigs:
             config_default["NCf"] = args.NConfigs
         if args.beta:
