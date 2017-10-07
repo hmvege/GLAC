@@ -9,12 +9,14 @@
 class SU3MatrixGenerator
 {
 private:
-    double epsilon;
-    double epsilonSquared;
+    double m_epsilon;
+    double m_epsilonSquared;
+    double m_sqrtOneMinusEpsSquared;
     std::mt19937_64 generator;
     std::uniform_real_distribution<double> uniform_distribution;
     std::uniform_real_distribution<double> SU2_uniform_distribution;
     SU3 RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t);
+    SU3 RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 t);
 
     // Used for creating a random matrix
     SU3 H;
@@ -39,10 +41,10 @@ public:
     SU2 generateSU2();
 
     // Setters
-    void setEpsilon(double eps) { epsilon = eps; }
+    void setEpsilon(double epsilon);
 
     // Getters
-    double getEpsilon() { return epsilon; }
+    double getEpsilon() { return m_epsilon; }
 };
 
 #endif // SU3MATRIXGENERATOR_H

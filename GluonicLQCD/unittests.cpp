@@ -530,31 +530,6 @@ void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatr
 
 }
 
-void inversePerformanceTest(double eps, double seed, int NTests)
-{
-    std::mt19937_64 gen(seed);
-    SU3 U, I;
-    SU3MatrixGenerator SU3Gen(eps, seed);
-    clock_t oldStart, oldEnd;
-    oldStart = clock();
-    // Old inversion method
-    for (int i = 0; i < NTests; i++) {
-        U = SU3Gen.generateRandom();
-        I = U*inverse(U);
-    }
-    oldEnd = clock();
-    // New inversion method
-    clock_t newStart, newEnd;
-    newStart = clock();
-    for (int i = 0; i < NTests; i++) {
-        U = SU3Gen.generateRandom();
-        I = U*U.inv();
-    }
-    newEnd = clock();
-    cout << "OLD METHOD. Time used: " << ((oldEnd - oldStart)/((double)CLOCKS_PER_SEC)) << endl;
-    cout << "NEW METHOD. Time used: " << ((newEnd - newStart)/((double)CLOCKS_PER_SEC)) << endl;
-    cout << "Improvement: " << ((oldEnd - oldStart)/((double)CLOCKS_PER_SEC))/((newEnd - newStart)/((double)CLOCKS_PER_SEC)) << endl;
-}
 
 void testInverseMatrix(double eps, double seed, int nTests, bool verbose) {
     std::mt19937_64 gen(seed);

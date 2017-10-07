@@ -19,8 +19,9 @@ SU3MatrixGenerator::SU3MatrixGenerator(double eps, double seed)
     std::mt19937_64 gen(seed);
     std::uniform_real_distribution<double> uni_dist(-eps,eps);
     std::uniform_real_distribution<double> uni_dist_SU2(-0.5,0.5);
-    epsilon = eps;
-    epsilonSquared = eps*eps;
+    m_epsilon = eps;
+    m_epsilonSquared = eps*eps;
+    m_sqrtOneMinusEpsSquared = sqrt(1 - m_epsilonSquared);
     generator = gen;
     uniform_distribution = uni_dist;
     SU2_uniform_distribution = uni_dist_SU2;
@@ -39,6 +40,13 @@ SU3MatrixGenerator::~SU3MatrixGenerator()
 {
 //    cout << "oops"<<endl;
 //    delete [] sigma;
+}
+
+void SU3MatrixGenerator::setEpsilon(double epsilon)
+{
+    m_epsilon = epsilon;
+    m_epsilonSquared = epsilon;
+    m_sqrtOneMinusEpsSquared = sqrt(1 - m_epsilonSquared);
 }
 
 SU3 SU3MatrixGenerator::generateRandom()
@@ -127,17 +135,17 @@ SU2 SU3MatrixGenerator::generateSU2()
     }
     // Populating the x-vector
     if (_r[0] < 0) {
-        _x[0] = - sqrt(1 - epsilonSquared);
+        _x[0] = - m_sqrtOneMinusEpsSquared;
     }
     else {
-        _x[0] = sqrt(1 - epsilonSquared);
+        _x[0] = m_sqrtOneMinusEpsSquared;
     }
     for (int i = 1; i < 4; i++) {
         _rNorm += _r[i]*_r[i];
     }
     _rNorm = sqrt(_rNorm);
     for (int i = 1; i < 4; i++) {
-        _x[i] = epsilon*_r[i]/_rNorm;
+        _x[i] = m_epsilon*_r[i]/_rNorm;
     }
     // Imposing unity
     _rNorm = 0;
@@ -208,26 +216,26 @@ SU3 SU3MatrixGenerator::generateRST()
 //    T.mat[16] = t.mat[6];
 //    T.mat[17] = t.mat[7];
 //    T.mat[0] = 1;
-    X.zeros();
+//    X.zeros();
     // CLEAN UP THIS! ALSO; MAKE DIRECT INVERSE METHOD!!
-    X[0] = - r[1]*s[1] + r[0]*s[0];
-    X[1] = + r[1]*s[0] + r[0]*s[1];
-    X[2] = - r[1]*s[3]*t[4] - r[1]*s[2]*t[5] - r[0]*s[3]*t[5] + r[0]*s[2]*t[4] - r[3]*t[1] + r[2]*t[0];
-    X[3] = - r[1]*s[3]*t[5] + r[1]*s[2]*t[4] + r[0]*s[3]*t[4] + r[0]*s[2]*t[5] + r[3]*t[0] + r[2]*t[1];
-    X[4] = - r[1]*s[3]*t[6] - r[1]*s[2]*t[7] - r[0]*s[3]*t[7] + r[0]*s[2]*t[6] - r[3]*t[3] + r[2]*t[2];
-    X[5] = - r[1]*s[3]*t[7] + r[1]*s[2]*t[6] + r[0]*s[3]*t[6] + r[0]*s[2]*t[7] + r[3]*t[2] + r[2]*t[3];
-    X[6] = - r[5]*s[1] + r[4]*s[0];
-    X[7] = + r[5]*s[0] + r[4]*s[1];
-    X[8] = - r[5]*s[3]*t[4] - r[5]*s[2]*t[5] - r[4]*s[3]*t[5] + r[4]*s[2]*t[4] - r[7]*t[1] + r[6]*t[0];
-    X[9] = - r[5]*s[3]*t[5] + r[5]*s[2]*t[4] + r[4]*s[3]*t[4] + r[4]*s[2]*t[5] + r[7]*t[0] + r[6]*t[1];
-    X[10] = - r[5]*s[3]*t[6] - r[5]*s[2]*t[7] - r[4]*s[3]*t[7] + r[4]*s[2]*t[6] - r[7]*t[3] + r[6]*t[2];
-    X[11] = - r[5]*s[3]*t[7] + r[5]*s[2]*t[6] + r[4]*s[3]*t[6] + r[4]*s[2]*t[7] + r[7]*t[2] + r[6]*t[3];
-    X[12] = + s[4];
-    X[13] =  s[5];
-    X[14] = - s[7]*t[5] + s[6]*t[4];
-    X[15] = + s[7]*t[4] + s[6]*t[5];
-    X[16] = - s[7]*t[7] + s[6]*t[6];
-    X[17] = + s[7]*t[6] + s[6]*t[7];
+//    X[0] = - r[1]*s[1] + r[0]*s[0];
+//    X[1] = + r[1]*s[0] + r[0]*s[1];
+//    X[2] = - r[1]*s[3]*t[4] - r[1]*s[2]*t[5] - r[0]*s[3]*t[5] + r[0]*s[2]*t[4] - r[3]*t[1] + r[2]*t[0];
+//    X[3] = - r[1]*s[3]*t[5] + r[1]*s[2]*t[4] + r[0]*s[3]*t[4] + r[0]*s[2]*t[5] + r[3]*t[0] + r[2]*t[1];
+//    X[4] = - r[1]*s[3]*t[6] - r[1]*s[2]*t[7] - r[0]*s[3]*t[7] + r[0]*s[2]*t[6] - r[3]*t[3] + r[2]*t[2];
+//    X[5] = - r[1]*s[3]*t[7] + r[1]*s[2]*t[6] + r[0]*s[3]*t[6] + r[0]*s[2]*t[7] + r[3]*t[2] + r[2]*t[3];
+//    X[6] = - r[5]*s[1] + r[4]*s[0];
+//    X[7] = + r[5]*s[0] + r[4]*s[1];
+//    X[8] = - r[5]*s[3]*t[4] - r[5]*s[2]*t[5] - r[4]*s[3]*t[5] + r[4]*s[2]*t[4] - r[7]*t[1] + r[6]*t[0];
+//    X[9] = - r[5]*s[3]*t[5] + r[5]*s[2]*t[4] + r[4]*s[3]*t[4] + r[4]*s[2]*t[5] + r[7]*t[0] + r[6]*t[1];
+//    X[10] = - r[5]*s[3]*t[6] - r[5]*s[2]*t[7] - r[4]*s[3]*t[7] + r[4]*s[2]*t[6] - r[7]*t[3] + r[6]*t[2];
+//    X[11] = - r[5]*s[3]*t[7] + r[5]*s[2]*t[6] + r[4]*s[3]*t[6] + r[4]*s[2]*t[7] + r[7]*t[2] + r[6]*t[3];
+//    X[12] = + s[4];
+//    X[13] =  s[5];
+//    X[14] = - s[7]*t[5] + s[6]*t[4];
+//    X[15] = + s[7]*t[4] + s[6]*t[5];
+//    X[16] = - s[7]*t[7] + s[6]*t[6];
+//    X[17] = + s[7]*t[6] + s[6]*t[7];
 
 //    SU3 H = R*S*T;
 //    testOrthogonality(H,false);
@@ -239,14 +247,51 @@ SU3 SU3MatrixGenerator::generateRST()
 //    exit(1);
 
     if (SU2_uniform_distribution(generator) < 0) {
+        return RSTMatrixMultiplication(r,s,t).inv();
 //        return (R*S*T).inv(); // THIS CAN BE MADE INTO TWO RST FUNCTIONS WITH 20 CFLOPS!!
-        return X.inv(); // THIS CAN BE MADE INTO TWO RST FUNCTIONS WITH 20 CFLOPS!!
+//        return X.inv(); // THIS CAN BE MADE INTO TWO RST FUNCTIONS WITH 20 CFLOPS!!
     } else {
-        return X;
+        return RSTMatrixMultiplication(r,s,t);
+//        return X;
+//        return R*S*T;
     }
 }
 
 SU3 SU3MatrixGenerator::RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t)
+{
+    /*
+     * Generatores a random SU3 matrix.
+     * Index map:
+     * H =
+     * 0 1 2    0  1   2  3    4  5
+     * 3 4 5 =  6  7   8  9   10 11
+     * 6 7 8   12 13  14 15   16 17
+     */
+//    H.mat[]
+    X.zeros();
+    X[0] = r[0]*s[0] - r[1]*s[1];
+    X[1] = r[1]*s[0] + r[0]*s[1];
+    X[2] = r[0]*s[2]*t[4] - r[3]*t[1] + r[2]*t[0] - r[1]*s[3]*t[4] - r[1]*s[2]*t[5] - r[0]*s[3]*t[5];
+    X[3] = r[1]*s[2]*t[4] + r[0]*s[3]*t[4] + r[0]*s[2]*t[5] + r[3]*t[0] + r[2]*t[1] - r[1]*s[3]*t[5];
+    X[4] = r[0]*s[2]*t[6] - r[3]*t[3] + r[2]*t[2] - r[1]*s[3]*t[6] - r[1]*s[2]*t[7] - r[0]*s[3]*t[7];
+    X[5] = r[1]*s[2]*t[6] + r[0]*s[3]*t[6] + r[0]*s[2]*t[7] + r[3]*t[2] + r[2]*t[3] - r[1]*s[3]*t[7];
+    X[6] = r[4]*s[0] - r[5]*s[1];
+    X[7] = r[5]*s[0] + r[4]*s[1];
+    X[8] = r[4]*s[2]*t[4] - r[7]*t[1] + r[6]*t[0] - r[5]*s[3]*t[4] - r[5]*s[2]*t[5] - r[4]*s[3]*t[5];
+    X[9] = r[5]*s[2]*t[4] + r[4]*s[3]*t[4] + r[4]*s[2]*t[5] + r[7]*t[0] + r[6]*t[1] - r[5]*s[3]*t[5];
+    X[10] = r[4]*s[2]*t[6] - r[7]*t[3] + r[6]*t[2] - r[5]*s[3]*t[6] - r[5]*s[2]*t[7] - r[4]*s[3]*t[7];
+    X[11] = r[5]*s[2]*t[6] + r[4]*s[3]*t[6] + r[4]*s[2]*t[7] + r[7]*t[2] + r[6]*t[3] - r[5]*s[3]*t[7];
+    X[12] = s[4];
+    X[13] = s[5];
+    X[14] = s[6]*t[4] - s[7]*t[5];
+    X[15] = s[7]*t[4] + s[6]*t[5];
+    X[16] = s[6]*t[6] - s[7]*t[7];
+    X[17] = s[7]*t[6] + s[6]*t[7];
+    return X;
+}
+
+
+SU3 SU3MatrixGenerator::RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 t)
 {
     /*
      * Generatores a random SU3 matrix.

@@ -118,7 +118,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     // Main program part
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
-    if (processRank == 0) runUnitTests(&SU3Gen);
+//    if (processRank == 0) runUnitTests(&SU3Gen);
     Plaquette G;
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);

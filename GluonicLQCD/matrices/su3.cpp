@@ -9,6 +9,7 @@ using std::endl;
 
 SU3::SU3()
 {
+    // Remove this! Make user manually fill by zeros! Can save quite some time (y)
     for (int i = 0; i < 18; i++) {
         mat[i] = 0;
     }

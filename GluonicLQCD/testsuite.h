@@ -69,6 +69,7 @@ private:
     bool testSU3Norm(bool verbose);
     bool checkSU3Norm(bool verbose, SU3 H);
     bool testSU3Determinant(bool verbose);
+    bool checkSU3Determinant(bool verbose, SU3 H);
 
     // Other tests
     bool testGaugeInvariance(bool verbose);
@@ -84,6 +85,7 @@ public:
     bool runSU3Tests(bool verbose);
     bool run2x2MatrixTests(bool verbose);
     bool run3x3MatrixTests(bool verbose);
+    bool runFunctionsTest(bool verbose);
 };
 
 #endif // TESTSUITE_H
