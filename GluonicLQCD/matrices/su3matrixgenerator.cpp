@@ -254,6 +254,7 @@ SU3 SU3MatrixGenerator::generateRST()
 
     if (SU2_uniform_distribution(generator) < 0) {
         return RSTMatrixMultiplication(r,s,t).inv();
+//        return RSTMatrixMultiplicationInverse(r,s,t);
 //        return (R*S*T).inv(); // THIS CAN BE MADE INTO TWO RST FUNCTIONS WITH 20 CFLOPS!!
 //        return X.inv(); // THIS CAN BE MADE INTO TWO RST FUNCTIONS WITH 20 CFLOPS!!
     } else {
@@ -275,6 +276,8 @@ SU3 SU3MatrixGenerator::RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t)
      */
 //    H.mat[]
 //    X.zeros();
+//    cout << "SU3MatrixGenerator: MAKE VALUES CALCULATED MORE THAN ONCE ONLY BE CALCULATED ONCE!" << endl;exit(1);
+
     X[0] = r[0]*s[0] - r[1]*s[1];
     X[1] = r[1]*s[0] + r[0]*s[1];
     X[2] = r[0]*s[2]*t[4] - r[3]*t[1] + r[2]*t[0] - r[1]*s[3]*t[4] - r[1]*s[2]*t[5] - r[0]*s[3]*t[5];
