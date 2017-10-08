@@ -24,7 +24,7 @@ private:
 //    SU3 R, S, T;
     SU3 X;
     SU2 r,s,t;
-    double r0s3, r0s2, r1s3, r1s2, r4s2, r5s2, r4s3, r5s3;
+//    double r0s3, r0s2, r1s3, r1s2, r4s2, r5s2, r4s3, r5s3;
     double rs[8];
 
     // Used for generating SU2 matrices

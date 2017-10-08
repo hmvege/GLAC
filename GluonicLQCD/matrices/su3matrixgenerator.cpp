@@ -253,7 +253,7 @@ SU3 SU3MatrixGenerator::generateRST()
 //    exit(1);
 
     if (SU2_uniform_distribution(generator) < 0) {
-        return RSTMatrixMultiplication(r,s,t).inv();
+        return RSTMatrixMultiplicationInverse(r,s,t);
 //        return RSTMatrixMultiplicationInverse(r,s,t);
 //        return (R*S*T).inv(); // THIS CAN BE MADE INTO TWO RST FUNCTIONS WITH 20 CFLOPS!!
 //        return X.inv(); // THIS CAN BE MADE INTO TWO RST FUNCTIONS WITH 20 CFLOPS!!
@@ -279,29 +279,29 @@ SU3 SU3MatrixGenerator::RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t)
 //    cout << "SU3MatrixGenerator: MAKE VALUES CALCULATED MORE THAN ONCE ONLY BE CALCULATED ONCE!" << endl;exit(1);
 //    double s2t4 = s[2]*t[4];
     // Block one shortenings
-    r0s3 = r[0]*s[3];
-    r0s2 = r[0]*s[2];
-    r1s3 = r[1]*s[3];
-    r1s2 = r[1]*s[2];
+    rs[0] = r[0]*s[3];
+    rs[1] = r[0]*s[2];
+    rs[2] = r[1]*s[3];
+    rs[3] = r[1]*s[2];
 
     // Block two shortenings
-    r4s2 = r[4]*s[2];
-    r5s2 = r[5]*s[2];
-    r4s3 = r[4]*s[3];
-    r5s3 = r[5]*s[3];
+    rs[4] = r[4]*s[2];
+    rs[5] = r[5]*s[2];
+    rs[6] = r[4]*s[3];
+    rs[7] = r[5]*s[3];
 
     X[0] = r[0]*s[0] - r[1]*s[1];
     X[1] = r[1]*s[0] + r[0]*s[1];
-    X[2] = r0s2*t[4] - r[3]*t[1] + r[2]*t[0] - r1s3*t[4] - r1s2*t[5] - r0s3*t[5];
-    X[3] = r1s2*t[4] + r0s3*t[4] + r0s2*t[5] + r[3]*t[0] + r[2]*t[1] - r1s3*t[5];
-    X[4] = r0s2*t[6] - r[3]*t[3] + r[2]*t[2] - r1s3*t[6] - r1s2*t[7] - r0s3*t[7];
-    X[5] = r1s2*t[6] + r0s3*t[6] + r0s2*t[7] + r[3]*t[2] + r[2]*t[3] - r1s3*t[7];
+    X[2] = rs[1]*t[4] - r[3]*t[1] + r[2]*t[0] - rs[2]*t[4] - rs[3]*t[5] - rs[0]*t[5];
+    X[3] = rs[3]*t[4] + rs[0]*t[4] + rs[1]*t[5] + r[3]*t[0] + r[2]*t[1] - rs[2]*t[5];
+    X[4] = rs[1]*t[6] - r[3]*t[3] + r[2]*t[2] - rs[2]*t[6] - rs[3]*t[7] - rs[0]*t[7];
+    X[5] = rs[3]*t[6] + rs[0]*t[6] + rs[1]*t[7] + r[3]*t[2] + r[2]*t[3] - rs[2]*t[7];
     X[6] = r[4]*s[0] - r[5]*s[1];
     X[7] = r[5]*s[0] + r[4]*s[1];
-    X[8] = r4s2*t[4] - r[7]*t[1] + r[6]*t[0] - r5s3*t[4] - r5s2*t[5] - r4s3*t[5];
-    X[9] = r5s2*t[4] + r4s3*t[4] + r4s2*t[5] + r[7]*t[0] + r[6]*t[1] - r5s3*t[5];
-    X[10] = r4s2*t[6] - r[7]*t[3] + r[6]*t[2] - r5s3*t[6] - r5s2*t[7] - r4s3*t[7];
-    X[11] = r5s2*t[6] + r4s3*t[6] + r4s2*t[7] + r[7]*t[2] + r[6]*t[3] - r5s3*t[7];
+    X[8] = rs[4]*t[4] - r[7]*t[1] + r[6]*t[0] - rs[7]*t[4] - rs[5]*t[5] - rs[6]*t[5];
+    X[9] = rs[5]*t[4] + rs[6]*t[4] + rs[4]*t[5] + r[7]*t[0] + r[6]*t[1] - rs[7]*t[5];
+    X[10] = rs[4]*t[6] - r[7]*t[3] + r[6]*t[2] - rs[7]*t[6] - rs[5]*t[7] - rs[6]*t[7];
+    X[11] = rs[5]*t[6] + rs[6]*t[6] + rs[4]*t[7] + r[7]*t[2] + r[6]*t[3] - rs[7]*t[7];
     X[12] = s[4];
     X[13] = s[5];
     X[14] = s[6]*t[4] - s[7]*t[5];
@@ -343,22 +343,22 @@ SU3 SU3MatrixGenerator::RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 t)
      * 6 7 8   12 13  14 15   16 17
      */
     // Block one shortenings
-    r0s3 = r[0]*s[3];
-    r0s2 = r[0]*s[2];
-    r1s3 = r[1]*s[3];
-    r1s2 = r[1]*s[2];
+    rs[0] = r[0]*s[3];
+    rs[1] = r[0]*s[2];
+    rs[2] = r[1]*s[3];
+    rs[3] = r[1]*s[2];
     // Block two shortenings
-    r4s2 = r[4]*s[2];
-    r5s2 = r[5]*s[2];
-    r4s3 = r[4]*s[3];
-    r5s3 = r[5]*s[3];
+    rs[4] = r[4]*s[2];
+    rs[5] = r[5]*s[2];
+    rs[6] = r[4]*s[3];
+    rs[7] = r[5]*s[3];
     // Upper triangular
-    X[6]  = r0s2*t[4] - r[3]*t[1] + r[2]*t[0] - r1s3*t[4] - r1s2*t[5] - r0s3*t[5];
-    X[7]  = r1s3*t[5] - r1s2*t[4] - r0s3*t[4] - r0s2*t[5] - r[3]*t[0] - r[2]*t[1];
-    X[12] = r0s2*t[6] - r[3]*t[3] + r[2]*t[2] - r1s3*t[6] - r1s2*t[7] - r0s3*t[7];
-    X[13] = r1s3*t[7] - r1s2*t[6] - r0s3*t[6] - r0s2*t[7] - r[3]*t[2] - r[2]*t[3];
-    X[14] = r4s2*t[6] - r[7]*t[3] + r[6]*t[2] - r5s3*t[6] - r5s2*t[7] - r4s3*t[7];
-    X[15] = r5s3*t[7] - r5s2*t[6] - r4s3*t[6] - r4s2*t[7] - r[7]*t[2] - r[6]*t[3];
+    X[6]  = rs[1]*t[4] - r[3]*t[1] + r[2]*t[0] - rs[2]*t[4] - rs[3]*t[5] - rs[0]*t[5];
+    X[7]  = rs[2]*t[5] - rs[3]*t[4] - rs[0]*t[4] - rs[1]*t[5] - r[3]*t[0] - r[2]*t[1];
+    X[12] = rs[1]*t[6] - r[3]*t[3] + r[2]*t[2] - rs[2]*t[6] - rs[3]*t[7] - rs[0]*t[7];
+    X[13] = rs[2]*t[7] - rs[3]*t[6] - rs[0]*t[6] - rs[1]*t[7] - r[3]*t[2] - r[2]*t[3];
+    X[14] = rs[4]*t[6] - r[7]*t[3] + r[6]*t[2] - rs[7]*t[6] - rs[5]*t[7] - rs[6]*t[7];
+    X[15] = rs[7]*t[7] - rs[5]*t[6] - rs[6]*t[6] - rs[4]*t[7] - r[7]*t[2] - r[6]*t[3];
     // Upper triangular
     X[2]  = r[4]*s[0] - r[5]*s[1];
     X[3]  = - r[5]*s[0] - r[4]*s[1];
@@ -369,8 +369,8 @@ SU3 SU3MatrixGenerator::RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 t)
     // Diagonals
     X[0]  = r[0]*s[0] - r[1]*s[1];
     X[1]  = - r[1]*s[0] - r[0]*s[1];
-    X[8]  = r4s2*t[4] - r[7]*t[1] + r[6]*t[0] - r5s3*t[4] - r5s2*t[5] - r4s3*t[5];
-    X[9]  = r5s3*t[5] - r5s2*t[4] - r4s3*t[4] - r4s2*t[5] - r[7]*t[0] - r[6]*t[1];
+    X[8]  = rs[4]*t[4] - r[7]*t[1] + r[6]*t[0] - rs[7]*t[4] - rs[5]*t[5] - rs[6]*t[5];
+    X[9]  = rs[7]*t[5] - rs[5]*t[4] - rs[6]*t[4] - rs[4]*t[5] - r[7]*t[0] - r[6]*t[1];
     X[16] = s[6]*t[6] - s[7]*t[7];
     X[17] = - s[7]*t[6] - s[6]*t[7];
 
