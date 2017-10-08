@@ -290,8 +290,9 @@ void System::update()
                         for (int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(m_indexHandler->getIndex(x,y,z,t), mu);
-                            m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
-                            if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
+//                            m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
+//                            if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
+                            if (exp(-m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu)) > m_uniform_distribution(m_generator))
                             {
                                 m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[mu].copy(m_updatedMatrix);
                                 m_acceptanceCounter++;

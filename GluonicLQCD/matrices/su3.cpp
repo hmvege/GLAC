@@ -53,7 +53,8 @@ SU3 &SU3::operator*=(SU3 B)
      * 3 4 5 = 21 22 23 = 10 11 12
      * 6 7 8   31 32 33   20 21 22
      */
-    double temp[18];
+//    double temp[18];
+    double temp[17];
 
     temp[0] = mat[0]*B[0] - mat[1]*B[1] + mat[2]*B[6] - mat[3]*B[7] + mat[4]*B[12] - mat[5]*B[13];
     temp[1] = mat[0]*B[1] + mat[1]*B[0] + mat[2]*B[7] + mat[3]*B[6] + mat[4]*B[13] + mat[5]*B[12];
@@ -72,9 +73,11 @@ SU3 &SU3::operator*=(SU3 B)
     temp[14] = mat[12]*B[2] - mat[13]*B[3] + mat[14]*B[8] - mat[15]*B[9] + mat[16]*B[14] - mat[17]*B[15];
     temp[15] = mat[12]*B[3] + mat[13]*B[2] + mat[14]*B[9] + mat[15]*B[8] + mat[16]*B[15] + mat[17]*B[14];
     temp[16] = mat[12]*B[4] - mat[13]*B[5] + mat[14]*B[10] - mat[15]*B[11] + mat[16]*B[16] - mat[17]*B[17];
-    temp[17] = mat[12]*B[5] + mat[13]*B[4] + mat[14]*B[11] + mat[15]*B[10] + mat[16]*B[17] + mat[17]*B[16];
+//    temp[17] = mat[12]*B[5] + mat[13]*B[4] + mat[14]*B[11] + mat[15]*B[10] + mat[16]*B[17] + mat[17]*B[16];
+    mat[17] = mat[12]*B[5] + mat[13]*B[4] + mat[14]*B[11] + mat[15]*B[10] + mat[16]*B[17] + mat[17]*B[16];
 
-    for (int i = 0; i < 18; i++) // OPTIMIZATION: can write the last element directly to the mat[18] instead of through temp
+//    for (int i = 0; i < 18; i++) // OPTIMIZATION: can write the last element directly to the mat[18] instead of through temp
+    for (int i = 0; i < 17; i++) // OPTIMIZATION: can write the last element directly to the mat[18] instead of through temp
     {
         mat[i] = temp[i];
     }
