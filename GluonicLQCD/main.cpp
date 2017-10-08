@@ -142,9 +142,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
 void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose)
 {
-//    TestSuite unitTester(SU3Gen);
-//    unitTester.runFullTestSuite(verbose);
-    runMatrixPerformanceTest(0.24,std::time(nullptr),1e7,true,false);
+    TestSuite unitTester(SU3Gen);
+    unitTester.runFullTestSuite(verbose);
+//    runMatrixPerformanceTest(0.24,std::time(nullptr),1e8,true,false);
     MPI_Finalize();
     exit(0);
 }

@@ -21,7 +21,6 @@ private:
     // Used for creating a random matrix
     SU3 H;
     // Used for creating a random matrix close to unity
-//    SU3 R, S, T;
     SU3 X;
     SU2 r,s,t;
 //    double r0s3, r0s2, r1s3, r1s2, r4s2, r5s2, r4s3, r5s3;

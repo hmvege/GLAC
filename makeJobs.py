@@ -70,7 +70,8 @@ class Slurm:
             storeThermCfgs      = job_config["storeThermCfgs"]
             hotStart            = job_config["hotStart"]
             subDims             = job_config["subDims"]
-            cpu_approx_runtime  = job_config["cpu_approx_runtime"]
+            cpu_approx_runtime_hr  = job_config["cpu_approx_runtime_hr"]
+            cpu_approx_runtime_min = job_config["cpu_approx_runtime_min"]
             
             # Error catching before submitting job is nice. MIGHT ADD MORE
             for dim in subDims:
@@ -84,12 +85,12 @@ class Slurm:
 #SBATCH --job-name={2:<3.2f}beta_{3:<d}cube{4:<d}_{5:<d}threads
 #SBATCH --partition={0:<s}
 #SBATCH --ntasks={1:<d}
-#SBATCH --time={21:0>2d}:00:00
+#SBATCH --time={21:0>2d}:{24:0>2d}:00
 {23:<s}
 mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {22:<s} {20:<s}
 '''.format( partition,threads,beta,NSpatial,NTemporal,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime,self.CURRENT_PATH,sbatch_exclusions)
+                cpu_approx_runtime_hr,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min)
             elif system == "abel":
                 # cpu_memory = job_config["cpu_memory"]
                 # account_name = job_config["account_name"] # Make system specific?
@@ -109,7 +110,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
                 content ='''#!/bin/bash
 #SBATCH --job-name={0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads
 #SBATCH --account={23:<s}
-#SBATCH --time={21:0>2d}:00:00
+#SBATCH --time={21:0>2d}:{28:0>2d}:00
 #SBATCH --mem-per-cpu={22:<4d}M
 #SBATCH --partition={4:<s}
 #SBATCH --ntasks={5:<d}
@@ -136,7 +137,7 @@ set -o errexit               # exit on errors
 mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {26:<s} {20:<s}
 '''.format(beta,NSpatial,NTemporal,threads,partition,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime,cpu_memory,account_name,nodes,tasks_per_node,self.CURRENT_PATH,sbatch_exclusions)
+                cpu_approx_runtime_hr,cpu_memory,account_name,nodes,tasks_per_node,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min)
 
             job = 'jobfile.slurm'
 
@@ -163,7 +164,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
                     print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
 
             # Stores job in job dictionary
-            self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims)),cpu_approx_runtime]
+            self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims)),cpu_approx_runtime_hr,cpu_approx_runtime_min]
             
             # Changes name of job script
             if self.dryrun:
@@ -198,7 +199,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
                 os.system("scancel %d" % i)
 
     def showIDwithNb(self):
-        header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart', 'subDims', 'CPU-estimate[hours]']
+        header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart', 'subDims', 'Ap.Time[hr]', 'Ap.Time[min]']
         widthChoser = lambda s: 7 if len(s) <= 6 else len(s)+4
         colWidths = [widthChoser(i) for i in header_labels]
         colWidths[2] = 20
@@ -238,7 +239,8 @@ def main(args):
                         "storeThermCfgs": 0,
                         "hotStart"      : 0,
                         "subDims"       : [],
-                        "cpu_approx_runtime": 2,
+                        "cpu_approx_runtime_hr": 2,
+                        "cpu_approx_runtime_min": 0,
                         "cpu_memory"    : 3800,
                         "account_name"  : "nn2977k"}
 
@@ -281,7 +283,8 @@ def main(args):
     job_parser.add_argument('-sq', '--square',      default=False,      action='store_true',help='Enforce square sub lattices(or as close as possible).')
     job_parser.add_argument('-sc','--storeCfgs',    default=True,       type=bool,help='Specifying if we are to store configurations')
     job_parser.add_argument('-st', '--storeThermCfgs',    default=False,type=bool,help='Specifies if we are to store the thermalization plaquettes')
-    job_parser.add_argument('-c', '--cpu_approx_runtime', default=False,type=int,help='Approximate cpu time that will be used')
+    job_parser.add_argument('-chr', '--cpu_approx_runtime_hr', default=-1,type=int,help='Approximate cpu time in hours that will be used')
+    job_parser.add_argument('-cmin', '--cpu_approx_runtime_min', default=-1,type=int,help='Approximate cpu time in minutes that will be used')
     job_parser.add_argument('-ex','--exclude',      default=False,      type=str,nargs='+',help='Nodes to exclude.')
     # Only to be used at abel
     job_parser.add_argument('--cpu_memory',         default=False,      type=int,help='CPU memory to be allocated to each core')
@@ -347,8 +350,10 @@ def main(args):
             config_default["storeCfgs"] = args.storeCfgs
         if args.exclude:
             excluded_nodes = ','.join(args.exclude)
-        if args.cpu_approx_runtime and system == "abel":
-            config_default["cpu_approx_runtime"] = args.cpu_approx_runtime
+        if args.cpu_approx_runtime_hr != -1 and system == "abel":
+            config_default["cpu_approx_runtime_hr"] = args.cpu_approx_runtime_hr
+        if args.cpu_approx_runtime_min != -1 and system == "abel":
+            config_default["cpu_approx_runtime_min"] = args.cpu_approx_runtime_min
         if args.account_name and system == "abel":
             config_default["account_name"] = args.account_name
         # Submitting job

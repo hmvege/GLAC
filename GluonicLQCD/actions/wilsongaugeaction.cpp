@@ -24,7 +24,7 @@ WilsonGaugeAction::~WilsonGaugeAction()
 double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
 //    tr = (UPrime - lattice[m_Index->getIndex(i,j,k,l)].U[mu])*staple;
-//    return (tr.mat[0].re() + tr.mat[4].re() + tr.mat[8].re())*multiplicationFactor; // Should be N=3 as in the Gauge symmetry
+//    return (tr.mat[0] + tr.mat[8] + tr.mat[16])*multiplicationFactor; // Should be N=3 as in the Gauge symmetry
     return traceRealMultiplication((UPrime - lattice[m_Index->getIndex(i,j,k,l)].U[mu]),staple)*multiplicationFactor;
 }
 
