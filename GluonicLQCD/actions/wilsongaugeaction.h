@@ -7,15 +7,12 @@ class WilsonGaugeAction : public Action
 {
 private:
     // Lorentz indices arrays
-//    int *muIndex;
-//    int *nuIndex;
     int muIndex[4];
     int nuIndex[4];
     // Action based constants
     double m_beta;
     double multiplicationFactor;
     SU3 staple;
-//    SU3 tr;
 public:
     WilsonGaugeAction(double beta);
     ~WilsonGaugeAction();

@@ -102,3 +102,24 @@ void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatr
         cout << "Complex multiplication performance test completed. Time used: " << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
     }
 }
+
+void runBoolTest(int NTests) {
+    /*
+     * Small tester for certain functions performance.
+     */
+    std::mt19937_64 gen(-1);
+    std::uniform_int_distribution<int> int_dist(0,1);
+    int int1 = 0, int2 = 0;
+    clock_t programStart, programEnd;
+    long unsigned int counter = 0;
+    programStart = clock();
+    for (int i = 0; i < NTests; i++)  {
+        int1 = int_dist(gen);
+        int2 = int_dist(gen);
+        if (int1 && int2) {
+            counter++;
+        }
+    }
+    programEnd = clock();
+    cout << ((programEnd - programStart)/((double)CLOCKS_PER_SEC)) << endl;
+}

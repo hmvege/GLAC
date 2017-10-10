@@ -9,4 +9,6 @@ void SU3BaseTests();
 void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatrix, bool testComplex);
 
 
+void runBoolTest(int NTests);
+
 #endif // UNITTESTS_H
