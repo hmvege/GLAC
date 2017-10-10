@@ -2,12 +2,16 @@
 #define SYSTEM_H
 
 #include <random>
+#include <chrono>
 #include "actions/action.h"
 #include "correlators/correlator.h"
 #include "links.h"
 #include "matrices/su3matrixgenerator.h"
 #include "parallelization/neighbours.h"
 #include "parallelization/indexorganiser.h"
+
+using std::chrono::steady_clock;
+using std::chrono::duration;
 
 class Action;
 
@@ -67,6 +71,11 @@ private:
     double m_varianceGamma = 0;
     double m_stdGamma = 0;
 
+    // Time counting
+    steady_clock::time_point m_preUpdate, m_postUpdate;
+    duration<double> m_updateTime;
+    double m_updateStorer = 0;
+
     // Storing the action as a pointer
     Action *m_S = nullptr;
     double m_deltaS;
@@ -77,6 +86,9 @@ private:
     // Function for updating our system using the Metropolis algorithm
     void update();
     void updateLink(int latticeIndex, int mu);
+
+    // Thermalization function
+    void thermalize();
 
     // Input/output locations
     std::string m_pwd = "";
@@ -90,6 +102,8 @@ private:
     // RNGs
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
+
+    inline void printLine();
 public:
     System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
     ~System();

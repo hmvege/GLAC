@@ -15,7 +15,6 @@ TestSuite::TestSuite(SU3MatrixGenerator *SU3Gen)
     m_uniform_distribution = uni_dist;
 
     // Initiating the SU3 Matrix generator
-//    SU3MatrixGenerator SU3Gen(0.24, std::time(nullptr)+1);
     m_SU3Generator = SU3Gen;
 
     //// 3x3 COMPLEX MATRICES
@@ -124,36 +123,6 @@ TestSuite::TestSuite(SU3MatrixGenerator *SU3Gen)
     s_t.setComplex(complex(6,1),2);
     s_t.setComplex(complex(6,4),4);
     s_t.setComplex(complex(5,2),6);
-//    // R matrix in RST multiplier test
-//    U_R.setComplex(complex(1,2),0);
-//    U_R.setComplex(complex(3,4),2);
-//    U_R.setComplex(complex(0,0),4);
-//    U_R.setComplex(complex(5,6),6);
-//    U_R.setComplex(complex(7,8),8);
-//    U_R.setComplex(complex(0,0),10);
-//    U_R.setComplex(complex(0,0),12);
-//    U_R.setComplex(complex(0,0),14);
-//    U_R.setComplex(complex(1,0),16);
-//    // S matrix in RST multiplier test
-//    U_S.setComplex(complex(2,5),0);
-//    U_S.setComplex(complex(0,0),2);
-//    U_S.setComplex(complex(4,8),4);
-//    U_S.setComplex(complex(0,0),6);
-//    U_S.setComplex(complex(1,0),8);
-//    U_S.setComplex(complex(0,0),10);
-//    U_S.setComplex(complex(2,6),12);
-//    U_S.setComplex(complex(0,0),14);
-//    U_S.setComplex(complex(10,3),16);
-//    // T matrix in RST multiplier test
-//    U_T.setComplex(complex(1,0),0);
-//    U_T.setComplex(complex(0,0),2);
-//    U_T.setComplex(complex(0,0),4);
-//    U_T.setComplex(complex(0,0),6);
-//    U_T.setComplex(complex(7,2),8);
-//    U_T.setComplex(complex(6,1),10);
-//    U_T.setComplex(complex(0,0),12);
-//    U_T.setComplex(complex(6,4),14);
-//    U_T.setComplex(complex(5,2),16);
     // Traced matrix multiplication
     m_tracedMatrix = -21.0; // re(tr(U1*U3))
     UTrace.setComplex(complex(4,4),0);
@@ -210,6 +179,11 @@ TestSuite::TestSuite(SU3MatrixGenerator *SU3Gen)
 
 void TestSuite::runFullTestSuite(bool verbose)
 {
+    /*
+     * Function that runs all available tests.
+     */
+    for (int i = 0; i < 60; i++) cout << "=";
+    cout << endl;
     if (verbose)
     {
         // Original matrices
@@ -223,10 +197,19 @@ void TestSuite::runFullTestSuite(bool verbose)
     } else {
         cout << "FAILURE: One or more test(s) failed." << endl;
     }
+    for (int i = 0; i < 60; i++) cout << "=";
+    cout << endl;
 }
 
 bool TestSuite::runSU2Tests(bool verbose)
 {
+    /*
+     * Function that runs tests on folowing properties of SU2 matrices:
+     *  - hermicity
+     *  - orthogonality of columns
+     *  - normality of columns
+     *  - determinant equals abs(1)
+     */
     if (verbose) cout << "Running SU2 property tests." << endl;
     bool passed = (testSU2Hermicity(verbose) && testSU2Orthogonality(verbose) && testSU2Norm(verbose)
                    && testSU2Determinant(verbose));
@@ -241,6 +224,13 @@ bool TestSuite::runSU2Tests(bool verbose)
 
 bool TestSuite::runSU3Tests(bool verbose)
 {
+    /*
+     * Function that runs tests on folowing properties of SU2 matrices:
+     *  - hermicity
+     *  - orthogonality of columns
+     *  - normality of columns
+     *  - determinant equals abs(1)
+     */
     if (verbose) cout << "Running SU3 property tests." << endl;
     bool passed = (testSU3Hermicity(verbose) && testSU3Orthogonality(verbose) && testSU3Norm(verbose)
                    && testSU3Determinant(verbose));
@@ -255,6 +245,14 @@ bool TestSuite::runSU3Tests(bool verbose)
 
 bool TestSuite::run2x2MatrixTests(bool verbose)
 {
+    /*
+     * Function that runs tests on folowing properties of complex 2x2 matrices:
+     *  - addition
+     *  - subtraction
+     *  - multiplication
+     *  - conjugation
+     *  - matrix transpose
+     */
     if (verbose) cout << "Running basic SU2 matrix tests." << endl;
     bool passed = (testSU2Addition(verbose) && testSU2Subtraction(verbose) && testSU2Multiplication(verbose)
                    && testSU2Conjugation(verbose) && testSU2Transpose(verbose));
@@ -268,6 +266,14 @@ bool TestSuite::run2x2MatrixTests(bool verbose)
 
 bool TestSuite::run3x3MatrixTests(bool verbose)
 {
+    /*
+     * Function that runs tests on folowing properties of complex 2x2 matrices:
+     *  - addition
+     *  - subtraction
+     *  - multiplication
+     *  - conjugation
+     *  - matrix transpose
+     */
     if (verbose) cout << "Running basic SU3 matrix tests." << endl;
     bool passed = (testSU3Addition(verbose) && testSU3Subtraction(verbose) && testSU3Multiplication(verbose)
                    && testSU3Conjugation(verbose) && testSU3Transpose(verbose));
@@ -281,6 +287,11 @@ bool TestSuite::run3x3MatrixTests(bool verbose)
 
 bool TestSuite::runFunctionsTest(bool verbose)
 {
+    /*
+     * Function that tests key elements of the program, that is:
+     *  - trace multiplication of the getDeltaAction in WilsonGaugeAction class.
+     *  - RST multiplication in the generateRST in SU3MatrixGenerator class.
+     */
     if (verbose) cout << "Running test on specific matrix trace multiplication." << endl;
     bool passed = true;
     if (testSU3TraceMultiplication(verbose)) {
@@ -354,6 +365,9 @@ inline complex TestSuite::dot2(complex * a, complex * b) {
 // Matrix operation tester ================================
 bool TestSuite::operationSU2Test(bool verbose, SU2 results, SU2 solution, std::string operation)
 {
+    /*
+     * Function that checks if a opertion on a 2x2 matrix has succeded.
+     */
     if (compareSU2(results,solution)) {
         if (verbose)
         {
@@ -376,6 +390,9 @@ bool TestSuite::operationSU2Test(bool verbose, SU2 results, SU2 solution, std::s
 
 bool TestSuite::operationSU3Test(bool verbose, SU3 results, SU3 solution, std::string operation)
 {
+    /*
+     * Function that checks if a opertion on a 3x3 matrix has succeded.
+     */
     if (compareSU3(results,solution)) {
         if (verbose)
         {
@@ -467,9 +484,11 @@ bool TestSuite::testSU3ComplexConjugation(bool verbose)
 }
 
 // SU2 PROPERTIES TESTS ===================================
-// Create sub-functions that can take a SU3/SU2 matrix as an parameter and test that manually.
 bool TestSuite::testSU2Hermicity(bool verbose)
 {
+    /*
+     * Overarching function for checking the hermicity of the SU2 matrix.
+     */
     bool passed = true;
     if (!checkSU2Hermicity(verbose, m_SU3Generator->generateSU2())) {
         cout << "FAILED: randomly generated SU2 matrix is not hermitian." << endl;
@@ -484,7 +503,7 @@ bool TestSuite::testSU2Hermicity(bool verbose)
 bool TestSuite::checkSU2Hermicity(bool verbose, SU2 H)
 {
     /*
-     * Checks the hermicity of the SU3 matrices.
+     * Checks the hermicity of the SU2 matrices.
      * H = 0 1  2 3
      *     4 5  6 7
      */
@@ -591,6 +610,9 @@ bool TestSuite::checkSU2Norm(bool verbose, SU2 H)
 
 bool TestSuite::testSU2Determinant(bool verbose)
 {
+    /*
+     * Overarching function for testing the SU2 determinant.
+    */
     bool passed = true;
     if (!checkSU2Determinant(verbose, m_SU3Generator->generateSU2())) {
         cout << "FAILED: determinant of randomly generated SU2 matrix is not 1." << endl;
@@ -604,12 +626,14 @@ bool TestSuite::testSU2Determinant(bool verbose)
 
 bool TestSuite::checkSU2Determinant(bool verbose, SU2 H)
 {
+    /*
+     * Function that checks the determinant of the SU2 matrix.
+     */
     bool passed = true;
     complex det = SU2Determinant(H);
-//    if (verbose) cout << "Determinant: " << det << endl;
     if (!((fabs(det.re()) - 1) < m_eps) && !(det.im() < m_eps)) {
         passed = false;
-        if (verbose)cout << "FAILED: the determinant of the SU2 matrix differs from 1: " << det << endl;
+        if (verbose) cout << "FAILED: the determinant of the SU2 matrix differs from 1: " << det << endl;
     }
     return passed;
 }
@@ -617,6 +641,9 @@ bool TestSuite::checkSU2Determinant(bool verbose, SU2 H)
 // SU3 PROPERTIES TESTS ===================================
 bool TestSuite::testSU3Hermicity(bool verbose)
 {
+    /*
+     * Overarching function for checking the hermicity of the SU2 matrix.
+     */
     bool passed = true;
     if (!checkSU3Hermicity(verbose, m_SU3Generator->generateRandom())) {
         cout << "FAILED: SU3 random generator matrix is not hermitian." << endl;
@@ -757,6 +784,9 @@ bool TestSuite::checkSU3Norm(bool verbose, SU3 H)
 
 bool TestSuite::testSU3Determinant(bool verbose)
 {
+    /*
+     * Overarching function for testing the SU3 determinant.
+    */
     bool passed = true;
     if (!checkSU3Determinant(verbose, m_SU3Generator->generateRandom())) {
         cout << "FAILED: determinant of SU3 random generator matrix is not 1." << endl;
@@ -774,9 +804,11 @@ bool TestSuite::testSU3Determinant(bool verbose)
 
 bool TestSuite::checkSU3Determinant(bool verbose, SU3 H)
 {
+    /*
+     * Function that checks the determinant of the SU2 matrix.
+     */
     bool passed = true;
     complex det = SU3Determinant(H);
-//    if (verbose) cout << "Determinant: " << det << endl;
     if (!((fabs(det.re()) - 1) < m_eps) && !(det.im() < m_eps)) {
         passed = false;
         if (verbose)cout << "FAILED: the determinant of the SU3 matrix differs from 1: " << det << endl;
@@ -787,6 +819,10 @@ bool TestSuite::checkSU3Determinant(bool verbose, SU3 H)
 // Other tests
 bool TestSuite::testSU3TraceMultiplication(bool verbose)
 {
+    /*
+     * Function for ensuring that the trace multiplication performed in the WilsonGaugeAction class is correct.
+     * Results retrieved from performing a simple calculation with numpy in python.
+     */
     bool passed = true;
     double results = traceRealMultiplication(U1,UTrace);
     if (results == m_tracedMatrix) {
@@ -802,6 +838,9 @@ bool TestSuite::testSU3TraceMultiplication(bool verbose)
 
 bool TestSuite::testRSTMultiplication(bool verbose)
 {
+    /*
+     * Function for checking that we are multiplying the SU2 matrices correctly when generating a SU3 matrix close to unity.
+     */
     bool passed = true;
     SU3 results = m_SU3Generator->testRSTMultiplication(s_r,s_s,s_t);
     if (compareSU3(results,U_RST)) {

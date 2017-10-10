@@ -9,10 +9,6 @@ using std::endl;
 
 SU3::SU3()
 {
-    // Remove this! Make user manually fill by zeros! Can save quite some time (y)
-//    for (int i = 0; i < 18; i++) {
-//        mat[i] = 0;
-//    }
 }
 
 SU3::~SU3()
@@ -198,15 +194,8 @@ complex SU3::c(int i)
     /*
      * Returns the complex conjugate of the object instance.
      */
-//    mat[i+1] *= -1;
-//    return *this;
     return complex(mat[2*i],mat[2*i+1]);
 }
-
-//complex SU3::getComplex(int i)
-//{
-//    return complex(mat[2*i],mat[2*i+1]);
-//}
 
 void SU3::setComplex(complex w, int i)
 {

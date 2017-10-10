@@ -206,7 +206,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
     m_SU3Generator = SU3Generator;
     if (hotStart) {
         // All starts with a completely random matrix.
-        for (int i = 0; i < m_latticeSize; i++)
+        for (int i = 0; i < m_subLatticeSize; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {
@@ -234,9 +234,13 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
 }
 
 void System::printRunInfo(bool verbose) {
+    /*
+     * Function for printing system information in the beginning.
+     * Arguments:
+     *  verbose     : for printing more detailed information
+     */
     if (m_processRank == 0) {
-        for (int i = 0; i < 60; i++) cout << "=";
-        cout << endl;
+        printLine();
         cout << "Threads:                               " << m_numprocs << endl;
         if (verbose) cout << "Lattice size:                          " << m_latticeSize << endl;
         cout << "Lattice dimensions(spatial, temporal): " << m_NSpatial << " " << m_NTemporal << endl;
@@ -259,9 +263,69 @@ void System::printRunInfo(bool verbose) {
             }
             cout << endl;
         }
-        for (int i = 0; i < 60; i++) cout << "=";
-        cout << endl;
+        printLine();
     }
+}
+
+void System::thermalize()
+{
+    /*
+     * Function for thermalizing the system.
+     */
+    if (m_storeThermalizationObservables) {
+        // Calculating correlator before any updates have began.
+        m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+
+        // Summing and sharing correlator to all processors before any updates has begun
+        MPI_Allreduce(&m_GammaPreThermalization[0], &m_GammaPreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
+        // Dividing by the number of processors in order to get the correlator.
+        m_GammaPreThermalization[0] /= double(m_numprocs);
+        if (m_processRank == 0) {
+            printf("\ni    Plaquette   ");
+            printf("\n%-4d %-12.8f",0,m_GammaPreThermalization[0]);
+        }
+    }
+
+    // Running thermalization
+    for (int i = 1; i < m_NTherm+1; i++)
+    {
+        // Pre timer
+        m_preUpdate = steady_clock::now();
+
+        update();
+
+        // Post timer
+        m_postUpdate = steady_clock::now();
+        m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
+        m_updateStorer += m_updateTime.count();
+        if (i % 20 == 0) { // Avg. time per update every 10th update
+            if (m_processRank == 0) {
+                printf("\nAvgerage update time(every 10th): %f sec.", m_updateStorer/double(i));
+            }
+        }
+
+        // Print correlator every somehting or store them all(useful when doing the thermalization).
+        if (m_storeThermalizationObservables) {
+            // Calculating the correlator
+            m_GammaPreThermalization[i] = m_correlator->calculate(m_lattice);
+
+            // Summing and sharing results across the processors
+            MPI_Allreduce(&m_GammaPreThermalization[i], &m_GammaPreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
+
+            // Averaging the results
+            m_GammaPreThermalization[i] /= double(m_numprocs);
+            if (m_processRank == 0) {
+                printf("\n%-4d %-12.8f",i,m_GammaPreThermalization[i]);
+            }
+        }
+    }
+
+    // Taking the average of the acceptance rate across the processors.
+    if (m_NTherm != 0) MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
+
+    // Printing post-thermalization correlator and acceptance rate
+    if (m_processRank == 0 && m_NTherm != 0) printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
 }
 
 void System::updateLink(int latticeIndex, int mu)
@@ -308,6 +372,9 @@ void System::update()
 
 void System::runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile)
 {
+    /*
+     * Runs the generation of gauge field configurations through the Metropolis algorithm.
+     */
     m_storeThermalizationObservables = storeThermalizationObservables;
     //// TESTS ==============================================================================
 //    MPI_Barrier(MPI_COMM_WORLD);
@@ -335,91 +402,38 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         } else {
             cout << "FALSE" << endl;
         }
-        for (int i = 0; i < 60; i++) cout << "=";
-        cout << endl;
+        printLine();
     }
 
     // Variables for checking performance of the update.
-    steady_clock::time_point preUpdate, postUpdate;
-    duration<double> updateTime;
-    double updateStorer = 0;
+    m_updateStorer = 0;
 
-//    clock_t preUpdate, postUpdate;
-    if (m_storeThermalizationObservables) {
-        // Calculating correlator before any updates have began.
-        m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+    // System thermalization
+    thermalize();
 
-        // Summing and sharing correlator to all processors before any updates has begun
-        MPI_Allreduce(&m_GammaPreThermalization[0], &m_GammaPreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-
-        // Dividing by the number of processors in order to get the correlator.
-        m_GammaPreThermalization[0] /= double(m_numprocs);
-        if (m_processRank == 0) {
-            printf("\ni    Plaquette   ");
-            printf("\n%-4d %-12.8f",0,m_GammaPreThermalization[0]);
-        }
-    }
-
-    // Running thermalization
-    for (int i = 1; i < m_NTherm+1; i++)
-    {
-        // Pre timer
-        preUpdate = steady_clock::now();
-
-        update();
-
-        // Post timer
-        postUpdate = steady_clock::now();
-        updateTime = duration_cast<duration<double>>(postUpdate-preUpdate);
-        updateStorer += updateTime.count();
-        if (i % 20 == 0) { // Avg. time per update every 10th update
-            if (m_processRank == 0) {
-                printf("\nAvgerage update time(every 10th): %f sec.", updateStorer/double(i));
-            }
-        }
-
-        // Print correlator every somehting or store them all(useful when doing the thermalization).
-        if (m_storeThermalizationObservables) {
-            // Calculating the correlator
-            m_GammaPreThermalization[i] = m_correlator->calculate(m_lattice);
-
-            // Summing and sharing results across the processors
-            MPI_Allreduce(&m_GammaPreThermalization[i], &m_GammaPreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
-
-            // Averaging the results
-            m_GammaPreThermalization[i] /= double(m_numprocs);
-            if (m_processRank == 0) {
-                printf("\n%-4d %-12.8f",i,m_GammaPreThermalization[i]);
-            }
-        }
-    }
-
-    // Taking the average of the acceptance rate across the processors.
-    if (m_NTherm != 0) MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
-
-    // Printing post-thermalization correlator and acceptance rate
+    // Printing header for main run
     if (m_processRank == 0) {
-        if (m_NTherm != 0) printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
         printf("\ni    Plaquette    Avg.Update-time   Accept/reject");
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
 
-    // For measuring main program time CPU TIME
-    clock_t preUpdateMain;
-    preUpdateMain = clock();
-    double avgUpdateMain = 0;
-
     // Main part of algorithm
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
         for (int i = 0; i < m_NCor; i++) // Updating NCor times before updating the Gamma function
         {
-            preUpdateMain = clock();
+            // Pre timer
+            m_preUpdate = steady_clock::now();
+
             update();
+
+            // Post timer
+            m_postUpdate = steady_clock::now();
+            m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
+            m_updateStorer += m_updateTime.count();
         }
-        avgUpdateMain += double(clock()-preUpdateMain)/double(CLOCKS_PER_SEC);
         // Averaging the gamma values
         m_Gamma[alpha] = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -427,7 +441,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
         if (m_processRank == 0) {
             // Printing plaquette value
-            printf("\n%-4d %-12.8f   %-15.8f",alpha,m_Gamma[alpha],avgUpdateMain/double((alpha+1)*m_NCor));
+            printf("\n%-4d %-12.8f   %-15.8f",alpha,m_Gamma[alpha],m_updateStorer/double((alpha+1)*m_NCor));
             // Adding the acceptance ratio
             if (alpha % 10 == 0) {
                 printf(" %-13.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(alpha+1)*m_NUpdates*m_NCor));
@@ -441,10 +455,10 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
     if (m_processRank == 0) {
         printf("\n");
-        for (int i = 0; i < 60; i++) cout << "=";
-        printf("\nSystem completed.");
-        printf("\nAverage update time: %.6f sec.", avgUpdateMain/double(m_NCf*m_NCor));
-        printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, avgUpdateMain);
+        printLine();
+        printf("System completed.");
+        printf("\nAverage update time: %.6f sec.", m_updateStorer/double(m_NCf*m_NCor));
+        printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer);
     }
 }
 
@@ -465,13 +479,11 @@ void System::runBasicStatistics()
     m_varianceGamma = (averagedGammaSquared - m_averagedGamma*m_averagedGamma)/double(m_NCf);
     m_stdGamma = sqrt(m_varianceGamma);
     if (m_processRank == 0) {
-        for (int i = 0; i < 60; i++) cout << "=";
-        cout << endl;
+        printLine();
         cout << "Average plaqutte:      " << m_averagedGamma << endl;
         cout << "Standard deviation:    " << m_stdGamma << endl;
         cout << "Variance:              " << m_varianceGamma << endl;
-        for (int i = 0; i < 60; i++) cout << "=";
-        cout << endl;
+        printLine();
     }
 }
 
@@ -541,12 +553,7 @@ void System::writeConfigurationToFile(int configNumber)
                                             + "_threads" + std::to_string(m_numprocs)
                                             + "_config" + std::to_string(configNumber) + ".bin";
 
-    // TEMP =====================================================================================================
-//    if (m_processRank == 0) cout << "Writing filename: " << filename << endl;
-    // ==========================================================================================================
-
     MPI_File_open(MPI_COMM_SELF, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
-//    MPI_File_open(MPI_COMM_WORLD, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned int t = 0; t < m_N[3]; t++) {
@@ -574,7 +581,6 @@ void System::loadFieldConfiguration(std::string filename)
      */
     MPI_File file;
     MPI_File_open(MPI_COMM_SELF, (m_pwd + m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-//    MPI_File_open(MPI_COMM_WORLD, (m_pwd + m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned int t = 0; t < m_N[3]; t++) {
@@ -593,4 +599,13 @@ void System::loadFieldConfiguration(std::string filename)
 
     MPI_File_close(&file);
     if (m_processRank == 0) cout << "Configuration " << m_outputFolder + filename << " loaded." << endl;
+}
+
+inline void System::printLine()
+{
+    for (int i = 0; i < 60; i++)
+    {
+        cout << "=";
+    }
+    cout << endl;
 }

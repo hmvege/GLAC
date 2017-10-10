@@ -21,7 +21,6 @@ public:
     void print();
     complex get(int i, int j) { return complex(mat[6*i + 2*j],mat[6*i + 2*j+1]); }
 
-//    void copy(SU3 B);
     SU3 inv();
     void zeros();
     void identity();
@@ -34,13 +33,11 @@ public:
     double norm(int i);
     double normSquared(int i);
     complex c(int i);
-//    complex getComplex(int i);
     double re(int i) const { return mat[i]; } // But why constant?
     double im(int i) const { return mat[i+1]; }
     void setRe(int i, double re) { mat[i] = re; } // A bit redundant?
     void setIm(int i, double im) { mat[i+1] = im; }
 
-//    // TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
     friend std::ostream& operator<<(std::ostream& os, const SU3& A); // Allows cout << myVector << endl;
 };
 

@@ -54,6 +54,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     bool hotStart                       = false;
     double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
     double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
+    bool runUnitTestsFlag               = false;
 
     // Only needed if numberOfArguments > 13.
     int NSub[4];
@@ -107,7 +108,11 @@ int main(int numberOfArguments, char* cmdLineArguments[])
         for (int i = 14; i < 18; i++) {
             NSub[i % 14] = atoi(cmdLineArguments[i]);
         }
-
+    }
+    if (numberOfArguments > 18) { // Flag for running unit tests
+        if (atoi(cmdLineArguments[18]) == 1) {
+            runUnitTestsFlag = true;
+        }
     }
 
     // Program timers
@@ -117,7 +122,11 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     // Main program part
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
-//    if (processRank == 0) runUnitTests(&SU3Gen, false);
+    if (runUnitTestsFlag) {
+        if (processRank == 0) runUnitTests(&SU3Gen, false);
+        MPI_Finalize();
+        exit(0);
+    }
     Plaquette G;
     WilsonGaugeAction S(beta);
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
@@ -145,6 +154,4 @@ void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose)
     TestSuite unitTester(SU3Gen);
     unitTester.runFullTestSuite(verbose);
 //    runMatrixPerformanceTest(0.24,std::time(nullptr),1e8,true,false);
-    MPI_Finalize();
-    exit(0);
 }
