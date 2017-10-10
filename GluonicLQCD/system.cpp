@@ -298,10 +298,10 @@ void System::thermalize()
         // Post timer
         m_postUpdate = steady_clock::now();
         m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
-        m_updateStorer += m_updateTime.count();
+        m_updateStorerTherm += m_updateTime.count();
         if (i % 20 == 0) { // Avg. time per update every 10th update
             if (m_processRank == 0) {
-                printf("\nAvgerage update time(every 10th): %f sec.", m_updateStorer/double(i));
+                printf("\nAvgerage update time(every 10th): %f sec.", m_updateStorerTherm/double(i));
             }
         }
 
@@ -405,8 +405,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         printLine();
     }
 
-    // Variables for checking performance of the update.
-    m_updateStorer = 0;
+    // Variables for checking performance of the thermalization update.
+    m_updateStorerTherm = 0;
 
     // System thermalization
     thermalize();
@@ -418,6 +418,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
+
+    // Variables for checking performance of the update.
+    m_updateStorer = 0;
 
     // Main part of algorithm
     for (int alpha = 0; alpha < m_NCf; alpha++)
@@ -458,7 +461,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         printLine();
         printf("System completed.");
         printf("\nAverage update time: %.6f sec.", m_updateStorer/double(m_NCf*m_NCor));
-        printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer);
+        printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
     }
 }
 

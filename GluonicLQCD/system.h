@@ -75,6 +75,7 @@ private:
     steady_clock::time_point m_preUpdate, m_postUpdate;
     duration<double> m_updateTime;
     double m_updateStorer = 0;
+    double m_updateStorerTherm = 0;
 
     // Storing the action as a pointer
     Action *m_S = nullptr;
