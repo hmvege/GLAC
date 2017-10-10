@@ -107,6 +107,7 @@ void runBoolTest(int NTests) {
     /*
      * Small tester for certain functions performance.
      */
+
     std::mt19937_64 gen(-1);
     std::uniform_int_distribution<int> int_dist(0,1);
     int int1 = 0, int2 = 0;
