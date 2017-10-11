@@ -26,3 +26,5 @@ test_env
 
 # Smaug files
 *.slurm
+
+!prod*.dat

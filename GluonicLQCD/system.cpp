@@ -325,7 +325,9 @@ void System::thermalize()
     if (m_NTherm != 0) MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
 
     // Printing post-thermalization correlator and acceptance rate
-    if (m_processRank == 0 && m_NTherm != 0) printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
+    if (m_processRank == 0 && m_NTherm != 0) printf("\nTermalization complete. Acceptance rate: %f", double(((long double) m_acceptanceCounter)/((long double)(4*((unsigned long int) m_latticeSize)
+                                                                                                                                                                *((unsigned long int) m_NUpdates)
+                                                                                                                                                                *((unsigned long int) m_NTherm)))));
 }
 
 void System::updateLink(int latticeIndex, int mu)
@@ -447,7 +449,10 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
             printf("\n%-4d %-12.8f   %-15.8f",alpha,m_Gamma[alpha],m_updateStorer/double((alpha+1)*m_NCor));
             // Adding the acceptance ratio
             if (alpha % 10 == 0) {
-                printf(" %-13.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(alpha+1)*m_NUpdates*m_NCor));
+                printf(" %-13.8f", double(((long double) m_acceptanceCounter)/((long double) (4 *((unsigned long int) m_subLatticeSize)
+                                                                                                *((unsigned long int) (alpha+1))
+                                                                                                *((unsigned long int) m_NUpdates)
+                                                                                                *((unsigned long int) m_NCor)))));
             }
         }
 
@@ -537,7 +542,10 @@ double System::getAcceptanceRate()
     /*
      * Returns the acceptance ratio of the main run of the System algorithm.
      */
-    return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_NUpdates*m_latticeSize*4); // Times 4 from the Lorentz indices
+    return double((long double) m_acceptanceCounter)/((long double) (((unsigned long int) m_NCf)
+                                                                    *((unsigned long int) m_NCor)
+                                                                    *((unsigned long int) m_NUpdates)
+                                                                    *((unsigned long int) m_latticeSize)*4)); // Times 4 from the Lorentz indices
 }
 
 void System::writeConfigurationToFile(int configNumber)
