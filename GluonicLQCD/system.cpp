@@ -18,6 +18,8 @@
 #include "parallelization/neighbours.h"
 #include "parallelization/indexorganiser.h"
 
+#include "flow/flow.h"
+
 using std::cout;
 using std::endl;
 using std::chrono::steady_clock;
@@ -382,12 +384,15 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     // loadFieldConfiguration("unityScalar.bin");
 //     loadFieldConfiguration("unity16cores.bin");
 //     loadFieldConfiguration("unity32cores.bin");
+    loadFieldConfiguration("para8core061102.bin");
+    Flow WFlow(m_N);
+    WFlow.flowGaugeField(1,m_lattice);
 //    MPI_Barrier(MPI_COMM_WORLD);
 //    double corr = m_correlator->calculate(m_lattice);
 //    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //    corr /= double(m_numprocs);
 //    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-//    MPI_Finalize(); exit(1);
+    MPI_Finalize(); exit(1);
     //// ===================================================================================
     if (m_processRank == 0) {
         cout << "Store thermalization observables:      ";
