@@ -25,6 +25,7 @@ public:
     void setN(unsigned int *N);
     void initializeIndexHandler(IndexOrganiser *Index);
 
+    SU3 getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
 //    inline void lorentzIndex(int mu, int *lorentzIndices)
 //    {
 //        /*

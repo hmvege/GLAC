@@ -385,7 +385,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //     loadFieldConfiguration("unity16cores.bin");
 //     loadFieldConfiguration("unity32cores.bin");
     loadFieldConfiguration("para8core061102.bin");
-    Flow WFlow(m_N);
+    Flow WFlow(m_N, m_beta);
+    WFlow.setIndexHandler(m_indexHandler);
+    WFlow.setAction(m_S);
     WFlow.flowGaugeField(1,m_lattice);
 //    MPI_Barrier(MPI_COMM_WORLD);
 //    double corr = m_correlator->calculate(m_lattice);

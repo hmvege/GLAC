@@ -20,12 +20,12 @@ using std::chrono::duration;
 
 /*
  * TODO:
+ * [ ] Implement better map structure system. e.g. latmath.h ect
  * [ ] Enforce sub lattice cubes as standard
  * [ ] Add batch name to print-out
  * [ ] Add function for loading fields? Or make a seperate program? Should probably be done here.
  * [ ] (optional) Switch to CORRECT method syntax, foo --> m_foo
  * [ ] (optional) Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
- * [ ] (optional) Add better test suites, one that prints FAIL if test fails!!
  */
 
 void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose);
@@ -54,7 +54,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     bool hotStart                       = false;
     double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
     double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
-    bool runUnitTestsFlag               = false;
+    bool runUnitTestsFlag               = true;
 
     // Only needed if numberOfArguments > 13.
     int NSub[4];
@@ -154,5 +154,5 @@ void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose)
 //    runBoolTest(1e9);
     TestSuite unitTester(SU3Gen);
     unitTester.runFullTestSuite(verbose);
-//    runMatrixPerformanceTest(0.24,std::time(nullptr),1e8,true,false);
+    runMatrixPerformanceTest(0.24,std::time(nullptr),1e0,true,false);
 }

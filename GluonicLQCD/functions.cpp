@@ -1,9 +1,11 @@
 #include "matrices/su3.h"
 #include "matrices/su2.h"
 #include "complex.h"
+#include <cmath>
 
 complex SU2Determinant(SU2 H)
 {
+    // Move into CLASS perhaps best?
     return complex(H[0]*H[6] - H[1]*H[7] - H[2]*H[4] + H[3]*H[5], H[0]*H[7] + H[1]*H[6] - H[2]*H[5] - H[3]*H[4]);;
 }
 
@@ -12,7 +14,7 @@ complex SU3Determinant(SU3 H)
     /*
      * Function for taking the determinant of
      */
-    // Redo! Move into class perhaps best?
+    // Redo! Move into CLASS perhaps best?
     return complex( - H[0]*H[10]*H[14] + H[0]*H[11]*H[15] + H[0]*H[16]*H[8] - H[0]*H[17]*H[9] + H[1]*H[10]*H[15] + H[1]*H[11]*H[14]
                     - H[1]*H[16]*H[9] - H[1]*H[17]*H[8] + H[10]*H[12]*H[2] - H[10]*H[13]*H[3] - H[11]*H[12]*H[3] - H[11]*H[13]*H[2]
                     - H[12]*H[4]*H[8] + H[12]*H[5]*H[9] + H[13]*H[4]*H[9] + H[13]*H[5]*H[8] + H[14]*H[4]*H[6] - H[14]*H[5]*H[7]
@@ -42,3 +44,30 @@ complex complexMultiply(SU3 A, SU3 B, int i, int j)
                    A[i]*B[j+1] + A[i+1]*B[j]);
 }
 
+complex complexCos(complex a)
+{
+    return complex(cos(a.z[0])*cosh(a.z[1]), - sin(a.z[0])*sinh(a.z[1]));
+}
+
+complex complexSin(complex a)
+{
+    return complex(sin(a.z[0])*cosh(a.z[1]),cos(a.z[0])*sinh(a.z[1]));
+}
+
+
+//complex complexArccos(complex z)
+//{
+//    return complex
+//}
+
+//complex getSqrt(complex z)
+//{
+//    double ab = sqrt(z[0]*z[0] + z[1]*z[1]);
+//    if (z[1] < 0) {
+//        return complex(sqrt(0.5*(z[0] + ab)), - sqrt(0.5*(- z[0] + ab)));
+//    } else if (z[1] > 0) {
+//        return complex(sqrt(0.5*(z[0] + ab)),0);
+//    } else {
+//        return complex(sqrt(0.5*(z[0] + ab)), sqrt(0.5*(- z[0] + ab)));
+//    }
+//}

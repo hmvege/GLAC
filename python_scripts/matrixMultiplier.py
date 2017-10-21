@@ -213,8 +213,8 @@ def printCrossProduct():
 if __name__ == '__main__':
 	# a*b = ac - bd + i(ad + bc)
 	# printSympyCrossProductOld()
-	printCrossProduct()
+	# printCrossProduct()
 	# printRegularMatrix()
-	# printContigiousComplexMatrixMultiplication(2)
+	printContigiousComplexMatrixMultiplication()
 	# printDeterminant()
 	# printSympyCrossProduct()

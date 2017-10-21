@@ -84,6 +84,12 @@ void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatr
         programStart = clock();
         for (int i = 0; i < NTests; i++) {
             U1 = SU3Gen.generateRST();
+//            U1 = SU3Gen.generateRandom();
+            U1.print();
+            U2 = U1.antiHermitian();
+            U2.print();
+            cout << U2.trace() << endl;
+            (U1*U2).print();
 //            U2 *= U1;
         }
         programEnd = clock();
