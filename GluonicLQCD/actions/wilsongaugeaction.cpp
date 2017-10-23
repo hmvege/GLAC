@@ -52,16 +52,25 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     indexes[1] = j;
     indexes[2] = k;
     indexes[3] = l;
+    // First: calculate the X_mu(see notes)
     for (int nu = 0; nu < 4; nu++)
     {
         if (mu == nu) continue;
         updateNuIndex(nu);
-        staple += lattice[m_Index->getIndex(i,j,k,l)].U[mu]
-                *m_Index->getPositiveLink(lattice,indexes,mu,muIndex,nu)
+        staple += m_Index->getPositiveLink(lattice,indexes,mu,muIndex,nu)
                 *m_Index->getPositiveLink(lattice,indexes,nu,nuIndex,mu).inv()
-                *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv();
+                *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv()
+                + m_Index->getNeighboursNeighbourLink(lattice,indexes,mu,muIndex,nu,nuIndex,nu).inv()
+                *m_Index->getNegativeLink(lattice,indexes,nu,nuIndex,mu).inv()
+                *m_Index->getNegativeLink(lattice,indexes,nu,nuIndex,nu);
     }
-    m_multiplicationFactor*()
-    // Multiply with generators
+    m_multiplicationFactor*();
+    // Multiply X_mu with the U_mu
+
+    // Multiply the product of this with each of the 8 T^a generators
+
+    // Take trace, real, and the multiply with beta/3
+
+    // Multiply with 8 generators T^a again, sum and return matrix
     return staple;
 }
