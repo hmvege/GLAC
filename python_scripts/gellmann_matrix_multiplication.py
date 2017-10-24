@@ -44,14 +44,20 @@ for i,T_a in enumerate(T):
 res = sp.zeros(3,3)
 for i,T_a in enumerate(T):
 	res += -sp.I*T_a*R[i]
-sp.pprint(sp.simplify(res))
 
 
 def printAll():
-	for i,T_a in enumerate(T):
-		print "T(%d):" % i 
-		sp.pprint(T_a)
+	# for i,T_a in enumerate(T):
+	# 	print "T(%d):" % i 
+	# 	sp.pprint(T_a)
 	sp.pprint(A)
+	sp.pprint(sp.simplify(res))
+	index_map = """\nIndex map:
+H =
+0 1 2    0  1   2  3    4  5
+3 4 5 =  6  7   8  9   10 11
+6 7 8   12 13  14 15   16 17
+	"""
+	print index_map
 
-
-# printAll()
+printAll()

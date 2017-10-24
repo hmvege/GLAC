@@ -18,14 +18,14 @@ private:
     complex f[3];
     complex h[3];
     complex c0, c1, u, w, theta, xi0;
-    SU3 W[3];
-    SU3 T[8]; // Gell-Mann matrices made anti-hermitian and traceless by multiplying with (-i). Might not need this,a s the Gell-Mann matrices sets so many numbers to zero?
+    SU3 W[3], Z[2];
+//    SU3 T[8]; // Gell-Mann matrices made anti-hermitian and traceless by multiplying with (-i). Might not need this,a s the Gell-Mann matrices sets so many numbers to zero?
     SU3 I; // Identity
     SU3 QSquared, QCubed;
 
     // Functions for performing flow
     void runFlow(Links *lattice);
-    void smearLink(SU3 V);
+    void smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
     IndexOrganiser *m_Index = nullptr;
     SU3 exponentiate(SU3 X);
 

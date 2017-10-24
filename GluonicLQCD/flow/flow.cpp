@@ -29,7 +29,7 @@ void Flow::runFlow(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        smearLink(lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        smearLink(lattice,i,j,k,l,mu);
                     }
                 }
             }
@@ -42,12 +42,12 @@ SU3 Flow::exponentiate(SU3 X)
 
 }
 
-void Flow::smearLink(SU3 V)
+void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     // Take derivative of action
 
 //    // Set W0
-//    W[0] = V;
+    W[0] = V; // V should be the previous flowed point!
 //    // Set W1
 //    W[1] = exponentiate(0.25 * epsilon * m_S->computeStaple()) * W[0];
 //    // Set W2

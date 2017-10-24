@@ -96,7 +96,8 @@ SU3 &SU3::operator*=(double a)
 }
 
 SU3 SU3::inv()
-{   /*
+{
+    /*
      * Takes the inverse of the matrix(which is transpose and conjugate).
      * Index map:
      * H =
