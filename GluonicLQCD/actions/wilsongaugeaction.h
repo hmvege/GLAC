@@ -7,12 +7,12 @@ class WilsonGaugeAction : public Action
 {
 private:
     // Lorentz indices arrays
-    int muIndex[4];
-    int nuIndex[4];
+    int m_muIndex[4];
+    int m_nuIndex[4];
     // Action based constants
     double m_beta;
     double m_multiplicationFactor;
-    SU3 staple;
+    SU3 m_staple, m_X;
 public:
     WilsonGaugeAction(double beta);
     ~WilsonGaugeAction();
@@ -23,16 +23,16 @@ public:
     inline void updateMuIndex(int mu) {
         for (int i = 0; i < 4; i++)
         {
-            muIndex[i] = 0;
+            m_muIndex[i] = 0;
         }
-        muIndex[mu] = 1;
+        m_muIndex[mu] = 1;
     }
     inline void updateNuIndex(int nu) {
         for (int i = 0; i < 4; i++)
         {
-            nuIndex[i] = 0;
+            m_nuIndex[i] = 0;
         }
-        nuIndex[nu] = 1;
+        m_nuIndex[nu] = 1;
     }
 };
 
