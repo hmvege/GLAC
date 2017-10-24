@@ -13,6 +13,8 @@ private:
     double m_epsilon = 0.01;
     double m_beta;
     unsigned int m_N[4];
+    unsigned int m_subLatticeSize;
+    Links * m_updatedLattice;
 
     // Flow variables
     complex f[3];
@@ -28,10 +30,12 @@ private:
     void smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
     IndexOrganiser *m_Index = nullptr;
     SU3 exponentiate(SU3 X);
+    inline void updateLattice(Links *lattice);
 
     Action *m_S = nullptr;
 public:
     Flow(unsigned int *N, double beta);
+    ~Flow();
     void flowGaugeField(int NFlows, Links *lattice);
 
     // Setters
