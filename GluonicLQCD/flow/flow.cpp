@@ -54,7 +54,7 @@ void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned in
 //    W[2] = exponentiate(8.0/9 * Z1 - 17/36.*Z0)* W[1];
 //    // Set V_{t+eps}
 //    VNew = exponentiate(0.75*Z2 - 8/9.*Z1 + 17/36.*Z0)*W[2];
-
+    // HOW MUCH MEMORY THAT I WILL USE: (64**3*128*4*18*8)/1024/1024/1024*2 / (256/16)
 //    QSquared = Q*Q;
 //    QCubed = Q*QSquared;
 //    c0 = 0.3333333333333333*QCubed.Trace();
