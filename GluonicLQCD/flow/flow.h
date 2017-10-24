@@ -27,7 +27,6 @@ private:
     void runFlow(Links *lattice);
     void smearLink(SU3 V);
     IndexOrganiser *m_Index = nullptr;
-    SU3 derivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
     SU3 exponentiate(SU3 X);
 
     Action *m_S = nullptr;

@@ -18,6 +18,7 @@ public:
     SU3 &operator-=(SU3 B);
     SU3 &operator*=(SU3 B);
     SU3 &operator/=(double a);
+    SU3 &operator*=(double a);
     void print();
     complex get(int i, int j) { return complex(mat[6*i + 2*j],mat[6*i + 2*j+1]); }
 
@@ -65,6 +66,12 @@ inline SU3 operator*(SU3 A, SU3 B)
 inline SU3 operator/(SU3 A, double a)
 {
     A /= a;
+    return A;
+}
+
+inline SU3 operator*(SU3 A, double a)
+{
+    A *= a;
     return A;
 }
 

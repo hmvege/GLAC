@@ -37,13 +37,6 @@ void Flow::runFlow(Links *lattice)
     }
 }
 
-SU3 Flow::derivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
-{
-    /*
-     * Takes the derivative of the action S. IS THIS DELTA ACTION? FOR WILSON ACTION
-     */
-}
-
 SU3 Flow::exponentiate(SU3 X)
 {
 
