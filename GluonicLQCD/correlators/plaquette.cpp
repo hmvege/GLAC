@@ -7,8 +7,6 @@
 
 Plaquette::Plaquette() : Correlator()
 {
-//    muIndex = new int[4];
-//    nuIndex = new int[4];
     for (int i = 0; i < 4; i++) {
         muIndex[i] = 0;
         nuIndex[i] = 0;
@@ -17,8 +15,6 @@ Plaquette::Plaquette() : Correlator()
 
 Plaquette::~Plaquette()
 {
-//    delete [] muIndex;
-//    delete [] nuIndex;
 }
 
 void Plaquette::setLatticeSize(int latticeSize)
@@ -39,10 +35,8 @@ double Plaquette::calculate(Links *lattice)
                     indexes[2] = k;
                     indexes[3] = l;
                     for (int mu = 0; mu < 4; mu++) {
-//                        lorentzIndex(mu,muIndex); // Saves quite a few flops by not figuring out the mu index every time
                         updateMuIndex(mu); // Inline function
                         for (int nu = mu+1; nu < 4; nu++) {
-//                            lorentzIndex(nu,nuIndex);
                             updateNuIndex(nu); // Inline function
                             P += lattice[m_Index->getIndex(i,j,k,l)].U[mu]
                                     *m_Index->getPositiveLink(lattice,indexes,mu,muIndex,nu)

@@ -9,8 +9,6 @@
 class Plaquette : public Correlator
 {
 private:
-//    int *muIndex;
-//    int *nuIndex;
     int muIndex[4];
     int nuIndex[4];
     double multiplicationFactor;

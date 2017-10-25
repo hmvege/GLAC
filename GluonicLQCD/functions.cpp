@@ -43,31 +43,3 @@ complex complexMultiply(SU3 A, SU3 B, int i, int j)
     return complex(A[i]*B[j] - A[i+1]*B[j+1],
                    A[i]*B[j+1] + A[i+1]*B[j]);
 }
-
-complex complexCos(complex a)
-{
-    return complex(cos(a.z[0])*cosh(a.z[1]), - sin(a.z[0])*sinh(a.z[1]));
-}
-
-complex complexSin(complex a)
-{
-    return complex(sin(a.z[0])*cosh(a.z[1]),cos(a.z[0])*sinh(a.z[1]));
-}
-
-
-//complex complexArccos(complex z)
-//{
-//    return complex
-//}
-
-//complex getSqrt(complex z)
-//{
-//    double ab = sqrt(z[0]*z[0] + z[1]*z[1]);
-//    if (z[1] < 0) {
-//        return complex(sqrt(0.5*(z[0] + ab)), - sqrt(0.5*(- z[0] + ab)));
-//    } else if (z[1] > 0) {
-//        return complex(sqrt(0.5*(z[0] + ab)),0);
-//    } else {
-//        return complex(sqrt(0.5*(z[0] + ab)), sqrt(0.5*(- z[0] + ab)));
-//    }
-//}

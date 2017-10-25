@@ -11,7 +11,7 @@ Flow::Flow(unsigned int *N, double beta)
 {
     for (int i = 0; i < 4; i++) m_N[i] = N[i];
     m_subLatticeSize = 1;
-    for (int i = 0; i < 4; i++) m_updatedLattice *= m_N[i];
+    for (int i = 0; i < 4; i++) m_subLatticeSize *= m_N[i];
     I.identity();
     m_beta = beta;
     m_updatedLattice = new Links[m_subLatticeSize];
@@ -42,7 +42,7 @@ void Flow::runFlow(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        smearLink(lattice,i,j,k,l,mu);
+                        smearLink(lattice,x,y,z,t,mu);
                     }
                 }
             }
@@ -53,27 +53,36 @@ void Flow::runFlow(Links *lattice)
 
 SU3 Flow::exponentiate(SU3 X)
 {
-
+    /*
+     * Takes the exponential of an Hermitian matrix.
+     */
+    //    QSquared = Q*Q;
+    //    QCubed = Q*QSquared;
+    //    c0 = 0.3333333333333333*QCubed.Trace();
+    //    c1 = 0.5*QSquared.Trace();
+    //    u = sqrt(0.3333333333333333*c1) * cos(0.3333333333333333*)
+    //    m_updatedLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy();
+    return X;
 }
 
 void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
-    // Take derivative of action
-
-//    // Set W0
+    /*
+     * Smears a link according to what that has been outlined in Luschers paper on Wilson flow.
+     */
+    // Sets first RK3 constant, W0
     W[0] = lattice[m_Index->getIndex(i,j,k,l)].U[mu]; // V should be the previous flowed point!
-//    // Set W1
-//    W[1] = exponentiate(0.25 * epsilon * m_S->computeStaple()) * W[0];
-//    // Set W2
-//    W[2] = exponentiate(8.0/9 * Z1 - 17/36.*Z0)* W[1];
-//    // Set V_{t+eps}
-//    VNew = exponentiate(0.75*Z2 - 8/9.*Z1 + 17/36.*Z0)*W[2];
+    // Finds Z0
+    Z[0] = m_S->getActionDerivative(lattice,W[0],i,j,k,l,mu) * m_epsilon;
+    // Sets second RK3 constant, W1
+    W[1] = exponentiate(Z[0] * 0.25) * W[0];
+    // Finds Z1
+    Z[1] = m_S->getActionDerivative(lattice,W[1],i,j,k,l,mu) * m_epsilon;
+    // Sets third RK3 constant, W2
+    W[2] = exponentiate(Z[1]*0.8888888888888888 - Z[0]*0.4722222222222222) * W[1];
+    // Sets the new, flowed SU3 matrix.
+    m_updatedLattice[m_Index->getIndex(i,j,k,l)].U[mu].copy(exponentiate(m_S->getActionDerivative(lattice,W[2],i,j,k,l,mu)*m_epsilon*0.75 - Z[1]*0.8888888888888888 + Z[0]*0.4722222222222222)*W[2]);
     // HOW MUCH MEMORY THAT I WILL USE: (64**3*128*4*18*8)/1024/1024/1024*2 / (256/16)
-//    QSquared = Q*Q;
-//    QCubed = Q*QSquared;
-//    c0 = 0.3333333333333333*QCubed.Trace();
-//    c1 = 0.5*QSquared.Trace();
-//    u = sqrt(0.3333333333333333*c1) * cos(0.3333333333333333*)
 }
 
 void Flow::setIndexHandler(IndexOrganiser *Index)
@@ -94,7 +103,7 @@ inline void Flow::updateLattice(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[m_Index->getIndex(i,j,k,l)].U[mu].copy(m_updatedLattice[m_Index->getIndex(i,j,k,l)].U[mu]);
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_updatedLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
                     }
                 }
             }

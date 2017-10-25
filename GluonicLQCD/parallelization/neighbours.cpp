@@ -1,18 +1,13 @@
 #include "neighbours.h"
 #include "neighbourlist.h"
 
-//TEMP
-#include <iostream>
-using std::cout;
-using std::endl;
-
 Neighbours::Neighbours()
 {
 }
 
 Neighbours::~Neighbours()
 {
-    cout << "DELETING NEIGHBOR LISTS." << endl;
+    std::cout << "DELETING NEIGHBOR LISTS." << std::endl;
     delete [] neighbourLists;
 }
 
@@ -29,20 +24,6 @@ void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim
     m_P[1] = (processRank / m_Nx) % m_Ny;
     m_P[2] = (processRank / (m_Nx * m_Ny)) % m_Nz;
     m_P[3] = (processRank / (m_Nx * m_Ny * m_Nz)) % m_Nt;
-
-    // TESTS ============================================================
-//    cout << "Processor " << m_processRank << " per dimension: ";
-//    for (int i = 0; i < 4; i++) {
-//        cout << processorsPerDim[i];
-//    }
-//    cout << endl;
-//    cout << "Processor " << m_processRank << " position: ";
-//    for (int i = 0; i < 4; i++) {
-//        cout << m_P[i];
-//    }
-//    cout << endl;
-    // ==================================================================
-
 }
 
 void Neighbours::generateNeighbourList()

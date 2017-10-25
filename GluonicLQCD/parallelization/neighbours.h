@@ -2,10 +2,7 @@
 #define NEIGHBOURS_H
 
 #include <iostream>
-
 #include "neighbourlist.h"
-
-typedef int (*indexCubeFinderArray) (int n1, int n2, int n3);
 
 class Neighbours
 {
