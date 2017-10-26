@@ -95,6 +95,15 @@ SU3 &SU3::operator*=(double a)
     return *this;
 }
 
+SU3 &SU3::operator-=(double a)
+{
+    for (int i = 0; i < 18; i++)
+    {
+        mat[i] -= a;
+    }
+    return *this;
+}
+
 SU3 SU3::inv()
 {
     /*

@@ -38,12 +38,12 @@ A = sp.Matrix([[a11, a12, a13],[a21, a22, a23],[a31, a32, a33]])
 
 R = [0 for i in range(8)]
 for i,T_a in enumerate(T):
-	R[i] = sp.re((-sp.I*T_a*A).trace())
+	R[i] = sp.re((T_a*A).trace())
 
 
 res = sp.zeros(3,3)
 for i,T_a in enumerate(T):
-	res += -sp.I*T_a*R[i]
+	res += T_a*R[i]
 
 
 def printAll():

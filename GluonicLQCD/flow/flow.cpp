@@ -65,9 +65,9 @@ SU3 Flow::exponentiate(SU3 Q)
     theta = acos(c0/c0max);
     u = sqrt(0.3333333333333333*c1) * cos(0.3333333333333333 * theta);
     w = sqrt(c1) * sin(0.3333333333333333 * theta);
-    h[0] = (u*u - w*w) * ;
-    h[1] = ;
-    h[2] = ;
+//    h[0] = (u*u - w*w) * ;
+//    h[1] = ;
+//    h[2] = ;
 //    u = sqrt(0.3333333333333333*c1) * cos(0.3333333333333333*);
     //    m_updatedLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy();
     exit(1);

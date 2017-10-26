@@ -71,6 +71,10 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, SU3 V, unsigned int 
     // Take trace, real, and the multiply with beta/3
     // Multiply with 8 generators T^a again, sum and return matrix
 
+    SU3 Q;
+    Q = (m_staple.inv() - m_staple)*0.5 - (m_staple.inv() - m_staple).trace().re()/6.0;
+
+
 
     // Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script.
 
@@ -98,6 +102,9 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, SU3 V, unsigned int 
     m_X.mat[14] = - m_X.mat[10];
     m_X.mat[15] = m_X.mat[11];
 
+    Q.print();
+    m_X.print();
+    exit(1);
     // No multiplication factor needed as the -3/beta is cancelled in the Z(W_i).
     return m_X;//*m_multiplicationFactor;
 }
