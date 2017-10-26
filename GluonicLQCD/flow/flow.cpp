@@ -51,18 +51,27 @@ void Flow::runFlow(Links *lattice)
     updateLattice(lattice);
 }
 
-SU3 Flow::exponentiate(SU3 X)
+SU3 Flow::exponentiate(SU3 Q)
 {
     /*
      * Takes the exponential of an Hermitian matrix.
      */
-    //    QSquared = Q*Q;
-    //    QCubed = Q*QSquared;
-    //    c0 = 0.3333333333333333*QCubed.Trace();
-    //    c1 = 0.5*QSquared.Trace();
-    //    u = sqrt(0.3333333333333333*c1) * cos(0.3333333333333333*)
+    QSquared = Q*Q;
+    QSquared.print();
+    QCubed = Q*QSquared;
+    c0 = 0.3333333333333333*(QCubed.mat[0] + QCubed.mat[8] + QCubed.mat[16]);
+    c1 = 0.5*(QSquared.mat[0] + QSquared.mat[8] + QSquared.mat[16]);
+    c0max = 0.6666666666666666 * c1 * sqrt(c1 * 0.3333333333333333);
+    theta = acos(c0/c0max);
+    u = sqrt(0.3333333333333333*c1) * cos(0.3333333333333333 * theta);
+    w = sqrt(c1) * sin(0.3333333333333333 * theta);
+    h[0] = (u*u - w*w) * ;
+    h[1] = ;
+    h[2] = ;
+//    u = sqrt(0.3333333333333333*c1) * cos(0.3333333333333333*);
     //    m_updatedLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy();
-    return X;
+    exit(1);
+    return Q;
 }
 
 void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
@@ -91,6 +100,14 @@ void Flow::setIndexHandler(IndexOrganiser *Index)
      * Sets the index handler that we are using. Must be set before performing the flow, or nonsense will ensue.
      */
     m_Index = Index;
+}
+
+void Flow::setAction(Action *S)
+{
+    /*
+     * Sets the action class of the Flow.
+     */
+    m_S = S;
 }
 
 inline void Flow::updateLattice(Links *lattice)

@@ -48,13 +48,13 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double beta     = 6.0;          // Beta value(connected to the lattice spacing a).
     double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
     std::string batchName               = "TEST_RUN_CONFIG";
-    std::string pwd                     = "";
+    std::string pwd                     = "/Users/hansmathiasmamenvege/Programming/FYSSP100/GluonAction";
     bool writeConfigsToFile             = true;
     bool storeThermalizationPlaquettes  = false;
     bool hotStart                       = false;
     double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
     double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
-    bool runUnitTestsFlag               = true;
+    bool runUnitTestsFlag               = false;
 
     // Only needed if numberOfArguments > 13.
     int NSub[4];
@@ -154,5 +154,5 @@ void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose)
 //    runBoolTest(1e9);
     TestSuite unitTester(SU3Gen);
     unitTester.runFullTestSuite(verbose);
-    runMatrixPerformanceTest(0.24,std::time(nullptr),1e0,true,false);
+//    runMatrixPerformanceTest(0.24,std::time(nullptr),1e0,true,false);
 }

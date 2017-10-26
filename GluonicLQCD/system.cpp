@@ -384,7 +384,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     // loadFieldConfiguration("unityScalar.bin");
 //     loadFieldConfiguration("unity16cores.bin");
 //     loadFieldConfiguration("unity32cores.bin");
-    loadFieldConfiguration("para8core061102.bin");
+//    loadFieldConfiguration("para8core061102.bin");
+    loadFieldConfiguration("TEST_RUN_CONFIG_beta6.000000_spatial16_temporal32_threads8_config19.bin");
+//    m_lattice[0].U[0].print();
     Flow WFlow(m_N, m_beta);
     WFlow.setIndexHandler(m_indexHandler);
     WFlow.setAction(m_S);

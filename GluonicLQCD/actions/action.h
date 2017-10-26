@@ -24,8 +24,14 @@ public:
     // Setters
     void setN(unsigned int *N);
     void initializeIndexHandler(IndexOrganiser *Index);
+    // Getters
+    unsigned int * getN() { return m_N; }
 
-    SU3 getActionDerivative(Links * lattice, SU3 V, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    virtual SU3 getActionDerivative(Links * lattice, SU3 V, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+
+    // Clone/copy operator
+
+
 //    inline void lorentzIndex(int mu, int *lorentzIndices)
 //    {
 //        /*
