@@ -17,6 +17,7 @@ public:
     SU3 &operator+=(SU3 B);
     SU3 &operator-=(SU3 B);
     SU3 &operator*=(SU3 B);
+    SU3 &operator*=(complex z);
     SU3 &operator/=(double a);
     SU3 &operator*=(double a);
     SU3 &operator-=(double a);
@@ -79,6 +80,12 @@ inline SU3 operator*(SU3 A, double a)
 inline SU3 operator-(SU3 A, double a)
 {
     A -= a;
+    return A;
+}
+
+inline SU3 operator*(SU3 A, complex z)
+{
+    A *= z;
     return A;
 }
 

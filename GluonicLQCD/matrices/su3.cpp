@@ -104,6 +104,18 @@ SU3 &SU3::operator-=(double a)
     return *this;
 }
 
+SU3 &SU3::operator*=(complex z)
+{
+    double temp;
+    for (int i = 0; i < 9; i++)
+    {
+        temp = mat[2*i];
+        mat[2*i] = mat[2*i]*z.z[0] - mat[2*i+1]*z.z[1];
+        mat[2*i+1] = temp*z.z[1] + mat[2*i+1]*z.z[0];
+    }
+    return *this;
+}
+
 SU3 SU3::inv()
 {
     /*

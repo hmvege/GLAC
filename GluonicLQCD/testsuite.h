@@ -19,7 +19,7 @@ private:
     SU3 U1, U2, U3, UAdd, USub, UMul, UC, UT, UCT, UTrace, U_RST;
     SU2 s1, s2, s3, sAdd, sSub, sMul, sC, sT, sCT, s_r, s_s, s_t;
 
-    double m_eps = 1e-15;
+    double m_eps = 2*1e-14;
     double m_tracedMatrix;
 
     // SU3 generator
@@ -86,7 +86,7 @@ private:
 
     // Add performance tests?
 public:
-    TestSuite(SU3MatrixGenerator *SU3Gen);
+    TestSuite();
 
     void runFullTestSuite(bool verbose);
     bool runSU2Tests(bool verbose);
@@ -94,6 +94,10 @@ public:
     bool run2x2MatrixTests(bool verbose);
     bool run3x3MatrixTests(bool verbose);
     bool runFunctionsTest(bool verbose);
+    void testMatrix(SU3 X, bool verbose);
+
+    // Setters
+    void setRNG(SU3MatrixGenerator *SU3Gen);
 };
 
 #endif // TESTSUITE_H

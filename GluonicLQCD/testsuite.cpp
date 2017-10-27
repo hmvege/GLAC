@@ -3,20 +3,11 @@
 using std::cout;
 using std::endl;
 
-TestSuite::TestSuite(SU3MatrixGenerator *SU3Gen)
+TestSuite::TestSuite()
 {
     /*
      * Class for running unit tests.
      */
-    // Initiating the Mersenne Twister random number generator
-    std::mt19937_64 gen(std::time(nullptr));
-    std::uniform_real_distribution<double> uni_dist(0,1);
-    m_generator = gen;
-    m_uniform_distribution = uni_dist;
-
-    // Initiating the SU3 Matrix generator
-    m_SU3Generator = SU3Gen;
-
     //// 3x3 COMPLEX MATRICES
     // Setting up matrix U1
     U1.setComplex(complex(1,1),0);
@@ -175,6 +166,18 @@ TestSuite::TestSuite(SU3MatrixGenerator *SU3Gen)
     sCT.setComplex(complex(2,-1),2);
     sCT.setComplex(complex(1,-2),4);
     sCT.setComplex(complex(2,-2),6);
+}
+
+void TestSuite::setRNG(SU3MatrixGenerator *SU3Gen)
+{
+    // Initiating the Mersenne Twister random number generator
+    std::mt19937_64 gen(std::time(nullptr));
+    std::uniform_real_distribution<double> uni_dist(0,1);
+    m_generator = gen;
+    m_uniform_distribution = uni_dist;
+
+    // Initiating the SU3 Matrix generator
+    m_SU3Generator = SU3Gen;
 }
 
 void TestSuite::runFullTestSuite(bool verbose)
@@ -672,7 +675,6 @@ bool TestSuite::checkSU3Hermicity(bool verbose, SU3 H)
         if (fabs(I[i]) > m_eps) passed = false;
     }
     if ((fabs(I[0] - 1) > m_eps) || (fabs(I[8] - 1) > m_eps) || (fabs(I[16] - 1) > m_eps)) passed = false;
-
     if (passed) {
         return true;
     }
@@ -811,7 +813,7 @@ bool TestSuite::checkSU3Determinant(bool verbose, SU3 H)
     complex det = SU3Determinant(H);
     if (!((fabs(det.re()) - 1) < m_eps) && !(det.im() < m_eps)) {
         passed = false;
-        if (verbose)cout << "FAILED: the determinant of the SU3 matrix differs from 1: " << det << endl;
+        if (verbose) cout << "FAILED: the determinant of the SU3 matrix differs from 1: " << det << endl;
     }
     return passed;
 }
@@ -852,4 +854,33 @@ bool TestSuite::testRSTMultiplication(bool verbose)
         passed = false;
     }
     return passed;
+}
+
+// Perform tests on matrix X
+void TestSuite::testMatrix(SU3 X, bool verbose)
+{
+    bool passed = true;
+    // Checks hermicity
+    if (!checkSU3Hermicity(true, X)) {
+        cout << "FAILED: matrix is not hermitian." << endl;
+        passed = false;
+    }
+    // Checks orthogonality
+    if (!checkSU3Orthogonality(verbose, X)) {
+        cout << "FAILED: matrix is not orthogonal." << endl;
+        passed = false;
+    }
+    // Checks the norm
+    if (!checkSU3Norm(verbose, X)) {
+        cout << "FAILED: columns of matrix are not of length 1." << endl;
+        passed = false;
+    }
+    // Checks the determinant
+    if (!checkSU3Determinant(verbose, X)) {
+        cout << "FAILED: determinant of matrix is not 1." << endl;
+        passed = false;
+    }
+    if (passed && verbose) {
+        cout << "SUCCESS: All tests passed." << endl;
+    }
 }

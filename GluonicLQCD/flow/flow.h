@@ -21,9 +21,10 @@ private:
     complex h[3];
     double c0, c1, u, w, theta, xi0, c0max;
     SU3 W[3], Z[2];
-//    SU3 T[8]; // Gell-Mann matrices made anti-hermitian and traceless by multiplying with (-i). Might not need this,a s the Gell-Mann matrices sets so many numbers to zero?
-    SU3 I; // Identity
+    SU3 I; // Matrix for filling return matrix
     SU3 QSquared, QCubed;
+
+    double temp, cosu, cosw, sinu, sinw, uu, ww, ww3uu, sin2u, cos2u;
 
     // Functions for performing flow
     void runFlow(Links *lattice);
