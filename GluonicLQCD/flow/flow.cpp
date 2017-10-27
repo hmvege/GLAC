@@ -57,21 +57,51 @@ SU3 Flow::exponentiate(SU3 Q)
      * Takes the exponential of an Hermitian matrix.
      */
     QSquared = Q*Q;
-    QSquared.print();
     QCubed = Q*QSquared;
+
+    std::cout << "Q: " << std::endl;
+    Q.print();
+    std::cout << "QSquared: " << std::endl;
+    QSquared.print();
+    std::cout << "QCubed: " << std::endl;
+    QCubed.print();
+
     c0 = 0.3333333333333333*(QCubed.mat[0] + QCubed.mat[8] + QCubed.mat[16]);
     c1 = 0.5*(QSquared.mat[0] + QSquared.mat[8] + QSquared.mat[16]);
+
+    std::cout << "c0 = " << c0 << std::endl;
+    std::cout << "c1 = " << c1 << std::endl;
+
     c0max = 0.6666666666666666 * c1 * sqrt(c1 * 0.3333333333333333);
     theta = acos(c0/c0max);
     u = sqrt(0.3333333333333333*c1) * cos(0.3333333333333333 * theta);
     w = sqrt(c1) * sin(0.3333333333333333 * theta);
-//    h[0] = (u*u - w*w) * ;
-//    h[1] = ;
-//    h[2] = ;
-//    u = sqrt(0.3333333333333333*c1) * cos(0.3333333333333333*);
-    //    m_updatedLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy();
+    // Find xi(w)
+    if (fabs(w) > 0.05) {
+        xi0 = sin(w)/w;
+    } else {
+        xi0 = 1 - 0.16666666666666666*w*w*(1 - 0.05*w*w*(1 - 0.023809523809523808*w*w)); // 1/6.0 and 1/42.0
+    }
+    // Sets h
+    h[0].setRe((u*u - w*w)*cos(2*w) + 8*u*u*cos(u)*cos(w) + 2*u*(3*u*u + w*w)*sin(w)*xi0);
+    h[0].setIm((u*u - w*w)*sin(2*u) + cos(u)*2*u*(3*u*u + w*w)*xi0 - sin(w)*8*u*u*cos(w));
+    h[1].setRe(2*u*cos(2*u) - cos(u)*2*u*cos(w) - sin(u)*(3*u*u - w*w)*xi0);
+    h[1].setIm(2*u*sin(2*u) + cos(u)*(3*u*u - w*w)*xi0 - sin(u)*2*u*cos(w));
+    h[2].setRe(cos(2*u) - cos(u)*cos(w) - sin(u)*3*u*xi0);
+    h[2].setIm(sin(2*u) - cos(u)*3*u*xi0 + sin(u)*cos(w));
+    // Sets f
+    for (int i = 0; i < 3; i++) {
+        f[i] = h[i] / (9*u*u - w*w);
+        if (c0 < 0) {
+            f[i] = f[i].c()*pow(-1,i);
+        }
+    }
+
+    SU3 X = QCubed - Q*c1 - I*c0;
+    X.print();
+    std::cout << "EXITS" << std::endl;
     exit(1);
-    return Q;
+//    return I*f[0] + Q*f[1] + QSquared*f[1];
 }
 
 void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)

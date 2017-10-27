@@ -71,8 +71,8 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, SU3 V, unsigned int 
     // Take trace, real, and the multiply with beta/3
     // Multiply with 8 generators T^a again, sum and return matrix
 
-    SU3 Q;
-    Q = (m_staple.inv() - m_staple)*0.5 - (m_staple.inv() - m_staple).trace().re()/6.0;
+//    SU3 Q;
+//    Q = (m_staple.inv() - m_staple)*0.5 - (m_staple.inv() - m_staple).trace().re()/6.0;
 
 
 
@@ -102,9 +102,14 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, SU3 V, unsigned int 
     m_X.mat[14] = - m_X.mat[10];
     m_X.mat[15] = m_X.mat[11];
 
-    Q.print();
-    m_X.print();
-    exit(1);
+//    std::cout << "printing Q" << std::endl;
+//    Q.print();
+
+//    std::cout << "printing X" << std::endl;
+//    m_X.print();
+//    std::cout<<std::endl;
+//    exit(1);
+
     // No multiplication factor needed as the -3/beta is cancelled in the Z(W_i).
     return m_X;//*m_multiplicationFactor;
 }
