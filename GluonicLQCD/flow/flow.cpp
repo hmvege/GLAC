@@ -34,15 +34,15 @@ void Flow::flowGaugeField(int NFlows, Links *lattice)
         runFlow(lattice);
     }
 
-    // Tests if flow preserves the SU3 matrix properties ===================
-    TestSuite test;
-    for (unsigned int i = 0; i < m_subLatticeSize; i++) {
-        for (unsigned int mu = 0; mu < 4; mu++) {
-            test.testMatrix(lattice[i].U[mu],true);
-            exit(1);
-        }
-    }
-    // =====================================================================
+//    // Tests if flow preserves the SU3 matrix properties ===================
+//    TestSuite test;
+//    for (unsigned int i = 0; i < m_subLatticeSize; i++) {
+//        for (unsigned int mu = 0; mu < 4; mu++) {
+//            test.testMatrix(lattice[i].U[mu],true);
+//            exit(1);
+//        }
+//    }
+//    // =====================================================================
 
 }
 
@@ -165,42 +165,42 @@ void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned in
     // Sets first RK3 constant, W0
     W[0] = lattice[m_Index->getIndex(i,j,k,l)].U[mu]; // V should be the previous flowed point!
 
-    // TEST ================================================================
-    TestSuite test;
-    std::cout << "MATRIX W0" << std::endl;
-    test.testMatrix(W[0],true);
-    // =====================================================================
+//    // TEST ================================================================
+//    TestSuite test;
+//    std::cout << "MATRIX W0" << std::endl;
+//    test.testMatrix(W[0],true);
+//    // =====================================================================
 
     // Finds Z0
     Z[0] = m_S->getActionDerivative(lattice,W[0],i,j,k,l,mu) * m_epsilon;
     // Sets second RK3 constant, W1
     W[1] = exponentiate(Z[0] * 0.25) * W[0];
 
-    // TEST ================================================================
-    std::cout << "MATRIX W1" << std::endl;
-    test.testMatrix(W[1],true);
-    exit(1);
-    // =====================================================================
+//    // TEST ================================================================
+//    std::cout << "MATRIX W1" << std::endl;
+//    test.testMatrix(W[1],true);
+//    exit(1);
+//    // =====================================================================
 
     // Finds Z1
     Z[1] = m_S->getActionDerivative(lattice,W[1],i,j,k,l,mu) * m_epsilon;
     // Sets third RK3 constant, W2
     W[2] = exponentiate(Z[1]*0.8888888888888888 - Z[0]*0.4722222222222222) * W[1];
 
-    // TEST ================================================================
-    std::cout << "MATRIX W2" << std::endl;
-    test.testMatrix(W[2],true);
-    // =====================================================================
+//    // TEST ================================================================
+//    std::cout << "MATRIX W2" << std::endl;
+//    test.testMatrix(W[2],true);
+//    // =====================================================================
 
     // Sets the new, flowed SU3 matrix.
     m_updatedLattice[m_Index->getIndex(i,j,k,l)].U[mu].copy(exponentiate(m_S->getActionDerivative(lattice,W[2],i,j,k,l,mu)*m_epsilon*0.75 - Z[1]*0.8888888888888888 + Z[0]*0.4722222222222222)*W[2]);
     // HOW MUCH MEMORY THAT I WILL USE: (64**3*128*4*18*8)/1024/1024/1024*2 / (256/16)
 
-    // TEST ================================================================
-    std::cout << "MATRIX W3" << std::endl;
-    test.testMatrix(m_updatedLattice[m_Index->getIndex(i,j,k,l)].U[mu],true);
-    std::cout << "Reached end of smear link" << std::endl;
-    // =====================================================================
+//    // TEST ================================================================
+//    std::cout << "MATRIX W3" << std::endl;
+//    test.testMatrix(m_updatedLattice[m_Index->getIndex(i,j,k,l)].U[mu],true);
+//    std::cout << "Reached end of smear link" << std::endl;
+//    // =====================================================================
 }
 
 void Flow::setIndexHandler(IndexOrganiser *Index)

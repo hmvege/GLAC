@@ -397,7 +397,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    double corr = m_correlator->calculate(m_lattice);
 //    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //    corr /= double(m_numprocs);
-//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;̈́
+    if (m_processRank == 0) cout << "Flow done" << endl;
     MPI_Finalize(); exit(1);
     //// ===================================================================================
     if (m_processRank == 0) {
