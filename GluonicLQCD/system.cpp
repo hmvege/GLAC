@@ -386,20 +386,23 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //     loadFieldConfiguration("unity32cores.bin");
 //    loadFieldConfiguration("para8core061102.bin");
 //    loadFieldConfiguration("scalar16cubed16run1.bin");
-    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469
+//    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469
 //    loadFieldConfiguration("TEST_RUN_CONFIG_beta6.000000_spatial16_temporal32_threads8_config19.bin");
 //    m_lattice[0].U[0].print();
-    Flow WFlow(m_N, m_beta);
-    WFlow.setIndexHandler(m_indexHandler);
-    WFlow.setAction(m_S);
-    WFlow.flowGaugeField(1,m_lattice);
+//    Flow WFlow(m_N, m_beta);
+//    WFlow.setIndexHandler(m_indexHandler);
+//    WFlow.setAction(m_S);
+//    for (int i = 0; i < 100; i++) {
+//        WFlow.flowGaugeField(1,m_lattice);
+//        m_correlator->calculate(m_lattice);
+//    }
 //    MPI_Barrier(MPI_COMM_WORLD);
 //    double corr = m_correlator->calculate(m_lattice);
 //    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //    corr /= double(m_numprocs);
 //    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;̈́
-    if (m_processRank == 0) cout << "Flow done" << endl;
-    MPI_Finalize(); exit(1);
+//    if (m_processRank == 0) cout << "Flow done" << endl;
+//    MPI_Finalize(); exit(1);
     //// ===================================================================================
     if (m_processRank == 0) {
         cout << "Store thermalization observables:      ";
@@ -475,6 +478,20 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         printf("\nAverage update time: %.6f sec.", m_updateStorer/double(m_NCf*m_NCor));
         printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
     }
+
+    // RUNNING FLOW!
+    Flow WFlow(m_N, m_beta);
+    WFlow.setIndexHandler(m_indexHandler);
+    WFlow.setAction(m_S);
+    double * m_GammaFlow = new double[100];
+    for (int tau = 0; tau < 100; tau++) {
+        WFlow.flowGaugeField(1,m_lattice);
+        m_GammaFlow[tau] = m_correlator->calculate(m_lattice);
+        MPI_Allreduce(&m_GammaFlow[tau], &m_GammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        m_GammaFlow[tau] /= double(m_numprocs);
+        if (m_processRank == 0) printf("\n%-4d %-12.8f", tau, m_gammaFlow[tau]);
+    }
+    delete [] m_GammaFlow;
 }
 
 void System::runBasicStatistics()
