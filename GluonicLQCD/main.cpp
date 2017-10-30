@@ -155,5 +155,5 @@ void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose)
     TestSuite unitTester;
     unitTester.setRNG(SU3Gen);
     unitTester.runFullTestSuite(verbose);
-//    runMatrixPerformanceTest(0.24,std::time(nullptr),1e0,true,false);
+//    runMatrixPerformanceTest(0.24,std::time(nullptr),1e7,true,false);
 }

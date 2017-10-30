@@ -483,15 +483,15 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     Flow WFlow(m_N, m_beta);
     WFlow.setIndexHandler(m_indexHandler);
     WFlow.setAction(m_S);
-    double * m_GammaFlow = new double[100];
+    double * m_gammaFlow = new double[100];
     for (int tau = 0; tau < 100; tau++) {
         WFlow.flowGaugeField(1,m_lattice);
-        m_GammaFlow[tau] = m_correlator->calculate(m_lattice);
-        MPI_Allreduce(&m_GammaFlow[tau], &m_GammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        m_GammaFlow[tau] /= double(m_numprocs);
+        m_gammaFlow[tau] = m_correlator->calculate(m_lattice);
+        MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        m_gammaFlow[tau] /= double(m_numprocs);
         if (m_processRank == 0) printf("\n%-4d %-12.8f", tau, m_gammaFlow[tau]);
     }
-    delete [] m_GammaFlow;
+    delete [] m_gammaFlow;
 }
 
 void System::runBasicStatistics()
