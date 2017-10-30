@@ -13,6 +13,8 @@
     "storeThermCfgs": 0,
     "hotStart"      : 0,
     "subDims"       : [12,12,12,6],
+    "uTest"         : 0,
+    "uTestVerbose"  : 0,
     "cpu_approx_runtime_min" : 0,
     "cpu_approx_runtime_hr" : 150,
     "cpu_memory"    : 3800,

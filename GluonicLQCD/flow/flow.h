@@ -14,7 +14,7 @@ private:
     double m_beta;
     unsigned int m_N[4];
     unsigned int m_subLatticeSize;
-    Links * m_updatedLattice;
+    Links * m_tempLattice;
 
     // Flow variables
     complex f[3];
@@ -24,7 +24,7 @@ private:
     SU3 I; // Matrix for filling return matrix
     SU3 QSquared, QCubed;
 
-    double temp, cosu, cosw, sinu, sinw, uu, ww, ww3uu, sin2u, cos2u;
+    double temp, cosu, cosw, sinu, sinw, uu, ww, sin2u, cos2u;
 
     // Functions for performing flow
     void runFlow(Links *lattice);

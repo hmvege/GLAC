@@ -70,6 +70,8 @@ class Slurm:
             storeThermCfgs      = job_config["storeThermCfgs"]
             hotStart            = job_config["hotStart"]
             subDims             = job_config["subDims"]
+            uTest               = job_config["uTest"]
+            uTestVerbose        = job_config["uTestVerbose"]
             cpu_approx_runtime_hr  = job_config["cpu_approx_runtime_hr"]
             cpu_approx_runtime_min = job_config["cpu_approx_runtime_min"]
             
@@ -87,10 +89,10 @@ class Slurm:
 #SBATCH --ntasks={1:<d}
 #SBATCH --time={21:0>2d}:{24:0>2d}:00
 {23:<s}
-mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {22:<s} {20:<s}
+mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {22:<s} {20:<s} {25:<1d} {26:<1d}
 '''.format( partition,threads,beta,NSpatial,NTemporal,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime_hr,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min)
+                cpu_approx_runtime_hr,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min,uTest,uTestVerbose)
             elif system == "abel":
                 # cpu_memory = job_config["cpu_memory"]
                 # account_name = job_config["account_name"] # Make system specific?
@@ -134,10 +136,10 @@ set -o errexit               # exit on errors
 #cd $SCRATCH
 #mkdir output
 
-mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {26:<s} {20:<s}
+mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {26:<s} {20:<s} {29:<1d} {30:<1d}
 '''.format(beta,NSpatial,NTemporal,threads,partition,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime_hr,cpu_memory,account_name,nodes,tasks_per_node,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min)
+                cpu_approx_runtime_hr,cpu_memory,account_name,nodes,tasks_per_node,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min,uTest,uTestVerbose)
 
             job = 'jobfile.slurm'
 
@@ -239,6 +241,8 @@ def main(args):
                         "storeThermCfgs": 0,
                         "hotStart"      : 0,
                         "subDims"       : [],
+                        "uTest"         : 0,
+                        "uTestVerbose"  : 0,
                         "cpu_approx_runtime_hr": 2,
                         "cpu_approx_runtime_min": 0,
                         "cpu_memory"    : 3800,
@@ -272,7 +276,7 @@ def main(args):
     job_parser.add_argument('-t',   '--threads',    default=False,      type=int,help='Number of threads to run on')
     job_parser.add_argument('-N',   '--NSpatial',   default=False,      type=int,help='spatial lattice dimension')
     job_parser.add_argument('-NT',  '--NTemporal',  default=False,      type=int,help='temporal lattice dimension')
-    job_parser.add_argument('-NTh', '--NTherm',     default=-1,      type=int,help='number of thermalization steps')
+    job_parser.add_argument('-NTh', '--NTherm',     default=-1,         type=int,help='number of thermalization steps')
     job_parser.add_argument('-NUp', '--NUpdates',   default=False,      type=int,help='number of updates per link')
     job_parser.add_argument('-NCf', '--NConfigs',   default=False,      type=int,help='number of configurations to generate')
     job_parser.add_argument('-NCor', '--NCor',      default=False,      type=int,help='number of correlation updates to perform')
@@ -296,9 +300,11 @@ def main(args):
     load_parser.add_argument('-s','--system',       default=False,      type=str, required=True,choices=['smaug','abel'],help='Cluster name')
     load_parser.add_argument('-p','--partition',    default="normal",   type=str, help='Partition to run on')
 
-    # # Unit test parser
-    # unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
-    # unit_test_parser.add_argument('-v', '--verbose',default=False,      type=bool, help='Prints more information during testing.')
+    # Unit test parser
+    unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
+    # unit_test_group = unit_test_parser.add_mutually_exclusive_group(required=True)
+    unit_test_parser.add_argument('system',          default=False,      type=str, choices=['smaug','abel'],help='Specify system we are running on.')
+    unit_test_parser.add_argument('-v', '--verbose', default=False,      action='store_true', help='Prints more information during testing.')
 
     args = parser.parse_args()
     # args = parser.parse_args(['python', 'makeJobs.py', 'load', 'config_folder/size_scaling_configs/config_16cube32.py', 'config_folder/size_scaling_configs/config_24cube48.py', 'config_folder/size_scaling_configs/config_28cube56.py', 'config_folder/size_scaling_configs/config_32cube64.py', '-s', 'abel'])
@@ -371,8 +377,16 @@ def main(args):
             s.showIDwithNb()
         if args.clearIDFile:
             s.clearIdFile()
-    # elif args.subparser == 'utest':
-        
+    elif args.subparser == 'utest':
+        config_default["uTest"] = 1
+        config_default["cpu_approx_runtime_hr"] = 0
+        config_default["cpu_approx_runtime_min"] = 10
+        partition = "normal"
+        excluded_nodes = ""
+        system = args.system
+        if args.verbose:
+            config_default["uTestVerbose"] = int(args.verbose)
+        s.submitJob([config_default],system,partition,excluded_nodes)
     else:
         print 'Parse error: %s \n--> exiting' % args
         exit(0)

@@ -17,12 +17,12 @@ Flow::Flow(unsigned int *N, double beta)
     for (int i = 0; i < 4; i++) m_subLatticeSize *= m_N[i];
     I.identity();
     m_beta = beta;
-    m_updatedLattice = new Links[m_subLatticeSize];
+    m_tempLattice = new Links[m_subLatticeSize];
 }
 
 Flow::~Flow()
 {
-    delete [] m_updatedLattice;
+    delete [] m_tempLattice;
 }
 
 void Flow::flowGaugeField(int NFlows, Links *lattice)
@@ -51,18 +51,83 @@ void Flow::runFlow(Links *lattice)
     /*
      * Performs a single flow on the lattice.
      */
+    // Sets Z0 in temporary lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        smearLink(lattice,x,y,z,t,mu);
+//                        W[0] = lattice[m_Index->getIndex(x,y,z,t)].U[mu]; // V should be the previous flowed point!
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,lattice[m_Index->getIndex(x,y,z,t)].U[mu],x,y,z,t,mu) * m_epsilon);
                     }
                 }
             }
         }
     }
-    updateLattice(lattice);
+    // Sets W1 in main lattice
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.25)*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                    }
+                }
+            }
+        }
+    }
+    // Sets "Z1" in temporary lattice
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(
+                                    m_S->getActionDerivative(lattice,lattice[m_Index->getGlobalIndex(x,y,z,t)].U[mu],x,y,z,t,mu)*m_epsilon*0.8888888888888888
+                                    - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.4722222222222222);
+                    }
+                }
+            }
+        }
+    }
+    // Sets W2 in main lattice
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                    }
+                }
+            }
+        }
+    }
+    // Sets "Z2" in temporary lattice
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(
+                                    m_S->getActionDerivative(lattice,lattice[m_Index->getGlobalIndex(x,y,z,t)].U[mu],x,y,z,t,mu)*m_epsilon*0.75
+                                    - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                    }
+                }
+            }
+        }
+    }
+    // Sets V_{t+1} in main lattice
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                    }
+                }
+            }
+        }
+    }
 }
 
 SU3 Flow::exponentiate(SU3 Q)
@@ -73,7 +138,6 @@ SU3 Flow::exponentiate(SU3 Q)
     I.identity();
 
     // Makes Q hermitian. MOVE TO FUNCTION?
-    double temp = 0;
     for (int i = 0; i < 9; i++) {
         temp = Q.mat[2*i];
         Q.mat[2*i] = Q.mat[2*i+1];
@@ -140,15 +204,15 @@ SU3 Flow::exponentiate(SU3 Q)
     }
 
     // Testing if we uphold the identity Q^3 - c1*Q - c0*I = 0 =============
-    SU3 X = QCubed - Q*c1 - I*c0;
-    for (int i = 0; i < 18; i++) {
-        if (X.mat[i] > 1e-16) {
-            std::cout << "ERROR: \nX: " << std::endl;
-            X.print();
-            std::cout << "EXITS" << std::endl;
-            exit(1);
-        }
-    }
+//    SU3 X = QCubed - Q*c1 - I*c0;
+//    for (int i = 0; i < 18; i++) {
+//        if (X.mat[i] > 1e-16) {
+//            std::cout << "ERROR: \nX: " << std::endl;
+//            X.print();
+//            std::cout << "EXITS" << std::endl;
+//            exit(1);
+//        }
+//    }
     // =====================================================================
 
     I.setComplex(f[0],0);
@@ -160,7 +224,7 @@ SU3 Flow::exponentiate(SU3 Q)
 void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     /*
-     * Smears a link according to what that has been outlined in Luschers paper on Wilson flow.
+     * Smears a link according to what that has been outlined in Luschers paper on Wilson flow. OLD METHOD! CAN REMOVE IF NEW ONE IS CORRECT!
      */
     // Sets first RK3 constant, W0
     W[0] = lattice[m_Index->getIndex(i,j,k,l)].U[mu]; // V should be the previous flowed point!
@@ -193,12 +257,12 @@ void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned in
 //    // =====================================================================
 
     // Sets the new, flowed SU3 matrix.
-    m_updatedLattice[m_Index->getIndex(i,j,k,l)].U[mu].copy(exponentiate(m_S->getActionDerivative(lattice,W[2],i,j,k,l,mu)*m_epsilon*0.75 - Z[1]*0.8888888888888888 + Z[0]*0.4722222222222222)*W[2]);
+    m_tempLattice[m_Index->getIndex(i,j,k,l)].U[mu].copy(exponentiate(m_S->getActionDerivative(lattice,W[2],i,j,k,l,mu)*m_epsilon*0.75 - Z[1]*0.8888888888888888 + Z[0]*0.4722222222222222)*W[2]);
     // HOW MUCH MEMORY THAT I WILL USE: (64**3*128*4*18*8)/1024/1024/1024*2 / (256/16)
 
 //    // TEST ================================================================
 //    std::cout << "MATRIX W3" << std::endl;
-//    test.testMatrix(m_updatedLattice[m_Index->getIndex(i,j,k,l)].U[mu],true);
+//    test.testMatrix(m_tempLattice[m_Index->getIndex(i,j,k,l)].U[mu],true);
 //    std::cout << "Reached end of smear link" << std::endl;
 //    // =====================================================================
 }
@@ -222,14 +286,14 @@ void Flow::setAction(Action *S)
 inline void Flow::updateLattice(Links *lattice)
 {
     /*
-     * Updates the lattice new values from m_updatedLattice.
+     * Updates the lattice new values from m_tempLattice.
      */
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_updatedLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
                     }
                 }
             }

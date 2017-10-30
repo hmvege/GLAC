@@ -55,6 +55,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
     double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
     bool runUnitTestsFlag               = false;
+    bool runVerboseUnitTestsFlag        = false;
 
     // Only needed if numberOfArguments > 13.
     int NSub[4];
@@ -114,6 +115,11 @@ int main(int numberOfArguments, char* cmdLineArguments[])
             runUnitTestsFlag = true;
         }
     }
+    if (numberOfArguments > 19) { // Flag for running unit tests
+        if (atoi(cmdLineArguments[19]) == 1) {
+            runVerboseUnitTestsFlag = true;
+        }
+    }
 
     // Program timers
     steady_clock::time_point programStart, programEnd;
@@ -123,7 +129,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Main program part
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     if (runUnitTestsFlag) {
-        if (processRank == 0) runUnitTests(&SU3Gen, false);
+        if (processRank == 0) runUnitTests(&SU3Gen, runVerboseUnitTestsFlag);
         MPI_Finalize();
         exit(0);
     }
