@@ -27,7 +27,7 @@ public:
     // Getters
     unsigned int * getN() { return m_N; }
 
-    virtual SU3 getActionDerivative(Links * lattice, SU3 V, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    virtual SU3 getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
 
     // Clone/copy operator
 

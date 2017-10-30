@@ -44,7 +44,7 @@ void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned i
     }
 }
 
-SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, SU3 V, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     m_staple.zeros();
 //    m_X.zeros();
@@ -66,7 +66,7 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, SU3 V, unsigned int 
                 *m_Index->getNegativeLink(lattice,m_indexes,nu,m_nuIndex,nu);
     }
     // Multiply X_mu with the U_mu
-    m_staple = V * m_staple;
+    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu] * m_staple;
     // Multiply the product of this with each of the 8 T^a generators
     // Take trace, real, and the multiply with beta/3
     // Multiply with 8 generators T^a again, sum and return matrix

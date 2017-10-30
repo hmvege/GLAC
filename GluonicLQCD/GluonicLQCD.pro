@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     parallelization/neighbourlist.cpp \
     parallelization/indexorganiser.cpp \
     testsuite.cpp \
-    flow/flow.cpp
+    flow/flow.cpp \
+    correlators/topologicalcharge.cpp
 
 HEADERS += \
     system.h \
@@ -40,7 +41,8 @@ HEADERS += \
     parallelization/neighbourlist.h \
     parallelization/indexorganiser.h \
     testsuite.h \
-    flow/flow.h
+    flow/flow.h \
+    correlators/topologicalcharge.h
 
 #LIBS += -llapack -lblas -larmadillo
 

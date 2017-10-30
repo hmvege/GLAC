@@ -49,7 +49,7 @@ void Action::initializeIndexHandler(IndexOrganiser *Index)
     m_Index = Index;
 }
 
-SU3 Action::getActionDerivative(Links * lattice, SU3 V, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+SU3 Action::getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     cout << "In Action::getActionDerivative: If you are seeing this, something is wrong!" << endl;
     exit(1);

@@ -58,7 +58,7 @@ void Flow::runFlow(Links *lattice)
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
 //                        W[0] = lattice[m_Index->getIndex(x,y,z,t)].U[mu]; // V should be the previous flowed point!
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,lattice[m_Index->getIndex(x,y,z,t)].U[mu],x,y,z,t,mu) * m_epsilon);
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu) * m_epsilon);
                     }
                 }
             }
@@ -82,9 +82,7 @@ void Flow::runFlow(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(
-                                    m_S->getActionDerivative(lattice,lattice[m_Index->getGlobalIndex(x,y,z,t)].U[mu],x,y,z,t,mu)*m_epsilon*0.8888888888888888
-                                    - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.4722222222222222);
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.8888888888888888 - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.4722222222222222);
                     }
                 }
             }
@@ -109,7 +107,7 @@ void Flow::runFlow(Links *lattice)
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
                         m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(
-                                    m_S->getActionDerivative(lattice,lattice[m_Index->getGlobalIndex(x,y,z,t)].U[mu],x,y,z,t,mu)*m_epsilon*0.75
+                                    m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.75
                                     - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
                     }
                 }
@@ -227,7 +225,7 @@ void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned in
      * Smears a link according to what that has been outlined in Luschers paper on Wilson flow. OLD METHOD! CAN REMOVE IF NEW ONE IS CORRECT!
      */
     // Sets first RK3 constant, W0
-    W[0] = lattice[m_Index->getIndex(i,j,k,l)].U[mu]; // V should be the previous flowed point!
+//    W[0] = lattice[m_Index->getIndex(i,j,k,l)].U[mu]; // V should be the previous flowed point!
 
 //    // TEST ================================================================
 //    TestSuite test;
@@ -236,9 +234,9 @@ void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned in
 //    // =====================================================================
 
     // Finds Z0
-    Z[0] = m_S->getActionDerivative(lattice,W[0],i,j,k,l,mu) * m_epsilon;
+//    Z[0] = m_S->getActionDerivative(lattice,W[0],i,j,k,l,mu) * m_epsilon;
     // Sets second RK3 constant, W1
-    W[1] = exponentiate(Z[0] * 0.25) * W[0];
+//    W[1] = exponentiate(Z[0] * 0.25) * W[0];
 
 //    // TEST ================================================================
 //    std::cout << "MATRIX W1" << std::endl;
@@ -247,9 +245,9 @@ void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned in
 //    // =====================================================================
 
     // Finds Z1
-    Z[1] = m_S->getActionDerivative(lattice,W[1],i,j,k,l,mu) * m_epsilon;
+//    Z[1] = m_S->getActionDerivative(lattice,W[1],i,j,k,l,mu) * m_epsilon;
     // Sets third RK3 constant, W2
-    W[2] = exponentiate(Z[1]*0.8888888888888888 - Z[0]*0.4722222222222222) * W[1];
+//    W[2] = exponentiate(Z[1]*0.8888888888888888 - Z[0]*0.4722222222222222) * W[1];
 
 //    // TEST ================================================================
 //    std::cout << "MATRIX W2" << std::endl;
@@ -257,7 +255,7 @@ void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned in
 //    // =====================================================================
 
     // Sets the new, flowed SU3 matrix.
-    m_tempLattice[m_Index->getIndex(i,j,k,l)].U[mu].copy(exponentiate(m_S->getActionDerivative(lattice,W[2],i,j,k,l,mu)*m_epsilon*0.75 - Z[1]*0.8888888888888888 + Z[0]*0.4722222222222222)*W[2]);
+//    m_tempLattice[m_Index->getIndex(i,j,k,l)].U[mu].copy(exponentiate(m_S->getActionDerivative(lattice,W[2],i,j,k,l,mu)*m_epsilon*0.75 - Z[1]*0.8888888888888888 + Z[0]*0.4722222222222222)*W[2]);
     // HOW MUCH MEMORY THAT I WILL USE: (64**3*128*4*18*8)/1024/1024/1024*2 / (256/16)
 
 //    // TEST ================================================================

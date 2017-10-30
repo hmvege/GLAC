@@ -1,6 +1,5 @@
 #include "plaquette.h"
 #include <vector>
-#include "correlator.h"
 #include "links.h"
 #include "functions.h"
 #include "parallelization/indexorganiser.h"
