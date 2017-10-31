@@ -15,7 +15,7 @@ Flow::Flow(unsigned int *N, double beta)
     for (int i = 0; i < 4; i++) m_N[i] = N[i];
     m_subLatticeSize = 1;
     for (int i = 0; i < 4; i++) m_subLatticeSize *= m_N[i];
-    I.identity();
+    f0.identity();
     m_beta = beta;
     m_tempLattice = new Links[m_subLatticeSize];
 }
@@ -59,8 +59,14 @@ void Flow::runFlow(Links *lattice)
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
 //                        W[0] = lattice[m_Index->getIndex(x,y,z,t)].U[mu]; // V should be the previous flowed point!
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu) * m_epsilon);
-//                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].print();exit(1);
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon);
+
+//                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu));
+//                        SU3 U = exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+//                        SU3 UInv = exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*(-1.0));
+//                        SU3 I = U*U.inv();
+//                        I.print();exit(1);
+//                        exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]).print();exit(1);
                     }
                 }
             }
@@ -72,7 +78,17 @@ void Flow::runFlow(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
+                        std::cout<<std::endl;
+                        (m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]).printMachine();
+                        std::cout<<std::endl;
+                        exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]).printMachine();
+                        std::cout<<std::endl;
+                        exponentiate2(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]).printMachine();
+                        std::cout<<std::endl;
+                        exit(1);
                         lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.25)*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+
+                        (exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]).inv()).print();exit(1);
                     }
                 }
             }
@@ -126,6 +142,7 @@ void Flow::runFlow(Links *lattice)
             }
         }
     }
+//    lattice[m_Index->getIndex(0,0,0,0)].U[0].print();
 }
 
 SU3 Flow::exponentiate(SU3 Q)
@@ -133,14 +150,14 @@ SU3 Flow::exponentiate(SU3 Q)
     /*
      * Takes the exponential of an Hermitian matrix.
      */
-    I.identity();
+    f0.identity();
 
-    // Makes Q hermitian. MOVE TO FUNCTION?
-    for (int i = 0; i < 9; i++) {
-        temp = Q.mat[2*i];
-        Q.mat[2*i] = Q.mat[2*i+1];
-        Q.mat[2*i+1] = -temp;
-    }
+//    // Makes Q hermitian. MOVE TO FUNCTION?
+//    for (int i = 0; i < 9; i++) {
+//        temp = Q.mat[2*i];
+//        Q.mat[2*i] = Q.mat[2*i+1];
+//        Q.mat[2*i+1] = -temp;
+//    }
 
     QSquared = Q*Q;
     QCubed = Q*QSquared;
@@ -213,56 +230,58 @@ SU3 Flow::exponentiate(SU3 Q)
 //    }
     // =====================================================================
 
-    I.setComplex(f[0],0);
-    I.setComplex(f[0],8);
-    I.setComplex(f[0],16);
-    return I + Q*f[1] + QSquared*f[1];
+    f0.setComplex(f[0],0);
+    f0.setComplex(f[0],8);
+    f0.setComplex(f[0],16);
+    return f0 + Q*f[1] + QSquared*f[1];
 }
 
-void Flow::smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+SU3 Flow::exponentiate2(SU3 Q)
 {
-    /*
-     * Smears a link according to what that has been outlined in Luschers paper on Wilson flow. OLD METHOD! CAN REMOVE IF NEW ONE IS CORRECT!
-     */
-    // Sets first RK3 constant, W0
-//    W[0] = lattice[m_Index->getIndex(i,j,k,l)].U[mu]; // V should be the previous flowed point!
+    Q.makeHermitian(); // Makes anti-hermitian
+    SU3 U1,U2,U3,Y1,Y2,Y3,I;
+    I.identity();
+    Y1.zeros();
+    Y2.zeros();
+    Y3.zeros();
+    complex x1,x2,x3;
+    x1 = complex(Q.mat[0] - Q.mat[8],Q.mat[1] - Q.mat[9]) * 0.3333333333333333;
+    Y1.setComplex(x1,0);
+    Y1.setComplex(complex(-x1.re(),-x1.im()),4);
+    Y1.mat[2] = Q.mat[2];
+    Y1.mat[3] = Q.mat[3];
+    Y1.mat[6] = Q.mat[6];
+    Y1.mat[7] = Q.mat[7];
 
-//    // TEST ================================================================
-//    TestSuite test;
-//    std::cout << "MATRIX W0" << std::endl;
-//    test.testMatrix(W[0],true);
-//    // =====================================================================
+    x2 = complex(Q.mat[0] - Q.mat[16],Q.mat[1] - Q.mat[17]) * 0.3333333333333333;
+    Y2.setComplex(x2,0);
+    Y2.setComplex(complex(-x2.re(),-x2.im()),8);
+    Y2.mat[4] = Q.mat[4];
+    Y2.mat[5] = Q.mat[5];
+    Y2.mat[12] = Q.mat[12];
+    Y2.mat[13] = Q.mat[13];
 
-    // Finds Z0
-//    Z[0] = m_S->getActionDerivative(lattice,W[0],i,j,k,l,mu) * m_epsilon;
-    // Sets second RK3 constant, W1
-//    W[1] = exponentiate(Z[0] * 0.25) * W[0];
+    x3 = complex(Q.mat[8] - Q.mat[16],Q.mat[9] - Q.mat[17]) * 0.3333333333333333;
+    Y3.setComplex(x3,4);
+    Y3.setComplex(complex(-x3.re(),-x3.im()),8);
+    Y3.mat[10] = Q.mat[10];
+    Y3.mat[11] = Q.mat[11];
+    Y3.mat[14] = Q.mat[14];
+    Y3.mat[15] = Q.mat[15];
 
-//    // TEST ================================================================
-//    std::cout << "MATRIX W1" << std::endl;
-//    test.testMatrix(W[1],true);
-//    exit(1);
-//    // =====================================================================
+//    * 0 1 2    0  1   2  3    4  5
+//    * 3 4 5 =  6  7   8  9   10 11
+//    * 6 7 8   12 13  14 15   16 17
 
-    // Finds Z1
-//    Z[1] = m_S->getActionDerivative(lattice,W[1],i,j,k,l,mu) * m_epsilon;
-    // Sets third RK3 constant, W2
-//    W[2] = exponentiate(Z[1]*0.8888888888888888 - Z[0]*0.4722222222222222) * W[1];
+//    U1 = (I + Y1*0.25) * inverseY1;
+//    U1 = (I + Y2*0.25) * inverseY2;
+//    U1 = (I + Y3*0.5) * inverseY3;
 
-//    // TEST ================================================================
-//    std::cout << "MATRIX W2" << std::endl;
-//    test.testMatrix(W[2],true);
-//    // =====================================================================
-
-    // Sets the new, flowed SU3 matrix.
-//    m_tempLattice[m_Index->getIndex(i,j,k,l)].U[mu].copy(exponentiate(m_S->getActionDerivative(lattice,W[2],i,j,k,l,mu)*m_epsilon*0.75 - Z[1]*0.8888888888888888 + Z[0]*0.4722222222222222)*W[2]);
-    // HOW MUCH MEMORY THAT I WILL USE: (64**3*128*4*18*8)/1024/1024/1024*2 / (256/16)
-
-//    // TEST ================================================================
-//    std::cout << "MATRIX W3" << std::endl;
-//    test.testMatrix(m_tempLattice[m_Index->getIndex(i,j,k,l)].U[mu],true);
-//    std::cout << "Reached end of smear link" << std::endl;
-//    // =====================================================================
+    U1 *= U2;
+    U1 *= U3;
+    U1 *= U2;
+    U1 *= U1;
+    return U1;
 }
 
 void Flow::setIndexHandler(IndexOrganiser *Index)

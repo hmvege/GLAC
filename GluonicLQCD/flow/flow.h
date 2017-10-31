@@ -21,7 +21,7 @@ private:
     complex h[3];
     double c0, c1, u, w, theta, xi0, c0max;
     SU3 W[3], Z[2];
-    SU3 I; // Matrix for filling return matrix
+    SU3 f0; // Matrix for filling return matrix
     SU3 QSquared, QCubed;
 
     double temp, cosu, cosw, sinu, sinw, uu, ww, sin2u, cos2u;
@@ -31,6 +31,7 @@ private:
     void smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
     IndexOrganiser *m_Index = nullptr;
     SU3 exponentiate(SU3 Q);
+    SU3 exponentiate2(SU3 Q);
     inline void updateLattice(Links *lattice);
 
     Action *m_S = nullptr;

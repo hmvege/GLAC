@@ -25,10 +25,11 @@ public:
     SU3 &operator*=(double a);
     SU3 &operator-=(double a);
     void print();
+    void printMachine();
     complex get(int i, int j) { return complex(mat[6*i + 2*j],mat[6*i + 2*j+1]); }
 
     complex trace();
-    SU3 antiHermitian(); // CORRECT?
+    SU3 makeHermitian();
 
     SU3 inv();
     void zeros();

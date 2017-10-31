@@ -65,17 +65,26 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
                 *m_Index->getNegativeLink(lattice,m_indexes,nu,m_nuIndex,mu).inv()
                 *m_Index->getNegativeLink(lattice,m_indexes,nu,m_nuIndex,nu);
     }
-    // Multiply X_mu with the U_mu
-    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu] * m_staple;
     // Multiply the product of this with each of the 8 T^a generators
     // Take trace, real, and the multiply with beta/3
     // Multiply with 8 generators T^a again, sum and return matrix
 
-//    SU3 Q;
-//    m_staple = m_staple*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
-//    m_X = (m_staple.inv() - m_staple)*0.5 - (m_staple.inv() - m_staple).trace().re()/6.0;
+//    SU3 m_staplez = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
+//    SU3 Q, C;
+//    double temp;
+//    temp = (m_staplez.inv() - m_staplez).trace().im()/6.0;
+//    C.zeros();
+//    C.mat[1] = temp;
+//    C.mat[9] = temp;
+//    C.mat[17] = temp;
 
+//    Q = (m_staplez.inv() - m_staplez)*0.5 - C;
 
+//    m_X = Q*0.5;
+//    m_X.print();
+
+    // Multiply X_mu with the U_mu
+    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu] * m_staple;
 
     // Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script.
 
@@ -106,11 +115,16 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
 //    std::cout << "printing Q" << std::endl;
 //    Q.print();
 
-//    std::cout << "printing X" << std::endl;
-//    m_X.print();
+
+    m_X.makeHermitian();
+//    m_X.printMachine();
 //    std::cout<<std::endl;
 //    exit(1);
 
+//    std::cout << "printing X" << std::endl;
+//    m_X.print();
+//    std::cout << std::endl;
+//    exit(1);
     // No multiplication factor needed as the -3/beta is cancelled in the Z(W_i).
     return m_X;//*m_multiplicationFactor;
 }

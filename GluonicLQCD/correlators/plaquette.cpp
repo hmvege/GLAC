@@ -37,10 +37,15 @@ double Plaquette::calculate(Links *lattice)
                         updateMuIndex(mu); // Inline function
                         for (int nu = mu+1; nu < 4; nu++) {
                             updateNuIndex(nu); // Inline function
-                            P += lattice[m_Index->getIndex(i,j,k,l)].U[mu]
-                                    *m_Index->getPositiveLink(lattice,indexes,mu,muIndex,nu)
-                                    *m_Index->getPositiveLink(lattice,indexes,nu,nuIndex,mu).inv()
-                                    *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv();
+                            PTemp = lattice[m_Index->getIndex(i,j,k,l)].U[mu];
+                            PTemp *= m_Index->getPositiveLink(lattice,indexes,mu,muIndex,nu);
+                            PTemp *= m_Index->getPositiveLink(lattice,indexes,nu,nuIndex,mu).inv();
+                            PTemp *= lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv();
+                            P += PTemp;
+//                            P += lattice[m_Index->getIndex(i,j,k,l)].U[mu]
+//                                    *m_Index->getPositiveLink(lattice,indexes,mu,muIndex,nu)
+//                                    *m_Index->getPositiveLink(lattice,indexes,nu,nuIndex,mu).inv()
+//                                    *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv();
                         }
                     }
                 }

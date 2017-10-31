@@ -13,6 +13,7 @@ private:
     int nuIndex[4];
     double multiplicationFactor;
     SU3 P;
+    SU3 PTemp;
 public:
     Plaquette();
     ~Plaquette();

@@ -240,7 +240,7 @@ void SU3::print()
     {
         for (int j = 0; j < 3; j++)
         {
-            cout <<std::setw(12) << mat[6*i + 2*j];
+            cout << std::setw(12) << mat[6*i + 2*j];
             if (mat[6*i + 2*j + 1] < 0)
             {
                 cout << " - ";
@@ -249,10 +249,45 @@ void SU3::print()
             {
                 cout << " + ";
             }
-            cout << std::setw(12) << fabs(mat[6*i + 2*j + 1]) << "i,  ";
+            cout << std::setw(12) << fabs(mat[6*i + 2*j + 1]) << "i";
         }
         cout << endl;
     }
+}
+
+void SU3::printMachine()
+{
+    for (int i = 0; i < 3; i++) // Machine friendly way
+    {
+        if (i == 0) {
+            cout << "[";
+        } else {
+            cout << " ";
+        }
+        cout << "[";
+        for (int j = 0; j < 3; j++)
+        {
+            cout << std::setprecision(4) << mat[6*i + 2*j];
+            if (mat[6*i + 2*j + 1] < 0)
+            {
+                cout << " - ";
+            }
+            else
+            {
+                cout << " + ";
+            }
+            cout << std::setprecision(4) << fabs(mat[6*i + 2*j + 1]) << "i";
+            if (j == 2){
+                cout << "]";
+                if (i != 2) cout << ",";
+            } else {
+                cout << ", ";
+            }
+
+        }
+        if (i != 2) cout << endl;
+    }
+    cout << "]" << endl;
 }
 
 complex SU3::trace()
@@ -260,15 +295,16 @@ complex SU3::trace()
     return complex(mat[0] + mat[8] + mat[16], mat[1] + mat[9] + mat[17]);
 }
 
-SU3 SU3::antiHermitian()
+SU3 SU3::makeHermitian()
 {
     /*
      * IS THIS RIGHT?
      */
-    SU3 temp;
+    double temp;
     for (int i = 0; i < 9; i++) {
-        temp.mat[2*i] = mat[2*i+1];
-        temp.mat[2*i+1] = - mat[2*i];
+        temp = mat[2*i];
+        mat[2*i] = mat[2*i+1];
+        mat[2*i+1] = -temp;
     }
-    return temp;
+    return *this;
 }
