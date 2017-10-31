@@ -72,7 +72,8 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     // Multiply with 8 generators T^a again, sum and return matrix
 
 //    SU3 Q;
-//    Q = (m_staple.inv() - m_staple)*0.5 - (m_staple.inv() - m_staple).trace().re()/6.0;
+//    m_staple = m_staple*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
+//    m_X = (m_staple.inv() - m_staple)*0.5 - (m_staple.inv() - m_staple).trace().re()/6.0;
 
 
 

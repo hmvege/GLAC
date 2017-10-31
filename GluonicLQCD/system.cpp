@@ -387,12 +387,11 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    loadFieldConfiguration("para8core061102.bin");
 //    loadFieldConfiguration("scalar16cubed16run1.bin");
 //    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469
-    loadFieldConfiguration("TEST_RUN_CONFIG_beta6.000000_spatial16_temporal32_threads8_config19.bin");
-//    m_lattice[0].U[0].print();
-//    double corr = m_correlator->calculate(m_lattice);
-//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//    corr /= double(m_numprocs);
-//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
+    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412
+    double corr = m_correlator->calculate(m_lattice);
+    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    corr /= double(m_numprocs);
+    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
 //    exit(1);
     Flow WFlow(m_N, m_beta);
     WFlow.setIndexHandler(m_indexHandler);

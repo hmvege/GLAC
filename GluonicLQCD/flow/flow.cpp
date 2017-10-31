@@ -51,6 +51,7 @@ void Flow::runFlow(Links *lattice)
     /*
      * Performs a single flow on the lattice.
      */
+    // W0 is simply just the original lattice times epsilon
     // Sets Z0 in temporary lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
@@ -59,6 +60,7 @@ void Flow::runFlow(Links *lattice)
                     for (unsigned int mu = 0; mu < 4; mu++) {
 //                        W[0] = lattice[m_Index->getIndex(x,y,z,t)].U[mu]; // V should be the previous flowed point!
                         m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu) * m_epsilon);
+//                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].print();exit(1);
                     }
                 }
             }
@@ -106,9 +108,7 @@ void Flow::runFlow(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(
-                                    m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.75
-                                    - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.75 - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
                     }
                 }
             }
