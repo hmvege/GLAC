@@ -30,6 +30,7 @@ public:
 
     complex trace();
     SU3 makeHermitian();
+    SU3 makeAntiHermitian();
 
     SU3 inv();
     void zeros();

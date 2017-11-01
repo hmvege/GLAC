@@ -32,6 +32,8 @@ T[7] *= 1/sp.sqrt(3)
 # Adding factor 1/2 to every generator
 T = [Ta/2 for Ta in T]
 
+# T = [-sp.I*Ta for Ta in T]
+
 # Setting general matrix A
 a11,a12,a13,a21,a22,a23,a31,a32,a33 = sp.symbols("a11 a12 a13 a21 a22 a23 a31 a32 a33",real=False)
 A = sp.Matrix([[a11, a12, a13],[a21, a22, a23],[a31, a32, a33]])
@@ -50,8 +52,14 @@ def printAll():
 	# for i,T_a in enumerate(T):
 	# 	print "T(%d):" % i 
 	# 	sp.pprint(T_a)
-	sp.pprint(A)
-	sp.pprint(sp.simplify(res))
+	# sp.pprint(A)
+	# sp.pprint(sp.simplify(res))
+	sp.pprint(sp.simplify(-res*sp.I))
+	print "REAL:"
+	sp.pprint(sp.simplify(sp.re(-res*sp.I)))
+	print "IMAG:"
+	sp.pprint(sp.simplify(sp.im(-res*sp.I)))
+
 	index_map = """\nIndex map:
 H =
 0 1 2    0  1   2  3    4  5

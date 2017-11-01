@@ -86,8 +86,8 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     // Multiply X_mu with the U_mu
     m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu] * m_staple;
 
-    // Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script.
 
+    // Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann_matrix_multiplication.py.
     // Diagonals
     m_X.mat[0] = 0;
     m_X.mat[1] = (m_staple.mat[9] - 2*m_staple.mat[1] + m_staple.mat[17])*0.1666666666666666;
@@ -112,18 +112,14 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     m_X.mat[14] = - m_X.mat[10];
     m_X.mat[15] = m_X.mat[11];
 
-//    std::cout << "printing Q" << std::endl;
-//    Q.print();
-
-
-    m_X.makeHermitian();
 //    m_X.printMachine();
-//    std::cout<<std::endl;
-//    exit(1);
+//    m_X.makeHermitian(); // Matrix now Hermitian
 
 //    std::cout << "printing X" << std::endl;
-//    m_X.print();
+//    m_X.printMachine();
 //    std::cout << std::endl;
+//    m_X.makeHermitian(); // Matrix now anti-Hermitian
+//    m_X.printMachine();
 //    exit(1);
     // No multiplication factor needed as the -3/beta is cancelled in the Z(W_i).
     return m_X;//*m_multiplicationFactor;

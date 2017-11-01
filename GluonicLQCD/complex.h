@@ -25,11 +25,14 @@ public:
 
     complex &operator =(const complex& b);
     complex &operator+=(complex b);
+    complex &operator+=(double b);
     complex &operator-=(complex b);
+    complex &operator-=(double b);
     complex &operator*=(complex b);
     complex &operator*=(double b);
     complex &operator/=(complex b);
     complex &operator/=(double b);
+    complex operator-() const;
 
     double norm();
     double normSquared();
@@ -46,7 +49,19 @@ inline complex operator+(complex a, complex b)
     return a;
 }
 
+inline complex operator+(complex a, double b)
+{
+    a += b;
+    return a;
+}
+
 inline complex operator-(complex a, complex b)
+{
+    a -= b;
+    return a;
+}
+
+inline complex operator-(complex a, double b)
 {
     a -= b;
     return a;
@@ -75,6 +90,7 @@ inline complex operator/(complex a, double b)
     a /= b;
     return a;
 }
+
 
 
 #endif // COMPLEX_H

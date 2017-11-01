@@ -107,11 +107,11 @@ SU3 &SU3::operator-=(double a)
 SU3 &SU3::operator*=(complex z)
 {
     double temp;
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 18; i+=2)
     {
-        temp = mat[2*i];
-        mat[2*i] = mat[2*i]*z.z[0] - mat[2*i+1]*z.z[1];
-        mat[2*i+1] = temp*z.z[1] + mat[2*i+1]*z.z[0];
+        temp = mat[i];
+        mat[i] = mat[i]*z.z[0] - mat[i+1]*z.z[1];
+        mat[i+1] = temp*z.z[1] + mat[i+1]*z.z[0];
     }
     return *this;
 }
@@ -267,7 +267,7 @@ void SU3::printMachine()
         cout << "[";
         for (int j = 0; j < 3; j++)
         {
-            cout << std::setprecision(4) << mat[6*i + 2*j];
+            cout << std::setw(12) << mat[6*i + 2*j];
             if (mat[6*i + 2*j + 1] < 0)
             {
                 cout << " - ";
@@ -276,7 +276,7 @@ void SU3::printMachine()
             {
                 cout << " + ";
             }
-            cout << std::setprecision(4) << fabs(mat[6*i + 2*j + 1]) << "i";
+            cout << std::setw(12) << fabs(mat[6*i + 2*j + 1]) << "i";
             if (j == 2){
                 cout << "]";
                 if (i != 2) cout << ",";
@@ -298,6 +298,20 @@ complex SU3::trace()
 SU3 SU3::makeHermitian()
 {
     /*
+     * An anti-hermitian matrix is made hermitian by multiplying by (-i)
+     */
+    double temp;
+    for (int i = 0; i < 9; i++) {
+        temp = mat[2*i];
+        mat[2*i] = mat[2*i+1];
+        mat[2*i+1] = -temp;
+    }
+    return *this;
+}
+
+SU3 SU3::makeAntiHermitian()
+{
+    /*
      * IS THIS RIGHT?
      */
     double temp;
@@ -308,3 +322,7 @@ SU3 SU3::makeHermitian()
     }
     return *this;
 }
+
+
+
+

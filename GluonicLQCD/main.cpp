@@ -158,8 +158,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose)
 {
 //    runBoolTest(1e9);
-    TestSuite unitTester;
-    unitTester.setRNG(SU3Gen);
-    unitTester.runFullTestSuite(verbose);
+//    TestSuite unitTester;
+//    unitTester.setRNG(SU3Gen);
+//    unitTester.runFullTestSuite(verbose);
+    SU3BaseTests();
 //    runMatrixPerformanceTest(0.24,std::time(nullptr),1e7,true,false);
 }

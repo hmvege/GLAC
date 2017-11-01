@@ -8,12 +8,12 @@ Y1Inverse = (sp.eye(3)-0.25*Y1).inv()
 Y2Inverse = (sp.eye(3)-0.25*Y2).inv()
 Y3Inverse = (sp.eye(3)-0.5*Y3).inv()
 
-N = 0
-print "="*N
+
+
 sp.pprint(sp.simplify(Y1Inverse))
-print "="*N
+print "\n"
 sp.pprint(sp.simplify(Y2Inverse))
-print "="*N
+print "\n"
 sp.pprint(sp.simplify(Y3Inverse))
 
 index_map = """

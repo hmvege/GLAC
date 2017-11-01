@@ -121,7 +121,6 @@ complex &complex::operator/=(complex b)
     /*
      * Dividing this by complex number b.
      */
-    std::cout<<"Complex division is used!"<<std::endl;
     double prev_re = z[0];
     double divisor = b.normSquared();
     z[0] = (z[0]*b.re() + z[1]*b.im())/divisor;
@@ -147,6 +146,29 @@ complex &complex::operator-=(complex b)
     z[0] -= b.re();
     z[1] -= b.im();
     return *this;
+}
+
+complex &complex::operator-=(double b)
+{
+    /*
+     * Subtracting this by real(double) number b.
+     */
+    z[0] -= b;
+    return *this;
+}
+
+complex &complex::operator+=(double b)
+{
+    /*
+     * Addingthis by real(double) number b.
+     */
+    z[0] += b;
+    return *this;
+}
+
+complex complex::operator-() const
+{
+    return complex(-z[0],-z[1]);
 }
 
 std::ostream &operator<<(std::ostream &os, const complex &a)

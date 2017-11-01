@@ -393,7 +393,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     corr /= double(m_numprocs);
     if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
 //    exit(1);
-    Flow WFlow(m_N, m_beta);
+    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
     WFlow.setIndexHandler(m_indexHandler);
     WFlow.setAction(m_S);
     double * m_gammaFlow = new double[100];
@@ -483,7 +483,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     }
 
     // RUNNING FLOW!
-//    Flow WFlow(m_N, m_beta);
+//    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
 //    WFlow.setIndexHandler(m_indexHandler);
 //    WFlow.setAction(m_S);
 //    double * m_gammaFlow = new double[100];
