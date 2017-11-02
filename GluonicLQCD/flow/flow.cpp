@@ -85,12 +85,9 @@ void Flow::runFlow(Links *lattice)
 //                            exponentiate2(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]).printMachine();
 //                            cout<<"TAYLOR EXPANSION: "<<endl;
 //                            exponentiate3(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]).printMachine();
-
 //                        }
 //                        MPI_Finalize();exit(1);
-                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.25)*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
-
-//                        (exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]).inv()).print();exit(1);
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate3(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.25)*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
                     }
                 }
             }
@@ -114,7 +111,7 @@ void Flow::runFlow(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate3(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
                     }
                 }
             }
@@ -138,7 +135,7 @@ void Flow::runFlow(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate3(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
                     }
                 }
             }
@@ -214,8 +211,6 @@ SU3 Flow::exponentiate2(SU3 Q)
     /*
      * Exponentiation using the Luscher method.
      */
-//    SU3 U1,U2,U3,Y1,Y2,Y3,I,Y1Inv,Y2Inv,Y3Inv;
-//    complex x1,x2,x3,div1,div2,div3;
     I.identity();
     Y1.zeros();
     Y2.zeros();
@@ -226,8 +221,14 @@ SU3 Flow::exponentiate2(SU3 Q)
     Y1Inv.identity();
     Y2Inv.identity();
     Y3Inv.identity();
+    x1.zeros();
+    x2.zeros();
+    x3.zeros();
+    div1.zeros();
+    div2.zeros();
+    div3.zeros();
 
-    x1 = (Q.get(0,0) - Q.get(1,1))*0.3333333333333333;//complex(Q.mat[0] - Q.mat[8],Q.mat[1] - Q.mat[9]) * 0.3333333333333333;
+    x1 = (Q.get(0,0) - Q.get(1,1))*0.3333333333333333;
     Y1.setComplex(x1,0);
     Y1.setComplex(-x1,8);
     Y1.mat[2] = Q.mat[2];
@@ -235,7 +236,7 @@ SU3 Flow::exponentiate2(SU3 Q)
     Y1.mat[6] = Q.mat[6];
     Y1.mat[7] = Q.mat[7];
 
-    x2 = (Q.get(0,0) - Q.get(3,3))*0.3333333333333333;//complex(Q.mat[0] - Q.mat[16],Q.mat[1] - Q.mat[17]) * 0.3333333333333333;
+    x2 = (Q.get(0,0) - Q.get(3,3))*0.3333333333333333;
     Y2.setComplex(x2,0);
     Y2.setComplex(-x2,16);
     Y2.mat[4] = Q.mat[4];
@@ -243,7 +244,7 @@ SU3 Flow::exponentiate2(SU3 Q)
     Y2.mat[12] = Q.mat[12];
     Y2.mat[13] = Q.mat[13];
 
-    x3 = (Q.get(1,1) - Q.get(2,2))*0.3333333333333333;//complex(Q.mat[8] - Q.mat[16],Q.mat[9] - Q.mat[17]) * 0.3333333333333333;
+    x3 = (Q.get(1,1) - Q.get(2,2))*0.3333333333333333;
     Y3.setComplex(x3,8);
     Y3.setComplex(-x3,16);
     Y3.mat[10] = Q.mat[10];
@@ -276,7 +277,12 @@ SU3 Flow::exponentiate2(SU3 Q)
     U1 = (I + Y1*0.25) * Y1Inv;
     U2 = (I + Y2*0.25) * Y2Inv;
     U3 = (I + Y3*0.5) * Y3Inv;
-    return U1*U2*U3*U2*U1;
+    Y1 = U1;
+    Y1 *= U2;
+    Y1 *= U3;
+    Y1 *= U2;
+    Y1 *= U1;
+    return Y1;
 }
 
 SU3 Flow::exponentiate3(SU3 Q)
@@ -284,8 +290,10 @@ SU3 Flow::exponentiate3(SU3 Q)
     /*
      * Exponentiate using regular Taylor expansion.
      */
-    QSquared = Q*Q;
-    return I + Q + QSquared*0.5;// + E*EE*m_epsilon*m_epsilon*m_epsilon/6.0;// + Temp*Temp*Temp*Temp*m_epsilon*m_epsilon*m_epsilon*m_epsilon/24.0;
+    QSquared = Q;
+    QSquared *= Q;
+    QCubed = QSquared*Q;
+    return I + Q + QSquared*0.5 + QCubed/6.0;// + Temp*Temp*Temp*Temp*m_epsilon*m_epsilon*m_epsilon*m_epsilon/24.0;
 }
 
 void Flow::setIndexHandler(IndexOrganiser *Index)

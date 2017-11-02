@@ -72,6 +72,12 @@ complex complex::c()
     return complex(z[0],-z[1]);
 }
 
+complex complex::zeros()
+{
+    z[0] = 0;
+    z[1] = 0;
+    return *this;
+}
 
 complex &complex::operator=(const complex &b)
 {

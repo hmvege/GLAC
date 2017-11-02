@@ -38,6 +38,7 @@ public:
     double normSquared();
     complex conjugate();
     complex c();
+    complex zeros();
 
     // TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
     friend std::ostream& operator<<(std::ostream& os, const complex& a); // Allows cout << myVector << endl;
