@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt, numpy as np
 
-s = np.array("""
+plaq_morningstar = np.array("""
 0    0.61401745  
 1    0.62927918  
 2    0.64409064  
@@ -102,13 +102,14 @@ s = np.array("""
 98   0.98796476  
 99   0.98824163""".split(),dtype=float)
 
-tflow = s[0::2] * 0.01
-plaq_flow = s[1::2]
-print len(plaq_flow), len(tflow)
+def getFlowPlaq(arr):
+	tflow = arr[0::2] * 0.01
+	plaq_flow = arr[1::2]
+	return  tflow, plaq_flow
 
-plt.plot(tflow,plaq_flow,"-", label="Flowed Plaquette")
+plt.plot(getFlowPlaq(plaq_morningstar),"-", label="Flowed Plaquette")
 plt.grid(True)
 plt.xlabel(r"Flow time $\tau$")
 plt.ylabel("Plaquette")
 plt.title("Flowed plaquette value")
-plt.savefig("plaquette_flow.png",dpi=300)
+plt.savefig("../figures/plaquette_flow.png",dpi=300)

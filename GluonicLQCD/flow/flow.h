@@ -33,11 +33,10 @@ private:
     int m_numprocs;
     int m_processRank;
 
-    double temp, cosu, cosw, sinu, sinw, uu, ww, sin2u, cos2u;
+    double cosu, cosw, sinu, sinw, uu, ww, sin2u, cos2u;
 
     // Functions for performing flow
     void runFlow(Links *lattice);
-    void smearLink(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
     IndexOrganiser *m_Index = nullptr;
     SU3 exponentiate(SU3 Q); // Morningstar method
     SU3 exponentiate2(SU3 Q); // Luscher method
