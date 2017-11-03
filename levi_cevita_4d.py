@@ -24,3 +24,11 @@ for perm in permutations:
 		for j in range(i+1,4):
 			s*=np.sign(perm[j]-perm[i])
 	print perm, s
+
+c=0
+for i in range(4):
+	for j in range(4):
+		if i == j: 
+			c += 1
+			continue
+		print 4*i+j - c

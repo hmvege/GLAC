@@ -45,15 +45,24 @@ double TopologicalCharge::calculate()
 
 void TopologicalCharge::populateLC()
 {
+    int muNuOverCounter = 0;
+    int rhoSigmaOverCounter = 0;
     for (int mu = 0; mu < 4; mu++) {
         for (int nu = 0; nu < 4; nu++) {
-            if (nu==mu) continue;
+            if (nu==mu) {
+                muNuOverCounter++;
+                continue;
+            }
             for (int rho = 0; rho < 4; rho++) {
                 if (rho==mu || rho==nu) continue;
                 for (int sigma = 0; sigma < 4; sigma++) {
-                    if (sigma==mu || sigma==nu || sigma==rho) continue;
+                    if (sigma==rho) {
+                        rhoSigmaOverCounter++;
+                        continue;
+                        if (sigma==mu || sigma==nu) continue;
+                    }
                     LeviCivita LC;
-                    LC.setLC(mu,nu,rho,sigma);
+                    LC.setLC(mu, nu - muNuOverCounter, rho, sigma - rhoSigmaOverCounter);
                     LC.sgn = getLCSign(LC);
                     m_leviCivita.push_back(LC);
                 }

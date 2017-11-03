@@ -35,6 +35,7 @@ private:
     int m_NTherm;
     int m_NUpdates; // N updates before calculating the action, as that is costly
     double m_epsilon;
+    double m_a; // lattice spacing
 
     // For handling the acceptance rate
     unsigned long int m_acceptanceCounter = 0;

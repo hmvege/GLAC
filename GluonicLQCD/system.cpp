@@ -411,24 +411,23 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     for (int tau = 0; tau < 100; tau++) {
         WFlow.flowGaugeField(1,m_lattice);
         m_gammaFlow[tau] = m_correlator->calculate(m_lattice);
-        for (unsigned int x = 0; x < m_N[0]; x++) {
-            for (unsigned int y = 0; y < m_N[1]; y++) {
+        m_topologicalCharge[tau] = 0;
+        for (unsigned int x = 0; x < m_N[0]; x++) { // CLEAN UP AND MOVE THIS PART INTO ITS OWN CLASS FOR CALCULATING TOP CHARGE AND ENERGY?!
+            for (unsigned int y = 0; y < m_N[1]; y++) { // HIDE IT, AS IT IS BIG AND UGLY!
                 for (unsigned int z = 0; z < m_N[2]; z++) {
                     for (unsigned int t = 0; t < m_N[3]; t++) {
                         Clov.calculateClover(m_lattice,x,y,z,t);
                         TopCharge.setClover(Clov.m_clovers);
-                        if (m_processRank == 0) {
-                            m_topologicalCharge[tau] = TopCharge.calculate();
-                            cout << "Exiting after 1 top charge calculation" << endl;
-                            MPI_Finalize();exit(1); // EXITING AFTER ONE CALCULATION!
-                        }
+                        m_topologicalCharge[tau] += TopCharge.calculate();
                     }
                 }
             }
         }
+        MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        m_topologicalCharge[tau] *= (0.09314*0.09314*0.09314*0.09314);
         m_gammaFlow[tau] /= double(m_numprocs);
-        if (m_processRank == 0) printf("\n%-4d %-12.16f", tau, m_gammaFlow[tau]);
+        if (m_processRank == 0) printf("\n%-4d %-18.14f %-18.14f", tau, m_gammaFlow[tau], m_topologicalCharge[tau]);
     }
     delete [] m_gammaFlow;
     delete [] m_topologicalCharge;

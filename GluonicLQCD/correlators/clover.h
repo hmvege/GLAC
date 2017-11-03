@@ -7,7 +7,7 @@ class Clover : public Correlator
 {
 private:
     SU3 U1,U2,U3,U4;
-
+    int overCounter = 0;
 public:
     Clover();
     ~Clover();

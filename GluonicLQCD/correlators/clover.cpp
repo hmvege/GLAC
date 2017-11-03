@@ -34,12 +34,16 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
     m_position[1] = j;
     m_position[2] = k;
     m_position[3] = l;
+    overCounter = 0; // Dirty method of ensuring cloverIndex returns right value.
     for (int mu = 0; mu < 4; mu++)
     {
         updateMuIndex(mu);
         for (int nu = 0; nu < 4; nu++)
         {
-            if (mu==nu) continue;
+            if (mu==nu) {
+                overCounter++;
+                continue;
+            }
             updateNuIndex(nu);
 
             // First leaf
@@ -67,8 +71,8 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
             U4 *= lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
 
             // Sums the leafs, takes imaginary part(sets real values to zero) and multiply by 0.25.
-            m_clovers[cloverIndex(mu,nu)] = (U1 + U2 + U3 + U4).getIm()*0.25;
-
+            m_clovers[cloverIndex(mu,nu-overCounter)] = (U1 + U2 + U3 + U4).getIm()*0.25;
         }
     }
+
 }
