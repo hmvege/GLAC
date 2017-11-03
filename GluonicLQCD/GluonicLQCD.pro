@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     parallelization/indexorganiser.cpp \
     testsuite.cpp \
     flow/flow.cpp \
-    correlators/topologicalcharge.cpp
+    correlators/topologicalcharge.cpp \
+    correlators/clover.cpp
 
 HEADERS += \
     system.h \
@@ -42,7 +43,8 @@ HEADERS += \
     parallelization/indexorganiser.h \
     testsuite.h \
     flow/flow.h \
-    correlators/topologicalcharge.h
+    correlators/topologicalcharge.h \
+    correlators/clover.h
 
 #LIBS += -llapack -lblas -larmadillo
 

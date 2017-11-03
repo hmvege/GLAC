@@ -32,6 +32,9 @@ public:
     SU3 makeHermitian();
     SU3 makeAntiHermitian();
 
+    SU3 getIm();
+    SU3 getRe();
+
     SU3 inv();
     void zeros();
     void identity();

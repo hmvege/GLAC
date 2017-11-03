@@ -26,44 +26,53 @@ void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned i
 {
     m_staple.zeros();
     updateMuIndex(mu);
-    m_indexes[0] = i;
-    m_indexes[1] = j;
-    m_indexes[2] = k;
-    m_indexes[3] = l;
+    m_position[0] = i;
+    m_position[1] = j;
+    m_position[2] = k;
+    m_position[3] = l;
     for (int nu = 0; nu < 4; nu++)
     {
         if (mu == nu) continue;
         updateNuIndex(nu);
+        // Getting first part of staple
+        m_staple1 = m_Index->getPositiveLink(lattice,m_position,mu,m_muIndex,nu);
+        m_staple1 *= m_Index->getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv();
+        m_staple1 *= lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv();
+        // Getting second part of staple
+        m_staple2 = m_Index->getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv();
+        m_staple2 *= m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv();
+        m_staple2 *= m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
+        // Sums staple
+        m_staple += m_staple1;
+        m_staple += m_staple2;
 
-        m_staple += m_Index->getPositiveLink(lattice,m_indexes,mu,m_muIndex,nu)
-                *m_Index->getPositiveLink(lattice,m_indexes,nu,m_nuIndex,mu).inv()
-                *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv()
-                + m_Index->getNeighboursNeighbourLink(lattice,m_indexes,mu,m_muIndex,nu,m_nuIndex,nu).inv()
-                *m_Index->getNegativeLink(lattice,m_indexes,nu,m_nuIndex,mu).inv()
-                *m_Index->getNegativeLink(lattice,m_indexes,nu,m_nuIndex,nu);
+//        m_staple += m_Index->getPositiveLink(lattice,m_position,mu,m_muIndex,nu)
+//                *m_Index->getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv()
+//                *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv()
+//                + m_Index->getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv()
+//                *m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv()
+//                *m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
     }
 }
 
 SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     m_staple.zeros();
-//    m_X.zeros();
     updateMuIndex(mu);
-    m_indexes[0] = i;
-    m_indexes[1] = j;
-    m_indexes[2] = k;
-    m_indexes[3] = l;
-    // First: calculate the X_mu(see notes)
+    m_position[0] = i;
+    m_position[1] = j;
+    m_position[2] = k;
+    m_position[3] = l;
     for (int nu = 0; nu < 4; nu++)
     {
-        if (mu == nu) continue;
+        if (mu == nu) continue; // CHANGE THIS SECTION TO USE THE STAPLE METHOD!
         updateNuIndex(nu);
-        m_staple += m_Index->getPositiveLink(lattice,m_indexes,mu,m_muIndex,nu)
-                *m_Index->getPositiveLink(lattice,m_indexes,nu,m_nuIndex,mu).inv()
+        m_staple += m_Index->getPositiveLink(lattice,m_position,mu,m_muIndex,nu) // Change here to utilize *= for improvement!!
+                *m_Index->getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv()
                 *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv()
-                + m_Index->getNeighboursNeighbourLink(lattice,m_indexes,mu,m_muIndex,nu,m_nuIndex,nu).inv()
-                *m_Index->getNegativeLink(lattice,m_indexes,nu,m_nuIndex,mu).inv()
-                *m_Index->getNegativeLink(lattice,m_indexes,nu,m_nuIndex,nu);
+                + m_Index->getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv()
+                *m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv()
+                *m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
     }
     // Multiply the product of this with each of the 8 T^a generators
     // Take trace, real, and the multiply with beta/3
@@ -112,15 +121,5 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     m_X.mat[14] = - m_X.mat[10];
     m_X.mat[15] = m_X.mat[11];
 
-//    m_X.printMachine();
-//    m_X.makeHermitian(); // Matrix now Hermitian
-
-//    std::cout << "printing X" << std::endl;
-//    m_X.printMachine();
-//    std::cout << std::endl;
-//    m_X.makeHermitian(); // Matrix now anti-Hermitian
-//    m_X.printMachine();
-//    exit(1);
-    // No multiplication factor needed as the -3/beta is cancelled in the Z(W_i).
-    return m_X;//*m_multiplicationFactor;
+    return m_X;;
 }

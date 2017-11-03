@@ -95,7 +95,18 @@ SU3 IndexOrganiser::getNegativeLink(Links *lattice, std::vector<int> n, int mu, 
 SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
 {
     /*
-     * For our program, mu is always in the positive direction and nu is always in the negative direction.
+     * Gets the neighbours neighbour link.
+     * mu: positive direction
+     * nu: negative direction
+     *
+     * Takes:
+     *  lattice     : constisting of links
+     *  n           : position vector in lattice
+     *  mu          : lorentz index mu
+     *  muIndex     : lorentz "vector"
+     *  nu          : lorentz index nu
+     *  nuIndex     : lorentz "vector"
+     *  SU3Dir      : which of the four SU3 matrices which we need
      */
     bool muDir = (n[mu] + muIndex[mu]) % m_N[mu] == 0;
     bool nuDir = (n[nu] - nuIndex[nu] + m_N[nu]) % m_N[nu] == (m_N[nu] - 1);
@@ -128,6 +139,55 @@ SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int>
         return lattice[getIndex(n[0]+muIndex[0]-nuIndex[0], n[1]+muIndex[1]-nuIndex[1], n[2]+muIndex[2]-nuIndex[2], n[3]+muIndex[3]-nuIndex[3])].U[SU3Dir];
     }
 }
+
+SU3 IndexOrganiser::getNeighboursNeighbourNegativeLink(Links * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
+{
+    /*
+     * Gets the neighbours neighbour link.
+     * mu: negative direction
+     * nu: negative direction
+     *
+     * Takes:
+     *  lattice     : constisting of links
+     *  n           : position vector in lattice
+     *  mu          : lorentz index mu
+     *  muIndex     : lorentz "vector"
+     *  nu          : lorentz index nu
+     *  nuIndex     : lorentz "vector"
+     *  SU3Dir      : which of the four SU3 matrices which we need
+     */
+    bool muDir = (n[mu] - muIndex[mu] + m_N[mu]) % m_N[mu] == (m_N[mu] - 1);
+    bool nuDir = (n[nu] - nuIndex[nu] + m_N[nu]) % m_N[nu] == (m_N[nu] - 1);
+    if (muDir && (!nuDir)) { // (muDir & ~nuDir)
+        // Positive mu direction
+        n[mu] = m_N[mu] - 1;
+        MPI_Sendrecv(&lattice[getIndex(n[0]-nuIndex[0],n[1]-nuIndex[1],n[2]-nuIndex[2],n[3]-nuIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,   // Send
+                &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,                                                                                              // Receive
+                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+        return exchangeU;
+    }
+    else if (nuDir && (!muDir)) { // (nuDir & ~muDir)
+        // Negative nu direction
+        n[nu] = m_N[nu] - 1;
+        MPI_Sendrecv(&lattice[getIndex(n[0]-muIndex[0],n[1]-muIndex[1],n[2]-muIndex[2],n[3]-muIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours(m_processRank)->list[2*nu+1],0, // Send
+                &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*nu],0,                                                                                        // Receive
+                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+        return exchangeU;
+    }
+    else if (muDir && nuDir) { // muDir & nuDir
+        // True edge case
+        n[mu] = m_N[mu] - 1;
+        n[nu] = m_N[nu] - 1;
+        MPI_Sendrecv(&lattice[getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours((m_neighbourLists->getNeighbours(m_processRank)->list[2*mu]))->list[2*nu+1],0,// Send
+                &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours((m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1]))->list[2*nu],0,                                             // Receive
+                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+        return exchangeU;
+    }
+    else {
+        return lattice[getIndex(n[0]-muIndex[0]-nuIndex[0], n[1]-muIndex[1]-nuIndex[1], n[2]-muIndex[2]-nuIndex[2], n[3]-muIndex[3]-nuIndex[3])].U[SU3Dir];
+    }
+}
+
 
 unsigned int IndexOrganiser::getIndex(unsigned int i, unsigned int j, unsigned int k, unsigned int l)
 {

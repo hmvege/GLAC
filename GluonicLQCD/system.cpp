@@ -19,6 +19,8 @@
 #include "parallelization/indexorganiser.h"
 
 #include "flow/flow.h"
+#include "correlators/clover.h"
+#include "correlators/topologicalcharge.h"
 
 using std::cout;
 using std::endl;
@@ -396,15 +398,40 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
     WFlow.setIndexHandler(m_indexHandler);
     WFlow.setAction(m_S);
+    Clover Clov;
+    Clov.initializeIndexHandler(m_indexHandler);
+    Clov.setN(m_N);
+    Clov.setLatticeSize(m_latticeSize);
+    TopologicalCharge TopCharge;
+    TopCharge.initializeIndexHandler(m_indexHandler);
+    TopCharge.setLatticeSize(m_latticeSize);
+    TopCharge.setN(m_N);
     double * m_gammaFlow = new double[100];
+    double * m_topologicalCharge = new double[100];
     for (int tau = 0; tau < 100; tau++) {
         WFlow.flowGaugeField(1,m_lattice);
         m_gammaFlow[tau] = m_correlator->calculate(m_lattice);
+        for (unsigned int x = 0; x < m_N[0]; x++) {
+            for (unsigned int y = 0; y < m_N[1]; y++) {
+                for (unsigned int z = 0; z < m_N[2]; z++) {
+                    for (unsigned int t = 0; t < m_N[3]; t++) {
+                        Clov.calculateClover(m_lattice,x,y,z,t);
+                        TopCharge.setClover(Clov.m_clovers);
+                        if (m_processRank == 0) {
+                            m_topologicalCharge[tau] = TopCharge.calculate();
+                            cout << "Exiting after 1 top charge calculation" << endl;
+                            MPI_Finalize();exit(1); // EXITING AFTER ONE CALCULATION!
+                        }
+                    }
+                }
+            }
+        }
         MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_gammaFlow[tau] /= double(m_numprocs);
-        if (m_processRank == 0) printf("\n%-4d %-12.8f", tau, m_gammaFlow[tau]);
+        if (m_processRank == 0) printf("\n%-4d %-12.16f", tau, m_gammaFlow[tau]);
     }
     delete [] m_gammaFlow;
+    delete [] m_topologicalCharge;
     MPI_Finalize(); exit(1);
     //// ===================================================================================
     if (m_processRank == 0) {

@@ -1,15 +1,20 @@
 #include "correlator.h"
 #include "parallelization/indexorganiser.h"
 #include "parallelization/neighbours.h"
-#include <iostream>
 
 Correlator::Correlator()
 {
+    // Initiates the lattice dimensions
     m_N = new unsigned int[4];
+
+    // Sets position vector to zero
+    m_position = std::vector<int>(4,0);
+
+    // Sets the lorentz indices to zero
     for (int i = 0; i < 4; i++) {
-        m_N[i] = 0;
+        muIndex[i] = 0;
+        nuIndex[i] = 0;
     }
-    indexes = std::vector<int>(4,0);
 }
 
 void Correlator::setLatticeSize(int latticeSize)
@@ -27,7 +32,16 @@ double Correlator::calculate(Links * lattice)
     /*
      * Default correlator is not implemented.
      */
-    std::cout << "If you see this, something is wrong! Should not call correlator.cpp" << std::endl;
+    cout << "If you see this, something is wrong! Should not call correlator.cpp" << endl;
+    return 1.0;
+}
+
+double Correlator::calculate()
+{
+    /*
+     * Default correlator is not implemented.
+     */
+    cout << "If you see this, something is wrong! Should not call correlator.cpp" << endl;
     return 1.0;
 }
 

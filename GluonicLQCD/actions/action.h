@@ -13,7 +13,7 @@ protected:
     // Index length array
     unsigned int *m_N;
     // For handling the shift-method in parallelization
-    std::vector<int> m_indexes;
+    std::vector<int> m_position;
     IndexOrganiser *m_Index = nullptr;
 public:
     Action();

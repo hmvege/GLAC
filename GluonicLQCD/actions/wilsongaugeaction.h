@@ -12,7 +12,7 @@ private:
     // Action based constants
     double m_beta;
     double m_multiplicationFactor;
-    SU3 m_staple, m_X;
+    SU3 m_staple, m_X, m_staple1, m_staple2;
 public:
     WilsonGaugeAction(double beta);
     ~WilsonGaugeAction();

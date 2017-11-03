@@ -21,11 +21,13 @@ private:
     complex h[3];
     double c0, c1, u, w, theta, xi0, c0max;
     SU3 f0; // Matrix for filling return matrix
-    SU3 QSquared, QCubed;
+    SU3 QSquared, QCubed, QQuartic;
 
     // Exponentiation variables for the Luscher method
-    SU3 U1,U2,U3,Y1,Y2,Y3,I,Y1Inv,Y2Inv,Y3Inv;
+//    SU3 U1,U2,U3,Y1,Y2,Y3,I,Y1Inv,Y2Inv,Y3Inv,E;
+    SU3 U1,U2,U3,E,I;
     complex x1,x2,x3,div1,div2,div3;
+    complex X1221X, X1331X, X2332X, sqrdFactor;
 
     // Exponentiation variables for the Taylor expansion method is just a reuse of QSquared and I
 

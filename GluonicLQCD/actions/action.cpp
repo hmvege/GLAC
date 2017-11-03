@@ -16,7 +16,7 @@ Action::Action()
     for (int i = 0; i < 4; i++) {
         m_N[i] = 0;
     }
-    m_indexes = std::vector<int>(4,0);
+    m_position = std::vector<int>(4,0);
 }
 
 Action::~Action()

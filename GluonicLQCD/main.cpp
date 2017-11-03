@@ -40,7 +40,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     // Constants by default initialization
     int N           = 16;            // Spatial lattice points.
-    int N_T         = 32;            // Temporal lattice points.
+    int N_T         = 16;            // Temporal lattice points.
     int NTherm      = 100;           // Thermalization.
     int NCor        = 10;            // Correlation updates.
     int NCf         = 20;           // Number of configurations to generate.
@@ -48,7 +48,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double beta     = 6.0;          // Beta value(connected to the lattice spacing a).
     double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
     std::string batchName               = "TEST_RUN_CONFIG";
-    std::string pwd                     = "/Users/hansmathiasmamenvege/Programming/FYSSP100/GluonAction";
+    std::string pwd                     = "/Users/hansmathiasmamenvege/Programming/FYSSP100/GluonAction"; // MAC
     bool writeConfigsToFile             = true;
     bool storeThermalizationPlaquettes  = false;
     bool hotStart                       = false;
