@@ -23,7 +23,9 @@ SOURCES += main.cpp \
     testsuite.cpp \
     flow/flow.cpp \
     correlators/topologicalcharge.cpp \
-    correlators/clover.cpp
+    correlators/clover.cpp \
+    correlators/energydensity.cpp \
+    correlators/topchargeandenergy.cpp
 
 HEADERS += \
     system.h \
@@ -44,7 +46,9 @@ HEADERS += \
     testsuite.h \
     flow/flow.h \
     correlators/topologicalcharge.h \
-    correlators/clover.h
+    correlators/clover.h \
+    correlators/energydensity.h \
+    correlators/topchargeandenergy.h
 
 #LIBS += -llapack -lblas -larmadillo
 

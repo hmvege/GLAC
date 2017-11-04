@@ -9,6 +9,8 @@
 class IndexOrganiser
 {
 private:
+    bool muDir;
+    bool nuDir;
     int m_processRank;
     unsigned int m_N[4];
     unsigned int m_NTot[4];

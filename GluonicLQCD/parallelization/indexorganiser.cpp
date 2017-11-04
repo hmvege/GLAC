@@ -108,8 +108,8 @@ SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int>
      *  nuIndex     : lorentz "vector"
      *  SU3Dir      : which of the four SU3 matrices which we need
      */
-    bool muDir = (n[mu] + muIndex[mu]) % m_N[mu] == 0;
-    bool nuDir = (n[nu] - nuIndex[nu] + m_N[nu]) % m_N[nu] == (m_N[nu] - 1);
+    muDir = (n[mu] + muIndex[mu]) % m_N[mu] == 0;
+    nuDir = (n[nu] - nuIndex[nu] + m_N[nu]) % m_N[nu] == (m_N[nu] - 1);
     if (muDir && (!nuDir)) { // (muDir & ~nuDir)
         // Positive mu direction
         n[mu] = 0;
@@ -156,8 +156,8 @@ SU3 IndexOrganiser::getNeighboursNeighbourNegativeLink(Links * lattice, std::vec
      *  nuIndex     : lorentz "vector"
      *  SU3Dir      : which of the four SU3 matrices which we need
      */
-    bool muDir = (n[mu] - muIndex[mu] + m_N[mu]) % m_N[mu] == (m_N[mu] - 1);
-    bool nuDir = (n[nu] - nuIndex[nu] + m_N[nu]) % m_N[nu] == (m_N[nu] - 1);
+    muDir = (n[mu] - muIndex[mu] + m_N[mu]) % m_N[mu] == (m_N[mu] - 1);
+    nuDir = (n[nu] - nuIndex[nu] + m_N[nu]) % m_N[nu] == (m_N[nu] - 1);
     if (muDir && (!nuDir)) { // (muDir & ~nuDir)
         // Positive mu direction
         n[mu] = m_N[mu] - 1;

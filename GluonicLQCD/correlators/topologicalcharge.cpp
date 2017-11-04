@@ -1,11 +1,12 @@
 #include "topologicalcharge.h"
 #include "functions.h"
+#include "clover.h"
 #include <cmath>
 
-
-TopologicalCharge::TopologicalCharge() : Correlator()
+TopologicalCharge::TopologicalCharge(double a) : Correlator()
 {
-    m_multiplicationFactor = 1.0/(32*std::atan(1)*4*std::atan(1)*4);
+    m_a = a;
+    m_multiplicationFactor = m_a*m_a*m_a*m_a/(32*std::atan(1)*4*std::atan(1)*4);
     populateLC(); // Fills the levi civita vector
 }
 
@@ -21,19 +22,39 @@ void TopologicalCharge::setClover(SU3 *clover)
     }
 }
 
+double TopologicalCharge::calculate(Links *lattice)
+{
+    /*
+     * Function to be used when no clover is provided. SHOULD BE TESTED
+     */
+    Clover Clov;
+    topCharge = 0;
+    for (unsigned int i = 0; i < m_N[0]; i++) { // x
+        for (unsigned int j = 0; j < m_N[1]; j++) { // y
+            for (unsigned int k = 0; k < m_N[2]; k++) { // z
+                for (unsigned int l = 0; l < m_N[3]; l++) { // t
+                    m_position[0] = i;
+                    m_position[1] = j;
+                    m_position[2] = k;
+                    m_position[3] = l;
+                    Clov.calculateClover(lattice,i,j,k,l);
+                    setClover(Clov.m_clovers);
+                    for (unsigned int i = 0; i < m_leviCivita.size(); i++)
+                    {
+                        G1 = m_clover[cloverIndex(m_leviCivita[i].lc[0],m_leviCivita[i].lc[1])];
+                        G2 = m_clover[cloverIndex(m_leviCivita[i].lc[2],m_leviCivita[i].lc[3])];
+                        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
+                    }
+                }
+            }
+        }
+    }
+    return topCharge*m_multiplicationFactor*m_a*m_a*m_a*m_a;
+}
+
 double TopologicalCharge::calculate()
 {
-//    for (int mu = 0; mu < 4; mu++) {
-//        for (int nu = 0; nu < 4; nu++) {
-//            for (int rho = 0; rho < 4; rho++) {
-//                for (int sigma = 0; sigma < 4; sigma++) {
-
-//                }
-//            }
-//        }
-//    }
-    double topCharge = 0;
-    SU3 G1,G2;
+    topCharge = 0;
     for (unsigned int i = 0; i < m_leviCivita.size(); i++)
     {
         G1 = m_clover[cloverIndex(m_leviCivita[i].lc[0],m_leviCivita[i].lc[1])];
@@ -69,6 +90,8 @@ void TopologicalCharge::populateLC()
             }
         }
     }
+    if (m_leviCivita.size() != 24)
+        cout << "Error: number of levi civita combinations is not 24" << endl;
 }
 
 int TopologicalCharge::getLCSign(LeviCivita LC)

@@ -31,6 +31,7 @@ public:
     double &operator[](int i) { return mat[i]; }
 
     // Operations
+    SU2 &operator=(const SU2 &B);
     SU2 &operator+=(SU2 B);
     SU2 &operator-=(SU2 B);
     SU2 &operator*=(SU2 B);

@@ -13,6 +13,20 @@ SU2::SU2()
 
 SU2::~SU2()
 {
+    /*
+     * Destructor operator
+     */
+}
+
+SU2 &SU2::operator=(const SU2 &B)
+{
+    /*
+     * Copy assignement operator.
+     */
+    for (int i = 0; i < 8; i++) {
+        mat[i] = B.mat[i];
+    }
+    return *this;
 }
 
 SU2 &SU2::operator+=(SU2 B)

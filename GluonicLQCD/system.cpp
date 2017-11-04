@@ -402,12 +402,13 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     Clov.initializeIndexHandler(m_indexHandler);
     Clov.setN(m_N);
     Clov.setLatticeSize(m_latticeSize);
-    TopologicalCharge TopCharge;
+    TopologicalCharge TopCharge(0.09314);
     TopCharge.initializeIndexHandler(m_indexHandler);
     TopCharge.setLatticeSize(m_latticeSize);
     TopCharge.setN(m_N);
     double * m_gammaFlow = new double[100];
     double * m_topologicalCharge = new double[100];
+    m_preUpdate = steady_clock::now();
     for (int tau = 0; tau < 100; tau++) {
         WFlow.flowGaugeField(1,m_lattice);
         m_gammaFlow[tau] = m_correlator->calculate(m_lattice);
@@ -425,10 +426,13 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         }
         MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        m_topologicalCharge[tau] *= (0.09314*0.09314*0.09314*0.09314);
+//        m_topologicalCharge[tau] *= (0.09314*0.09314*0.09314*0.09314); // lattice spacing: a = 0.09314
         m_gammaFlow[tau] /= double(m_numprocs);
         if (m_processRank == 0) printf("\n%-4d %-18.14f %-18.14f", tau, m_gammaFlow[tau], m_topologicalCharge[tau]);
     }
+    MPI_Barrier(MPI_COMM_WORLD);
+    if (m_processRank == 0) printf("Time used to flow: %-.4f",(duration_cast<duration<double>>(steady_clock::now() - m_preUpdate)).count());
+
     delete [] m_gammaFlow;
     delete [] m_topologicalCharge;
     MPI_Finalize(); exit(1);

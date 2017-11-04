@@ -18,29 +18,27 @@ private:
             lc[2] = rho;
             lc[3] = sigma;
         }
-//        int getMu() { return lc[0]; }
-//        int getNu() { return lc[1]; }
-//        int getRho() { return lc[2]; }
-//        int getSigma() { return lc[3]; }
         friend std::ostream& operator<<(std::ostream& os, const LeviCivita& a) {
             os << "("<< a.lc[0] << " " << a.lc[1] << " " << a.lc[2] << " " << a.lc[3] << ") sign: " << a.sgn;
             return os;
         }
     };
 
+    double topCharge;
+    double m_a; // Lattice spacing
+    SU3 G1,G2;
     SU3 m_clover[12];
     double m_multiplicationFactor;
     std::vector<LeviCivita> m_leviCivita;
-//    LeviCivita m_leviCevita[24];
-//    LeviCivita m_leviCevitaOdd[12];
 
     void populateLC();
     int getLCSign(LeviCivita LC);
 public:
-    TopologicalCharge();
+    TopologicalCharge(double a);
     ~TopologicalCharge();
 
     double calculate();
+    double calculate(Links *lattice);
     void setClover(SU3 *clover);
 };
 

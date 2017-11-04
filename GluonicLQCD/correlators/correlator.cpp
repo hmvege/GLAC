@@ -45,7 +45,7 @@ double Correlator::calculate()
     return 1.0;
 }
 
-void Correlator::setN(unsigned int *N)
+void Correlator::setN(unsigned int *N) // MOVE INTO CONSTRUCTOR?
 {
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];

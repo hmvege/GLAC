@@ -45,57 +45,29 @@ void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned i
         // Sums staple
         m_staple += m_staple1;
         m_staple += m_staple2;
-
-//        m_staple += m_Index->getPositiveLink(lattice,m_position,mu,m_muIndex,nu)
-//                *m_Index->getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv()
-//                *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv()
-//                + m_Index->getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv()
-//                *m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv()
-//                *m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
     }
 }
 
 SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
-    m_staple.zeros();
-    updateMuIndex(mu);
-    m_position[0] = i;
-    m_position[1] = j;
-    m_position[2] = k;
-    m_position[3] = l;
-    for (int nu = 0; nu < 4; nu++)
-    {
-        if (mu == nu) continue; // CHANGE THIS SECTION TO USE THE STAPLE METHOD!
-        updateNuIndex(nu);
-        m_staple += m_Index->getPositiveLink(lattice,m_position,mu,m_muIndex,nu) // Change here to utilize *= for improvement!!
-                *m_Index->getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv()
-                *lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv()
-                + m_Index->getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv()
-                *m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv()
-                *m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
-    }
+    computeStaple(lattice,i,j,k,l,mu);
+    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
+
+    // MORNINGSTAR METHOD
+//    Omega = m_staple.inv();
+//    Omega -= m_staple;
+//    tempDiag = Omega.trace().im()/6.0;
+//    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/6.0;
+//    Q = Omega*0.5;
+//    Q.mat[1] -= tempDiag;
+//    Q.mat[9] -= tempDiag;
+//    Q.mat[17] -= tempDiag;
+//    m_X = Q*0.5;
+
+    // LUSCHER METHOD
     // Multiply the product of this with each of the 8 T^a generators
     // Take trace, real, and the multiply with beta/3
     // Multiply with 8 generators T^a again, sum and return matrix
-
-//    SU3 m_staplez = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
-//    SU3 Q, C;
-//    double temp;
-//    temp = (m_staplez.inv() - m_staplez).trace().im()/6.0;
-//    C.zeros();
-//    C.mat[1] = temp;
-//    C.mat[9] = temp;
-//    C.mat[17] = temp;
-
-//    Q = (m_staplez.inv() - m_staplez)*0.5 - C;
-
-//    m_X = Q*0.5;
-//    m_X.print();
-
-    // Multiply X_mu with the U_mu
-    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu] * m_staple;
-
-
     // Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann_matrix_multiplication.py.
     // Diagonals
     m_X.mat[0] = 0;
