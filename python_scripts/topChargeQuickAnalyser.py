@@ -121,15 +121,22 @@ def getData(arr):
 t,plaq,topc = getData(results)
 
 fig1 = plt.figure()
-ax1 = fig1.add_subplot(211)
+ax1 = fig1.add_subplot(311)
 ax1.plot(t,plaq)
 ax1.set_ylabel(r"$P_t$")
 ax1.set_title("Flowed plaquette and topological charge")
 
-ax2 = fig1.add_subplot(212)
+ax2 = fig1.add_subplot(312)
 ax2.plot(t,topc,label=r"$Q = a^4\sum_x q_L^{clov}(x)$")
 ax2.set_ylabel(r"$Q$")
 ax2.set_xlabel(r"$t$")
 ax2.legend()
+
+ax3 = fig1.add_subplot(313)
+ax3.plot(t,topc**2,label=r"$Q^2$")
+ax3.set_ylabel(r"$Q^2$")
+ax3.set_xlabel(r"$t$")
+ax3.legend()
+
 fig1.savefig("../figures/topological_charge_test.png",dpi=300)
 plt.show()
