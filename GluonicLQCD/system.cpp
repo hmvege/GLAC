@@ -389,13 +389,12 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //     loadFieldConfiguration("unity32cores.bin");
 //    loadFieldConfiguration("para8core061102.bin");
 //    loadFieldConfiguration("scalar16cubed16run1.bin");
-    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469
-//    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412
+//    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469, UBUNTU
+    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     corr /= double(m_numprocs);
-    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl << endl;
-//    exit(1);
+    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl;
     Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
     WFlow.setIndexHandler(m_indexHandler);
     WFlow.setAction(m_S);
@@ -420,7 +419,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
                 for (unsigned int z = 0; z < m_N[2]; z++) {
                     for (unsigned int t = 0; t < m_N[3]; t++) {
                         Clov.calculateClover(m_lattice,x,y,z,t);
-                        TopCharge.setClover(Clov.m_clovers);
+                        TopCharge.setClover(Clov.m_clovers); // Send directly to top charge in calculate? MAKE IT INTO VIRTUAL IN CORRELATOR
                         m_topologicalCharge[tau] += TopCharge.calculate();
                     }
                 }

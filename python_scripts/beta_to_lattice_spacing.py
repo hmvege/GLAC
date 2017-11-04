@@ -7,4 +7,4 @@ def getLatticeSpacing(beta):
 	a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
 	return a
 
-print getLatticeSpacing(5.95)
+print getLatticeSpacing(6.0)
