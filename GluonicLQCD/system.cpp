@@ -245,6 +245,7 @@ void System::printRunInfo(bool verbose) {
      */
     if (m_processRank == 0) {
         printLine();
+        cout << "Batch name:                            " << m_filename << endl;
         cout << "Threads:                               " << m_numprocs << endl;
         if (verbose) cout << "Lattice size:                          " << m_latticeSize << endl;
         cout << "Lattice dimensions(spatial, temporal): " << m_NSpatial << " " << m_NTemporal << endl;
@@ -409,7 +410,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     double * m_gammaFlow = new double[100];
     double * m_topologicalCharge = new double[100];
     m_preUpdate = steady_clock::now();
-    for (int tau = 0; tau < 100; tau++) {
+    for (int tau = 0; tau < 1000; tau++) {
         WFlow.flowGaugeField(1,m_lattice);
         m_gammaFlow[tau] = m_correlator->calculate(m_lattice);
         m_topologicalCharge[tau] = 0;

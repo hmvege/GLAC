@@ -71,27 +71,42 @@ void TopologicalCharge::populateLC()
     for (int mu = 0; mu < 4; mu++) {
         for (int nu = 0; nu < 4; nu++) {
             if (nu==mu) {
-                muNuOverCounter++;
+                muNuOverCounter++; // Acounts for overcounting
                 continue;
             }
+
             for (int rho = 0; rho < 4; rho++) {
-                if (rho==mu || rho==nu) continue;
+                if (rho==mu || rho==nu) {
+                    rhoSigmaOverCounter++; // Acounts for overcounting
+                    continue;
+                }
+
                 for (int sigma = 0; sigma < 4; sigma++) {
+
                     if (sigma==rho) {
-                        rhoSigmaOverCounter++;
+                        rhoSigmaOverCounter++; // Acounts for overcounting
                         continue;
-                        if (sigma==mu || sigma==nu) continue;
                     }
+                    if (sigma==mu || sigma==nu) continue;
                     LeviCivita LC;
-                    LC.setLC(mu, nu - muNuOverCounter, rho, sigma - rhoSigmaOverCounter);
+                    LC.setLC(mu, nu, rho, sigma);
                     LC.sgn = getLCSign(LC);
+                    LC.setCI(cloverIndex(mu,nu - muNuOverCounter),cloverIndex(rho,sigma - rhoSigmaOverCounter));
                     m_leviCivita.push_back(LC);
                 }
             }
+            rhoSigmaOverCounter = 0;
         }
     }
     if (m_leviCivita.size() != 24)
-        cout << "Error: number of levi civita combinations is not 24" << endl;
+    {
+        cout << "Error: number of levi civita combinations is " << m_leviCivita.size() << ", not 24!" << endl;
+        for (unsigned int i = 0; i < m_leviCivita.size(); i++) {
+            cout << m_leviCivita[i];
+            cout << "   Clover index: " << cloverIndex(m_leviCivita[i].lc[0],m_leviCivita[i].lc[1]) << " " << cloverIndex(m_leviCivita[i].lc[2],m_leviCivita[i].lc[3]) << endl;
+        }
+        exit(1);
+    }
 }
 
 int TopologicalCharge::getLCSign(LeviCivita LC)
