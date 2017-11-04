@@ -41,8 +41,8 @@ double TopologicalCharge::calculate(Links *lattice)
                     setClover(Clov.m_clovers);
                     for (unsigned int i = 0; i < m_leviCivita.size(); i++)
                     {
-                        G1 = m_clover[cloverIndex(m_leviCivita[i].lc[0],m_leviCivita[i].lc[1])];
-                        G2 = m_clover[cloverIndex(m_leviCivita[i].lc[2],m_leviCivita[i].lc[3])];
+                        G1 = m_clover[m_leviCivita[i].ci[0]];
+                        G2 = m_clover[m_leviCivita[i].ci[1]];
                         topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
                     }
                 }
@@ -57,8 +57,8 @@ double TopologicalCharge::calculate()
     topCharge = 0;
     for (unsigned int i = 0; i < m_leviCivita.size(); i++)
     {
-        G1 = m_clover[cloverIndex(m_leviCivita[i].lc[0],m_leviCivita[i].lc[1])];
-        G2 = m_clover[cloverIndex(m_leviCivita[i].lc[2],m_leviCivita[i].lc[3])];
+        G1 = m_clover[m_leviCivita[i].ci[0]];
+        G2 = m_clover[m_leviCivita[i].ci[1]];
         topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
     }
     return topCharge*m_multiplicationFactor;
@@ -98,13 +98,10 @@ void TopologicalCharge::populateLC()
             rhoSigmaOverCounter = 0;
         }
     }
+
     if (m_leviCivita.size() != 24)
     {
         cout << "Error: number of levi civita combinations is " << m_leviCivita.size() << ", not 24!" << endl;
-        for (unsigned int i = 0; i < m_leviCivita.size(); i++) {
-            cout << m_leviCivita[i];
-            cout << "   Clover index: " << cloverIndex(m_leviCivita[i].lc[0],m_leviCivita[i].lc[1]) << " " << cloverIndex(m_leviCivita[i].lc[2],m_leviCivita[i].lc[3]) << endl;
-        }
         exit(1);
     }
 }
