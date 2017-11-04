@@ -389,8 +389,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //     loadFieldConfiguration("unity32cores.bin");
 //    loadFieldConfiguration("para8core061102.bin");
 //    loadFieldConfiguration("scalar16cubed16run1.bin");
-//    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469
-    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412
+    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469
+//    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     corr /= double(m_numprocs);
@@ -407,10 +407,11 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     TopCharge.initializeIndexHandler(m_indexHandler);
     TopCharge.setLatticeSize(m_latticeSize);
     TopCharge.setN(m_N);
-    double * m_gammaFlow = new double[100];
-    double * m_topologicalCharge = new double[100];
+    int NFlows = 1000;
+    double * m_gammaFlow = new double[NFlows];
+    double * m_topologicalCharge = new double[NFlows];
     m_preUpdate = steady_clock::now();
-    for (int tau = 0; tau < 1000; tau++) {
+    for (int tau = 0; tau < NFlows; tau++) {
         WFlow.flowGaugeField(1,m_lattice);
         m_gammaFlow[tau] = m_correlator->calculate(m_lattice);
         m_topologicalCharge[tau] = 0;
