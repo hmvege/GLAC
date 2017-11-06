@@ -1,8 +1,11 @@
 #include "energydensity.h"
+#include "clover.h"
+#include "functions.h"
 
-EnergyDensity::EnergyDensity(double a, double latticeVolume) : Correlator()
+EnergyDensity::EnergyDensity(double a, int latticeSize) : Correlator()
 {
-    m_multiplicationFactor = (a*a*a*a)/(3*latticeVolume);
+    setLatticeSize(latticeSize);
+    m_multiplicationFactor = (a*a*a*a)/(3*double(m_latticeSize));
 }
 
 void EnergyDensity::setClover(SU3 *clover)
@@ -14,12 +17,39 @@ void EnergyDensity::setClover(SU3 *clover)
 
 double EnergyDensity::calculate()
 {
-    // When clover is provided
-    return 0;
+    m_actionDensity = 0;
+    for (unsigned int i = 0; i < 12; i++)
+    {
+        m_actionDensity -= traceRealMultiplication(m_clover[i],m_clover[i])*0.5; // WHY MINUS?
+    }
+    return m_actionDensity*m_multiplicationFactor; // Correct or not?
 }
 
 double EnergyDensity::calculate(Links *lattice)
 {
     // When clover is not provided
-    return 0;
+    Clover Clov;
+    Clov.initializeIndexHandler(m_Index);
+    Clov.setN(m_N);
+    Clov.setLatticeSize(m_latticeSize);
+    m_actionDensity = 0;
+    for (unsigned int i = 0; i < m_N[0]; i++) { // x
+        for (unsigned int j = 0; j < m_N[1]; j++) { // y
+            for (unsigned int k = 0; k < m_N[2]; k++) { // z
+                for (unsigned int l = 0; l < m_N[3]; l++) { // t
+                    m_position[0] = i;
+                    m_position[1] = j;
+                    m_position[2] = k;
+                    m_position[3] = l;
+                    Clov.calculateClover(lattice,i,j,k,l);
+                    setClover(Clov.m_clovers);
+                    for (unsigned int i = 0; i < 12; i++)
+                    {
+                        m_actionDensity += (m_clover[i].mat[0] + m_clover[i].mat[8] + m_clover[i].mat[16]);
+                    }
+                }
+            }
+        }
+    }
+    return m_actionDensity*m_multiplicationFactor;
 }

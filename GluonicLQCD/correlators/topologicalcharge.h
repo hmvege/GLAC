@@ -46,6 +46,7 @@ public:
     double calculate();
     double calculate(Links *lattice);
     void setClover(SU3 *clover);
+    void setLatticeSpacing(double a) { m_a = a; }
 };
 
 #endif // TOPOLOGICALCHARGE_H

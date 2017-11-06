@@ -55,10 +55,11 @@ def printAll():
 	# sp.pprint(A)
 	# sp.pprint(sp.simplify(res))
 	sp.pprint(sp.simplify(-res*sp.I))
-	print "REAL:"
-	sp.pprint(sp.simplify(sp.re(-res*sp.I)))
-	print "IMAG:"
-	sp.pprint(sp.simplify(sp.im(-res*sp.I)))
+	sp.printing.print_ccode(res)
+	# print "REAL:"
+	# sp.pprint(sp.simplify(sp.re(-res*sp.I)))
+	# print "IMAG:"
+	# sp.pprint(sp.simplify(sp.im(-res*sp.I)))
 
 	index_map = """\nIndex map:
 H =

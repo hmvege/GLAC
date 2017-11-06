@@ -7,9 +7,11 @@ class EnergyDensity : public Correlator
 {
 private:
     double m_multiplicationFactor;
+    double m_actionDensity;
 public:
     SU3 m_clover[12];
-    EnergyDensity(double a, double latticeVolume);
+    SU3 m_temp;
+    EnergyDensity(double a, int latticeSize);
     void setClover(SU3 *clover);
     double calculate();
     double calculate(Links *lattice);

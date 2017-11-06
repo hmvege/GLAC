@@ -21,6 +21,7 @@
 #include "flow/flow.h"
 #include "correlators/clover.h"
 #include "correlators/topologicalcharge.h"
+#include "correlators/energydensity.h"
 
 using std::cout;
 using std::endl;
@@ -402,13 +403,17 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     Clov.initializeIndexHandler(m_indexHandler);
     Clov.setN(m_N);
     Clov.setLatticeSize(m_latticeSize);
-    TopologicalCharge TopCharge(0.09314);
+    TopologicalCharge TopCharge(0.0931);
+//    TopCharge.setLatticeSpacing(0.0931);
     TopCharge.initializeIndexHandler(m_indexHandler);
     TopCharge.setLatticeSize(m_latticeSize);
     TopCharge.setN(m_N);
+    EnergyDensity Energy(0.0931, m_latticeSize);
+    Energy.initializeIndexHandler(m_indexHandler);
     int NFlows = 1000;
     double * m_gammaFlow = new double[NFlows];
     double * m_topologicalCharge = new double[NFlows];
+    double * m_actionDensity = new double[NFlows];
     m_preUpdate = steady_clock::now();
     for (int tau = 0; tau < NFlows; tau++) {
         WFlow.flowGaugeField(1,m_lattice);
@@ -421,21 +426,28 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
                         Clov.calculateClover(m_lattice,x,y,z,t);
                         TopCharge.setClover(Clov.m_clovers); // Send directly to top charge in calculate? MAKE IT INTO VIRTUAL IN CORRELATOR
                         m_topologicalCharge[tau] += TopCharge.calculate();
+                        Energy.setClover(Clov.m_clovers);
+                        m_actionDensity[tau] += Energy.calculate();
+//                        exit(1);
                     }
                 }
             }
         }
         MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        m_topologicalCharge[tau] *= (0.09314*0.09314*0.09314*0.09314); // lattice spacing: a = 0.09314
+        m_topologicalCharge[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
+        m_actionDensity[tau] = m_actionDensity[tau];
         m_gammaFlow[tau] /= double(m_numprocs);
-        if (m_processRank == 0) printf("\n%-4d %-18.14f %-18.14f", tau, m_gammaFlow[tau], m_topologicalCharge[tau]);
+        if (m_processRank == 0) printf("\n%-4d %-18.16f %-18.16f %-18.16f", tau, m_gammaFlow[tau], m_topologicalCharge[tau], m_actionDensity[tau]);
+//        if (m_processRank == 0) printf("\n%-4d %-18.14f", tau, m_gammaFlow[tau]);
     }
     MPI_Barrier(MPI_COMM_WORLD);
     if (m_processRank == 0) printf("Time used to flow: %-.4f",(duration_cast<duration<double>>(steady_clock::now() - m_preUpdate)).count());
 
     delete [] m_gammaFlow;
     delete [] m_topologicalCharge;
+    delete [] m_actionDensity;
     MPI_Finalize(); exit(1);
     //// ===================================================================================
     if (m_processRank == 0) {

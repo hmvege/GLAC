@@ -1,4 +1,5 @@
 #include "topchargeandenergy.h"
+#include "clover.h"
 
 TopChargeAndEnergy::TopChargeAndEnergy()
 {

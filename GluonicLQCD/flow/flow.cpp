@@ -60,18 +60,43 @@ void Flow::runFlow(Links *lattice)
      * Performs a single flow on the lattice.
      */
     // W0 is simply just the original lattice times epsilon
+//    if (m_processRank==0) {
+//        SU3 T;
+//        T.setComplex(complex(0.126061, 0.000000),0);
+//        T.setComplex(complex(0.506331, -0.075089 ),2);
+//        T.setComplex(complex(0.624423, 0.209273 ),4);
+//        T.setComplex(complex(0.506331, 0.075089 ),6);
+//        T.setComplex(complex(0.401737, 0.000000 ),8);
+//        T.setComplex(complex(-0.236524, 0.069301 ),10);
+//        T.setComplex(complex(0.624423, -0.209273 ),12);
+//        T.setComplex(complex(-0.236524, -0.069301 ),14);
+//        T.setComplex(complex(-0.527798, 0.000000 ),16);
+//        (T*0.01*0.25).printMachine();
+//        exponentiate(T*0.01*0.25).printMachine();
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    exit(1);
+
+//    if (m_processRank == 0) lattice[0].U[0].printMachine();
     // Sets Z0 in temporary lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon);
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu));
                     }
                 }
             }
         }
     }
+//    SU3 Temp;
+//    if (m_processRank == 0) {
+//        cout <<"ACTION:"<<endl;
+//        m_tempLattice[0].U[0].printMachine();
+//        cout <<"EXP:"<<endl;
+//        exponentiate(m_tempLattice[0].U[0]*m_epsilon*0.25).printMachine();
+//    }
     // Sets W1 in main lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
@@ -88,24 +113,36 @@ void Flow::runFlow(Links *lattice)
 //                            exponentiate3(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.25).printMachine();
 //                        }
 //                        MPI_Finalize();exit(1);
-                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.25)*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*m_epsilon*0.25)*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
                     }
                 }
             }
         }
     }
+//    if (m_processRank == 0) exponentiate(m_tempLattice[0].U[0]*m_epsilon*0.25).printMachine();
+//    if (m_processRank == 0) {
+//        cout << "W1 "<<endl;
+//        lattice[0].U[0].printMachine();
+//    }
     // Sets "Z1" in temporary lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.8888888888888888 - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*0.4722222222222222);
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.8888888888888888 - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*m_epsilon*0.4722222222222222);
                     }
                 }
             }
         }
     }
+//    Temp = m_S->getActionDerivative(lattice,0,0,0,0,0);
+//    if (m_processRank == 0) {
+//        cout <<"ACTION:"<<endl;
+//        Temp.printMachine();
+//        cout <<"EXP:"<<endl;
+//        exponentiate(m_tempLattice[0].U[0]).printMachine();
+//    }
     // Sets W2 in main lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
@@ -118,18 +155,29 @@ void Flow::runFlow(Links *lattice)
             }
         }
     }
+//    if (m_processRank == 0) {
+//        cout << "W2" << endl;;
+//        lattice[0].U[0].printMachine();
+//    }
     // Sets "Z2" in temporary lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.75 - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*0.75*m_epsilon - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
                     }
                 }
             }
         }
     }
+//    Temp = m_S->getActionDerivative(lattice,0,0,0,0,0);
+//    if (m_processRank == 0) {
+//        cout <<"ACTION:"<<endl;
+//        Temp.printMachine();
+//        cout <<"EXP:"<<endl;
+//        exponentiate(m_tempLattice[0].U[0]).printMachine();
+//    }
     // Sets V_{t+1} in main lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
@@ -142,6 +190,12 @@ void Flow::runFlow(Links *lattice)
             }
         }
     }
+//    if (m_processRank == 0) {
+//        cout << "FINAL:" <<endl;
+//        lattice[0].U[0].printMachine();
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    exit(1);
 //    lattice[m_Index->getIndex(0,0,0,0)].U[0].print();
 }
 
@@ -178,19 +232,25 @@ SU3 Flow::exponentiate(SU3 Q)
     if (fabs(w) > 0.05) {
         xi0 = sinw/w;
     } else {
-        xi0 = 1 - ww*(1 - 0.05*ww*(1 - ww/42.0))/6.0; // 1/6.0 and 1/42.0
+        xi0 = 1.0 - ww*(1 - 0.05*ww*(1 - ww/42.0))/6.0; // 1/6.0 and 1/42.0
+//        printf("XI= %g\n",xi0);
     }
-
+//    cout << 2*u*cos2u << endl;
+//    cout << -2*u*cosu*cosw << endl;
+//    cout << xi0*(3*uu - ww)*sinu << endl;
     // Sets h
     h[0].setRe(8*uu*cosu*cosw + 2*u*xi0*(3*uu + ww)*sinu + (uu - ww)*cos2u);
     h[0].setIm(-8*uu*sinu*cosw + 2*u*xi0*(3*uu + ww)*cosu + (uu - ww)*sin2u);
     h[1].setRe(-2*u*cosu*cosw + 2*u*cos2u + xi0*(3*uu - ww)*sinu);
+//    h[1].setRe(0);
     h[1].setIm(2*u*sinu*cosw + 2*u*sin2u + xi0*(3*uu - ww)*cosu);
     h[2].setRe(-3*u*xi0*sinu - cosu*cosw + cos2u);
     h[2].setIm(-3*u*xi0*cosu + sinu*cosw + sin2u);
+//    cout << h[1].re() << endl;
 
     // Sets f
     for (int i = 0; i < 3; i++) {
+//        printf("%g %g\n",h[i].re(),h[i].im());
         f[i] = h[i] / (9*uu - ww);
     }
 
@@ -205,6 +265,7 @@ SU3 Flow::exponentiate(SU3 Q)
     f0.setComplex(f[0],0);
     f0.setComplex(f[0],8);
     f0.setComplex(f[0],16);
+
     return f0 + Q*f[1] + QSquared*f[2];
 }
 

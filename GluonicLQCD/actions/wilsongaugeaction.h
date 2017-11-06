@@ -15,8 +15,8 @@ private:
     SU3 m_staple, m_X, m_staple1, m_staple2;
 
     // FOR ALTERNATIVE DERIVATIVE METHOD!
-//    SU3 Q, C, Omega;
-//    double tempDiag;
+    SU3 Q, C, Omega;
+    double tempDiag;
 
 public:
     WilsonGaugeAction(double beta);

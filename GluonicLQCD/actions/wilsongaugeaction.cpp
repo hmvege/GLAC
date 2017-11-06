@@ -51,47 +51,55 @@ void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned i
 SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     computeStaple(lattice,i,j,k,l,mu);
-    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
+//    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
+//    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
+//    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple.inv();
+    m_staple *= lattice[m_Index->getIndex(i,j,k,l)].U[mu];
 
     // MORNINGSTAR METHOD
-//    Omega = m_staple.inv();
-//    Omega -= m_staple;
-//    tempDiag = Omega.trace().im()/6.0;
-//    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/6.0;
-//    Q = Omega*0.5;
-//    Q.mat[1] -= tempDiag;
-//    Q.mat[9] -= tempDiag;
-//    Q.mat[17] -= tempDiag;
-//    m_X = Q*0.5;
+    Omega = m_staple.inv();
+    Omega -= m_staple;
+    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/6.0;
+    Q = Omega*0.5;
+    for (int i = 1; i < 18; i+=2) {
+        Q.mat[i] -= tempDiag;
+    }
+    m_X = Q*0.5;
+//    m_X.printMachine();
 
     // LUSCHER METHOD
     // Multiply the product of this with each of the 8 T^a generators
     // Take trace, real, and the multiply with beta/3
     // Multiply with 8 generators T^a again, sum and return matrix
     // Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann_matrix_multiplication.py.
-    // Diagonals
-    m_X.mat[0] = 0;
-    m_X.mat[1] = (m_staple.mat[9] - 2*m_staple.mat[1] + m_staple.mat[17])*0.1666666666666666;
-    m_X.mat[8] = 0;
-    m_X.mat[9] = (m_staple.mat[1] - 2*m_staple.mat[9] + m_staple.mat[17])*0.1666666666666666;
-    m_X.mat[16] = 0;
-    m_X.mat[17] = (m_staple.mat[1] + m_staple.mat[9] - 2*m_staple.mat[17])*0.1666666666666666;
 
-    // Upper triangular
-    m_X.mat[2] =    0.25 * (m_staple.mat[6]  - m_staple.mat[2]);
-    m_X.mat[3] =  - 0.25 * (m_staple.mat[3]  + m_staple.mat[7]);
-    m_X.mat[4] =    0.25 * (m_staple.mat[12] - m_staple.mat[4]);
-    m_X.mat[5] =  - 0.25 * (m_staple.mat[5]  + m_staple.mat[13]);
-    m_X.mat[10] =   0.25 * (m_staple.mat[14] - m_staple.mat[10]);
-    m_X.mat[11] = - 0.25 * (m_staple.mat[11] + m_staple.mat[15]);
+//    // Diagonals
+//    m_X.mat[0] = 0;
+//    m_X.mat[1] = (m_staple.mat[9] - 2*m_staple.mat[1] + m_staple.mat[17])*0.1666666666666666;
+//    m_X.mat[8] = 0;
+//    m_X.mat[9] = (m_staple.mat[1] - 2*m_staple.mat[9] + m_staple.mat[17])*0.1666666666666666;
+//    m_X.mat[16] = 0;
+//    m_X.mat[17] = (m_staple.mat[1] + m_staple.mat[9] - 2*m_staple.mat[17])*0.1666666666666666;
 
-    // Lower triangular
-    m_X.mat[6] = - m_X.mat[2];
-    m_X.mat[7] = m_X.mat[3];
-    m_X.mat[12] = - m_X.mat[4];
-    m_X.mat[13] = m_X.mat[5];
-    m_X.mat[14] = - m_X.mat[10];
-    m_X.mat[15] = m_X.mat[11];
+//    // Upper triangular
+//    m_X.mat[2] =    0.25 * (m_staple.mat[6]  - m_staple.mat[2]);
+//    m_X.mat[3] =  - 0.25 * (m_staple.mat[3]  + m_staple.mat[7]);
+//    m_X.mat[4] =    0.25 * (m_staple.mat[12] - m_staple.mat[4]);
+//    m_X.mat[5] =  - 0.25 * (m_staple.mat[5]  + m_staple.mat[13]);
+//    m_X.mat[10] =   0.25 * (m_staple.mat[14] - m_staple.mat[10]);
+//    m_X.mat[11] = - 0.25 * (m_staple.mat[11] + m_staple.mat[15]);
+
+//    // Lower triangular
+//    m_X.mat[6] = - m_X.mat[2];
+//    m_X.mat[7] = m_X.mat[3];
+//    m_X.mat[12] = - m_X.mat[4];
+//    m_X.mat[13] = m_X.mat[5];
+//    m_X.mat[14] = - m_X.mat[10];
+//    m_X.mat[15] = m_X.mat[11];
+
+//    m_X.printMachine();
+//    cout <<"EXITS IN WILSONGAUGEACTIONDERIVATIVE"<<endl;
+//    exit(1);
 
     return m_X;;
 }

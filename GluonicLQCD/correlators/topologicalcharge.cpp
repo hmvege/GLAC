@@ -5,9 +5,9 @@
 
 TopologicalCharge::TopologicalCharge(double a) : Correlator()
 {
-    m_a = a;
-    m_multiplicationFactor = m_a*m_a*m_a*m_a/(32*std::atan(1)*4*std::atan(1)*4);
+    m_multiplicationFactor = 1.0/(32*M_PI*M_PI);
     populateLC(); // Fills the levi civita vector
+    setLatticeSpacing(a);
 }
 
 TopologicalCharge::~TopologicalCharge()
@@ -28,7 +28,11 @@ double TopologicalCharge::calculate(Links *lattice)
      * Function to be used when no clover is provided. SHOULD BE TESTED
      */
     Clover Clov;
+    Clov.initializeIndexHandler(m_Index);
+    Clov.setN(m_N);
+    Clov.setLatticeSize(m_latticeSize);
     topCharge = 0;
+
     for (unsigned int i = 0; i < m_N[0]; i++) { // x
         for (unsigned int j = 0; j < m_N[1]; j++) { // y
             for (unsigned int k = 0; k < m_N[2]; k++) { // z
@@ -49,7 +53,7 @@ double TopologicalCharge::calculate(Links *lattice)
             }
         }
     }
-    return topCharge*m_multiplicationFactor*m_a*m_a*m_a*m_a;
+    return topCharge*m_multiplicationFactor;
 }
 
 double TopologicalCharge::calculate()

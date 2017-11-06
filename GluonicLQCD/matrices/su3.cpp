@@ -322,6 +322,7 @@ SU3 SU3::getRe()
 
 void SU3::printMachine()
 {
+    // CHANGE TO PRINTF!
     for (int i = 0; i < 3; i++) // Machine friendly way
     {
         if (i == 0) {
