@@ -41,11 +41,13 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
         updateMuIndex(mu);
         for (int nu = 0; nu < 4; nu++) // ONLY NEED TO STORE HALF OF THESE; SINCE THEY ARE SYMMETRIC AND CAN BE TAKEN INVERSE OF!
         {
-            if (mu==nu) {
+            if (nu==mu) {
                 m_cloverOverCounter++;
                 m_plaquetteOverCounter++;
                 continue;
-            }
+            } else if (nu > mu) { CHANGE TO nu = mu + 1, as that is simplest most likely!
+
+            } else // nu < mu
             updateNuIndex(nu);
 
             // First leaf
