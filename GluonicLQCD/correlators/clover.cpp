@@ -45,9 +45,7 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
                 m_cloverOverCounter++;
                 m_plaquetteOverCounter++;
                 continue;
-            } else if (nu > mu) { CHANGE TO nu = mu + 1, as that is simplest most likely!
-
-            } else // nu < mu
+            }
             updateNuIndex(nu);
 
             // First leaf

@@ -52,28 +52,29 @@ for i in range(4):
 		if i == j: 
 			c += 1
 			continue
-		print "%-2d %-2d %-2d" % (i,j,4*i+j - c)
+		# print "%-2d %-2d %-2d" % (i,j,4*i+j - c)
 		l1.append(4*i+j - c)
+		print "%-2d %-2d %-2d" % (i,j,4*i+j-c)
 
 l2 = []
-print "With symmetry utilization\ni  j  Index"
+print "With symmetry utilization\ni  j  Index j  i  Index c  Plaq"
 c=0
 for i in range(4):
 	for j in range(i,4):
 		if i == j: 
 			c += 1
 			continue
-		print "%-2d %-2d %-2d" % (i,j,4*i+j-c)
+		print "%-2d %-2d %-2d    %-2d %-2d %-2d    %-2d   %2d" % (i,j,4*i+j-c, j,i, 3*j+i, c, 3*i+j-c)
 		l2.append(4*i+j-c)
 		# print "%-2d %-2d %-2d" % (j,i,4*j+i-c)
-
+print 
 c=0
 for j in range(4):
 	for i in range(0,j+1):
 		if i == j:
 			c += 1
 			continue
-		print "%-2d %-2d %-2d" % (j,i,4*j+i-c)
+		print "%-2d %-2d %-2d    %d" % (j,i,4*j+i-c, c)
 		l2.append(4*j+i-c)
 
 for i1 in l1:
