@@ -51,8 +51,8 @@ void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned i
 SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     computeStaple(lattice,i,j,k,l,mu);
-//    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
-    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
+    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
+//    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
 //    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple.inv();
 //    m_staple *= lattice[m_Index->getIndex(i,j,k,l)].U[mu];
 
