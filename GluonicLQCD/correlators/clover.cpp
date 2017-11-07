@@ -34,14 +34,16 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
     m_position[1] = j;
     m_position[2] = k;
     m_position[3] = l;
-    overCounter = 0; // Dirty method of ensuring cloverIndex returns right value.
+    m_cloverOverCounter = 0; // Dirty method of ensuring cloverIndex returns right value.
+    m_plaquetteOverCounter = 0; // Dirty method of ensuring cloverIndex returns right value.
     for (int mu = 0; mu < 4; mu++)
     {
         updateMuIndex(mu);
-        for (int nu = 0; nu < 4; nu++)
+        for (int nu = 0; nu < 4; nu++) // ONLY NEED TO STORE HALF OF THESE; SINCE THEY ARE SYMMETRIC AND CAN BE TAKEN INVERSE OF!
         {
             if (mu==nu) {
-                overCounter++;
+                m_cloverOverCounter++;
+                m_plaquetteOverCounter++;
                 continue;
             }
             updateNuIndex(nu);
@@ -56,23 +58,31 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
             U2 = lattice[m_Index->getIndex(i,j,k,l)].U[nu];
             U2 *= m_Index->getNeighboursNeighbourLink(lattice,m_position,nu,nuIndex,mu,muIndex,mu).inv();
             U2 *= m_Index->getNegativeLink(lattice,m_position,mu,muIndex,nu).inv();
-            U2 *= m_Index->getNegativeLink(lattice,m_position,mu,muIndex,mu);
+            U2Temp = m_Index->getNegativeLink(lattice,m_position,mu,muIndex,mu);
+            U2 *= U2Temp;
 
             // Third leaf
-            U3 = m_Index->getNegativeLink(lattice,m_position,mu,muIndex,mu).inv();
+            U3 = U2Temp.inv();
             U3 *= m_Index->getNeighboursNeighbourNegativeLink(lattice,m_position,mu,muIndex,nu,nuIndex,nu).inv();
             U3 *= m_Index->getNeighboursNeighbourNegativeLink(lattice,m_position,mu,muIndex,nu,nuIndex,mu);
-            U3 *= m_Index->getNegativeLink(lattice,m_position,nu,nuIndex,nu);
+            U3Temp = m_Index->getNegativeLink(lattice,m_position,nu,nuIndex,nu);
+            U3 *= U3Temp;
 
             // Fourth leaf
-            U4 = m_Index->getNegativeLink(lattice,m_position,nu,nuIndex,nu).inv();
+            U4 = U3Temp.inv();
             U4 *= m_Index->getNegativeLink(lattice,m_position,nu,nuIndex,mu);
             U4 *= m_Index->getNeighboursNeighbourLink(lattice,m_position,mu,muIndex,nu,nuIndex,nu);
             U4 *= lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
 
+            // Gets the plaquette leaf
+            if (nu > mu) {
+                m_plaquettes[cloverIndex(mu,nu-m_plaquetteOverCounter)] = U1;
+            } else {
+                m_plaquetteOverCounter++;
+            }
+
             // Sums the leafs, takes imaginary part(sets real values to zero) and multiply by 0.25.
-            m_clovers[cloverIndex(mu,nu-overCounter)] = (U1 + U2 + U3 + U4).getIm()*0.25;
+            m_clovers[cloverIndex(mu,nu-m_cloverOverCounter)] = (U1 + U2 + U3 + U4).getIm()*0.25;
         }
     }
-
 }

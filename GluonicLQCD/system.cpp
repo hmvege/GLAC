@@ -403,8 +403,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     Clov.initializeIndexHandler(m_indexHandler);
     Clov.setN(m_N);
     Clov.setLatticeSize(m_latticeSize);
-    TopologicalCharge TopCharge(0.0931);
-//    TopCharge.setLatticeSpacing(0.0931);
+    TopologicalCharge TopCharge;
     TopCharge.initializeIndexHandler(m_indexHandler);
     TopCharge.setLatticeSize(m_latticeSize);
     TopCharge.setN(m_N);
@@ -414,21 +413,23 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     double * m_gammaFlow = new double[NFlows];
     double * m_topologicalCharge = new double[NFlows];
     double * m_actionDensity = new double[NFlows];
+    for (int tau = 0; tau < NFlows; tau++) {
+        m_topologicalCharge[tau] = 0;
+        m_gammaFlow[tau] = 0;
+        m_actionDensity[tau] = 0;
+    }
     m_preUpdate = steady_clock::now();
     for (int tau = 0; tau < NFlows; tau++) {
-        WFlow.flowGaugeField(1,m_lattice);
-        m_gammaFlow[tau] = m_correlator->calculate(m_lattice);
-        m_topologicalCharge[tau] = 0;
+        WFlow.flowField(m_lattice);
+//        m_gammaFlow[tau] = m_correlator->calculate(m_lattice);
         for (unsigned int x = 0; x < m_N[0]; x++) { // CLEAN UP AND MOVE THIS PART INTO ITS OWN CLASS FOR CALCULATING TOP CHARGE AND ENERGY?!
             for (unsigned int y = 0; y < m_N[1]; y++) { // HIDE IT, AS IT IS BIG AND UGLY!
                 for (unsigned int z = 0; z < m_N[2]; z++) {
                     for (unsigned int t = 0; t < m_N[3]; t++) {
                         Clov.calculateClover(m_lattice,x,y,z,t);
-                        TopCharge.setClover(Clov.m_clovers); // Send directly to top charge in calculate? MAKE IT INTO VIRTUAL IN CORRELATOR
-                        m_topologicalCharge[tau] += TopCharge.calculate();
-                        Energy.setClover(Clov.m_clovers);
-                        m_actionDensity[tau] += Energy.calculate();
-//                        exit(1);
+                        m_topologicalCharge[tau] += TopCharge.calculate(Clov.m_clovers);
+                        m_actionDensity[tau] += Energy.calculate(Clov.m_clovers);
+                        m_gammaFlow[tau] += m_correlator->calculate(Clov.m_plaquettes);
                     }
                 }
             }
@@ -437,9 +438,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         m_topologicalCharge[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
-        m_actionDensity[tau] = m_actionDensity[tau];
         m_gammaFlow[tau] /= double(m_numprocs);
-        if (m_processRank == 0) printf("\n%-4d %-18.16f %-18.16f %-18.16f", tau, m_gammaFlow[tau], m_topologicalCharge[tau], m_actionDensity[tau]);
+        if (m_processRank == 0) printf("\n%-5.4d %-5.4f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_gammaFlow[tau], m_topologicalCharge[tau], m_actionDensity[tau]);
 //        if (m_processRank == 0) printf("\n%-4d %-18.14f", tau, m_gammaFlow[tau]);
     }
     MPI_Barrier(MPI_COMM_WORLD);

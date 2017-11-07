@@ -19,6 +19,8 @@ protected:
     unsigned int *m_N;
     // (sub)lattice size
     double m_latticeSize;
+    // Lattice spacing
+    double m_a;
     // Lorentz indices
     int muIndex[4];
     int nuIndex[4];
@@ -51,8 +53,9 @@ public:
     Correlator();
     virtual ~Correlator();
     virtual double calculate(Links *lattice);
-    virtual double calculate();
+    virtual double calculate(SU3 *U);
     virtual void setLatticeSize(int latticeSize);
+    virtual void setLatticeSpacing(double a) { m_a = a; }
 
     // Setters
     void setN(unsigned int *N);

@@ -25,7 +25,7 @@ SOURCES += main.cpp \
     correlators/topologicalcharge.cpp \
     correlators/clover.cpp \
     correlators/energydensity.cpp \
-    correlators/topchargeandenergy.cpp
+    correlators/observablesampler.cpp
 
 HEADERS += \
     system.h \
@@ -48,7 +48,7 @@ HEADERS += \
     correlators/topologicalcharge.h \
     correlators/clover.h \
     correlators/energydensity.h \
-    correlators/topchargeandenergy.h
+    correlators/observablesampler.h
 
 #LIBS += -llapack -lblas -larmadillo
 

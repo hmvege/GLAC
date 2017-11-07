@@ -36,7 +36,7 @@ double Correlator::calculate(Links * lattice)
     return 1.0;
 }
 
-double Correlator::calculate()
+double Correlator::calculate(SU3 *U)
 {
     /*
      * Default correlator is not implemented.

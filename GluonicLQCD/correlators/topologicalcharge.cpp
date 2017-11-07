@@ -3,23 +3,15 @@
 #include "clover.h"
 #include <cmath>
 
-TopologicalCharge::TopologicalCharge(double a) : Correlator()
+TopologicalCharge::TopologicalCharge() : Correlator()
 {
     m_multiplicationFactor = 1.0/(32*M_PI*M_PI);
     populateLC(); // Fills the levi civita vector
-    setLatticeSpacing(a);
 }
 
 TopologicalCharge::~TopologicalCharge()
 {
 
-}
-
-void TopologicalCharge::setClover(SU3 *clover)
-{
-    for (int i = 0; i < 12; i++) {
-        m_clover[i] = clover[i];
-    }
 }
 
 double TopologicalCharge::calculate(Links *lattice)
@@ -42,12 +34,11 @@ double TopologicalCharge::calculate(Links *lattice)
                     m_position[2] = k;
                     m_position[3] = l;
                     Clov.calculateClover(lattice,i,j,k,l);
-                    setClover(Clov.m_clovers);
                     for (unsigned int i = 0; i < m_leviCivita.size(); i++)
                     {
-                        G1 = m_clover[m_leviCivita[i].ci[0]];
-                        G2 = m_clover[m_leviCivita[i].ci[1]];
-                        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
+                        G1 = Clov.m_clovers[m_leviCivita[i].ci[0]];
+                        G2 = Clov.m_clovers[m_leviCivita[i].ci[1]];
+                        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
                     }
                 }
             }
@@ -56,14 +47,14 @@ double TopologicalCharge::calculate(Links *lattice)
     return topCharge*m_multiplicationFactor;
 }
 
-double TopologicalCharge::calculate()
+double TopologicalCharge::calculate(SU3 *clovers)
 {
     topCharge = 0;
     for (unsigned int i = 0; i < m_leviCivita.size(); i++)
     {
-        G1 = m_clover[m_leviCivita[i].ci[0]];
-        G2 = m_clover[m_leviCivita[i].ci[1]];
-        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
+        G1 = clovers[m_leviCivita[i].ci[0]];
+        G2 = clovers[m_leviCivita[i].ci[1]];
+        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
     }
     return topCharge*m_multiplicationFactor;
 }

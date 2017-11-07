@@ -31,22 +31,18 @@ private:
     };
 
     double topCharge;
-    double m_a; // Lattice spacing
     SU3 G1,G2;
-    SU3 m_clover[12];
     double m_multiplicationFactor;
     std::vector<LeviCivita> m_leviCivita;
 
     void populateLC();
     int getLCSign(LeviCivita LC);
 public:
-    TopologicalCharge(double a);
+    TopologicalCharge();
     ~TopologicalCharge();
 
-    double calculate();
+    double calculate(SU3 *clovers);
     double calculate(Links *lattice);
-    void setClover(SU3 *clover);
-    void setLatticeSpacing(double a) { m_a = a; }
 };
 
 #endif // TOPOLOGICALCHARGE_H

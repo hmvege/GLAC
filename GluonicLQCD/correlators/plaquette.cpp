@@ -6,10 +6,6 @@
 
 Plaquette::Plaquette() : Correlator()
 {
-//    for (int i = 0; i < 4; i++) {
-//        muIndex[i] = 0;
-//        nuIndex[i] = 0;
-//    }
 }
 
 Plaquette::~Plaquette()
@@ -50,3 +46,13 @@ double Plaquette::calculate(Links *lattice)
     }
     return (P.mat[0] + P.mat[8] + P.mat[16])/multiplicationFactor; // 3 from SU3, 6 from number of plaquettes, 3*6=18
 }
+
+double Plaquette::calculate(SU3 *plaquetteStaples)
+{
+    P.zeros();
+    for (int i = 0; i < 6; i++) {
+        P += plaquetteStaples[i];
+    }
+    return (P.mat[0] + P.mat[8] + P.mat[16])/multiplicationFactor;
+}
+

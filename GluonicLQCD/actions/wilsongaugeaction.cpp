@@ -52,9 +52,9 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
 {
     computeStaple(lattice,i,j,k,l,mu);
 //    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
-//    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
+    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
 //    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple.inv();
-    m_staple *= lattice[m_Index->getIndex(i,j,k,l)].U[mu];
+//    m_staple *= lattice[m_Index->getIndex(i,j,k,l)].U[mu];
 
     // MORNINGSTAR METHOD
     Omega = m_staple.inv();
@@ -67,6 +67,7 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     m_X = Q*0.5;
 //    m_X.printMachine();
 
+    /////// FIX LUSHCER METHOD ///////
     // LUSCHER METHOD
     // Multiply the product of this with each of the 8 T^a generators
     // Take trace, real, and the multiply with beta/3

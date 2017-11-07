@@ -38,7 +38,6 @@ private:
     double cosu, cosw, sinu, sinw, uu, ww, sin2u, cos2u;
 
     // Functions for performing flow
-    void runFlow(Links *lattice);
     IndexOrganiser *m_Index = nullptr;
     SU3 exponentiate(SU3 Q); // Morningstar method
     SU3 exponentiate2(SU3 Q); // Luscher method
@@ -49,7 +48,7 @@ private:
 public:
     Flow(unsigned int *N, double beta, int numprocs, int processRank);
     ~Flow();
-    void flowGaugeField(int NFlows, Links *lattice);
+    void flowField(Links *lattice);
 
     // Setters
     void setEpsilon(double epsilon) { m_epsilon = epsilon; }

@@ -2,27 +2,30 @@
 #include "clover.h"
 #include "functions.h"
 
+EnergyDensity::EnergyDensity()
+{
+}
+
 EnergyDensity::EnergyDensity(double a, int latticeSize) : Correlator()
 {
+    setLatticeSpacing(a);
     setLatticeSize(latticeSize);
+    m_multiplicationFactor = (m_a*m_a*m_a*m_a)/(3*double(m_latticeSize));
+}
+
+void EnergyDensity::setLatticeSpacing(double a) // NEED TO DOUBLE CHECK THIS WITH ANDREA!
+{
     m_multiplicationFactor = (a*a*a*a)/(3*double(m_latticeSize));
 }
 
-void EnergyDensity::setClover(SU3 *clover)
-{
-    for (int i = 0; i < 12; i++) {
-        m_clover[i] = clover[i];
-    }
-}
-
-double EnergyDensity::calculate()
+double EnergyDensity::calculate(SU3 *clovers)
 {
     m_actionDensity = 0;
     for (unsigned int i = 0; i < 12; i++)
     {
-        m_actionDensity -= traceRealMultiplication(m_clover[i],m_clover[i])*0.5; // WHY MINUS?
+        m_actionDensity += traceSparseImagMultiplication(clovers[i],clovers[i]); // Might check this one with Andrea
     }
-    return m_actionDensity*m_multiplicationFactor; // Correct or not?
+    return m_actionDensity;//*m_multiplicationFactor; // Correct or not?
 }
 
 double EnergyDensity::calculate(Links *lattice)
@@ -42,14 +45,13 @@ double EnergyDensity::calculate(Links *lattice)
                     m_position[2] = k;
                     m_position[3] = l;
                     Clov.calculateClover(lattice,i,j,k,l);
-                    setClover(Clov.m_clovers);
                     for (unsigned int i = 0; i < 12; i++)
                     {
-                        m_actionDensity += (m_clover[i].mat[0] + m_clover[i].mat[8] + m_clover[i].mat[16]);
+                        m_actionDensity += traceSparseImagMultiplication(Clov.m_clovers[i],Clov.m_clovers[i]);
                     }
                 }
             }
         }
     }
-    return m_actionDensity*m_multiplicationFactor;
+    return m_actionDensity;//*m_multiplicationFactor; // Temporary off
 }

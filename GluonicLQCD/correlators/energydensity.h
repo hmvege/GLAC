@@ -9,12 +9,12 @@ private:
     double m_multiplicationFactor;
     double m_actionDensity;
 public:
-    SU3 m_clover[12];
     SU3 m_temp;
     EnergyDensity(double a, int latticeSize);
-    void setClover(SU3 *clover);
-    double calculate();
+    EnergyDensity();
+    double calculate(SU3 *clovers);
     double calculate(Links *lattice);
+    void setLatticeSpacing(double a);
 };
 
 #endif // ENERGYDENSITY_H
