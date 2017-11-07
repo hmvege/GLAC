@@ -3,7 +3,6 @@
 #include "neighbours.h"
 #include "matrices/su3.h"
 #include <mpi.h>
-#include <vector>
 
 IndexOrganiser::IndexOrganiser(int processRank) : m_processRank(processRank)
 {

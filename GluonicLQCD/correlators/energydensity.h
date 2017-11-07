@@ -9,9 +9,9 @@ private:
     double m_multiplicationFactor;
     double m_actionDensity;
 public:
-    SU3 m_temp;
     EnergyDensity(double a, int latticeSize);
     EnergyDensity();
+    ~EnergyDensity();
     double calculate(SU3 *clovers);
     double calculate(Links *lattice);
     void setLatticeSpacing(double a);

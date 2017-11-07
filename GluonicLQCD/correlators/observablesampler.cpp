@@ -1,10 +1,22 @@
 #include "observablesampler.h"
 
-ObservableSampler::ObservableSampler(double a, int latticeSize) : Correlator()
+#include "parallelization/indexorganiser.h"
+
+#include <iostream>
+using std::cout;
+using std::endl;
+
+ObservableSampler::ObservableSampler(unsigned int *N, int latticeSize, double a, IndexOrganiser *Index)// : Correlator()
 {
     m_a = a;
     setLatticeSize(latticeSize);
     m_energyDensity.setLatticeSpacing(m_a);
+    setN(N);
+    m_position = std::vector<int>(4,0);
+    m_clover.initializeIndexHandler(Index);
+    m_plaquette.initializeIndexHandler(Index);
+    m_energyDensity.initializeIndexHandler(Index);
+    m_topologicalCharge.initializeIndexHandler(Index);
 }
 
 ObservableSampler::~ObservableSampler()
@@ -12,7 +24,7 @@ ObservableSampler::~ObservableSampler()
 
 }
 
-double ObservableSampler::calculate(Links *lattice)
+void ObservableSampler::calculate(Links *lattice)
 {
     /*
      * Samples plaquette, topological charge and action/energy density.
@@ -46,4 +58,11 @@ void ObservableSampler::setLatticeSize(int latticeSize)
     m_plaquette.setLatticeSize(m_latticeSize);
     m_energyDensity.setLatticeSize(m_latticeSize);
     m_topologicalCharge.setLatticeSize(m_latticeSize);
+}
+
+void ObservableSampler::setN(unsigned int *N)
+{
+    for (int i = 0; i < 4; i++) {
+        m_N[i] = N[i];
+    }
 }

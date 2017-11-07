@@ -15,7 +15,7 @@ Plaquette::~Plaquette()
 void Plaquette::setLatticeSize(int latticeSize)
 {
     m_latticeSize = double(latticeSize);
-    multiplicationFactor = 18.0*m_latticeSize;
+    m_multiplicationFactor = 18.0*m_latticeSize; // 3 from SU3, 6 from number of plaquettes, 3*6=18
 }
 
 double Plaquette::calculate(Links *lattice)
@@ -44,7 +44,7 @@ double Plaquette::calculate(Links *lattice)
             }
         }
     }
-    return (P.mat[0] + P.mat[8] + P.mat[16])/multiplicationFactor; // 3 from SU3, 6 from number of plaquettes, 3*6=18
+    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 }
 
 double Plaquette::calculate(SU3 *plaquetteStaples)
@@ -53,6 +53,6 @@ double Plaquette::calculate(SU3 *plaquetteStaples)
     for (int i = 0; i < 6; i++) {
         P += plaquetteStaples[i];
     }
-    return (P.mat[0] + P.mat[8] + P.mat[16])/multiplicationFactor;
+    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 }
 

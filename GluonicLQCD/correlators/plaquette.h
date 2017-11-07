@@ -6,7 +6,7 @@
 class Plaquette : public Correlator
 {
 private:
-    double multiplicationFactor;
+    double m_multiplicationFactor;
     SU3 P;
     SU3 PTemp;
 public:

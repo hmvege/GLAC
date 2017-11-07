@@ -30,6 +30,7 @@ Flow::Flow(unsigned int *N, double beta, int numprocs, int processRank)
 
 Flow::~Flow()
 {
+    cout << "SHOULD NOT DELETE YET!" << endl;
     delete [] m_tempLattice;
 }
 
@@ -45,7 +46,7 @@ void Flow::flowField(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu));
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu] = m_S->getActionDerivative(lattice,x,y,z,t,mu);
                     }
                 }
             }
@@ -57,7 +58,7 @@ void Flow::flowField(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*m_epsilon*0.25)*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu] = exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*m_epsilon*0.25)*lattice[m_Index->getIndex(x,y,z,t)].U[mu];
                     }
                 }
             }
@@ -69,7 +70,7 @@ void Flow::flowField(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.8888888888888888 - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*m_epsilon*0.4722222222222222);
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu] = m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.8888888888888888 - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]*m_epsilon*0.4722222222222222;
                     }
                 }
             }
@@ -81,7 +82,7 @@ void Flow::flowField(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu] = exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu];
                     }
                 }
             }
@@ -93,7 +94,7 @@ void Flow::flowField(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(m_S->getActionDerivative(lattice,x,y,z,t,mu)*0.75*m_epsilon - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu] = m_S->getActionDerivative(lattice,x,y,z,t,mu)*0.75*m_epsilon - m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu];
                     }
                 }
             }
@@ -105,7 +106,7 @@ void Flow::flowField(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[m_Index->getIndex(x,y,z,t)].U[mu].copy(exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu]);
+                        lattice[m_Index->getIndex(x,y,z,t)].U[mu] = exponentiate(m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu])*lattice[m_Index->getIndex(x,y,z,t)].U[mu];
                     }
                 }
             }

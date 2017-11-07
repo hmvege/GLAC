@@ -6,6 +6,11 @@ EnergyDensity::EnergyDensity()
 {
 }
 
+EnergyDensity::~EnergyDensity()
+{
+
+}
+
 EnergyDensity::EnergyDensity(double a, int latticeSize) : Correlator()
 {
     setLatticeSpacing(a);

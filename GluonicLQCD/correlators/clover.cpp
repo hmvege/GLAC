@@ -34,16 +34,14 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
     m_position[1] = j;
     m_position[2] = k;
     m_position[3] = l;
-    m_cloverOverCounter = 0; // Dirty method of ensuring cloverIndex returns right value.
-    m_plaquetteOverCounter = 0; // Dirty method of ensuring cloverIndex returns right value.
+    m_overCounter = 0; // Dirty method of ensuring cloverIndex returns right value.
     for (int mu = 0; mu < 4; mu++)
     {
         updateMuIndex(mu);
-        for (int nu = 0; nu < 4; nu++) // ONLY NEED TO STORE HALF OF THESE; SINCE THEY ARE SYMMETRIC AND CAN BE TAKEN INVERSE OF!
+        for (int nu = mu; nu < 4; nu++) // ONLY NEED TO STORE HALF OF THESE; SINCE THEY ARE SYMMETRIC AND CAN BE TAKEN INVERSE OF!
         {
             if (nu==mu) {
-                m_cloverOverCounter++;
-                m_plaquetteOverCounter++;
+                m_overCounter++;
                 continue;
             }
             updateNuIndex(nu);
@@ -75,14 +73,12 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
             U4 *= lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
 
             // Gets the plaquette leaf
-            if (nu > mu) {
-                m_plaquettes[cloverIndex(mu,nu-m_plaquetteOverCounter)] = U1;
-            } else {
-                m_plaquetteOverCounter++;
-            }
+//            printf("mu=%2d nu=%2d plaq=%2d clov=%2d clov_inv=%2d\n",mu,nu,3*mu + nu - m_overCounter,cloverIndex(mu,nu-m_overCounter),3*nu+mu);
+            m_plaquettes[3*mu + nu - m_overCounter - mu/2] = U1;
 
             // Sums the leafs, takes imaginary part(sets real values to zero) and multiply by 0.25.
-            m_clovers[cloverIndex(mu,nu-m_cloverOverCounter)] = (U1 + U2 + U3 + U4).getIm()*0.25;
+            m_clovers[cloverIndex(mu,nu-m_overCounter)] = (U1 + U2 + U3 + U4).getIm()*0.25;
+            m_clovers[3*nu + mu] = m_clovers[cloverIndex(mu,nu-m_overCounter)].inv();
         }
     }
 }
