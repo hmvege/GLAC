@@ -31,8 +31,7 @@ T[7] *= 1/sp.sqrt(3)
 
 # Adding factor 1/2 to every generator
 T = [Ta/2 for Ta in T]
-
-# T = [-sp.I*Ta for Ta in T]
+T = [(-sp.I)*Ta for Ta in T]
 
 # Setting general matrix A
 a11,a12,a13,a21,a22,a23,a31,a32,a33 = sp.symbols("a11 a12 a13 a21 a22 a23 a31 a32 a33",real=False)
@@ -40,13 +39,24 @@ A = sp.Matrix([[a11, a12, a13],[a21, a22, a23],[a31, a32, a33]])
 
 R = [0 for i in range(8)]
 for i,T_a in enumerate(T):
-	R[i] = sp.re((T_a*A).trace())
+	R[i] = sp.im((T_a*A).trace())
+	# sp.pprint((T_a*A).trace())
+	# print R[i]
+# exit(1)
+
 
 
 res = sp.zeros(3,3)
 for i,T_a in enumerate(T):
 	res += T_a*R[i]
 
+res = sp.simplify(res)
+
+for i,elem in enumerate(res):
+	print "\n\nELEMENT: %d " % (2*i)
+	sp.pprint(sp.re(elem))
+	print "\n\nELEMENT: %d " % (2*i+1)
+	sp.pprint(sp.im(elem))
 
 def printAll():
 	# for i,T_a in enumerate(T):
@@ -54,19 +64,20 @@ def printAll():
 	# 	sp.pprint(T_a)
 	# sp.pprint(A)
 	# sp.pprint(sp.simplify(res))
-	sp.pprint(sp.simplify(-res*sp.I))
-	sp.printing.print_ccode(res)
+	sp.pprint(res)
+	# sp.printing.print_ccode(res)
 	# print "REAL:"
 	# sp.pprint(sp.simplify(sp.re(-res*sp.I)))
 	# print "IMAG:"
 	# sp.pprint(sp.simplify(sp.im(-res*sp.I)))
 
-	index_map = """\nIndex map:
+
+index_map = """\nIndex map:
 H =
 0 1 2    0  1   2  3    4  5
 3 4 5 =  6  7   8  9   10 11
 6 7 8   12 13  14 15   16 17
 	"""
-	print index_map
+print index_map
 
-printAll()
+# printAll()

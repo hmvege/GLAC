@@ -417,9 +417,11 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     int NFlows = 1000;
     double * m_gammaFlow = new double[NFlows];
     double * m_topologicalCharge = new double[NFlows];
+    double * m_topologicalSusceptibility = new double[NFlows];
     double * m_actionDensity = new double[NFlows];
     for (int tau = 0; tau < NFlows; tau++) {
         m_topologicalCharge[tau] = 0;
+        m_topologicalSusceptibility[tau] = 0;
         m_gammaFlow[tau] = 0;
         m_actionDensity[tau] = 0;
     }
@@ -449,9 +451,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        m_topologicalCharge[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
+        m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
         m_gammaFlow[tau] /= double(m_numprocs);
-        if (m_processRank == 0) printf("\n%5d %-5.4f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_gammaFlow[tau], m_topologicalCharge[tau], m_actionDensity[tau]);
+        if (m_processRank == 0) printf("\n%5d %-5.4f %-18.16f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_gammaFlow[tau], m_topologicalCharge[tau], m_topologicalSusceptibility[tau], m_actionDensity[tau]);
 
         updateTime += (duration_cast<duration<double>>(steady_clock::now() - m_preUpdate)).count();
 

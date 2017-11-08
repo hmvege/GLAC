@@ -46,6 +46,7 @@ void Flow::flowField(Links *lattice)
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
+
                         m_tempLattice[m_Index->getIndex(x,y,z,t)].U[mu] = m_S->getActionDerivative(lattice,x,y,z,t,mu);
                     }
                 }

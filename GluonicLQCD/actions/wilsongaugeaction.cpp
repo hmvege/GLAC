@@ -51,9 +51,12 @@ void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned i
 SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     computeStaple(lattice,i,j,k,l,mu);
-    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
-//    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple;
+
+    // How should on take the staple?
+//    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv(); // Chroma
+    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple; // My method
 //    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple.inv();
+//    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu];
 //    m_staple *= lattice[m_Index->getIndex(i,j,k,l)].U[mu];
 
     // MORNINGSTAR METHOD
@@ -61,10 +64,11 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     Omega -= m_staple;
     tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/6.0;
     Q = Omega*0.5;
-    for (int i = 1; i < 18; i+=2) {
+    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
         Q.mat[i] -= tempDiag;
     }
     m_X = Q*0.5;
+//    std::cout<<"MORNINGSTAR:"<<std::endl;
 //    m_X.printMachine();
 
     /////// FIX LUSHCER METHOD ///////
@@ -73,7 +77,7 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     // Take trace, real, and the multiply with beta/3
     // Multiply with 8 generators T^a again, sum and return matrix
     // Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann_matrix_multiplication.py.
-
+//    std::cout<<"LUSCHER:"<<std::endl;
 //    // Diagonals
 //    m_X.mat[0] = 0;
 //    m_X.mat[1] = (m_staple.mat[9] - 2*m_staple.mat[1] + m_staple.mat[17])*0.1666666666666666;
@@ -99,8 +103,10 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
 //    m_X.mat[15] = m_X.mat[11];
 
 //    m_X.printMachine();
-//    cout <<"EXITS IN WILSONGAUGEACTIONDERIVATIVE"<<endl;
+//    std::cout <<"EXITS IN WILSONGAUGEACTIONDERIVATIVE"<<std::endl;
 //    exit(1);
+
+    // Make hermitian
 
     return m_X;;
 }
