@@ -53,21 +53,21 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     computeStaple(lattice,i,j,k,l,mu);
 
     // How should on take the staple?
-//    m_staple = m_staple.inv()*lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].inv(); // Chroma
-    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method
+    m_staple = m_staple.inv()*lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].inv(); // Chroma
+//    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method
 //    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple.inv();
 //    m_staple = m_staple.inv()*lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
 //    m_staple *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
 
     // MORNINGSTAR METHOD
-//    Omega = m_staple.inv();
-//    Omega -= m_staple;
-//    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/6.0;
-//    m_X = Omega*0.5;
-//    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
-//        m_X.mat[i] -= tempDiag;
-//    }
-//    m_X = Q;
+    Omega = m_staple.inv();
+    Omega -= m_staple;
+    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/6.0;
+    Q = Omega*0.5;
+    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
+        Q.mat[i] -= tempDiag;
+    }
+    m_X = Q*0.5;
 //    std::cout<<"MORNINGSTAR:"<<std::endl;
 //    m_X.printMachine();
 
@@ -99,27 +99,28 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
 //    m_X.mat[13] = m_X.mat[5];
 //    m_X.mat[14] = - m_X.mat[10];
 //    m_X.mat[15] = m_X.mat[11];
-    // Diagonals
-    m_X.mat[0] = 0;
-    m_X.mat[1] = (m_staple.mat[9] - 2*m_staple.mat[1] + m_staple.mat[17])*0.3333333333333333;
-    m_X.mat[8] = 0;
-    m_X.mat[9] = (m_staple.mat[1] - 2*m_staple.mat[9] + m_staple.mat[17])*0.3333333333333333;
-    m_X.mat[16] = 0;
-    m_X.mat[17] = (m_staple.mat[1] + m_staple.mat[9] - 2*m_staple.mat[17])*0.3333333333333333;
-    // Upper triangular
-    m_X.mat[2] =    0.5 * (m_staple.mat[6]  - m_staple.mat[2]);
-    m_X.mat[3] =  - 0.5 * (m_staple.mat[3]  + m_staple.mat[7]);
-    m_X.mat[4] =    0.5 * (m_staple.mat[12] - m_staple.mat[4]);
-    m_X.mat[5] =  - 0.5 * (m_staple.mat[5]  + m_staple.mat[13]);
-    m_X.mat[10] =   0.5 * (m_staple.mat[14] - m_staple.mat[10]);
-    m_X.mat[11] = - 0.5 * (m_staple.mat[11] + m_staple.mat[15]);
-    // Lower triangular
-    m_X.mat[6] = - m_X.mat[2];
-    m_X.mat[7] = m_X.mat[3];
-    m_X.mat[12] = - m_X.mat[4];
-    m_X.mat[13] = m_X.mat[5];
-    m_X.mat[14] = - m_X.mat[10];
-    m_X.mat[15] = m_X.mat[11];
+
+//    // Diagonals // WITHOUT FACTOR 2
+//    m_X.mat[0] = 0;
+//    m_X.mat[1] = (m_staple.mat[9] - 2*m_staple.mat[1] + m_staple.mat[17])*0.3333333333333333;
+//    m_X.mat[8] = 0;
+//    m_X.mat[9] = (m_staple.mat[1] - 2*m_staple.mat[9] + m_staple.mat[17])*0.3333333333333333;
+//    m_X.mat[16] = 0;
+//    m_X.mat[17] = (m_staple.mat[1] + m_staple.mat[9] - 2*m_staple.mat[17])*0.3333333333333333;
+//    // Upper triangular
+//    m_X.mat[2] =    0.5 * (m_staple.mat[6]  - m_staple.mat[2]);
+//    m_X.mat[3] =  - 0.5 * (m_staple.mat[3]  + m_staple.mat[7]);
+//    m_X.mat[4] =    0.5 * (m_staple.mat[12] - m_staple.mat[4]);
+//    m_X.mat[5] =  - 0.5 * (m_staple.mat[5]  + m_staple.mat[13]);
+//    m_X.mat[10] =   0.5 * (m_staple.mat[14] - m_staple.mat[10]);
+//    m_X.mat[11] = - 0.5 * (m_staple.mat[11] + m_staple.mat[15]);
+//    // Lower triangular
+//    m_X.mat[6] = - m_X.mat[2];
+//    m_X.mat[7] = m_X.mat[3];
+//    m_X.mat[12] = - m_X.mat[4];
+//    m_X.mat[13] = m_X.mat[5];
+//    m_X.mat[14] = - m_X.mat[10];
+//    m_X.mat[15] = m_X.mat[11];
 
 //    m_X.printMachine();
 //    std::cout <<"EXITS IN WILSONGAUGEACTIONDERIVATIVE"<<std::endl;

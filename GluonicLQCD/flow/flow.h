@@ -38,7 +38,6 @@ private:
     double cosu, cosw, sinu, sinw, uu, ww, sin2u, cos2u;
 
     // Functions for performing flow
-//    Parallel::IndexOrganiser *m_Index = nullptr;
     SU3 exponentiate(SU3 Q); // Morningstar method
     SU3 exponentiate2(SU3 Q); // Luscher method
     SU3 exponentiate3(SU3 Q); // Taylor expansion
@@ -52,7 +51,6 @@ public:
 
     // Setters
     void setEpsilon(double epsilon) { m_epsilon = epsilon; }
-//    void setIndexHandler(IndexOrganiser *Index);
     void setAction(Action *S);
     // Getters
     double getEpsilon() { return m_epsilon; }

@@ -37,7 +37,8 @@ double TopologicalCharge::calculate(Links *lattice)
                     {
                         G1 = Clov.m_clovers[m_leviCivita[i].ci[0]];
                         G2 = Clov.m_clovers[m_leviCivita[i].ci[1]];
-                        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
+//                        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn; // When off diagonal complex elements are zero
+                        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn; // When off diagonal complex elements are not zero
                     }
                 }
             }

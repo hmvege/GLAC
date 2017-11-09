@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     correlators/clover.cpp \
     correlators/energydensity.cpp \
     correlators/observablesampler.cpp \
-    parallelization/index.cpp
+    parallelization/index.cpp \
+    math/exponentiation/su3exp.cpp
 
 HEADERS += \
     system.h \
@@ -48,7 +49,8 @@ HEADERS += \
     correlators/clover.h \
     correlators/energydensity.h \
     correlators/observablesampler.h \
-    parallelization/index.h
+    parallelization/index.h \
+    math/exponentiation/su3exp.h
 
 #LIBS += -llapack -lblas -larmadillo
 

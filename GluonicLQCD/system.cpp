@@ -378,7 +378,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
      */
     m_storeThermalizationObservables = storeThermalizationObservables;
     //// TESTS ==============================================================================
-//    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
     // Common files
     // loadFieldConfiguration("unityScalar.bin");
 //     loadFieldConfiguration("unity16cores.bin");
@@ -386,15 +386,14 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    loadFieldConfiguration("para8core061102.bin");
 //    loadFieldConfiguration("scalar16cubed16run1.bin");
 //    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469, UBUNTU
-//    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
+    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
 //    loadFieldConfiguration("msg01.rec02.ildg-binary-data"); // jack
-//    double corr = m_correlator->calculate(m_lattice);
-//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//    corr /= double(m_numprocs);
-//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl;
-//    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
-//    WFlow.setIndexHandler(m_indexHandler);
-//    WFlow.setAction(m_S);
+    double corr = m_correlator->calculate(m_lattice);
+    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    corr /= double(m_numprocs);
+    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl;
+    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
+    WFlow.setAction(m_S);
 
     /// OLD
 //    Clover Clov;
@@ -408,28 +407,28 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    EnergyDensity Energy(0.0931, m_latticeSize);
 //    Energy.initializeIndexHandler(m_indexHandler);
 
-//    ObservableSampler OSampler(m_N,m_subLatticeSize,0.0931,m_indexHandler);
+    ObservableSampler OSampler(m_N,m_subLatticeSize,0.0931);
 
-//    int NFlows = 1000;
-//    double * m_gammaFlow = new double[NFlows];
-//    double * m_topologicalCharge = new double[NFlows];
-//    double * m_topologicalSusceptibility = new double[NFlows];
-//    double * m_actionDensity = new double[NFlows];
-//    for (int tau = 0; tau < NFlows; tau++) {
-//        m_topologicalCharge[tau] = 0;
-//        m_topologicalSusceptibility[tau] = 0;
-//        m_gammaFlow[tau] = 0;
-//        m_actionDensity[tau] = 0;
-//    }
-//    double updateTime = 0;
-//    for (int tau = 0; tau < NFlows; tau++) {
-//        m_preUpdate = steady_clock::now();
-//        WFlow.flowField(m_lattice);
+    int NFlows = 1000;
+    double * m_gammaFlow = new double[NFlows];
+    double * m_topologicalCharge = new double[NFlows];
+    double * m_topologicalSusceptibility = new double[NFlows];
+    double * m_actionDensity = new double[NFlows];
+    for (int tau = 0; tau < NFlows; tau++) {
+        m_topologicalCharge[tau] = 0;
+        m_topologicalSusceptibility[tau] = 0;
+        m_gammaFlow[tau] = 0;
+        m_actionDensity[tau] = 0;
+    }
+    double updateTime = 0;
+    for (int tau = 0; tau < NFlows; tau++) {
+        m_preUpdate = steady_clock::now();
+        WFlow.flowField(m_lattice);
 
-//        OSampler.calculate(m_lattice);
-//        m_gammaFlow[tau] = OSampler.getPlaquette();
-//        m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
-//        m_actionDensity[tau] = OSampler.getEnergyDensity();
+        OSampler.calculate(m_lattice);
+        m_gammaFlow[tau] = OSampler.getPlaquette();
+        m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
+        m_actionDensity[tau] = OSampler.getEnergyDensity();
 
        /// OLD
 //        for (unsigned int x = 0; x < m_N[0]; x++) { // CLEAN UP AND MOVE THIS PART INTO ITS OWN CLASS FOR CALCULATING TOP CHARGE AND ENERGY?!
@@ -445,24 +444,24 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //            }
 //        }
 
-//        MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
-//        m_gammaFlow[tau] /= double(m_numprocs);
-//        if (m_processRank == 0) printf("\n%5d %-5.4f %-18.16f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_gammaFlow[tau], m_topologicalCharge[tau], m_topologicalSusceptibility[tau], m_actionDensity[tau]);
+        MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
+        m_gammaFlow[tau] /= double(m_numprocs);
+        if (m_processRank == 0) printf("\n%5d %-5.4f %-18.16f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_gammaFlow[tau], m_topologicalCharge[tau], m_topologicalSusceptibility[tau], m_actionDensity[tau]);
 
-//        updateTime += (duration_cast<duration<double>>(steady_clock::now() - m_preUpdate)).count();
+        updateTime += (duration_cast<duration<double>>(steady_clock::now() - m_preUpdate)).count();
 
-//        if (m_processRank == 0) printf("  Update time: : %-.4f",updateTime / (tau+1));
-//    }
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    if (m_processRank == 0) printf("\nTime used to flow: %-.4f",updateTime);
+        if (m_processRank == 0) printf("  Update time: : %-.4f",updateTime / (tau+1));
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
+    if (m_processRank == 0) printf("\nTime used to flow: %-.4f",updateTime);
 
-//    delete [] m_gammaFlow;
-//    delete [] m_topologicalCharge;
-//    delete [] m_actionDensity;
-//    MPI_Finalize(); exit(1);
+    delete [] m_gammaFlow;
+    delete [] m_topologicalCharge;
+    delete [] m_actionDensity;
+    MPI_Finalize(); exit(1);
     //// ===================================================================================
     if (m_processRank == 0) {
         cout << "Store thermalization observables:      ";
