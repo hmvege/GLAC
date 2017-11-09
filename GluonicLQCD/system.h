@@ -8,7 +8,7 @@
 #include "links.h"
 #include "matrices/su3matrixgenerator.h"
 #include "parallelization/neighbours.h"
-#include "parallelization/indexorganiser.h"
+#include "parallelization/index.h"
 
 using std::chrono::steady_clock;
 using std::chrono::duration;
@@ -62,7 +62,6 @@ private:
 
     // Parallelization variables and functions
     Neighbours * m_neighbourLists = nullptr;
-    IndexOrganiser * m_indexHandler = nullptr;
 
     // Variables used to perform statistics
     double * m_Gamma;

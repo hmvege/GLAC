@@ -19,7 +19,7 @@ WilsonGaugeAction::~WilsonGaugeAction()
 
 double WilsonGaugeAction::getDeltaAction(Links *lattice, SU3 UPrime, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
-    return traceRealMultiplication((UPrime - lattice[m_Index->getIndex(i,j,k,l)].U[mu]),m_staple)*m_multiplicationFactor;
+    return traceRealMultiplication((UPrime - lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]),m_staple)*m_multiplicationFactor;
 }
 
 void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
@@ -35,13 +35,13 @@ void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned i
         if (mu == nu) continue;
         updateNuIndex(nu);
         // Getting first part of staple
-        m_staple1 = m_Index->getPositiveLink(lattice,m_position,mu,m_muIndex,nu);
-        m_staple1 *= m_Index->getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv();
-        m_staple1 *= lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv();
+        m_staple1 = Parallel::Index::getPositiveLink(lattice,m_position,mu,m_muIndex,nu);
+        m_staple1 *= Parallel::Index::getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv();
+        m_staple1 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu].inv();
         // Getting second part of staple
-        m_staple2 = m_Index->getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv();
-        m_staple2 *= m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv();
-        m_staple2 *= m_Index->getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
+        m_staple2 = Parallel::Index::getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv();
+        m_staple2 *= Parallel::Index::getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv();
+        m_staple2 *= Parallel::Index::getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
         // Sums staple
         m_staple += m_staple1;
         m_staple += m_staple2;
@@ -53,11 +53,11 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     computeStaple(lattice,i,j,k,l,mu);
 
     // How should on take the staple?
-//    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv(); // Chroma
-    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple; // My method
-//    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple.inv();
-//    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu];
-//    m_staple *= lattice[m_Index->getIndex(i,j,k,l)].U[mu];
+//    m_staple = m_staple.inv()*lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].inv(); // Chroma
+    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method
+//    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple.inv();
+//    m_staple = m_staple.inv()*lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
+//    m_staple *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
 
     // MORNINGSTAR METHOD
 //    Omega = m_staple.inv();

@@ -12,7 +12,7 @@ private:
     int m_Nx, m_Ny, m_Nz, m_Nt; // Prosessors per dimension
     int m_P[4]; // Prosessor coordinate
     void generateNeighbourList();
-    NeighbourList * neighbourLists;
+    NeighbourList * m_neighbourLists;
 
     // Contigious index finder for cubes
     /*

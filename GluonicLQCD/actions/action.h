@@ -3,9 +3,13 @@
 
 #include "links.h"
 #include "functions.h"
-#include "parallelization/indexorganiser.h"
+#include "parallelization/index.h"
 #include "parallelization/neighbours.h"
 #include <vector>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 class Action
 {
@@ -14,7 +18,6 @@ protected:
     unsigned int *m_N;
     // For handling the shift-method in parallelization
     std::vector<int> m_position;
-    IndexOrganiser *m_Index = nullptr;
 public:
     Action();
 //    Action(int *N);
@@ -23,7 +26,6 @@ public:
     virtual void computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
     // Setters
     void setN(unsigned int *N);
-    void initializeIndexHandler(IndexOrganiser *Index);
     // Getters
     unsigned int * getN() { return m_N; }
 

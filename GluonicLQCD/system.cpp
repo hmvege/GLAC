@@ -16,8 +16,7 @@
 #include "matrices/su3matrixgenerator.h"
 #include "parallelization/neighbourlist.h"
 #include "parallelization/neighbours.h"
-#include "parallelization/indexorganiser.h"
-
+#include "parallelization/index.h"
 #include "flow/flow.h"
 #include "correlators/clover.h"
 #include "correlators/topologicalcharge.h"
@@ -51,10 +50,6 @@ System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int N
     m_GammaPreThermalization = new double[m_NTherm+1];
     m_Gamma = new double[m_NCf]; // Correlator values
     m_GammaSquared = new double[m_NCf];
-
-    // For parallelization
-    m_neighbourLists = new Neighbours;
-    m_indexHandler = new IndexOrganiser(m_processRank);
 
     std::mt19937_64 gen(seed); // Starting up the Mersenne-Twister19937 function
     std::uniform_real_distribution<double> uni_dist(0,1);
@@ -104,7 +99,6 @@ void System::subLatticeSetup()
         // Iteratively finds and sets the sub-lattice dimensions
         while (restProc >= 2) {
             for (int i = 0; i < 4; i++) { // Counts from x to t
-                //        for (int i = 4; i >= 0; i--) { // Counts from x to t
                 m_N[i] /= 2;
                 restProc /= 2;
                 if (restProc < 2) break;
@@ -162,17 +156,17 @@ void System::subLatticeSetup()
     m_processorsPerDimension[3] = m_NTemporal / m_N[3];
 
     // Initializes the neighbour lists
+    m_neighbourLists = new Neighbours;
     m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
 
     // Passes relevant information to the index handler(for the shifts).
-    m_indexHandler->setN(m_N);
-    m_indexHandler->setNTot(m_NSpatial, m_NTemporal);
-    m_indexHandler->setNeighbourList(m_neighbourLists);
+    Parallel::Index::setProcessRank(m_processRank);
+    Parallel::Index::setN(m_N);
+    Parallel::Index::setNTot(m_NSpatial, m_NTemporal);
+    Parallel::Index::setNeighbourList(m_neighbourLists);
 
     // Passes the index handler and dimensionality to the action and correlator classes.
-    m_S->initializeIndexHandler(m_indexHandler);
     m_S->setN(m_N);
-    m_correlator->initializeIndexHandler(m_indexHandler);
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
 
@@ -227,7 +221,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
                 for (unsigned int z = 0; z < m_N[2]; z++) {
                     for (unsigned int t = 0; t < m_N[3]; t++) {
                         for (unsigned int mu = 0; mu < 4; mu++) {
-                            m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[mu].identity();
+                            m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu].identity();
                         }
                     }
                 }
@@ -360,12 +354,12 @@ void System::update()
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
                         for (int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
-                            updateLink(m_indexHandler->getIndex(x,y,z,t), mu);
+                            updateLink(Parallel::Index::getIndex(x,y,z,t), mu);
 //                            m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
 //                            if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             if (exp(-m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu)) > m_uniform_distribution(m_generator))
                             {
-                                m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[mu].copy(m_updatedMatrix);
+                                m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu].copy(m_updatedMatrix);
                                 m_acceptanceCounter++;
                             }
                         }
@@ -662,7 +656,7 @@ void System::writeConfigurationToFile(int configNumber)
                 ny = (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (unsigned int x = 0; x < m_N[0]; x++) {
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
-                    MPI_File_write_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                    MPI_File_write_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[Parallel::Index::getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
         }
@@ -710,7 +704,7 @@ void System::loadFieldConfiguration(std::string filename)
                 ny = (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (unsigned int x = 0; x < m_N[0]; x++) {
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
-                    MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                    MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[Parallel::Index::getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
 
 //                    for (int link = 0; link < 4; link++) {
 //                        for (int i = 0; i < 18; i++) {

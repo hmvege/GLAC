@@ -1,16 +1,18 @@
 #ifndef NEIGHBOURLIST_H
 #define NEIGHBOURLIST_H
 
+#include <iostream>
+#include <iomanip>
+using std::cout;
+using std::endl;
 
-class NeighbourList
+struct NeighbourList
 {
-public:
     NeighbourList();
     ~NeighbourList();
     // Neighbour list:
     int list[8];
 
-//    int *dimensionsToCubesToShareWithNeighbour;
     int rank;
     void print();
 };

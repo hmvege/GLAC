@@ -1,24 +1,32 @@
-#include "indexorganiser.h"
+#include "Index.h"
 #include "links.h"
 #include "neighbours.h"
 #include "matrices/su3.h"
 #include <mpi.h>
 
-IndexOrganiser::IndexOrganiser(int processRank) : m_processRank(processRank)
+bool Parallel::Index::muDir = 0;
+bool Parallel::Index::nuDir = 0;
+unsigned int Parallel::Index::m_N[4];
+unsigned int Parallel::Index::m_NTot[4];
+Neighbours * Parallel::Index::m_neighbourLists = nullptr;
+SU3 Parallel::Index::exchangeU;
+int Parallel::Index::m_processRank = 0;
+
+Parallel::Index::Index()
 {
     /*
-     * IndexOrganiser initialiser. After initialisation, must set the int*N and m_neighbourLists manually.
+     * Index initialiser. After initialisation, must set the int*N and m_neighbourLists manually.
      * Takes:
      *  processRank : process ID as given by MPI initialisation
      */
 }
 
-IndexOrganiser::~IndexOrganiser()
+Parallel::Index::~Index()
 {
 
 }
 
-void IndexOrganiser::MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir)
+void Parallel::Index::MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir)
 {
     /*
      * Performs an MPI call to retrieve matrix in the positive direction.
@@ -33,7 +41,7 @@ void IndexOrganiser::MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int
             MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 }
 
-void IndexOrganiser::MPIfetchSU3Negative(Links *lattice, std::vector<int> n, int mu, int SU3Dir)
+void Parallel::Index::MPIfetchSU3Negative(Links *lattice, std::vector<int> n, int mu, int SU3Dir)
 {
     /*
      * Performs an MPI call to retrieve matrix in the negative direction.
@@ -48,7 +56,7 @@ void IndexOrganiser::MPIfetchSU3Negative(Links *lattice, std::vector<int> n, int
             MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 }
 
-SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
+SU3 Parallel::Index::getPositiveLink(Links *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
 {
     /*
      * Function for retrieving link in positive direction.
@@ -70,7 +78,7 @@ SU3 IndexOrganiser::getPositiveLink(Links *lattice, std::vector<int> n, int mu, 
     }
 }
 
-SU3 IndexOrganiser::getNegativeLink(Links *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
+SU3 Parallel::Index::getNegativeLink(Links *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
 {
     /*
      * Function for retrieving link in negative direction.
@@ -91,7 +99,7 @@ SU3 IndexOrganiser::getNegativeLink(Links *lattice, std::vector<int> n, int mu, 
     }
 }
 
-SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
+SU3 Parallel::Index::getNeighboursNeighbourLink(Links * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
 {
     /*
      * Gets the neighbours neighbour link.
@@ -139,7 +147,7 @@ SU3 IndexOrganiser::getNeighboursNeighbourLink(Links * lattice, std::vector<int>
     }
 }
 
-SU3 IndexOrganiser::getNeighboursNeighbourNegativeLink(Links * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
+SU3 Parallel::Index::getNeighboursNeighbourNegativeLink(Links * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
 {
     /*
      * Gets the neighbours neighbour link.
@@ -188,7 +196,7 @@ SU3 IndexOrganiser::getNeighboursNeighbourNegativeLink(Links * lattice, std::vec
 }
 
 
-unsigned int IndexOrganiser::getIndex(unsigned int i, unsigned int j, unsigned int k, unsigned int l)
+unsigned int Parallel::Index::getIndex(unsigned int i, unsigned int j, unsigned int k, unsigned int l)
 {
     /*
      * Function for retrieving lattice position in contigious memory allocation.
@@ -200,7 +208,7 @@ unsigned int IndexOrganiser::getIndex(unsigned int i, unsigned int j, unsigned i
     return i + m_N[0]*(j + m_N[1]*(k + m_N[2]*l)); // column-major
 }
 
-unsigned int IndexOrganiser::getGlobalIndex(unsigned int i, unsigned int j, unsigned int k, unsigned int l)
+unsigned int Parallel::Index::getGlobalIndex(unsigned int i, unsigned int j, unsigned int k, unsigned int l)
 {
     /*
      * Function for retrieving global lattice position.
@@ -212,7 +220,7 @@ unsigned int IndexOrganiser::getGlobalIndex(unsigned int i, unsigned int j, unsi
     return i + m_NTot[0]*(j + m_NTot[1]*(k + m_NTot[2]*l)); // column-major
 }
 
-void IndexOrganiser::setN(unsigned int *N)
+void Parallel::Index::setN(unsigned int *N)
 {
     /*
      * Function for setting the dimensionality of the sublattice.
@@ -224,7 +232,7 @@ void IndexOrganiser::setN(unsigned int *N)
     }
 }
 
-void IndexOrganiser::setNTot(int NSpatial, int NTemporal)
+void Parallel::Index::setNTot(int NSpatial, int NTemporal)
 {
     /*
      * Function for setting the dimensionality of the total lattice.

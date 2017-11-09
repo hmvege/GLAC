@@ -2,15 +2,13 @@
 #define CORRELATOR_H
 
 #include "links.h"
-#include "parallelization/indexorganiser.h"
+#include "parallelization/index.h"
 #include "parallelization/neighbours.h"
 #include <vector>
 #include <iostream>
 
-//TEMP
 using std::cout;
 using std::endl;
-
 
 class Correlator
 {
@@ -26,7 +24,7 @@ protected:
     int nuIndex[4];
     // Position vector for handling the shift-method in parallelization
     std::vector<int> m_position;
-    IndexOrganiser *m_Index = nullptr; // TO BE MOVED TO PARALLEL CLASS LATER!!
+//    Parallel::IndexOrganiser *m_Index = nullptr; // TO BE MOVED TO PARALLEL CLASS LATER!!
 
     inline void updateMuIndex(int mu) {
         for (int i = 0; i < 4; i++)
@@ -59,7 +57,7 @@ public:
 
     // Setters
     void setN(unsigned int *N);
-    void initializeIndexHandler(IndexOrganiser *Index);
+//    void initializeIndexHandler(Parallel::IndexOrganiser *Index);
 };
 
 

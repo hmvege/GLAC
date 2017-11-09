@@ -22,7 +22,7 @@ private:
     EnergyDensity m_energyDensity;
     TopologicalCharge m_topologicalCharge;
 public:
-    ObservableSampler(unsigned int *N, int latticeSize, double a, IndexOrganiser *Index);
+    ObservableSampler(unsigned int *N, int latticeSize, double a);
     ~ObservableSampler();
 
     void calculate(Links *lattice);

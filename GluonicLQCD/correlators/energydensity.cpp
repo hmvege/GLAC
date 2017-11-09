@@ -37,7 +37,6 @@ double EnergyDensity::calculate(Links *lattice)
 {
     // When clover is not provided
     Clover Clov;
-    Clov.initializeIndexHandler(m_Index);
     Clov.setN(m_N);
     Clov.setLatticeSize(m_latticeSize);
     m_actionDensity = 0;

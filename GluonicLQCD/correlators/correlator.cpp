@@ -1,6 +1,4 @@
 #include "correlator.h"
-#include "parallelization/indexorganiser.h"
-#include "parallelization/neighbours.h"
 
 Correlator::Correlator()
 {
@@ -50,9 +48,4 @@ void Correlator::setN(unsigned int *N) // MOVE INTO CONSTRUCTOR?
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];
     }
-}
-
-void Correlator::initializeIndexHandler(IndexOrganiser *Index)
-{
-    m_Index = Index;
 }

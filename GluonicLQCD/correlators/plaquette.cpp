@@ -2,7 +2,7 @@
 #include <vector>
 #include "links.h"
 #include "functions.h"
-#include "parallelization/indexorganiser.h"
+#include "parallelization/index.h"
 
 Plaquette::Plaquette() : Correlator()
 {
@@ -33,10 +33,10 @@ double Plaquette::calculate(Links *lattice)
                         updateMuIndex(mu); // Inline function
                         for (int nu = mu+1; nu < 4; nu++) {
                             updateNuIndex(nu); // Inline function
-                            PTemp = lattice[m_Index->getIndex(i,j,k,l)].U[mu];
-                            PTemp *= m_Index->getPositiveLink(lattice,m_position,mu,muIndex,nu);
-                            PTemp *= m_Index->getPositiveLink(lattice,m_position,nu,nuIndex,mu).inv();
-                            PTemp *= lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv();
+                            PTemp = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
+                            PTemp *= Parallel::Index::getPositiveLink(lattice,m_position,mu,muIndex,nu);
+                            PTemp *= Parallel::Index::getPositiveLink(lattice,m_position,nu,nuIndex,mu).inv();
+                            PTemp *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu].inv();
                             P += PTemp;
                         }
                     }

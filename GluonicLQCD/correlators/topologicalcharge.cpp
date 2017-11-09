@@ -20,7 +20,6 @@ double TopologicalCharge::calculate(Links *lattice)
      * Function to be used when no clover is provided. SHOULD BE TESTED
      */
     Clover Clov;
-    Clov.initializeIndexHandler(m_Index);
     Clov.setN(m_N);
     Clov.setLatticeSize(m_latticeSize);
     topCharge = 0;

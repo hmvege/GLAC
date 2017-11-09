@@ -19,13 +19,13 @@ SOURCES += main.cpp \
     matrices/su3matrixgenerator.cpp \
     parallelization/neighbours.cpp \
     parallelization/neighbourlist.cpp \
-    parallelization/indexorganiser.cpp \
     testsuite.cpp \
     flow/flow.cpp \
     correlators/topologicalcharge.cpp \
     correlators/clover.cpp \
     correlators/energydensity.cpp \
-    correlators/observablesampler.cpp
+    correlators/observablesampler.cpp \
+    parallelization/index.cpp
 
 HEADERS += \
     system.h \
@@ -42,13 +42,13 @@ HEADERS += \
     matrices/su3matrixgenerator.h \
     parallelization/neighbours.h \
     parallelization/neighbourlist.h \
-    parallelization/indexorganiser.h \
     testsuite.h \
     flow/flow.h \
     correlators/topologicalcharge.h \
     correlators/clover.h \
     correlators/energydensity.h \
-    correlators/observablesampler.h
+    correlators/observablesampler.h \
+    parallelization/index.h
 
 #LIBS += -llapack -lblas -larmadillo
 

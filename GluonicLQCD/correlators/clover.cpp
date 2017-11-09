@@ -47,30 +47,30 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
             updateNuIndex(nu);
 
             // First leaf
-            U1 = lattice[m_Index->getIndex(i,j,k,l)].U[mu];
-            U1 *= m_Index->getPositiveLink(lattice,m_position,mu,muIndex,nu);
-            U1 *= m_Index->getPositiveLink(lattice,m_position,nu,nuIndex,mu).inv();
-            U1 *= lattice[m_Index->getIndex(i,j,k,l)].U[nu].inv();
+            U1 = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
+            U1 *= Parallel::Index::getPositiveLink(lattice,m_position,mu,muIndex,nu);
+            U1 *= Parallel::Index::getPositiveLink(lattice,m_position,nu,nuIndex,mu).inv();
+            U1 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu].inv();
 
             // Second leaf
-            U2 = lattice[m_Index->getIndex(i,j,k,l)].U[nu];
-            U2 *= m_Index->getNeighboursNeighbourLink(lattice,m_position,nu,nuIndex,mu,muIndex,mu).inv();
-            U2 *= m_Index->getNegativeLink(lattice,m_position,mu,muIndex,nu).inv();
-            U2Temp = m_Index->getNegativeLink(lattice,m_position,mu,muIndex,mu);
+            U2 = lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu];
+            U2 *= Parallel::Index::getNeighboursNeighbourLink(lattice,m_position,nu,nuIndex,mu,muIndex,mu).inv();
+            U2 *= Parallel::Index::getNegativeLink(lattice,m_position,mu,muIndex,nu).inv();
+            U2Temp = Parallel::Index::getNegativeLink(lattice,m_position,mu,muIndex,mu);
             U2 *= U2Temp;
 
             // Third leaf
             U3 = U2Temp.inv();
-            U3 *= m_Index->getNeighboursNeighbourNegativeLink(lattice,m_position,mu,muIndex,nu,nuIndex,nu).inv();
-            U3 *= m_Index->getNeighboursNeighbourNegativeLink(lattice,m_position,mu,muIndex,nu,nuIndex,mu);
-            U3Temp = m_Index->getNegativeLink(lattice,m_position,nu,nuIndex,nu);
+            U3 *= Parallel::Index::getNeighboursNeighbourNegativeLink(lattice,m_position,mu,muIndex,nu,nuIndex,nu).inv();
+            U3 *= Parallel::Index::getNeighboursNeighbourNegativeLink(lattice,m_position,mu,muIndex,nu,nuIndex,mu);
+            U3Temp = Parallel::Index::getNegativeLink(lattice,m_position,nu,nuIndex,nu);
             U3 *= U3Temp;
 
             // Fourth leaf
             U4 = U3Temp.inv();
-            U4 *= m_Index->getNegativeLink(lattice,m_position,nu,nuIndex,mu);
-            U4 *= m_Index->getNeighboursNeighbourLink(lattice,m_position,mu,muIndex,nu,nuIndex,nu);
-            U4 *= lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv();
+            U4 *= Parallel::Index::getNegativeLink(lattice,m_position,nu,nuIndex,mu);
+            U4 *= Parallel::Index::getNeighboursNeighbourLink(lattice,m_position,mu,muIndex,nu,nuIndex,nu);
+            U4 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].inv();
 
             // Gets the plaquette leaf
 //            printf("mu=%2d nu=%2d plaq=%2d clov=%2d clov_inv=%2d\n",mu,nu,3*mu + nu - m_overCounter,cloverIndex(mu,nu-m_overCounter),3*nu+mu);

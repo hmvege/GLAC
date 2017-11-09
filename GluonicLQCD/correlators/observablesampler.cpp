@@ -1,22 +1,22 @@
 #include "observablesampler.h"
 
-#include "parallelization/indexorganiser.h"
+#include "parallelization/index.h"
 
 #include <iostream>
 using std::cout;
 using std::endl;
 
-ObservableSampler::ObservableSampler(unsigned int *N, int latticeSize, double a, IndexOrganiser *Index)// : Correlator()
+ObservableSampler::ObservableSampler(unsigned int *N, int latticeSize, double a)// : Correlator()
 {
     m_a = a;
     setLatticeSize(latticeSize);
     m_energyDensity.setLatticeSpacing(m_a);
     setN(N);
     m_position = std::vector<int>(4,0);
-    m_clover.initializeIndexHandler(Index);
-    m_plaquette.initializeIndexHandler(Index);
-    m_energyDensity.initializeIndexHandler(Index);
-    m_topologicalCharge.initializeIndexHandler(Index);
+//    m_clover.initializeIndexHandler(Index);
+//    m_plaquette.initializeIndexHandler(Index);
+//    m_energyDensity.initializeIndexHandler(Index);
+//    m_topologicalCharge.initializeIndexHandler(Index);
 }
 
 ObservableSampler::~ObservableSampler()

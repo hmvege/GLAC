@@ -1,14 +1,4 @@
 #include "action.h"
-#include "links.h"
-#include "matrices/su3.h"
-#include "functions.h"
-#include "parallelization/indexorganiser.h"
-#include "parallelization/neighbours.h"
-
-// TEMP
-#include <iostream>
-using std::cout;
-using std::endl;
 
 Action::Action()
 {
@@ -42,11 +32,6 @@ void Action::setN(unsigned int *N)
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];
     }
-}
-
-void Action::initializeIndexHandler(IndexOrganiser *Index)
-{
-    m_Index = Index;
 }
 
 SU3 Action::getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)

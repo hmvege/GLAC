@@ -1,5 +1,4 @@
 #include "neighbours.h"
-#include "neighbourlist.h"
 
 Neighbours::Neighbours()
 {
@@ -7,8 +6,8 @@ Neighbours::Neighbours()
 
 Neighbours::~Neighbours()
 {
-    std::cout << "DELETING NEIGHBOR LISTS." << std::endl;
-    delete [] neighbourLists;
+    std::cout << "DELETING NEIGHBOR LISTS..." << std::endl;
+    delete [] m_neighbourLists;
 }
 
 void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim) {
@@ -18,7 +17,7 @@ void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim
     m_Ny = processorsPerDim[1];
     m_Nz = processorsPerDim[2];
     m_Nt = processorsPerDim[3];
-    neighbourLists = new NeighbourList[m_numproc];
+    m_neighbourLists = new NeighbourList[m_numproc];
     generateNeighbourList();
     m_P[0] = processRank % m_Nx;
     m_P[1] = (processRank / m_Nx) % m_Ny;
@@ -36,15 +35,15 @@ void Neighbours::generateNeighbourList()
      * 6: t-1 | 7: t+1
      */
     for (int Np = 0; Np < m_numproc; Np++) {
-        neighbourLists[Np].rank = Np;
-        neighbourLists[Np].list[0] = getXMinusOne(Np);
-        neighbourLists[Np].list[1] = getXPlusOne(Np);
-        neighbourLists[Np].list[2] = getYMinusOne(Np);
-        neighbourLists[Np].list[3] = getYPlusOne(Np);
-        neighbourLists[Np].list[4] = getZMinusOne(Np);
-        neighbourLists[Np].list[5] = getZPlusOne(Np);
-        neighbourLists[Np].list[6] = getTMinusOne(Np);
-        neighbourLists[Np].list[7] = getTPlusOne(Np);
+        m_neighbourLists[Np].rank = Np;
+        m_neighbourLists[Np].list[0] = getXMinusOne(Np);
+        m_neighbourLists[Np].list[1] = getXPlusOne(Np);
+        m_neighbourLists[Np].list[2] = getYMinusOne(Np);
+        m_neighbourLists[Np].list[3] = getYPlusOne(Np);
+        m_neighbourLists[Np].list[4] = getZMinusOne(Np);
+        m_neighbourLists[Np].list[5] = getZPlusOne(Np);
+        m_neighbourLists[Np].list[6] = getTMinusOne(Np);
+        m_neighbourLists[Np].list[7] = getTPlusOne(Np);
     }
 }
 
@@ -54,5 +53,5 @@ NeighbourList* Neighbours::getNeighbours(int Np) {
      * Arguments:
      *  Np  : process rank
      */
-    return &neighbourLists[Np];
+    return &m_neighbourLists[Np];
 }
