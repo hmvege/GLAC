@@ -392,7 +392,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    loadFieldConfiguration("para8core061102.bin");
 //    loadFieldConfiguration("scalar16cubed16run1.bin");
 //    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469, UBUNTU
-    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
+//    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
+    loadFieldConfiguration("msg01.rec02.ildg-binary-data"); // jack
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     corr /= double(m_numprocs);
@@ -414,7 +415,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
     ObservableSampler OSampler(m_N,m_subLatticeSize,0.0931,m_indexHandler);
 
-    int NFlows = 1000;
+    int NFlows = 3;
     double * m_gammaFlow = new double[NFlows];
     double * m_topologicalCharge = new double[NFlows];
     double * m_topologicalSusceptibility = new double[NFlows];
@@ -667,6 +668,24 @@ void System::writeConfigurationToFile(int configNumber)
     MPI_File_close(&file);
 }
 
+double Reversedouble( const double inDouble )
+{
+   double retVal;
+   char *doubleToConvert = ( char* ) & inDouble;
+   char *returnDouble = ( char* ) & retVal;
+
+   // swap the bytes into a temporary buffer
+   returnDouble[0] = doubleToConvert[7];
+   returnDouble[1] = doubleToConvert[6];
+   returnDouble[2] = doubleToConvert[5];
+   returnDouble[3] = doubleToConvert[4];
+   returnDouble[4] = doubleToConvert[3];
+   returnDouble[5] = doubleToConvert[2];
+   returnDouble[6] = doubleToConvert[1];
+   returnDouble[7] = doubleToConvert[0];
+   return retVal;
+}
+
 void System::loadFieldConfiguration(std::string filename)
 {
     /*
@@ -678,6 +697,9 @@ void System::loadFieldConfiguration(std::string filename)
     MPI_File_open(MPI_COMM_SELF, (m_pwd + m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
+    if (m_processRank == 0) cout << "Started to load configuration: " << m_pwd + m_outputFolder + filename << endl;
+
+    double val = 0;
     for (unsigned int t = 0; t < m_N[3]; t++) {
         nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
         for (unsigned int z = 0; z < m_N[2]; z++) {
@@ -686,12 +708,21 @@ void System::loadFieldConfiguration(std::string filename)
                 ny = (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (unsigned int x = 0; x < m_N[0]; x++) {
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
-                    MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+//                    MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[m_indexHandler->getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+
+                    for (int link = 0; link < 4; link++) {
+                        for (int i = 0; i < 18; i++) {
+                            MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize + link*18*sizeof(double) + i*sizeof(double), &val, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                            m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[link].mat[i] = Reversedouble(val);
+                        }
+//                        m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[link].printMachine();
+                    }
+//                    exit(1);
                 }
             }
         }
     }
-
+    if (m_processRank == 0) m_lattice[0].U[0].printMachine();
     MPI_File_close(&file);
     if (m_processRank == 0) cout << "Configuration " << m_outputFolder + filename << " loaded." << endl;
 }

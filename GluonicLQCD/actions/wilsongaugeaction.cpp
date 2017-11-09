@@ -53,8 +53,8 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     computeStaple(lattice,i,j,k,l,mu);
 
     // How should on take the staple?
-//    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv(); // Chroma
-    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple; // My method
+    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu].inv(); // Chroma
+//    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple; // My method
 //    m_staple = lattice[m_Index->getIndex(i,j,k,l)].U[mu]*m_staple.inv();
 //    m_staple = m_staple.inv()*lattice[m_Index->getIndex(i,j,k,l)].U[mu];
 //    m_staple *= lattice[m_Index->getIndex(i,j,k,l)].U[mu];
