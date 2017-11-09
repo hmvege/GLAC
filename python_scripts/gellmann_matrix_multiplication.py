@@ -33,13 +33,17 @@ T[7] *= 1/sp.sqrt(3)
 T = [Ta/2 for Ta in T]
 T = [(-sp.I)*Ta for Ta in T]
 
+for i,j in zip(T,T):
+	sp.pprint((i*j).trace())
+exit(1)
+
 # Setting general matrix A
 a11,a12,a13,a21,a22,a23,a31,a32,a33 = sp.symbols("a11 a12 a13 a21 a22 a23 a31 a32 a33",real=False)
 A = sp.Matrix([[a11, a12, a13],[a21, a22, a23],[a31, a32, a33]])
 
 R = [0 for i in range(8)]
 for i,T_a in enumerate(T):
-	R[i] = sp.im((T_a*A).trace())
+	R[i] = sp.re((T_a*A).trace())
 	# sp.pprint((T_a*A).trace())
 	# print R[i]
 # exit(1)
