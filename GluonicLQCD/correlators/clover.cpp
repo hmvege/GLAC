@@ -79,8 +79,9 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
             // Sums the leafs, takes imaginary part(sets real values to zero) and multiply by 0.25.
 //            m_clovers[cloverIndex(mu,nu-m_overCounter)] = (U1 + U2 + U3 + U4).getIm()*0.25;
 //            m_clovers[3*nu + mu] = m_clovers[cloverIndex(mu,nu-m_overCounter)].inv();
-
-            m_clovers[cloverIndex(mu,nu-m_overCounter)] = ((U1 + U2 + U3 + U4) - (U1 + U2 + U3 + U4).inv())*(1/8.);// Using the old luscher definition
+            SU3 A;
+            A = (U1 + U2 + U3 + U4) - (U1 + U2 + U3 + U4).inv();
+            m_clovers[cloverIndex(mu,nu-m_overCounter)] = (A*0.5 - (A.mat[1] + A.mat[9] + A.mat[17])*(1.0/6.0))*(0.25);// Using the old luscher definition
             m_clovers[3*nu + mu] = m_clovers[cloverIndex(mu,nu-m_overCounter)].inv();
 //            m_clovers[cloverIndex(mu,nu-m_overCounter)].printMachine();
 //            exit(1);

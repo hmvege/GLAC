@@ -386,8 +386,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    loadFieldConfiguration("para8core061102.bin");
 //    loadFieldConfiguration("scalar16cubed16run1.bin");
 //    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469, UBUNTU
-    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
-//    loadFieldConfiguration("msg01.rec02.ildg-binary-data"); // jack
+//    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
+    loadFieldConfiguration("msg01.rec02.ildg-binary-data"); // jack
     double corr = m_correlator->calculate(m_lattice);
     MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     corr /= double(m_numprocs);
