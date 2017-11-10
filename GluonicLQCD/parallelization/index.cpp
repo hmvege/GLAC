@@ -1,4 +1,4 @@
-#include "Index.h"
+#include "index.h"
 #include "links.h"
 #include "neighbours.h"
 #include "matrices/su3.h"

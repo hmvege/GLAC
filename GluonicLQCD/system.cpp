@@ -694,7 +694,7 @@ void System::loadFieldConfiguration(std::string filename)
 
     if (m_processRank == 0) cout << "Started to load configuration: " << m_pwd + m_outputFolder + filename << endl;
 
-//    double val = 0;
+    double val = 0;
     for (unsigned int t = 0; t < m_N[3]; t++) {
         nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
         for (unsigned int z = 0; z < m_N[2]; z++) {
@@ -705,12 +705,12 @@ void System::loadFieldConfiguration(std::string filename)
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
                     MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[Parallel::Index::getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
 
-//                    for (int link = 0; link < 4; link++) {
-//                        for (int i = 0; i < 18; i++) {
-//                            MPI_File_read_at(file, m_indexHandler->getGlobalIndex(nx,ny,nz,nt)*linkSize + link*18*sizeof(double) + i*sizeof(double), &val, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
-//                            m_lattice[m_indexHandler->getIndex(x,y,z,t)].U[link].mat[i] = Reversedouble(val);
-//                        }
-//                    }
+                    for (int link = 0; link < 4; link++) {
+                        for (int i = 0; i < 18; i++) {
+                            MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize + link*18*sizeof(double) + i*sizeof(double), &val, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                            m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i] = Reversedouble(val);
+                        }
+                    }
                 }
             }
         }
