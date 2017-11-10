@@ -1,11 +1,11 @@
 #include "flow.h"
-#include "links.h"
+#include "math/links.h"
 #include "parallelization/index.h"
-#include "functions.h"
+#include "math/functions.h"
 #include <mpi.h>
 
 // FOR TESTING IF FLOW PRESERVES SU3
-#include "testsuite.h"
+#include "unittests/testsuite.h"
 #include <iostream>
 
 using std::cout;
@@ -249,14 +249,6 @@ SU3 Flow::exponentiate3(SU3 Q)
     QQuartic *= Q;
     return I + Q + QSquared*0.5 + QCubed/6.0 + QQuartic/24.0;
 }
-
-//void Flow::setIndexHandler(IndexOrganiser *Index)
-//{
-//    /*
-//     * Sets the index handler that we are using. Must be set before performing the flow, or nonsense will ensue.
-//     */
-//    m_Index = Index;
-//}
 
 void Flow::setAction(Action *S)
 {

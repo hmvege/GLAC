@@ -2,8 +2,8 @@
 #define INDEX_H
 
 #include "neighbours.h"
-#include "links.h"
-#include "matrices/su3.h"
+#include "math/links.h"
+#include "math/matrices/su3.h"
 #include <vector>
 
 namespace Parallel {
@@ -40,6 +40,8 @@ namespace Parallel {
         static void setN(unsigned int *N);
         static void setNTot(int NSpatial, int NTemporal);
         static void setNeighbourList(Neighbours *neighbourLists) { m_neighbourLists = neighbourLists; }
+
+        static void setBarrier();
     };
 }
 #endif // INDEX_H

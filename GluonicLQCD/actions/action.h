@@ -1,8 +1,8 @@
 #ifndef ACTION_H
 #define ACTION_H
 
-#include "links.h"
-#include "functions.h"
+#include "math/links.h"
+#include "math/functions.h"
 #include "parallelization/index.h"
 #include "parallelization/neighbours.h"
 #include <vector>

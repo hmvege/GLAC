@@ -1,5 +1,5 @@
 #include "topologicalcharge.h"
-#include "functions.h"
+#include "math/functions.h"
 #include "clover.h"
 #include <cmath>
 
@@ -55,6 +55,7 @@ double TopologicalCharge::calculate(SU3 *clovers)
         G1 = clovers[m_leviCivita[i].ci[0]];
         G2 = clovers[m_leviCivita[i].ci[1]];
         topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
+//        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
     }
     return topCharge*m_multiplicationFactor;
 }

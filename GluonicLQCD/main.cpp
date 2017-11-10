@@ -5,12 +5,12 @@
 #include "system.h"
 #include "actions/action.h"
 #include "actions/wilsongaugeaction.h"
-#include "correlators/plaquette.h"
-#include "matrices/su3matrixgenerator.h"
+#include "observables/plaquette.h"
+#include "math/matrices/su3matrixgenerator.h"
 #include "parallelization/index.h"
 
-#include "unittests.h"
-#include "testsuite.h"
+#include "unittests/unittests.h"
+#include "unittests/testsuite.h"
 
 using std::cout;
 using std::endl;

@@ -1,11 +1,4 @@
 #include "su3.h"
-#include <cmath>
-#include <iostream>
-#include <iomanip>
-#include "complex.h"
-
-using std::cout;
-using std::endl;
 
 SU3::SU3()
 {
@@ -20,11 +13,6 @@ SU3::~SU3()
      * Destructor.
      */
 }
-
-//SU3::SU3(const SU3 &other)
-//{
-
-//}
 
 SU3 &SU3::operator=(const SU3 &B)
 {

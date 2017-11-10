@@ -1,9 +1,13 @@
 #ifndef SU3_H
 #define SU3_H
 
-#include "complex.h"
-//#include <array>
+#include <cmath>
+#include <iostream>
+#include <iomanip>
+#include "math/complex.h"
 
+using std::cout;
+using std::endl;
 
 class SU3
 {
@@ -11,7 +15,6 @@ public:
     SU3();
     ~SU3();
 
-//    std::array<double,18> mat;
     double mat[18];
 
     // Matrix specific functionss

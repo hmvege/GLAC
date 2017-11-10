@@ -10,18 +10,18 @@
 #include <mpi.h>
 #include "system.h"
 #include "actions/action.h"
-#include "correlators/correlator.h"
-#include "functions.h"
-#include "links.h"
-#include "matrices/su3matrixgenerator.h"
+#include "observables/correlator.h"
+#include "math/functions.h"
+#include "math/links.h"
+#include "math/matrices/su3matrixgenerator.h"
 #include "parallelization/neighbourlist.h"
 #include "parallelization/neighbours.h"
 #include "parallelization/index.h"
 #include "flow/flow.h"
-#include "correlators/clover.h"
-#include "correlators/topologicalcharge.h"
-#include "correlators/energydensity.h"
-#include "correlators/observablesampler.h"
+#include "observables/clover.h"
+#include "observables/topologicalcharge.h"
+#include "observables/energydensity.h"
+#include "observables/observablesampler.h"
 
 using std::cout;
 using std::endl;
@@ -82,9 +82,6 @@ void System::subLatticeSetup()
         cout << "Error: odd number of processors --> exiting." << endl;
         MPI_Finalize();
         exit(1);
-    }
-    else if (m_numprocs % 16 != 0) {
-        if (m_processRank == 0) cout << "Warning: running for an number of prosessors not divisible by 16 may slow down performance due to the geometry of the lattice." << endl;
     }
     int restProc = m_numprocs;
 
@@ -378,90 +375,82 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
      */
     m_storeThermalizationObservables = storeThermalizationObservables;
     //// TESTS ==============================================================================
-    MPI_Barrier(MPI_COMM_WORLD);
-    // Common files
-    // loadFieldConfiguration("unityScalar.bin");
-//     loadFieldConfiguration("unity16cores.bin");
-//     loadFieldConfiguration("unity32cores.bin");
-//    loadFieldConfiguration("para8core061102.bin");
-//    loadFieldConfiguration("scalar16cubed16run1.bin");
-//    loadFieldConfiguration("UbuntuTestRun1_beta6.000000_spatial16_temporal32_threads8_config2.bin"); // 0.59831469, UBUNTU
+//    // Common files
 //    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
-    loadFieldConfiguration("msg01.rec02.ildg-binary-data"); // jack
-    double corr = m_correlator->calculate(m_lattice);
-    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-    corr /= double(m_numprocs);
-    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl;
-    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
-    WFlow.setAction(m_S);
+////    loadFieldConfiguration("msg01.rec02.ildg-binary-data"); // jack
+//    double corr = m_correlator->calculate(m_lattice);
+//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//    corr /= double(m_numprocs);
+//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl;
+//    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
+//    WFlow.setAction(m_S);
+//    /// OLD, run tests and compare times?
+////    Clover Clov;
+////    Clov.initializeIndexHandler(m_indexHandler);
+////    Clov.setN(m_N);
+////    Clov.setLatticeSize(m_latticeSize);
+////    TopologicalCharge TopCharge;
+////    TopCharge.initializeIndexHandler(m_indexHandler);
+////    TopCharge.setLatticeSize(m_latticeSize);
+////    TopCharge.setN(m_N);
+////    EnergyDensity Energy(0.0931, m_latticeSize);
+////    Energy.initializeIndexHandler(m_indexHandler);
 
-    /// OLD
-//    Clover Clov;
-//    Clov.initializeIndexHandler(m_indexHandler);
-//    Clov.setN(m_N);
-//    Clov.setLatticeSize(m_latticeSize);
-//    TopologicalCharge TopCharge;
-//    TopCharge.initializeIndexHandler(m_indexHandler);
-//    TopCharge.setLatticeSize(m_latticeSize);
-//    TopCharge.setN(m_N);
-//    EnergyDensity Energy(0.0931, m_latticeSize);
-//    Energy.initializeIndexHandler(m_indexHandler);
+//    ObservableSampler OSampler(m_N,m_subLatticeSize,0.0931);
 
-    ObservableSampler OSampler(m_N,m_subLatticeSize,0.0931);
+//    int NFlows = 20;
+//    double * m_gammaFlow = new double[NFlows];
+//    double * m_topologicalCharge = new double[NFlows];
+//    double * m_topologicalSusceptibility = new double[NFlows];
+//    double * m_actionDensity = new double[NFlows];
+//    for (int tau = 0; tau < NFlows; tau++) {
+//        m_topologicalCharge[tau] = 0;
+//        m_topologicalSusceptibility[tau] = 0;
+//        m_gammaFlow[tau] = 0;
+//        m_actionDensity[tau] = 0;
+//    }
+//    double updateTime = 0;
+//    for (int tau = 0; tau < NFlows; tau++) {
+//        m_preUpdate = steady_clock::now();
+//        WFlow.flowField(m_lattice);
 
-    int NFlows = 1000;
-    double * m_gammaFlow = new double[NFlows];
-    double * m_topologicalCharge = new double[NFlows];
-    double * m_topologicalSusceptibility = new double[NFlows];
-    double * m_actionDensity = new double[NFlows];
-    for (int tau = 0; tau < NFlows; tau++) {
-        m_topologicalCharge[tau] = 0;
-        m_topologicalSusceptibility[tau] = 0;
-        m_gammaFlow[tau] = 0;
-        m_actionDensity[tau] = 0;
-    }
-    double updateTime = 0;
-    for (int tau = 0; tau < NFlows; tau++) {
-        m_preUpdate = steady_clock::now();
-        WFlow.flowField(m_lattice);
+//        OSampler.calculate(m_lattice);
+//        m_gammaFlow[tau] = OSampler.getPlaquette();
+//        m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
+//        m_actionDensity[tau] = OSampler.getEnergyDensity();
 
-        OSampler.calculate(m_lattice);
-        m_gammaFlow[tau] = OSampler.getPlaquette();
-        m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
-        m_actionDensity[tau] = OSampler.getEnergyDensity();
+//       /// OLD
+////        for (unsigned int x = 0; x < m_N[0]; x++) { // CLEAN UP AND MOVE THIS PART INTO ITS OWN CLASS FOR CALCULATING TOP CHARGE AND ENERGY?!
+////            for (unsigned int y = 0; y < m_N[1]; y++) { // HIDE IT, AS IT IS BIG AND UGLY!
+////                for (unsigned int z = 0; z < m_N[2]; z++) {
+////                    for (unsigned int t = 0; t < m_N[3]; t++) {
+////                        Clov.calculateClover(m_lattice,x,y,z,t);
+////                        m_topologicalCharge[tau] += TopCharge.calculate(Clov.m_clovers);
+////                        m_actionDensity[tau] += Energy.calculate(Clov.m_clovers);
+////                        m_gammaFlow[tau] += m_correlator->calculate(Clov.m_plaquettes);
+////                    }
+////                }
+////            }
+////        }
 
-       /// OLD
-//        for (unsigned int x = 0; x < m_N[0]; x++) { // CLEAN UP AND MOVE THIS PART INTO ITS OWN CLASS FOR CALCULATING TOP CHARGE AND ENERGY?!
-//            for (unsigned int y = 0; y < m_N[1]; y++) { // HIDE IT, AS IT IS BIG AND UGLY!
-//                for (unsigned int z = 0; z < m_N[2]; z++) {
-//                    for (unsigned int t = 0; t < m_N[3]; t++) {
-//                        Clov.calculateClover(m_lattice,x,y,z,t);
-//                        m_topologicalCharge[tau] += TopCharge.calculate(Clov.m_clovers);
-//                        m_actionDensity[tau] += Energy.calculate(Clov.m_clovers);
-//                        m_gammaFlow[tau] += m_correlator->calculate(Clov.m_plaquettes);
-//                    }
-//                }
-//            }
-//        }
+//        MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//        MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//        MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//        m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
+//        m_gammaFlow[tau] /= double(m_numprocs);
+//        if (m_processRank == 0) printf("\n%5d %-5.4f %-18.16f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_gammaFlow[tau], m_topologicalCharge[tau], m_topologicalSusceptibility[tau], m_actionDensity[tau]);
 
-        MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
-        m_gammaFlow[tau] /= double(m_numprocs);
-        if (m_processRank == 0) printf("\n%5d %-5.4f %-18.16f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_gammaFlow[tau], m_topologicalCharge[tau], m_topologicalSusceptibility[tau], m_actionDensity[tau]);
+//        updateTime += (duration_cast<duration<double>>(steady_clock::now() - m_preUpdate)).count();
 
-        updateTime += (duration_cast<duration<double>>(steady_clock::now() - m_preUpdate)).count();
+//        if (m_processRank == 0) printf("  Update time: : %-.4f",updateTime / (tau+1));
+//    }
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    if (m_processRank == 0) printf("\nTime used to flow: %-.4f",updateTime);
 
-        if (m_processRank == 0) printf("  Update time: : %-.4f",updateTime / (tau+1));
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
-    if (m_processRank == 0) printf("\nTime used to flow: %-.4f",updateTime);
-
-    delete [] m_gammaFlow;
-    delete [] m_topologicalCharge;
-    delete [] m_actionDensity;
-    MPI_Finalize(); exit(1);
+//    delete [] m_gammaFlow;
+//    delete [] m_topologicalCharge;
+//    delete [] m_actionDensity;
+//    MPI_Finalize(); exit(1);
     //// ===================================================================================
     if (m_processRank == 0) {
         cout << "Store thermalization observables:      ";
@@ -694,7 +683,7 @@ void System::loadFieldConfiguration(std::string filename)
 
     if (m_processRank == 0) cout << "Started to load configuration: " << m_pwd + m_outputFolder + filename << endl;
 
-    double val = 0;
+//    double val = 0;
     for (unsigned int t = 0; t < m_N[3]; t++) {
         nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
         for (unsigned int z = 0; z < m_N[2]; z++) {
@@ -705,12 +694,19 @@ void System::loadFieldConfiguration(std::string filename)
                     nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
                     MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[Parallel::Index::getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
 
-                    for (int link = 0; link < 4; link++) {
-                        for (int i = 0; i < 18; i++) {
-                            MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize + link*18*sizeof(double) + i*sizeof(double), &val, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
-                            m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i] = Reversedouble(val);
-                        }
-                    }
+//                    for (int link = 0; link < 4; link++) {
+//                        for (int i = 0; i < 18; i++) {
+//                            MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize + link*18*sizeof(double) + i*sizeof(double), &val, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
+//                            m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i] = Reversedouble(val);
+//                            // Checking for corruption
+//                            if (isnan(m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i]))
+//                            {
+//                                m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].printMachine();
+//                                printf("\nConfiguration is corrupt.\n");
+//                                exit(1);
+//                            }
+//                        }
+//                    }
                 }
             }
         }

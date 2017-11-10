@@ -3,7 +3,6 @@
 
 #include "matrices/su3.h"
 #include "matrices/su2.h"
-#include "complex.h"
 
 complex SU2Determinant(SU2 H);
 complex SU3Determinant(SU3 U);

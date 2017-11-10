@@ -4,9 +4,9 @@
 #include <random>
 #include <chrono>
 #include "actions/action.h"
-#include "correlators/correlator.h"
-#include "links.h"
-#include "matrices/su3matrixgenerator.h"
+#include "observables/correlator.h"
+#include "math/links.h"
+#include "math/matrices/su3matrixgenerator.h"
 #include "parallelization/neighbours.h"
 #include "parallelization/index.h"
 

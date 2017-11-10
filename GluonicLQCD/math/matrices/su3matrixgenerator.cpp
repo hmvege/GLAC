@@ -2,10 +2,10 @@
 #include <random>
 #include <iomanip>
 #include <iostream>
-#include "functions.h"
+#include "math/functions.h"
 
 // For testing
-#include "unittests.h"
+#include "unittests/unittests.h"
 
 using std::cout;
 using std::endl;

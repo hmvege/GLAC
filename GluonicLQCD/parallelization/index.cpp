@@ -1,7 +1,7 @@
 #include "index.h"
-#include "links.h"
+#include "math/links.h"
 #include "neighbours.h"
-#include "matrices/su3.h"
+#include "math/matrices/su3.h"
 #include <mpi.h>
 
 bool Parallel::Index::muDir = 0;
@@ -243,4 +243,9 @@ void Parallel::Index::setNTot(int NSpatial, int NTemporal)
         m_NTot[i] = (unsigned int) NSpatial;
     }
     m_NTot[3] = (unsigned int) NTemporal;
+}
+
+void Parallel::Index::setBarrier()
+{
+    MPI_Barrier(MPI_COMM_WORLD);
 }

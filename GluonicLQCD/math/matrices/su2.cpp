@@ -1,8 +1,5 @@
 #include "su2.h"
 
-using std::cout;
-using std::endl;
-
 SU2::SU2()
 {
     for (int i = 0; i < 8; i++)

@@ -1,7 +1,7 @@
 #ifndef CORRELATOR_H
 #define CORRELATOR_H
 
-#include "links.h"
+#include "math/links.h"
 #include "parallelization/index.h"
 #include "parallelization/neighbours.h"
 #include <vector>

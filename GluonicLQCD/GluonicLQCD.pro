@@ -7,50 +7,55 @@ CONFIG -= qt
 SOURCES += main.cpp \
     system.cpp \
     actions/action.cpp \
-    functions.cpp \
-    links.cpp \
-    complex.cpp \
-    unittests.cpp \
-    correlators/correlator.cpp \
-    correlators/plaquette.cpp \
     actions/wilsongaugeaction.cpp \
-    matrices/su2.cpp \
-    matrices/su3.cpp \
-    matrices/su3matrixgenerator.cpp \
+    observables/correlator.cpp \
+    observables/plaquette.cpp \
+    observables/topologicalcharge.cpp \
+    observables/clover.cpp \
+    observables/energydensity.cpp \
+    observables/observablesampler.cpp \
+    math/functions.cpp \
+    math/links.cpp \
+    math/complex.cpp \
+    math/matrices/su2.cpp \
+    math/matrices/su3.cpp \
+    math/matrices/su3matrixgenerator.cpp \
+    math/exponentiation/su3exp.cpp \
     parallelization/neighbours.cpp \
     parallelization/neighbourlist.cpp \
-    testsuite.cpp \
-    flow/flow.cpp \
-    correlators/topologicalcharge.cpp \
-    correlators/clover.cpp \
-    correlators/energydensity.cpp \
-    correlators/observablesampler.cpp \
     parallelization/index.cpp \
-    math/exponentiation/su3exp.cpp
-
+    flow/flow.cpp \
+    unittests/testsuite.cpp \
+    unittests/unittests.cpp \
+    math/exponentiation/taylorexp.cpp \
+    math/exponentiation/expmorningstar.cpp \
+    math/exponentiation/expluscher.cpp
 HEADERS += \
     system.h \
     actions/action.h \
-    functions.h \
-    links.h \
-    complex.h \
-    unittests.h \
-    correlators/correlator.h \
-    correlators/plaquette.h \
     actions/wilsongaugeaction.h \
-    matrices/su2.h \
-    matrices/su3.h \
-    matrices/su3matrixgenerator.h \
+    observables/correlator.h \
+    observables/plaquette.h \
+    observables/topologicalcharge.h \
+    observables/clover.h \
+    observables/energydensity.h \
+    observables/observablesampler.h \
+    math/functions.h \
+    math/links.h \
+    math/complex.h \
+    math/matrices/su2.h \
+    math/matrices/su3.h \
+    math/matrices/su3matrixgenerator.h \
+    math/exponentiation/su3exp.h \
     parallelization/neighbours.h \
     parallelization/neighbourlist.h \
-    testsuite.h \
-    flow/flow.h \
-    correlators/topologicalcharge.h \
-    correlators/clover.h \
-    correlators/energydensity.h \
-    correlators/observablesampler.h \
     parallelization/index.h \
-    math/exponentiation/su3exp.h
+    flow/flow.h \
+    unittests/testsuite.h \
+    unittests/unittests.h \
+    math/exponentiation/taylorexp.h \
+    math/exponentiation/expmorningstar.h \
+    math/exponentiation/expluscher.h
 
 #LIBS += -llapack -lblas -larmadillo
 

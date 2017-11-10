@@ -1,9 +1,10 @@
 #ifndef COMPLEX_H
 #define COMPLEX_H
 
-// TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
-#include <string>
 #include <iostream>
+
+// TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
+//#include <string>
 
 class complex
 {
@@ -15,13 +16,10 @@ public:
     complex (const complex &b); // Copy constructor
 
     double z[2];
-//    double im;
-//    double re;
     double re() const { return z[0]; } // But why constant?
     double im() const { return z[1]; }
     void setRe(double re) { z[0] = re; }
     void setIm(double im) { z[1] = im; }
-//    void set(complex a);
 
     complex &operator =(const complex& b);
     complex &operator+=(complex b);
@@ -40,8 +38,7 @@ public:
     complex c();
     complex zeros();
 
-    // TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
-    friend std::ostream& operator<<(std::ostream& os, const complex& a); // Allows cout << myVector << endl;
+    friend std::ostream& operator<<(std::ostream& os, const complex& a); // Allows cout << myComplex << endl;
 };
 
 inline complex operator+(complex a, complex b)

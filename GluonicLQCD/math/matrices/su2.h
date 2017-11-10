@@ -1,11 +1,14 @@
 #ifndef SU2_H
 #define SU2_H
 
-#include <string>
+//#include <string>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
-#include "complex.h"
+#include "math/complex.h"
+
+using std::cout;
+using std::endl;
 
 class SU2
 {

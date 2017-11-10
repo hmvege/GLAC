@@ -5,13 +5,13 @@
 #include <iomanip>
 #include <cmath>
 #include <ctime>
-#include "matrices/su2.h"
-#include "matrices/su3.h"
-#include "matrices/su3matrixgenerator.h"
-#include "correlators/plaquette.h"
-#include "links.h"
-#include "complex.h"
-#include "functions.h"
+#include "math/matrices/su2.h"
+#include "math/matrices/su3.h"
+#include "math/matrices/su3matrixgenerator.h"
+#include "observables/plaquette.h"
+#include "math/links.h"
+#include "math/complex.h"
+#include "math/functions.h"
 
 class TestSuite
 {

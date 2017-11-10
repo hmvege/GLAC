@@ -1,10 +1,5 @@
 #include "observablesampler.h"
-
 #include "parallelization/index.h"
-
-#include <iostream>
-using std::cout;
-using std::endl;
 
 ObservableSampler::ObservableSampler(unsigned int *N, int latticeSize, double a)// : Correlator()
 {

@@ -1,7 +1,7 @@
 #include "plaquette.h"
 #include <vector>
-#include "links.h"
-#include "functions.h"
+#include "math/links.h"
+#include "math/functions.h"
 #include "parallelization/index.h"
 
 Plaquette::Plaquette() : Correlator()

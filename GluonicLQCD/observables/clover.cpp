@@ -1,9 +1,5 @@
 #include "clover.h"
 
-#include <iostream>
-using std::cout;
-using std::endl;
-
 Clover::Clover() : Correlator()
 {
     /* The clover should be defined as:
@@ -75,13 +71,14 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
             // Gets the plaquette leaf
 //            printf("mu=%2d nu=%2d plaq=%2d clov=%2d clov_inv=%2d\n",mu,nu,3*mu + nu - m_overCounter,cloverIndex(mu,nu-m_overCounter),3*nu+mu);
             m_plaquettes[3*mu + nu - m_overCounter - mu/2] = U1;
-
             // Sums the leafs, takes imaginary part(sets real values to zero) and multiply by 0.25.
 //            m_clovers[cloverIndex(mu,nu-m_overCounter)] = (U1 + U2 + U3 + U4).getIm()*0.25;
 //            m_clovers[3*nu + mu] = m_clovers[cloverIndex(mu,nu-m_overCounter)].inv();
+
             SU3 A;
-            A = (U1 + U2 + U3 + U4) - (U1 + U2 + U3 + U4).inv();
-            m_clovers[cloverIndex(mu,nu-m_overCounter)] = (A*0.5 - (A.mat[1] + A.mat[9] + A.mat[17])*(1.0/6.0))*(0.25);// Using the old luscher definition
+            A = (U1 + U2 + U3 + U4);
+            m_clovers[cloverIndex(mu,nu-m_overCounter)] = (A - A.inv()) * (1/8.0); // Using the old luscher definition
+
             m_clovers[3*nu + mu] = m_clovers[cloverIndex(mu,nu-m_overCounter)].inv();
 //            m_clovers[cloverIndex(mu,nu-m_overCounter)].printMachine();
 //            exit(1);

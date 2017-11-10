@@ -1,9 +1,11 @@
+#include <cmath>
 #include "matrices/su3.h"
 #include "matrices/su2.h"
 #include "complex.h"
-#include <cmath>
 
+// TEMP!
 #include <iostream>
+
 
 complex SU2Determinant(SU2 H)
 {

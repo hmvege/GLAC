@@ -1,6 +1,6 @@
 #include "energydensity.h"
 #include "clover.h"
-#include "functions.h"
+#include "math/functions.h"
 
 EnergyDensity::EnergyDensity()
 {

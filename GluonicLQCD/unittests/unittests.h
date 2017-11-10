@@ -1,7 +1,7 @@
 #ifndef UNITTESTS_H
 #define UNITTESTS_H
 
-#include "matrices/su3.h"
+#include "math/matrices/su3.h"
 
 // complex tests
 void SU3BaseTests();

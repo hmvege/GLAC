@@ -1,10 +1,8 @@
 #ifndef FLOW_H
 #define FLOW_H
 
-#include "links.h"
-
+#include "math/links.h"
 #include "actions/action.h"
-
 #include "parallelization/index.h"
 
 class Flow
