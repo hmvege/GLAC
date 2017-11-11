@@ -1,10 +1,12 @@
 #ifndef ACTION_H
 #define ACTION_H
 
-#include "math/links.h"
-#include "math/functions.h"
+//#include "math/links.h"
+//#include "math/functions.h"
+#include "math/latticemath.h"
 #include "parallelization/index.h"
 #include "parallelization/neighbours.h"
+#include "parallelization/communicator.h"
 #include <vector>
 #include <iostream>
 

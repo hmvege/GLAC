@@ -1,7 +1,6 @@
 #ifndef NEIGHBOURS_H
 #define NEIGHBOURS_H
 
-#include <iostream>
 #include "neighbourlist.h"
 
 class Neighbours

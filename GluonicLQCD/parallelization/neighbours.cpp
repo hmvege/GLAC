@@ -6,7 +6,7 @@ Neighbours::Neighbours()
 
 Neighbours::~Neighbours()
 {
-    std::cout << "DELETING NEIGHBOR LISTS..." << std::endl;
+    printf("\nDeleting neighourlists\n");
     delete [] m_neighbourLists;
 }
 

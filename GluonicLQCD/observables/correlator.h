@@ -4,6 +4,7 @@
 #include "math/links.h"
 #include "parallelization/index.h"
 #include "parallelization/neighbours.h"
+#include "parallelization/communicator.h"
 #include <vector>
 #include <iostream>
 

@@ -34,8 +34,8 @@ double Plaquette::calculate(Links *lattice)
                         for (int nu = mu+1; nu < 4; nu++) {
                             updateNuIndex(nu); // Inline function
                             PTemp = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
-                            PTemp *= Parallel::Index::getPositiveLink(lattice,m_position,mu,muIndex,nu);
-                            PTemp *= Parallel::Index::getPositiveLink(lattice,m_position,nu,nuIndex,mu).inv();
+                            PTemp *= Parallel::Communicator::getPositiveLink(lattice,m_position,mu,muIndex,nu);
+                            PTemp *= Parallel::Communicator::getPositiveLink(lattice,m_position,nu,nuIndex,mu).inv();
                             PTemp *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu].inv();
                             P += PTemp;
                         }

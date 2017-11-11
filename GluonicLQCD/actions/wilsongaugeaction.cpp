@@ -1,7 +1,4 @@
 #include "wilsongaugeaction.h"
-#include "action.h"
-//#include "math/functions.h"
-//#include <vector>
 
 WilsonGaugeAction::WilsonGaugeAction(double beta): Action()
 {
@@ -35,13 +32,13 @@ void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned i
         if (mu == nu) continue;
         updateNuIndex(nu);
         // Getting first part of staple
-        m_staple1 = Parallel::Index::getPositiveLink(lattice,m_position,mu,m_muIndex,nu);
-        m_staple1 *= Parallel::Index::getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv();
+        m_staple1 = Parallel::Communicator::getPositiveLink(lattice,m_position,mu,m_muIndex,nu);
+        m_staple1 *= Parallel::Communicator::getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv();
         m_staple1 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu].inv();
         // Getting second part of staple
-        m_staple2 = Parallel::Index::getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv();
-        m_staple2 *= Parallel::Index::getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv();
-        m_staple2 *= Parallel::Index::getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
+        m_staple2 = Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv();
+        m_staple2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv();
+        m_staple2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
         // Sums staple
         m_staple += m_staple1;
         m_staple += m_staple2;

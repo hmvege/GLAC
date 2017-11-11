@@ -9,6 +9,8 @@
 #include "math/matrices/su3matrixgenerator.h"
 #include "parallelization/index.h"
 
+#include "parameters/parameters.h"
+
 #include "unittests/unittests.h"
 #include "unittests/testsuite.h"
 
@@ -139,6 +141,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     }
     Plaquette G;
     WilsonGaugeAction S(beta);
+    Parameters Params;
     System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, NFlows, beta, metropolisSeed, &G, &S, numprocs, processRank);
     if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);

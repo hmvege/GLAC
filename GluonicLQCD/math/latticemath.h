@@ -7,5 +7,6 @@
 #include "math/matrices/su2.h"
 #include "math/complex.h"
 #include "math/links.h"
+#include "math/functions.h"
 
 #endif // LATTICEMATH_H

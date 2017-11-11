@@ -158,10 +158,10 @@ void System::subLatticeSetup()
     m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
 
     // Passes relevant information to the index handler(for the shifts).
-    Parallel::Index::setProcessRank(m_processRank);
     Parallel::Index::setN(m_N);
     Parallel::Index::setNTot(m_NSpatial, m_NTemporal);
-    Parallel::Index::setNeighbourList(m_neighbourLists);
+    Parallel::Communicator::setProcessRank(m_processRank);
+    Parallel::Communicator::setNeighbourList(m_neighbourLists);
 
     // Passes the index handler and dimensionality to the action and correlator classes.
     m_S->setN(m_N);
@@ -244,6 +244,7 @@ void System::printRunInfo(bool verbose) {
         if (verbose) cout << "Lattice size:                          " << m_latticeSize << endl;
         cout << "Lattice dimensions(spatial, temporal): " << m_NSpatial << " " << m_NTemporal << endl;
         cout << "N configurations:                      " << m_NCf << endl;
+        cout << "N flow updates per configuration:      " << m_NFlows << endl;
         cout << "N correlation updates:                 " << m_NCor << endl;
         cout << "N thermalization updates:              " << m_NTherm << endl;
         cout << "N link updates:                        " << m_NUpdates << endl;
@@ -357,7 +358,7 @@ void System::update()
 //                            if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             if (exp(-m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu)) > m_uniform_distribution(m_generator))
                             {
-                                m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu].copy(m_updatedMatrix);
+                                m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_updatedMatrix;
                                 m_acceptanceCounter++;
                             }
                         }
@@ -653,23 +654,23 @@ void System::writeConfigurationToFile(int configNumber)
     MPI_File_close(&file);
 }
 
-double Reversedouble( const double inDouble )
-{
-   double retVal;
-   char *doubleToConvert = ( char* ) & inDouble;
-   char *returnDouble = ( char* ) & retVal;
+//double Reversedouble( const double inDouble )
+//{
+//   double retVal;
+//   char *doubleToConvert = ( char* ) & inDouble;
+//   char *returnDouble = ( char* ) & retVal;
 
-   // swap the bytes into a temporary buffer
-   returnDouble[0] = doubleToConvert[7];
-   returnDouble[1] = doubleToConvert[6];
-   returnDouble[2] = doubleToConvert[5];
-   returnDouble[3] = doubleToConvert[4];
-   returnDouble[4] = doubleToConvert[3];
-   returnDouble[5] = doubleToConvert[2];
-   returnDouble[6] = doubleToConvert[1];
-   returnDouble[7] = doubleToConvert[0];
-   return retVal;
-}
+//   // swap the bytes into a temporary buffer
+//   returnDouble[0] = doubleToConvert[7];
+//   returnDouble[1] = doubleToConvert[6];
+//   returnDouble[2] = doubleToConvert[5];
+//   returnDouble[3] = doubleToConvert[4];
+//   returnDouble[4] = doubleToConvert[3];
+//   returnDouble[5] = doubleToConvert[2];
+//   returnDouble[6] = doubleToConvert[1];
+//   returnDouble[7] = doubleToConvert[0];
+//   return retVal;
+//}
 
 void System::loadFieldConfiguration(std::string filename)
 {
@@ -681,8 +682,6 @@ void System::loadFieldConfiguration(std::string filename)
     MPI_File file;
     MPI_File_open(MPI_COMM_SELF, (m_pwd + m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
-
-    if (m_processRank == 0) cout << "Started to load configuration: " << m_pwd + m_outputFolder + filename << endl;
 
 //    double val = 0;
     for (unsigned int t = 0; t < m_N[3]; t++) {
@@ -712,7 +711,6 @@ void System::loadFieldConfiguration(std::string filename)
             }
         }
     }
-    if (m_processRank == 0) m_lattice[0].U[0].printMachine();
     MPI_File_close(&file);
     if (m_processRank == 0) cout << "Configuration " << m_outputFolder + filename << " loaded." << endl;
 }

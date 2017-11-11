@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     math/exponentiation/expluscher.cpp \
     parameters/parameters.cpp \
     io/observablesio.cpp \
-    io/fieldio.cpp
+    io/fieldio.cpp \
+    parallelization/communicator.cpp
 HEADERS += \
     system.h \
     actions/action.h \
@@ -62,7 +63,8 @@ HEADERS += \
     parameters/parameters.h \
     io/observablesio.h \
     io/fieldio.h \
-    math/latticemath.h
+    math/latticemath.h \
+    parallelization/communicator.h
 
 #LIBS += -llapack -lblas -larmadillo
 
