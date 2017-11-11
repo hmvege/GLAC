@@ -29,7 +29,7 @@ using std::chrono::steady_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 
-System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank)
+System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, int NFlows, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank)
 {
     /*
      * Class for calculating correlators using the System algorithm.
@@ -42,6 +42,7 @@ System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int N
     m_NCor = NCor;
     m_NTherm = NTherm;
     m_NUpdates = NUpdates;
+    m_NFlows = NFlows;
     m_beta = beta;
     m_numprocs = numprocs;
     m_processRank = processRank;

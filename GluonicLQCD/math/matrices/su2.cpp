@@ -123,14 +123,14 @@ void SU2::print()
         for (int j = 0; j < 2; j++)
         {
             if (mat[4*i+2*j+1] < 0) {
-                cout << std::setw(15) << mat[4*i+2*j] << " - " << fabs(mat[4*i+2*j+1]) << "i";
+                printf("%12.8f - %12.8fi", mat[4*i+2*j], fabs(mat[4*i+2*j+1]));
             }
             else {
-                cout << std::setw(15) << mat[4*i+2*j] << " + " << mat[4*i+2*j+1] << "i";
+                printf("%12.8f + %12.8fi", mat[4*i+2*j], mat[4*i+2*j+1]);
             }
-            cout << "  ";
+            printf("      ");
         }
-        cout << endl;
+        printf("\n");
     }
 }
 

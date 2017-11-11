@@ -45,6 +45,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     int NCor        = 10;            // Correlation updates.
     int NCf         = 20;           // Number of configurations to generate.
     int NUpdates    = 10;           // Number of link updates before moving on.
+    int NFlows      = 0;            // Number of times to flow a variable.
     double beta     = 6.0;          // Beta value(connected to the lattice spacing a).
     double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
     std::string batchName               = "TEST_RUN_CONFIG";
@@ -78,45 +79,48 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     if (numberOfArguments > 6) { // Number of field configurations that will be generated. In production runs, this should be around 1000 for the smallest, 500 for the others.
         NCf         = atoi(cmdLineArguments[6]);
     }
-    if (numberOfArguments > 7) { // Number of times a link will be updated. Because of the 10% acceptance ratio, 10 times means about 1 update.
-        NUpdates    = atoi(cmdLineArguments[7]);
+    if (numberOfArguments > 7) { // Number of flows per configuration
+        NFlows      = atoi(cmdLineArguments[7]);
     }
-    if (numberOfArguments > 8) { // Beta value, phenomelogically connected to lattice spacing a.
-        beta        = atof(cmdLineArguments[8]);
+    if (numberOfArguments > 8) { // Number of times a link will be updated. Because of the 10% acceptance ratio, 10 times means about 1 update.
+        NUpdates    = atoi(cmdLineArguments[8]);
     }
-    if (numberOfArguments > 9) { // Epsilon used for generating SU(3) matrices
-        SU3Eps      = atof(cmdLineArguments[9]);
+    if (numberOfArguments > 9) { // Beta value, phenomelogically connected to lattice spacing a.
+        beta        = atof(cmdLineArguments[9]);
     }
-    if (numberOfArguments > 10) { // If we are to write the configurations to file. Default is TRUE.
-        if (atoi(cmdLineArguments[10]) == 0) {
+    if (numberOfArguments > 10) { // Epsilon used for generating SU(3) matrices
+        SU3Eps      = atof(cmdLineArguments[10]);
+    }
+    if (numberOfArguments > 11) { // If we are to write the configurations to file. Default is TRUE.
+        if (atoi(cmdLineArguments[11]) == 0) {
             writeConfigsToFile = false;
         }
     }
-    if (numberOfArguments > 11) { // If we are to store the plaquettes from the thermalization. Default is TRUE.
-        if (atoi(cmdLineArguments[11]) == 1) {
+    if (numberOfArguments > 12) { // If we are to store the plaquettes from the thermalization. Default is TRUE.
+        if (atoi(cmdLineArguments[12]) == 1) {
             storeThermalizationPlaquettes = true;
         }
     }
-    if (numberOfArguments > 12) { // Hot start/cold start. Default is cold start.
-        if (atoi(cmdLineArguments[12]) == 1) {
+    if (numberOfArguments > 13) { // Hot start/cold start. Default is cold start.
+        if (atoi(cmdLineArguments[13]) == 1) {
             hotStart = true;
         }
     }
-    if (numberOfArguments > 13) { // Takes absolute file path
-        pwd = cmdLineArguments[13];
+    if (numberOfArguments > 14) { // Takes absolute file path
+        pwd = cmdLineArguments[14];
     }
-    if (numberOfArguments > 14) { // Takes specific sub lattice dimensions
-        for (int i = 14; i < 18; i++) {
-            NSub[i % 14] = atoi(cmdLineArguments[i]);
-        }
-    }
-    if (numberOfArguments > 18) { // Flag for running unit tests
-        if (atoi(cmdLineArguments[18]) == 1) {
-            runUnitTestsFlag = true;
+    if (numberOfArguments > 15) { // Takes specific sub lattice dimensions
+        for (int i = 15; i < 19; i++) {
+            NSub[i % 15] = atoi(cmdLineArguments[i]);
         }
     }
     if (numberOfArguments > 19) { // Flag for running unit tests
         if (atoi(cmdLineArguments[19]) == 1) {
+            runUnitTestsFlag = true;
+        }
+    }
+    if (numberOfArguments > 20) { // Flag for running unit tests
+        if (atoi(cmdLineArguments[20]) == 1) {
             runVerboseUnitTestsFlag = true;
         }
     }
@@ -135,7 +139,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     }
     Plaquette G;
     WilsonGaugeAction S(beta);
-    System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, beta, metropolisSeed, &G, &S, numprocs, processRank);
+    System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, NFlows, beta, metropolisSeed, &G, &S, numprocs, processRank);
     if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     pureGauge.setProgramPath(pwd);
@@ -158,9 +162,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose)
 {
 //    runBoolTest(1e9);
-//    TestSuite unitTester;
-//    unitTester.setRNG(SU3Gen);
-//    unitTester.runFullTestSuite(verbose);
-    SU3BaseTests();
+    TestSuite unitTester;
+    unitTester.setRNG(SU3Gen);
+    unitTester.runFullTestSuite(verbose);
+//    SU3BaseTests();
 //    runMatrixPerformanceTest(0.24,std::time(nullptr),1e7,true,false);
 }

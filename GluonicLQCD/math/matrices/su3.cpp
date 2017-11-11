@@ -242,18 +242,18 @@ void SU3::print()
     {
         for (int j = 0; j < 3; j++)
         {
-            cout << std::setw(12) << mat[6*i + 2*j];
+            printf("%12.8f",mat[6*i + 2*j]);
             if (mat[6*i + 2*j + 1] < 0)
             {
-                cout << " - ";
+                printf(" - ");
             }
             else
             {
-                cout << " + ";
+                printf(" + ");
             }
-            cout << std::setw(12) << fabs(mat[6*i + 2*j + 1]) << "i";
+            printf("%12.8fi",fabs(mat[6*i + 2*j + 1]));
         }
-        cout << endl;
+        printf("\n");
     }
 }
 
@@ -314,32 +314,32 @@ void SU3::printMachine()
     for (int i = 0; i < 3; i++) // Machine friendly way
     {
         if (i == 0) {
-            cout << "[";
+            printf("[");
         } else {
-            cout << " ";
+            printf(" ");
         }
-        cout << "[";
+        printf("[");
         for (int j = 0; j < 3; j++)
         {
-            cout << std::setw(12) << mat[6*i + 2*j];
+            printf("%12.8f", mat[6*i + 2*j]);
             if (mat[6*i + 2*j + 1] < 0)
             {
-                cout << " - ";
+                printf(" - ");
             }
             else
             {
-                cout << " + ";
+                printf(" + ");
             }
-            cout << std::setw(12) << fabs(mat[6*i + 2*j + 1]) << "i";
+            printf("%12.8fi",fabs(mat[6*i + 2*j + 1]));
             if (j == 2){
-                cout << "]";
-                if (i != 2) cout << ",";
+                printf("]");
+                if (i != 2) printf(",");
             } else {
-                cout << ", ";
+                printf(", ");
             }
 
         }
-        if (i != 2) cout << endl;
+        if (i != 2) printf("\n");
     }
-    cout << "]" << endl;
+    printf("]\n");
 }

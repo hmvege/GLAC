@@ -64,6 +64,7 @@ class Slurm:
             NTherm              = job_config["NTherm"]
             NCor                = job_config["NCor"] 
             NCf                 = job_config["NCf"]
+            NFlows              = job_config["NFlows"]
             NUpdates            = job_config["NUpdates"]
             SU3Eps              = job_config["SU3Eps"]
             storeCfgs           = job_config["storeCfgs"]
@@ -89,10 +90,10 @@ class Slurm:
 #SBATCH --ntasks={1:<d}
 #SBATCH --time={21:0>2d}:{24:0>2d}:00
 {23:<s}
-mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {22:<s} {20:<s} {25:<1d} {26:<1d}
+mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {27:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {22:<s} {20:<s} {25:<1d} {26:<1d}
 '''.format( partition,threads,beta,NSpatial,NTemporal,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime_hr,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min,uTest,uTestVerbose)
+                cpu_approx_runtime_hr,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min,uTest,uTestVerbose,NFlows)
             elif system == "abel":
                 # cpu_memory = job_config["cpu_memory"]
                 # account_name = job_config["account_name"] # Make system specific?
@@ -136,10 +137,10 @@ set -o errexit               # exit on errors
 #cd $SCRATCH
 #mkdir output
 
-mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {26:<s} {20:<s} {29:<1d} {30:<1d}
+mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {31:<d}{14:<d} {15:<.2f} {16:<.2f} {17:<1d} {18:<1d} {19:<1d} {26:<s} {20:<s} {29:<1d} {30:<1d}
 '''.format(beta,NSpatial,NTemporal,threads,partition,threads,
                 threads,binary_filename,runName,NSpatial,NTemporal,NTherm,NCor,NCf,NUpdates,beta,SU3Eps,storeCfgs,storeThermCfgs,hotStart,' '.join(map(str,subDims)),
-                cpu_approx_runtime_hr,cpu_memory,account_name,nodes,tasks_per_node,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min,uTest,uTestVerbose)
+                cpu_approx_runtime_hr,cpu_memory,account_name,nodes,tasks_per_node,self.CURRENT_PATH,sbatch_exclusions,cpu_approx_runtime_min,uTest,uTestVerbose,NFlows)
 
             job = 'jobfile.slurm'
 
@@ -166,7 +167,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
                     print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
 
             # Stores job in job dictionary
-            self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims)),cpu_approx_runtime_hr,cpu_approx_runtime_min]
+            self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,NFlows,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims)),cpu_approx_runtime_hr,cpu_approx_runtime_min]
             
             # Changes name of job script
             if self.dryrun:
@@ -201,7 +202,7 @@ mpirun -n {6:<d} {7:<s} {8:<s} {9:<d} {10:<d} {11:<d} {12:<d} {13:<d} {14:<d} {1
                 os.system("scancel %d" % i)
 
     def showIDwithNb(self):
-        header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart', 'subDims', 'Ap.Time[hr]', 'Ap.Time[min]']
+        header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'NFlows', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart', 'subDims', 'Ap.Time[hr]', 'Ap.Time[min]']
         widthChoser = lambda s: 7 if len(s) <= 6 else len(s)+4
         colWidths = [widthChoser(i) for i in header_labels]
         colWidths[2] = 20
@@ -234,6 +235,7 @@ def main(args):
                         "NTherm"        : 200,
                         "NCor"          : 20,
                         "NCf"           : 100,
+                        "NFlows"        : 0,
                         "NUpdates"      : 10,
                         "SU3Eps"        : 0.24,
                         "threads"       : 64,
@@ -280,6 +282,7 @@ def main(args):
     job_parser.add_argument('-NUp', '--NUpdates',   default=False,      type=int,help='number of updates per link')
     job_parser.add_argument('-NCf', '--NConfigs',   default=False,      type=int,help='number of configurations to generate')
     job_parser.add_argument('-NCor', '--NCor',      default=False,      type=int,help='number of correlation updates to perform')
+    job_parser.add_argument('-NFLows','--NFlows',   default=0,          type=int,help='number of flows to perform per configuration')
     job_parser.add_argument('-b',   '--beta',       default=False,      type=float,help='beta value')
     job_parser.add_argument('-SU3', '--SU3Eps',     default=False,      type=float,help='SU3 value')
     job_parser.add_argument('-hs', '--hotStart',    default=False,      type=bool,help='Hot start or cold start')
@@ -345,6 +348,8 @@ def main(args):
             config_default["NCor"] = args.NCor
         if args.NConfigs:
             config_default["NCf"] = args.NConfigs
+        if args.NFlows:
+            config_default["NFlows"] = args.NFlows
         if args.beta:
             config_default["beta"] = args.beta
         if args.SU3Eps:

@@ -29,7 +29,10 @@ SOURCES += main.cpp \
     unittests/unittests.cpp \
     math/exponentiation/taylorexp.cpp \
     math/exponentiation/expmorningstar.cpp \
-    math/exponentiation/expluscher.cpp
+    math/exponentiation/expluscher.cpp \
+    parameters/parameters.cpp \
+    io/observablesio.cpp \
+    io/fieldio.cpp
 HEADERS += \
     system.h \
     actions/action.h \
@@ -55,7 +58,11 @@ HEADERS += \
     unittests/unittests.h \
     math/exponentiation/taylorexp.h \
     math/exponentiation/expmorningstar.h \
-    math/exponentiation/expluscher.h
+    math/exponentiation/expluscher.h \
+    parameters/parameters.h \
+    io/observablesio.h \
+    io/fieldio.h \
+    math/latticemath.h
 
 #LIBS += -llapack -lblas -larmadillo
 

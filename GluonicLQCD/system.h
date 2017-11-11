@@ -34,6 +34,7 @@ private:
     int m_NCor;
     int m_NTherm;
     int m_NUpdates; // N updates before calculating the action, as that is costly
+    int m_NFlows;
     double m_epsilon;
     double m_a; // lattice spacing
 
@@ -106,7 +107,7 @@ private:
 
     inline void printLine();
 public:
-    System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
+    System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, int NFlows, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
     ~System();
     void runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
