@@ -7,6 +7,7 @@
 #include "observables/correlator.h"
 #include "math/links.h"
 #include "math/matrices/su3matrixgenerator.h"
+#include "parallelization/neighbourlist.h"
 #include "parallelization/neighbours.h"
 #include "parallelization/index.h"
 
@@ -65,12 +66,12 @@ private:
     Neighbours * m_neighbourLists = nullptr;
 
     // Variables used to perform statistics
-    double * m_Gamma;
-    double * m_GammaPreThermalization;
-    double * m_GammaSquared;
-    double m_averagedGamma = 0; // Change these to not have m_ convention
-    double m_varianceGamma = 0;
-    double m_stdGamma = 0;
+    double * m_observable;
+    double * m_observablePreThermalization;
+    double * m_observableSquared;
+    double m_averagedObservable = 0; // Change these to not have m_ convention
+    double m_varianceObservable = 0;
+    double m_stdObservable = 0;
 
     // Time counting
     steady_clock::time_point m_preUpdate, m_postUpdate;
@@ -107,7 +108,7 @@ private:
 
     inline void printLine();
 public:
-    System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, int NFlows, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank);
+    System(int NCf, int NCor, int NTherm, int NUpdates, int NFlows, double seed, Correlator *correlator, Action *S);
     ~System();
     void runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);

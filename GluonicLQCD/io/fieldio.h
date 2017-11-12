@@ -13,8 +13,8 @@ namespace IO {
     {
     private:
         // For writing to file
-        int m_linkDoubles = 72;
-        int m_linkSize = m_linkDoubles*sizeof(double);
+        const int m_linkDoubles = 72;
+        const int m_linkSize = m_linkDoubles*sizeof(double);
 
         unsigned int m_N[4];
         inline double reverseDouble(const double inDouble);

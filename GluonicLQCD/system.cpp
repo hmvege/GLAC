@@ -10,18 +10,11 @@
 #include <mpi.h>
 #include "system.h"
 #include "actions/action.h"
-#include "observables/correlator.h"
-#include "math/functions.h"
-#include "math/links.h"
-#include "math/matrices/su3matrixgenerator.h"
-#include "parallelization/neighbourlist.h"
-#include "parallelization/neighbours.h"
-#include "parallelization/index.h"
+#include "math/latticemath.h"
 #include "flow/flow.h"
-#include "observables/clover.h"
-#include "observables/topologicalcharge.h"
-#include "observables/energydensity.h"
+#include "observables/correlator.h"
 #include "observables/observablesampler.h"
+#include "parameters/parameters.h"
 
 using std::cout;
 using std::endl;
@@ -29,28 +22,31 @@ using std::chrono::steady_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 
-System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int NUpdates, int NFlows, double beta, double seed, Correlator *correlator, Action *S, int numprocs, int processRank)
+System::System(int NCf, int NCor, int NTherm, int NUpdates, int NFlows, double seed, Correlator *correlator, Action *S)
 {
     /*
      * Class for calculating correlators using the System algorithm.
      * Takes an action object as well as a Gamma functional to be used in the action.
      */
-    m_NSpatial = NSpatial; // Spatial dimensions
-    m_NTemporal = NTemporal; // Time dimensions
-    m_latticeSize = NSpatial*NSpatial*NSpatial*NTemporal;
+//    m_NSpatial = NSpatial; // Spatial dimensions
+//    m_NTemporal = NTemporal; // Time dimensions
+//    m_latticeSize = NSpatial*NSpatial*NSpatial*NTemporal;
+    m_NSpatial = Parameters::getNSpatial();
+    m_NTemporal = Parameters::getNTemporal();
+    m_latticeSize = Parameters::getLatticeSize();
     m_NCf = NCf; // Number of configurations to run for
     m_NCor = NCor;
     m_NTherm = NTherm;
     m_NUpdates = NUpdates;
     m_NFlows = NFlows;
-    m_beta = beta;
-    m_numprocs = numprocs;
-    m_processRank = processRank;
+    m_beta = Parameters::getBeta();
+    m_processRank = Parallel::Communicator::getProcessRank();
+    m_numprocs = Parallel::Communicator::getNumProc();
     setAction(S);
     setCorrelator(correlator);
-    m_GammaPreThermalization = new double[m_NTherm+1];
-    m_Gamma = new double[m_NCf]; // Correlator values
-    m_GammaSquared = new double[m_NCf];
+    m_observablePreThermalization = new double[m_NTherm+1];
+    m_observable = new double[m_NCf]; // Correlator values
+    m_observableSquared = new double[m_NCf];
 
     std::mt19937_64 gen(seed); // Starting up the Mersenne-Twister19937 function
     std::uniform_real_distribution<double> uni_dist(0,1);
@@ -58,8 +54,8 @@ System::System(int NSpatial, int NTemporal, int NCf, int NCor, int NTherm, int N
     m_uniform_distribution = uni_dist;
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
-        m_Gamma[alpha] = 0;
-        m_GammaSquared[alpha] = 0;
+        m_observable[alpha] = 0;
+        m_observableSquared[alpha] = 0;
     }
 }
 
@@ -69,9 +65,9 @@ System::~System()
      * Class destructor
      */
     delete [] m_lattice;
-    delete [] m_Gamma;
-    delete [] m_GammaSquared;
-    delete [] m_GammaPreThermalization;
+    delete [] m_observable;
+    delete [] m_observableSquared;
+    delete [] m_observablePreThermalization;
 }
 
 void System::subLatticeSetup()
@@ -274,16 +270,16 @@ void System::thermalize()
      */
     if (m_storeThermalizationObservables) {
         // Calculating correlator before any updates have began.
-        m_GammaPreThermalization[0] = m_correlator->calculate(m_lattice);
+        m_observablePreThermalization[0] = m_correlator->calculate(m_lattice);
 
         // Summing and sharing correlator to all processors before any updates has begun
-        MPI_Allreduce(&m_GammaPreThermalization[0], &m_GammaPreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        MPI_Allreduce(&m_observablePreThermalization[0], &m_observablePreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
         // Dividing by the number of processors in order to get the correlator.
-        m_GammaPreThermalization[0] /= double(m_numprocs);
+        m_observablePreThermalization[0] /= double(m_numprocs);
         if (m_processRank == 0) {
             printf("\ni    Plaquette   ");
-            printf("\n%-4d %-12.8f",0,m_GammaPreThermalization[0]);
+            printf("\n%-4d %-12.8f",0,m_observablePreThermalization[0]);
         }
     }
 
@@ -308,15 +304,15 @@ void System::thermalize()
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (m_storeThermalizationObservables) {
             // Calculating the correlator
-            m_GammaPreThermalization[i] = m_correlator->calculate(m_lattice);
+            m_observablePreThermalization[i] = m_correlator->calculate(m_lattice);
 
             // Summing and sharing results across the processors
-            MPI_Allreduce(&m_GammaPreThermalization[i], &m_GammaPreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
+            MPI_Allreduce(&m_observablePreThermalization[i], &m_observablePreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
 
             // Averaging the results
-            m_GammaPreThermalization[i] /= double(m_numprocs);
+            m_observablePreThermalization[i] /= double(m_numprocs);
             if (m_processRank == 0) {
-                printf("\n%-4d %-12.8f",i,m_GammaPreThermalization[i]);
+                printf("\n%-4d %-12.8f",i,m_observablePreThermalization[i]);
             }
         }
     }
@@ -401,14 +397,14 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    ObservableSampler OSampler(m_N,m_subLatticeSize,0.0931);
 
 //    int NFlows = 20;
-//    double * m_gammaFlow = new double[NFlows];
+//    double * m_observableFlow = new double[NFlows];
 //    double * m_topologicalCharge = new double[NFlows];
 //    double * m_topologicalSusceptibility = new double[NFlows];
 //    double * m_actionDensity = new double[NFlows];
 //    for (int tau = 0; tau < NFlows; tau++) {
 //        m_topologicalCharge[tau] = 0;
 //        m_topologicalSusceptibility[tau] = 0;
-//        m_gammaFlow[tau] = 0;
+//        m_observableFlow[tau] = 0;
 //        m_actionDensity[tau] = 0;
 //    }
 //    double updateTime = 0;
@@ -417,7 +413,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //        WFlow.flowField(m_lattice);
 
 //        OSampler.calculate(m_lattice);
-//        m_gammaFlow[tau] = OSampler.getPlaquette();
+//        m_observableFlow[tau] = OSampler.getPlaquette();
 //        m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
 //        m_actionDensity[tau] = OSampler.getEnergyDensity();
 
@@ -429,7 +425,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 ////                        Clov.calculateClover(m_lattice,x,y,z,t);
 ////                        m_topologicalCharge[tau] += TopCharge.calculate(Clov.m_clovers);
 ////                        m_actionDensity[tau] += Energy.calculate(Clov.m_clovers);
-////                        m_gammaFlow[tau] += m_correlator->calculate(Clov.m_plaquettes);
+////                        m_observableFlow[tau] += m_correlator->calculate(Clov.m_plaquettes);
 ////                    }
 ////                }
 ////            }
@@ -437,10 +433,10 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
 //        MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //        MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//        MPI_Allreduce(&m_observableFlow[tau], &m_observableFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //        m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
-//        m_gammaFlow[tau] /= double(m_numprocs);
-//        if (m_processRank == 0) printf("\n%5d %-5.4f %-18.16f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_gammaFlow[tau], m_topologicalCharge[tau], m_topologicalSusceptibility[tau], m_actionDensity[tau]);
+//        m_observableFlow[tau] /= double(m_numprocs);
+//        if (m_processRank == 0) printf("\n%5d %-5.4f %-18.16f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_observableFlow[tau], m_topologicalCharge[tau], m_topologicalSusceptibility[tau], m_actionDensity[tau]);
 
 //        updateTime += (duration_cast<duration<double>>(steady_clock::now() - m_preUpdate)).count();
 
@@ -449,7 +445,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    MPI_Barrier(MPI_COMM_WORLD);
 //    if (m_processRank == 0) printf("\nTime used to flow: %-.4f",updateTime);
 
-//    delete [] m_gammaFlow;
+//    delete [] m_observableFlow;
 //    delete [] m_topologicalCharge;
 //    delete [] m_actionDensity;
 //    MPI_Finalize(); exit(1);
@@ -503,13 +499,13 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
             m_updateStorer += m_updateTime.count();
         }
         // Averaging the gamma values
-        m_Gamma[alpha] = m_correlator->calculate(m_lattice);
-        MPI_Allreduce(&m_Gamma[alpha], &m_Gamma[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        m_Gamma[alpha] /= double(m_numprocs);
+        m_observable[alpha] = m_correlator->calculate(m_lattice);
+        MPI_Allreduce(&m_observable[alpha], &m_observable[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        m_observable[alpha] /= double(m_numprocs);
 
         if (m_processRank == 0) {
             // Printing plaquette value
-            printf("\n%-4d %-12.8f   %-15.8f",alpha,m_Gamma[alpha],m_updateStorer/double((alpha+1)*m_NCor));
+            printf("\n%-4d %-12.8f   %-15.8f",alpha,m_observable[alpha],m_updateStorer/double((alpha+1)*m_NCor));
             // Adding the acceptance ratio
             if (alpha % 10 == 0) {
                 printf(" %-13.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(alpha+1)*m_NUpdates*m_NCor));
@@ -533,15 +529,15 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
 //    WFlow.setIndexHandler(m_indexHandler);
 //    WFlow.setAction(m_S);
-//    double * m_gammaFlow = new double[100];
+//    double * m_observableFlow = new double[100];
 //    for (int tau = 0; tau < 100; tau++) {
 //        WFlow.flowGaugeField(1,m_lattice);
-//        m_gammaFlow[tau] = m_correlator->calculate(m_lattice);
-//        MPI_Allreduce(&m_gammaFlow[tau], &m_gammaFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        m_gammaFlow[tau] /= double(m_numprocs);
-//        if (m_processRank == 0) printf("\n%-4d %-12.8f", tau, m_gammaFlow[tau]);
+//        m_observableFlow[tau] = m_correlator->calculate(m_lattice);
+//        MPI_Allreduce(&m_observableFlow[tau], &m_observableFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//        m_observableFlow[tau] /= double(m_numprocs);
+//        if (m_processRank == 0) printf("\n%-4d %-12.8f", tau, m_observableFlow[tau]);
 //    }
-//    delete [] m_gammaFlow;
+//    delete [] m_observableFlow;
 }
 
 void System::runBasicStatistics()
@@ -549,22 +545,22 @@ void System::runBasicStatistics()
     /*
      * Class instance for sampling statistics from our system.
      */
-    double averagedGammaSquared = 0;
+    double averagedObservableSquared = 0;
     // Performing an average over the Monte Carlo obtained values
     for (int alpha = 0; alpha < m_NCf; alpha++)
     {
-        m_averagedGamma += m_Gamma[alpha];
-        averagedGammaSquared += m_Gamma[alpha]*m_Gamma[alpha];
+        m_averagedObservable += m_observable[alpha];
+        averagedObservableSquared += m_observable[alpha]*m_observable[alpha];
     }
-    m_averagedGamma /= double(m_NCf);
-    averagedGammaSquared /= double(m_NCf);
-    m_varianceGamma = (averagedGammaSquared - m_averagedGamma*m_averagedGamma)/double(m_NCf);
-    m_stdGamma = sqrt(m_varianceGamma);
+    m_averagedObservable /= double(m_NCf);
+    averagedObservableSquared /= double(m_NCf);
+    m_varianceObservable = (averagedObservableSquared - m_averagedObservable*m_averagedObservable)/double(m_NCf);
+    m_stdObservable = sqrt(m_varianceObservable);
     if (m_processRank == 0) {
         printLine();
-        cout << "Average plaqutte:      " << m_averagedGamma << endl;
-        cout << "Standard deviation:    " << m_stdGamma << endl;
-        cout << "Variance:              " << m_varianceGamma << endl;
+        cout << "Average plaqutte:      " << m_averagedObservable << endl;
+        cout << "Standard deviation:    " << m_stdObservable << endl;
+        cout << "Variance:              " << m_varianceObservable << endl;
         printLine();
     }
 }
@@ -585,17 +581,17 @@ void System::writeDataToFile(std::string filename)
         file << "NCor " << m_NCor << endl;
         file << "NCf " << m_NCf << endl;
         file << "NTherm " << m_NTherm << endl;
-        file << std::setprecision(15) << "AverageGamma " << m_averagedGamma << endl;
-        file << std::setprecision(15) << "VarianceGamma " << m_varianceGamma << endl;
-        file << std::setprecision(15) << "stdGamma " << m_stdGamma << endl;
+        file << std::setprecision(15) << "AverageObservable " << m_averagedObservable << endl;
+        file << std::setprecision(15) << "VarianceObservable " << m_varianceObservable << endl;
+        file << std::setprecision(15) << "stdObservable " << m_stdObservable << endl;
         if (m_storeThermalizationObservables) {
             for (int i = 0; i < m_NTherm+1; i++) {
-                file << std::setprecision(15) << m_GammaPreThermalization[i] << endl;
+                file << std::setprecision(15) << m_observablePreThermalization[i] << endl;
             }
             file << endl;
         }
         for (int i = 0; i < m_NCf; i++) {
-            file << std::setprecision(15) << m_Gamma[i] << endl;
+            file << std::setprecision(15) << m_observable[i] << endl;
         }
         file.close();
         cout << fname << " written." << endl;

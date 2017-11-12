@@ -2,6 +2,7 @@
 #define NEIGHBOURS_H
 
 #include "neighbourlist.h"
+//#include "communicator.h"
 
 class Neighbours
 {

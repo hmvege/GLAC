@@ -132,6 +132,12 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     duration<double> programTime;
     programStart = steady_clock::now();
 
+    // Parameter setting
+    Parameters::setBatchName(batchName);
+    Parameters::setBeta(beta);
+    Parameters::setFilePath(pwd);
+    Parameters::setNSpatial(N);
+    Parameters::setNTemporal(N_T);
     // Main program part
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     if (runUnitTestsFlag) {
@@ -141,8 +147,8 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     }
     Plaquette G;
     WilsonGaugeAction S(beta);
-    Parameters Params;
-    System pureGauge(N, N_T, NCf, NCor, NTherm, NUpdates, NFlows, beta, metropolisSeed, &G, &S, numprocs, processRank);
+
+    System pureGauge(NCf, NCor, NTherm, NUpdates, NFlows, metropolisSeed, &G, &S);
     if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     pureGauge.setProgramPath(pwd);
