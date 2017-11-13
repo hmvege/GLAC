@@ -24,6 +24,12 @@ private:
     static std::string m_batchName;
     static std::string m_inputFolder;
     static std::string m_outputFolder;
+    // Run specific variables
+    static int m_NCf;
+    static int m_NCor;
+    static int m_NTherm;
+    static int m_NUpdates;
+    static int m_NFlows;
 
     static double calculateLatticeSpacing(double beta);
 public:
@@ -33,6 +39,11 @@ public:
     // Setters
     static void setNSpatial(int NSpatial);
     static void setNTemporal(int NTemporal);
+    static void setNCf(int NCf) { m_NCf = NCf; }
+    static void setNCor(int NCor) { m_NCor = NCor; }
+    static void setNTherm(int NTherm) { m_NTherm = NTherm; }
+    static void setNUpdates(int NUpdates) { m_NUpdates = NUpdates; }
+    static void setNFlows(int NFlows) { m_NFlows = NFlows; }
     static void setLatticeSize(int latticeSize) { m_latticeSize = latticeSize; }
     static void setSubLatticeSize(int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
     static void setFilePath(std::string pwd) { m_pwd = pwd; }
@@ -46,6 +57,11 @@ public:
     static int getNTemporal() { return m_NTemporal; }
     static int getLatticeSize() { return m_latticeSize; }
     static int getSubLatticeSize() { return m_subLatticeSize; }
+    static int getNCf() { return m_NCf; }
+    static int getNCor() { return m_NCor; }
+    static int getNTherm() { return m_NTherm; }
+    static int getNUpdates() { return m_NUpdates; }
+    static int getNFlows() { return m_NFlows; }
     static double getBeta() { return m_beta; }
     static double getLatticeSpacing() { return m_a; }
     static void getN(unsigned int *N);

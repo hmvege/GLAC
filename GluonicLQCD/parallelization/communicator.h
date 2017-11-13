@@ -20,7 +20,7 @@ namespace Parallel {
         static bool nuDir;
         static SU3 exchangeU;
 
-        // Lattice size variable
+        // Sub lattice dimensions
         static unsigned int m_N[4];
 
         // Private fetchSU3 functions
@@ -41,7 +41,7 @@ namespace Parallel {
 
         // Setters
         static void setProcessRank(int processRank) { m_processRank = processRank; }
-        static void setNumProc(int processRank) { m_processRank = processRank; }
+        static void setNumproc(int numprocs) { m_numprocs = numprocs; }
         static void setN(unsigned int *N);
         static void setNeighbourList(Neighbours *neighbourLists) { m_neighbourLists = neighbourLists; }
 

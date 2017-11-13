@@ -9,12 +9,6 @@
 #include <cstdlib>
 #include <mpi.h>
 #include "system.h"
-#include "actions/action.h"
-#include "math/latticemath.h"
-#include "flow/flow.h"
-#include "observables/correlator.h"
-#include "observables/observablesampler.h"
-#include "parameters/parameters.h"
 
 using std::cout;
 using std::endl;
@@ -22,7 +16,7 @@ using std::chrono::steady_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 
-System::System(int NCf, int NCor, int NTherm, int NUpdates, int NFlows, double seed, Correlator *correlator, Action *S)
+System::System(double seed, Correlator *correlator, Action *S)
 {
     /*
      * Class for calculating correlators using the System algorithm.
@@ -34,16 +28,30 @@ System::System(int NCf, int NCor, int NTherm, int NUpdates, int NFlows, double s
     m_NSpatial = Parameters::getNSpatial();
     m_NTemporal = Parameters::getNTemporal();
     m_latticeSize = Parameters::getLatticeSize();
-    m_NCf = NCf; // Number of configurations to run for
-    m_NCor = NCor;
-    m_NTherm = NTherm;
-    m_NUpdates = NUpdates;
-    m_NFlows = NFlows;
+    m_NCf = Parameters::getNCf(); // Number of configurations to run for
+    m_NCor = Parameters::getNCor();
+    m_NTherm = Parameters::getNTherm();
+    m_NUpdates = Parameters::getNUpdates();
+    m_NFlows = Parameters::getNFlows();
     m_beta = Parameters::getBeta();
     m_processRank = Parallel::Communicator::getProcessRank();
     m_numprocs = Parallel::Communicator::getNumProc();
+    m_batchName = Parameters::getBatchName();
+    m_pwd = Parameters::getFilePath();
+    // Sets pointers to use
     setAction(S);
     setCorrelator(correlator);
+    if (m_NFlows != 0) {
+        Flow flow;
+        flow.setEpsilon(0.02); // CHECK THAT THIS STAYS THE SAME
+        flow.setAction(S);
+        m_Flow = &flow;
+        cout << m_Flow->getEpsilon() << endl;
+    }
+    cout << m_Flow->getEpsilon() << endl;
+    cout << "EXITS IN FLOW SETTING system.cpp" << endl;
+    exit(1);
+    // For only one observable
     m_observablePreThermalization = new double[m_NTherm+1];
     m_observable = new double[m_NCf]; // Correlator values
     m_observableSquared = new double[m_NCf];
@@ -164,17 +172,17 @@ void System::subLatticeSetup()
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
 
-    // Volumes in sub dimension
-    m_VSub[0] = m_N[0]; // X-dimension
-    m_VSub[1] = m_N[0]*m_N[1]; // Y-dimension
-    m_VSub[2] = m_N[0]*m_N[1]*m_N[2]; // Z-dimension
-    m_VSub[3] = m_N[0]*m_N[1]*m_N[2]*m_N[3]; // T-dimension
+//    // Volumes in sub dimension
+//    m_VSub[0] = m_N[0]; // X-dimension
+//    m_VSub[1] = m_N[0]*m_N[1]; // Y-dimension
+//    m_VSub[2] = m_N[0]*m_N[1]*m_N[2]; // Z-dimension
+//    m_VSub[3] = m_N[0]*m_N[1]*m_N[2]*m_N[3]; // T-dimension
 
-    // Volumes in total lattice
-    m_V[0] = m_NSpatial; // X volume
-    m_V[1] = m_NSpatial*m_NSpatial; // XY volume
-    m_V[2] = m_NSpatial*m_NSpatial*m_NSpatial; // XYZ Volume
-    m_V[3] = m_NSpatial*m_NSpatial*m_NSpatial*m_NTemporal; // XYZT volume
+//    // Volumes in total lattice
+//    m_V[0] = m_NSpatial; // X volume
+//    m_V[1] = m_NSpatial*m_NSpatial; // XY volume
+//    m_V[2] = m_NSpatial*m_NSpatial*m_NSpatial; // XYZ Volume
+//    m_V[3] = m_NSpatial*m_NSpatial*m_NSpatial*m_NTemporal; // XYZT volume
 }
 
 void System::setSubLatticeDimensions(int *NSub)
@@ -204,21 +212,23 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
         {
             for (int mu = 0; mu < 4; mu++)
             {
-                m_lattice[i].U[mu] = m_SU3Generator->generateRandom(); // Fully random
-//            m_lattice[i].U[mu] = m_SU3Generator->generateRST(); // Random close to unity
+                if (!m_RSTInit)
+                {
+                    cout << "FULLY RANDOM BY DEFAULT! exits in latticeSetup, system.cpp" << endl;
+                    exit(1);
+                    m_lattice[i].U[mu] = m_SU3Generator->generateRandom(); // Fully random
+                } else {
+                    m_lattice[i].U[mu] = m_SU3Generator->generateRST(); // Random close to unity
+                }
             }
         }
     } else {
         // Cold start: everything starts out at unity.
-        for (unsigned int x = 0; x < m_N[0]; x++) {
-            for (unsigned int y = 0; y < m_N[1]; y++) {
-                for (unsigned int z = 0; z < m_N[2]; z++) {
-                    for (unsigned int t = 0; t < m_N[3]; t++) {
-                        for (unsigned int mu = 0; mu < 4; mu++) {
-                            m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu].identity();
-                        }
-                    }
-                }
+        for (int i = 0; i < m_subLatticeSize; i++)
+        {
+            for (int mu = 0; mu < 4; mu++)
+            {
+                m_lattice[i].U[mu].identity();
             }
         }
     }
@@ -235,7 +245,7 @@ void System::printRunInfo(bool verbose) {
      */
     if (m_processRank == 0) {
         printLine();
-        cout << "Batch name:                            " << m_filename << endl;
+        cout << "Batch name:                            " << m_batchName << endl;
         cout << "Threads:                               " << m_numprocs << endl;
         if (verbose) cout << "Lattice size:                          " << m_latticeSize << endl;
         cout << "Lattice dimensions(spatial, temporal): " << m_NSpatial << " " << m_NTemporal << endl;
@@ -498,6 +508,11 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
             m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
             m_updateStorer += m_updateTime.count();
         }
+        // Flow
+        for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
+        {
+            m_Flow->flowField(m_lattice);
+        }
         // Averaging the gamma values
         m_observable[alpha] = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&m_observable[alpha], &m_observable[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -565,7 +580,7 @@ void System::runBasicStatistics()
     }
 }
 
-void System::writeDataToFile(std::string filename)
+void System::writeDataToFile()
 {
     /*
      * For writing the raw Gamma data to file.
@@ -574,7 +589,7 @@ void System::writeDataToFile(std::string filename)
      */
     if (m_processRank == 0) {
         std::ofstream file;
-        std::string fname = m_pwd + m_outputFolder + filename + ".dat";
+        std::string fname = m_pwd + m_outputFolder + m_batchName + ".dat";
         file.open(fname);
         file << "beta " << m_beta << endl;
         file << "acceptanceCounter " << getAcceptanceRate() << endl;
@@ -624,7 +639,7 @@ void System::writeConfigurationToFile(int configNumber)
      */
 
     MPI_File file;
-    std::string filename = m_pwd + m_outputFolder + m_filename
+    std::string filename = m_pwd + m_outputFolder + m_batchName
                                             + "_beta" + std::to_string(m_beta)
                                             + "_spatial" + std::to_string(m_NSpatial)
                                             + "_temporal" + std::to_string(m_NTemporal)

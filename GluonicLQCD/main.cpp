@@ -8,11 +8,10 @@
 #include "observables/plaquette.h"
 #include "math/matrices/su3matrixgenerator.h"
 #include "parallelization/index.h"
-
 #include "parameters/parameters.h"
 
-#include "unittests/unittests.h"
-#include "unittests/testsuite.h"
+#include "tests/unittests.h"
+#include "tests/testsuite.h"
 
 using std::cout;
 using std::endl;
@@ -138,6 +137,14 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Parameters::setFilePath(pwd);
     Parameters::setNSpatial(N);
     Parameters::setNTemporal(N_T);
+    Parameters::setNCf(NCf);
+    Parameters::setNCor(NCor);
+    Parameters::setNTherm(NTherm);
+    Parameters::setNUpdates(NUpdates);
+    Parameters::setNFlows(NFlows);
+    // Setting parallel variables
+    Parallel::Communicator::setNumproc(numprocs);
+    Parallel::Communicator::setProcessRank(processRank);
     // Main program part
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     if (runUnitTestsFlag) {
@@ -148,16 +155,16 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Plaquette G;
     WilsonGaugeAction S(beta);
 
-    System pureGauge(NCf, NCor, NTherm, NUpdates, NFlows, metropolisSeed, &G, &S);
+    System pureGauge(metropolisSeed, &G, &S);
     if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
-    pureGauge.setProgramPath(pwd);
-    pureGauge.setConfigBatchName(batchName);
+//    pureGauge.setProgramPath(pwd);
+//    pureGauge.setConfigBatchName(batchName);
     pureGauge.printRunInfo(true); // Always print run info
     pureGauge.runMetropolis(storeThermalizationPlaquettes, writeConfigsToFile);
     pureGauge.runBasicStatistics();
     pureGauge.printAcceptanceRate();
-    pureGauge.writeDataToFile(batchName);
+    pureGauge.writeDataToFile();
 
     // Finalizing and printing time taken
     programEnd = steady_clock::now();

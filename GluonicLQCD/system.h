@@ -5,11 +5,17 @@
 #include <chrono>
 #include "actions/action.h"
 #include "observables/correlator.h"
-#include "math/links.h"
+#include "parameters/parameters.h"
 #include "math/matrices/su3matrixgenerator.h"
+#include "math/latticemath.h"
 #include "parallelization/neighbourlist.h"
 #include "parallelization/neighbours.h"
 #include "parallelization/index.h"
+#include "flow/flow.h"
+
+
+#include "observables/observablesampler.h"
+
 
 using std::chrono::steady_clock;
 using std::chrono::duration;
@@ -46,14 +52,17 @@ private:
     // Variable for storing if the sub lattice size has been preset.
     bool m_subLatticeSizePreset = false;
 
+    // For have the possibility to start lattice with SU3 RST random, and not fully random SU3
+    bool m_RSTInit = false;
+
     // Paralellization setup
     int m_numprocs;
     int m_processRank;
     int m_processorsPerDimension[4];
     int m_subLatticeSize;
     void subLatticeSetup();
-    int m_VSub[4]; // Sub-volumes, used when writing to file
-    int m_V[4]; // Total lattice volumes
+//    int m_VSub[4]; // Sub-volumes, used when writing to file
+//    int m_V[4]; // Total lattice volumes
     int linkDoubles = 72;
     int linkSize = linkDoubles*sizeof(double);
 
@@ -86,6 +95,9 @@ private:
     // Correlator
     Correlator * m_correlator = nullptr;
 
+    // Flow
+    Flow * m_Flow = nullptr;
+
     // Function for updating our system using the Metropolis algorithm
     void update();
     void updateLink(int latticeIndex, int mu);
@@ -95,7 +107,7 @@ private:
 
     // Input/output locations
     std::string m_pwd = "";
-    std::string m_filename = "";
+    std::string m_batchName = "";
     std::string m_inputFolder = "/input/";
     std::string m_outputFolder = "/output/"; // On mac, do not need ../
 
@@ -108,21 +120,22 @@ private:
 
     inline void printLine();
 public:
-    System(int NCf, int NCor, int NTherm, int NUpdates, int NFlows, double seed, Correlator *correlator, Action *S);
+    System(double seed, Correlator *correlator, Action *S);
     ~System();
     void runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
     void runBasicStatistics();
 
     // Data outputters
-    void writeDataToFile(std::string filename);
+    void writeDataToFile();
     void writeConfigurationToFile(int configNumber);
     void loadFieldConfiguration(std::string filename);
 
     // Setters
     void setAction(Action *S) { m_S = S; }
     void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
-    void setConfigBatchName(std::string filename) { m_filename = filename; }
+    void setSU3ExpFunc(SU3Exp * SU3ExpFunc) { m_Flow->setSU3ExpFunc(SU3ExpFunc); }
+    void setConfigBatchName(std::string batchName) { m_batchName = batchName; }
     void setProgramPath(std::string pwd) { m_pwd = pwd; }
     void setN(int NSpatial) { m_NSpatial = NSpatial; }
     void setNT(int NTemporal) { m_NTemporal = NTemporal; }
@@ -130,6 +143,7 @@ public:
     void setNCf(int NCf) { m_NCf = NCf; }
     void setEpsilon(double epsilon) { m_epsilon = epsilon; }
     void setUpdateFrequency(int NUpdates) { m_NUpdates = NUpdates; }
+    void setLatticeInitRST(bool RSTInit) { m_RSTInit = RSTInit; }
 
     // Getters
     int getNSpatial() { return m_NSpatial; }

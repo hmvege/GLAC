@@ -190,3 +190,8 @@ void Parallel::Communicator::setBarrier()
 {
     MPI_Barrier(MPI_COMM_WORLD);
 }
+
+//void Parallel::Communicator::reduceDoubleArray(double *var, int N)
+//{
+//    MPI_Allreduce(&var, &var, N, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//}

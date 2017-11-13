@@ -1,7 +1,4 @@
 #include "index.h"
-#include "math/links.h"
-#include "neighbours.h"
-#include "math/matrices/su3.h"
 #include <mpi.h>
 
 //bool Parallel::Index::muDir = 0;

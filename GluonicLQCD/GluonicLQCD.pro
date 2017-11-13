@@ -25,15 +25,15 @@ SOURCES += main.cpp \
     parallelization/neighbourlist.cpp \
     parallelization/index.cpp \
     flow/flow.cpp \
-    unittests/testsuite.cpp \
-    unittests/unittests.cpp \
+    tests/testsuite.cpp \
+    tests/unittests.cpp \
     math/exponentiation/taylorexp.cpp \
-    math/exponentiation/expmorningstar.cpp \
     math/exponentiation/expluscher.cpp \
     parameters/parameters.cpp \
     io/observablesio.cpp \
     io/fieldio.cpp \
-    parallelization/communicator.cpp
+    parallelization/communicator.cpp \
+    tests/performancetests.cpp
 HEADERS += \
     system.h \
     actions/action.h \
@@ -55,16 +55,16 @@ HEADERS += \
     parallelization/neighbourlist.h \
     parallelization/index.h \
     flow/flow.h \
-    unittests/testsuite.h \
-    unittests/unittests.h \
+    tests/testsuite.h \
+    tests/unittests.h \
     math/exponentiation/taylorexp.h \
-    math/exponentiation/expmorningstar.h \
     math/exponentiation/expluscher.h \
     parameters/parameters.h \
     io/observablesio.h \
     io/fieldio.h \
     math/latticemath.h \
-    parallelization/communicator.h
+    parallelization/communicator.h \
+    tests/performancetests.h
 
 #LIBS += -llapack -lblas -larmadillo
 

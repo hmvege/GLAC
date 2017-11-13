@@ -15,16 +15,10 @@ using std::endl;
  * A class for performing Wilson flow on a gauge field configuration.
  */
 
-Flow::Flow(unsigned int *N, double beta, int numprocs, int processRank)
+Flow::Flow()
 {
-    m_numprocs = numprocs;
-    m_processRank = processRank;
-    for (int i = 0; i < 4; i++) m_N[i] = N[i];
-    m_subLatticeSize = 1;
-    for (int i = 0; i < 4; i++) m_subLatticeSize *= m_N[i];
-    f0.identity();
-    I.identity();
-    m_beta = beta;
+    Parameters::getN(m_N);
+    m_subLatticeSize = Parameters::getSubLatticeSize();
     m_tempLattice = new Links[m_subLatticeSize];
 }
 
@@ -256,6 +250,14 @@ void Flow::setAction(Action *S)
      * Sets the action class of the Flow.
      */
     m_S = S;
+}
+
+void Flow::setSU3ExpFunc(SU3Exp *SU3ExpFunc)
+{
+    /*
+     * Sets the prefered method of exponentiation.
+     */
+    m_SU3ExpFunc = SU3ExpFunc;
 }
 
 inline void Flow::updateLattice(Links *lattice)
