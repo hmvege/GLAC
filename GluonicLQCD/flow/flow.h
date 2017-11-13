@@ -10,7 +10,7 @@
 class Flow
 {
 private:
-    double m_epsilon = 0.01;
+    double m_epsilon;
     unsigned int m_N[4];
     unsigned int m_subLatticeSize;
     Links * m_tempLattice;

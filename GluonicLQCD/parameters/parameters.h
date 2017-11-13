@@ -31,6 +31,9 @@ private:
     static int m_NUpdates;
     static int m_NFlows;
 
+    // Flow
+    static double m_flowEpsilon; // TEMP SET TO 0.02!
+
     static double calculateLatticeSpacing(double beta);
 public:
     Parameters();
@@ -62,6 +65,7 @@ public:
     static int getNTherm() { return m_NTherm; }
     static int getNUpdates() { return m_NUpdates; }
     static int getNFlows() { return m_NFlows; }
+    static double getFlowEpsilon() { return m_flowEpsilon; }
     static double getBeta() { return m_beta; }
     static double getLatticeSpacing() { return m_a; }
     static void getN(unsigned int *N);

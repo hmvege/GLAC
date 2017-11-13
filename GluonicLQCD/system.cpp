@@ -512,7 +512,19 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
         {
             m_Flow->flowField(m_lattice);
+//            OSampler.calculate(m_lattice);
+//            m_observableFlow[tau] = OSampler.getPlaquette();
+//            m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
+//            m_actionDensity[tau] = OSampler.getEnergyDensity();
+//            MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//            MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//            MPI_Allreduce(&m_observableFlow[tau], &m_observableFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//            m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
+//            m_observableFlow[tau] /= double(m_numprocs);
+
         }
+        // Write flow data to file
+
         // Averaging the gamma values
         m_observable[alpha] = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&m_observable[alpha], &m_observable[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -583,9 +595,7 @@ void System::runBasicStatistics()
 void System::writeDataToFile()
 {
     /*
-     * For writing the raw Gamma data to file.
-     * Arguments:
-     *  filename                : to write stats to
+     * For writing the observables to file.
      */
     if (m_processRank == 0) {
         std::ofstream file;
@@ -596,7 +606,7 @@ void System::writeDataToFile()
         file << "NCor " << m_NCor << endl;
         file << "NCf " << m_NCf << endl;
         file << "NTherm " << m_NTherm << endl;
-        file << std::setprecision(15) << "AverageObservable " << m_averagedObservable << endl;
+        file << std::setprecision(15) << "AverageObservable " << m_averagedObservable << endl; // can setprecision be moved outside the write-to-file?
         file << std::setprecision(15) << "VarianceObservable " << m_varianceObservable << endl;
         file << std::setprecision(15) << "stdObservable " << m_stdObservable << endl;
         if (m_storeThermalizationObservables) {
@@ -724,6 +734,36 @@ void System::loadFieldConfiguration(std::string filename)
     }
     MPI_File_close(&file);
     if (m_processRank == 0) cout << "Configuration " << m_outputFolder + filename << " loaded." << endl;
+}
+
+void System::setFlowSampling(std::vector<std::string> flowObs)
+{
+    for (int i = 0; i < flowObs.size(); i++)
+    {
+        if (flowObs == "all")
+        {
+            // sett all samplers to true
+        }
+        else if (flowObs == "topcharge")
+        {
+
+        }
+        else if (flowObs == "energydensity")
+        {
+
+        }
+        else if (flowObs == "plaquette")
+        {
+
+        }
+        else {
+            // Bug catching
+        }
+    }
+    // Allocate arrays and stuff for observables and their statistics
+
+    // Also add check for user defined observable(or other observables)?
+
 }
 
 inline void System::printLine()

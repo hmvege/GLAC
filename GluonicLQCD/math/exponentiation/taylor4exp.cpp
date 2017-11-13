@@ -1,11 +1,11 @@
-#include "taylorexp.h"
+#include "taylor4exp.h"
 
-TaylorExp::TaylorExp()
+Taylor4Exp::Taylor4Exp()
 {
     I.identity();
 }
 
-SU3 TaylorExp::exp(SU3 Q)
+SU3 Taylor4Exp::exp(SU3 Q)
 {
     /*
      * Exponentiate using regular Taylor expansion.

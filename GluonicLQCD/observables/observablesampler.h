@@ -5,6 +5,7 @@
 #include "clover.h"
 #include "energydensity.h"
 #include "topologicalcharge.h"
+#include "parameters/parameters.h"
 
 class ObservableSampler// : public Correlator
 {
@@ -21,7 +22,7 @@ private:
     EnergyDensity m_energyDensity;
     TopologicalCharge m_topologicalCharge;
 public:
-    ObservableSampler(unsigned int *N, int latticeSize, double a);
+    ObservableSampler();
     ~ObservableSampler();
 
     void calculate(Links *lattice);

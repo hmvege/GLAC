@@ -27,13 +27,14 @@ SOURCES += main.cpp \
     flow/flow.cpp \
     tests/testsuite.cpp \
     tests/unittests.cpp \
-    math/exponentiation/taylorexp.cpp \
     math/exponentiation/expluscher.cpp \
     parameters/parameters.cpp \
     io/observablesio.cpp \
     io/fieldio.cpp \
     parallelization/communicator.cpp \
-    tests/performancetests.cpp
+    tests/performancetests.cpp \
+    math/exponentiation/taylor2exp.cpp \
+    math/exponentiation/taylor4exp.cpp
 HEADERS += \
     system.h \
     actions/action.h \
@@ -57,14 +58,15 @@ HEADERS += \
     flow/flow.h \
     tests/testsuite.h \
     tests/unittests.h \
-    math/exponentiation/taylorexp.h \
     math/exponentiation/expluscher.h \
     parameters/parameters.h \
     io/observablesio.h \
     io/fieldio.h \
     math/latticemath.h \
     parallelization/communicator.h \
-    tests/performancetests.h
+    tests/performancetests.h \
+    math/exponentiation/taylor2exp.h \
+    math/exponentiation/taylor4exp.h
 
 #LIBS += -llapack -lblas -larmadillo
 

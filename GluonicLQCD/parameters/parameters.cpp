@@ -8,6 +8,13 @@ int Parameters::m_subLatticeSize = 1;
 double Parameters::m_beta = 0;
 double Parameters::m_a = 0;
 const double Parameters::r0 = 0.5; // Sommer parameter
+double Parameters::m_flowEpsilon = 0.01;
+int Parameters::m_NCf = 0;
+int Parameters::m_NCor = 0;
+int Parameters::m_NTherm = 0;
+int Parameters::m_NUpdates = 0;
+int Parameters::m_NFlows = 0;
+
 
 std::string Parameters::m_pwd = "";
 std::string Parameters::m_batchName= "";

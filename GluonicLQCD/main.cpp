@@ -160,15 +160,16 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     pureGauge.latticeSetup(&SU3Gen, hotStart);
 //    pureGauge.setProgramPath(pwd);
 //    pureGauge.setConfigBatchName(batchName);
-    pureGauge.printRunInfo(true); // Always print run info
+    // ADD VERBOSE ARGUMENT? Or not, more info is always good...?
+    pureGauge.printRunInfo(true); // Always print run info, so make optional to turn off
     pureGauge.runMetropolis(storeThermalizationPlaquettes, writeConfigsToFile);
-    pureGauge.runBasicStatistics();
-    pureGauge.printAcceptanceRate();
-    pureGauge.writeDataToFile();
+    pureGauge.runBasicStatistics(); // Will always run basic statistics, so turn off!
+    pureGauge.printAcceptanceRate(); // Make optional, will always print run info
+    pureGauge.writeDataToFile(); // MAKE OPTIONAL ARGUEMENT, that is will always be executed, but can be turned off by calling this function explicitly and setting it to false
 
     // Finalizing and printing time taken
     programEnd = steady_clock::now();
-    programTime = duration_cast<duration<double>>(programEnd-programStart);
+    programTime = duration_cast<duration<double>>(programEnd - programStart);
     if (processRank == 0) cout << "Program complete. Time used: " << double(programTime.count())/3600.0 << " hours (" << programTime.count() << " seconds)" << endl;
 
     MPI_Finalize();

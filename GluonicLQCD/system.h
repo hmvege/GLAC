@@ -42,7 +42,7 @@ private:
     int m_NTherm;
     int m_NUpdates; // N updates before calculating the action, as that is costly
     int m_NFlows;
-    double m_epsilon;
+//    double m_epsilon;
     double m_a; // lattice spacing
 
     // For handling the acceptance rate
@@ -90,7 +90,7 @@ private:
 
     // Storing the action as a pointer
     Action *m_S = nullptr;
-    double m_deltaS;
+    double m_deltaS; // REDUNDANT
 
     // Correlator
     Correlator * m_correlator = nullptr;
@@ -105,7 +105,7 @@ private:
     // Thermalization function
     void thermalize();
 
-    // Input/output locations
+    // Input/output locations REDUNDANT
     std::string m_pwd = "";
     std::string m_batchName = "";
     std::string m_inputFolder = "/input/";
@@ -129,7 +129,7 @@ public:
     // Data outputters
     void writeDataToFile();
     void writeConfigurationToFile(int configNumber);
-    void loadFieldConfiguration(std::string filename);
+    void loadFieldConfiguration(std::string filename); // REDO THIS TO LOAD and wrap around the IO one, and add chroma!
 
     // Setters
     void setAction(Action *S) { m_S = S; }
@@ -141,15 +141,16 @@ public:
     void setNT(int NTemporal) { m_NTemporal = NTemporal; }
     void setSubLatticeDimensions(int *NSub);
     void setNCf(int NCf) { m_NCf = NCf; }
-    void setEpsilon(double epsilon) { m_epsilon = epsilon; }
+//    void setEpsilon(double epsilon) { m_epsilon = epsilon; }
     void setUpdateFrequency(int NUpdates) { m_NUpdates = NUpdates; }
     void setLatticeInitRST(bool RSTInit) { m_RSTInit = RSTInit; }
+    void setFlowSampling(std::vector<std::string> flowObs);
 
     // Getters
     int getNSpatial() { return m_NSpatial; }
     int getNNTemporal() { return m_NTemporal; }
     int getNCf() { return m_NCf; }
-    int getEpsilon() { return m_epsilon; }
+//    int getEpsilon() { return m_epsilon; }
 
     // Printers
     void printRunInfo(bool verbose);

@@ -5,7 +5,7 @@
 #include <mpi.h>
 
 // FOR TESTING IF FLOW PRESERVES SU3
-#include "unittests/testsuite.h"
+#include "tests/testsuite.h"
 #include <iostream>
 
 using std::cout;
@@ -18,6 +18,7 @@ using std::endl;
 Flow::Flow()
 {
     Parameters::getN(m_N);
+    m_epsilon = Parameters::getFlowEpsilon();
     m_subLatticeSize = Parameters::getSubLatticeSize();
     m_tempLattice = new Links[m_subLatticeSize];
 }
