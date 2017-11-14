@@ -19,6 +19,8 @@ private:
     // Lattice spacing
     static double m_a;
     static const double r0;
+    // Program information output
+    static bool m_verbose;
     // IO parameters
     static std::string m_pwd;
     static std::string m_batchName;
@@ -54,6 +56,7 @@ public:
     static void setInputFolder(std::string inputFolder) { m_inputFolder = inputFolder; }
     static void setOutputFolder(std::string outputFolder) { m_outputFolder = outputFolder; }
     static void setBeta(double beta);
+    static void setVerbose(bool verbose) { m_verbose = verbose; }
 
     // Getters
     static int getNSpatial() { return m_NSpatial; }
@@ -65,6 +68,7 @@ public:
     static int getNTherm() { return m_NTherm; }
     static int getNUpdates() { return m_NUpdates; }
     static int getNFlows() { return m_NFlows; }
+    static bool getVerbose() { return m_verbose; }
     static double getFlowEpsilon() { return m_flowEpsilon; }
     static double getBeta() { return m_beta; }
     static double getLatticeSpacing() { return m_a; }

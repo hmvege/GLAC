@@ -8,14 +8,17 @@
 #include "parameters/parameters.h"
 #include "math/matrices/su3matrixgenerator.h"
 #include "math/latticemath.h"
-#include "parallelization/neighbourlist.h"
+
+#include "parallelization/neighbourlist.h" // Make this into
 #include "parallelization/neighbours.h"
 #include "parallelization/index.h"
-#include "flow/flow.h"
 
+#include "flow/flow.h"
+#include "io/fieldio.h"
+#include "io/observablesio.h"
 
 #include "observables/observablesampler.h"
-
+#include "observablestorer.h"
 
 using std::chrono::steady_clock;
 using std::chrono::duration;
@@ -43,7 +46,7 @@ private:
     int m_NUpdates; // N updates before calculating the action, as that is costly
     int m_NFlows;
 //    double m_epsilon;
-    double m_a; // lattice spacing
+//    double m_a; // lattice spacing
 
     // For handling the acceptance rate
     unsigned long int m_acceptanceCounter = 0;
@@ -61,8 +64,6 @@ private:
     int m_processorsPerDimension[4];
     int m_subLatticeSize;
     void subLatticeSetup();
-//    int m_VSub[4]; // Sub-volumes, used when writing to file
-//    int m_V[4]; // Total lattice volumes
     int linkDoubles = 72;
     int linkSize = linkDoubles*sizeof(double);
 
@@ -82,6 +83,21 @@ private:
     double m_varianceObservable = 0;
     double m_stdObservable = 0;
 
+    // Variables for the config sampling
+    long unsigned int m_NConfigObs = 0;
+    ObservableStorer ** m_configObservableStorage;
+    bool m_sampleTopCharge = false;
+    bool m_sampleEnergyDensity = false;
+    bool m_samplePlaquette = false;
+    bool m_sampleOnlyPlaquette = false;
+    // Variables for the flow sampling
+    long unsigned int m_NFlowObs = 0;
+    ObservableStorer ** m_flowObservableStorage;
+    bool m_sampleFlowTopCharge = false;
+    bool m_sampleFlowEnergyDensity = false;
+    bool m_sampleFlowPlaquette = false;
+
+
     // Time counting
     steady_clock::time_point m_preUpdate, m_postUpdate;
     duration<double> m_updateTime;
@@ -90,7 +106,7 @@ private:
 
     // Storing the action as a pointer
     Action *m_S = nullptr;
-    double m_deltaS; // REDUNDANT
+//    double m_deltaS; // REDUNDANT
 
     // Correlator
     Correlator * m_correlator = nullptr;
@@ -120,7 +136,7 @@ private:
 
     inline void printLine();
 public:
-    System(double seed, Correlator *correlator, Action *S);
+    System(double seed, Correlator *correlator, Action *S, Flow *F, std::vector<std::string> flowObservables);
     ~System();
     void runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
@@ -131,30 +147,31 @@ public:
     void writeConfigurationToFile(int configNumber);
     void loadFieldConfiguration(std::string filename); // REDO THIS TO LOAD and wrap around the IO one, and add chroma!
 
-    // Setters
+    // Object setters
     void setAction(Action *S) { m_S = S; }
     void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
+    void setFlow(Flow *F) { m_Flow = F; }
     void setSU3ExpFunc(SU3Exp * SU3ExpFunc) { m_Flow->setSU3ExpFunc(SU3ExpFunc); }
+
+    // Variable setters
     void setConfigBatchName(std::string batchName) { m_batchName = batchName; }
     void setProgramPath(std::string pwd) { m_pwd = pwd; }
     void setN(int NSpatial) { m_NSpatial = NSpatial; }
     void setNT(int NTemporal) { m_NTemporal = NTemporal; }
-    void setSubLatticeDimensions(int *NSub);
     void setNCf(int NCf) { m_NCf = NCf; }
-//    void setEpsilon(double epsilon) { m_epsilon = epsilon; }
+    void setSubLatticeDimensions(int *NSub);
     void setUpdateFrequency(int NUpdates) { m_NUpdates = NUpdates; }
     void setLatticeInitRST(bool RSTInit) { m_RSTInit = RSTInit; }
-    void setFlowSampling(std::vector<std::string> flowObs);
 
-    // Getters
-    int getNSpatial() { return m_NSpatial; }
-    int getNNTemporal() { return m_NTemporal; }
-    int getNCf() { return m_NCf; }
+//    void setEpsilon(double epsilon) { m_epsilon = epsilon; }
 //    int getEpsilon() { return m_epsilon; }
+
+    // Sets what samplers we are to use
+    void setFlowSampling(std::vector<std::string> flowObs);
+    void setConfigurationSampling(std::vector<std::string> configObs);
 
     // Printers
     void printRunInfo(bool verbose);
-    void printEnergies();
     void printAcceptanceRate();
 };
 

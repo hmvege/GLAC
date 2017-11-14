@@ -5,7 +5,7 @@
 #include "math/functions.h"
 
 // For testing
-#include "unittests/unittests.h"
+#include "tests/unittests.h"
 
 using std::cout;
 using std::endl;

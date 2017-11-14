@@ -1,7 +1,7 @@
 #include "observablesampler.h"
 #include "parallelization/index.h"
 
-ObservableSampler::ObservableSampler()// : Correlator()
+ObservableSampler::ObservableSampler()
 {
     m_a = Parameters::getLatticeSpacing();
     m_energyDensity.setLatticeSpacing(m_a);

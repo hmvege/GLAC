@@ -12,6 +12,7 @@ class SU3
 {
 public:
     SU3();
+    SU3(double fill);
     ~SU3();
 
     double mat[18];

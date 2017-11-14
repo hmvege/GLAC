@@ -1,21 +1,31 @@
 #include "parameters.h"
 
+// Lattice specific constants
 int Parameters::m_NSpatial = 0;
 int Parameters::m_NTemporal = 0;
 int Parameters::m_latticeSize = 1;
 unsigned int Parameters::m_N[] = {0};
 int Parameters::m_subLatticeSize = 1;
+
+// Physical lattice size dependent values
 double Parameters::m_beta = 0;
 double Parameters::m_a = 0;
 const double Parameters::r0 = 0.5; // Sommer parameter
-double Parameters::m_flowEpsilon = 0.01;
+
+// Run specific constants
 int Parameters::m_NCf = 0;
 int Parameters::m_NCor = 0;
 int Parameters::m_NTherm = 0;
 int Parameters::m_NUpdates = 0;
 int Parameters::m_NFlows = 0;
 
+// Flow
+double Parameters::m_flowEpsilon = 0.01;
 
+// System constants
+bool Parameters::m_verbose = true;
+
+// For IO handling
 std::string Parameters::m_pwd = "";
 std::string Parameters::m_batchName= "";
 std::string Parameters::m_inputFolder = "/input/";

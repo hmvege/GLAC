@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     parallelization/communicator.cpp \
     tests/performancetests.cpp \
     math/exponentiation/taylor2exp.cpp \
-    math/exponentiation/taylor4exp.cpp
+    math/exponentiation/taylor4exp.cpp \
+    observablestorer.cpp
 HEADERS += \
     system.h \
     actions/action.h \
@@ -66,7 +67,8 @@ HEADERS += \
     parallelization/communicator.h \
     tests/performancetests.h \
     math/exponentiation/taylor2exp.h \
-    math/exponentiation/taylor4exp.h
+    math/exponentiation/taylor4exp.h \
+    observablestorer.h
 
 #LIBS += -llapack -lblas -larmadillo
 

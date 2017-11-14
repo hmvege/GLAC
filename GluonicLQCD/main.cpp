@@ -40,24 +40,28 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     MPI_Comm_rank (MPI_COMM_WORLD, &processRank);
 
     // Constants by default initialization
-    int N           = 16;            // Spatial lattice points.
-    int N_T         = 16;            // Temporal lattice points.
-    int NTherm      = 100;           // Thermalization.
-    int NCor        = 10;            // Correlation updates.
-    int NCf         = 20;           // Number of configurations to generate.
-    int NUpdates    = 10;           // Number of link updates before moving on.
-    int NFlows      = 0;            // Number of times to flow a variable.
-    double beta     = 6.0;          // Beta value(connected to the lattice spacing a).
-    double SU3Eps   = 0.24;         // Epsilon spread for generating SU(3) matrices.
-    std::string batchName               = "TEST_RUN_CONFIG";
-    std::string pwd                     = "/Users/hansmathiasmamenvege/Programming/FYSSP100/GluonAction"; // MAC
-    bool writeConfigsToFile             = true;
-    bool storeThermalizationPlaquettes  = false;
-    bool hotStart                       = false;
-    double seed                         = std::time(nullptr) + double(processRank);                     // Random matrix seed. Defualt: current time.
-    double metropolisSeed               = std::time(nullptr) + double(numprocs) + double(processRank);  // Metropolis seed. Defualt: current time.
-    bool runUnitTestsFlag               = false;
-    bool runVerboseUnitTestsFlag        = false;
+    int N                   = 16;           // Spatial lattice points.
+    int N_T                 = 16;           // Temporal lattice points.
+    int NTherm              = 100;          // Thermalization.
+    int NCor                = 10;           // Correlation updates.
+    int NCf                 = 20;           // Number of configurations to generate.
+    int NUpdates            = 10;           // Number of link updates before moving on.
+    int NFlows              = 0;            // Number of times to flow a variable.
+    double beta             = 6.0;          // Beta value(connected to the lattice spacing a).
+    double SU3Eps           = 0.24;         // Epsilon spread for generating SU(3) matrices.
+    std::string batchName   = "TEST_RUN_CONFIG";
+    std::string pwd         = "/Users/hansmathiasmamenvege/Programming/FYSSP100/GluonAction"; // MAC
+    double seed             = std::time(nullptr) + double(processRank);                       // Random matrix seed. Defualt: current time.
+    double metropolisSeed   = std::time(nullptr) + double(numprocs) + double(processRank);    // Metropolis seed. Defualt: current time.
+    bool writeConfigsToFile                     = true;
+    bool storeThermalizationPlaquettes          = false;
+    bool hotStart                               = false;
+    bool runUnitTestsFlag                       = false;
+    bool runVerboseUnitTestsFlag                = false;
+    std::vector<std::string> flowObservables    = {"topcharge","energydensity","plaquette"};
+    std::vector<std::string> configObservables  = {"plaquette"}; // Not really needed, as we sample everything in the flow as well
+    Parameters::setVerbose(true);
+    // ADD VERBOSE TOGGLING!
 
     // Only needed if numberOfArguments > 13.
     int NSub[4];
@@ -154,8 +158,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     }
     Plaquette G;
     WilsonGaugeAction S(beta);
+    Flow F;
 
-    System pureGauge(metropolisSeed, &G, &S);
+    System pureGauge(metropolisSeed, &G, &S, &F, flowObservables);
     if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
 //    pureGauge.setProgramPath(pwd);

@@ -4,7 +4,7 @@ bool Parallel::Communicator::muDir = 0;
 bool Parallel::Communicator::nuDir = 0;
 unsigned int Parallel::Communicator::m_N[4];
 Neighbours * Parallel::Communicator::m_neighbourLists = nullptr;
-SU3 Parallel::Communicator::exchangeU;
+SU3 Parallel::Communicator::exchangeU(0);
 int Parallel::Communicator::m_processRank = 0;
 int Parallel::Communicator::m_numprocs = 0;
 
@@ -58,7 +58,6 @@ SU3 Parallel::Communicator::getPositiveLink(Links *lattice, std::vector<int> n, 
      *  muIndex     : lorentz "vector"
      *  SU3Dir      : which of the four SU3 matrices which we need
      */
-
     if ((n[mu]+muIndex[mu]) % m_N[mu] == 0) {
         n[mu] = 0;
         MPIfetchSU3Positive(lattice,n,mu,SU3Dir);
@@ -189,6 +188,13 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Links * lattice, 
 void Parallel::Communicator::setBarrier()
 {
     MPI_Barrier(MPI_COMM_WORLD);
+}
+
+void Parallel::Communicator::setN(unsigned int *N)
+{
+    for (int i = 0; i < 4; i++) {
+        m_N[i] = N[i];
+    }
 }
 
 //void Parallel::Communicator::reduceDoubleArray(double *var, int N)

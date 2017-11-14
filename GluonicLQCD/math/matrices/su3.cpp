@@ -7,6 +7,16 @@ SU3::SU3()
      */
 }
 
+SU3::SU3(double fill)
+{
+    /*
+     * SU3 initialiser with fill as variable.
+     */
+    for (int i = 0; i < 18; i++) {
+        mat[i] = fill;
+    }
+}
+
 SU3::~SU3()
 {
     /*

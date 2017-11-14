@@ -20,13 +20,16 @@ namespace IO {
                                     double averagedObservable,
                                     double varianceObservable,
                                     double stdObservable,
-                                    double *observables,
                                     double *thermalizationObservables,
+                                    double *observables,
                                     std::string observableName);
-        void writeFlowObservableToFile(double *observableStatistics,
-                                       double *t,
-                                       double *observables,
-                                       std::string observableName);
+        void writeFlowObservableToFile(double averagedObservable, double varianceObservable, double stdObservable,
+                                       double *t, double *observables, std::string observableName, int configNumber);
+        void writeDataToFile(double averagedObservable,
+                             double varianceObservable,
+                             double stdObservable,
+                             double *observables,
+                             std::string observableName);
 //    };
 }
 
