@@ -18,7 +18,7 @@
 #include "io/observablesio.h"
 
 #include "observables/observablesampler.h"
-#include "observablestorer.h"
+//#include "observablestorer.h"
 
 using std::chrono::steady_clock;
 using std::chrono::duration;
@@ -83,19 +83,19 @@ private:
     double m_varianceObservable = 0;
     double m_stdObservable = 0;
 
-    // Variables for the config sampling
-    long unsigned int m_NConfigObs = 0;
-    ObservableStorer ** m_configObservableStorage;
-    bool m_sampleTopCharge = false;
-    bool m_sampleEnergyDensity = false;
-    bool m_samplePlaquette = false;
-    bool m_sampleOnlyPlaquette = false;
-    // Variables for the flow sampling
-    long unsigned int m_NFlowObs = 0;
-    ObservableStorer ** m_flowObservableStorage;
-    bool m_sampleFlowTopCharge = false;
-    bool m_sampleFlowEnergyDensity = false;
-    bool m_sampleFlowPlaquette = false;
+//    // Variables for the config sampling
+//    long unsigned int m_NConfigObs = 0;
+//    ObservableStorer ** m_configObservableStorage;
+//    bool m_sampleTopCharge = false;
+//    bool m_sampleEnergyDensity = false;
+//    bool m_samplePlaquette = false;
+//    bool m_sampleOnlyPlaquette = false;
+//    // Variables for the flow sampling
+//    long unsigned int m_NFlowObs = 0;
+//    ObservableStorer ** m_flowObservableStorage;
+//    bool m_sampleFlowTopCharge = false;
+//    bool m_sampleFlowEnergyDensity = false;
+//    bool m_sampleFlowPlaquette = false;
 
 
     // Time counting
@@ -108,8 +108,11 @@ private:
     Action *m_S = nullptr;
 //    double m_deltaS; // REDUNDANT
 
-    // Correlator
+    // Config correlator
     Correlator * m_correlator = nullptr;
+
+    // Flow correlator
+    Correlator * m_flowCorrelator = nullptr;
 
     // Flow
     Flow * m_Flow = nullptr;
@@ -136,7 +139,7 @@ private:
 
     inline void printLine();
 public:
-    System(double seed, Correlator *correlator, Action *S, Flow *F, std::vector<std::string> flowObservables);
+    System(double seed, Correlator *correlator, Action *S, Flow *F, Correlator *flowCorrelator);
     ~System();
     void runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile);
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
@@ -150,6 +153,7 @@ public:
     // Object setters
     void setAction(Action *S) { m_S = S; }
     void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
+    void setFlowCorrelator(Correlator *flowCorrelator) { m_flowCorrelator = flowCorrelator; }
     void setFlow(Flow *F) { m_Flow = F; }
     void setSU3ExpFunc(SU3Exp * SU3ExpFunc) { m_Flow->setSU3ExpFunc(SU3ExpFunc); }
 
@@ -166,9 +170,9 @@ public:
 //    void setEpsilon(double epsilon) { m_epsilon = epsilon; }
 //    int getEpsilon() { return m_epsilon; }
 
-    // Sets what samplers we are to use
-    void setFlowSampling(std::vector<std::string> flowObs);
-    void setConfigurationSampling(std::vector<std::string> configObs);
+//    // Sets what samplers we are to use
+//    void setFlowSampling(std::vector<std::string> flowObs);
+//    void setConfigurationSampling(std::vector<std::string> configObs);
 
     // Printers
     void printRunInfo(bool verbose);

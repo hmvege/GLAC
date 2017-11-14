@@ -1,9 +1,6 @@
 #include "observablestorer.h"
 
-ObservableStorer::ObservableStorer(int NSize, std::string observableName, bool procNormalize) :
-    m_NSize(NSize),
-    m_observableName(observableName),
-    m_procNormalize(procNormalize)
+ObservableStorer::ObservableStorer(int m_NSize)
 {
     m_observables = new double[m_NSize];
     m_observablesSquared = new double[m_NSize];
@@ -30,7 +27,7 @@ void ObservableStorer::runStatistics()
     double numprocs = double(Parallel::Communicator::getNumProc());
     double averagedObservableSquared = 0;
     // Normalizes by the number of processors
-    if (m_procNormalize) {
+    if (m_normalizeObservableByProcessor) {
         for (int i = 0; i < m_NSize; i++) {
             m_observables[i] /= numprocs;
             m_observablesSquared[i] /= numprocs;
@@ -46,6 +43,10 @@ void ObservableStorer::runStatistics()
     averagedObservableSquared /= double(m_NSize);
     m_varianceObservable = (averagedObservableSquared - m_averagedObservable*m_averagedObservable)/double(m_NSize);
     m_stdObservable = sqrt(m_varianceObservable);
+}
+
+void ObservableStorer::printStatistics()
+{
     if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose())
     {
         printf("\nObservable: %s", m_observableName.c_str());

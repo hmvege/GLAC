@@ -16,7 +16,7 @@ using std::chrono::steady_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 
-System::System(double seed, Correlator *correlator, Action *S, Flow *F, std::vector<std::__1::string> flowObservables)
+System::System(double seed, Correlator *correlator, Action *S, Flow *F, Correlator *flowCorrelator)
 {
     /*
      * Class for calculating correlators using the System algorithm.
@@ -38,10 +38,11 @@ System::System(double seed, Correlator *correlator, Action *S, Flow *F, std::vec
     // Sets pointers to use
     setAction(S);
     setCorrelator(correlator);
+    setFlowCorrelator(flowCorrelator);
     setFlow(F); // Setting it outside, in case we want to specify the exponentiation function.
 //    m_Flow = new Flow;
     // Initializes the samplers
-    setFlowSampling(flowObservables);
+//    setFlowSampling(flowObservables);
 
 
     // For only one observable
@@ -66,16 +67,16 @@ System::~System()
      * Class destructor
      */
 
-    //---------------------–REDUNDANT?------------------–---//
-    for (unsigned int i = 0; i < m_NFlowObs; i++) {
-        delete m_flowObservableStorage[i];
-    }
-    delete [] m_flowObservableStorage;
-    for (unsigned int i = 0; i < m_NConfigObs; i++) {
-        delete m_configObservableStorage[i];
-    }
-    delete [] m_configObservableStorage;
-    //-----------------–-----------------–-----------------–//
+//    //---------------------–REDUNDANT?------------------–---//
+//    for (unsigned int i = 0; i < m_NFlowObs; i++) {
+//        delete m_flowObservableStorage[i];
+//    }
+//    delete [] m_flowObservableStorage;
+//    for (unsigned int i = 0; i < m_NConfigObs; i++) {
+//        delete m_configObservableStorage[i];
+//    }
+//    delete [] m_configObservableStorage;
+//    //-----------------–-----------------–-----------------–//
 
     delete [] m_lattice;
     delete [] m_observable;
@@ -89,12 +90,14 @@ void System::subLatticeSetup()
      * Sets up the sub-lattices. Adds +2 in every direction to account for sharing of s.
      */
 
-    // MAKE PARALLEL COMMUNICATOR INSTANCE Parallel::Communicator::checkSubLatticeValidity()
-    if (m_numprocs % 2 != 0) {
-        cout << "Error: odd number of processors --> exiting." << endl;
-        MPI_Finalize();
-        exit(1);
-    }
+//    // MAKE PARALLEL COMMUNICATOR INSTANCE Parallel::Communicator::checkSubLatticeValidity()
+//    if (m_numprocs % 2 != 0) {
+//        cout << "Error: odd number of processors --> exiting." << endl;
+//        MPI_Finalize();
+//        exit(1);
+//    }
+    // Checks initial processor validity
+    Parallel::Communicator::checkProcessorValidity();
     int restProc = m_numprocs;
 
     // Only finds the sub lattice size iteratively if no preset value has been defined.
@@ -104,7 +107,6 @@ void System::subLatticeSetup()
             m_N[i] = m_NSpatial;
         }
         m_N[3] = m_NTemporal;
-
         // Iteratively finds and sets the sub-lattice dimensions
         while (restProc >= 2) {
             for (int i = 0; i < 4; i++) { // Counts from x to t
@@ -114,49 +116,53 @@ void System::subLatticeSetup()
             }
         }
     }
-
+    // Sets the sub lattice dimensions
+    Parallel::Index::setN(m_N);
+    Parallel::Communicator::setN(m_N);
     // Gets the total size of the sub-lattice(without faces)
     m_subLatticeSize = 1;
     for (int i = 0; i < 4; i++) {
         m_subLatticeSize *= m_N[i];
     }
+    Parameters::setSubLatticeSize(m_subLatticeSize);
     m_lattice = new Links[m_subLatticeSize];
 
     // If has a size of 2, we exit as that may produce poor results.
-    for (int i = 0; i < 4; i++) {
-        if (m_N[i] <= 2) {
-            if (m_processRank == 0) {
-                cout << "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
-                for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
-                cout << " --> exiting."<< endl;
-            }
-            MPI_Finalize();
-            exit(0);
-        }
-    }
+    Parallel::Communicator::checkSubLatticeDimensionsValidity();
+//    for (int i = 0; i < 4; i++) {
+//        if (m_N[i] <= 2) {
+//            if (m_processRank == 0) {
+//                cout << "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
+//                for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
+//                cout << " --> exiting."<< endl;
+//            }
+//            MPI_Finalize();
+//            exit(0);
+//        }
+//    }
 
     // Checking if the sub lattice size acutally divide the lattice correctly.
-    bool latticeSizeError = false;
-    for (int i = 0; i < 3; i++) {
-        if (m_NSpatial % m_N[i] != 0) {
-            latticeSizeError = true;
-        }
-    }
-    if (m_subLatticeSize*m_numprocs != m_latticeSize) {
-        latticeSizeError = true;
-    }
-    if (m_NTemporal % m_N[3] != 0) {
-        latticeSizeError = true;
-    }
-    if (latticeSizeError) {
-        if (m_processRank == 0) {
-            cout << "Error: sub-lattice size invalid: ";
-            for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
-            cout << " --> exiting."<< endl;
-        }
-        MPI_Finalize();
-        exit(0);
-    }
+//    bool latticeSizeError = false;
+//    for (int i = 0; i < 3; i++) {
+//        if (m_NSpatial % m_N[i] != 0) {
+//            latticeSizeError = true;
+//        }
+//    }
+//    if (m_subLatticeSize*m_numprocs != m_latticeSize) {
+//        latticeSizeError = true;
+//    }
+//    if (m_NTemporal % m_N[3] != 0) {
+//        latticeSizeError = true;
+//    }
+//    if (latticeSizeError) {
+//        if (m_processRank == 0) {
+//            cout << "Error: sub-lattice size invalid: ";
+//            for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
+//            cout << " --> exiting."<< endl;
+//        }
+//        MPI_Finalize();
+//        exit(0);
+//    }
 
     // Sets up number of processors per dimension
     for (int i = 0; i < 3; i++) {
@@ -169,11 +175,8 @@ void System::subLatticeSetup()
     m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
 
     // Passes relevant information to the index handler(for the shifts).
-    Parallel::Index::setN(m_N);
-    Parallel::Index::setNTot(m_NSpatial, m_NTemporal);
-    Parallel::Communicator::setProcessRank(m_processRank);
     Parallel::Communicator::setNeighbourList(m_neighbourLists);
-    Parallel::Communicator::setN(m_N);
+//    Parallel::Communicator::setN(m_N);
 
     // Passes the index handler and dimensionality to the action and correlator classes.
     m_S->setN(m_N);
@@ -241,7 +244,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
         }
     }
     if (m_processRank == 0) {
-        cout << "\nLattice setup complete\n" << endl;
+        printf("\nLattice setup complete");
     }
 }
 
@@ -287,17 +290,18 @@ void System::thermalize()
      * Function for thermalizing the system.
      */
     if (m_storeThermalizationObservables) {
-        // Calculating correlator before any updates have began.
-        m_observablePreThermalization[0] = m_correlator->calculate(m_lattice);
+//        // Calculating correlator before any updates have began.
+//        m_observablePreThermalization[0] = m_correlator->calculate(m_lattice);
 
-        // Summing and sharing correlator to all processors before any updates has begun
-        MPI_Allreduce(&m_observablePreThermalization[0], &m_observablePreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//        // Summing and sharing correlator to all processors before any updates has begun
+//        MPI_Allreduce(&m_observablePreThermalization[0], &m_observablePreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
-        // Dividing by the number of processors in order to get the correlator.
-        m_observablePreThermalization[0] /= double(m_numprocs);
+//        // Dividing by the number of processors in order to get the correlator.
+//        m_observablePreThermalization[0] /= double(m_numprocs);
         if (m_processRank == 0) {
             printf("\ni    Plaquette   ");
-            printf("\n%-4d %-12.8f",0,m_observablePreThermalization[0]);
+//            printf("\n%-4d %-12.8f",0,m_observablePreThermalization[0]);
+            printf("\n%-4d %-12.8f",0,m_correlator->getObservable(0));
         }
     }
 
@@ -323,15 +327,19 @@ void System::thermalize()
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (m_storeThermalizationObservables) {
             // Calculating the correlator
-            m_observablePreThermalization[i] = m_correlator->calculate(m_lattice);
+//            m_observablePreThermalization[i] = m_correlator->calculate(m_lattice);
+            m_correlator->calculate(m_lattice,i);
 
             // Summing and sharing results across the processors
-            MPI_Allreduce(&m_observablePreThermalization[i], &m_observablePreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
-
+//            MPI_Allreduce(&m_observablePreThermalization[i], &m_observablePreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
             // Averaging the results
-            m_observablePreThermalization[i] /= double(m_numprocs);
+//            m_observablePreThermalization[i] /= double(m_numprocs);
+
+//            if (m_processRank == 0) {
+//                printf("\n%-4d %-12.8f",i,m_observablePreThermalization[i]);
+//            }
             if (m_processRank == 0) {
-                printf("\n%-4d %-12.8f",i,m_observablePreThermalization[i]);
+                printf("\n%-4d %-12.8f",i,m_correlator->getObservable(i)); // returns the observable at i(not averaged between by processors?)
             }
         }
     }
@@ -503,7 +511,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     m_updateStorer = 0;
 
     // Main part of algorithm
-    for (int alpha = 0; alpha < m_NCf; alpha++)
+    for (int iConfig = 0; iConfig < m_NCf; iConfig++)
     {
         for (int i = 0; i < m_NCor; i++) // Updating NCor times before updating the Gamma function
         {
@@ -521,6 +529,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
         {
             m_Flow->flowField(m_lattice);
+            m_flowCorrelator->calculate(m_lattice,iFlow);
 //            OSampler.calculate(m_lattice);
 //            m_observableFlow[tau] = OSampler.getPlaquette();
 //            m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
@@ -532,24 +541,26 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //            m_observableFlow[tau] /= double(m_numprocs);
 
         }
+        m_flowCorrelator->writeStatisticsToFile();
         // Write flow data to file
 
         // Averaging the gamma values
-        m_observable[alpha] = m_correlator->calculate(m_lattice);
-        MPI_Allreduce(&m_observable[alpha], &m_observable[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-        m_observable[alpha] /= double(m_numprocs);
+        m_correlator->calculate(m_lattice,iConfig);
+//        m_observable[iConfig] = m_correlator->calculate(m_lattice);
+//        MPI_Allreduce(&m_observable[iConfig], &m_observable[iConfig], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+//        m_observable[iConfig] /= double(m_numprocs);
 
         if (m_processRank == 0) {
             // Printing plaquette value
-            printf("\n%-4d %-12.8f   %-15.8f",alpha,m_observable[alpha],m_updateStorer/double((alpha+1)*m_NCor));
+            printf("\n%-4d %-12.8f   %-15.8f",iConfig,m_correlator->getObservable(iConfig),m_updateStorer/double((iConfig+1)*m_NCor));
             // Adding the acceptance ratio
-            if (alpha % 10 == 0) {
-                printf(" %-13.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(alpha+1)*m_NUpdates*m_NCor));
+            if (iConfig % 10 == 0) {
+                printf(" %-13.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(iConfig+1)*m_NUpdates*m_NCor));
             }
         }
 
         // Writing field config to file
-        if (writeConfigsToFile) writeConfigurationToFile(alpha);
+        if (writeConfigsToFile) writeConfigurationToFile(iConfig);
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
@@ -560,6 +571,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         printf("\nAverage update time: %.6f sec.", m_updateStorer/double(m_NCf*m_NCor));
         printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
     }
+    m_correlator->writeStatisticsToFile(); // Runs statistics, writes to file, and prints results (if verbose is on)
 
     // RUNNING FLOW!
 //    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
@@ -752,94 +764,94 @@ void System::loadFieldConfiguration(std::string filename)
     if (m_processRank == 0) cout << "Configuration " << m_outputFolder + filename << " loaded." << endl;
 }
 
-void System::setFlowSampling(std::vector<std::string> flowObs)
-{
-    m_flowObservableStorage = new ObservableStorer*[flowObs.size()];
-    m_NFlowObs = flowObs.size();
-    for (unsigned int i = 0; i < m_NFlowObs; i++)
-    {
-        if (flowObs[i] == "all") // Default
-        {
-            if (m_NFlowObs != 1 && Parallel::Communicator::getProcessRank() == 0) {
-                printf("\nError: inccorrect number of configs given: %lu", m_NFlowObs);
-                exit(0);
-            }
-            m_sampleFlowTopCharge = true;
-            m_sampleFlowEnergyDensity = true;
-            m_sampleFlowPlaquette = true;
-        }
-        else if (flowObs[i] == "topcharge")
-        {
-            m_sampleFlowTopCharge = true;
+//void System::setFlowSampling(std::vector<std::string> flowObs)
+//{
+//    m_flowObservableStorage = new ObservableStorer*[flowObs.size()];
+//    m_NFlowObs = flowObs.size();
+//    for (unsigned int i = 0; i < m_NFlowObs; i++)
+//    {
+//        if (flowObs[i] == "all") // Default
+//        {
+//            if (m_NFlowObs != 1 && Parallel::Communicator::getProcessRank() == 0) {
+//                printf("\nError: inccorrect number of configs given: %lu", m_NFlowObs);
+//                exit(0);
+//            }
+//            m_sampleFlowTopCharge = true;
+//            m_sampleFlowEnergyDensity = true;
+//            m_sampleFlowPlaquette = true;
+//        }
+//        else if (flowObs[i] == "topcharge")
+//        {
+//            m_sampleFlowTopCharge = true;
 
-        }
-        else if (flowObs[i] == "energydensity")
-        {
-            m_sampleFlowEnergyDensity = true;
-        }
-        else if (flowObs[i] == "plaquette")
-        {
-            m_sampleFlowPlaquette = true;
-        }
-        else {
-            if (Parallel::Communicator::getProcessRank() == 0) {
-                printf("ERROR: Observable %s not found in library: \n  plaquette\n  topcharge  \nenergydensity",flowObs[i].c_str());
-                exit(1);
-            }
-        }
-    }
-    // Allocate arrays and stuff for observables and their statistics
-    if (m_sampleFlowPlaquette) m_flowObservableStorage[0] = new ObservableStorer(m_NFlows + 1, "plaquette", true);
-    if (m_sampleFlowTopCharge) m_flowObservableStorage[1] = new ObservableStorer(m_NFlows + 1, "topcharge", false);
-    if (m_sampleFlowEnergyDensity) m_flowObservableStorage[2] = new ObservableStorer(m_NFlows + 1, "energydensity", false);
-    // Also add check for user defined observable(or other observables)?
+//        }
+//        else if (flowObs[i] == "energydensity")
+//        {
+//            m_sampleFlowEnergyDensity = true;
+//        }
+//        else if (flowObs[i] == "plaquette")
+//        {
+//            m_sampleFlowPlaquette = true;
+//        }
+//        else {
+//            if (Parallel::Communicator::getProcessRank() == 0) {
+//                printf("ERROR: Observable %s not found in library: \n  plaquette\n  topcharge  \nenergydensity",flowObs[i].c_str());
+//                exit(1);
+//            }
+//        }
+//    }
+//    // Allocate arrays and stuff for observables and their statistics
+//    if (m_sampleFlowPlaquette) m_flowObservableStorage[0] = new ObservableStorer(m_NFlows + 1, "plaquette", true);
+//    if (m_sampleFlowTopCharge) m_flowObservableStorage[1] = new ObservableStorer(m_NFlows + 1, "topcharge", false);
+//    if (m_sampleFlowEnergyDensity) m_flowObservableStorage[2] = new ObservableStorer(m_NFlows + 1, "energydensity", false);
+//    // Also add check for user defined observable(or other observables)?
 
-}
+//}
 
-void System::setConfigurationSampling(std::vector<std::string> configObs)
-{
-    m_NConfigObs = configObs.size();
-    m_configObservableStorage = new ObservableStorer*[m_NConfigObs];
-    for (unsigned int i = 0; i < configObs.size(); i++)
-    {
-        if (configObs[i] == "all") // Default
-        {
-            if (m_NConfigObs > 1 && Parallel::Communicator::getProcessRank() == 0) {
-                printf("\nError: inccorrect number of configs given: %lu", m_NConfigObs);
-                exit(0);
-            }
-            m_sampleTopCharge = true;
-            m_sampleEnergyDensity = true;
-            m_samplePlaquette = true;
-        }
-        else if (configObs[i] == "topcharge")
-        {
-            m_sampleTopCharge = true;
+//void System::setConfigurationSampling(std::vector<std::string> configObs)
+//{
+//    m_NConfigObs = configObs.size();
+//    m_configObservableStorage = new ObservableStorer*[m_NConfigObs];
+//    for (unsigned int i = 0; i < configObs.size(); i++)
+//    {
+//        if (configObs[i] == "all") // Default
+//        {
+//            if (m_NConfigObs > 1 && Parallel::Communicator::getProcessRank() == 0) {
+//                printf("\nError: inccorrect number of configs given: %lu", m_NConfigObs);
+//                exit(0);
+//            }
+//            m_sampleTopCharge = true;
+//            m_sampleEnergyDensity = true;
+//            m_samplePlaquette = true;
+//        }
+//        else if (configObs[i] == "topcharge")
+//        {
+//            m_sampleTopCharge = true;
 
-        }
-        else if (configObs[i] == "energydensity")
-        {
-            m_sampleEnergyDensity = true;
-        }
-        else if (configObs[i] == "plaquette")
-        {
-            m_samplePlaquette = true;
-            if (m_NConfigObs == 1) m_sampleOnlyPlaquette = true;
-        }
-        else {
-            if (Parallel::Communicator::getProcessRank() == 0) {
-                printf("ERROR: Observable %s not found in library: \n  plaquette\n  topcharge  \nenergydensity",configObs[i].c_str());
-                exit(1);
-            }
-        }
-    }
-    // Allocate arrays and stuff for observables and their statistics
-    if (m_samplePlaquette) m_configObservableStorage[0] = new ObservableStorer(m_NCf + 1, "plaquette", true);
-    if (m_sampleTopCharge) m_configObservableStorage[1] = new ObservableStorer(m_NCf + 1, "topcharge", false);
-    if (m_sampleEnergyDensity) m_configObservableStorage[2] = new ObservableStorer(m_NCf + 1, "energydensity", false);
-    // Also add check for user defined observable(or other observables)?
+//        }
+//        else if (configObs[i] == "energydensity")
+//        {
+//            m_sampleEnergyDensity = true;
+//        }
+//        else if (configObs[i] == "plaquette")
+//        {
+//            m_samplePlaquette = true;
+//            if (m_NConfigObs == 1) m_sampleOnlyPlaquette = true;
+//        }
+//        else {
+//            if (Parallel::Communicator::getProcessRank() == 0) {
+//                printf("ERROR: Observable %s not found in library: \n  plaquette\n  topcharge  \nenergydensity",configObs[i].c_str());
+//                exit(1);
+//            }
+//        }
+//    }
+//    // Allocate arrays and stuff for observables and their statistics
+//    if (m_samplePlaquette) m_configObservableStorage[0] = new ObservableStorer(m_NCf + 1, "plaquette", true);
+//    if (m_sampleTopCharge) m_configObservableStorage[1] = new ObservableStorer(m_NCf + 1, "topcharge", false);
+//    if (m_sampleEnergyDensity) m_configObservableStorage[2] = new ObservableStorer(m_NCf + 1, "energydensity", false);
+//    // Also add check for user defined observable(or other observables)?
 
-}
+//}
 
 inline void System::printLine()
 {

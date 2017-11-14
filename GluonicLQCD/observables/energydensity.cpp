@@ -23,7 +23,7 @@ void EnergyDensity::setLatticeSpacing(double a) // NEED TO DOUBLE CHECK THIS WIT
     m_multiplicationFactor = (a*a*a*a)/(3*double(m_latticeSize));
 }
 
-double EnergyDensity::calculate(SU3 *clovers)
+void EnergyDensity::calculate(SU3 *clovers, int i)
 {
     m_actionDensity = 0;
     for (unsigned int i = 0; i < 12; i++)
@@ -33,7 +33,7 @@ double EnergyDensity::calculate(SU3 *clovers)
     return m_actionDensity;//*m_multiplicationFactor; // Correct or not?
 }
 
-double EnergyDensity::calculate(Links *lattice)
+void EnergyDensity::calculate(Links *lattice, int i)
 {
     // When clover is not provided
     Clover Clov;

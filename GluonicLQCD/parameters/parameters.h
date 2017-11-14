@@ -21,6 +21,8 @@ private:
     static const double r0;
     // Program information output
     static bool m_verbose;
+    // Variables holding if we are to calculate and store the thermalization variables
+    static bool m_storeThermalizationObservables;
     // IO parameters
     static std::string m_pwd;
     static std::string m_batchName;
@@ -57,6 +59,7 @@ public:
     static void setOutputFolder(std::string outputFolder) { m_outputFolder = outputFolder; }
     static void setBeta(double beta);
     static void setVerbose(bool verbose) { m_verbose = verbose; }
+    static void setStoreThermalizationObservables(bool storeThermalizationObservables) { m_storeThermalizationObservables = storeThermalizationObservables; }
 
     // Getters
     static int getNSpatial() { return m_NSpatial; }
@@ -68,16 +71,16 @@ public:
     static int getNTherm() { return m_NTherm; }
     static int getNUpdates() { return m_NUpdates; }
     static int getNFlows() { return m_NFlows; }
-    static bool getVerbose() { return m_verbose; }
+    static void getN(unsigned int *N);
     static double getFlowEpsilon() { return m_flowEpsilon; }
     static double getBeta() { return m_beta; }
     static double getLatticeSpacing() { return m_a; }
-    static void getN(unsigned int *N);
     static std::string getFilePath() { return m_pwd; }
     static std::string getBatchName() { return m_batchName; }
     static std::string getInputFolder() { return m_inputFolder; }
     static std::string getOutputFolder() { return m_outputFolder; }
-
+    static bool getVerbose() { return m_verbose; }
+    static bool setStoreThermalizationObservables() { return m_storeThermalizationObservables; }
 };
 
 #endif // PARAMETERS_H

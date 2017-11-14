@@ -9,11 +9,12 @@ private:
     double m_multiplicationFactor;
     SU3 P;
     SU3 PTemp;
+    const static std::string m_observableName;
 public:
     Plaquette();
     ~Plaquette();
-    double calculate(Links *lattice);
-    double calculate(SU3 *plaquetteStaples);
+    void calculate(Links *lattice, int i);
+    void calculate(SU3 *plaquetteStaples, int i);
     void setLatticeSize(int latticeSize);
     void setPlaquetteStaples(SU3 *plaquetteStaples);
 };

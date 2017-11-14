@@ -12,8 +12,8 @@ public:
     EnergyDensity(double a, int latticeSize);
     EnergyDensity();
     ~EnergyDensity();
-    double calculate(SU3 *clovers);
-    double calculate(Links *lattice);
+    void calculate(SU3 *clovers, int i);
+    void calculate(Links *lattice, int i);
     void setLatticeSpacing(double a);
 };
 

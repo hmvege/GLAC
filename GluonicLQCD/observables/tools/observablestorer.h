@@ -18,14 +18,22 @@ private:
     // Observable name
     std::string m_observableName;
     // Bool to store if we are to normalize the data by number of processors
-    bool m_procNormalize = false;
+    bool m_normalizeObservableByProcessor = false;
 public:
-    ObservableStorer(int NSize, std::__1::string observableName, bool procNormalize);
+    ObservableStorer(int m_NSize);
     ~ObservableStorer();
     void pushObservable(double newObs, int position);
     void runStatistics();
+    // Printers
+    void printStatistics();
+    // File writers
     void writeObservableToFile();
     void writeFlowObservableToFile(double * flowTime, int configNumber);
+    // Getters
+    double getObservable(int position) { return m_observables[position]; }
+    // Setters
+    void setObservableName(std::string observableName) { m_observableName = observableName; }
+    void setNormalizeObservableByProcessor(bool norm) { m_normalizeObservableByProcessor = norm; }
 };
 
 #endif // OBSERVABLESTORER_H

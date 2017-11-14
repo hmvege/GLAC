@@ -1,13 +1,14 @@
 #ifndef OBSERVABLESAMPLER_H
 #define OBSERVABLESAMPLER_H
 
+#include "correlator.h"
 #include "plaquette.h"
 #include "clover.h"
 #include "energydensity.h"
 #include "topologicalcharge.h"
 #include "parameters/parameters.h"
 
-class ObservableSampler// : public Correlator
+class ObservableSampler : public Correlator
 {
 private:
     unsigned int m_N[4];
@@ -25,7 +26,7 @@ public:
     ObservableSampler();
     ~ObservableSampler();
 
-    void calculate(Links *lattice);
+    void calculate(Links *lattice, int i);
 
     // Setters
     void setLatticeSize(int latticeSize);

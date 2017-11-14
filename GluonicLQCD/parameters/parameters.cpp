@@ -22,6 +22,9 @@ int Parameters::m_NFlows = 0;
 // Flow
 double Parameters::m_flowEpsilon = 0.01;
 
+// Variables holding if we are to calculate and store the thermalization variables
+bool Parameters::m_storeThermalizationObservables = false;
+
 // System constants
 bool Parameters::m_verbose = true;
 

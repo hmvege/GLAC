@@ -7,6 +7,8 @@
 #include "neighbours.h"
 #include "math/latticemath.h"
 
+#include "parameters/parameters.h"
+
 namespace Parallel {
     class Communicator
     {
@@ -51,6 +53,11 @@ namespace Parallel {
 
         // MPI
         static void setBarrier();
+
+        // Validity checkers
+        static void checkProcessorValidity();
+        static void checkSubLatticeDimensionsValidity();
+        static void checkSubLatticeValidity();
     };
 }
 

@@ -41,8 +41,8 @@ public:
     TopologicalCharge();
     ~TopologicalCharge();
 
-    double calculate(SU3 *clovers);
-    double calculate(Links *lattice);
+    void calculate(SU3 *clovers, int i);
+    void calculate(Links *lattice, int i);
 };
 
 #endif // TOPOLOGICALCHARGE_H

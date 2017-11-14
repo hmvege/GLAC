@@ -1,7 +1,7 @@
 #include "observablesampler.h"
 #include "parallelization/index.h"
 
-ObservableSampler::ObservableSampler()
+ObservableSampler::ObservableSampler() : Correlator()
 {
     m_a = Parameters::getLatticeSpacing();
     m_energyDensity.setLatticeSpacing(m_a);
@@ -15,7 +15,7 @@ ObservableSampler::~ObservableSampler()
 
 }
 
-void ObservableSampler::calculate(Links *lattice)
+void ObservableSampler::calculate(Links *lattice, int i)
 {
     /*
      * Samples plaquette, topological charge and action/energy density.

@@ -20,6 +20,11 @@ using std::chrono::duration_cast;
 using std::chrono::duration;
 
 /*
+ * SETUP INSTRUCTIONS:
+ * Set all parameters
+ * Set correlators
+ * Set and run system
+ *
  * TODO:
  * [ ] Implement better map structure system. e.g. latmath.h ect
  * [ ] Enforce sub lattice cubes as standard
@@ -54,12 +59,12 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     double seed             = std::time(nullptr) + double(processRank);                       // Random matrix seed. Defualt: current time.
     double metropolisSeed   = std::time(nullptr) + double(numprocs) + double(processRank);    // Metropolis seed. Defualt: current time.
     bool writeConfigsToFile                     = true;
-    bool storeThermalizationPlaquettes          = false;
+    bool storeThermalizationObservables         = false;
     bool hotStart                               = false;
     bool runUnitTestsFlag                       = false;
     bool runVerboseUnitTestsFlag                = false;
-    std::vector<std::string> flowObservables    = {"topcharge","energydensity","plaquette"};
-    std::vector<std::string> configObservables  = {"plaquette"}; // Not really needed, as we sample everything in the flow as well
+//    std::vector<std::string> flowObservables    = {"topcharge","energydensity","plaquette"};
+//    std::vector<std::string> configObservables  = {"plaquette"}; // Not really needed, as we sample everything in the flow as well
     Parameters::setVerbose(true);
     // ADD VERBOSE TOGGLING!
 
@@ -103,7 +108,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     }
     if (numberOfArguments > 12) { // If we are to store the plaquettes from the thermalization. Default is TRUE.
         if (atoi(cmdLineArguments[12]) == 1) {
-            storeThermalizationPlaquettes = true;
+            storeThermalizationObservables = true;
         }
     }
     if (numberOfArguments > 13) { // Hot start/cold start. Default is cold start.
@@ -146,9 +151,12 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Parameters::setNTherm(NTherm);
     Parameters::setNUpdates(NUpdates);
     Parameters::setNFlows(NFlows);
+    Parameters::setStoreThermalizationObservables(storeThermalizationObservables);
     // Setting parallel variables
     Parallel::Communicator::setNumproc(numprocs);
     Parallel::Communicator::setProcessRank(processRank);
+    // Sets lattice dimensions
+    Parallel::Index::setNTot(N,N_T);
     // Main program part
     SU3MatrixGenerator SU3Gen(SU3Eps, seed);
     if (runUnitTestsFlag) {
@@ -156,18 +164,20 @@ int main(int numberOfArguments, char* cmdLineArguments[])
         MPI_Finalize();
         exit(0);
     }
-    Plaquette G; // Maybe remove this, and rather make the only possible way to choose the observable to use availbable through string check???
+    Plaquette G;
+    ObservableSampler GFlow;
+    GFlow.storeFlow(true);
     WilsonGaugeAction S(beta);
     Flow F;
 
-    System pureGauge(metropolisSeed, &G, &S, &F, flowObservables);
+    System pureGauge(metropolisSeed, &G, &S, &F, &GFlow);
     if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
 //    pureGauge.setProgramPath(pwd);
 //    pureGauge.setConfigBatchName(batchName);
     // ADD VERBOSE ARGUMENT? Or not, more info is always good...?
     pureGauge.printRunInfo(true); // Always print run info, so make optional to turn off
-    pureGauge.runMetropolis(storeThermalizationPlaquettes, writeConfigsToFile);
+    pureGauge.runMetropolis(storeThermalizationObservables, writeConfigsToFile);
     pureGauge.runBasicStatistics(); // Will always run basic statistics, so turn off!
     pureGauge.printAcceptanceRate(); // Make optional, will always print run info
     pureGauge.writeDataToFile(); // MAKE OPTIONAL ARGUEMENT, that is will always be executed, but can be turned off by calling this function explicitly and setting it to false

@@ -14,7 +14,7 @@ TopologicalCharge::~TopologicalCharge()
 
 }
 
-double TopologicalCharge::calculate(Links *lattice)
+void TopologicalCharge::calculate(Links *lattice, int i)
 {
     /*
      * Function to be used when no clover is provided. SHOULD BE TESTED

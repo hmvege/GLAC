@@ -15,6 +15,7 @@ Parallel::Communicator::Communicator()
 
 Parallel::Communicator::~Communicator()
 {
+    delete Neighbours;
 }
 
 void Parallel::Communicator::MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir)
@@ -185,6 +186,66 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Links * lattice, 
     }
 }
 
+void Parallel::Communicator::checkSubLatticeValidity()
+{
+    /*
+     * Tests to ensures that the sub lattice is correctly divided.
+     */
+    bool latticeSizeError = false;
+    for (int i = 0; i < 3; i++) {
+        if (Parameters::getNSpatial() % m_N[i] != 0) {
+            latticeSizeError = true;
+        }
+    }
+    if (Parameters::getSubLatticeSize()*m_numprocs != Parameters::getLatticeSize()) {
+        latticeSizeError = true;
+    }
+    if (Parameters::getNTemporal() % m_N[3] != 0) {
+        latticeSizeError = true;
+    }
+    if (latticeSizeError) {
+        if (m_processRank == 0) {
+            cout << "Error: sub-lattice size invalid: ";
+            for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
+            cout << " --> exiting."<< endl;
+        }
+        MPI_Finalize();
+        exit(0);
+    }
+}
+
+void Parallel::Communicator::checkProcessorValidity()
+{
+    /*
+     * Exits if number of processors are odd.
+     */
+    if (m_numprocs % 2 != 0) {
+        cout << "Error: odd number of processors --> exiting." << endl;
+        MPI_Finalize();
+        exit(1);
+    }
+}
+
+void Parallel::Communicator::checkSubLatticeDimensionsValidity()
+{
+    /*
+     * Checks if the sublattice has any dimensions less than 2, as
+     * that may cause instabilities with self-communications ect.
+     */
+    for (int i = 0; i < 4; i++) {
+        if (m_N[i] <= 2) {
+            if (m_processRank == 0) {
+                cout << "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
+                for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
+                cout << " --> exiting."<< endl;
+            }
+            MPI_Finalize();
+            exit(0);
+        }
+    }
+}
+
+
 void Parallel::Communicator::setBarrier()
 {
     MPI_Barrier(MPI_COMM_WORLD);
@@ -196,8 +257,3 @@ void Parallel::Communicator::setN(unsigned int *N)
         m_N[i] = N[i];
     }
 }
-
-//void Parallel::Communicator::reduceDoubleArray(double *var, int N)
-//{
-//    MPI_Allreduce(&var, &var, N, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//}

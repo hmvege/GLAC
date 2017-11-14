@@ -3,10 +3,12 @@
 
 #include "math/links.h"
 #include "parallelization/index.h"
-#include "parallelization/neighbours.h"
+//#include "parallelization/neighbours.h"
 #include "parallelization/communicator.h"
+#include "tools/observablestorer.h"
 #include <vector>
 #include <iostream>
+
 
 using std::cout;
 using std::endl;
@@ -25,7 +27,11 @@ protected:
     int nuIndex[4];
     // Position vector for handling the shift-method in parallelization
     std::vector<int> m_position;
-
+    // Creates a object that store the observable
+    ObservableStorer * m_observable = nullptr;
+    // Object that holds info of whether or not we are storing flow observables
+    bool m_storeFlowObservable = false;
+    // Function for updating the mu and nu indices
     inline void updateMuIndex(int mu) {
         for (int i = 0; i < 4; i++)
         {
@@ -40,6 +46,7 @@ protected:
         }
         nuIndex[nu] = 1;
     }
+    // Function for accessing the clover index
     inline int cloverIndex(int mu, int nu)
     {
         /*
@@ -50,14 +57,18 @@ protected:
 public:
     Correlator();
     virtual ~Correlator();
-    virtual double calculate(Links *lattice);
-//    virtual void calculate(Links * lattice);
-    virtual double calculate(SU3 *U);
-    virtual void setLatticeSize(int latticeSize);
-    virtual void setLatticeSpacing(double a) { m_a = a; }
+    virtual void calculate(Links *lattice, int i);
+    virtual void calculate(SU3 *U, int i);
+    virtual void writeStatisticsToFile();
+
+    // Getters
+    virtual double getObservable(int i);
 
     // Setters
+    virtual void setLatticeSize(int latticeSize);
+    virtual void setLatticeSpacing(double a) { m_a = a; }
     void setN(unsigned int *N);
+    virtual void storeFlow(bool storeFlowObservable) { m_storeFlowObservable = storeFlowObservable; } flytt denne til initialisering
 };
 
 

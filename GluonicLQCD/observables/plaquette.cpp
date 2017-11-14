@@ -4,6 +4,8 @@
 #include "math/functions.h"
 #include "parallelization/index.h"
 
+const static std::string m_observableName = "Plaquette";
+
 Plaquette::Plaquette() : Correlator()
 {
 }
@@ -18,7 +20,7 @@ void Plaquette::setLatticeSize(int latticeSize)
     m_multiplicationFactor = 18.0*m_latticeSize; // 3 from SU3, 6 from number of plaquettes, 3*6=18
 }
 
-double Plaquette::calculate(Links *lattice)
+void Plaquette::calculate(Links *lattice, int i)
 {
     P.zeros();
     for (unsigned int i = 0; i < m_N[0]; i++) { // x
@@ -47,7 +49,7 @@ double Plaquette::calculate(Links *lattice)
     return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 }
 
-double Plaquette::calculate(SU3 *plaquetteStaples)
+void Plaquette::calculate(SU3 *plaquetteStaples, int i)
 {
     P.zeros();
     for (int i = 0; i < 6; i++) {

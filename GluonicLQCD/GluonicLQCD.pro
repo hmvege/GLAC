@@ -2,7 +2,6 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
-#CONFIG += optimize_full # OK?
 
 SOURCES += main.cpp \
     system.cpp \
@@ -14,6 +13,7 @@ SOURCES += main.cpp \
     observables/clover.cpp \
     observables/energydensity.cpp \
     observables/observablesampler.cpp \
+    observables/tools/observablestorer.cpp \
     math/functions.cpp \
     math/links.cpp \
     math/complex.cpp \
@@ -21,21 +21,21 @@ SOURCES += main.cpp \
     math/matrices/su3.cpp \
     math/matrices/su3matrixgenerator.cpp \
     math/exponentiation/su3exp.cpp \
+    math/exponentiation/expluscher.cpp \
+    math/exponentiation/taylor2exp.cpp \
+    math/exponentiation/taylor4exp.cpp \
     parallelization/neighbours.cpp \
     parallelization/neighbourlist.cpp \
     parallelization/index.cpp \
-    flow/flow.cpp \
+    parallelization/communicator.cpp \
     tests/testsuite.cpp \
     tests/unittests.cpp \
-    math/exponentiation/expluscher.cpp \
-    parameters/parameters.cpp \
+    tests/performancetests.cpp \
     io/observablesio.cpp \
     io/fieldio.cpp \
-    parallelization/communicator.cpp \
-    tests/performancetests.cpp \
-    math/exponentiation/taylor2exp.cpp \
-    math/exponentiation/taylor4exp.cpp \
-    observablestorer.cpp
+    parameters/parameters.cpp \
+    flow/flow.cpp
+
 HEADERS += \
     system.h \
     actions/action.h \
@@ -46,6 +46,7 @@ HEADERS += \
     observables/clover.h \
     observables/energydensity.h \
     observables/observablesampler.h \
+    observables/tools/observablestorer.h \
     math/functions.h \
     math/links.h \
     math/complex.h \
@@ -53,24 +54,21 @@ HEADERS += \
     math/matrices/su3.h \
     math/matrices/su3matrixgenerator.h \
     math/exponentiation/su3exp.h \
+    math/exponentiation/expluscher.h \
+    math/exponentiation/taylor2exp.h \
+    math/exponentiation/taylor4exp.h \
+    math/latticemath.h \
     parallelization/neighbours.h \
     parallelization/neighbourlist.h \
     parallelization/index.h \
-    flow/flow.h \
+    parallelization/communicator.h \
     tests/testsuite.h \
     tests/unittests.h \
-    math/exponentiation/expluscher.h \
-    parameters/parameters.h \
+    tests/performancetests.h \
     io/observablesio.h \
     io/fieldio.h \
-    math/latticemath.h \
-    parallelization/communicator.h \
-    tests/performancetests.h \
-    math/exponentiation/taylor2exp.h \
-    math/exponentiation/taylor4exp.h \
-    observablestorer.h
-
-#LIBS += -llapack -lblas -larmadillo
+    parameters/parameters.h \
+    flow/flow.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx
@@ -88,18 +86,3 @@ QMAKE_CXXFLAGS_RELEASE += -O3 -std=c++11 $$system(mpicxx --showme:compile) -DMPI
 QMAKE_CFLAGS -= -O2
 QMAKE_CXXFLAGS -= -O2
 QMAKE_CXXFLAGS_RELEASE -= -O2
-
-
-# Following to make openmp usable on linux
-#QMAKE_LFLAGS += -fopenmp
-
-# Following to make openmp usable on mac
-#QMAKE_LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
-
-# Following used to make armadillo usable on mac
-#LIBS += -L/usr/local/lib -larmadillo
-#INCLUDEPATH += /usr/local/include
-
-#INCLUDEPATH += -I/usr/local/include
-#INCLUDEPATH += -L/usr/local/lib
-#compileCommand-I/usr/local/include -L/usr/local/lib -llapack -lblas -larmadillo
