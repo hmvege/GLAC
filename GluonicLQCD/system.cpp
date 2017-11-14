@@ -22,9 +22,6 @@ System::System(double seed, Correlator *correlator, Action *S, Flow *F, std::vec
      * Class for calculating correlators using the System algorithm.
      * Takes an action object as well as a Gamma functional to be used in the action.
      */
-//    m_NSpatial = NSpatial; // Spatial dimensions
-//    m_NTemporal = NTemporal; // Time dimensions
-//    m_latticeSize = NSpatial*NSpatial*NSpatial*NTemporal;
     m_NSpatial = Parameters::getNSpatial();
     m_NTemporal = Parameters::getNTemporal();
     m_latticeSize = Parameters::getLatticeSize();
@@ -41,7 +38,8 @@ System::System(double seed, Correlator *correlator, Action *S, Flow *F, std::vec
     // Sets pointers to use
     setAction(S);
     setCorrelator(correlator);
-    setFlow(F);
+    setFlow(F); // Setting it outside, in case we want to specify the exponentiation function.
+//    m_Flow = new Flow;
     // Initializes the samplers
     setFlowSampling(flowObservables);
 
@@ -67,6 +65,18 @@ System::~System()
     /*
      * Class destructor
      */
+
+    //---------------------–REDUNDANT?------------------–---//
+    for (unsigned int i = 0; i < m_NFlowObs; i++) {
+        delete m_flowObservableStorage[i];
+    }
+    delete [] m_flowObservableStorage;
+    for (unsigned int i = 0; i < m_NConfigObs; i++) {
+        delete m_configObservableStorage[i];
+    }
+    delete [] m_configObservableStorage;
+    //-----------------–-----------------–-----------------–//
+
     delete [] m_lattice;
     delete [] m_observable;
     delete [] m_observableSquared;
@@ -78,6 +88,8 @@ void System::subLatticeSetup()
     /*
      * Sets up the sub-lattices. Adds +2 in every direction to account for sharing of s.
      */
+
+    // MAKE PARALLEL COMMUNICATOR INSTANCE Parallel::Communicator::checkSubLatticeValidity()
     if (m_numprocs % 2 != 0) {
         cout << "Error: odd number of processors --> exiting." << endl;
         MPI_Finalize();
@@ -210,7 +222,7 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
             {
                 if (!m_RSTInit)
                 {
-                    cout << "FULLY RANDOM BY DEFAULT! exits in latticeSetup, system.cpp" << endl;
+                    cout << "FULLY RANDOM BY DEFAULT! exits in latticeSetup, system.cpp line 225" << endl;
                     exit(1);
                     m_lattice[i].U[mu] = m_SU3Generator->generateRandom(); // Fully random
                 } else {
@@ -522,7 +534,6 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         }
         // Write flow data to file
 
-
         // Averaging the gamma values
         m_observable[alpha] = m_correlator->calculate(m_lattice);
         MPI_Allreduce(&m_observable[alpha], &m_observable[alpha], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -564,6 +575,13 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    }
 //    delete [] m_observableFlow;
 }
+
+//void System::flowConfiguration(std::vector<std::string> configurationName)
+//{
+//    for (unsigned int i = 0; i < configurationName.size(); i++) {
+//        // Flow configurationName[i]
+//    }
+//}
 
 void System::runBasicStatistics()
 {

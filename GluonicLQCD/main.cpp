@@ -156,7 +156,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
         MPI_Finalize();
         exit(0);
     }
-    Plaquette G;
+    Plaquette G; // Maybe remove this, and rather make the only possible way to choose the observable to use availbable through string check???
     WilsonGaugeAction S(beta);
     Flow F;
 

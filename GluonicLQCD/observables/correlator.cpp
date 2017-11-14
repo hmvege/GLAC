@@ -34,10 +34,18 @@ double Correlator::calculate(Links * lattice)
     return 1.0;
 }
 
+//void Correlator::calculate(Links * lattice)
+//{
+//    /*
+//     * Default correlator not implemented when only given lattice and not expected to return anything.
+//     */
+//    cout << "If you see this, something is wrong! Should not call correlator.cpp" << endl;
+//}
+
 double Correlator::calculate(SU3 *U)
 {
     /*
-     * Default correlator is not implemented.
+     * Default correlator is not implemented when only given a SU3 matrix.
      */
     cout << "If you see this, something is wrong! Should not call correlator.cpp" << endl;
     return 1.0;

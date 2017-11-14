@@ -25,7 +25,6 @@ protected:
     int nuIndex[4];
     // Position vector for handling the shift-method in parallelization
     std::vector<int> m_position;
-//    Parallel::IndexOrganiser *m_Index = nullptr; // TO BE MOVED TO PARALLEL CLASS LATER!!
 
     inline void updateMuIndex(int mu) {
         for (int i = 0; i < 4; i++)
@@ -52,13 +51,13 @@ public:
     Correlator();
     virtual ~Correlator();
     virtual double calculate(Links *lattice);
+//    virtual void calculate(Links * lattice);
     virtual double calculate(SU3 *U);
     virtual void setLatticeSize(int latticeSize);
     virtual void setLatticeSpacing(double a) { m_a = a; }
 
     // Setters
     void setN(unsigned int *N);
-//    void initializeIndexHandler(Parallel::IndexOrganiser *Index);
 };
 
 
