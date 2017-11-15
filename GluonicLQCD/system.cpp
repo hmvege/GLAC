@@ -40,10 +40,6 @@ System::System(double seed, Correlator *correlator, Action *S, Flow *F, Correlat
     setCorrelator(correlator);
     setFlowCorrelator(flowCorrelator);
     setFlow(F); // Setting it outside, in case we want to specify the exponentiation function.
-//    m_Flow = new Flow;
-    // Initializes the samplers
-//    setFlowSampling(flowObservables);
-
 
     // For only one observable
     m_observablePreThermalization = new double[m_NTherm+1];
@@ -66,22 +62,7 @@ System::~System()
     /*
      * Class destructor
      */
-
-//    //---------------------–REDUNDANT?------------------–---//
-//    for (unsigned int i = 0; i < m_NFlowObs; i++) {
-//        delete m_flowObservableStorage[i];
-//    }
-//    delete [] m_flowObservableStorage;
-//    for (unsigned int i = 0; i < m_NConfigObs; i++) {
-//        delete m_configObservableStorage[i];
-//    }
-//    delete [] m_configObservableStorage;
-//    //-----------------–-----------------–-----------------–//
-
     delete [] m_lattice;
-    delete [] m_observable;
-    delete [] m_observableSquared;
-    delete [] m_observablePreThermalization;
 }
 
 void System::subLatticeSetup()
@@ -89,17 +70,9 @@ void System::subLatticeSetup()
     /*
      * Sets up the sub-lattices. Adds +2 in every direction to account for sharing of s.
      */
-
-//    // MAKE PARALLEL COMMUNICATOR INSTANCE Parallel::Communicator::checkSubLatticeValidity()
-//    if (m_numprocs % 2 != 0) {
-//        cout << "Error: odd number of processors --> exiting." << endl;
-//        MPI_Finalize();
-//        exit(1);
-//    }
     // Checks initial processor validity
     Parallel::Communicator::checkProcessorValidity();
     int restProc = m_numprocs;
-
     // Only finds the sub lattice size iteratively if no preset value has been defined.
     if (!m_subLatticeSizePreset) {
         // Sets up sub lattice dimensionality without any splitting
@@ -129,74 +102,22 @@ void System::subLatticeSetup()
     Parallel::Communicator::checkSubLatticeValidity();
     // Creates (sub) lattice
     m_lattice = new Links[m_subLatticeSize];
-
     // If has a size of 2, we exit as that may produce poor results.
     Parallel::Communicator::checkSubLatticeDimensionsValidity();
-//    for (int i = 0; i < 4; i++) {
-//        if (m_N[i] <= 2) {
-//            if (m_processRank == 0) {
-//                cout << "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
-//                for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
-//                cout << " --> exiting."<< endl;
-//            }
-//            MPI_Finalize();
-//            exit(0);
-//        }
-//    }
-
-    // Checking if the sub lattice size acutally divide the lattice correctly.
-//    bool latticeSizeError = false;
-//    for (int i = 0; i < 3; i++) {
-//        if (m_NSpatial % m_N[i] != 0) {
-//            latticeSizeError = true;
-//        }
-//    }
-//    if (m_subLatticeSize*m_numprocs != m_latticeSize) {
-//        latticeSizeError = true;
-//    }
-//    if (m_NTemporal % m_N[3] != 0) {
-//        latticeSizeError = true;
-//    }
-//    if (latticeSizeError) {
-//        if (m_processRank == 0) {
-//            cout << "Error: sub-lattice size invalid: ";
-//            for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
-//            cout << " --> exiting."<< endl;
-//        }
-//        MPI_Finalize();
-//        exit(0);
-//    }
-
     // Sets up number of processors per dimension
     for (int i = 0; i < 3; i++) {
         m_processorsPerDimension[i] = m_NSpatial / m_N[i];
     }
     m_processorsPerDimension[3] = m_NTemporal / m_N[3];
-
     // Initializes the neighbour lists
     m_neighbourLists = new Neighbours;
     m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
-
     // Passes relevant information to the index handler(for the shifts).
     Parallel::Communicator::setNeighbourList(m_neighbourLists);
-//    Parallel::Communicator::setN(m_N);
-
     // Passes the index handler and dimensionality to the action and correlator classes.
     m_S->setN(m_N);
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
-
-//    // Volumes in sub dimension
-//    m_VSub[0] = m_N[0]; // X-dimension
-//    m_VSub[1] = m_N[0]*m_N[1]; // Y-dimension
-//    m_VSub[2] = m_N[0]*m_N[1]*m_N[2]; // Z-dimension
-//    m_VSub[3] = m_N[0]*m_N[1]*m_N[2]*m_N[3]; // T-dimension
-
-//    // Volumes in total lattice
-//    m_V[0] = m_NSpatial; // X volume
-//    m_V[1] = m_NSpatial*m_NSpatial; // XY volume
-//    m_V[2] = m_NSpatial*m_NSpatial*m_NSpatial; // XYZ Volume
-//    m_V[3] = m_NSpatial*m_NSpatial*m_NSpatial*m_NTemporal; // XYZT volume
 }
 
 void System::setSubLatticeDimensions(int *NSub)
@@ -218,7 +139,6 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
      * Sets up the lattice and its matrices.
      */
     subLatticeSetup();
-
     m_SU3Generator = SU3Generator;
     if (hotStart) {
         // All starts with a completely random matrix.
@@ -297,12 +217,7 @@ void System::thermalize()
     if (m_storeThermalizationObservables) {
         // Storing the number of shifts that are needed in the observable storage container.
         m_NThermSteps = 1 + m_NTherm;
-//        // Calculating correlator before any updates have began.
-//        m_observablePreThermalization[0] = m_correlator->calculate(m_lattice);
-
-//        Parallel::Communicator::setBarrier();
-//        printf("\nTrying to get m_corr at 0");
-//        Parallel::Communicator::setBarrier();
+        // Calculating correlator before any updates have began.
         m_correlator->calculate(m_lattice,0);
 //        Parallel::Communicator::setBarrier();
 //        printf("\nGot it!");
