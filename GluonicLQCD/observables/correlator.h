@@ -55,20 +55,23 @@ protected:
         return (4*mu + nu);
     }
 public:
-    Correlator();
+    Correlator(bool storeFlowObservable);
     virtual ~Correlator();
-    virtual void calculate(Links *lattice, int i);
-    virtual void calculate(SU3 *U, int i);
+    virtual void calculate(Links *lattice, int iObs);
+    virtual void calculate(SU3 *U, int iObs);
     virtual void writeStatisticsToFile();
+    virtual void writeStatisticsToFile(int iConfig);
+    virtual void printStatistics();
 
     // Getters
-    virtual double getObservable(int i);
+    virtual double getObservable(int iObs);
+    virtual std::string getObservableName() { return "Correlator"; }
 
     // Setters
     virtual void setLatticeSize(int latticeSize);
     virtual void setLatticeSpacing(double a) { m_a = a; }
     void setN(unsigned int *N);
-    virtual void storeFlow(bool storeFlowObservable) { m_storeFlowObservable = storeFlowObservable; } flytt denne til initialisering
+    virtual void storeFlow(bool storeFlowObservable);// { m_storeFlowObservable = storeFlowObservable; } flytt denne til initialisering
 };
 
 

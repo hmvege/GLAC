@@ -2,8 +2,9 @@
 #include "clover.h"
 #include "math/functions.h"
 
-EnergyDensity::EnergyDensity()
+EnergyDensity::EnergyDensity(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
+    m_observable->setObservableName(m_observableName);
 }
 
 EnergyDensity::~EnergyDensity()
@@ -11,7 +12,7 @@ EnergyDensity::~EnergyDensity()
 
 }
 
-EnergyDensity::EnergyDensity(double a, int latticeSize) : Correlator()
+EnergyDensity::EnergyDensity(bool storeFlowObservable, double a, int latticeSize) : Correlator(storeFlowObservable)
 {
     setLatticeSpacing(a);
     setLatticeSize(latticeSize);
@@ -23,20 +24,21 @@ void EnergyDensity::setLatticeSpacing(double a) // NEED TO DOUBLE CHECK THIS WIT
     m_multiplicationFactor = (a*a*a*a)/(3*double(m_latticeSize));
 }
 
-void EnergyDensity::calculate(SU3 *clovers, int i)
+void EnergyDensity::calculate(SU3 *clovers, int iObs)
 {
     m_actionDensity = 0;
     for (unsigned int i = 0; i < 12; i++)
     {
         m_actionDensity += traceSparseImagMultiplication(clovers[i],clovers[i]); // Might check this one with Andrea
     }
-    return m_actionDensity;//*m_multiplicationFactor; // Correct or not?
+    m_observable->pushObservable(m_actionDensity,iObs);
+//    return m_actionDensity;//*m_multiplicationFactor; // Correct or not?
 }
 
-void EnergyDensity::calculate(Links *lattice, int i)
+void EnergyDensity::calculate(Links *lattice, int iObs)
 {
     // When clover is not provided
-    Clover Clov;
+    Clover Clov(m_storeFlowObservable);
     Clov.setN(m_N);
     Clov.setLatticeSize(m_latticeSize);
     m_actionDensity = 0;
@@ -57,5 +59,11 @@ void EnergyDensity::calculate(Links *lattice, int i)
             }
         }
     }
-    return m_actionDensity;//*m_multiplicationFactor; // Temporary off
+    m_observable->pushObservable(m_actionDensity,iObs);
+//    return m_actionDensity;//*m_multiplicationFactor; // Temporary off
+}
+
+void EnergyDensity::printStatistics()
+{
+    if (Parameters::getVerbose()) m_observable->printStatistics();
 }

@@ -9,7 +9,7 @@ class ObservableStorer
 {
 private:
     // Observable data
-    int m_NSize = 0;
+    int m_NSize;
     double * m_observables;
     double * m_observablesSquared;
     double m_averagedObservable = 0;
@@ -28,11 +28,14 @@ public:
     void printStatistics();
     // File writers
     void writeObservableToFile();
-    void writeFlowObservableToFile(double * flowTime, int configNumber);
+    void writeFlowObservableToFile(int configNumber);
     // Getters
     double getObservable(int position) { return m_observables[position]; }
     // Setters
-    void setObservableName(std::string observableName) { m_observableName = observableName; }
+    void setObservableName(std::string observableName) {
+        m_observableName = observableName;
+        printf("\nSize off storeage array: %d. ProcessID: %d. ObsName: %s",m_NSize,Parallel::Communicator::getProcessRank(),m_observableName.c_str());
+    }
     void setNormalizeObservableByProcessor(bool norm) { m_normalizeObservableByProcessor = norm; }
 };
 

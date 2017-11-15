@@ -8,12 +8,17 @@ class EnergyDensity : public Correlator
 private:
     double m_multiplicationFactor;
     double m_actionDensity;
+    const std::string m_observableName = "Energy/Action density";
 public:
-    EnergyDensity(double a, int latticeSize);
-    EnergyDensity();
+    EnergyDensity(bool storeFlowObservable, double a, int latticeSize);
+    EnergyDensity(bool storeFlowObservable);
     ~EnergyDensity();
-    void calculate(SU3 *clovers, int i);
-    void calculate(Links *lattice, int i);
+    void calculate(SU3 *clovers, int iObs);
+    void calculate(Links *lattice, int iObs);
+
+    // Printers
+    void printStatistics();
+    // Setters
     void setLatticeSpacing(double a);
 };
 

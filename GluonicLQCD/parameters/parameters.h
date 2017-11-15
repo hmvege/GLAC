@@ -34,6 +34,8 @@ private:
     static int m_NTherm;
     static int m_NUpdates;
     static int m_NFlows;
+    static int m_configSamplePoints;
+    static int m_flowSamplePoints;
 
     // Flow
     static double m_flowEpsilon; // TEMP SET TO 0.02!
@@ -60,6 +62,8 @@ public:
     static void setBeta(double beta);
     static void setVerbose(bool verbose) { m_verbose = verbose; }
     static void setStoreThermalizationObservables(bool storeThermalizationObservables) { m_storeThermalizationObservables = storeThermalizationObservables; }
+    static void setConfigSamplePoints(int NSamplePoints) { m_configSamplePoints = NSamplePoints; }
+    static void setFlowSamplePoints(int NSamplePoints) { m_flowSamplePoints = NSamplePoints; }
 
     // Getters
     static int getNSpatial() { return m_NSpatial; }
@@ -81,6 +85,9 @@ public:
     static std::string getOutputFolder() { return m_outputFolder; }
     static bool getVerbose() { return m_verbose; }
     static bool setStoreThermalizationObservables() { return m_storeThermalizationObservables; }
+    static int getConfigSamplePoints() { return m_configSamplePoints; }
+    static int getFlowSamplePoints() { return m_flowSamplePoints; }
+
 };
 
 #endif // PARAMETERS_H

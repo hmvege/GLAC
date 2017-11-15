@@ -9,7 +9,7 @@ private:
     SU3 U1,U2,U3,U4,U2Temp,U3Temp;
     int m_overCounter = 0;
 public:
-    Clover();
+    Clover(bool storeFlowObservable);
     ~Clover();
 
     SU3 m_clovers[12];

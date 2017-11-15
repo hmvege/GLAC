@@ -255,6 +255,7 @@ void System::printRunInfo(bool verbose) {
      *  verbose     : for printing more detailed information
      */
     if (m_processRank == 0) {
+        cout << endl;
         printLine();
         cout << "Batch name:                            " << m_batchName << endl;
         cout << "Threads:                               " << m_numprocs << endl;
@@ -289,22 +290,35 @@ void System::thermalize()
     /*
      * Function for thermalizing the system.
      */
+    if (m_processRank) printf("\nInitiating thermalization.");
     if (m_storeThermalizationObservables) {
+        // Storing the number of shifts that are needed in the observable storage container.
+        m_NThermSteps = 1 + m_NTherm;
 //        // Calculating correlator before any updates have began.
 //        m_observablePreThermalization[0] = m_correlator->calculate(m_lattice);
 
+//        Parallel::Communicator::setBarrier();
+//        printf("\nTrying to get m_corr at 0");
+//        Parallel::Communicator::setBarrier();
+        m_correlator->calculate(m_lattice,0);
+//        Parallel::Communicator::setBarrier();
+//        printf("\nGot it!");
+//        Parallel::Communicator::setBarrier();
 //        // Summing and sharing correlator to all processors before any updates has begun
 //        MPI_Allreduce(&m_observablePreThermalization[0], &m_observablePreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
 //        // Dividing by the number of processors in order to get the correlator.
 //        m_observablePreThermalization[0] /= double(m_numprocs);
         if (m_processRank == 0) {
-            printf("\ni    Plaquette   ");
+            printf("\ni    Observable   ");
 //            printf("\n%-4d %-12.8f",0,m_observablePreThermalization[0]);
             printf("\n%-4d %-12.8f",0,m_correlator->getObservable(0));
         }
     }
 
+//    Parallel::Communicator::setBarrier();
+//    printf("\nOk in thermilization for processor %d",m_processRank);
+//    Parallel::Communicator::setBarrier();
     // Running thermalization
     for (int i = 1; i < m_NTherm+1; i++)
     {
@@ -323,6 +337,9 @@ void System::thermalize()
                 printf("\nAvgerage update time(every 10th): %f sec.", m_updateStorerTherm/double(i));
             }
         }
+//        if (m_processRank == 0) {
+//            printf("\r%6.2f %% done", i/double(m_NTherm));
+//        }
 
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (m_storeThermalizationObservables) {
@@ -499,9 +516,13 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     // System thermalization
     thermalize();
 
+//    Parallel::Communicator::setBarrier();
+//    cout << "Ok in runMetropolis"<<endl;
+//    Parallel::Communicator::setBarrier();
+
     // Printing header for main run
     if (m_processRank == 0) {
-        printf("\ni    Plaquette    Avg.Update-time   Accept/reject");
+        printf("\ni     %-20s  Avg.Update-time   Accept/reject", m_correlator->getObservableName().c_str());
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -529,7 +550,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
         {
             m_Flow->flowField(m_lattice);
-            m_flowCorrelator->calculate(m_lattice,iFlow);
+            m_flowCorrelator->calculate(m_lattice,iFlow + m_NThermSteps);
 //            OSampler.calculate(m_lattice);
 //            m_observableFlow[tau] = OSampler.getPlaquette();
 //            m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
@@ -539,9 +560,11 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //            MPI_Allreduce(&m_observableFlow[tau], &m_observableFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //            m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
 //            m_observableFlow[tau] /= double(m_numprocs);
-
         }
-        m_flowCorrelator->writeStatisticsToFile();
+        if (m_NFlows != 0) {
+            m_flowCorrelator->writeStatisticsToFile(iConfig);
+            if (Parameters::getVerbose()) m_flowCorrelator->printStatistics();
+        }
         // Write flow data to file
 
         // Averaging the gamma values
@@ -552,7 +575,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
         if (m_processRank == 0) {
             // Printing plaquette value
-            printf("\n%-4d %-12.8f   %-15.8f",iConfig,m_correlator->getObservable(iConfig),m_updateStorer/double((iConfig+1)*m_NCor));
+            printf("\n%-4d  %-20.8f  %-12.8f",iConfig,m_correlator->getObservable(iConfig),m_updateStorer/double((iConfig+1)*m_NCor));
             // Adding the acceptance ratio
             if (iConfig % 10 == 0) {
                 printf(" %-13.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(iConfig+1)*m_NUpdates*m_NCor));
@@ -572,6 +595,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
     }
     m_correlator->writeStatisticsToFile(); // Runs statistics, writes to file, and prints results (if verbose is on)
+    if (Parameters::getVerbose()) m_correlator->printStatistics();
 
     // RUNNING FLOW!
 //    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);

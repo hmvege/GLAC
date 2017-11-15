@@ -1,6 +1,6 @@
 #include "correlator.h"
 
-Correlator::Correlator()
+Correlator::Correlator(bool storeFlowObservable)
 {
     // Initiates the lattice dimensions
     m_N = new unsigned int[4];
@@ -12,7 +12,7 @@ Correlator::Correlator()
         muIndex[i] = 0;
         nuIndex[i] = 0;
     }
-    m_observable = new ObservableStorer(NSize);
+    storeFlow(storeFlowObservable);
 }
 
 void Correlator::setLatticeSize(int latticeSize)
@@ -22,24 +22,25 @@ void Correlator::setLatticeSize(int latticeSize)
 
 Correlator::~Correlator()
 {
+    delete m_observable;
     delete [] m_N;
 }
 
-void Correlator::calculate(Links * lattice, int i)
+void Correlator::calculate(Links * lattice, int iObs)
 {
     /*
-     * Default correlator is not implemented.
+     * Default correlator is not implemented. Pushes to observable array at position iObs.
      */
-    lattice[i].U[0].zeros(); // TEMP
+    lattice[iObs].U[0].zeros(); // TEMP
     printf("\nIf you see this, something is wrong! Should not call correlator.cpp");
 }
 
-void Correlator::calculate(SU3 *U, int i)
+void Correlator::calculate(SU3 *U, int iObs)
 {
     /*
-     * Default correlator is not implemented when only given a SU3 matrix.
+     * Default correlator is not implemented when only given a SU3 matrix. Pushes to observable array at position iObs.
      */
-    U[i % 4].zeros(); // TEMP
+    U[iObs % 4].zeros(); // TEMP
     printf("\nIf you see this, something is wrong! Should not call correlator.cpp");
 }
 
@@ -50,13 +51,42 @@ void Correlator::setN(unsigned int *N) // MOVE INTO CONSTRUCTOR?
     }
 }
 
-double Correlator::getObservable(int i)
+double Correlator::getObservable(int iObs)
 {
-    printf("\nNot implemented for base class!");
-    return i;
+    return m_observable->getObservable(iObs);
+}
+
+void Correlator::writeStatisticsToFile(int iConfig)
+{
+//    printf("\nFunction for writing statistics to file not implemented for base correlator class!");
+    m_observable->runStatistics();
+    if (Parameters::getVerbose()) {
+        m_observable->printStatistics();
+    }
+    m_observable->writeFlowObservableToFile(iConfig);
 }
 
 void Correlator::writeStatisticsToFile()
 {
-    printf("\nFunction for writing statistics to file not implemented for base correlator class!");
+//    printf("\nFunction for writing statistics to file not implemented for base correlator class!");
+    m_observable->runStatistics();
+    if (Parameters::getVerbose()) {
+        m_observable->printStatistics();
+    }
+    m_observable->writeObservableToFile();
+}
+
+void Correlator::storeFlow(bool storeFlowObservable)
+{
+    m_storeFlowObservable = storeFlowObservable;
+    if (m_storeFlowObservable) {
+        m_observable = new ObservableStorer(Parameters::getFlowSamplePoints());
+    } else {
+        m_observable = new ObservableStorer(Parameters::getConfigSamplePoints());
+    }
+}
+
+void Correlator::printStatistics()
+{
+    if (Parameters::getVerbose()) m_observable->printStatistics();
 }

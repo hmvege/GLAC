@@ -84,7 +84,6 @@ void IO::writeObservablesToFile(double acceptanceRate,
 void IO::writeFlowObservableToFile(double averagedObservable,
                                    double varianceObservable,
                                    double stdObservable,
-                                   double *t,
                                    double *observables,
                                    std::string observableName,
                                    int configNumber)
@@ -94,6 +93,8 @@ void IO::writeFlowObservableToFile(double averagedObservable,
      */
     if (Parallel::Communicator::getProcessRank() == 0) {
         auto oldPrecision = cout.precision(15);
+        double a = Parameters::getLatticeSpacing();
+        double flowStep = Parameters::getFlowEpsilon();
         std::ofstream file;
         std::string fname = Parameters::getFilePath()
                           + Parameters::getOutputFolder()
@@ -107,7 +108,7 @@ void IO::writeFlowObservableToFile(double averagedObservable,
         file << "Variance" << observableName << " " << varianceObservable << endl;
         file << "std" << observableName << " " << stdObservable << endl;
         for (int i = 0; i < Parameters::getNFlows(); i++) {
-            file << i << " " << t[i] << " " << observables[i] << endl;
+            file << i << " " << a*sqrt(8*flowStep*(i+1)) << " " << observables[i] << endl;
         }
         file.close();
         cout << fname << " written." << endl;

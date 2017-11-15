@@ -140,7 +140,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     duration<double> programTime;
     programStart = steady_clock::now();
 
-    // Parameter setting
+    // Parameter setting. MOVE ALL OF THIS INTO A FUNCTION!
     Parameters::setBatchName(batchName);
     Parameters::setBeta(beta);
     Parameters::setFilePath(pwd);
@@ -152,6 +152,12 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Parameters::setNUpdates(NUpdates);
     Parameters::setNFlows(NFlows);
     Parameters::setStoreThermalizationObservables(storeThermalizationObservables);
+    Parameters::setFlowSamplePoints(NFlows);
+    if (storeThermalizationObservables) {
+        Parameters::setConfigSamplePoints(NCf + 1 + NTherm);
+    } else {
+        Parameters::setConfigSamplePoints(NCf);
+    }
     // Setting parallel variables
     Parallel::Communicator::setNumproc(numprocs);
     Parallel::Communicator::setProcessRank(processRank);
@@ -164,9 +170,8 @@ int main(int numberOfArguments, char* cmdLineArguments[])
         MPI_Finalize();
         exit(0);
     }
-    Plaquette G;
-    ObservableSampler GFlow;
-    GFlow.storeFlow(true);
+    Plaquette G(false);
+    ObservableSampler GFlow(true);
     WilsonGaugeAction S(beta);
     Flow F;
 
@@ -178,9 +183,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // ADD VERBOSE ARGUMENT? Or not, more info is always good...?
     pureGauge.printRunInfo(true); // Always print run info, so make optional to turn off
     pureGauge.runMetropolis(storeThermalizationObservables, writeConfigsToFile);
-    pureGauge.runBasicStatistics(); // Will always run basic statistics, so turn off!
-    pureGauge.printAcceptanceRate(); // Make optional, will always print run info
-    pureGauge.writeDataToFile(); // MAKE OPTIONAL ARGUEMENT, that is will always be executed, but can be turned off by calling this function explicitly and setting it to false
+//    pureGauge.runBasicStatistics(); // Will always run basic statistics, so turn off!
+//    pureGauge.printAcceptanceRate(); // Make optional, will always print run info
+//    pureGauge.writeDataToFile(); // MAKE OPTIONAL ARGUEMENT, that is will always be executed, but can be turned off by calling this function explicitly and setting it to false
 
     // Finalizing and printing time taken
     programEnd = steady_clock::now();

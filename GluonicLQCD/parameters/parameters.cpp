@@ -19,6 +19,10 @@ int Parameters::m_NTherm = 0;
 int Parameters::m_NUpdates = 0;
 int Parameters::m_NFlows = 0;
 
+// Number of points we are storing
+int Parameters::m_configSamplePoints = 0;
+int Parameters::m_flowSamplePoints = 0;
+
 // Flow
 double Parameters::m_flowEpsilon = 0.01;
 

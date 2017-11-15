@@ -23,8 +23,7 @@ namespace IO {
                                     double *thermalizationObservables,
                                     double *observables,
                                     std::string observableName);
-        void writeFlowObservableToFile(double averagedObservable, double varianceObservable, double stdObservable,
-                                       double *t, double *observables, std::string observableName, int configNumber);
+        void writeFlowObservableToFile(double averagedObservable, double varianceObservable, double stdObservable, double *observables, std::string observableName, int configNumber);
         void writeDataToFile(double averagedObservable,
                              double varianceObservable,
                              double stdObservable,

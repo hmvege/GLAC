@@ -30,19 +30,22 @@ private:
         }
     };
 
+    const std::string m_observableName = "Topological charge";
     double topCharge;
     SU3 G1,G2;
     double m_multiplicationFactor;
     std::vector<LeviCivita> m_leviCivita;
-
     void populateLC();
     int getLCSign(LeviCivita LC);
 public:
-    TopologicalCharge();
+    TopologicalCharge(bool storeFlowObservable);
     ~TopologicalCharge();
 
-    void calculate(SU3 *clovers, int i);
-    void calculate(Links *lattice, int i);
+    void calculate(SU3 *clovers, int iObs);
+    void calculate(Links *lattice, int iObs);
+
+    // Printers
+    void printStatistics();
 };
 
 #endif // TOPOLOGICALCHARGE_H

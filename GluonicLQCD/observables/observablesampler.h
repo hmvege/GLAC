@@ -18,21 +18,26 @@ private:
     std::vector<int> m_position;
 
     // All observables in program
-    Clover m_clover;
-    Plaquette m_plaquette;
-    EnergyDensity m_energyDensity;
-    TopologicalCharge m_topologicalCharge;
+    Clover *m_clover = nullptr;
+    Plaquette *m_plaquette = nullptr;
+    EnergyDensity *m_energyDensity = nullptr;
+    TopologicalCharge *m_topologicalCharge = nullptr;
 public:
-    ObservableSampler();
+    ObservableSampler(bool storeFlowObservable);
     ~ObservableSampler();
 
-    void calculate(Links *lattice, int i);
+    void calculate(Links *lattice, int iObs);
+
+    void writeStatisticsToFile();
+    void writeStatisticsToFile(int iConfig);
+    void printStatistics();
 
     // Setters
     void setLatticeSize(int latticeSize);
     void setN(unsigned int *N);
 
     // Getters
+    double getObservable(int iObs);
     double getPlaquette() { return m_P; }
     double getTopologicalCharge() { return m_Q; }
     double getEnergyDensity() { return m_E; }

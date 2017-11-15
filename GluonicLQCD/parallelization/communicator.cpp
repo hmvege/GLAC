@@ -15,7 +15,6 @@ Parallel::Communicator::Communicator()
 
 Parallel::Communicator::~Communicator()
 {
-    delete Neighbours;
 }
 
 void Parallel::Communicator::MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir)

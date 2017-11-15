@@ -4,10 +4,10 @@
 #include "math/functions.h"
 #include "parallelization/index.h"
 
-const static std::string m_observableName = "Plaquette";
-
-Plaquette::Plaquette() : Correlator()
+Plaquette::Plaquette(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
+//    storeFlow(storeFlowObservable);
+    m_observable->setObservableName(m_observableName);
 }
 
 Plaquette::~Plaquette()
@@ -20,7 +20,7 @@ void Plaquette::setLatticeSize(int latticeSize)
     m_multiplicationFactor = 18.0*m_latticeSize; // 3 from SU3, 6 from number of plaquettes, 3*6=18
 }
 
-void Plaquette::calculate(Links *lattice, int i)
+void Plaquette::calculate(Links *lattice, int iObs)
 {
     P.zeros();
     for (unsigned int i = 0; i < m_N[0]; i++) { // x
@@ -46,15 +46,21 @@ void Plaquette::calculate(Links *lattice, int i)
             }
         }
     }
-    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
+    m_observable->pushObservable((P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor,iObs);
+//    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 }
 
-void Plaquette::calculate(SU3 *plaquetteStaples, int i)
+void Plaquette::calculate(SU3 *plaquetteStaples, int iObs)
 {
     P.zeros();
     for (int i = 0; i < 6; i++) {
         P += plaquetteStaples[i];
     }
-    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
+    m_observable->pushObservable((P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor,iObs);
+//    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 }
 
+void Plaquette::printStatistics()
+{
+    if (Parameters::getVerbose()) m_observable->printStatistics();
+}

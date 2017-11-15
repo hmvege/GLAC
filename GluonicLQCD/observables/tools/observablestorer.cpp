@@ -2,8 +2,10 @@
 
 ObservableStorer::ObservableStorer(int m_NSize)
 {
+//    printf("\nSize off storeage array: %d. ProcessID: %d",m_NSize,Parallel::Communicator::getProcessRank());
     m_observables = new double[m_NSize];
     m_observablesSquared = new double[m_NSize];
+
 }
 
 ObservableStorer::~ObservableStorer()
@@ -47,12 +49,16 @@ void ObservableStorer::runStatistics()
 
 void ObservableStorer::printStatistics()
 {
-    if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose())
+    if (Parallel::Communicator::getProcessRank() == 0)
     {
-        printf("\nObservable: %s", m_observableName.c_str());
-        printf("\nAverage: %-20.15f", m_averagedObservable);
-        printf("\nStandard deviation: %-20.15f", m_averagedObservable);
-        printf("\nVariance%-20.15f", m_averagedObservable);
+//        printf("\nObservable: %s", m_observableName.c_str());
+//        printf("\nAverage: %-20.15f", m_averagedObservable);
+//        printf("\nVariance%-20.15f", m_varianceObservable);
+//        printf("\nStandard deviation: %-20.15f", m_stdObservable);
+        printf("\n%-20s ", m_observableName.c_str());
+        printf("%-20.15f", m_averagedObservable);
+        printf("%-20.15f", m_varianceObservable);
+        printf("%-20.15f", m_stdObservable);
     }
 }
 
@@ -63,9 +69,9 @@ void ObservableStorer::writeObservableToFile()
     }
 }
 
-void ObservableStorer::writeFlowObservableToFile(double * flowTime, int configNumber)
+void ObservableStorer::writeFlowObservableToFile(int configNumber)
 {
     if (Parallel::Communicator::getProcessRank() == 0) {
-        IO::writeFlowObservableToFile(m_averagedObservable,m_varianceObservable,m_stdObservable,flowTime,m_observables,m_observableName,configNumber);
+        IO::writeFlowObservableToFile(m_averagedObservable,m_varianceObservable,m_stdObservable,m_observables,m_observableName,configNumber);
     }
 }

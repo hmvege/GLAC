@@ -48,6 +48,9 @@ private:
 //    double m_epsilon;
 //    double m_a; // lattice spacing
 
+    // Variable for storing how many steps we are shifting in the observables storage array if we choose to store the thermalization variables
+    int m_NThermSteps = 0;
+
     // For handling the acceptance rate
     unsigned long int m_acceptanceCounter = 0;
     double getAcceptanceRate();

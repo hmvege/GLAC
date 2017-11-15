@@ -3,8 +3,9 @@
 #include "clover.h"
 #include <cmath>
 
-TopologicalCharge::TopologicalCharge() : Correlator()
+TopologicalCharge::TopologicalCharge(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
+    m_observable->setObservableName(m_observableName);
     m_multiplicationFactor = 1.0/(32*M_PI*M_PI);
     populateLC(); // Fills the levi civita vector
 }
@@ -14,12 +15,12 @@ TopologicalCharge::~TopologicalCharge()
 
 }
 
-void TopologicalCharge::calculate(Links *lattice, int i)
+void TopologicalCharge::calculate(Links *lattice, int iObs)
 {
     /*
      * Function to be used when no clover is provided. SHOULD BE TESTED
      */
-    Clover Clov;
+    Clover Clov(m_storeFlowObservable);
     Clov.setN(m_N);
     Clov.setLatticeSize(m_latticeSize);
     topCharge = 0;
@@ -39,15 +40,17 @@ void TopologicalCharge::calculate(Links *lattice, int i)
                         G2 = Clov.m_clovers[m_leviCivita[i].ci[1]];
 //                        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn; // When off diagonal complex elements are zero
                         topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn; // When off diagonal complex elements are not zero
+
                     }
                 }
             }
         }
     }
-    return topCharge*m_multiplicationFactor;
+//    return topCharge*m_multiplicationFactor;
+    m_observable->pushObservable(topCharge*m_multiplicationFactor, iObs);
 }
 
-double TopologicalCharge::calculate(SU3 *clovers)
+void TopologicalCharge::calculate(SU3 *clovers, int iObs)
 {
     topCharge = 0;
     for (unsigned int i = 0; i < m_leviCivita.size(); i++)
@@ -57,7 +60,8 @@ double TopologicalCharge::calculate(SU3 *clovers)
         topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
 //        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
     }
-    return topCharge*m_multiplicationFactor;
+    m_observable->pushObservable(topCharge*m_multiplicationFactor,iObs);
+//    return topCharge*m_multiplicationFactor;
 }
 
 void TopologicalCharge::populateLC()
@@ -113,4 +117,9 @@ int TopologicalCharge::getLCSign(LeviCivita LC)
         }
     }
     return sign;
+}
+
+void TopologicalCharge::printStatistics()
+{
+    if (Parameters::getVerbose()) m_observable->printStatistics();
 }

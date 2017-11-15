@@ -1,6 +1,6 @@
 #include "clover.h"
 
-Clover::Clover() : Correlator()
+Clover::Clover(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     /* The clover should be defined as:
      * index | mu | nu
