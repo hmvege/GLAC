@@ -196,10 +196,10 @@ void Parallel::Communicator::checkSubLatticeValidity()
             latticeSizeError = true;
         }
     }
-    if (Parameters::getSubLatticeSize()*m_numprocs != Parameters::getLatticeSize()) {
+    if (Parameters::getNTemporal() % m_N[3] != 0) {
         latticeSizeError = true;
     }
-    if (Parameters::getNTemporal() % m_N[3] != 0) {
+    if (Parameters::getSubLatticeSize()*m_numprocs != Parameters::getLatticeSize()) {
         latticeSizeError = true;
     }
     if (latticeSizeError) {
@@ -248,6 +248,14 @@ void Parallel::Communicator::checkSubLatticeDimensionsValidity()
 void Parallel::Communicator::setBarrier()
 {
     MPI_Barrier(MPI_COMM_WORLD);
+}
+
+void Parallel::Communicator::gatherDoubleResults(double * data, int N)
+{
+    double *tempData = new double[N];
+    MPI_Allreduce(data,tempData,N,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+    for (int i = 0; i < N; i++) data[i] = tempData[i];
+    delete [] tempData;
 }
 
 void Parallel::Communicator::setN(unsigned int *N)

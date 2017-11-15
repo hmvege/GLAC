@@ -2,6 +2,7 @@
 
 Correlator::Correlator(bool storeFlowObservable)
 {
+    storeFlow(storeFlowObservable);
     // Initiates the lattice dimensions
     m_N = new unsigned int[4];
     // Sets position vector to zero
@@ -12,7 +13,6 @@ Correlator::Correlator(bool storeFlowObservable)
         muIndex[i] = 0;
         nuIndex[i] = 0;
     }
-    storeFlow(storeFlowObservable);
 }
 
 void Correlator::setLatticeSize(int latticeSize)
@@ -53,26 +53,37 @@ void Correlator::setN(unsigned int *N) // MOVE INTO CONSTRUCTOR?
 
 double Correlator::getObservable(int iObs)
 {
-    return m_observable->getObservable(iObs);
+    return m_observable->m_observables[iObs];
+}
+
+void Correlator::runStatistics()
+{
+    int NObs = m_observable->m_NObs;
+    // Gathers results from processors
+    Parallel::Communicator::gatherDoubleResults(m_observable->m_observables,NObs);
+    // Temp holders
+    double averagedObservableSquared = 0;
+    for (int iObs = 0; iObs < NObs; iObs++)
+    {
+        m_observable->m_averagedObservable += m_observable->m_observables[iObs];
+        averagedObservableSquared += m_observable->m_observables[iObs]*m_observable->m_observables[iObs];
+    }
+    averagedObservableSquared /= double(NObs);
+    m_observable->m_averagedObservable /= double(NObs);
+    m_observable->m_varianceObservable = (averagedObservableSquared - m_observable->m_averagedObservable*m_observable->m_averagedObservable)/double(NObs);
+    m_observable->m_stdObservable = sqrt(m_observable->m_varianceObservable);
+    if (Parameters::getVerbose()) {
+        m_observable->printStatistics();
+    }
 }
 
 void Correlator::writeStatisticsToFile(int iConfig)
 {
-//    printf("\nFunction for writing statistics to file not implemented for base correlator class!");
-    m_observable->runStatistics();
-    if (Parameters::getVerbose()) {
-        m_observable->printStatistics();
-    }
     m_observable->writeFlowObservableToFile(iConfig);
 }
 
 void Correlator::writeStatisticsToFile()
 {
-//    printf("\nFunction for writing statistics to file not implemented for base correlator class!");
-    m_observable->runStatistics();
-    if (Parameters::getVerbose()) {
-        m_observable->printStatistics();
-    }
     m_observable->writeObservableToFile();
 }
 
@@ -84,9 +95,4 @@ void Correlator::storeFlow(bool storeFlowObservable)
     } else {
         m_observable = new ObservableStorer(Parameters::getConfigSamplePoints());
     }
-}
-
-void Correlator::printStatistics()
-{
-    if (Parameters::getVerbose()) m_observable->printStatistics();
 }

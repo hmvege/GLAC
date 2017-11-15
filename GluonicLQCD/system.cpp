@@ -125,6 +125,9 @@ void System::subLatticeSetup()
         m_subLatticeSize *= m_N[i];
     }
     Parameters::setSubLatticeSize(m_subLatticeSize);
+    // Ensures correct sub lattice dimensions
+    Parallel::Communicator::checkSubLatticeValidity();
+    // Creates (sub) lattice
     m_lattice = new Links[m_subLatticeSize];
 
     // If has a size of 2, we exit as that may produce poor results.
@@ -290,7 +293,7 @@ void System::thermalize()
     /*
      * Function for thermalizing the system.
      */
-    if (m_processRank) printf("\nInitiating thermalization.");
+    if (m_processRank == 0) printf("\nInitiating thermalization.");
     if (m_storeThermalizationObservables) {
         // Storing the number of shifts that are needed in the observable storage container.
         m_NThermSteps = 1 + m_NTherm;
@@ -319,6 +322,9 @@ void System::thermalize()
 //    Parallel::Communicator::setBarrier();
 //    printf("\nOk in thermilization for processor %d",m_processRank);
 //    Parallel::Communicator::setBarrier();
+//    m_correlator->calculate(m_lattice,0);
+//    Parallel::Communicator::setBarrier();
+//    exit(1);
     // Running thermalization
     for (int i = 1; i < m_NTherm+1; i++)
     {
@@ -516,10 +522,6 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     // System thermalization
     thermalize();
 
-//    Parallel::Communicator::setBarrier();
-//    cout << "Ok in runMetropolis"<<endl;
-//    Parallel::Communicator::setBarrier();
-
     // Printing header for main run
     if (m_processRank == 0) {
         printf("\ni     %-20s  Avg.Update-time   Accept/reject", m_correlator->getObservableName().c_str());
@@ -562,10 +564,13 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //            m_observableFlow[tau] /= double(m_numprocs);
         }
         if (m_NFlows != 0) {
+            /* Make flow statistics, that is, the only stats that is needed is the sum of all configurations, which cant be reached untill end.
+             * So, either print flow during the run, or nothing.
+             * Then, write the flow values to file. */
+            m_flowCorrelator->runStatistics();
+            // Write flow data to file
             m_flowCorrelator->writeStatisticsToFile(iConfig);
-            if (Parameters::getVerbose()) m_flowCorrelator->printStatistics();
         }
-        // Write flow data to file
 
         // Averaging the gamma values
         m_correlator->calculate(m_lattice,iConfig);
@@ -594,22 +599,9 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         printf("\nAverage update time: %.6f sec.", m_updateStorer/double(m_NCf*m_NCor));
         printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
     }
+    m_correlator->runStatistics();
     m_correlator->writeStatisticsToFile(); // Runs statistics, writes to file, and prints results (if verbose is on)
-    if (Parameters::getVerbose()) m_correlator->printStatistics();
 
-    // RUNNING FLOW!
-//    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
-//    WFlow.setIndexHandler(m_indexHandler);
-//    WFlow.setAction(m_S);
-//    double * m_observableFlow = new double[100];
-//    for (int tau = 0; tau < 100; tau++) {
-//        WFlow.flowGaugeField(1,m_lattice);
-//        m_observableFlow[tau] = m_correlator->calculate(m_lattice);
-//        MPI_Allreduce(&m_observableFlow[tau], &m_observableFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        m_observableFlow[tau] /= double(m_numprocs);
-//        if (m_processRank == 0) printf("\n%-4d %-12.8f", tau, m_observableFlow[tau]);
-//    }
-//    delete [] m_observableFlow;
 }
 
 //void System::flowConfiguration(std::vector<std::string> configurationName)
@@ -726,24 +718,6 @@ void System::writeConfigurationToFile(int configNumber)
     }
     MPI_File_close(&file);
 }
-
-//double Reversedouble( const double inDouble )
-//{
-//   double retVal;
-//   char *doubleToConvert = ( char* ) & inDouble;
-//   char *returnDouble = ( char* ) & retVal;
-
-//   // swap the bytes into a temporary buffer
-//   returnDouble[0] = doubleToConvert[7];
-//   returnDouble[1] = doubleToConvert[6];
-//   returnDouble[2] = doubleToConvert[5];
-//   returnDouble[3] = doubleToConvert[4];
-//   returnDouble[4] = doubleToConvert[3];
-//   returnDouble[5] = doubleToConvert[2];
-//   returnDouble[6] = doubleToConvert[1];
-//   returnDouble[7] = doubleToConvert[0];
-//   return retVal;
-//}
 
 void System::loadFieldConfiguration(std::string filename)
 {

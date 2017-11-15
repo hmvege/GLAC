@@ -72,11 +72,12 @@ void ObservableSampler::writeStatisticsToFile(int iConfig)
     m_topologicalCharge->writeStatisticsToFile(iConfig);
 }
 
-void ObservableSampler::printStatistics()
+void ObservableSampler::runStatistics()
 {
-    m_plaquette->printStatistics();
-    m_energyDensity->printStatistics();
-    m_topologicalCharge->printStatistics();
+    cout << "Running stats" << endl;
+    m_plaquette->runStatistics();
+    m_energyDensity->runStatistics();
+    m_topologicalCharge->runStatistics();
 }
 
 double ObservableSampler::getObservable(int iObs)

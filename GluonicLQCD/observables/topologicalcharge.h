@@ -30,7 +30,7 @@ private:
         }
     };
 
-    const std::string m_observableName = "Topological charge";
+    static const std::string m_observableName;
     double topCharge;
     SU3 G1,G2;
     double m_multiplicationFactor;

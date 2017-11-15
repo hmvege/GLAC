@@ -1,50 +1,47 @@
 #include "observablestorer.h"
 
-ObservableStorer::ObservableStorer(int m_NSize)
+ObservableStorer::ObservableStorer(int NSize)
 {
-//    printf("\nSize off storeage array: %d. ProcessID: %d",m_NSize,Parallel::Communicator::getProcessRank());
-    m_observables = new double[m_NSize];
-    m_observablesSquared = new double[m_NSize];
-
+    // Initializes arrays
+    m_NObs = NSize;
+    m_observables = new double[m_NObs];
+    for (int iObs = 0; iObs < m_NObs; iObs++) m_observables[iObs] = 0;
+//    printf("\nSize off storeage array: %d. ProcessID: %d. ObsName: %s\n",m_NObs,Parallel::Communicator::getProcessRank(),m_observableName.c_str());
 }
 
 ObservableStorer::~ObservableStorer()
 {
     delete [] m_observables;
-    delete [] m_observablesSquared;
 }
 
-void ObservableStorer::pushObservable(double newObs, int position)
-{
-    m_observables[position] = newObs;
-    m_observablesSquared[position] = newObs*newObs;
-}
 
 void ObservableStorer::runStatistics()
 {
     // Performing an average over the Monte Carlo obtained values
-    MPI_Allreduce(&m_observables, &m_observables, m_NSize, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-    MPI_Allreduce(&m_observablesSquared, &m_observablesSquared, m_NSize, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-
-    double numprocs = double(Parallel::Communicator::getNumProc());
-    double averagedObservableSquared = 0;
-    // Normalizes by the number of processors
-    if (m_normalizeObservableByProcessor) {
-        for (int i = 0; i < m_NSize; i++) {
-            m_observables[i] /= numprocs;
-            m_observablesSquared[i] /= numprocs;
-        }
+    for (int iBuffer = 0; iBuffer < m_NObs; iBuffer++) {
+        MPI_Allreduce(&m_observables[iBuffer], &m_observables[iBuffer], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     }
+    // Normalizes by the number of processors
+    double *observablesSquared = new double[m_NObs];
+    double numprocs = double(Parallel::Communicator::getNumProc());
+//    if (m_normalizeObservableByProcessor) {
+//        for (int i = 0; i < m_NObs; i++) {
+//            m_observables[i] /= numprocs;
+//            observablesSquared[i] = m_observables[i]*m_observables[i];
+//        }
+//    }
     // Gets average of the observable
-    for (int i = 0; i < m_NSize; i++)
+    double averagedObservableSquared = 0;
+    for (int i = 0; i < m_NObs; i++)
     {
         m_averagedObservable += m_observables[i];
-        averagedObservableSquared += m_observablesSquared[i];
+        averagedObservableSquared += observablesSquared[i];
     }
-    m_averagedObservable /= double(m_NSize);
-    averagedObservableSquared /= double(m_NSize);
-    m_varianceObservable = (averagedObservableSquared - m_averagedObservable*m_averagedObservable)/double(m_NSize);
+    m_averagedObservable /= double(m_NObs);
+    averagedObservableSquared /= double(m_NObs);
+    m_varianceObservable = (averagedObservableSquared - m_averagedObservable*m_averagedObservable)/double(m_NObs);
     m_stdObservable = sqrt(m_varianceObservable);
+    delete [] observablesSquared;
 }
 
 void ObservableStorer::printStatistics()
@@ -55,7 +52,7 @@ void ObservableStorer::printStatistics()
 //        printf("\nAverage: %-20.15f", m_averagedObservable);
 //        printf("\nVariance%-20.15f", m_varianceObservable);
 //        printf("\nStandard deviation: %-20.15f", m_stdObservable);
-        printf("\n%-20s ", m_observableName.c_str());
+        printf("\n%-10s ", m_observableName.c_str());
         printf("%-20.15f", m_averagedObservable);
         printf("%-20.15f", m_varianceObservable);
         printf("%-20.15f", m_stdObservable);

@@ -3,11 +3,13 @@
 #include "clover.h"
 #include <cmath>
 
+const std::string TopologicalCharge::m_observableName = "Topological charge";
+
 TopologicalCharge::TopologicalCharge(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
-    m_observable->setObservableName(m_observableName);
     m_multiplicationFactor = 1.0/(32*M_PI*M_PI);
     populateLC(); // Fills the levi civita vector
+    m_observable->setObservableName(m_observableName);
 }
 
 TopologicalCharge::~TopologicalCharge()
@@ -47,7 +49,7 @@ void TopologicalCharge::calculate(Links *lattice, int iObs)
         }
     }
 //    return topCharge*m_multiplicationFactor;
-    m_observable->pushObservable(topCharge*m_multiplicationFactor, iObs);
+    m_observable->m_observables[iObs] =  topCharge*m_multiplicationFactor;
 }
 
 void TopologicalCharge::calculate(SU3 *clovers, int iObs)
@@ -60,7 +62,7 @@ void TopologicalCharge::calculate(SU3 *clovers, int iObs)
         topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
 //        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
     }
-    m_observable->pushObservable(topCharge*m_multiplicationFactor,iObs);
+    m_observable->m_observables[iObs] += topCharge*m_multiplicationFactor;
 //    return topCharge*m_multiplicationFactor;
 }
 
@@ -122,4 +124,28 @@ int TopologicalCharge::getLCSign(LeviCivita LC)
 void TopologicalCharge::printStatistics()
 {
     if (Parameters::getVerbose()) m_observable->printStatistics();
+}
+
+void TopologicalCharge::runStatistics()
+{
+    /*
+     * Statistics. Should perhaps make into its own class?
+     */
+    int NObs = m_observable->m_NObs;
+    // Gathers results from processors
+    Parallel::Communicator::gatherDoubleResults(m_observable->m_observables,NObs);
+    // Temp holders
+    double averagedObservableSquared = 0;
+    for (int iObs = 0; iObs < NObs; iObs++) {
+        m_observable->m_averagedObservable += m_observable->m_observables[iObs];
+        averagedObservableSquared += m_observable->m_observables[iObs]*m_observable->m_observables[iObs];
+    }
+    averagedObservableSquared /= double(NObs);
+    m_observable->m_averagedObservable /= double(NObs);
+    m_observable->m_varianceObservable = (averagedObservableSquared - m_observable->m_averagedObservable*m_observable->m_averagedObservable)/double(NObs);
+    m_observable->m_stdObservable = sqrt(m_observable->m_varianceObservable);
+
+    if (Parameters::getVerbose()) {
+        m_observable->printStatistics();
+    }
 }

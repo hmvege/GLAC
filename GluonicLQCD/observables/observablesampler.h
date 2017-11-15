@@ -30,7 +30,7 @@ public:
 
     void writeStatisticsToFile();
     void writeStatisticsToFile(int iConfig);
-    void printStatistics();
+    void runStatistics();
 
     // Setters
     void setLatticeSize(int latticeSize);

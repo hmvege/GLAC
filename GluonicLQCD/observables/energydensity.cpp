@@ -2,6 +2,8 @@
 #include "clover.h"
 #include "math/functions.h"
 
+const std::string EnergyDensity::m_observableName = "Energy/action density";
+
 EnergyDensity::EnergyDensity(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     m_observable->setObservableName(m_observableName);
@@ -31,7 +33,7 @@ void EnergyDensity::calculate(SU3 *clovers, int iObs)
     {
         m_actionDensity += traceSparseImagMultiplication(clovers[i],clovers[i]); // Might check this one with Andrea
     }
-    m_observable->pushObservable(m_actionDensity,iObs);
+    m_observable->m_observables[iObs] += m_actionDensity;
 //    return m_actionDensity;//*m_multiplicationFactor; // Correct or not?
 }
 
@@ -59,7 +61,7 @@ void EnergyDensity::calculate(Links *lattice, int iObs)
             }
         }
     }
-    m_observable->pushObservable(m_actionDensity,iObs);
+    m_observable->m_observables[iObs] = m_actionDensity;
 //    return m_actionDensity;//*m_multiplicationFactor; // Temporary off
 }
 

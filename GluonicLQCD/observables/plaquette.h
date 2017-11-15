@@ -9,15 +9,16 @@ private:
     double m_multiplicationFactor;
     SU3 P;
     SU3 PTemp;
-    const std::string m_observableName = "Plaquette";
+    const static std::string m_observableName;
 public:
     Plaquette(bool storeFlowObservable);
     ~Plaquette();
     void calculate(Links *lattice, int iObs);
     void calculate(SU3 *plaquetteStaples, int iObs);
 
-    // Printers
-    void printStatistics();
+    // Statistics getter
+    void runStatistics();
+
     // Setters
     void setLatticeSize(int latticeSize);
     void setPlaquetteStaples(SU3 *plaquetteStaples);

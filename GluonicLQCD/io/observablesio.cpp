@@ -40,7 +40,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
             file << observables[i] << endl;
         }
         file.close();
-        cout << fname << " written." << endl;
+        printf("\n%s written.",fname.c_str());
         std::setprecision(oldPrecision);
     }
 }
@@ -76,7 +76,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
             file << observables[i] << endl;
         }
         file.close();
-        cout << fname << " written." << endl;
+        printf("\n%s written.",fname.c_str());
         std::setprecision(oldPrecision);
     }
 }
@@ -111,7 +111,7 @@ void IO::writeFlowObservableToFile(double averagedObservable,
             file << i << " " << a*sqrt(8*flowStep*(i+1)) << " " << observables[i] << endl;
         }
         file.close();
-        cout << fname << " written." << endl;
+        printf("\n%s written.",fname.c_str());
         std::setprecision(oldPrecision);
     }
 }
@@ -130,7 +130,7 @@ void IO::writeDataToFile(double averagedObservable,
         std::ofstream file;
         std::string fname = Parameters::getFilePath() +
                             Parameters::getOutputFolder() +
-                            Parameters::getBatchName() + "_configNumber" + "_" + observableName + ".dat";
+                            Parameters::getBatchName() + "_" + observableName + ".dat";
         file.open(fname);
         file << "Average" << observableName << " " << averagedObservable << endl;
         file << "Variance" << observableName << " " << varianceObservable << endl;
@@ -139,7 +139,7 @@ void IO::writeDataToFile(double averagedObservable,
             file << i << " " << observables[i] << endl;
         }
         file.close();
-        cout << fname << " written." << endl;
+        printf("\n%s written.",fname.c_str());
         std::setprecision(oldPrecision);
     }
 }

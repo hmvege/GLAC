@@ -190,7 +190,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Finalizing and printing time taken
     programEnd = steady_clock::now();
     programTime = duration_cast<duration<double>>(programEnd - programStart);
-    if (processRank == 0) cout << "Program complete. Time used: " << double(programTime.count())/3600.0 << " hours (" << programTime.count() << " seconds)" << endl;
+    if (processRank == 0) printf("\nProgram complete. Time used: %f hourse (%f seconds)", double(programTime.count())/3600.0, programTime.count());
 
     MPI_Finalize();
     return 0;

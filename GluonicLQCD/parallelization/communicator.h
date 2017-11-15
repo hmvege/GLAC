@@ -53,6 +53,7 @@ namespace Parallel {
 
         // MPI
         static void setBarrier();
+        static void gatherDoubleResults(double * data, int N);
 
         // Validity checkers
         static void checkProcessorValidity();

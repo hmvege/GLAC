@@ -4,9 +4,10 @@
 #include "math/functions.h"
 #include "parallelization/index.h"
 
+const std::string Plaquette::m_observableName = "Plaquette";
+
 Plaquette::Plaquette(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
-//    storeFlow(storeFlowObservable);
     m_observable->setObservableName(m_observableName);
 }
 
@@ -46,7 +47,7 @@ void Plaquette::calculate(Links *lattice, int iObs)
             }
         }
     }
-    m_observable->pushObservable((P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor,iObs);
+    m_observable->m_observables[iObs] = (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 //    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 }
 
@@ -56,11 +57,34 @@ void Plaquette::calculate(SU3 *plaquetteStaples, int iObs)
     for (int i = 0; i < 6; i++) {
         P += plaquetteStaples[i];
     }
-    m_observable->pushObservable((P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor,iObs);
+    m_observable->m_observables[iObs] += (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 //    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 }
 
-void Plaquette::printStatistics()
+void Plaquette::runStatistics()
 {
-    if (Parameters::getVerbose()) m_observable->printStatistics();
+    /*
+     * Statistics. Should perhaps make into its own class?
+     */
+    int NObs = m_observable->m_NObs;
+    // Gathers results from processors
+    Parallel::Communicator::gatherDoubleResults(m_observable->m_observables,NObs);
+    for (int iObs = 0; iObs < NObs; iObs++) {
+        m_observable->m_observables[iObs] /= double(Parallel::Communicator::getNumProc()); // For plaquette only
+    }
+    // Temp holders
+    double averagedObservableSquared = 0;
+    for (int iObs = 0; iObs < NObs; iObs++) {
+        m_observable->m_averagedObservable += m_observable->m_observables[iObs];
+        averagedObservableSquared += m_observable->m_observables[iObs]*m_observable->m_observables[iObs];
+    }
+    averagedObservableSquared /= double(NObs);
+    m_observable->m_averagedObservable /= double(NObs);
+    m_observable->m_varianceObservable = (averagedObservableSquared - m_observable->m_averagedObservable*m_observable->m_averagedObservable)/double(NObs);
+    m_observable->m_stdObservable = sqrt(m_observable->m_varianceObservable);
+
+    if (Parameters::getVerbose()) {
+        m_observable->printStatistics();
+    }
 }
+

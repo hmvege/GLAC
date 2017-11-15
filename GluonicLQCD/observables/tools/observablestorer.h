@@ -8,21 +8,22 @@
 class ObservableStorer
 {
 private:
-    // Observable data
-    int m_NSize;
-    double * m_observables;
-    double * m_observablesSquared;
-    double m_averagedObservable = 0;
-    double m_varianceObservable = 0;
-    double m_stdObservable = 0;
     // Observable name
     std::string m_observableName;
     // Bool to store if we are to normalize the data by number of processors
     bool m_normalizeObservableByProcessor = false;
 public:
-    ObservableStorer(int m_NSize);
+    ObservableStorer(int NSize);
     ~ObservableStorer();
-    void pushObservable(double newObs, int position);
+
+    // Observable data
+    int m_NObs;
+    double m_averagedObservable = 0;
+    double m_varianceObservable = 0;
+    double m_stdObservable = 0;
+    double * m_observables; // SLOW COMPARED TO STACK? Making it public is the simplest way to make this work...
+
+    // THIS WILL BE MOVED TO CORRELATOR CLASS, MOST LIKELY!
     void runStatistics();
     // Printers
     void printStatistics();
@@ -34,7 +35,6 @@ public:
     // Setters
     void setObservableName(std::string observableName) {
         m_observableName = observableName;
-        printf("\nSize off storeage array: %d. ProcessID: %d. ObsName: %s",m_NSize,Parallel::Communicator::getProcessRank(),m_observableName.c_str());
     }
     void setNormalizeObservableByProcessor(bool norm) { m_normalizeObservableByProcessor = norm; }
 };
