@@ -6,7 +6,7 @@
 #include "clover.h"
 #include "energydensity.h"
 #include "topologicalcharge.h"
-#include "parameters/parameters.h"
+#include "config/parameters.h"
 
 class ObservableSampler : public Correlator
 {
@@ -16,6 +16,8 @@ private:
     double m_a;
     double m_P, m_E, m_Q;
     std::vector<int> m_position;
+
+    const int m_headerWidth = 42;
 
     // All observables in program
     Clover *m_clover = nullptr;
@@ -32,11 +34,15 @@ public:
     void writeStatisticsToFile(int iConfig);
     void runStatistics();
 
+    // Printers
+    void printObservable(int iObs);
+
     // Setters
     void setLatticeSize(int latticeSize);
     void setN(unsigned int *N);
 
     // Getters
+    std::string getObservableName();
     double getObservable(int iObs);
     double getPlaquette() { return m_P; }
     double getTopologicalCharge() { return m_Q; }

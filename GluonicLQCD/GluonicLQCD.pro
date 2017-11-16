@@ -33,8 +33,10 @@ SOURCES += main.cpp \
     tests/performancetests.cpp \
     io/observablesio.cpp \
     io/fieldio.cpp \
-    parameters/parameters.cpp \
-    flow/flow.cpp
+    config/parameters.cpp \
+    flow/flow.cpp \
+    observables/tools/observablestatistics.cpp \
+    config/configloader.cpp
 
 HEADERS += \
     system.h \
@@ -67,8 +69,10 @@ HEADERS += \
     tests/performancetests.h \
     io/observablesio.h \
     io/fieldio.h \
-    parameters/parameters.h \
-    flow/flow.h
+    config/parameters.h \
+    flow/flow.h \
+    observables/tools/observablestatistics.h \
+    config/configloader.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx

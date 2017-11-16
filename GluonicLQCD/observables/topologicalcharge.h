@@ -44,8 +44,11 @@ public:
     void calculate(SU3 *clovers, int iObs);
     void calculate(Links *lattice, int iObs);
 
+    void runStatistics();
     // Printers
     void printStatistics();
+    // Getters
+    std::string getObservableName() { return m_observableName; }
 };
 
 #endif // TOPOLOGICALCHARGE_H

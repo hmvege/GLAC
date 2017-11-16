@@ -1,9 +1,16 @@
 #include "fieldio.h"
 
+const int IO::FieldIO::m_linkDoubles = 72;
+const int IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);
+unsigned int IO::FieldIO::m_N[4];
 
 IO::FieldIO::FieldIO()
 {
     Parameters::getN(m_N);
+}
+
+IO::FieldIO::~FieldIO()
+{
 }
 
 void IO::FieldIO::writeFieldToFile(Links * lattice, int configNumber)

@@ -15,13 +15,12 @@ public:
     ~Plaquette();
     void calculate(Links *lattice, int iObs);
     void calculate(SU3 *plaquetteStaples, int iObs);
-
     // Statistics getter
     void runStatistics();
-
     // Setters
     void setLatticeSize(int latticeSize);
     void setPlaquetteStaples(SU3 *plaquetteStaples);
+    // Getters
     virtual std::string getObservableName() { return m_observableName; }
 };
 

@@ -64,7 +64,8 @@ class Slurm:
             NTherm              = job_config["NTherm"]
             NCor                = job_config["NCor"] 
             NCf                 = job_config["NCf"]
-            NFlows              = job_config["NFlows"]
+            # NFlows              = job_config["NFlows"]
+            NFlows              = 0
             NUpdates            = job_config["NUpdates"]
             SU3Eps              = job_config["SU3Eps"]
             storeCfgs           = job_config["storeCfgs"]

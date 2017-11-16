@@ -8,7 +8,7 @@
 #include "observables/plaquette.h"
 #include "math/matrices/su3matrixgenerator.h"
 #include "parallelization/index.h"
-#include "parameters/parameters.h"
+#include "config/parameters.h"
 
 #include "tests/unittests.h"
 #include "tests/testsuite.h"
@@ -178,8 +178,6 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     System pureGauge(metropolisSeed, &G, &S, &F, &GFlow);
     if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
-//    pureGauge.setProgramPath(pwd);
-//    pureGauge.setConfigBatchName(batchName);
     // ADD VERBOSE ARGUMENT? Or not, more info is always good...?
     pureGauge.printRunInfo(true); // Always print run info, so make optional to turn off
     pureGauge.runMetropolis(storeThermalizationObservables, writeConfigsToFile);
@@ -190,7 +188,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Finalizing and printing time taken
     programEnd = steady_clock::now();
     programTime = duration_cast<duration<double>>(programEnd - programStart);
-    if (processRank == 0) printf("\nProgram complete. Time used: %f hourse (%f seconds)", double(programTime.count())/3600.0, programTime.count());
+    if (processRank == 0) printf("\nProgram complete. Time used: %f hours (%f seconds)", double(programTime.count())/3600.0, programTime.count());
 
     MPI_Finalize();
     return 0;

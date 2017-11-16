@@ -85,3 +85,17 @@ double ObservableSampler::getObservable(int iObs)
     printf("\ngetObservable not implemented for ObservableSampeler class.");
     return iObs*0.0;
 }
+
+void ObservableSampler::printObservable(int iObs)
+{
+    printf("\n%-4d   %-*.8f   %-*.8f   %-*.8f",iObs,12,m_plaquette->getObservable(iObs),
+                                                 12,m_topologicalCharge->getObservable(iObs),
+                                                 12,m_energyDensity->getObservable(iObs));
+}
+
+std::string ObservableSampler::getObservableName()
+{
+    return m_plaquette->getObservableName() + "   "
+            + m_topologicalCharge->getObservableName() + "   "
+            + m_energyDensity->getObservableName();
+}

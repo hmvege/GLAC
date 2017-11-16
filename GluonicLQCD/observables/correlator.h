@@ -28,7 +28,9 @@ protected:
     // Position vector for handling the shift-method in parallelization
     std::vector<int> m_position;
     // Observable name
+    const int m_headerWidth = 15;
     const std::string m_observableName = "Correlator";
+    const std::string m_headerString = "Correlator";
     // Creates a object that store the observable
     ObservableStorer * m_observable = nullptr;
     // Object that holds info of whether or not we are storing flow observables
@@ -65,9 +67,13 @@ public:
     virtual void writeStatisticsToFile(int iConfig);
     virtual void runStatistics();
 
+    // Printers
+    virtual void printObservable(int iObs);
+
     // Getters
     virtual double getObservable(int iObs);
     virtual std::string getObservableName() { return m_observableName; }
+    virtual int getHeaderWidth() { return m_headerWidth; }
 
     // Setters
     virtual void setLatticeSize(int latticeSize);

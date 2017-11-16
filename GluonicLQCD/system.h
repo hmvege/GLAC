@@ -5,7 +5,7 @@
 #include <chrono>
 #include "actions/action.h"
 #include "observables/correlator.h"
-#include "parameters/parameters.h"
+#include "config/parameters.h"
 #include "math/matrices/su3matrixgenerator.h"
 #include "math/latticemath.h"
 
@@ -38,6 +38,7 @@ private:
 
     // Variable for storing the thermalization observables
     bool m_storeThermalizationObservables = false;
+    bool m_systemIsThermalized = false;
 
     // Updating constants
     int m_NCf;
@@ -45,8 +46,6 @@ private:
     int m_NTherm;
     int m_NUpdates; // N updates before calculating the action, as that is costly
     int m_NFlows;
-//    double m_epsilon;
-//    double m_a; // lattice spacing
 
     // Variable for storing how many steps we are shifting in the observables storage array if we choose to store the thermalization variables
     int m_NThermSteps = 0;
@@ -86,21 +85,6 @@ private:
     double m_varianceObservable = 0;
     double m_stdObservable = 0;
 
-//    // Variables for the config sampling
-//    long unsigned int m_NConfigObs = 0;
-//    ObservableStorer ** m_configObservableStorage;
-//    bool m_sampleTopCharge = false;
-//    bool m_sampleEnergyDensity = false;
-//    bool m_samplePlaquette = false;
-//    bool m_sampleOnlyPlaquette = false;
-//    // Variables for the flow sampling
-//    long unsigned int m_NFlowObs = 0;
-//    ObservableStorer ** m_flowObservableStorage;
-//    bool m_sampleFlowTopCharge = false;
-//    bool m_sampleFlowEnergyDensity = false;
-//    bool m_sampleFlowPlaquette = false;
-
-
     // Time counting
     steady_clock::time_point m_preUpdate, m_postUpdate;
     duration<double> m_updateTime;
@@ -109,7 +93,6 @@ private:
 
     // Storing the action as a pointer
     Action *m_S = nullptr;
-//    double m_deltaS; // REDUNDANT
 
     // Config correlator
     Correlator * m_correlator = nullptr;
@@ -119,6 +102,7 @@ private:
 
     // Flow
     Flow * m_Flow = nullptr;
+    void flowConfiguration(int iConfig);
 
     // Function for updating our system using the Metropolis algorithm
     void update();
@@ -148,10 +132,10 @@ public:
     void latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart);
     void runBasicStatistics();
 
-    // Data outputters
-    void writeDataToFile();
-    void writeConfigurationToFile(int configNumber);
-    void loadFieldConfiguration(std::string filename); // REDO THIS TO LOAD and wrap around the IO one, and add chroma!
+    // Functions loading fields configurations from file
+    void loadChroma(std::string configurationName);
+    void load(std::string configurationName);
+    void flowConfigurations(std::vector<std::string> configurationNames);
 
     // Object setters
     void setAction(Action *S) { m_S = S; }
@@ -161,21 +145,8 @@ public:
     void setSU3ExpFunc(SU3Exp * SU3ExpFunc) { m_Flow->setSU3ExpFunc(SU3ExpFunc); }
 
     // Variable setters
-    void setConfigBatchName(std::string batchName) { m_batchName = batchName; }
-    void setProgramPath(std::string pwd) { m_pwd = pwd; }
-    void setN(int NSpatial) { m_NSpatial = NSpatial; }
-    void setNT(int NTemporal) { m_NTemporal = NTemporal; }
-    void setNCf(int NCf) { m_NCf = NCf; }
     void setSubLatticeDimensions(int *NSub);
-    void setUpdateFrequency(int NUpdates) { m_NUpdates = NUpdates; }
     void setLatticeInitRST(bool RSTInit) { m_RSTInit = RSTInit; }
-
-//    void setEpsilon(double epsilon) { m_epsilon = epsilon; }
-//    int getEpsilon() { return m_epsilon; }
-
-//    // Sets what samplers we are to use
-//    void setFlowSampling(std::vector<std::string> flowObs);
-//    void setConfigurationSampling(std::vector<std::string> configObs);
 
     // Printers
     void printRunInfo(bool verbose);

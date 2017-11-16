@@ -4,7 +4,7 @@
 #include <string>
 #include <mpi.h>
 #include "math/latticemath.h"
-#include "parameters/parameters.h"
+#include "config/parameters.h"
 #include "parallelization/index.h"
 #include "parallelization/communicator.h"
 
@@ -13,16 +13,17 @@ namespace IO {
     {
     private:
         // For writing to file
-        const int m_linkDoubles = 72;
-        const int m_linkSize = m_linkDoubles*sizeof(double);
+        static const int m_linkDoubles;// = 72;
+        static const int m_linkSize;// = m_linkDoubles*sizeof(double);
 
-        unsigned int m_N[4];
-        inline double reverseDouble(const double inDouble);
+        static unsigned int m_N[4];
+        static inline double reverseDouble(const double inDouble);
     public:
         FieldIO();
-        void writeFieldToFile(Links * lattice, int configNumber);
-        void loadFieldConfiguration(std::string filename, Links * lattice);
-        void loadChromaFieldConfiguration(std::string filename, Links *lattice);
+        ~FieldIO();
+        static void writeFieldToFile(Links * lattice, int configNumber);
+        static void loadFieldConfiguration(std::string filename, Links * lattice);
+        static void loadChromaFieldConfiguration(std::string filename, Links *lattice);
     };
 }
 

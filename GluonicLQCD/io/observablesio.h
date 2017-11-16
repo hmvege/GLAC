@@ -1,7 +1,7 @@
 #ifndef OBSERVABLESIO_H
 #define OBSERVABLESIO_H
 
-#include "parameters/parameters.h"
+#include "config/parameters.h"
 #include "parallelization/communicator.h"
 
 namespace IO {

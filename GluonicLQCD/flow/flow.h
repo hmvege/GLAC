@@ -4,7 +4,7 @@
 #include "math/latticemath.h"
 #include "actions/action.h"
 #include "parallelization/index.h"
-#include "parameters/parameters.h"
+#include "config/parameters.h"
 #include "math/exponentiation/su3exp.h"
 
 class Flow

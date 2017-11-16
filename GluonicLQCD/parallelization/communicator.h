@@ -7,7 +7,7 @@
 #include "neighbours.h"
 #include "math/latticemath.h"
 
-#include "parameters/parameters.h"
+#include "config/parameters.h"
 
 namespace Parallel {
     class Communicator

@@ -219,12 +219,8 @@ void System::thermalize()
         m_NThermSteps = 1 + m_NTherm;
         // Calculating correlator before any updates have began.
         m_correlator->calculate(m_lattice,0);
-//        Parallel::Communicator::setBarrier();
-//        printf("\nGot it!");
-//        Parallel::Communicator::setBarrier();
 //        // Summing and sharing correlator to all processors before any updates has begun
 //        MPI_Allreduce(&m_observablePreThermalization[0], &m_observablePreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-
 //        // Dividing by the number of processors in order to get the correlator.
 //        m_observablePreThermalization[0] /= double(m_numprocs);
         if (m_processRank == 0) {
@@ -233,15 +229,8 @@ void System::thermalize()
             printf("\n%-4d %-12.8f",0,m_correlator->getObservable(0));
         }
     }
-
-//    Parallel::Communicator::setBarrier();
-//    printf("\nOk in thermilization for processor %d",m_processRank);
-//    Parallel::Communicator::setBarrier();
-//    m_correlator->calculate(m_lattice,0);
-//    Parallel::Communicator::setBarrier();
-//    exit(1);
     // Running thermalization
-    for (int i = 1; i < m_NTherm+1; i++)
+    for (int iTherm = 1; iTherm < m_NTherm + 1; iTherm++)
     {
         // Pre update time
         m_preUpdate = steady_clock::now();
@@ -250,12 +239,12 @@ void System::thermalize()
         update();
 
         // Post timer
-        m_postUpdate = steady_clock::now();
+        m_postUpdate = steady_clock::now(); // REDUNDANT?
         m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
         m_updateStorerTherm += m_updateTime.count();
-        if (i % 20 == 0) { // Avg. time per update every 10th update
+        if (iTherm % 20 == 0) { // Avg. time per update every 10th update
             if (m_processRank == 0) {
-                printf("\nAvgerage update time(every 10th): %f sec.", m_updateStorerTherm/double(i));
+                printf("\nAvgerage update time(every 10th): %f sec.", m_updateStorerTherm/double(iTherm));
             }
         }
 //        if (m_processRank == 0) {
@@ -266,7 +255,7 @@ void System::thermalize()
         if (m_storeThermalizationObservables) {
             // Calculating the correlator
 //            m_observablePreThermalization[i] = m_correlator->calculate(m_lattice);
-            m_correlator->calculate(m_lattice,i);
+            m_correlator->calculate(m_lattice,iTherm);
 
             // Summing and sharing results across the processors
 //            MPI_Allreduce(&m_observablePreThermalization[i], &m_observablePreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
@@ -277,7 +266,8 @@ void System::thermalize()
 //                printf("\n%-4d %-12.8f",i,m_observablePreThermalization[i]);
 //            }
             if (m_processRank == 0) {
-                printf("\n%-4d %-12.8f",i,m_correlator->getObservable(i)); // returns the observable at i(not averaged between by processors?)
+                m_correlator->printObservable(iTherm);
+//                printf("\n%-4d %-12.8f",iTherm,m_correlator->getObservable(iTherm)); // returns the observable at i(not averaged between by processors?)
             }
         }
     }
@@ -315,8 +305,6 @@ void System::update()
                         for (int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(Parallel::Index::getIndex(x,y,z,t), mu);
-//                            m_deltaS = m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu);
-//                            if (exp(-m_deltaS) > m_uniform_distribution(m_generator))
                             if (exp(-m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu)) > m_uniform_distribution(m_generator))
                             {
                                 m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_updatedMatrix;
@@ -329,7 +317,6 @@ void System::update()
         }
     }
 }
-
 
 void System::runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile)
 {
@@ -422,7 +409,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         } else {
             cout << "FALSE" << endl;
         }
-        cout << "Store configurations:                  ";
+        cout << "Store field configurations:            ";
         if (writeConfigsToFile) {
             cout << "TRUE" << endl;
         } else {
@@ -439,7 +426,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
     // Printing header for main run
     if (m_processRank == 0) {
-        printf("\ni     %-20s  Avg.Update-time   Accept/reject", m_correlator->getObservableName().c_str());
+        printf("\ni    %-*s Avg.Update-time  Accept/reject", m_correlator->getHeaderWidth(),m_correlator->getObservableName().c_str());
+//        printf("\ni     %-20s  Avg.Update-time   Accept/reject", m_correlator->getObservableName().c_str());
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -463,29 +451,8 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
             m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
             m_updateStorer += m_updateTime.count();
         }
-        // Flow
-        for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
-        {
-            m_Flow->flowField(m_lattice);
-            m_flowCorrelator->calculate(m_lattice,iFlow + m_NThermSteps);
-//            OSampler.calculate(m_lattice);
-//            m_observableFlow[tau] = OSampler.getPlaquette();
-//            m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
-//            m_actionDensity[tau] = OSampler.getEnergyDensity();
-//            MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//            MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//            MPI_Allreduce(&m_observableFlow[tau], &m_observableFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//            m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
-//            m_observableFlow[tau] /= double(m_numprocs);
-        }
-        if (m_NFlows != 0) {
-            /* Make flow statistics, that is, the only stats that is needed is the sum of all configurations, which cant be reached untill end.
-             * So, either print flow during the run, or nothing.
-             * Then, write the flow values to file. */
-            m_flowCorrelator->runStatistics();
-            // Write flow data to file
-            m_flowCorrelator->writeStatisticsToFile(iConfig);
-        }
+        // Flowing configuration
+        if (m_NFlows != 0) flowConfiguration(iConfig);
 
         // Averaging the gamma values
         m_correlator->calculate(m_lattice,iConfig);
@@ -495,15 +462,15 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 
         if (m_processRank == 0) {
             // Printing plaquette value
-            printf("\n%-4d  %-20.8f  %-12.8f",iConfig,m_correlator->getObservable(iConfig),m_updateStorer/double((iConfig+1)*m_NCor));
+            m_correlator->printObservable(iConfig);
+            printf(" %-12.8f",m_updateStorer/double((iConfig+1)*m_NCor));
             // Adding the acceptance ratio
             if (iConfig % 10 == 0) {
-                printf(" %-13.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(iConfig+1)*m_NUpdates*m_NCor));
+                printf("     %-12.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(iConfig+1)*m_NUpdates*m_NCor));
             }
         }
-
         // Writing field config to file
-        if (writeConfigsToFile) writeConfigurationToFile(iConfig);
+        if (writeConfigsToFile) IO::FieldIO::writeFieldToFile(m_lattice,iConfig);
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
@@ -511,20 +478,66 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         printf("\n");
         printLine();
         printf("System completed.");
+        printf("\nAcceptancerate: %.16f ", getAcceptanceRate());
         printf("\nAverage update time: %.6f sec.", m_updateStorer/double(m_NCf*m_NCor));
         printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
+        printLine();
     }
     m_correlator->runStatistics();
     m_correlator->writeStatisticsToFile(); // Runs statistics, writes to file, and prints results (if verbose is on)
-
 }
 
-//void System::flowConfiguration(std::vector<std::string> configurationName)
-//{
-//    for (unsigned int i = 0; i < configurationName.size(); i++) {
-//        // Flow configurationName[i]
-//    }
-//}
+void System::flowConfiguration(int iConfig)
+{
+    /*
+     * Flows configuration, performs flow statistics and writes it to a file.
+     */
+    for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
+    {
+        m_Flow->flowField(m_lattice);
+        m_flowCorrelator->calculate(m_lattice,iFlow + m_NThermSteps);
+    }
+    /* Make flow statistics, that is, the only stats that is needed is the sum of all configurations, which cant be reached untill end.
+         * So, either print flow during the run, or nothing.
+         * Then, write the flow values to file. */
+    m_flowCorrelator->runStatistics();
+    // Write flow data to file
+    m_flowCorrelator->writeStatisticsToFile(iConfig);
+}
+
+
+void System::load(std::string configurationName)
+{
+    /*
+     * Method for loading regular a configuration and continuing and evolving it(without the need for any thermalization)
+     */
+    m_systemIsThermalized = true;
+    m_storeThermalizationObservables = false;
+    IO::FieldIO::loadFieldConfiguration(configurationName,m_lattice);
+}
+
+void System::loadChroma(std::string configurationName)
+{
+    /*
+     * Method for loading regular a configuration and continuing and evolving it(without the need for any thermalization)
+     */
+    m_systemIsThermalized = true;
+    m_storeThermalizationObservables = false;
+//    if (Parameters.getConfigType == "chroma") SWITCH TO THIS!
+    IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_lattice);
+}
+
+void System::flowConfigurations(std::vector<std::string> configurationNames)
+{
+    /*
+     * Method for flowing several configurations given as a vector of strings.
+     */
+    for (unsigned int i = 0; i < configurationNames.size(); i++) {
+        load(configurationNames[i]);
+        flowConfiguration(i);
+    }
+    printf("\nFlowing of %lu configurations done.", configurationNames.size());
+}
 
 void System::runBasicStatistics()
 {
@@ -551,45 +564,36 @@ void System::runBasicStatistics()
     }
 }
 
-void System::writeDataToFile()
-{
-    /*
-     * For writing the observables to file.
-     */
-    if (m_processRank == 0) {
-        std::ofstream file;
-        std::string fname = m_pwd + m_outputFolder + m_batchName + ".dat";
-        file.open(fname);
-        file << "beta " << m_beta << endl;
-        file << "acceptanceCounter " << getAcceptanceRate() << endl;
-        file << "NCor " << m_NCor << endl;
-        file << "NCf " << m_NCf << endl;
-        file << "NTherm " << m_NTherm << endl;
-        file << std::setprecision(15) << "AverageObservable " << m_averagedObservable << endl; // can setprecision be moved outside the write-to-file?
-        file << std::setprecision(15) << "VarianceObservable " << m_varianceObservable << endl;
-        file << std::setprecision(15) << "stdObservable " << m_stdObservable << endl;
-        if (m_storeThermalizationObservables) {
-            for (int i = 0; i < m_NTherm+1; i++) {
-                file << std::setprecision(15) << m_observablePreThermalization[i] << endl;
-            }
-            file << endl;
-        }
-        for (int i = 0; i < m_NCf; i++) {
-            file << std::setprecision(15) << m_observable[i] << endl;
-        }
-        file.close();
-        cout << fname << " written." << endl;
-    }
-}
-
-
-void System::printAcceptanceRate()
-{
-    /*
-     * Returns the acceptance ratio of the main run of the System algorithm.
-     */
-    if (m_processRank == 0) printf("Acceptancerate: %.16f \n", getAcceptanceRate());
-}
+//void System::writeDataToFile()
+//{
+//    /*
+//     * For writing the observables to file.
+//     */
+//    if (m_processRank == 0) {
+//        std::ofstream file;
+//        std::string fname = m_pwd + m_outputFolder + m_batchName + ".dat";
+//        file.open(fname);
+//        file << "beta " << m_beta << endl;
+//        file << "acceptanceCounter " << getAcceptanceRate() << endl;
+//        file << "NCor " << m_NCor << endl;
+//        file << "NCf " << m_NCf << endl;
+//        file << "NTherm " << m_NTherm << endl;
+//        file << std::setprecision(15) << "AverageObservable " << m_averagedObservable << endl; // can setprecision be moved outside the write-to-file?
+//        file << std::setprecision(15) << "VarianceObservable " << m_varianceObservable << endl;
+//        file << std::setprecision(15) << "stdObservable " << m_stdObservable << endl;
+//        if (m_storeThermalizationObservables) {
+//            for (int i = 0; i < m_NTherm+1; i++) {
+//                file << std::setprecision(15) << m_observablePreThermalization[i] << endl;
+//            }
+//            file << endl;
+//        }
+//        for (int i = 0; i < m_NCf; i++) {
+//            file << std::setprecision(15) << m_observable[i] << endl;
+//        }
+//        file.close();
+//        cout << fname << " written." << endl;
+//    }
+//}
 
 double System::getAcceptanceRate()
 {
@@ -599,178 +603,8 @@ double System::getAcceptanceRate()
     return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_NUpdates*m_latticeSize*4); // Times 4 from the Lorentz indices
 }
 
-void System::writeConfigurationToFile(int configNumber)
-{
-    /*
-     * C-method for writing out configuration to file.
-     * Arguments:
-     *  configNumber   : (int) configuration number
-     */
-
-    MPI_File file;
-    std::string filename = m_pwd + m_outputFolder + m_batchName
-                                            + "_beta" + std::to_string(m_beta)
-                                            + "_spatial" + std::to_string(m_NSpatial)
-                                            + "_temporal" + std::to_string(m_NTemporal)
-                                            + "_threads" + std::to_string(m_numprocs)
-                                            + "_config" + std::to_string(configNumber) + ".bin";
-
-    MPI_File_open(MPI_COMM_SELF, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
-    MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
-
-    for (unsigned int t = 0; t < m_N[3]; t++) {
-        nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (unsigned int z = 0; z < m_N[2]; z++) {
-            nz = (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (unsigned int y = 0; y < m_N[1]; y++) {
-                ny = (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (unsigned int x = 0; x < m_N[0]; x++) {
-                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
-                    MPI_File_write_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[Parallel::Index::getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
-                }
-            }
-        }
-    }
-    MPI_File_close(&file);
-}
-
-void System::loadFieldConfiguration(std::string filename)
-{
-    /*
-     * Method for loading a field configuration and running the plaquettes on them.
-     * Arguments:
-     * - filename
-     */
-    MPI_File file;
-    MPI_File_open(MPI_COMM_SELF, (m_pwd + m_outputFolder + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-    MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
-
-//    double val = 0;
-    for (unsigned int t = 0; t < m_N[3]; t++) {
-        nt = (m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (unsigned int z = 0; z < m_N[2]; z++) {
-            nz = (m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (unsigned int y = 0; y < m_N[1]; y++) {
-                ny = (m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (unsigned int x = 0; x < m_N[0]; x++) {
-                    nx = (m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
-                    MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize, &m_lattice[Parallel::Index::getIndex(x,y,z,t)], linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
-
-//                    for (int link = 0; link < 4; link++) {
-//                        for (int i = 0; i < 18; i++) {
-//                            MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*linkSize + link*18*sizeof(double) + i*sizeof(double), &val, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
-//                            m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i] = Reversedouble(val);
-//                            // Checking for corruption
-//                            if (isnan(m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i]))
-//                            {
-//                                m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].printMachine();
-//                                printf("\nConfiguration is corrupt.\n");
-//                                exit(1);
-//                            }
-//                        }
-//                    }
-                }
-            }
-        }
-    }
-    MPI_File_close(&file);
-    if (m_processRank == 0) cout << "Configuration " << m_outputFolder + filename << " loaded." << endl;
-}
-
-//void System::setFlowSampling(std::vector<std::string> flowObs)
-//{
-//    m_flowObservableStorage = new ObservableStorer*[flowObs.size()];
-//    m_NFlowObs = flowObs.size();
-//    for (unsigned int i = 0; i < m_NFlowObs; i++)
-//    {
-//        if (flowObs[i] == "all") // Default
-//        {
-//            if (m_NFlowObs != 1 && Parallel::Communicator::getProcessRank() == 0) {
-//                printf("\nError: inccorrect number of configs given: %lu", m_NFlowObs);
-//                exit(0);
-//            }
-//            m_sampleFlowTopCharge = true;
-//            m_sampleFlowEnergyDensity = true;
-//            m_sampleFlowPlaquette = true;
-//        }
-//        else if (flowObs[i] == "topcharge")
-//        {
-//            m_sampleFlowTopCharge = true;
-
-//        }
-//        else if (flowObs[i] == "energydensity")
-//        {
-//            m_sampleFlowEnergyDensity = true;
-//        }
-//        else if (flowObs[i] == "plaquette")
-//        {
-//            m_sampleFlowPlaquette = true;
-//        }
-//        else {
-//            if (Parallel::Communicator::getProcessRank() == 0) {
-//                printf("ERROR: Observable %s not found in library: \n  plaquette\n  topcharge  \nenergydensity",flowObs[i].c_str());
-//                exit(1);
-//            }
-//        }
-//    }
-//    // Allocate arrays and stuff for observables and their statistics
-//    if (m_sampleFlowPlaquette) m_flowObservableStorage[0] = new ObservableStorer(m_NFlows + 1, "plaquette", true);
-//    if (m_sampleFlowTopCharge) m_flowObservableStorage[1] = new ObservableStorer(m_NFlows + 1, "topcharge", false);
-//    if (m_sampleFlowEnergyDensity) m_flowObservableStorage[2] = new ObservableStorer(m_NFlows + 1, "energydensity", false);
-//    // Also add check for user defined observable(or other observables)?
-
-//}
-
-//void System::setConfigurationSampling(std::vector<std::string> configObs)
-//{
-//    m_NConfigObs = configObs.size();
-//    m_configObservableStorage = new ObservableStorer*[m_NConfigObs];
-//    for (unsigned int i = 0; i < configObs.size(); i++)
-//    {
-//        if (configObs[i] == "all") // Default
-//        {
-//            if (m_NConfigObs > 1 && Parallel::Communicator::getProcessRank() == 0) {
-//                printf("\nError: inccorrect number of configs given: %lu", m_NConfigObs);
-//                exit(0);
-//            }
-//            m_sampleTopCharge = true;
-//            m_sampleEnergyDensity = true;
-//            m_samplePlaquette = true;
-//        }
-//        else if (configObs[i] == "topcharge")
-//        {
-//            m_sampleTopCharge = true;
-
-//        }
-//        else if (configObs[i] == "energydensity")
-//        {
-//            m_sampleEnergyDensity = true;
-//        }
-//        else if (configObs[i] == "plaquette")
-//        {
-//            m_samplePlaquette = true;
-//            if (m_NConfigObs == 1) m_sampleOnlyPlaquette = true;
-//        }
-//        else {
-//            if (Parallel::Communicator::getProcessRank() == 0) {
-//                printf("ERROR: Observable %s not found in library: \n  plaquette\n  topcharge  \nenergydensity",configObs[i].c_str());
-//                exit(1);
-//            }
-//        }
-//    }
-//    // Allocate arrays and stuff for observables and their statistics
-//    if (m_samplePlaquette) m_configObservableStorage[0] = new ObservableStorer(m_NCf + 1, "plaquette", true);
-//    if (m_sampleTopCharge) m_configObservableStorage[1] = new ObservableStorer(m_NCf + 1, "topcharge", false);
-//    if (m_sampleEnergyDensity) m_configObservableStorage[2] = new ObservableStorer(m_NCf + 1, "energydensity", false);
-//    // Also add check for user defined observable(or other observables)?
-
-//}
-
 inline void System::printLine()
 {
-    for (int i = 0; i < 60; i++)
-    {
-        cout << "=";
-    }
+    for (int i = 0; i < 60; i++) cout << "=";
     cout << endl;
 }
