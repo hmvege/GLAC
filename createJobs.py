@@ -38,18 +38,21 @@ class Slurm:
     def __init__(self, dryrun):
         self.dryrun = dryrun
         self.CURRENT_PATH = os.getcwd()
-        # Checking that we have an output folder.
-        self._checkFolderPath('output')
-        self._checkFolderPath('output/flow_observables')
-        self._checkFolderPath('output/field_configurations')
-        self._checkFolderPath('output/observables')
-        self._checkFolderPath('input')
         # Checking the .ids.json file for previous jobs and storing them in job-list.
         self.idFilesName = '.ids.json'
         if os.path.isfile(self.idFilesName) and not self.dryrun:
             self.jobs = json.load(open(self.idFilesName,"r"))
         else:
             self.jobs = {}
+
+    def _create_folders(self, runName):
+        # Checking that we have an output folder.
+        self._checkFolderPath('output')
+        self._checkFolderPath('output/%s' % runName)
+        self._checkFolderPath('output/%s/flow_observables' % runName)
+        self._checkFolderPath('output/%s/field_configurations' % runName)
+        self._checkFolderPath('output/%s/observables' % runName)
+        self._checkFolderPath('input/%s' % runName)
 
     def _checkFolderPath(self, folder):
         # Function for checking if a folder exists, and if not creates on(unless we are doing a dryrun)
@@ -74,6 +77,8 @@ class Slurm:
             json_dict["NFlows"] = config_dict["NFlows"]
             json_dict["NUpdates"] = config_dict["NUpdates"]
             # Data storage related variables
+            json_dict["outputFolder"] = "/output/%s/" % config_dict["runName"]
+            json_dict["inputFolder"] = "/input/%s/" % config_dict["runName"]
             json_dict["storeConfigurations"] = config_dict["storeCfgs"]
             json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
             # Human readable output related variables
@@ -103,34 +108,36 @@ class Slurm:
 
         for job_config in job_configurations:
             # Retrieving config contents
-            binary_filename     = job_config["bin_fn"]
-            runName             = job_config["runName"]
-            threads             = job_config["threads"]
-            beta                = job_config["beta"]
-            NSpatial            = job_config["N"]
-            NTemporal           = job_config["NT"]
-            NTherm              = job_config["NTherm"]
-            NCor                = job_config["NCor"] 
-            NCf                 = job_config["NCf"]
-            NFlows              = job_config["NFlows"]
-            NUpdates            = job_config["NUpdates"]
-            SU3Eps              = job_config["SU3Eps"]
-            flowEpsilon         = job_config["flowEpsilon"]
-            storeCfgs           = job_config["storeCfgs"]
-            storeThermCfgs      = job_config["storeThermCfgs"]
-            hotStart            = job_config["hotStart"]
-            subDims             = job_config["subDims"]
-            verboseRun          = job_config["verboseRun"]
-            uTest               = job_config["uTest"]
-            uTestVerbose        = job_config["uTestVerbose"]
-            cpu_approx_runtime_hr  = job_config["cpu_approx_runtime_hr"]
-            cpu_approx_runtime_min = job_config["cpu_approx_runtime_min"]
-            
+            binary_filename         = job_config["bin_fn"]
+            runName                 = job_config["runName"]
+            threads                 = job_config["threads"]
+            beta                    = job_config["beta"]
+            NSpatial                = job_config["N"]
+            NTemporal               = job_config["NT"]
+            NTherm                  = job_config["NTherm"]
+            NCor                    = job_config["NCor"] 
+            NCf                     = job_config["NCf"]
+            NFlows                  = job_config["NFlows"]
+            NUpdates                = job_config["NUpdates"]
+            SU3Eps                  = job_config["SU3Eps"]
+            flowEpsilon             = job_config["flowEpsilon"]
+            storeCfgs               = job_config["storeCfgs"]
+            storeThermCfgs          = job_config["storeThermCfgs"]
+            hotStart                = job_config["hotStart"]
+            subDims                 = job_config["subDims"]
+            verboseRun              = job_config["verboseRun"]
+            uTest                   = job_config["uTest"]
+            uTestVerbose            = job_config["uTestVerbose"]
+            cpu_approx_runtime_hr   = job_config["cpu_approx_runtime_hr"]
+            cpu_approx_runtime_min  = job_config["cpu_approx_runtime_min"]
+
             # Checks that binary file exists in expected location
             if not os.path.isfile("%s/%s" % (self.CURRENT_PATH,binary_filename)):
                 exit("Error: binary file path not in expected location %s/%s" % (self.CURRENT_PATH,binary_filename))
 
             checkSubDimViability(subDims)
+            self._checkFolderPath(runName)
+            self._create_json(job_config)
 
             # Setting job name before creating content file.
             job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta,NSpatial,NTemporal,threads)
@@ -270,7 +277,7 @@ def main(args):
         raise EnvironmentError("Build folder is not present at location %s." % (os.getcwd() + "/build"))
 
     # Default config
-    config_default = {  "bin_fn"                    : "%s/build/GluonicLQCD" % os.getcwd(),
+    config_default = {  "bin_fn"                    : "build/GluonicLQCD",
                         "runName"                   : "defaultTestRun",
                         "N"                         : 24,
                         "NT"                        : 48,
@@ -324,8 +331,8 @@ def main(args):
     ######## Manual job setup ########
     job_parser = subparser.add_parser('setup', help='Sets up the job.')
     job_parser.add_argument('system',                           default=False,                              type=str, choices=['smaug','abel'],help='Specify system we are running on.')
-    job_parser.add_argument('-rn',  '--run_name',               default=config_default["runName"],          type=str,help='Specifiy the run name')
     job_parser.add_argument('-p',   '--partition',              default="normal",                           type=str,help='Specify partition to run program on.')
+    job_parser.add_argument('-rn',  '--run_name',               default=config_default["runName"],          type=str,help='Specifiy the run name')
     job_parser.add_argument('-t',   '--threads',                default=config_default["threads"],          type=int,help='Number of threads to run on')
     # Lattice related run variables
     job_parser.add_argument('-N',   '--NSpatial',               default=config_default["N"],                type=int,help='spatial lattice dimension')
@@ -350,17 +357,17 @@ def main(args):
     # Data generation related variables
     job_parser.add_argument('-SU3Eps', '--SU3Epsilon',          default=config_default["SU3Eps"],           type=float,help='SU3 epsilon random increment value.')
     job_parser.add_argument('-fEps', '--flowEpsilon',           default=config_default["flowEpsilon"],      type=float,help='Flow epsilon derivative small change value.')
-    job_parser.add_argument('-mSeed', '--metropolisSeed',       default=False,                              type=float,help='Seed for the Metropolis algorithm.')
-    job_parser.add_argument('-rSeed', '--randomSeed',           default=False,                              type=float,help='Seed for the random matrix generation.')
+    job_parser.add_argument('-mSeed', '--metropolisSeed',       default=config_default["metropolisSeed"],   type=float,help='Seed for the Metropolis algorithm.')
+    job_parser.add_argument('-rSeed', '--randomSeed',           default=config_default["randomMatrixSeed"], type=float,help='Seed for the random matrix generation.')
     # Other usefull parsing options
     job_parser.add_argument('-sq', '--square',                  default=False,      action='store_true',help='Enforce square sub lattices(or as close as possible).')
-    job_parser.add_argument('-chr', '--cpu_approx_runtime_hr',  default=-1,         type=int,help='Approximate cpu time in hours that will be used')
-    job_parser.add_argument('-cmin', '--cpu_approx_runtime_min',default=-1,         type=int,help='Approximate cpu time in minutes that will be used')
+    job_parser.add_argument('-chr', '--cpu_approx_runtime_hr',  default=config_default["cpu_approx_runtime_hr"], type=int,help='Approximate cpu time in hours that will be used')
+    job_parser.add_argument('-cmin', '--cpu_approx_runtime_min',default=config_default["cpu_approx_runtime_min"],type=int,help='Approximate cpu time in minutes that will be used')
     job_parser.add_argument('-ex','--exclude',                  default=False,      type=str,nargs='+',help='Nodes to exclude.')
 
     ######## Abel specific commands ########
-    job_parser.add_argument('--cpu_memory',                     default=False,      type=int,help='CPU memory to be allocated to each core')
-    job_parser.add_argument('--account_name',                   default=False,      type=str,help='Account name associated to the abel cluster')
+    job_parser.add_argument('--cpu_memory',                     default=config_default["cpu_memory"],       type=int,help='CPU memory to be allocated to each core')
+    job_parser.add_argument('--account_name',                   default=config_default["account_name"],     type=str,help='Account name associated to the abel cluster')
 
     ######## Job load parser ########
     load_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
@@ -390,51 +397,43 @@ def main(args):
         configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
         s.submitJob(configurations,args.system,args.partition)
     elif args.subparser == 'setup':
-        # Note: with setup, can only submit a single job at the time
-        partition = "normal"
+        if not args.system: raise ValueError("System value %g: something is wrong in parser." % args.system)
         excluded_nodes = ""
         system = args.system
-        if args.run_name:
-            config_default["runName"] = args.run_name
-        if args.partition:
-            partition = args.partition
-        if args.threads:
-            config_default["threads"] = args.threads
-        if args.NSpatial:
-            config_default["N"] = args.NSpatial
-        if args.NTemporal:
-            config_default["NT"] = args.NTemporal
-        if args.NTherm != -1:
-            config_default["NTherm"] = args.NTherm
-        if args.NUpdates:
-            config_default["NUpdates"] = args.NUpdates
-        if args.NCor:
-            config_default["NCor"] = args.NCor
-        if args.NConfigs:
-            config_default["NCf"] = args.NConfigs
-        if args.NFlows:
-            config_default["NFlows"] = args.NFlows
-        if args.beta:
-            config_default["beta"] = args.beta
-        if args.SU3Eps:
-            config_default["SU3Eps"] = args.SU3Eps
-        if args.hotStart:
-            config_default["hotStart"] = int(args.hotStart)
+        partition = args.partition
+        config_default["runName"]                   = args.run_name
+        config_default["threads"]                   = args.threads
+        config_default["N"]                         = args.NSpatial
+        config_default["NT"]                        = args.NTemporal
+        config_default["beta"]                      = args.beta
+        config_default["NCf"]                       = args.NConfigs
+        config_default["NCor"]                      = args.NCor
+        config_default["NTherm"]                    = args.NTherm
+        config_default["NFlows"]                    = args.NFlows
+        config_default["NUpdates"]                  = args.NUpdates
+        config_default["storeCfgs"]                 = args.storeCfgs
+        config_default["storeThermCfgs"]            = args.storeThermCfgs
+        config_default["verboseRun"]                = args.verboseRun
+        config_default["hotStart"]                  = int(args.hotStart)
+        config_default["expFunc"]                   = args.expFunc
+        config_default["observables"]               = args.observables
+        config_default["flowObservables"]           = args.flowObservables
+        config_default["SU3Eps"]                    = args.SU3Epsilon
+        config_default["fEps"]                      = args.flowEpsilon
+        config_default["metropolisSeed"]            = args.metropolisSeed:
+        config_default["randomMatrixSeed"]          = args.randomMatrixSeed
+        config_default["cpu_approx_runtime_hr"]     = args.cpu_approx_runtime_hr
+        config_default["cpu_approx_runtime_min"]    = args.cpu_approx_runtime_min
+        config_default["account_name"]              = args.account_name
+        config_default["cpu_memory"]                = args.cpu_memory
+        # Non-trivial default values
         if args.subDims:
             checkSubDimViability(args.subDims)
             config_default["subDims"] = args.subDims
         if args.square:
             config_default["subDims"] = createSquare(config_default["threads"],config_default["N"],config_default["NT"])
-        if args.storeCfgs:
-            config_default["storeCfgs"] = args.storeCfgs
         if args.exclude:
             excluded_nodes = ','.join(args.exclude)
-        if args.cpu_approx_runtime_hr != -1 and system == "abel":
-            config_default["cpu_approx_runtime_hr"] = args.cpu_approx_runtime_hr
-        if args.cpu_approx_runtime_min != -1 and system == "abel":
-            config_default["cpu_approx_runtime_min"] = args.cpu_approx_runtime_min
-        if args.account_name and system == "abel":
-            config_default["account_name"] = args.account_name
         # Submitting job
         s.submitJob([config_default],system,partition,excluded_nodes)
     elif args.subparser == 'sbatch':
@@ -453,8 +452,8 @@ def main(args):
         partition = "normal"
         excluded_nodes = ""
         system = args.system
-        if args.verbose:
-            config_default["uTestVerbose"] = int(args.verbose)
+        config_default["uTestVerbose"] = int(args.verbose)
+        # Submitting job
         s.submitJob([config_default],system,partition,excluded_nodes)
     else:
         print 'Parse error: %s \n--> exiting' % args
