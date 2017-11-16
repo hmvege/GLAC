@@ -1,4 +1,4 @@
-{   "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
+{   "bin_fn"        : "build/GluonicLQCD",
     "runName"       : "job1",
     "beta"          : 6.1,
     "N"             : 48,

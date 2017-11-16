@@ -1,4 +1,4 @@
-{   "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
+{   "bin_fn"        : "build/GluonicLQCD",
     "runName"       : "configP32run",
     "beta"          : 6.0,
     "N"             : 24,

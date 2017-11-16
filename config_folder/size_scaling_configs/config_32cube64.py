@@ -1,4 +1,4 @@
-{   "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
+{   "bin_fn"        : "build/GluonicLQCD",
     "runName"       : "sizeScaling32cube64",
     "beta"          : 6.0,
     "N"             : 32,

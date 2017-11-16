@@ -1,4 +1,4 @@
-import os, subprocess, time, sys, argparse, json
+import os, subprocess, time, sys, argparse, json, ast
 
 def getArgMaxIndex(N):
     # For getting the maximum index of an list.
@@ -206,7 +206,7 @@ set -o errexit               # exit on errors
                 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
                 tmp = proc.stdout.read()
                 try:
-                    ID = int(tmp.split()[-1])               # ID of job
+                    ID = int(tmp.split()[-1]) # ID of job
                 except IndexError:
                     print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
 
@@ -387,7 +387,7 @@ def main(args):
 
     # Loads a configuration into the world(or multiple!)
     if args.subparser == 'load':
-        configurations = [eval(open(load_argument,"r").read()) for load_argument in args.file]
+        configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
         s.submitJob(configurations,args.system,args.partition)
     elif args.subparser == 'setup':
         # Note: with setup, can only submit a single job at the time
