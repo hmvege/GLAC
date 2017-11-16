@@ -28,11 +28,10 @@ def createSquare(numprocs,NSpatial,NTemporal):
 def checkSubDimViability(subDims):
     # Doing some basic error catching before the actual jobs starts
     if len(subDims) != 4 and sum([type(i) == int for i in subDims]) != 4:
-        raise ValueError("%g is not a valid set of sub dimensions." % subDims)
+        raise ValueError("%s is not a valid set of sub dimensions." % str(subDims))
     # Ensuring all dimensions are larger than 2
     for dim in subDims:
         if dim <= 2: exit("Error: %d is not a valid dimension" % dim)
-
 
 class Slurm:
     def __init__(self, dryrun):
@@ -64,7 +63,8 @@ class Slurm:
 
     def _create_json(self,config_dict):
         # Function that creates a json file for submitting to the c++ file.
-        with file("%s/input/config.json" % self.CURRENT_PATH,"w") as json_file:
+        self.json_file_name = "config.json"
+        with file("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),"w") as json_file:
             json_dict = {}
             # Lattice related run variables
             json_dict["NSpatial"] = config_dict["N"]
@@ -98,7 +98,11 @@ class Slurm:
             json_dict["flowEpsilon"] = config_dict["flowEpsilon"]
             json_dict["metropolisSeed"] = config_dict["metropolisSeed"]
             json_dict["randomMatrixSeed"] = config_dict["randomMatrixSeed"]
-            json.dump(json.JSONEncoder(json_dict),json_file)
+            if self.dryrun:
+                print "Writing json configuration file:\n"
+                print json.dumps(json_dict,indent=4,separators=(', ', ': ')), "\n"
+            else:
+                json.dump(json_dict,json_file)
 
     def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
         if excluded_nodes:
@@ -135,8 +139,9 @@ class Slurm:
             if not os.path.isfile("%s/%s" % (self.CURRENT_PATH,binary_filename)):
                 exit("Error: binary file path not in expected location %s/%s" % (self.CURRENT_PATH,binary_filename))
 
-            checkSubDimViability(subDims)
-            self._checkFolderPath(runName)
+            if len(subDims) != 0:
+                checkSubDimViability(subDims)
+            self._create_folders(runName)
             self._create_json(job_config)
 
             # Setting job name before creating content file.
@@ -146,7 +151,7 @@ class Slurm:
             estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr,cpu_approx_runtime_min)
 
             # Setting run-command
-            run_command = "mpirun -n {0:<s} {1:<s} {2:<s}".format(threads,binary_filename,json_file)
+            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,binary_filename,self.json_file_name)
 
             # Chosing system
             if system == "smaug":
@@ -187,7 +192,7 @@ source /cluster/bin/jobsetup
 module purge                # clear any inherited modules
 module load openmpi.gnu     # loads mpi
 
-set -o errexit               # exit on errors
+set -o errexit              # exit on errors
 
 {9:<s}
 
@@ -239,23 +244,23 @@ set -o errexit               # exit on errors
 
     def cancelJob(self, jobID):
         if self.dryrun:
-            print "scancel %d" % jobID
+            print "> scancel %d" % jobID
         else:
             os.system("scancel %d" % jobID)
 
     def cancelAllJobs(self):
         if self.dryrun:
             for i in self.jobs:
-                print "scancel %d" % i
+                print "> scancel %d" % i
         else:
             for i in self.jobs:
                 os.system("scancel %d" % i)
 
     def showIDwithNb(self):
         header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'NFlows', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart', 'subDims', 'Ap.Time[hr]', 'Ap.Time[min]']
-        widthChoser = lambda s: 7 if len(s) <= 6 else len(s)+4
+        widthChoser = lambda s: 7 if len(s) <= 6 else len(s)+2
         colWidths = [widthChoser(i) for i in header_labels]
-        colWidths[2] = 20
+        colWidths[2] = 15
         for label,colWidth in zip(header_labels,colWidths):
             print '{0:<{w}}'.format(label, w=colWidth),
         print
@@ -267,7 +272,10 @@ set -o errexit               # exit on errors
 
     def clearIdFile(self):
         self.jobs = {}
-        self.updateIdFile()
+        if self.dryrun:
+            print "Clearing ID file."
+        else:
+            self.updateIdFile()
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -331,9 +339,9 @@ def main(args):
     ######## Manual job setup ########
     job_parser = subparser.add_parser('setup', help='Sets up the job.')
     job_parser.add_argument('system',                           default=False,                              type=str, choices=['smaug','abel'],help='Specify system we are running on.')
+    job_parser.add_argument('threads',                          default=False,                              type=int,help='Number of threads to run on')
     job_parser.add_argument('-p',   '--partition',              default="normal",                           type=str,help='Specify partition to run program on.')
     job_parser.add_argument('-rn',  '--run_name',               default=config_default["runName"],          type=str,help='Specifiy the run name')
-    job_parser.add_argument('-t',   '--threads',                default=config_default["threads"],          type=int,help='Number of threads to run on')
     # Lattice related run variables
     job_parser.add_argument('-N',   '--NSpatial',               default=config_default["N"],                type=int,help='spatial lattice dimension')
     job_parser.add_argument('-NT',  '--NTemporal',              default=config_default["NT"],               type=int,help='temporal lattice dimension')
@@ -342,13 +350,13 @@ def main(args):
     job_parser.add_argument('-NCf', '--NConfigs',               default=config_default["NCf"],              type=int,help='number of configurations to generate')
     job_parser.add_argument('-NCor', '--NCor',                  default=config_default["NCor"],             type=int,help='number of correlation updates to perform')
     job_parser.add_argument('-NTh', '--NTherm',                 default=config_default["NTherm"],           type=int,help='number of thermalization steps')
-    job_parser.add_argument('-NFLows','--NFlows',               default=config_default["NFlows"],           type=int,help='number of flows to perform per configuration')
+    job_parser.add_argument('-NFlows','--NFlows',               default=config_default["NFlows"],           type=int,help='number of flows to perform per configuration')
     job_parser.add_argument('-NUp', '--NUpdates',               default=config_default["NUpdates"],         type=int,help='number of updates per link')
     # Data storage related variables
     job_parser.add_argument('-sc','--storeCfgs',                default=config_default["storeCfgs"],        type=bool,help='Specifying if we are to store configurations')
     job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],   type=bool,help='Specifies if we are to store the thermalization plaquettes')
     # Human readable output related variables
-    job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       type=bool,help='Verbose run of GluonicLQCD. By default, it is on.')
+    job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       action='store_true',help='Verbose run of GluonicLQCD. By default, it is on.')
     # Setup related variables
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=bool,help='Hot start or cold start')
     job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],          type=str,help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
@@ -358,12 +366,12 @@ def main(args):
     job_parser.add_argument('-SU3Eps', '--SU3Epsilon',          default=config_default["SU3Eps"],           type=float,help='SU3 epsilon random increment value.')
     job_parser.add_argument('-fEps', '--flowEpsilon',           default=config_default["flowEpsilon"],      type=float,help='Flow epsilon derivative small change value.')
     job_parser.add_argument('-mSeed', '--metropolisSeed',       default=config_default["metropolisSeed"],   type=float,help='Seed for the Metropolis algorithm.')
-    job_parser.add_argument('-rSeed', '--randomSeed',           default=config_default["randomMatrixSeed"], type=float,help='Seed for the random matrix generation.')
+    job_parser.add_argument('-rSeed', '--randomMatrixSeed',     default=config_default["randomMatrixSeed"], type=float,help='Seed for the random matrix generation.')
     # Other usefull parsing options
-    job_parser.add_argument('-sq', '--square',                  default=False,      action='store_true',help='Enforce square sub lattices(or as close as possible).')
+    job_parser.add_argument('-sq', '--square',                  default=False,                              action='store_true',help='Enforce square sub lattices(or as close as possible).')
     job_parser.add_argument('-chr', '--cpu_approx_runtime_hr',  default=config_default["cpu_approx_runtime_hr"], type=int,help='Approximate cpu time in hours that will be used')
     job_parser.add_argument('-cmin', '--cpu_approx_runtime_min',default=config_default["cpu_approx_runtime_min"],type=int,help='Approximate cpu time in minutes that will be used')
-    job_parser.add_argument('-ex','--exclude',                  default=False,      type=str,nargs='+',help='Nodes to exclude.')
+    job_parser.add_argument('-ex','--exclude',                  default=False,                              type=str,nargs='+',help='Nodes to exclude.')
 
     ######## Abel specific commands ########
     job_parser.add_argument('--cpu_memory',                     default=config_default["cpu_memory"],       type=int,help='CPU memory to be allocated to each core')
@@ -371,9 +379,9 @@ def main(args):
 
     ######## Job load parser ########
     load_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
-    load_parser.add_argument('file',                            default=False,      type=str, nargs='+', help='Loads config file')
-    load_parser.add_argument('-s','--system',                   default=False,      type=str, required=True,choices=['smaug','abel'],help='Cluster name')
-    load_parser.add_argument('-p','--partition',                default="normal",   type=str, help='Partition to run on')
+    load_parser.add_argument('file',                            default=False,                              type=str, nargs='+', help='Loads config file')
+    load_parser.add_argument('-s','--system',                   default=False,                              type=str, required=True,choices=['smaug','abel'],help='Cluster name')
+    load_parser.add_argument('-p','--partition',                default="normal",                           type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
@@ -420,7 +428,7 @@ def main(args):
         config_default["flowObservables"]           = args.flowObservables
         config_default["SU3Eps"]                    = args.SU3Epsilon
         config_default["fEps"]                      = args.flowEpsilon
-        config_default["metropolisSeed"]            = args.metropolisSeed:
+        config_default["metropolisSeed"]            = args.metropolisSeed
         config_default["randomMatrixSeed"]          = args.randomMatrixSeed
         config_default["cpu_approx_runtime_hr"]     = args.cpu_approx_runtime_hr
         config_default["cpu_approx_runtime_min"]    = args.cpu_approx_runtime_min
