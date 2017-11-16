@@ -171,18 +171,16 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
     }
 }
 
-void System::printRunInfo(bool verbose) {
+void System::printRunInfo() {
     /*
      * Function for printing system information in the beginning.
-     * Arguments:
-     *  verbose     : for printing more detailed information
      */
     if (m_processRank == 0) {
         cout << endl;
         printLine();
         cout << "Batch name:                            " << m_batchName << endl;
         cout << "Threads:                               " << m_numprocs << endl;
-        if (verbose) cout << "Lattice size:                          " << m_latticeSize << endl;
+        cout << "Lattice size:                          " << m_latticeSize << endl;
         cout << "Lattice dimensions(spatial, temporal): " << m_NSpatial << " " << m_NTemporal << endl;
         cout << "N configurations:                      " << m_NCf << endl;
         cout << "N flow updates per configuration:      " << m_NFlows << endl;
@@ -190,20 +188,19 @@ void System::printRunInfo(bool verbose) {
         cout << "N thermalization updates:              " << m_NTherm << endl;
         cout << "N link updates:                        " << m_NUpdates << endl;
         cout << "Beta:                                  " << m_beta << endl;
-        if (verbose) {
-            cout << "SU3Eps:                                " << m_SU3Generator->getEpsilon() << endl;
-            cout << "Sub lattice Size:                      " << m_subLatticeSize << endl;
-            cout << "Sub latticedimensions:                 ";
-            for (int i = 0; i < 4; i++) {
-                cout << m_N[i] << " ";
-            }
-            cout << endl;
-            cout << "Processsors per dimension:             ";
-            for (int i = 0; i < 4; i++) {
-                cout << m_processorsPerDimension[i] << " ";
-            }
-            cout << endl;
+        cout << "SU3Eps:                                " << m_SU3Generator->getEpsilon() << endl;
+        cout << "Sub lattice Size:                      " << m_subLatticeSize << endl;
+        cout << "Sub latticedimensions:                 ";
+        for (int i = 0; i < 4; i++) {
+            cout << m_N[i] << " ";
         }
+        cout << endl;
+        cout << "Processsors per dimension:             ";
+        for (int i = 0; i < 4; i++) {
+            cout << m_processorsPerDimension[i] << " ";
+        }
+        cout << endl;
+
         printLine();
     }
 }

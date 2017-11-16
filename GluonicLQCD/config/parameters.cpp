@@ -35,8 +35,8 @@ bool Parameters::m_verbose = true;
 // For IO handling
 std::string Parameters::m_pwd = "";
 std::string Parameters::m_batchName= "";
-const std::string Parameters::m_inputFolder = "/input/";
-const std::string Parameters::m_outputFolder = "/output/";
+std::string Parameters::m_inputFolder = "/input/";
+std::string Parameters::m_outputFolder = "/output/";
 
 Parameters::Parameters()
 {

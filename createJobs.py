@@ -72,6 +72,7 @@ class Slurm:
             json_dict["NCor"] = config_dict["NCor"]
             json_dict["NTherm"] = config_dict["NTherm"]
             json_dict["NFlows"] = config_dict["NFlows"]
+            json_dict["NUpdates"] = config_dict["NUpdates"]
             # Data storage related variables
             json_dict["storeConfigurations"] = config_dict["storeCfgs"]
             json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
@@ -81,14 +82,14 @@ class Slurm:
             json_dict["pwd"] = self.CURRENT_PATH
             json_dict["batchName"] = config_dict["runName"]
             json_dict["hotStart"] = config_dict["hotStart"]
-            json_dict["exponentiationFunction"] = config_dict["exponentiationFunction"]
+            json_dict["expFunc"] = config_dict["expFunc"]
             json_dict["observables"] = config_dict["observables"]
             json_dict["flowObservables"] = config_dict["flowObservables"]
             # Testing related variables
             json_dict["unitTesting"] = config_dict["uTest"]
             json_dict["unitTestingVerbose"] = config_dict["uTestVerbose"]
             # Data generation related variables
-            json_dict["SU3Eps"] = config_dict[""]
+            json_dict["SU3Eps"] = config_dict["SU3Eps"]
             json_dict["flowEpsilon"] = config_dict["flowEpsilon"]
             json_dict["metropolisSeed"] = config_dict["metropolisSeed"]
             json_dict["randomMatrixSeed"] = config_dict["randomMatrixSeed"]
@@ -155,8 +156,8 @@ class Slurm:
 
             elif system == "abel":
                 # Abel specific commands
-                cpu_memory = 3800
-                account_name = "nn2977k"
+                cpu_memory = job_config["cpu_memory"]
+                account_name = job_config["account_name"]
                 tasks_per_node = 16 # Maximum number of threads per node
                 if threads > tasks_per_node:
                     nodes = threads / tasks_per_node
@@ -261,7 +262,7 @@ set -o errexit               # exit on errors
         self.jobs = {}
         self.updateIdFile()
 
-#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 def main(args):
     # Default configuration file.
@@ -269,30 +270,35 @@ def main(args):
         raise EnvironmentError("Build folder is not present at location %s." % (os.getcwd() + "/build"))
 
     # Default config
-    config_default = {  "bin_fn"        : "%s/build/GluonicLQCD" % os.getcwd(),
-                        "runName"       : "defaultTestRun",
-                        "beta"          : 6.0,
-                        "N"             : 24,
-                        "NT"            : 48,
-                        "NTherm"        : 200,
-                        "NCor"          : 20,
-                        "NCf"           : 100,
-                        "NFlows"        : 0,
-                        "NUpdates"      : 10,
-                        "SU3Eps"        : 0.24,
-                        "flowEpsilon"   : 0.01,
-                        "threads"       : 64,
-                        "storeCfgs"     : 1,
-                        "storeThermCfgs": 0,
-                        "hotStart"      : 0,
-                        "subDims"       : [],
-                        "verboseRun"    : 1,
-                        "uTest"         : 0,
-                        "uTestVerbose"  : 0,
-                        "cpu_approx_runtime_hr": 2,
-                        "cpu_approx_runtime_min": 0,
-                        "cpu_memory"    : 3800,
-                        "account_name"  : "nn2977k"}
+    config_default = {  "bin_fn"                    : "%s/build/GluonicLQCD" % os.getcwd(),
+                        "runName"                   : "defaultTestRun",
+                        "N"                         : 24,
+                        "NT"                        : 48,
+                        "subDims"                   : [],
+                        "beta"                      : 6.0,
+                        "NCf"                       : 100,
+                        "NCor"                      : 20,
+                        "NTherm"                    : 200,
+                        "NFlows"                    : 0,
+                        "NUpdates"                  : 10,
+                        "storeCfgs"                 : 1,
+                        "storeThermCfgs"            : 0,
+                        "verboseRun"                : 1,
+                        "hotStart"                  : 0,
+                        "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
+                        "observables"               : ["plaquette"], # Optional: topologicalCharge, energyDensity
+                        "flowObservables"           : ["plaquette"], # Optional: topologicalCharge, energyDensity
+                        "uTest"                     : 0,
+                        "uTestVerbose"              : 0,
+                        "SU3Eps"                    : 0.24,
+                        "flowEpsilon"               : 0.01,
+                        "metropolisSeed"            : 0,
+                        "randomMatrixSeed"          : 0,
+                        "threads"                   : 64,
+                        "cpu_approx_runtime_hr"     : 2,
+                        "cpu_approx_runtime_min"    : 0,
+                        "cpu_memory"                : 3800,
+                        "account_name"              : "nn2977k"}
 
     ######## Initiating command line parser ########
     description_string = '''
@@ -317,28 +323,41 @@ def main(args):
 
     ######## Manual job setup ########
     job_parser = subparser.add_parser('setup', help='Sets up the job.')
-    job_parser.add_argument('system',                           default=False,      type=str, choices=['smaug','abel'],help='Specify system we are running on.')
-    job_parser.add_argument('-rn',  '--run_name',               default='run',      type=str,help='Specifiy the run name')
-    job_parser.add_argument('-p',   '--partition',              default="normal",   type=str,help='Specify partition to run program on.')
-    job_parser.add_argument('-t',   '--threads',                default=False,      type=int,help='Number of threads to run on')
-    job_parser.add_argument('-N',   '--NSpatial',               default=False,      type=int,help='spatial lattice dimension')
-    job_parser.add_argument('-NT',  '--NTemporal',              default=False,      type=int,help='temporal lattice dimension')
-    job_parser.add_argument('-NTh', '--NTherm',                 default=-1,         type=int,help='number of thermalization steps')
-    job_parser.add_argument('-NUp', '--NUpdates',               default=False,      type=int,help='number of updates per link')
-    job_parser.add_argument('-NCf', '--NConfigs',               default=False,      type=int,help='number of configurations to generate')
-    job_parser.add_argument('-NCor', '--NCor',                  default=False,      type=int,help='number of correlation updates to perform')
-    job_parser.add_argument('-NFLows','--NFlows',               default=0,          type=int,help='number of flows to perform per configuration')
-    job_parser.add_argument('-b',   '--beta',                   default=False,      type=float,help='beta value')
-    job_parser.add_argument('-SU3', '--SU3Eps',                 default=False,      type=float,help='SU3 value')
-    job_parser.add_argument('-hs', '--hotStart',                default=False,      type=bool,help='Hot start or cold start')
-    job_parser.add_argument('-sd', '--subDims',                 default=False,      type=int,nargs=4,help='List of sub lattice dimension sizes, length 4')
+    job_parser.add_argument('system',                           default=False,                              type=str, choices=['smaug','abel'],help='Specify system we are running on.')
+    job_parser.add_argument('-rn',  '--run_name',               default=config_default["runName"],          type=str,help='Specifiy the run name')
+    job_parser.add_argument('-p',   '--partition',              default="normal",                           type=str,help='Specify partition to run program on.')
+    job_parser.add_argument('-t',   '--threads',                default=config_default["threads"],          type=int,help='Number of threads to run on')
+    # Lattice related run variables
+    job_parser.add_argument('-N',   '--NSpatial',               default=config_default["N"],                type=int,help='spatial lattice dimension')
+    job_parser.add_argument('-NT',  '--NTemporal',              default=config_default["NT"],               type=int,help='temporal lattice dimension')
+    job_parser.add_argument('-sd', '--subDims',                 default=False,                              type=int,nargs=4,help='List of sub lattice dimension sizes, length 4')
+    job_parser.add_argument('-b',   '--beta',                   default=config_default["beta"],             type=float,help='beta value')
+    job_parser.add_argument('-NCf', '--NConfigs',               default=config_default["NCf"],              type=int,help='number of configurations to generate')
+    job_parser.add_argument('-NCor', '--NCor',                  default=config_default["NCor"],             type=int,help='number of correlation updates to perform')
+    job_parser.add_argument('-NTh', '--NTherm',                 default=config_default["NTherm"],           type=int,help='number of thermalization steps')
+    job_parser.add_argument('-NFLows','--NFlows',               default=config_default["NFlows"],           type=int,help='number of flows to perform per configuration')
+    job_parser.add_argument('-NUp', '--NUpdates',               default=config_default["NUpdates"],         type=int,help='number of updates per link')
+    # Data storage related variables
+    job_parser.add_argument('-sc','--storeCfgs',                default=config_default["storeCfgs"],        type=bool,help='Specifying if we are to store configurations')
+    job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],   type=bool,help='Specifies if we are to store the thermalization plaquettes')
+    # Human readable output related variables
+    job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       type=bool,help='Verbose run of GluonicLQCD. By default, it is on.')
+    # Setup related variables
+    job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=bool,help='Hot start or cold start')
+    job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],          type=str,help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
+    job_parser.add_argument('-obs', '--observables',            default=config_default["flowObservables"],  type=str,choices=['plaquette','topc','energy'],nargs='+',help='Observables to sample for in flow.')
+    job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],  type=str,choices=['plaquette','topc','energy'],nargs='+',help='Observables to sample for in flow.')
+    # Data generation related variables
+    job_parser.add_argument('-SU3Eps', '--SU3Epsilon',          default=config_default["SU3Eps"],           type=float,help='SU3 epsilon random increment value.')
+    job_parser.add_argument('-fEps', '--flowEpsilon',           default=config_default["flowEpsilon"],      type=float,help='Flow epsilon derivative small change value.')
+    job_parser.add_argument('-mSeed', '--metropolisSeed',       default=False,                              type=float,help='Seed for the Metropolis algorithm.')
+    job_parser.add_argument('-rSeed', '--randomSeed',           default=False,                              type=float,help='Seed for the random matrix generation.')
+    # Other usefull parsing options
     job_parser.add_argument('-sq', '--square',                  default=False,      action='store_true',help='Enforce square sub lattices(or as close as possible).')
-    job_parser.add_argument('-sc','--storeCfgs',                default=True,       type=bool,help='Specifying if we are to store configurations')
-    job_parser.add_argument('-st', '--storeThermCfgs',          default=False,      type=bool,help='Specifies if we are to store the thermalization plaquettes')
     job_parser.add_argument('-chr', '--cpu_approx_runtime_hr',  default=-1,         type=int,help='Approximate cpu time in hours that will be used')
     job_parser.add_argument('-cmin', '--cpu_approx_runtime_min',default=-1,         type=int,help='Approximate cpu time in minutes that will be used')
     job_parser.add_argument('-ex','--exclude',                  default=False,      type=str,nargs='+',help='Nodes to exclude.')
-    
+
     ######## Abel specific commands ########
     job_parser.add_argument('--cpu_memory',                     default=False,      type=int,help='CPU memory to be allocated to each core')
     job_parser.add_argument('--account_name',                   default=False,      type=str,help='Account name associated to the abel cluster')

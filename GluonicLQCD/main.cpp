@@ -179,7 +179,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     // ADD VERBOSE ARGUMENT? Or not, more info is always good...?
-    pureGauge.printRunInfo(true); // Always print run info, so make optional to turn off
+    pureGauge.printRunInfo(); // Always print run info, so make optional to turn off
     pureGauge.runMetropolis(storeThermalizationObservables, writeConfigsToFile);
 //    pureGauge.runBasicStatistics(); // Will always run basic statistics, so turn off!
 //    pureGauge.printAcceptanceRate(); // Make optional, will always print run info

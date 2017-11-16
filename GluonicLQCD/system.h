@@ -149,7 +149,7 @@ public:
     void setLatticeInitRST(bool RSTInit) { m_RSTInit = RSTInit; }
 
     // Printers
-    void printRunInfo(bool verbose);
+    void printRunInfo();
     void printAcceptanceRate();
 };
 
