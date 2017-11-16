@@ -26,8 +26,8 @@ private:
     // IO parameters
     static std::string m_pwd;
     static std::string m_batchName;
-    static std::string m_inputFolder;
-    static std::string m_outputFolder;
+    static const std::string m_inputFolder;
+    static const std::string m_outputFolder;
     // Run specific variables
     static int m_NCf;
     static int m_NCor;

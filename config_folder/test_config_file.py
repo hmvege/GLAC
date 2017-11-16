@@ -6,6 +6,7 @@
     "NTherm"        : 200,
     "NCor"          : 20,
     "NCf"           : 100,
+    "NFlows"        : 0,
     "NUpdates"      : 10,
     "SU3Eps"        : 0.24,
     "threads"       : 64,
