@@ -187,7 +187,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Plaquette G(false);
     ObservableSampler GFlow(true);
     WilsonGaugeAction S(beta);
-    Flow F;
+    Flow F; // Move this inside
 
     System pureGauge(metropolisSeed, &G, &S, &F, &GFlow);
     if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);

@@ -29,6 +29,11 @@ void ConfigLoader::load(std::string jsonFileName)
     Parameters::setFilePath(j["pwd"]);
     Parameters::setBatchName(j["batchName"]);
     Parameters::setHotStart(j["hotStart"]);
+    // Sub dimension setting
+    if (!j["subDims"].empty()) {
+        unsigned int tempN[4] = {j["subDims"][0],j["subDims"][1],j["subDims"][2],j["subDims"][3]};
+        Parameters::setN(tempN);
+    }
     // Exp.func setting (for flow)
 
     // Observables setting

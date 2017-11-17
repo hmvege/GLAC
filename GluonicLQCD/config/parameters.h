@@ -54,6 +54,8 @@ public:
     Parameters();
     ~Parameters();
 
+    static void printSystemInfo();
+
     /////////////////
     //// Setters ////
     /////////////////
