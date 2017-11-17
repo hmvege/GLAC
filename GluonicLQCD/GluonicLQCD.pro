@@ -72,7 +72,8 @@ HEADERS += \
     config/parameters.h \
     flow/flow.h \
     observables/tools/observablestatistics.h \
-    config/configloader.h
+    config/configloader.h \
+    lib/json.hpp
 
 # MPI Settings
 QMAKE_CXX = mpicxx

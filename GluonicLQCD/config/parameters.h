@@ -21,8 +21,12 @@ private:
     static const double r0;
     // Program information output
     static bool m_verbose;
-    // Variables holding if we are to calculate and store the thermalization variables
+    // Variable holding if we are to calculate and store the thermalization variables
     static bool m_storeThermalizationObservables;
+    // Variable storing gauge configurations
+    static bool m_storeConfigurations;
+    // Variable storing if we are to start hot or cold
+    static bool m_hotStart;
     // IO parameters
     static std::string m_pwd;
     static std::string m_batchName;
@@ -36,55 +40,96 @@ private:
     static int m_NFlows;
     static int m_configSamplePoints;
     static int m_flowSamplePoints;
-
-    // Flow
-    static double m_flowEpsilon; // TEMP SET TO 0.02!
+    // Unit testing
+    static bool m_unitTesting;
+    static bool m_unitTestingVerbose;
+    // Data generation related variables
+    static double m_SU3Eps;
+    static double m_flowEpsilon;
+    static double m_metropolisSeed;
+    static double m_randomMatrixSeed;
 
     static double calculateLatticeSpacing(double beta);
 public:
     Parameters();
     ~Parameters();
 
-    // Setters
+    /////////////////
+    //// Setters ////
+    /////////////////
+    // Lattice related run variables
     static void setNSpatial(int NSpatial);
     static void setNTemporal(int NTemporal);
+    static void setBeta(double beta);
     static void setNCf(int NCf) { m_NCf = NCf; }
     static void setNCor(int NCor) { m_NCor = NCor; }
     static void setNTherm(int NTherm) { m_NTherm = NTherm; }
-    static void setNUpdates(int NUpdates) { m_NUpdates = NUpdates; }
     static void setNFlows(int NFlows) { m_NFlows = NFlows; }
-    static void setLatticeSize(int latticeSize) { m_latticeSize = latticeSize; }
-    static void setSubLatticeSize(int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
+    static void setNUpdates(int NUpdates) { m_NUpdates = NUpdates; }
+    // Data storage related variables
+    static void setOutputFolder(std::string outputFolder) { m_outputFolder = outputFolder; }
+    static void setInputFolder(std::string inputFolder) { m_inputFolder = inputFolder; }
+    static void setStoreConfigurations(bool storeConfigurations) { m_storeConfigurations = storeConfigurations; }
+    static void setStoreThermalizationObservables(bool storeThermalizationObservables) { m_storeThermalizationObservables = storeThermalizationObservables; }
+    // Human readable output related variables
+    static void setVerbose(bool verbose) { m_verbose = verbose; }
+    // Setup related variables
     static void setFilePath(std::string pwd) { m_pwd = pwd; }
     static void setBatchName(std::string batchName) { m_batchName = batchName; }
-    static void setInputFolder(std::string inputFolder) { m_inputFolder = inputFolder; }
-    static void setOutputFolder(std::string outputFolder) { m_outputFolder = outputFolder; }
-    static void setBeta(double beta);
-    static void setVerbose(bool verbose) { m_verbose = verbose; }
-    static void setStoreThermalizationObservables(bool storeThermalizationObservables) { m_storeThermalizationObservables = storeThermalizationObservables; }
+    static void setHotStart(bool hotStart) { m_hotStart = hotStart; }
+    // Testing related variables
+    static void setUnitTesting(bool unitTesting) { m_unitTesting = unitTesting; }
+    static void setUnitTestingVerbose(bool unitTestingVerbose) { m_unitTestingVerbose = unitTestingVerbose; }
+    // Data generation related variables
+    static void setFlowEpsilon(double flowEpsilon) { m_flowEpsilon = flowEpsilon; }
+    static void setSU3Eps(double SU3Eps) { m_SU3Eps = SU3Eps; }
+    static void setMetropolisSeed(double metropolisSeed) { m_metropolisSeed = metropolisSeed; }
+    static void setRandomMatrixSeed(double randomMatrixSeed) { m_randomMatrixSeed = randomMatrixSeed; }
+    // Lattice related variables, initiated after config input
+    static void setN(unsigned int *N) { for (int i = 0; i < 4; i++) m_N[i] = N[i]; }
+    static void setLatticeSize(int latticeSize) { m_latticeSize = latticeSize; }
+    static void setSubLatticeSize(int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
+    // Internal variables for tracking position in m_observable array
     static void setConfigSamplePoints(int NSamplePoints) { m_configSamplePoints = NSamplePoints; }
     static void setFlowSamplePoints(int NSamplePoints) { m_flowSamplePoints = NSamplePoints; }
 
-    // Getters
+    /////////////////
+    //// Getters ////
+    /////////////////
+    // Lattice related run variables
     static int getNSpatial() { return m_NSpatial; }
     static int getNTemporal() { return m_NTemporal; }
-    static int getLatticeSize() { return m_latticeSize; }
-    static int getSubLatticeSize() { return m_subLatticeSize; }
+    static double getBeta() { return m_beta; }
     static int getNCf() { return m_NCf; }
     static int getNCor() { return m_NCor; }
     static int getNTherm() { return m_NTherm; }
     static int getNUpdates() { return m_NUpdates; }
     static int getNFlows() { return m_NFlows; }
-    static void getN(unsigned int *N);
-    static double getFlowEpsilon() { return m_flowEpsilon; }
-    static double getBeta() { return m_beta; }
-    static double getLatticeSpacing() { return m_a; }
+    // Data storage related variables
+    static std::string getOutputFolder() { return m_outputFolder; }
+    static std::string getInputFolder() { return m_inputFolder; }
+    static bool getStoreConfigurations() { return m_storeConfigurations; }
+    static bool setStoreThermalizationObservables() { return m_storeThermalizationObservables; }
+    // Human readable output related variables
+    static bool getVerbose() { return m_verbose; }
+    // Setup related variables
     static std::string getFilePath() { return m_pwd; }
     static std::string getBatchName() { return m_batchName; }
-    static std::string getInputFolder() { return m_inputFolder; }
-    static std::string getOutputFolder() { return m_outputFolder; }
-    static bool getVerbose() { return m_verbose; }
-    static bool setStoreThermalizationObservables() { return m_storeThermalizationObservables; }
+    static bool getHotStart() { return m_hotStart; }
+    // Testing related variables
+    static bool getUnitTesting() { return m_unitTesting; }
+    static bool getUnitTestingVerbose() { return m_unitTestingVerbose; }
+    // Data generation related variables
+    static double getFlowEpsilon() { return m_flowEpsilon; }
+    static double getSU3Eps() { return m_SU3Eps; }
+    static double getMetropolisSeed() { return m_metropolisSeed; }
+    static double getRandomMatrixSeed() { return m_randomMatrixSeed; }
+    // Lattice related variables, initiated after config input
+    static void getN(unsigned int *N);
+    static double getLatticeSpacing() { return m_a; }
+    static int getLatticeSize() { return m_latticeSize; }
+    static int getSubLatticeSize() { return m_subLatticeSize; }
+    // Internal variables for tracking position in m_observable array
     static int getConfigSamplePoints() { return m_configSamplePoints; }
     static int getFlowSamplePoints() { return m_flowSamplePoints; }
 

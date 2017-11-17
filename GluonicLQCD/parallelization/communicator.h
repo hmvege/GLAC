@@ -42,6 +42,7 @@ namespace Parallel {
         static SU3 getNeighboursNeighbourNegativeLink(Links * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir);
 
         // Setters
+        static void init(int numprocs, int processRank) { setNumproc(numprocs); setProcessRank(processRank); }
         static void setProcessRank(int processRank) { m_processRank = processRank; }
         static void setNumproc(int numprocs) { m_numprocs = numprocs; }
         static void setN(unsigned int *N);

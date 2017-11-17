@@ -9,6 +9,7 @@
 #include "math/matrices/su3matrixgenerator.h"
 #include "parallelization/index.h"
 #include "config/parameters.h"
+#include "config/configloader.h"
 
 #include "tests/unittests.h"
 #include "tests/testsuite.h"
@@ -20,7 +21,7 @@ using std::chrono::duration_cast;
 using std::chrono::duration;
 
 /*
- * SETUP INSTRUCTIONS:
+ * SETUP INSTRUCTIONS: (UPDATE THIS!)
  * Set all parameters
  * Set correlators
  * Set and run system
@@ -28,8 +29,8 @@ using std::chrono::duration;
  * TODO:
  * [ ] Implement better map structure system. e.g. latmath.h ect
  * [ ] Enforce sub lattice cubes as standard
- * [ ] Add batch name to print-out
- * [ ] Add function for loading fields? Or make a seperate program? Should probably be done here.
+ * [x] Add batch name to print-out
+ * [x] Add function for loading fields? Or make a seperate program? Should probably be done here.
  * [ ] (optional) Switch to CORRECT method syntax, foo --> m_foo
  * [ ] (optional) Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
  */
@@ -38,7 +39,7 @@ void runUnitTests(SU3MatrixGenerator *SU3Gen, bool verbose);
 
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
-    // Initializing parallelization
+    // Initializing parallelization, HIDE THIS?
     int numprocs, processRank;
     MPI_Init (&numberOfArguments, &cmdLineArguments);
     MPI_Comm_size (MPI_COMM_WORLD, &numprocs);
@@ -70,6 +71,19 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     // Only needed if numberOfArguments > 13.
     int NSub[4];
+
+    if (numberOfArguments != 2) {
+        printf("\nError: please provide a json file to parse.");
+        MPI_Finalize();
+        exit(1);
+    }
+    Parallel::Communicator::init(numprocs,processRank);
+    ConfigLoader::load(cmdLineArguments[1]);
+
+    //================================================================================================
+    MPI_Finalize();
+    exit(1);
+    //================================================================================================
 
     if (numberOfArguments > 1) {
         batchName = cmdLineArguments[1];

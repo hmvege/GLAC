@@ -64,44 +64,44 @@ class Slurm:
     def _create_json(self,config_dict):
         # Function that creates a json file for submitting to the c++ file.
         self.json_file_name = "config.json"
-        with file("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),"w") as json_file:
-            json_dict = {}
-            # Lattice related run variables
-            json_dict["NSpatial"] = config_dict["N"]
-            json_dict["NTemporal"] = config_dict["NT"]
-            json_dict["subDims"] = config_dict["subDims"] # Will have to check for this being false
-            json_dict["beta"] = config_dict["beta"]
-            json_dict["NCf"] = config_dict["NCf"]
-            json_dict["NCor"] = config_dict["NCor"]
-            json_dict["NTherm"] = config_dict["NTherm"]
-            json_dict["NFlows"] = config_dict["NFlows"]
-            json_dict["NUpdates"] = config_dict["NUpdates"]
-            # Data storage related variables
-            json_dict["outputFolder"] = "/output/%s/" % config_dict["runName"]
-            json_dict["inputFolder"] = "/input/%s/" % config_dict["runName"]
-            json_dict["storeConfigurations"] = config_dict["storeCfgs"]
-            json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
-            # Human readable output related variables
-            json_dict["verbose"] = config_dict["verboseRun"]
-            # Setup related variables
-            json_dict["pwd"] = self.CURRENT_PATH
-            json_dict["batchName"] = config_dict["runName"]
-            json_dict["hotStart"] = config_dict["hotStart"]
-            json_dict["expFunc"] = config_dict["expFunc"]
-            json_dict["observables"] = config_dict["observables"]
-            json_dict["flowObservables"] = config_dict["flowObservables"]
-            # Testing related variables
-            json_dict["unitTesting"] = config_dict["uTest"]
-            json_dict["unitTestingVerbose"] = config_dict["uTestVerbose"]
-            # Data generation related variables
-            json_dict["SU3Eps"] = config_dict["SU3Eps"]
-            json_dict["flowEpsilon"] = config_dict["flowEpsilon"]
-            json_dict["metropolisSeed"] = config_dict["metropolisSeed"]
-            json_dict["randomMatrixSeed"] = config_dict["randomMatrixSeed"]
-            if self.dryrun:
-                print "Writing json configuration file:\n"
-                print json.dumps(json_dict,indent=4,separators=(', ', ': ')), "\n"
-            else:
+        json_dict = {}
+        # Lattice related run variables
+        json_dict["NSpatial"] = config_dict["N"]
+        json_dict["NTemporal"] = config_dict["NT"]
+        json_dict["subDims"] = config_dict["subDims"] # Will have to check for this being false
+        json_dict["beta"] = config_dict["beta"]
+        json_dict["NCf"] = config_dict["NCf"]
+        json_dict["NCor"] = config_dict["NCor"]
+        json_dict["NTherm"] = config_dict["NTherm"]
+        json_dict["NFlows"] = config_dict["NFlows"]
+        json_dict["NUpdates"] = config_dict["NUpdates"]
+        # Data storage related variables
+        json_dict["outputFolder"] = "/output/%s/" % config_dict["runName"]
+        json_dict["inputFolder"] = "/input/%s/" % config_dict["runName"]
+        json_dict["storeConfigurations"] = config_dict["storeCfgs"]
+        json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
+        # Human readable output related variables
+        json_dict["verbose"] = config_dict["verboseRun"]
+        # Setup related variables
+        json_dict["pwd"] = self.CURRENT_PATH
+        json_dict["batchName"] = config_dict["runName"]
+        json_dict["hotStart"] = config_dict["hotStart"]
+        json_dict["expFunc"] = config_dict["expFunc"]
+        json_dict["observables"] = config_dict["observables"]
+        json_dict["flowObservables"] = config_dict["flowObservables"]
+        # Testing related variables
+        json_dict["unitTesting"] = config_dict["uTest"]
+        json_dict["unitTestingVerbose"] = config_dict["uTestVerbose"]
+        # Data generation related variables
+        json_dict["SU3Eps"] = config_dict["SU3Eps"]
+        json_dict["flowEpsilon"] = config_dict["flowEpsilon"]
+        json_dict["metropolisSeed"] = config_dict["metropolisSeed"]
+        json_dict["randomMatrixSeed"] = config_dict["randomMatrixSeed"]
+        if self.dryrun:
+            print "Writing json configuration file:\n"
+            print json.dumps(json_dict,indent=4,separators=(', ', ': ')), "\n"
+        else:
+            with file("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),"w+") as json_file:
                 json.dump(json_dict,json_file)
 
     def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
@@ -171,10 +171,12 @@ class Slurm:
                 cpu_memory = job_config["cpu_memory"]
                 account_name = job_config["account_name"]
                 tasks_per_node = 16 # Maximum number of threads per node
+                
+                nodes = 1
                 if threads > tasks_per_node:
                     nodes = threads / tasks_per_node
-                    if threads % tasks_per_node != 0:
-                        raise ValueError("Tasks(number of threads) have to be divisible by 16.")
+                if threads % tasks_per_node != 0:
+                    raise ValueError("Tasks(number of threads) have to be divisible by 16.")
 
                 content ='''#!/bin/bash
 #SBATCH --job-name={0:<s}
@@ -197,6 +199,8 @@ set -o errexit              # exit on errors
 {9:<s}
 
 '''.format(job_name, account_name, estimated_time, cpu_memory, partition, threads, nodes, tasks_per_node, sbatch_exclusions, run_command)
+            elif system == "local":
+                cmd = ""
 
             job = 'jobfile.slurm'
 

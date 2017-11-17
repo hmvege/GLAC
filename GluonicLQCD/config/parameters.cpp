@@ -23,11 +23,14 @@ int Parameters::m_NFlows = 0;
 int Parameters::m_configSamplePoints = 0;
 int Parameters::m_flowSamplePoints = 0;
 
-// Flow
-double Parameters::m_flowEpsilon = 0.01;
-
 // Variables holding if we are to calculate and store the thermalization variables
 bool Parameters::m_storeThermalizationObservables = false;
+
+// Variable storing gauge configurations
+bool Parameters::m_storeConfigurations = false;
+
+// Variable storing if we are to start hot or cold
+bool Parameters::m_hotStart = false;
 
 // System constants
 bool Parameters::m_verbose = true;
@@ -37,6 +40,16 @@ std::string Parameters::m_pwd = "";
 std::string Parameters::m_batchName= "";
 std::string Parameters::m_inputFolder = "/input/";
 std::string Parameters::m_outputFolder = "/output/";
+
+// Unit testing
+bool Parameters::m_unitTesting = false;
+bool Parameters::m_unitTestingVerbose = false;
+
+// Data generation related variables
+double Parameters::m_SU3Eps = 0.24;
+double Parameters::m_flowEpsilon = 0.01;
+double Parameters::m_metropolisSeed = 0;
+double Parameters::m_randomMatrixSeed = 0;
 
 Parameters::Parameters()
 {
