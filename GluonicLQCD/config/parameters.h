@@ -3,17 +3,21 @@
 
 #include <string>
 #include <cmath>
+#include "config/sysprint.h"
 
 class Parameters
 {
+    friend class SysPrint;
 private:
     // Total lattice sizes
     static int m_NSpatial;
     static int m_NTemporal;
     static int m_latticeSize;
-    // Sub lattice sizes
+    // Sub lattice / parallel related variables
     static unsigned int m_N[4];
     static int m_subLatticeSize;
+    static int m_processorsPerDimension[4];
+    static bool m_subLatticeSizePreset;
     // Beta value constant
     static double m_beta;
     // Lattice spacing
@@ -54,7 +58,7 @@ public:
     Parameters();
     ~Parameters();
 
-    static void printSystemInfo();
+//    static void printSystemInfo(); // MOVE INTO OWN CLAS AND MAKE FRIEND?
 
     /////////////////
     //// Setters ////
@@ -72,7 +76,7 @@ public:
     static void setOutputFolder(std::string outputFolder) { m_outputFolder = outputFolder; }
     static void setInputFolder(std::string inputFolder) { m_inputFolder = inputFolder; }
     static void setStoreConfigurations(bool storeConfigurations) { m_storeConfigurations = storeConfigurations; }
-    static void setStoreThermalizationObservables(bool storeThermalizationObservables) { m_storeThermalizationObservables = storeThermalizationObservables; }
+    static void setStoreThermalizationObservables(bool storeThermalizationObservables);
     // Human readable output related variables
     static void setVerbose(bool verbose) { m_verbose = verbose; }
     // Setup related variables
@@ -88,9 +92,12 @@ public:
     static void setMetropolisSeed(double metropolisSeed) { m_metropolisSeed = metropolisSeed; }
     static void setRandomMatrixSeed(double randomMatrixSeed) { m_randomMatrixSeed = randomMatrixSeed; }
     // Lattice related variables, initiated after config input
-    static void setN(unsigned int *N) { for (int i = 0; i < 4; i++) m_N[i] = N[i]; }
     static void setLatticeSize(int latticeSize) { m_latticeSize = latticeSize; }
+    // Sub lattice / parallel related variables
+    static void setN(unsigned int *N) { for (int i = 0; i < 4; i++) m_N[i] = N[i]; }
+    static void setSubLatticePreset(bool subLatticeSizePreset) { m_subLatticeSizePreset = subLatticeSizePreset; }
     static void setSubLatticeSize(int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
+    static void setProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
     // Internal variables for tracking position in m_observable array
     static void setConfigSamplePoints(int NSamplePoints) { m_configSamplePoints = NSamplePoints; }
     static void setFlowSamplePoints(int NSamplePoints) { m_flowSamplePoints = NSamplePoints; }
@@ -127,14 +134,16 @@ public:
     static double getMetropolisSeed() { return m_metropolisSeed; }
     static double getRandomMatrixSeed() { return m_randomMatrixSeed; }
     // Lattice related variables, initiated after config input
-    static void getN(unsigned int *N);
     static double getLatticeSpacing() { return m_a; }
     static int getLatticeSize() { return m_latticeSize; }
+    // Sub lattice / parallel related variables
+    static void getN(unsigned int *N) { for (int i = 0; i < 4; i++) N[i] = m_N[i]; }
+    static bool getSubLatticePreset() { return m_subLatticeSizePreset; }
     static int getSubLatticeSize() { return m_subLatticeSize; }
+    static void getProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
     // Internal variables for tracking position in m_observable array
     static int getConfigSamplePoints() { return m_configSamplePoints; }
     static int getFlowSamplePoints() { return m_flowSamplePoints; }
-
 };
 
 #endif // PARAMETERS_H

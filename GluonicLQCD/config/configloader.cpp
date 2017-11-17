@@ -12,6 +12,7 @@ void ConfigLoader::load(std::string jsonFileName)
     // Lattice related run variables
     Parameters::setNSpatial(j["NSpatial"]);
     Parameters::setNTemporal(j["NTemporal"]);
+    Parallel::Index::setNTot(j["NSpatial"],j["NTemporal"]);
     Parameters::setBeta(j["beta"]);
     Parameters::setNCf(j["NCf"]);
     Parameters::setNCor(j["NCor"]);
@@ -33,6 +34,8 @@ void ConfigLoader::load(std::string jsonFileName)
     if (!j["subDims"].empty()) {
         unsigned int tempN[4] = {j["subDims"][0],j["subDims"][1],j["subDims"][2],j["subDims"][3]};
         Parameters::setN(tempN);
+        Parallel::Index::setN(tempN);
+        Parameters::setSubLatticePreset(true);
     }
     // Exp.func setting (for flow)
 

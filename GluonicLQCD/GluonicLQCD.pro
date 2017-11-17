@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     config/parameters.cpp \
     flow/flow.cpp \
     observables/tools/observablestatistics.cpp \
-    config/configloader.cpp
+    config/configloader.cpp \
+    config/sysprint.cpp
 
 HEADERS += \
     system.h \
@@ -73,7 +74,8 @@ HEADERS += \
     flow/flow.h \
     observables/tools/observablestatistics.h \
     config/configloader.h \
-    lib/json.hpp
+    lib/json.hpp \
+    config/sysprint.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx

@@ -4,8 +4,12 @@
 int Parameters::m_NSpatial = 0;
 int Parameters::m_NTemporal = 0;
 int Parameters::m_latticeSize = 1;
-unsigned int Parameters::m_N[] = {0};
+
+// Sub lattice / parallel related variables
+unsigned int Parameters::m_N[4] = {0};
 int Parameters::m_subLatticeSize = 1;
+int Parameters::m_processorsPerDimension[4] = {0};
+bool Parameters::m_subLatticeSizePreset = false;
 
 // Physical lattice size dependent values
 double Parameters::m_beta = 0;
@@ -74,21 +78,11 @@ double Parameters::calculateLatticeSpacing(double beta)
 {
     /*
      * Calculates the lattice spaing from the beta value.
+     * From paper by M. Guagnelli, arXiv:hep-lat/9806005
      */
     double bval = (beta - 6);
     double a = exp(-1.6805 - 1.7139*bval + 0.8155*bval*bval - 0.6667*bval*bval*bval)*0.5;
     return a/r0;
-}
-
-void Parameters::getN(unsigned int *N)
-{
-    /*
-     * Fills the array N with the lattice dimensions.
-     */
-    for (int i = 0; i < 4; i++)
-    {
-        N[i] = m_N[i];
-    }
 }
 
 void Parameters::setNSpatial(int NSpatial)
@@ -103,4 +97,14 @@ void Parameters::setNTemporal(int NTemporal)
 {
     m_NTemporal = NTemporal;
     m_latticeSize *= NTemporal;
+}
+
+void Parameters::setStoreThermalizationObservables(bool storeThermalizationObservables)
+{
+    m_storeThermalizationObservables = storeThermalizationObservables;
+    if (m_storeThermalizationObservables) {
+        Parameters::setConfigSamplePoints(m_NCf + 1 + m_NTherm);
+    } else {
+        Parameters::setConfigSamplePoints(m_NCf);
+    }
 }

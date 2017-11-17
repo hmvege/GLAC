@@ -74,10 +74,10 @@ private:
     Links * m_lattice;
     SU3 m_updatedMatrix;
 
-    // Parallelization variables and functions
-    Neighbours * m_neighbourLists = nullptr;
+//    // Parallelization variables and functions
+//    Neighbours * m_neighbourLists = nullptr;
 
-    // Variables used to perform statistics
+    // Variables used to perform statistics REDUNDANT
     double * m_observable;
     double * m_observablePreThermalization;
     double * m_observableSquared;
@@ -123,8 +123,6 @@ private:
     // RNGs
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
-
-    inline void printLine();
 public:
     System(double seed, Correlator *correlator, Action *S, Flow *F, Correlator *flowCorrelator);
     ~System();
@@ -145,8 +143,7 @@ public:
     void setSU3ExpFunc(SU3Exp * SU3ExpFunc) { m_Flow->setSU3ExpFunc(SU3ExpFunc); }
 
     // Variable setters
-    void setSubLatticeDimensions(int *NSub);
-    void setLatticeInitRST(bool RSTInit) { m_RSTInit = RSTInit; }
+    void setLatticeInitRST(bool RSTInit) { m_RSTInit = RSTInit; } // MOVE TO PARAMETERS
 
     // Printers
     void printRunInfo();

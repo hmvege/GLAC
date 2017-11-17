@@ -1,13 +1,14 @@
 #include "communicator.h"
 
+// Internal variables
 bool Parallel::Communicator::muDir = 0;
 bool Parallel::Communicator::nuDir = 0;
-unsigned int Parallel::Communicator::m_N[4];
 Neighbours * Parallel::Communicator::m_neighbourLists = nullptr;
 SU3 Parallel::Communicator::exchangeU(0);
+unsigned int Parallel::Communicator::m_N[4];
+// Variables used externally
 int Parallel::Communicator::m_processRank = 0;
 int Parallel::Communicator::m_numprocs = 0;
-
 
 Parallel::Communicator::Communicator()
 {
@@ -213,6 +214,13 @@ void Parallel::Communicator::checkSubLatticeValidity()
     }
 }
 
+void Parallel::Communicator::init(int numprocs, int processRank)
+{
+    m_numprocs = numprocs;
+    m_processRank = processRank;
+    checkProcessorValidity();
+}
+
 void Parallel::Communicator::checkProcessorValidity()
 {
     /*
@@ -244,6 +252,49 @@ void Parallel::Communicator::checkSubLatticeDimensionsValidity()
     }
 }
 
+void Parallel::Communicator::initializeSubLattice()
+{
+    int restProc = m_numprocs;
+    int processorsPerDimension[4];
+    double subLatticeSize = 1;
+    // Only finds the sub lattice size iteratively if no preset value has been defined.
+    if (!Parameters::getSubLatticePreset()) {
+        // Sets up sub lattice dimensionality without any splitting
+        for (int i = 0; i < 3; i++) {
+            m_N[i] = Parameters::getNSpatial();
+        }
+        m_N[3] = Parameters::getNTemporal();
+        // Iteratively finds and sets the sub-lattice dimensions
+        while (restProc >= 2) {
+            for (int i = 0; i < 4; i++) { // Counts from x to t
+                m_N[i] /= 2;
+                restProc /= 2;
+                if (restProc < 2) break;
+            }
+        }
+    }
+    // Sets the sub lattice dimensions
+    Parallel::Index::setN(m_N);
+    setN(m_N);
+    // Gets the total size of the sub-lattice(without faces)
+    for (int i = 0; i < 4; i++) {
+        subLatticeSize *= m_N[i];
+    }
+    // Ensures correct sub lattice dimensions
+    checkSubLatticeValidity();
+    // If has a size of 2, we exit as that may produce poor results.
+    checkSubLatticeDimensionsValidity();
+    // Sets up number of processors per dimension
+    for (int i = 0; i < 3; i++) {
+        processorsPerDimension[i] = Parameters::getNSpatial() / m_N[i];
+    }
+    processorsPerDimension[3] = Parameters::getNTemporal() / m_N[3];
+    // Initializes the neighbour lists
+    m_neighbourLists->initialize(m_processRank, m_numprocs, processorsPerDimension);
+    Parameters::setSubLatticeSize(subLatticeSize);
+    Parameters::setN(m_N);
+    Parameters::setProcessorsPerDimension(processorsPerDimension);
+}
 
 void Parallel::Communicator::setBarrier()
 {
@@ -252,7 +303,7 @@ void Parallel::Communicator::setBarrier()
 
 void Parallel::Communicator::gatherDoubleResults(double * data, int N)
 {
-    double *tempData = new double[N];
+    double *tempData = new double[N]; // Possibly bad?! TEST
     MPI_Allreduce(data,tempData,N,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
     for (int i = 0; i < N; i++) data[i] = tempData[i];
     delete [] tempData;

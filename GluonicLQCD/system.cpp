@@ -1,12 +1,11 @@
 #include <random>   // For Mersenne-Twister19937
 #include <chrono>
-//#include <ctime>
 #include <cmath>    // For exp()
-#include <fstream>
-#include <iostream>
-#include <iomanip>
-#include <cstdio>   // For io C-style handling.
-#include <cstdlib>
+#include <fstream> // REDUNDANT
+#include <iostream> // REDUNDANT
+#include <iomanip> // REDUNDANT
+#include <cstdio>   // For io C-style handling. // REDUNDANT
+#include <cstdlib> // REDUNDANT
 #include <mpi.h>
 #include "system.h"
 
@@ -22,19 +21,19 @@ System::System(double seed, Correlator *correlator, Action *S, Flow *F, Correlat
      * Class for calculating correlators using the System algorithm.
      * Takes an action object as well as a Gamma functional to be used in the action.
      */
-    m_NSpatial = Parameters::getNSpatial();
-    m_NTemporal = Parameters::getNTemporal();
+    m_NSpatial = Parameters::getNSpatial(); // REDUNDANT
+    m_NTemporal = Parameters::getNTemporal(); // REDUNDANT
+    m_beta = Parameters::getBeta(); // REDUNDANT
+    m_batchName = Parameters::getBatchName(); // REDUNDANT
+    m_pwd = Parameters::getFilePath(); // REDUNDANT
     m_latticeSize = Parameters::getLatticeSize();
     m_NCf = Parameters::getNCf(); // Number of configurations to run for
     m_NCor = Parameters::getNCor();
     m_NTherm = Parameters::getNTherm();
     m_NUpdates = Parameters::getNUpdates();
     m_NFlows = Parameters::getNFlows();
-    m_beta = Parameters::getBeta();
     m_processRank = Parallel::Communicator::getProcessRank();
     m_numprocs = Parallel::Communicator::getNumProc();
-    m_batchName = Parameters::getBatchName();
-    m_pwd = Parameters::getFilePath();
     // Sets pointers to use
     setAction(S);
     setCorrelator(correlator);
@@ -68,70 +67,31 @@ System::~System()
 void System::subLatticeSetup()
 {
     /*
-     * Sets up the sub-lattices. Adds +2 in every direction to account for sharing of s.
+     * Sets up the sub-lattices.
      */
-    // Checks initial processor validity
-    Parallel::Communicator::checkProcessorValidity();
-    int restProc = m_numprocs;
-    // Only finds the sub lattice size iteratively if no preset value has been defined.
-    if (!m_subLatticeSizePreset) {
-        // Sets up sub lattice dimensionality without any splitting
-        for (int i = 0; i < 3; i++) {
-            m_N[i] = m_NSpatial;
-        }
-        m_N[3] = m_NTemporal;
-        // Iteratively finds and sets the sub-lattice dimensions
-        while (restProc >= 2) {
-            for (int i = 0; i < 4; i++) { // Counts from x to t
-                m_N[i] /= 2;
-                restProc /= 2;
-                if (restProc < 2) break;
-            }
-        }
-    }
-    // Sets the sub lattice dimensions
-    Parallel::Index::setN(m_N);
-    Parallel::Communicator::setN(m_N);
-    // Gets the total size of the sub-lattice(without faces)
-    m_subLatticeSize = 1;
-    for (int i = 0; i < 4; i++) {
-        m_subLatticeSize *= m_N[i];
-    }
-    Parameters::setSubLatticeSize(m_subLatticeSize);
-    // Ensures correct sub lattice dimensions
-    Parallel::Communicator::checkSubLatticeValidity();
+    Parallel::Communicator::initializeSubLattice();
+    Parameters::getN(m_N);
+    m_subLatticeSize = Parameters::getSubLatticeSize();
     // Creates (sub) lattice
     m_lattice = new Links[m_subLatticeSize];
-    // If has a size of 2, we exit as that may produce poor results.
-    Parallel::Communicator::checkSubLatticeDimensionsValidity();
-    // Sets up number of processors per dimension
-    for (int i = 0; i < 3; i++) {
-        m_processorsPerDimension[i] = m_NSpatial / m_N[i];
-    }
-    m_processorsPerDimension[3] = m_NTemporal / m_N[3];
-    // Initializes the neighbour lists
-    m_neighbourLists = new Neighbours;
-    m_neighbourLists->initialize(m_processRank, m_numprocs, m_processorsPerDimension);
-    // Passes relevant information to the index handler(for the shifts).
-    Parallel::Communicator::setNeighbourList(m_neighbourLists);
     // Passes the index handler and dimensionality to the action and correlator classes.
     m_S->setN(m_N);
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
 }
 
-void System::setSubLatticeDimensions(int *NSub)
-{
-    /*
-     * Function for specifying sub-lattice dimensions.
-     * Arguments:
-     *  (int*) NSub     : takes 4 integers, one integer for each sub-lattice dimension.
-     */
-    for (int i = 0; i < 4; i++) {
-        m_N[i] = NSub[i];
-    }
-    m_subLatticeSizePreset = true;
-}
+//void System::setSubLatticeDimensions(int *NSub)
+//{
+//    /* REDUNDANT
+//     * Function for specifying sub-lattice dimensions.
+//     * Arguments:
+//     *  (int*) NSub     : takes 4 integers, one integer for each sub-lattice dimension.
+//     */
+//    for (int i = 0; i < 4; i++) {
+//        m_N[i] = NSub[i];
+//    }
+//    m_subLatticeSizePreset = true;
+//}
 
 void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
 {
@@ -176,8 +136,7 @@ void System::printRunInfo() {
      * Function for printing system information in the beginning.
      */
     if (m_processRank == 0) {
-        cout << endl;
-        printLine();
+        SysPrint::printLine();
         cout << "Batch name:                            " << m_batchName << endl;
         cout << "Threads:                               " << m_numprocs << endl;
         cout << "Lattice size:                          " << m_latticeSize << endl;
@@ -200,8 +159,7 @@ void System::printRunInfo() {
             cout << m_processorsPerDimension[i] << " ";
         }
         cout << endl;
-
-        printLine();
+        SysPrint::printLine();
     }
 }
 
@@ -399,7 +357,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    delete [] m_actionDensity;
 //    MPI_Finalize(); exit(1);
     //// ===================================================================================
-    if (m_processRank == 0) {
+    if (m_processRank == 0) { // MOVE INTO PRINTER
         cout << "Store thermalization observables:      ";
         if (m_storeThermalizationObservables) {
             cout << "TRUE" << endl;
@@ -412,7 +370,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
         } else {
             cout << "FALSE" << endl;
         }
-        printLine();
+        SysPrint::printLine();
     }
 
     // Variables for checking performance of the thermalization update.
@@ -472,13 +430,12 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
     if (m_processRank == 0) {
-        printf("\n");
-        printLine();
+        SysPrint::printLine();
         printf("System completed.");
         printf("\nAcceptancerate: %.16f ", getAcceptanceRate());
         printf("\nAverage update time: %.6f sec.", m_updateStorer/double(m_NCf*m_NCor));
         printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
-        printLine();
+        SysPrint::printLine();
     }
     m_correlator->runStatistics();
     m_correlator->writeStatisticsToFile(); // Runs statistics, writes to file, and prints results (if verbose is on)
@@ -553,55 +510,17 @@ void System::runBasicStatistics()
     m_varianceObservable = (averagedObservableSquared - m_averagedObservable*m_averagedObservable)/double(m_NCf);
     m_stdObservable = sqrt(m_varianceObservable);
     if (m_processRank == 0) {
-        printLine();
+        SysPrint::printLine();
         cout << "Average plaqutte:      " << m_averagedObservable << endl;
         cout << "Standard deviation:    " << m_stdObservable << endl;
         cout << "Variance:              " << m_varianceObservable << endl;
-        printLine();
+        SysPrint::printLine();
     }
 }
-
-//void System::writeDataToFile()
-//{
-//    /*
-//     * For writing the observables to file.
-//     */
-//    if (m_processRank == 0) {
-//        std::ofstream file;
-//        std::string fname = m_pwd + m_outputFolder + m_batchName + ".dat";
-//        file.open(fname);
-//        file << "beta " << m_beta << endl;
-//        file << "acceptanceCounter " << getAcceptanceRate() << endl;
-//        file << "NCor " << m_NCor << endl;
-//        file << "NCf " << m_NCf << endl;
-//        file << "NTherm " << m_NTherm << endl;
-//        file << std::setprecision(15) << "AverageObservable " << m_averagedObservable << endl; // can setprecision be moved outside the write-to-file?
-//        file << std::setprecision(15) << "VarianceObservable " << m_varianceObservable << endl;
-//        file << std::setprecision(15) << "stdObservable " << m_stdObservable << endl;
-//        if (m_storeThermalizationObservables) {
-//            for (int i = 0; i < m_NTherm+1; i++) {
-//                file << std::setprecision(15) << m_observablePreThermalization[i] << endl;
-//            }
-//            file << endl;
-//        }
-//        for (int i = 0; i < m_NCf; i++) {
-//            file << std::setprecision(15) << m_observable[i] << endl;
-//        }
-//        file.close();
-//        cout << fname << " written." << endl;
-//    }
-//}
-
 double System::getAcceptanceRate()
 {
     /*
      * Returns the acceptance ratio of the main run of the System algorithm.
      */
     return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_NUpdates*m_latticeSize*4); // Times 4 from the Lorentz indices
-}
-
-inline void System::printLine()
-{
-    for (int i = 0; i < 60; i++) cout << "=";
-    cout << endl;
 }

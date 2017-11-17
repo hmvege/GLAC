@@ -173,8 +173,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
         Parameters::setConfigSamplePoints(NCf);
     }
     // Setting parallel variables
-    Parallel::Communicator::setNumproc(numprocs);
-    Parallel::Communicator::setProcessRank(processRank);
+    Parallel::Communicator::init(numprocs,processRank);
     // Sets lattice dimensions
     Parallel::Index::setNTot(N,N_T);
     // Main program part
@@ -190,7 +189,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Flow F; // Move this inside
 
     System pureGauge(metropolisSeed, &G, &S, &F, &GFlow);
-    if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
+//    if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
     pureGauge.latticeSetup(&SU3Gen, hotStart);
     // ADD VERBOSE ARGUMENT? Or not, more info is always good...?
     pureGauge.printRunInfo(); // Always print run info, so make optional to turn off
