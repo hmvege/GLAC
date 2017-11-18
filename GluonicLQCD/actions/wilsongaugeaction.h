@@ -19,7 +19,7 @@ private:
     double tempDiag;
 
 public:
-    WilsonGaugeAction(double beta);
+    WilsonGaugeAction();
     ~WilsonGaugeAction();
     double getDeltaAction(Links *lattice, SU3 UPrime, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
     void computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);

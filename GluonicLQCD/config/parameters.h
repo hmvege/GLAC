@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cmath>
+#include <vector>
 #include "config/sysprint.h"
 
 class Parameters
@@ -53,6 +54,11 @@ private:
     static double m_metropolisSeed;
     static double m_randomMatrixSeed;
 
+    // Name of samplers
+    static std::string m_expFuncName;
+    static std::vector<std::string> m_observablesList;
+    static std::vector<std::string> m_flowObservablesList;
+
     static double calculateLatticeSpacing(double beta);
 public:
     Parameters();
@@ -101,6 +107,10 @@ public:
     // Internal variables for tracking position in m_observable array
     static void setConfigSamplePoints(int NSamplePoints) { m_configSamplePoints = NSamplePoints; }
     static void setFlowSamplePoints(int NSamplePoints) { m_flowSamplePoints = NSamplePoints; }
+    // Name of samplers
+    static void setExpFuncName(std::string expFuncName) { m_expFuncName = expFuncName;}
+    static void setObservableList(std::vector<std::string> observablesList) { m_observablesList = observablesList; }
+    static void setFlowObservablesList(std::vector<std::string> flowObservablesList) { m_flowObservablesList = flowObservablesList; }
 
     /////////////////
     //// Getters ////
@@ -118,7 +128,7 @@ public:
     static std::string getOutputFolder() { return m_outputFolder; }
     static std::string getInputFolder() { return m_inputFolder; }
     static bool getStoreConfigurations() { return m_storeConfigurations; }
-    static bool setStoreThermalizationObservables() { return m_storeThermalizationObservables; }
+    static bool getStoreThermalizationObservables() { return m_storeThermalizationObservables; }
     // Human readable output related variables
     static bool getVerbose() { return m_verbose; }
     // Setup related variables
@@ -144,6 +154,16 @@ public:
     // Internal variables for tracking position in m_observable array
     static int getConfigSamplePoints() { return m_configSamplePoints; }
     static int getFlowSamplePoints() { return m_flowSamplePoints; }
+    // Name of samplers
+    static std::string getExpFuncName() { return m_expFuncName; }
+    static std::vector<std::string> getObservablesList() { return m_observablesList; }
+    static std::vector<std::string> getFlowObservablesList() { return m_flowObservablesList; }
+
+    // Observable
+    // Flow Observable
+    // Exponentiation function
+//    static
+
 };
 
 #endif // PARAMETERS_H

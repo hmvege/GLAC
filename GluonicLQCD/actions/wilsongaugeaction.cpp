@@ -1,8 +1,8 @@
 #include "wilsongaugeaction.h"
 
-WilsonGaugeAction::WilsonGaugeAction(double beta): Action()
+WilsonGaugeAction::WilsonGaugeAction(): Action()
 {
-    m_beta = beta;
+    m_beta = Parameters::getBeta();
     m_multiplicationFactor = -m_beta/3.0;
     for (int i = 0; i < 4; i++) {
         m_muIndex[i] = 0;

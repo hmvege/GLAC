@@ -8,11 +8,14 @@
 
 class SysPrint
 {
+private:
+    static std::string getTrueOrFalseString(bool i);
+    static std::string getListString(std::vector<std::string> observableList);
 public:
     SysPrint();
 
     static void printSystemInfo();
-    inline static void printLine();
+    static void printLine();
 };
 
 #endif // SYSPRINT_H

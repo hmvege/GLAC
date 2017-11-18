@@ -4,14 +4,6 @@
  * A class for performing Wilson flow on a gauge field configuration.
  */
 
-Flow::Flow()
-{
-    Parameters::getN(m_N);
-    m_epsilon = Parameters::getFlowEpsilon();
-    m_subLatticeSize = Parameters::getSubLatticeSize();
-    m_tempLattice = new Links[m_subLatticeSize];
-}
-
 Flow::Flow(Action *S)
 {
     Parameters::getN(m_N);
@@ -19,6 +11,7 @@ Flow::Flow(Action *S)
     m_subLatticeSize = Parameters::getSubLatticeSize();
     m_tempLattice = new Links[m_subLatticeSize];
     m_S = S;
+    setSU3ExpFunc();
 }
 
 Flow::~Flow()
@@ -107,20 +100,20 @@ void Flow::flowField(Links *lattice)
     }
 }
 
-void Flow::setAction(Action *S)
-{
-    /*
-     * Sets the action class of the Flow.
-     */
-    m_S = S;
-}
-
-void Flow::setSU3ExpFunc(SU3Exp *SU3ExpFunc)
+void Flow::setSU3ExpFunc()
 {
     /*
      * Sets the prefered method of exponentiation.
+     * Does nothing if name is not recognized.
+     * If Morningstar, do nothing as that is default.
      */
-    m_SU3ExpFunc = SU3ExpFunc;
+    if (Parameters::getExpFuncName() == "taylor2") {
+        m_SU3ExpFunc = new Taylor2Exp;
+    } else if (Parameters::getExpFuncName() == "taylor4") {
+        m_SU3ExpFunc = new Taylor4Exp;
+    } else if (Parameters::getExpFuncName() == "luscher") {
+        m_SU3ExpFunc = new ExpLuscher;
+    }
 }
 
 inline void Flow::updateLattice(Links *lattice)

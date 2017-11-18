@@ -301,6 +301,12 @@ void Parallel::Communicator::setBarrier()
     MPI_Barrier(MPI_COMM_WORLD);
 }
 
+void Parallel::Communicator::MPIExit()
+{
+    MPI_Finalize();
+    exit(m_processRank);
+}
+
 void Parallel::Communicator::gatherDoubleResults(double * data, int N)
 {
     double *tempData = new double[N]; // Possibly bad?! TEST

@@ -53,9 +53,9 @@ void ObservableStorer::printStatistics()
 //        printf("\nVariance%-20.15f", m_varianceObservable);
 //        printf("\nStandard deviation: %-20.15f", m_stdObservable);
         printf("\n%-20s ", m_observableName.c_str());
-        printf("%-20.15f", m_averagedObservable);
-        printf("%-20.15f", m_varianceObservable);
-        printf("%-20.15f", m_stdObservable);
+        printf("%-20.15f ", m_averagedObservable);
+        printf("%-20.15f ", m_varianceObservable);
+        printf("%-20.15f ", m_stdObservable);
     }
 }
 

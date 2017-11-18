@@ -75,7 +75,8 @@ HEADERS += \
     observables/tools/observablestatistics.h \
     config/configloader.h \
     lib/json.hpp \
-    config/sysprint.h
+    config/sysprint.h \
+    math/flowexpfunctions.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx

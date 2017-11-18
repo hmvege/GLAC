@@ -15,46 +15,77 @@ using std::chrono::steady_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 
-System::System(double seed, Correlator *correlator, Action *S, Flow *F, Correlator *flowCorrelator)
+//System::System(Correlator *correlator, Action *S, Flow *F, Correlator *flowCorrelator)
+System::System()
 {
     /*
      * Class for calculating correlators using the System algorithm.
      * Takes an action object as well as a Gamma functional to be used in the action.
      */
-    m_NSpatial = Parameters::getNSpatial(); // REDUNDANT
-    m_NTemporal = Parameters::getNTemporal(); // REDUNDANT
-    m_beta = Parameters::getBeta(); // REDUNDANT
-    m_batchName = Parameters::getBatchName(); // REDUNDANT
-    m_pwd = Parameters::getFilePath(); // REDUNDANT
-    m_latticeSize = Parameters::getLatticeSize();
-    m_NCf = Parameters::getNCf(); // Number of configurations to run for
-    m_NCor = Parameters::getNCor();
-    m_NTherm = Parameters::getNTherm();
-    m_NUpdates = Parameters::getNUpdates();
-    m_NFlows = Parameters::getNFlows();
-    m_processRank = Parallel::Communicator::getProcessRank();
-    m_numprocs = Parallel::Communicator::getNumProc();
+    // Retrieving program parameters
+    m_latticeSize   = Parameters::getLatticeSize();
+    m_NCf           = Parameters::getNCf(); // Number of configurations to run for
+    m_NCor          = Parameters::getNCor();
+    m_NTherm        = Parameters::getNTherm();
+    m_NUpdates      = Parameters::getNUpdates();
+    m_NFlows        = Parameters::getNFlows();
+    m_processRank   = Parallel::Communicator::getProcessRank();
+    m_numprocs      = Parallel::Communicator::getNumProc();
+    m_pwd           = Parameters::getFilePath();
+    m_batchName     = Parameters::getBatchName();
+    m_inputFolder   = Parameters::getInputFolder();
+    m_outputFolder  = Parameters::getOutputFolder();
+    m_storeThermalizationObservables    = Parameters::getStoreThermalizationObservables();
+    m_writeConfigsToFile                = Parameters::getStoreConfigurations();
     // Sets pointers to use
-    setAction(S);
-    setCorrelator(correlator);
-    setFlowCorrelator(flowCorrelator);
-    setFlow(F); // Setting it outside, in case we want to specify the exponentiation function.
+    setAction();
+    setObservable(Parameters::getObservablesList(),false);
+    if (m_NFlows != 0) {
+        setObservable(Parameters::getFlowObservablesList(),true);
+        m_flow = new Flow(m_S); // Ensure it does not go out of scope
+    }
 
-    // For only one observable
-    m_observablePreThermalization = new double[m_NTherm+1];
-    m_observable = new double[m_NCf]; // Correlator values
-    m_observableSquared = new double[m_NCf];
-
-    std::mt19937_64 gen(seed); // Starting up the Mersenne-Twister19937 function
+    // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
+    std::mt19937_64 gen(Parameters::getMetropolisSeed());
     std::uniform_real_distribution<double> uni_dist(0,1);
     m_generator = gen;
     m_uniform_distribution = uni_dist;
-    for (int alpha = 0; alpha < m_NCf; alpha++)
-    {
-        m_observable[alpha] = 0;
-        m_observableSquared[alpha] = 0;
+}
+
+void System::setAction()
+{
+    m_S = new WilsonGaugeAction;
+}
+
+
+void System::setObservable(std::vector<std::string> obsList, bool flow)
+{
+    bool plaq = false;
+    bool topc = false;
+    bool energy = false;
+    for (unsigned int i = 0; i < obsList.size(); i++) {
+        if (obsList[i] == "plaquette") plaq = true;
+        if (obsList[i] == "topc") topc = true;
+        if (obsList[i] == "energy") energy = true;
+    }
+    if (plaq && !topc && !energy) {
+        // Initialize plaquette sampler
+        if (flow) {
+            m_flowCorrelator = new Plaquette(flow);
+        } else {
+            m_correlator = new Plaquette(flow);
+        }
+    }
+    else {
+        // All other cases, might as well initialize the full machinery
+        if (flow) {
+            m_flowCorrelator = new ObservableSampler(flow);
+        } else {
+            m_correlator = new ObservableSampler(flow);
+        }
     }
 }
+
 
 System::~System()
 {
@@ -80,27 +111,14 @@ void System::subLatticeSetup()
     m_correlator->setLatticeSize(m_subLatticeSize);
 }
 
-//void System::setSubLatticeDimensions(int *NSub)
-//{
-//    /* REDUNDANT
-//     * Function for specifying sub-lattice dimensions.
-//     * Arguments:
-//     *  (int*) NSub     : takes 4 integers, one integer for each sub-lattice dimension.
-//     */
-//    for (int i = 0; i < 4; i++) {
-//        m_N[i] = NSub[i];
-//    }
-//    m_subLatticeSizePreset = true;
-//}
-
-void System::latticeSetup(SU3MatrixGenerator *SU3Generator, bool hotStart)
+void System::latticeSetup(SU3MatrixGenerator *SU3Generator)
 {
     /*
      * Sets up the lattice and its matrices.
      */
     subLatticeSetup();
     m_SU3Generator = SU3Generator;
-    if (hotStart) {
+    if (Parameters::getHotStart()) {
         // All starts with a completely random matrix.
         for (int i = 0; i < m_subLatticeSize; i++)
         {
@@ -197,14 +215,12 @@ void System::thermalize()
         m_postUpdate = steady_clock::now(); // REDUNDANT?
         m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
         m_updateStorerTherm += m_updateTime.count();
-        if (iTherm % 20 == 0) { // Avg. time per update every 10th update
-            if (m_processRank == 0) {
-                printf("\nAvgerage update time(every 10th): %f sec.", m_updateStorerTherm/double(iTherm));
+        if (m_processRank == 0) {
+            printf("\r%6.2f %% done. ", iTherm/double(m_NTherm));
+            if (iTherm % 20 == 0) { // Avg. time per update every 10th update
+                printf("Avgerage update time(every 10th): %10.6f sec.", m_updateStorerTherm/double(iTherm));
             }
         }
-//        if (m_processRank == 0) {
-//            printf("\r%6.2f %% done", i/double(m_NTherm));
-//        }
 
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (m_storeThermalizationObservables) {
@@ -273,12 +289,11 @@ void System::update()
     }
 }
 
-void System::runMetropolis(bool storeThermalizationObservables, bool writeConfigsToFile)
+void System::runMetropolis()
 {
     /*
      * Runs the generation of gauge field configurations through the Metropolis algorithm.
      */
-    m_storeThermalizationObservables = storeThermalizationObservables;
     //// TESTS ==============================================================================
 //    // Common files
 //    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
@@ -357,32 +372,17 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
 //    delete [] m_actionDensity;
 //    MPI_Finalize(); exit(1);
     //// ===================================================================================
-    if (m_processRank == 0) { // MOVE INTO PRINTER
-        cout << "Store thermalization observables:      ";
-        if (m_storeThermalizationObservables) {
-            cout << "TRUE" << endl;
-        } else {
-            cout << "FALSE" << endl;
-        }
-        cout << "Store field configurations:            ";
-        if (writeConfigsToFile) {
-            cout << "TRUE" << endl;
-        } else {
-            cout << "FALSE" << endl;
-        }
-        SysPrint::printLine();
-    }
-
     // Variables for checking performance of the thermalization update.
     m_updateStorerTherm = 0;
 
     // System thermalization
-    thermalize();
+    if (!m_systemIsThermalized) {
+        thermalize();
+    }
 
     // Printing header for main run
     if (m_processRank == 0) {
         printf("\ni    %-*s Avg.Update-time  Accept/reject", m_correlator->getHeaderWidth(),m_correlator->getObservableName().c_str());
-//        printf("\ni     %-20s  Avg.Update-time   Accept/reject", m_correlator->getObservableName().c_str());
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -425,7 +425,7 @@ void System::runMetropolis(bool storeThermalizationObservables, bool writeConfig
             }
         }
         // Writing field config to file
-        if (writeConfigsToFile) IO::FieldIO::writeFieldToFile(m_lattice,iConfig);
+        if (m_writeConfigsToFile) IO::FieldIO::writeFieldToFile(m_lattice,iConfig);
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
@@ -448,7 +448,7 @@ void System::flowConfiguration(int iConfig)
      */
     for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
-        m_Flow->flowField(m_lattice);
+        m_flow->flowField(m_lattice);
         m_flowCorrelator->calculate(m_lattice,iFlow + m_NThermSteps);
     }
     /* Make flow statistics, that is, the only stats that is needed is the sum of all configurations, which cant be reached untill end.
@@ -493,30 +493,31 @@ void System::flowConfigurations(std::vector<std::string> configurationNames)
     printf("\nFlowing of %lu configurations done.", configurationNames.size());
 }
 
-void System::runBasicStatistics()
-{
-    /*
-     * Class instance for sampling statistics from our system.
-     */
-    double averagedObservableSquared = 0;
-    // Performing an average over the Monte Carlo obtained values
-    for (int alpha = 0; alpha < m_NCf; alpha++)
-    {
-        m_averagedObservable += m_observable[alpha];
-        averagedObservableSquared += m_observable[alpha]*m_observable[alpha];
-    }
-    m_averagedObservable /= double(m_NCf);
-    averagedObservableSquared /= double(m_NCf);
-    m_varianceObservable = (averagedObservableSquared - m_averagedObservable*m_averagedObservable)/double(m_NCf);
-    m_stdObservable = sqrt(m_varianceObservable);
-    if (m_processRank == 0) {
-        SysPrint::printLine();
-        cout << "Average plaqutte:      " << m_averagedObservable << endl;
-        cout << "Standard deviation:    " << m_stdObservable << endl;
-        cout << "Variance:              " << m_varianceObservable << endl;
-        SysPrint::printLine();
-    }
-}
+//void System::runBasicStatistics()
+//{
+//    /*
+//     * Class instance for sampling statistics from our system.
+//     */
+//    double averagedObservableSquared = 0;
+//    // Performing an average over the Monte Carlo obtained values
+//    for (int alpha = 0; alpha < m_NCf; alpha++)
+//    {
+//        m_averagedObservable += m_observable[alpha];
+//        averagedObservableSquared += m_observable[alpha]*m_observable[alpha];
+//    }
+//    m_averagedObservable /= double(m_NCf);
+//    averagedObservableSquared /= double(m_NCf);
+//    m_varianceObservable = (averagedObservableSquared - m_averagedObservable*m_averagedObservable)/double(m_NCf);
+//    m_stdObservable = sqrt(m_varianceObservable);
+//    if (m_processRank == 0) {
+//        SysPrint::printLine();
+//        cout << "Average plaqutte:      " << m_averagedObservable << endl;
+//        cout << "Standard deviation:    " << m_stdObservable << endl;
+//        cout << "Variance:              " << m_varianceObservable << endl;
+//        SysPrint::printLine();
+//    }
+//}
+
 double System::getAcceptanceRate()
 {
     /*

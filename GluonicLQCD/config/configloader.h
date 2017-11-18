@@ -10,9 +10,6 @@
 namespace ConfigLoader
 {
     void load(std::string jsonFileName);
-    namespace {
-        // Namespace unaccessible outside of the ConfigLoader namespace.
-    }
 }
 
 #endif // CONFIGLOADER_H

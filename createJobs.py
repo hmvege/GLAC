@@ -86,6 +86,7 @@ class Slurm:
         json_dict["pwd"] = self.CURRENT_PATH
         json_dict["batchName"] = config_dict["runName"]
         json_dict["hotStart"] = config_dict["hotStart"]
+        print config_dict["hotStart"]
         json_dict["expFunc"] = config_dict["expFunc"]
         json_dict["observables"] = config_dict["observables"]
         json_dict["flowObservables"] = config_dict["flowObservables"]
@@ -307,8 +308,8 @@ def main(args):
                         "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
                         "observables"               : ["plaquette"], # Optional: topologicalCharge, energyDensity
                         "flowObservables"           : ["plaquette"], # Optional: topologicalCharge, energyDensity
-                        "uTest"                     : 0,
-                        "uTestVerbose"              : 0,
+                        "uTest"                     : False,
+                        "uTestVerbose"              : False,
                         "SU3Eps"                    : 0.24,
                         "flowEpsilon"               : 0.01,
                         "metropolisSeed"            : 0,
@@ -364,7 +365,7 @@ def main(args):
     # Setup related variables
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=bool,help='Hot start or cold start')
     job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],          type=str,help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
-    job_parser.add_argument('-obs', '--observables',            default=config_default["flowObservables"],  type=str,choices=['plaquette','topc','energy'],nargs='+',help='Observables to sample for in flow.')
+    job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],      type=str,choices=['plaquette','topc','energy'],nargs='+',help='Observables to sample for in flow.')
     job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],  type=str,choices=['plaquette','topc','energy'],nargs='+',help='Observables to sample for in flow.')
     # Data generation related variables
     job_parser.add_argument('-SU3Eps', '--SU3Epsilon',          default=config_default["SU3Eps"],           type=float,help='SU3 epsilon random increment value.')
@@ -426,7 +427,7 @@ def main(args):
         config_default["storeCfgs"]                 = args.storeCfgs
         config_default["storeThermCfgs"]            = args.storeThermCfgs
         config_default["verboseRun"]                = args.verboseRun
-        config_default["hotStart"]                  = int(args.hotStart)
+        config_default["hotStart"]                  = args.hotStart
         config_default["expFunc"]                   = args.expFunc
         config_default["observables"]               = args.observables
         config_default["flowObservables"]           = args.flowObservables
@@ -458,13 +459,13 @@ def main(args):
         if args.clearIDFile:
             s.clearIdFile()
     elif args.subparser == 'utest':
-        config_default["uTest"] = 1
+        config_default["uTest"] = True
         config_default["cpu_approx_runtime_hr"] = 0
         config_default["cpu_approx_runtime_min"] = 10
         partition = "normal"
         excluded_nodes = ""
         system = args.system
-        config_default["uTestVerbose"] = int(args.verbose)
+        config_default["uTestVerbose"] = args.verbose
         # Submitting job
         s.submitJob([config_default],system,partition,excluded_nodes)
     else:

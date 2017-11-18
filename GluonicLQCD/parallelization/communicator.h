@@ -51,6 +51,7 @@ namespace Parallel {
         static int getNumProc() { return m_numprocs; }
 
         // MPI
+        static void MPIExit();
         static void setBarrier();
         static void gatherDoubleResults(double * data, int N);
 

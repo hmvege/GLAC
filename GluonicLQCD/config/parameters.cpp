@@ -55,6 +55,12 @@ double Parameters::m_flowEpsilon = 0.01;
 double Parameters::m_metropolisSeed = 0;
 double Parameters::m_randomMatrixSeed = 0;
 
+// Name of samplers
+std::string Parameters::m_expFuncName = "";
+std::vector<std::string> Parameters::m_observablesList = {};
+std::vector<std::string> Parameters::m_flowObservablesList = {};
+
+
 Parameters::Parameters()
 {
 
