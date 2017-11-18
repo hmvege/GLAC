@@ -35,7 +35,7 @@ using std::chrono::duration;
  * [ ] (optional) Check that the lattice is gauge invariant: M^-1 * U * M, see Gattinger intro on how to make gauge fields gauge invariant!
  */
 
-void runUnitTests(SU3MatrixGenerator *SU3Gen);
+void runUnitTests();
 
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
@@ -52,32 +52,17 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Parallel::Communicator::init(numprocs,processRank);
     ConfigLoader::load(cmdLineArguments[1]);
 
-    //================================================================================================
-    Parallel::Communicator::MPIExit();
-    //================================================================================================
-
     // Program timers
     steady_clock::time_point programStart, programEnd;
     duration<double> programTime;
     programStart = steady_clock::now();
 
     // Main program part
-    SU3MatrixGenerator SU3Gen(Parameters::getSU3Eps(), Parameters::getRandomMatrixSeed());
-    if (Parameters::getUnitTesting() && processRank == 0) runUnitTests(&SU3Gen);
-//    Plaquette G(false);
-//    ObservableSampler GFlow(true);
-//    WilsonGaugeAction S(beta);
-//    Flow F; // Move this inside
+    if (Parameters::getUnitTesting() && processRank == 0) runUnitTests();
     System pureGauge;
-//    System pureGauge(&G, &S, &F, &GFlow);
-//    if (numberOfArguments > 14) pureGauge.setSubLatticeDimensions(NSub);
-    pureGauge.latticeSetup(&SU3Gen);
-    // ADD VERBOSE ARGUMENT? Or not, more info is always good...?
     SysPrint::printSystemInfo();
-    pureGauge.runMetropolis();
-//    pureGauge.runBasicStatistics(); // Will always run basic statistics, so turn off!
-//    pureGauge.printAcceptanceRate(); // Make optional, will always print run info
-//    pureGauge.writeDataToFile(); // MAKE OPTIONAL ARGUEMENT, that is will always be executed, but can be turned off by calling this function explicitly and setting it to false
+    pureGauge.latticeSetup();
+//    pureGauge.runMetropolis();
 
     // Finalizing and printing time taken
     programEnd = steady_clock::now();
@@ -88,11 +73,10 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     return 0;
 }
 
-void runUnitTests(SU3MatrixGenerator *SU3Gen)
+void runUnitTests()
 {
 //    runBoolTest(1e9);
     TestSuite unitTester;
-    unitTester.setRNG(SU3Gen);
     unitTester.runFullTestSuite(Parameters::getUnitTestingVerbose());
 //    SU3BaseTests();
 //    runMatrixPerformanceTest(0.24,std::time(nullptr),1e7,true,false);

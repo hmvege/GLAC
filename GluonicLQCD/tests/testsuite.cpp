@@ -8,7 +8,12 @@ TestSuite::TestSuite()
     /*
      * Class for running unit tests.
      */
-    // Initialize RNG here.
+    // Initiating the Mersenne Twister random number generator
+    m_generator = std::mt19937_64(std::time(nullptr));
+    m_uniform_distribution = std::uniform_real_distribution<double>(0,1); // Print out max values to ensure we dont go out of scope!!
+    // Initiating the SU3 Matrix generator
+    m_SU3Generator = new SU3MatrixGenerator;
+
     //// 3x3 COMPLEX MATRICES
     // Setting up matrix U1
     U1.setComplex(complex(1,1),0);
@@ -167,18 +172,6 @@ TestSuite::TestSuite()
     sCT.setComplex(complex(2,-1),2);
     sCT.setComplex(complex(1,-2),4);
     sCT.setComplex(complex(2,-2),6);
-}
-
-void TestSuite::setRNG(SU3MatrixGenerator *SU3Gen)
-{
-    // Initiating the Mersenne Twister random number generator
-    std::mt19937_64 gen(std::time(nullptr));
-    std::uniform_real_distribution<double> uni_dist(0,1);
-    m_generator = gen;
-    m_uniform_distribution = uni_dist; // Print out max values to ensure we dont go out of scope!!
-
-    // Initiating the SU3 Matrix generator
-    m_SU3Generator = SU3Gen;
 }
 
 void TestSuite::runFullTestSuite(bool verbose)

@@ -36,6 +36,7 @@ private:
     int m_NSpatial;
     int m_NTemporal;
     unsigned int m_N[4];
+    int m_latticeSize;
     // Beta value constant
     double m_beta;
     // Updating constants
@@ -54,21 +55,20 @@ private:
     int m_processorsPerDimension[4];
     int m_subLatticeSize;
 
-
+    /////////////////////////////////////////
+    /////// Parameters and functions ////////
+    /////////////////////////////////////////
     // Variable for storing how many steps we are shifting in the observables storage array if we choose to store the thermalization variables
     int m_NThermSteps = 0;
+
     // For handling the acceptance rate
     unsigned long int m_acceptanceCounter = 0;
     double getAcceptanceRate();
-
-    // For have the possibility to start lattice with SU3 RST random, and not fully random SU3
-    bool m_RSTInit = false;
 
     // Function for initializing the sub lattice.
     void subLatticeSetup();
 
     // Lattice variables
-    int m_latticeSize;
     Links * m_lattice;
     SU3 m_updatedMatrix;
 
@@ -104,14 +104,8 @@ private:
     // Thermalization function
     void thermalize();
 
-    // Input/output locations REDUNDANT
-    std::string m_pwd = "";
-    std::string m_batchName = "";
-    std::string m_inputFolder = "/input/";
-    std::string m_outputFolder = "/output/"; // On mac, do not need ../
-
     // SU3 generator
-    SU3MatrixGenerator *m_SU3Generator = nullptr;
+    SU3MatrixGenerator * m_SU3Generator = nullptr;
 
     // RNGs
     std::mt19937_64 m_generator;
@@ -120,26 +114,12 @@ public:
     System();
     ~System();
     void runMetropolis();
-    void latticeSetup(SU3MatrixGenerator *SU3Generator);
+    void latticeSetup();
 
     // Functions loading fields configurations from file
     void loadChroma(std::string configurationName);
     void load(std::string configurationName);
     void flowConfigurations(std::vector<std::string> configurationNames);
-
-    // Object setters
-//    void setAction(Action *S) { m_S = S; }
-//    void setCorrelator(Correlator *correlator) { m_correlator = correlator; }
-//    void setFlowCorrelator(Correlator *flowCorrelator) { m_flowCorrelator = flowCorrelator; }
-//    void setFlow(Flow *F) { m_Flow = F; }
-//    void setSU3ExpFunc(SU3Exp * SU3ExpFunc) { m_Flow->setSU3ExpFunc(SU3ExpFunc); }
-
-    // Variable setters
-    void setLatticeInitRST(bool RSTInit) { m_RSTInit = RSTInit; } // MOVE TO PARAMETERS
-
-    // Printers
-    void printRunInfo();
-    void printAcceptanceRate();
 };
 
 #endif // METROPOLIS_H

@@ -32,6 +32,8 @@ private:
     static bool m_storeConfigurations;
     // Variable storing if we are to start hot or cold
     static bool m_hotStart;
+    // Variable storing what kind if initial hot start we are to use
+    static bool m_RSTInit;
     // IO parameters
     static std::string m_pwd;
     static std::string m_batchName;
@@ -89,6 +91,7 @@ public:
     static void setFilePath(std::string pwd) { m_pwd = pwd; }
     static void setBatchName(std::string batchName) { m_batchName = batchName; }
     static void setHotStart(bool hotStart) { m_hotStart = hotStart; }
+    static void setRSTInit(bool RSTInit) { m_RSTInit = RSTInit; }
     // Testing related variables
     static void setUnitTesting(bool unitTesting) { m_unitTesting = unitTesting; }
     static void setUnitTestingVerbose(bool unitTestingVerbose) { m_unitTestingVerbose = unitTestingVerbose; }
@@ -135,6 +138,7 @@ public:
     static std::string getFilePath() { return m_pwd; }
     static std::string getBatchName() { return m_batchName; }
     static bool getHotStart() { return m_hotStart; }
+    static bool getRSTInit() { return m_RSTInit; }
     // Testing related variables
     static bool getUnitTesting() { return m_unitTesting; }
     static bool getUnitTestingVerbose() { return m_unitTestingVerbose; }

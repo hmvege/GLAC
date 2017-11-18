@@ -82,7 +82,7 @@ void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatr
     std::uniform_real_distribution<double> uni_dist(0,1);
     if (testMatrix) {
         SU3 U1, U2;
-        SU3MatrixGenerator SU3Gen(eps, seed);
+        SU3MatrixGenerator SU3Gen;
         clock_t programStart, programEnd;
         programStart = clock();
         for (int i = 0; i < NTests; i++) {

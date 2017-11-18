@@ -84,7 +84,6 @@ private:
 
     // Add complex class tests?
 
-    // Add performance tests?
 public:
     TestSuite();
 
@@ -95,9 +94,6 @@ public:
     bool run3x3MatrixTests(bool verbose);
     bool runFunctionsTest(bool verbose);
     void testMatrix(SU3 X, bool verbose);
-
-    // Setters
-    void setRNG(SU3MatrixGenerator *SU3Gen);
 };
 
 #endif // TESTSUITE_H

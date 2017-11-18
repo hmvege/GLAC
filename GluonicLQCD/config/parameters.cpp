@@ -36,6 +36,9 @@ bool Parameters::m_storeConfigurations = false;
 // Variable storing if we are to start hot or cold
 bool Parameters::m_hotStart = false;
 
+// Variable storing what kind if initial hot start we are to use
+bool Parameters::m_RSTInit = false;
+
 // System constants
 bool Parameters::m_verbose = true;
 

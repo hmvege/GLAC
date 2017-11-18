@@ -22,22 +22,19 @@ System::System()
      * Class for calculating correlators using the System algorithm.
      * Takes an action object as well as a Gamma functional to be used in the action.
      */
+    // Retrieving communication related variables
+    m_processRank                       = Parallel::Communicator::getProcessRank();
     // Retrieving program parameters
-    m_latticeSize   = Parameters::getLatticeSize();
-    m_NCf           = Parameters::getNCf(); // Number of configurations to run for
-    m_NCor          = Parameters::getNCor();
-    m_NTherm        = Parameters::getNTherm();
-    m_NUpdates      = Parameters::getNUpdates();
-    m_NFlows        = Parameters::getNFlows();
-    m_processRank   = Parallel::Communicator::getProcessRank();
-    m_numprocs      = Parallel::Communicator::getNumProc();
-    m_pwd           = Parameters::getFilePath();
-    m_batchName     = Parameters::getBatchName();
-    m_inputFolder   = Parameters::getInputFolder();
-    m_outputFolder  = Parameters::getOutputFolder();
+    m_latticeSize                       = Parameters::getLatticeSize();
+    m_NCf                               = Parameters::getNCf();
+    m_NCor                              = Parameters::getNCor();
+    m_NTherm                            = Parameters::getNTherm();
+    m_NUpdates                          = Parameters::getNUpdates();
+    m_NFlows                            = Parameters::getNFlows();
     m_storeThermalizationObservables    = Parameters::getStoreThermalizationObservables();
     m_writeConfigsToFile                = Parameters::getStoreConfigurations();
     // Sets pointers to use
+    m_SU3Generator = new SU3MatrixGenerator;
     setAction();
     setObservable(Parameters::getObservablesList(),false);
     if (m_NFlows != 0) {
@@ -46,14 +43,15 @@ System::System()
     }
 
     // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
-    std::mt19937_64 gen(Parameters::getMetropolisSeed());
-    std::uniform_real_distribution<double> uni_dist(0,1);
-    m_generator = gen;
-    m_uniform_distribution = uni_dist;
+    m_generator = std::mt19937_64(Parameters::getMetropolisSeed());
+    m_uniform_distribution = std::uniform_real_distribution<double>(0,1);
 }
 
 void System::setAction()
 {
+    /*
+     * Only one action available at the moment
+     */
     m_S = new WilsonGaugeAction;
 }
 
@@ -111,26 +109,23 @@ void System::subLatticeSetup()
     m_correlator->setLatticeSize(m_subLatticeSize);
 }
 
-void System::latticeSetup(SU3MatrixGenerator *SU3Generator)
+void System::latticeSetup()
 {
     /*
      * Sets up the lattice and its matrices.
      */
     subLatticeSetup();
-    m_SU3Generator = SU3Generator;
     if (Parameters::getHotStart()) {
         // All starts with a completely random matrix.
         for (int i = 0; i < m_subLatticeSize; i++)
         {
             for (int mu = 0; mu < 4; mu++)
             {
-                if (!m_RSTInit)
+                if (Parameters::getRSTInit())
                 {
-                    cout << "FULLY RANDOM BY DEFAULT! exits in latticeSetup, system.cpp line 225" << endl;
-                    exit(1);
-                    m_lattice[i].U[mu] = m_SU3Generator->generateRandom(); // Fully random
-                } else {
                     m_lattice[i].U[mu] = m_SU3Generator->generateRST(); // Random close to unity
+                } else {
+                    m_lattice[i].U[mu] = m_SU3Generator->generateRandom(); // Fully random
                 }
             }
         }
@@ -146,38 +141,6 @@ void System::latticeSetup(SU3MatrixGenerator *SU3Generator)
     }
     if (m_processRank == 0) {
         printf("\nLattice setup complete");
-    }
-}
-
-void System::printRunInfo() {
-    /*
-     * Function for printing system information in the beginning.
-     */
-    if (m_processRank == 0) {
-        SysPrint::printLine();
-        cout << "Batch name:                            " << m_batchName << endl;
-        cout << "Threads:                               " << m_numprocs << endl;
-        cout << "Lattice size:                          " << m_latticeSize << endl;
-        cout << "Lattice dimensions(spatial, temporal): " << m_NSpatial << " " << m_NTemporal << endl;
-        cout << "N configurations:                      " << m_NCf << endl;
-        cout << "N flow updates per configuration:      " << m_NFlows << endl;
-        cout << "N correlation updates:                 " << m_NCor << endl;
-        cout << "N thermalization updates:              " << m_NTherm << endl;
-        cout << "N link updates:                        " << m_NUpdates << endl;
-        cout << "Beta:                                  " << m_beta << endl;
-        cout << "SU3Eps:                                " << m_SU3Generator->getEpsilon() << endl;
-        cout << "Sub lattice Size:                      " << m_subLatticeSize << endl;
-        cout << "Sub latticedimensions:                 ";
-        for (int i = 0; i < 4; i++) {
-            cout << m_N[i] << " ";
-        }
-        cout << endl;
-        cout << "Processsors per dimension:             ";
-        for (int i = 0; i < 4; i++) {
-            cout << m_processorsPerDimension[i] << " ";
-        }
-        cout << endl;
-        SysPrint::printLine();
     }
 }
 
