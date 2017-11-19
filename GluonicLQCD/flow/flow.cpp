@@ -98,6 +98,14 @@ void Flow::flowField(Links *lattice)
             }
         }
     }
+
+//    Parallel::Communicator::setBarrier();
+//    for (int i = 0; i < 4; i++) {
+//        cout << m_N[i] << endl;
+//    }
+//    cout<<"GOOD FOR FLOW"<<endl;
+//    Parallel::Communicator::setBarrier();
+//    exit(1);
 }
 
 void Flow::setSU3ExpFunc()
@@ -113,6 +121,10 @@ void Flow::setSU3ExpFunc()
         m_SU3ExpFunc = new Taylor4Exp;
     } else if (Parameters::getExpFuncName() == "luscher") {
         m_SU3ExpFunc = new ExpLuscher;
+    } else if (Parameters::getExpFuncName() == "morningstar") {
+        m_SU3ExpFunc = new SU3Exp;
+    } else {
+        printf("SU3 exp. func. %s not recognized",Parameters::getExpFuncName().c_str());
     }
 }
 

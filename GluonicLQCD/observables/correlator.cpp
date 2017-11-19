@@ -96,8 +96,12 @@ void Correlator::storeFlow(bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
     if (m_storeFlowObservable) {
-        m_observable = new ObservableStorer(Parameters::getFlowSamplePoints());
+        m_observable = new ObservableStorer(Parameters::getNFlows());
     } else {
-        m_observable = new ObservableStorer(Parameters::getConfigSamplePoints());
+        if (Parameters::getStoreThermalizationObservables()) {
+            m_observable = new ObservableStorer(Parameters::getNCf() + Parameters::getNTherm() + 1);
+        } else {
+            m_observable = new ObservableStorer(Parameters::getNCf());
+        }
     }
 }

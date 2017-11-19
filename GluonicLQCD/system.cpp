@@ -37,11 +37,6 @@ System::System()
     m_SU3Generator = new SU3MatrixGenerator;
     setAction();
     setObservable(Parameters::getObservablesList(),false);
-    if (m_NFlows != 0) {
-        setObservable(Parameters::getFlowObservablesList(),true);
-        m_flow = new Flow(m_S); // Ensure it does not go out of scope
-    }
-
     // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
     m_generator = std::mt19937_64(Parameters::getMetropolisSeed());
     m_uniform_distribution = std::uniform_real_distribution<double>(0,1);
@@ -104,6 +99,12 @@ void System::subLatticeSetup()
     // Creates (sub) lattice
     m_lattice = new Links[m_subLatticeSize];
     // Passes the index handler and dimensionality to the action and correlator classes.
+    if (m_NFlows != 0) {
+        setObservable(Parameters::getFlowObservablesList(),true);
+        m_flowCorrelator->setN(m_N);
+        m_flowCorrelator->setLatticeSize(m_subLatticeSize);
+        m_flow = new Flow(m_S); // Ensure it does not go out of scope
+    }
     m_S->setN(m_N);
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
@@ -121,7 +122,7 @@ void System::latticeSetup()
         {
             for (int mu = 0; mu < 4; mu++)
             {
-                if (Parameters::getRSTInit())
+                if (Parameters::getRSTHotStart())
                 {
                     m_lattice[i].U[mu] = m_SU3Generator->generateRST(); // Random close to unity
                 } else {
@@ -140,7 +141,7 @@ void System::latticeSetup()
         }
     }
     if (m_processRank == 0) {
-        printf("\nLattice setup complete");
+        printf("\nLattice setup complete\n");
     }
 }
 
@@ -178,12 +179,13 @@ void System::thermalize()
         m_postUpdate = steady_clock::now(); // REDUNDANT?
         m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
         m_updateStorerTherm += m_updateTime.count();
-        if (m_processRank == 0) {
-            printf("\r%6.2f %% done. ", iTherm/double(m_NTherm));
-            if (iTherm % 20 == 0) { // Avg. time per update every 10th update
-                printf("Avgerage update time(every 10th): %10.6f sec.", m_updateStorerTherm/double(iTherm));
-            }
-        }
+//        if (m_processRank == 0) {
+//            printf("\r%6.2f %% done. ", iTherm/double(m_NTherm)*100);
+//            std::fflush(stdout);
+//            if (iTherm % 20 == 0) { // Avg. time per update every 10th update
+//                printf("Avgerage update time(every 10th): %10.6f sec.", m_updateStorerTherm/double(iTherm));
+//            }
+//        }
 
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (m_storeThermalizationObservables) {
@@ -373,7 +375,7 @@ void System::runMetropolis()
         if (m_NFlows != 0) flowConfiguration(iConfig);
 
         // Averaging the gamma values
-        m_correlator->calculate(m_lattice,iConfig);
+        m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
 //        m_observable[iConfig] = m_correlator->calculate(m_lattice);
 //        MPI_Allreduce(&m_observable[iConfig], &m_observable[iConfig], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //        m_observable[iConfig] /= double(m_numprocs);
@@ -393,6 +395,7 @@ void System::runMetropolis()
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
     if (m_processRank == 0) {
+        printf("\n");
         SysPrint::printLine();
         printf("System completed.");
         printf("\nAcceptancerate: %.16f ", getAcceptanceRate());
@@ -412,7 +415,7 @@ void System::flowConfiguration(int iConfig)
     for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
         m_flow->flowField(m_lattice);
-        m_flowCorrelator->calculate(m_lattice,iFlow + m_NThermSteps);
+        m_flowCorrelator->calculate(m_lattice,iFlow);
     }
     /* Make flow statistics, that is, the only stats that is needed is the sum of all configurations, which cant be reached untill end.
          * So, either print flow during the run, or nothing.

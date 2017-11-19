@@ -33,8 +33,7 @@ public:
 
     virtual SU3 getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
 
-    // Clone/copy operator
-
+    virtual void printStuff() {} // TEMP
 
 //    inline void lorentzIndex(int mu, int *lorentzIndices)
 //    {

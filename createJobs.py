@@ -1,4 +1,4 @@
-import os, subprocess, time, sys, argparse, json, ast
+import os, subprocess, time, sys, argparse, json, ast, shutil
 
 def getArgMaxIndex(N):
     # For getting the maximum index of an list.
@@ -44,14 +44,14 @@ class Slurm:
         else:
             self.jobs = {}
 
-    def _create_folders(self, runName):
+    def _create_folders(self):
         # Checking that we have an output folder.
         self._checkFolderPath('output')
-        self._checkFolderPath('output/%s' % runName)
-        self._checkFolderPath('output/%s/flow_observables' % runName)
-        self._checkFolderPath('output/%s/field_configurations' % runName)
-        self._checkFolderPath('output/%s/observables' % runName)
-        self._checkFolderPath('input/%s' % runName)
+        self._checkFolderPath('output/%s' % self.runName)
+        self._checkFolderPath('output/%s/flow_observables' % self.runName)
+        self._checkFolderPath('output/%s/field_configurations' % self.runName)
+        self._checkFolderPath('output/%s/observables' % self.runName)
+        self._checkFolderPath('input/%s' % self.runName)
 
     def _checkFolderPath(self, folder):
         # Function for checking if a folder exists, and if not creates on(unless we are doing a dryrun)
@@ -86,7 +86,7 @@ class Slurm:
         json_dict["pwd"] = self.CURRENT_PATH
         json_dict["batchName"] = config_dict["runName"]
         json_dict["hotStart"] = config_dict["hotStart"]
-        print config_dict["hotStart"]
+        json_dict["RSTHotStart"] = config_dict["RSTHotStart"]
         json_dict["expFunc"] = config_dict["expFunc"]
         json_dict["observables"] = config_dict["observables"]
         json_dict["flowObservables"] = config_dict["flowObservables"]
@@ -104,6 +104,9 @@ class Slurm:
         else:
             with file("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),"w+") as json_file:
                 json.dump(json_dict,json_file)
+                shutil.copy("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),                   # src
+                            "%s/input/%s/%s.bak" % (self.CURRENT_PATH,self.runName,self.json_file_name))   # dest
+
 
     def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
         if excluded_nodes:
@@ -114,7 +117,7 @@ class Slurm:
         for job_config in job_configurations:
             # Retrieving config contents
             binary_filename         = job_config["bin_fn"]
-            runName                 = job_config["runName"]
+            self.runName            = job_config["runName"]
             threads                 = job_config["threads"]
             beta                    = job_config["beta"]
             NSpatial                = job_config["N"]
@@ -129,6 +132,7 @@ class Slurm:
             storeCfgs               = job_config["storeCfgs"]
             storeThermCfgs          = job_config["storeThermCfgs"]
             hotStart                = job_config["hotStart"]
+            RSTHotStart             = job_config["RSTHotStart"]
             subDims                 = job_config["subDims"]
             verboseRun              = job_config["verboseRun"]
             uTest                   = job_config["uTest"]
@@ -142,8 +146,10 @@ class Slurm:
 
             if len(subDims) != 0:
                 checkSubDimViability(subDims)
-            self._create_folders(runName)
+            self._create_folders()
             self._create_json(job_config)
+            if system == "local":
+                sys.exit("Config file for local producton created.")
 
             # Setting job name before creating content file.
             job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta,NSpatial,NTemporal,threads)
@@ -201,7 +207,7 @@ set -o errexit              # exit on errors
 
 '''.format(job_name, account_name, estimated_time, cpu_memory, partition, threads, nodes, tasks_per_node, sbatch_exclusions, run_command)
             elif system == "local":
-                cmd = ""
+                sys.exit("Error: this is a local production run. Should never see this error message.")
 
             job = 'jobfile.slurm'
 
@@ -301,10 +307,11 @@ def main(args):
                         "NTherm"                    : 200,
                         "NFlows"                    : 0,
                         "NUpdates"                  : 10,
-                        "storeCfgs"                 : 1,
-                        "storeThermCfgs"            : 0,
-                        "verboseRun"                : 1,
-                        "hotStart"                  : 0,
+                        "storeCfgs"                 : True,
+                        "storeThermCfgs"            : False,
+                        "verboseRun"                : True,
+                        "hotStart"                  : False,
+                        "RSTHotStart"               : False,
                         "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
                         "observables"               : ["plaquette"], # Optional: topologicalCharge, energyDensity
                         "flowObservables"           : ["plaquette"], # Optional: topologicalCharge, energyDensity
@@ -343,7 +350,7 @@ def main(args):
 
     ######## Manual job setup ########
     job_parser = subparser.add_parser('setup', help='Sets up the job.')
-    job_parser.add_argument('system',                           default=False,                              type=str, choices=['smaug','abel'],help='Specify system we are running on.')
+    job_parser.add_argument('system',                           default=False,                              type=str, choices=['smaug','abel','local'],help='Specify system we are running on.')
     job_parser.add_argument('threads',                          default=False,                              type=int,help='Number of threads to run on')
     job_parser.add_argument('-p',   '--partition',              default="normal",                           type=str,help='Specify partition to run program on.')
     job_parser.add_argument('-rn',  '--run_name',               default=config_default["runName"],          type=str,help='Specifiy the run name')
@@ -364,6 +371,7 @@ def main(args):
     job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       action='store_true',help='Verbose run of GluonicLQCD. By default, it is on.')
     # Setup related variables
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=bool,help='Hot start or cold start')
+    job_parser.add_argument('-rsths', '--RSTHotStart',          default=config_default["RSTHotStart"],      type=bool,help='RST hot start is closer to unity')
     job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],          type=str,help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
     job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],      type=str,choices=['plaquette','topc','energy'],nargs='+',help='Observables to sample for in flow.')
     job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],  type=str,choices=['plaquette','topc','energy'],nargs='+',help='Observables to sample for in flow.')
@@ -428,6 +436,7 @@ def main(args):
         config_default["storeThermCfgs"]            = args.storeThermCfgs
         config_default["verboseRun"]                = args.verboseRun
         config_default["hotStart"]                  = args.hotStart
+        config_default["RSTHotStart"]               = args.RSTHotStart
         config_default["expFunc"]                   = args.expFunc
         config_default["observables"]               = args.observables
         config_default["flowObservables"]           = args.flowObservables

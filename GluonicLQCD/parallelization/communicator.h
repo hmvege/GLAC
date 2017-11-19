@@ -24,7 +24,6 @@ namespace Parallel {
 
         // Sub lattice dimensions
         static unsigned int m_N[4];
-        static void setN(unsigned int *N);
 
         // Private fetchSU3 functions
         static void MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
@@ -34,7 +33,7 @@ namespace Parallel {
         ~Communicator();
 
         // Public variables
-        static Neighbours * m_neighbourLists;
+        static Neighbours m_neighbourLists;
 
         // Initializers
         static void init(int numprocs, int processRank);
@@ -49,6 +48,9 @@ namespace Parallel {
         // Getters
         static int getProcessRank() { return m_processRank; }
         static int getNumProc() { return m_numprocs; }
+
+        // Setters
+        static void setN(unsigned int *N);
 
         // MPI
         static void MPIExit();

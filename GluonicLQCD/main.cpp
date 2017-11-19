@@ -60,9 +60,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Main program part
     if (Parameters::getUnitTesting() && processRank == 0) runUnitTests();
     System pureGauge;
-    SysPrint::printSystemInfo();
     pureGauge.latticeSetup();
-//    pureGauge.runMetropolis();
+    SysPrint::printSystemInfo();
+    pureGauge.runMetropolis();
 
     // Finalizing and printing time taken
     programEnd = steady_clock::now();

@@ -15,9 +15,9 @@ void SysPrint::printLine()
 
 std::string SysPrint::getListString(std::vector<std::string> observableList)
 {
-    std::string returnString;
-    for (unsigned int i = 0; i < observableList.size(); i++) {
-        returnString += observableList[i];
+    std::string returnString = observableList[0];
+    for (unsigned int i = 1; i < observableList.size(); i++) {
+        returnString += ", " + observableList[i];
     }
     return returnString;
 }
@@ -43,7 +43,7 @@ void SysPrint::printSystemInfo()
         cout << "Lattice size:                          " << Parameters::m_latticeSize << endl;
         cout << "Lattice dimensions(spatial, temporal): " << Parameters::m_NSpatial << " " << Parameters::m_NTemporal << endl;
         cout << "Sub lattice size:                      " << Parameters::m_subLatticeSize << endl;
-        cout << "Sub lattice dimensions:                    ";
+        cout << "Sub lattice dimensions:                ";
         for (int i = 0; i < 4; i++) {
             cout << Parameters::m_N[i] << " ";
         }
@@ -61,8 +61,8 @@ void SysPrint::printSystemInfo()
             cout << "N flow updates per configuration:      " << Parameters::m_NFlows << endl;
         }
         cout << "N link updates:                        " << Parameters::m_NUpdates << endl;
-        cout << "Output folder:                         " << Parameters::m_pwd + "/" + Parameters::m_outputFolder << endl;
-        cout << "Input folder:                          " << Parameters::m_pwd + "/" + Parameters::m_inputFolder << endl;
+        cout << "Output folder:                         " << Parameters::m_pwd + Parameters::m_outputFolder << endl;
+        cout << "Input folder:                          " << Parameters::m_pwd + Parameters::m_inputFolder << endl;
         cout << "Store configurations:                  " << getTrueOrFalseString(Parameters::m_storeConfigurations) << endl;
         cout << "Store thermalization observables:      " << getTrueOrFalseString(Parameters::m_storeThermalizationObservables) << endl;
         cout << "Exponentiation function:               " << Parameters::m_expFuncName << endl;
@@ -75,10 +75,15 @@ void SysPrint::printSystemInfo()
         }
         cout << "SU3Eps:                                " << Parameters::m_SU3Eps << endl;
         if (Parameters::m_verbose) {
-            cout << "Metropolis seed:                       " << Parameters::m_metropolisSeed << endl;
-            cout << "Random matrix seed:                    " << Parameters::m_randomMatrixSeed << endl;
+            cout << "Metropolis seed:                       ";
+            printf("%-16.1f\n",Parameters::m_metropolisSeed);
+            cout << "Random matrix seed:                    ";
+            printf("%-16.1f\n",Parameters::m_randomMatrixSeed);
         }
-        cout << "Hot start:                                 " << getTrueOrFalseString(Parameters::m_hotStart) << endl;
+        cout << "Hot start:                             " << getTrueOrFalseString(Parameters::m_hotStart) << endl;
+        if (Parameters::m_hotStart) {
+            cout << "Random start close to unity:           " << getTrueOrFalseString(Parameters::m_RSTHotStart) << endl;
+        }
 
         printLine();
     }

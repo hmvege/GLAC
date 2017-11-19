@@ -47,8 +47,13 @@ void WilsonGaugeAction::computeStaple(Links *lattice, unsigned int i, unsigned i
 
 SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
+//    Parallel::Communicator::setBarrier();
+//    printf("PRE-STAPLE");
+//    Parallel::Communicator::setBarrier();
     computeStaple(lattice,i,j,k,l,mu);
-
+//    Parallel::Communicator::setBarrier();
+//    printf("STAPLE DONE");
+//    Parallel::Communicator::setBarrier();
     // How should on take the staple?
 //    m_staple = m_staple.inv()*lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].inv(); // Chroma
     m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method

@@ -6,7 +6,6 @@ Neighbours::Neighbours()
 
 Neighbours::~Neighbours()
 {
-    printf("\nDeleting neighourlists\n");
     delete [] m_neighbourLists;
 }
 

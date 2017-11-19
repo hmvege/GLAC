@@ -23,7 +23,7 @@ namespace ConfigLoader {
         std::ifstream i(jsonFileName.c_str());
         json j;
         i >> j;
-        if (Parallel::Communicator::getProcessRank() == 0) std::cout << std::setw(4) << j << std::endl;
+//        if (Parallel::Communicator::getProcessRank() == 0) std::cout << std::setw(4) << j << std::endl;
 
         // Lattice related run variables
         Parameters::setNSpatial(j["NSpatial"]);
@@ -46,20 +46,20 @@ namespace ConfigLoader {
         Parameters::setFilePath(j["pwd"]);
         Parameters::setBatchName(j["batchName"]);
         Parameters::setHotStart(bool(j["hotStart"]));
+        Parameters::setRSTHotStart(bool(j["RSTHotStart"]));
         // Sub dimension setting
         if (!j["subDims"].empty()) {
             unsigned int tempN[4] = {j["subDims"][0],j["subDims"][1],j["subDims"][2],j["subDims"][3]};
             Parameters::setN(tempN);
-            Parallel::Index::setN(tempN);
             Parameters::setSubLatticePreset(true);
+            Parallel::Communicator::setN(tempN);
+            Parallel::Index::setN(tempN);
         }
         // Exp.func setting (for flow)
         Parameters::setExpFuncName(j["expFunc"]);
         // Observables setting
-        cout << j["observables"] << endl;
         setObservable(j["observables"], false);
         // Flow observables setting
-        cout << j["flowObservables"] << endl;
         setObservable(j["flowObservables"], true);
         // Testing related variables
         Parameters::setUnitTesting(j["unitTesting"]);

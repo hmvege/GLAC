@@ -32,13 +32,13 @@ void IO::FieldIO::writeFieldToFile(Links * lattice, int configNumber)
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned int t = 0; t < m_N[3]; t++) {
-        nt = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
+        nt = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(3) * m_N[3] + t);
         for (unsigned int z = 0; z < m_N[2]; z++) {
-            nz = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
+            nz = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(2) * m_N[2] + z);
             for (unsigned int y = 0; y < m_N[1]; y++) {
-                ny = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
+                ny = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (unsigned int x = 0; x < m_N[0]; x++) {
-                    nx = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
+                    nx = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(0) * m_N[0] + x);
                     MPI_File_write_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize, &lattice[Parallel::Index::getIndex(x,y,z,t)], m_linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
@@ -59,13 +59,13 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Links *lattice)
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned int t = 0; t < m_N[3]; t++) {
-        nt = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
+        nt = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(3) * m_N[3] + t);
         for (unsigned int z = 0; z < m_N[2]; z++) {
-            nz = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
+            nz = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(2) * m_N[2] + z);
             for (unsigned int y = 0; y < m_N[1]; y++) {
-                ny = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
+                ny = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (unsigned int x = 0; x < m_N[0]; x++) {
-                    nx = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
+                    nx = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(0) * m_N[0] + x);
                     MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize, &lattice[Parallel::Index::getIndex(x,y,z,t)], m_linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
             }
@@ -88,13 +88,13 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Links *latt
 
     double temp = 0;
     for (unsigned int t = 0; t < m_N[3]; t++) {
-        nt = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(3) * m_N[3] + t);
+        nt = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(3) * m_N[3] + t);
         for (unsigned int z = 0; z < m_N[2]; z++) {
-            nz = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(2) * m_N[2] + z);
+            nz = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(2) * m_N[2] + z);
             for (unsigned int y = 0; y < m_N[1]; y++) {
-                ny = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(1) * m_N[1] + y);
+                ny = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (unsigned int x = 0; x < m_N[0]; x++) {
-                    nx = (Parallel::Communicator::m_neighbourLists->getProcessorDimensionPosition(0) * m_N[0] + x);
+                    nx = (Parallel::Communicator::m_neighbourLists.getProcessorDimensionPosition(0) * m_N[0] + x);
 
                     for (int link = 0; link < 4; link++) {
                         for (int i = 0; i < 18; i++) {

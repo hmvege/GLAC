@@ -25,6 +25,11 @@ public:
     void computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
     SU3 getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
 
+    void printStuff() {
+        printf("\nBETA: %g",m_beta);
+        printf("\nMULTFACTOR: %g",m_multiplicationFactor);
+    }
+
     inline void updateMuIndex(int mu) {
         for (int i = 0; i < 4; i++)
         {

@@ -11,7 +11,7 @@ class Flow
 {
 private:
     // Flow update step
-    double m_epsilon = 0.01;
+    double m_epsilon = 0.02;
     // Lattice constants
     unsigned int m_N[4];
     unsigned int m_subLatticeSize;
@@ -28,6 +28,13 @@ public:
     Flow(Action *S);
     ~Flow();
     void flowField(Links *lattice);
+
+    void printTest() {
+        Parallel::Communicator::setBarrier();
+        m_S->printStuff();
+        cout << "FLOW EPS: " << m_epsilon << endl;
+        Parallel::Communicator::setBarrier();
+    }
 };
 
 #endif // FLOW_H

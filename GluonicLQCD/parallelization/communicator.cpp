@@ -3,7 +3,7 @@
 // Internal variables
 bool Parallel::Communicator::muDir = 0;
 bool Parallel::Communicator::nuDir = 0;
-Neighbours * Parallel::Communicator::m_neighbourLists = nullptr;
+Neighbours Parallel::Communicator::m_neighbourLists;
 SU3 Parallel::Communicator::exchangeU(0);
 unsigned int Parallel::Communicator::m_N[4];
 // Variables used externally
@@ -28,8 +28,8 @@ void Parallel::Communicator::MPIfetchSU3Positive(Links *lattice, std::vector<int
      *  mu          : lorentz index for shift direction(always negative in either x,y,z or t direction)
      *  SU3Dir      : SU3 matrix direction at link
      */
-    MPI_Sendrecv(&lattice[Index::getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0, // Send
-            &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,                                               // Receive
+    MPI_Sendrecv(&lattice[Index::getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE,m_neighbourLists.getNeighbours(m_processRank)->list[2*mu],0, // Send
+            &exchangeU,18,MPI_DOUBLE,m_neighbourLists.getNeighbours(m_processRank)->list[2*mu+1],0,                                               // Receive
             MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 }
 
@@ -43,8 +43,8 @@ void Parallel::Communicator::MPIfetchSU3Negative(Links *lattice, std::vector<int
      *  mu          : lorentz index for shift direction(always negative in either x,y,z or t direction)
      *  SU3Dir      : SU3 matrix direction at link
      */
-    MPI_Sendrecv(&lattice[Index::getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,  // Send
-            &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,                                            // Receive
+    MPI_Sendrecv(&lattice[Index::getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE,m_neighbourLists.getNeighbours(m_processRank)->list[2*mu+1],0,  // Send
+            &exchangeU,18,MPI_DOUBLE,m_neighbourLists.getNeighbours(m_processRank)->list[2*mu],0,                                            // Receive
             MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 }
 
@@ -111,16 +111,16 @@ SU3 Parallel::Communicator::getNeighboursNeighbourLink(Links * lattice, std::vec
     if (muDir && (!nuDir)) { // (muDir & ~nuDir)
         // Positive mu direction
         n[mu] = 0;
-        MPI_Sendrecv(&lattice[Index::getIndex(n[0]-nuIndex[0],n[1]-nuIndex[1],n[2]-nuIndex[2],n[3]-nuIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,   // Send
-                &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,                                                                                              // Receive
+        MPI_Sendrecv(&lattice[Index::getIndex(n[0]-nuIndex[0],n[1]-nuIndex[1],n[2]-nuIndex[2],n[3]-nuIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists.getNeighbours(m_processRank)->list[2*mu],0,   // Send
+                &exchangeU,18,MPI_DOUBLE,m_neighbourLists.getNeighbours(m_processRank)->list[2*mu+1],0,                                                                                              // Receive
                 MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         return exchangeU;
     }
     else if (nuDir && (!muDir)) { // (nuDir & ~muDir)
         // Negative nu direction
         n[nu] = m_N[nu] - 1;
-        MPI_Sendrecv(&lattice[Index::getIndex(n[0]+muIndex[0],n[1]+muIndex[1],n[2]+muIndex[2],n[3]+muIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours(m_processRank)->list[2*nu+1],0, // Send
-                &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*nu],0,                                                                                        // Receive
+        MPI_Sendrecv(&lattice[Index::getIndex(n[0]+muIndex[0],n[1]+muIndex[1],n[2]+muIndex[2],n[3]+muIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists.getNeighbours(m_processRank)->list[2*nu+1],0, // Send
+                &exchangeU,18,MPI_DOUBLE,m_neighbourLists.getNeighbours(m_processRank)->list[2*nu],0,                                                                                        // Receive
                 MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         return exchangeU;
     }
@@ -128,8 +128,8 @@ SU3 Parallel::Communicator::getNeighboursNeighbourLink(Links * lattice, std::vec
         // True edge case
         n[mu] = 0;
         n[nu] = m_N[nu] - 1;
-        MPI_Sendrecv(&lattice[Index::getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours((m_neighbourLists->getNeighbours(m_processRank)->list[2*mu]))->list[2*nu+1],0,// Send
-                &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours((m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1]))->list[2*nu],0,                                             // Receive
+        MPI_Sendrecv(&lattice[Index::getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists.getNeighbours((m_neighbourLists.getNeighbours(m_processRank)->list[2*mu]))->list[2*nu+1],0,// Send
+                &exchangeU,18,MPI_DOUBLE,m_neighbourLists.getNeighbours((m_neighbourLists.getNeighbours(m_processRank)->list[2*mu+1]))->list[2*nu],0,                                             // Receive
                 MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         return exchangeU;
     }
@@ -159,16 +159,16 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Links * lattice, 
     if (muDir && (!nuDir)) { // (muDir & ~nuDir)
         // Positive mu direction
         n[mu] = m_N[mu] - 1;
-        MPI_Sendrecv(&lattice[Index::getIndex(n[0]-nuIndex[0],n[1]-nuIndex[1],n[2]-nuIndex[2],n[3]-nuIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours(m_processRank)->list[2*mu],0,   // Send
-                &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1],0,                                                                                              // Receive
+        MPI_Sendrecv(&lattice[Index::getIndex(n[0]-nuIndex[0],n[1]-nuIndex[1],n[2]-nuIndex[2],n[3]-nuIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists.getNeighbours(m_processRank)->list[2*mu],0,   // Send
+                &exchangeU,18,MPI_DOUBLE,m_neighbourLists.getNeighbours(m_processRank)->list[2*mu+1],0,                                                                                              // Receive
                 MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         return exchangeU;
     }
     else if (nuDir && (!muDir)) { // (nuDir & ~muDir)
         // Negative nu direction
         n[nu] = m_N[nu] - 1;
-        MPI_Sendrecv(&lattice[Index::getIndex(n[0]-muIndex[0],n[1]-muIndex[1],n[2]-muIndex[2],n[3]-muIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours(m_processRank)->list[2*nu+1],0, // Send
-                &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours(m_processRank)->list[2*nu],0,                                                                                        // Receive
+        MPI_Sendrecv(&lattice[Index::getIndex(n[0]-muIndex[0],n[1]-muIndex[1],n[2]-muIndex[2],n[3]-muIndex[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists.getNeighbours(m_processRank)->list[2*nu+1],0, // Send
+                &exchangeU,18,MPI_DOUBLE,m_neighbourLists.getNeighbours(m_processRank)->list[2*nu],0,                                                                                        // Receive
                 MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         return exchangeU;
     }
@@ -176,8 +176,8 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Links * lattice, 
         // True edge case
         n[mu] = m_N[mu] - 1;
         n[nu] = m_N[nu] - 1;
-        MPI_Sendrecv(&lattice[Index::getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists->getNeighbours((m_neighbourLists->getNeighbours(m_processRank)->list[2*mu]))->list[2*nu+1],0,// Send
-                &exchangeU,18,MPI_DOUBLE,m_neighbourLists->getNeighbours((m_neighbourLists->getNeighbours(m_processRank)->list[2*mu+1]))->list[2*nu],0,                                             // Receive
+        MPI_Sendrecv(&lattice[Index::getIndex(n[0],n[1],n[2],n[3])].U[SU3Dir],18,MPI_DOUBLE, m_neighbourLists.getNeighbours((m_neighbourLists.getNeighbours(m_processRank)->list[2*mu]))->list[2*nu+1],0,// Send
+                &exchangeU,18,MPI_DOUBLE,m_neighbourLists.getNeighbours((m_neighbourLists.getNeighbours(m_processRank)->list[2*mu+1]))->list[2*nu],0,                                             // Receive
                 MPI_COMM_WORLD,MPI_STATUS_IGNORE);
         return exchangeU;
     }
@@ -194,18 +194,21 @@ void Parallel::Communicator::checkSubLatticeValidity()
     bool latticeSizeError = false;
     for (int i = 0; i < 3; i++) {
         if (Parameters::getNSpatial() % m_N[i] != 0) {
+            if (m_processRank == 0) cout << "Error: spatial dimension(s) is not correct";
             latticeSizeError = true;
         }
     }
     if (Parameters::getNTemporal() % m_N[3] != 0) {
+        if (m_processRank == 0) cout << "Error: temporal dimension(s) is not correct";
         latticeSizeError = true;
     }
     if (Parameters::getSubLatticeSize()*m_numprocs != Parameters::getLatticeSize()) {
+        if (m_processRank == 0) cout << "Error: volume of sub dimensions does not match the total lattice volume";
         latticeSizeError = true;
     }
     if (latticeSizeError) {
         if (m_processRank == 0) {
-            cout << "Error: sub-lattice size invalid: ";
+            cout << ": dimensions:  ";
             for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
             cout << " --> exiting."<< endl;
         }
@@ -272,14 +275,16 @@ void Parallel::Communicator::initializeSubLattice()
                 if (restProc < 2) break;
             }
         }
+        // Sets the sub lattice dimensions in case they have not been set in the loading of the configuration.
+        Parallel::Index::setN(m_N);
+        Parameters::setN(m_N);
+        setN(m_N);
     }
-    // Sets the sub lattice dimensions
-    Parallel::Index::setN(m_N);
-    setN(m_N);
     // Gets the total size of the sub-lattice(without faces)
     for (int i = 0; i < 4; i++) {
         subLatticeSize *= m_N[i];
     }
+    Parameters::setSubLatticeSize(subLatticeSize);
     // Ensures correct sub lattice dimensions
     checkSubLatticeValidity();
     // If has a size of 2, we exit as that may produce poor results.
@@ -290,9 +295,7 @@ void Parallel::Communicator::initializeSubLattice()
     }
     processorsPerDimension[3] = Parameters::getNTemporal() / m_N[3];
     // Initializes the neighbour lists
-    m_neighbourLists->initialize(m_processRank, m_numprocs, processorsPerDimension);
-    Parameters::setSubLatticeSize(subLatticeSize);
-    Parameters::setN(m_N);
+    m_neighbourLists.initialize(m_processRank, m_numprocs, processorsPerDimension);
     Parameters::setProcessorsPerDimension(processorsPerDimension);
 }
 

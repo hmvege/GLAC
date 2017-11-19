@@ -37,7 +37,7 @@ bool Parameters::m_storeConfigurations = false;
 bool Parameters::m_hotStart = false;
 
 // Variable storing what kind if initial hot start we are to use
-bool Parameters::m_RSTInit = false;
+bool Parameters::m_RSTHotStart = false;
 
 // System constants
 bool Parameters::m_verbose = true;
@@ -108,12 +108,14 @@ void Parameters::setNTemporal(int NTemporal)
     m_latticeSize *= NTemporal;
 }
 
-void Parameters::setStoreThermalizationObservables(bool storeThermalizationObservables)
+void Parameters::setMetropolisSeed(double metropolisSeed)
 {
-    m_storeThermalizationObservables = storeThermalizationObservables;
-    if (m_storeThermalizationObservables) {
-        Parameters::setConfigSamplePoints(m_NCf + 1 + m_NTherm);
-    } else {
-        Parameters::setConfigSamplePoints(m_NCf);
-    }
+        metropolisSeed += double(Parallel::Communicator::getNumProc()) + double(Parallel::Communicator::getProcessRank());
+        m_metropolisSeed = metropolisSeed;
+}
+
+void Parameters::setRandomMatrixSeed(double randomMatrixSeed)
+{
+    randomMatrixSeed += double(Parallel::Communicator::getProcessRank());
+    m_randomMatrixSeed = randomMatrixSeed;
 }
