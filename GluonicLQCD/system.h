@@ -66,7 +66,7 @@ private:
     SU3 m_updatedMatrix;
 
     // Time counting
-    steady_clock::time_point m_preUpdate, m_postUpdate;
+    steady_clock::time_point m_preUpdate;
     duration<double> m_updateTime;
     double m_updateStorer = 0;
     double m_updateStorerTherm = 0;

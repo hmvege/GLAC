@@ -15,7 +15,7 @@ System::System()
 {
     /*
      * Class for calculating correlators using the System algorithm.
-     * Takes an action object as well as a Gamma functional to be used in the action.
+     * Reads in from Parameters, and sets the action accordingly.
      */
     // Retrieving communication related variables
     m_processRank                       = Parallel::Communicator::getProcessRank();
@@ -48,6 +48,12 @@ void System::setAction()
 
 void System::setObservable(std::vector<std::string> obsList, bool flow)
 {
+    /*
+     * Sets the observables to be sampled.
+     * Arguments:
+     *  obsList     : vector of string
+     *  flow        : flag if we are initializing a flow variable
+     */
     bool plaq = false;
     bool topc = false;
     bool energy = false;
@@ -55,6 +61,7 @@ void System::setObservable(std::vector<std::string> obsList, bool flow)
         if (obsList[i] == "plaquette") plaq = true;
         if (obsList[i] == "topc") topc = true;
         if (obsList[i] == "energy") energy = true;
+        // ADD USER OBS?
     }
     if (plaq && !topc && !energy) {
         // Initialize plaquette sampler
@@ -162,18 +169,14 @@ void System::thermalize()
      */
     if (m_processRank == 0) printf("\nInitiating thermalization.");
     if (m_storeThermalizationObservables) {
-        // Storing the number of shifts that are needed in the observable storage container.
+        // Storing the number of shifts that are needed in the observable storage container. Will be used for main for loop shifting.
         m_NThermSteps = 1 + m_NTherm;
         // Calculating correlator before any updates have began.
-        m_correlator->calculate(m_lattice,0);
-//        // Summing and sharing correlator to all processors before any updates has begun
-//        MPI_Allreduce(&m_observablePreThermalization[0], &m_observablePreThermalization[0], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        // Dividing by the number of processors in order to get the correlator.
-//        m_observablePreThermalization[0] /= double(m_numprocs);
+        m_correlator->calculate(m_lattice,0); // Averaging is done if specified for observable in statistics after run is done.
         if (m_processRank == 0) {
-            printf("\ni    Observable   ");
-//            printf("\n%-4d %-12.8f",0,m_observablePreThermalization[0]);
-            printf("\n%-4d %-12.8f",0,m_correlator->getObservable(0));
+            printf("\ni    ");
+            m_correlator->printHeader();
+            m_correlator->printObservable(0);
         }
     }
     // Running thermalization
@@ -186,14 +189,13 @@ void System::thermalize()
         update();
 
         // Post timer
-        m_postUpdate = steady_clock::now(); // REDUNDANT?
-        m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
+        m_updateTime = duration_cast<duration<double>>(steady_clock::now() - m_preUpdate);
         m_updateStorerTherm += m_updateTime.count();
-        if (m_processRank == 0) {
-            printf("\r%6.2f %% done. ", iTherm/double(m_NTherm)*100);
-            std::fflush(stdout);
-            if (iTherm % 20 == 0) { // Avg. time per update every 10th update
-                printf("Avgerage update time(every 10th): %10.6f sec.", m_updateStorerTherm/double(iTherm));
+        if (m_processRank == 0 && iTherm % 20 == 0) { // Progress and Avg. time per update every 10th update
+            printf("\r%6.2f %% done. Avg. update time: %10.6f sec", iTherm/double(m_NTherm)*100, m_updateStorerTherm/double(iTherm));
+            if (!m_storeThermalizationObservables) {
+                // Flushes if we are not storing any thermalization observables
+                std::fflush(stdout);
             }
         }
 
@@ -201,11 +203,6 @@ void System::thermalize()
         if (m_storeThermalizationObservables) {
             // Calculating the correlator
             m_correlator->calculate(m_lattice,iTherm);
-
-            // Summing and sharing results across the processors
-//            MPI_Allreduce(&m_observablePreThermalization[i], &m_observablePreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
-            // Averaging the results
-//            m_observablePreThermalization[i] /= double(m_numprocs);
             if (m_processRank == 0) {
                 m_correlator->printObservable(iTherm);
             }
@@ -290,7 +287,7 @@ void System::runMetropolis()
     // Main part of algorithm
     for (int iConfig = 0; iConfig < m_NCf; iConfig++)
     {
-        for (int i = 0; i < m_NCor; i++) // Updating NCor times before updating the Gamma function
+        for (int i = 0; i < m_NCor; i++) // Updating NCor times before updating the lattice
         {
             // Pre timer
             m_preUpdate = steady_clock::now();
@@ -298,22 +295,17 @@ void System::runMetropolis()
             update();
 
             // Post timer
-            m_postUpdate = steady_clock::now();
-            m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
+            m_updateTime = duration_cast<duration<double>>(steady_clock::now() - m_preUpdate);
             m_updateStorer += m_updateTime.count();
         }
         // Flowing configuration
         if (m_NFlows != 0) flowConfiguration(iConfig);
 
-        // Averaging the gamma values
+        // Averaging the observable values
         m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
 
-//        m_observable[iConfig] = m_correlator->calculate(m_lattice);
-//        MPI_Allreduce(&m_observable[iConfig], &m_observable[iConfig], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        m_observable[iConfig] /= double(m_numprocs);
-
         if (m_processRank == 0) {
-            // Printing plaquette value
+            // Printing the observables
             m_correlator->printObservable(iConfig);
             printf(" %-12.8f",m_updateStorer/double((iConfig+1)*m_NCor));
             // Adding the acceptance ratio

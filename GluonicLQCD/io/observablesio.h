@@ -5,12 +5,6 @@
 #include "parallelization/communicator.h"
 
 namespace IO {
-//        void writeObservablesToFile(double acceptanceRate,
-//                                    double averagedObservable,
-//                                    double varianceObservable,
-//                                    double stdObservable,
-//                                    double *observables,
-//                                    std::string observableName);
         void writeObservablesToFile(double acceptanceRate,
                                     double averagedObservable,
                                     double varianceObservable,
@@ -21,11 +15,6 @@ namespace IO {
         void writeFlowObservableToFile(double *observables,
                                        std::string observableName,
                                        int configNumber);
-        void writeDataToFile(double averagedObservable,
-                             double varianceObservable,
-                             double stdObservable,
-                             double *observables,
-                             std::string observableName);
 }
 
 #endif // OBSERVABLESIO_H
