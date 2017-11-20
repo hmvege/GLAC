@@ -9,13 +9,13 @@ class SU3MatrixGenerator
 {
 private:
     // RNG
-    std::mt19937_64 generator;
+    std::mt19937_64 m_generator;
 
     // Random matrix distribution
-    std::uniform_real_distribution<double> uniform_distribution;
+    std::uniform_real_distribution<double> m_uniform_distribution;
 
     // RST related distribution
-    std::uniform_real_distribution<double> SU2_uniform_distribution;
+    std::uniform_real_distribution<double> m_SU2_uniform_distribution;
     double m_epsilon;
     double m_epsilonSquared;
     double m_sqrtOneMinusEpsSquared;
@@ -56,7 +56,7 @@ inline SU2 SU3MatrixGenerator::generateSU2()
     _rNorm = 0;
     // Generating 4 r random numbers
     for (int i = 0; i < 4; i++) {
-        _r[i] = SU2_uniform_distribution(generator);
+        _r[i] = m_SU2_uniform_distribution(m_generator);
     }
     // Populating the x-vector
     if (_r[0] < 0) {

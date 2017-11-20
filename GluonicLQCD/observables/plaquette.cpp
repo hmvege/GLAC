@@ -49,7 +49,6 @@ void Plaquette::calculate(Links *lattice, int iObs)
         }
     }
     m_observable->m_observables[iObs] = (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
-//    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 }
 
 void Plaquette::calculate(SU3 *plaquetteStaples, int iObs)
@@ -59,7 +58,6 @@ void Plaquette::calculate(SU3 *plaquetteStaples, int iObs)
         P += plaquetteStaples[i];
     }
     m_observable->m_observables[iObs] += (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
-//    return (P.mat[0] + P.mat[8] + P.mat[16])/m_multiplicationFactor;
 }
 
 void Plaquette::runStatistics()

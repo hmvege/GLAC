@@ -1,7 +1,7 @@
 #ifndef OBSERVABLESIO_H
 #define OBSERVABLESIO_H
 
-#include "config/parameters.h"
+#include <string>
 
 namespace IO {
         void writeObservablesToFile(double acceptanceRate,

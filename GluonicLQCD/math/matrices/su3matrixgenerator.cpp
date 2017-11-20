@@ -21,12 +21,10 @@ SU3MatrixGenerator::SU3MatrixGenerator()
     m_epsilon = Parameters::getSU3Eps();
     m_epsilonSquared = m_epsilon*m_epsilon;
     m_sqrtOneMinusEpsSquared = sqrt(1 - m_epsilonSquared);
-    std::mt19937_64 gen(Parameters::getRandomMatrixSeed());
-    std::uniform_real_distribution<double> uni_dist(-m_epsilon,m_epsilon);
-    std::uniform_real_distribution<double> uni_dist_SU2(-0.5,0.5);
-    generator = gen;
-    uniform_distribution = uni_dist;
-    SU2_uniform_distribution = uni_dist_SU2;
+    // Initializes RNGs
+    m_generator = std::mt19937_64 (Parameters::getRandomMatrixSeed());
+    m_uniform_distribution = std::uniform_real_distribution<double> (-m_epsilon,m_epsilon);
+    m_SU2_uniform_distribution = std::uniform_real_distribution<double> (-0.5,0.5);
     // Ensures RST and regular matrices start at zero.
     H.zeros();
     X.zeros();
@@ -59,8 +57,8 @@ SU3 SU3MatrixGenerator::generateRandom()
     {
         for (int j = 0; j < 3; j++)
         {
-            H[6*i + 2*j] = uniform_distribution(generator);
-            H[6*i + 2*j + 1] = uniform_distribution(generator);
+            H[6*i + 2*j] = m_uniform_distribution(m_generator);
+            H[6*i + 2*j + 1] = m_uniform_distribution(m_generator);
         }
     }
     // Normalizing first column
@@ -133,7 +131,7 @@ SU3 SU3MatrixGenerator::generateRST()
     r = generateSU2();
     s = generateSU2();
     t = generateSU2();
-    if (SU2_uniform_distribution(generator) < 0) {
+    if (m_SU2_uniform_distribution(m_generator) < 0) {
         return RSTMatrixMultiplicationInverse(r,s,t);
     } else {
         return RSTMatrixMultiplication(r,s,t);

@@ -36,6 +36,7 @@ System::System()
     // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
     m_generator = std::mt19937_64(Parameters::getMetropolisSeed());
     m_uniform_distribution = std::uniform_real_distribution<double>(0,1);
+    cout << Parallel::Communicator::getProcessRank() << " " << m_uniform_distribution.a() << " " << m_uniform_distribution.b() << endl;
 }
 
 void System::setAction()
@@ -158,9 +159,10 @@ void System::latticeSetup()
             }
         }
     }
-    if (m_processRank == 0) {
-        printf("\nLattice setup complete\n");
-    }
+    if (m_processRank == 0) printf("\nLattice setup complete\n");
+    cout << Parallel::Communicator::getProcessRank() << " " << m_uniform_distribution.a() << " " << m_uniform_distribution.b() << endl;
+    // Prints system info after setup is complete
+    SysPrint::printSystemInfo();
 }
 
 void System::thermalize()

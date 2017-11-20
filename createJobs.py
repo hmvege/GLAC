@@ -315,6 +315,8 @@ def main(args):
                         "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
                         "observables"               : ["plaquette"], # Optional: topologicalCharge, energyDensity
                         "flowObservables"           : ["plaquette"], # Optional: topologicalCharge, energyDensity
+                        "load_field_configs"        : False,    # ADD THIS POSSIBILITY
+                        "field_configs"             : [],       # Only add from command line when specified so
                         "uTest"                     : False,
                         "uTestVerbose"              : False,
                         "SU3Eps"                    : 0.24,
@@ -416,6 +418,7 @@ def main(args):
     # Loads a configuration into the world(or multiple!)
     if args.subparser == 'load':
         configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
+        print configurations; exit(1);
         s.submitJob(configurations,args.system,args.partition)
     elif args.subparser == 'setup':
         if not args.system: raise ValueError("System value %g: something is wrong in parser." % args.system)

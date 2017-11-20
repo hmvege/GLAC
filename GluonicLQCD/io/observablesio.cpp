@@ -1,4 +1,5 @@
 #include "observablesio.h"
+#include "config/parameters.h"
 #include "parallelization/communicator.h"
 #include <cmath>
 #include <fstream>
