@@ -208,12 +208,12 @@ void Parallel::Communicator::checkSubLatticeValidity()
     }
     if (latticeSizeError) {
         if (m_processRank == 0) {
-            cout << ": dimensions:  ";
-            for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
-            cout << " --> exiting."<< endl;
+            std::string errMsg = "";
+            errMsg += ": dimensions:  ";
+            for (int j = 0; j < 4; j++) errMsg += std::to_string(m_N[j]) + " ";
+            errMsg += " --> exiting.";
+            MPIExit(errMsg);
         }
-        MPI_Finalize();
-        exit(0);
     }
 }
 
@@ -230,9 +230,7 @@ void Parallel::Communicator::checkProcessorValidity()
      * Exits if number of processors are odd.
      */
     if (m_numprocs % 2 != 0) {
-        cout << "Error: odd number of processors --> exiting." << endl;
-        MPI_Finalize();
-        exit(1);
+        MPIExit("Error: odd number of processors --> exiting.");
     }
 }
 
@@ -245,12 +243,13 @@ void Parallel::Communicator::checkSubLatticeDimensionsValidity()
     for (int i = 0; i < 4; i++) {
         if (m_N[i] <= 2) {
             if (m_processRank == 0) {
-                cout << "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
-                for (int j = 0; j < 4; j++) cout << m_N[j] << " ";
-                cout << " --> exiting."<< endl;
+                std::string errMsg = "";
+                errMsg += "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
+                for (int j = 0; j < 4; j++) errMsg += std::to_string(m_N[j]) + " ";
+                errMsg += " --> exiting.";
+                MPIExit(errMsg);
             }
-            MPI_Finalize();
-            exit(0);
+
         }
     }
 }
@@ -304,8 +303,9 @@ void Parallel::Communicator::setBarrier()
     MPI_Barrier(MPI_COMM_WORLD);
 }
 
-void Parallel::Communicator::MPIExit()
+void Parallel::Communicator::MPIExit(std::string message)
 {
+    printf("\n%s", message.c_str());
     MPI_Finalize();
     exit(m_processRank);
 }

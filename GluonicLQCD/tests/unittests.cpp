@@ -73,7 +73,7 @@ void SU3BaseTests()
 }
 
 
-void runMatrixPerformanceTest(double eps, double seed, int NTests, bool testMatrix, bool testComplex) {
+void runMatrixPerformanceTest(double seed, int NTests, bool testMatrix, bool testComplex) {
     /*
      * For running performance tests of the matrix multiplication contained in SU3.
      */

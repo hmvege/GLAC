@@ -46,15 +46,13 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     MPI_Comm_rank (MPI_COMM_WORLD, &processRank);
 
     if (numberOfArguments != 2) {
-        printf("\nError: please provide a json file to parse.");
-        Parallel::Communicator::MPIExit();
+        Parallel::Communicator::MPIExit("Error: please provide a json file to parse.");
     }
     Parallel::Communicator::init(numprocs,processRank);
     ConfigLoader::load(cmdLineArguments[1]);
 
     // Program timers
-    steady_clock::time_point programStart, programEnd;
-    duration<double> programTime;
+    steady_clock::time_point programStart;
     programStart = steady_clock::now();
 
     // Main program part
@@ -65,8 +63,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     pureGauge.runMetropolis();
 
     // Finalizing and printing time taken
-    programEnd = steady_clock::now();
-    programTime = duration_cast<duration<double>>(programEnd - programStart);
+    duration<double> programTime = duration_cast<duration<double>>(steady_clock::now() - programStart);
     if (processRank == 0) printf("\nProgram complete. Time used: %f hours (%f seconds)", double(programTime.count())/3600.0, programTime.count());
 
     MPI_Finalize();
@@ -79,6 +76,6 @@ void runUnitTests()
     TestSuite unitTester;
     unitTester.runFullTestSuite(Parameters::getUnitTestingVerbose());
 //    SU3BaseTests();
-//    runMatrixPerformanceTest(0.24,std::time(nullptr),1e7,true,false);
-    Parallel::Communicator::MPIExit();
+//    runMatrixPerformanceTest(std::time(nullptr),1e7,true,false);
+    Parallel::Communicator::MPIExit("");
 }

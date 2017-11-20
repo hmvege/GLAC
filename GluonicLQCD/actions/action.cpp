@@ -18,6 +18,7 @@ double Action::getDeltaAction(Links * lattice, SU3 U, unsigned int i, unsigned i
 {
     cout << "In Action::getDeltaAction: If you are seeing this, something is wrong!" << endl;
     exit(1);
+    U = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
     return 1.0;
 }
 
@@ -25,6 +26,7 @@ void Action::computeStaple(Links *lattice, unsigned int i, unsigned int j, unsig
 {
     cout << "In Action::computeStaple: If you are seeing this, something is wrong!" << endl;
     exit(1);
+    lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].printMachine();
 }
 
 void Action::setN(unsigned int *N)
@@ -38,4 +40,5 @@ SU3 Action::getActionDerivative(Links * lattice, unsigned int i, unsigned int j,
 {
     cout << "In Action::getActionDerivative: If you are seeing this, something is wrong!" << endl;
     exit(1);
+    lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].printMachine();
 }
