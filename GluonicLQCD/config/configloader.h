@@ -4,8 +4,7 @@
 #include <fstream>
 #include "lib/json.hpp"
 #include "parameters.h"
-#include "parallelization/communicator.h"
-#include "parallelization/index.h"
+#include "parallelization/parallel.h"
 
 namespace ConfigLoader
 {

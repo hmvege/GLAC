@@ -1,5 +1,6 @@
 #include "observablesampler.h"
-#include "parallelization/index.h"
+#include "parallelization/parallel.h"
+#include "config/parameters.h"
 
 ObservableSampler::ObservableSampler(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {

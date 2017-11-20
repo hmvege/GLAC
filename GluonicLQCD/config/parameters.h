@@ -2,7 +2,6 @@
 #define PARAMETERS_H
 
 #include <string>
-#include <cmath>
 #include <vector>
 #include "config/sysprint.h"
 
@@ -65,8 +64,6 @@ private:
 public:
     Parameters();
     ~Parameters();
-
-//    static void printSystemInfo(); // MOVE INTO OWN CLAS AND MAKE FRIEND?
 
     /////////////////
     //// Setters ////
@@ -156,12 +153,6 @@ public:
     static std::string getExpFuncName() { return m_expFuncName; }
     static std::vector<std::string> getObservablesList() { return m_observablesList; }
     static std::vector<std::string> getFlowObservablesList() { return m_flowObservablesList; }
-
-    // Observable
-    // Flow Observable
-    // Exponentiation function
-//    static
-
 };
 
 #endif // PARAMETERS_H

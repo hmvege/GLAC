@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <iostream>
 #include "math/functions.h"
+#include "complex.h"
+#include "config/parameters.h"
 
 // For testing
 #include "tests/unittests.h"

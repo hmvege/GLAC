@@ -1,4 +1,12 @@
 #include "fieldio.h"
+#include "config/parameters.h"
+#include "parallelization/index.h"
+#include "parallelization/communicator.h"
+#include <mpi.h>
+#include <cmath>
+
+using std::cout;
+using std::endl;
 
 const int IO::FieldIO::m_linkDoubles = 72;
 const int IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);

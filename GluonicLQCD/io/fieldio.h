@@ -2,11 +2,7 @@
 #define FIELDIO_H
 
 #include <string>
-#include <mpi.h>
-#include "math/latticemath.h"
-#include "config/parameters.h"
-#include "parallelization/index.h"
-#include "parallelization/communicator.h"
+#include "math/Links.h"
 
 namespace IO {
     class FieldIO

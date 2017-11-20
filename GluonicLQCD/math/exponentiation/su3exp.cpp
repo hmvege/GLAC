@@ -1,4 +1,5 @@
 #include "su3exp.h"
+#include <cmath>
 
 SU3Exp::SU3Exp()
 {

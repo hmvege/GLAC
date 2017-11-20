@@ -1,4 +1,6 @@
 #include "clover.h"
+#include "parallelization/parallel.h"
+#include "config/parameters.h"
 
 Clover::Clover(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {

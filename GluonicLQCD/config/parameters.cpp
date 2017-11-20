@@ -1,4 +1,5 @@
 #include "parameters.h"
+#include <cmath>
 
 // Lattice specific constants
 int Parameters::m_NSpatial = 0;

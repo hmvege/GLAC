@@ -1,8 +1,9 @@
-#include <random>   // For Mersenne-Twister19937
-#include <chrono>
+#include "system.h"
+#include "config/parameters.h"
+#include "parallelization/parallel.h"
+#include "io/fieldio.h"
 #include <cmath>    // For exp()
 #include <mpi.h>
-#include "system.h"
 
 using std::cout;
 using std::endl;
@@ -207,6 +208,11 @@ void System::thermalize()
                 m_correlator->printObservable(iTherm);
             }
         }
+    }
+
+    // Printing out the avg. update time one more time at the end, to avoid unfinnished percentage sign
+    if (m_processRank == 0) {
+        printf("\r%6.2f %% done. Avg. update time: %10.6f sec", 100.0, m_updateStorerTherm/double(m_NTherm + 1));
     }
 
     // Taking the average of the acceptance rate across the processors.

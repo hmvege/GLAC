@@ -1,7 +1,7 @@
 #ifndef EXPLUSCHER_H
 #define EXPLUSCHER_H
 
-#include "math/exponentiation/su3exp.h"
+#include "su3exp.h"
 
 class ExpLuscher : public SU3Exp
 {

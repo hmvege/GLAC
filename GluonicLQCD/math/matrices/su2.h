@@ -1,9 +1,6 @@
 #ifndef SU2_H
 #define SU2_H
 
-//#include <string>
-#include <iostream>
-#include <cmath>
 #include "math/complex.h"
 
 using std::cout;

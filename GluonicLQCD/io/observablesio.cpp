@@ -1,8 +1,12 @@
 #include "observablesio.h"
-
+#include "parallelization/communicator.h"
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+
+using std::cout;
+using std::endl;
 
 void IO::writeObservablesToFile(double acceptanceRate,
                                 double averagedObservable,

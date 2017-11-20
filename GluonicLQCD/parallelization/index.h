@@ -1,11 +1,6 @@
 #ifndef INDEX_H
 #define INDEX_H
 
-#include "neighbours.h"
-#include "math/links.h"
-#include "math/matrices/su3.h"
-#include <vector>
-
 namespace Parallel {
     class Index
     {

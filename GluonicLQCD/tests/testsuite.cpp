@@ -1,4 +1,8 @@
 #include "testsuite.h"
+#include <iostream>
+#include <iomanip>
+#include <ctime>
+#include <cmath>
 
 using std::cout;
 using std::endl;

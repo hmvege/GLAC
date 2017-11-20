@@ -1,4 +1,6 @@
 #include "correlator.h"
+#include "parallelization/parallel.h"
+#include "config/parameters.h"
 
 Correlator::Correlator(bool storeFlowObservable)
 {

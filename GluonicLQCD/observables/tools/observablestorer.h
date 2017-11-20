@@ -2,8 +2,6 @@
 #define OBSERVABLESTORER_H
 
 #include <string>
-#include "io/observablesio.h"
-#include "parallelization/communicator.h"
 
 struct ObservableStorer
 {

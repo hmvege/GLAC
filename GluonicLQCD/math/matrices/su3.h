@@ -1,12 +1,7 @@
 #ifndef SU3_H
 #define SU3_H
 
-#include <cmath>
-#include <iostream>
 #include "math/complex.h"
-
-using std::cout;
-using std::endl;
 
 class SU3
 {

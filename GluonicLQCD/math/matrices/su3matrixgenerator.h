@@ -4,8 +4,6 @@
 #include <random>
 #include "su3.h"
 #include "su2.h"
-#include "complex.h"
-#include "config/parameters.h"
 
 class SU3MatrixGenerator
 {

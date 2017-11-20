@@ -2,6 +2,7 @@
 #define ENERGYDENSITY_H
 
 #include "correlator.h"
+#include "math/functions.h"
 
 class EnergyDensity : public Correlator
 {

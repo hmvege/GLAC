@@ -3,9 +3,6 @@
 
 #include <iostream>
 
-// TEMP FOR PRINTING; MUST REMOVE TO STRIP DOWN LATER
-//#include <string>
-
 class complex
 {
 public:
@@ -38,7 +35,7 @@ public:
     complex c();
     complex zeros();
 
-    friend std::ostream& operator<<(std::ostream& os, const complex& a); // Allows cout << myComplex << endl;
+    friend std::ostream& operator<<(std::ostream& os, const complex& a);
 };
 
 inline complex operator+(complex a, complex b)
@@ -88,7 +85,5 @@ inline complex operator/(complex a, double b)
     a /= b;
     return a;
 }
-
-
 
 #endif // COMPLEX_H

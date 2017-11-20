@@ -2,12 +2,8 @@
 #define COMMUNICATOR_H
 
 #include <vector>
-#include <mpi.h>
-#include "index.h"
 #include "neighbours.h"
-#include "math/latticemath.h"
-
-#include "config/parameters.h"
+#include "math/links.h"
 
 namespace Parallel {
     class Communicator
@@ -36,7 +32,7 @@ namespace Parallel {
         static Neighbours m_neighbourLists;
 
         // Initializers
-        static void init(int numprocs, int processRank);
+        static void init(int *numberOfArguments, char ***cmdLineArguments);
         static void initializeSubLattice();
 
         // Link getters

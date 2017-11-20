@@ -1,4 +1,9 @@
 #include "observablestorer.h"
+#include "io/observablesio.h"
+#include "parallelization/parallel.h"
+#include "config/parameters.h"
+#include <cmath>
+#include <mpi.h>
 
 ObservableStorer::ObservableStorer(int NSize)
 {

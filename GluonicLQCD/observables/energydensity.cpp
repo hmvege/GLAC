@@ -1,6 +1,5 @@
 #include "energydensity.h"
 #include "clover.h"
-#include "math/functions.h"
 
 EnergyDensity::EnergyDensity(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {

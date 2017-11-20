@@ -1,17 +1,8 @@
 #ifndef TESTSUITE_H
 #define TESTSUITE_H
 
-#include <iostream>
-#include <iomanip>
-#include <cmath>
-#include <ctime>
-#include "math/matrices/su2.h"
-#include "math/matrices/su3.h"
 #include "math/matrices/su3matrixgenerator.h"
-#include "observables/plaquette.h"
-#include "math/links.h"
-#include "math/complex.h"
-#include "math/functions.h"
+#include "math/latticemath.h"
 
 class TestSuite
 {

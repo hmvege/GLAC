@@ -1,8 +1,10 @@
 #include "plaquette.h"
-#include <vector>
 #include "math/links.h"
 #include "math/functions.h"
-#include "parallelization/index.h"
+#include "parallelization/parallel.h"
+#include "config/parameters.h"
+#include <vector>
+#include <cmath>
 
 Plaquette::Plaquette(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {

@@ -1,11 +1,6 @@
 #ifndef NEIGHBOURLIST_H
 #define NEIGHBOURLIST_H
 
-#include <iostream>
-#include <iomanip>
-using std::cout;
-using std::endl;
-
 struct NeighbourList
 {
     NeighbourList();

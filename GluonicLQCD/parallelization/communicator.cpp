@@ -1,4 +1,8 @@
 #include "communicator.h"
+#include "math/functions.h"
+#include "index.h"
+#include "config/parameters.h"
+#include <mpi.h>
 
 // Internal variables
 bool Parallel::Communicator::muDir = 0;
@@ -217,10 +221,16 @@ void Parallel::Communicator::checkSubLatticeValidity()
     }
 }
 
-void Parallel::Communicator::init(int numprocs, int processRank)
+void Parallel::Communicator::init(int *numberOfArguments, char ***cmdLineArguments)
 {
-    m_numprocs = numprocs;
-    m_processRank = processRank;
+    // Initializing parallelization, HIDE THIS?
+    MPI_Init (numberOfArguments, cmdLineArguments);
+    MPI_Comm_size (MPI_COMM_WORLD, &m_numprocs);
+    MPI_Comm_rank (MPI_COMM_WORLD, &m_processRank);
+
+    if ((*numberOfArguments) != 2) {
+        Parallel::Communicator::MPIExit("Error: please provide a json file to parse.");
+    }
     checkProcessorValidity();
 }
 

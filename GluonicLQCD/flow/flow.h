@@ -1,11 +1,9 @@
 #ifndef FLOW_H
 #define FLOW_H
 
-#include "math/latticemath.h"
+#include "math/Links.h"
 #include "math/flowexpfunctions.h"
 #include "actions/action.h"
-#include "parallelization/index.h"
-#include "config/parameters.h"
 
 class Flow
 {

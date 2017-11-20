@@ -3,9 +3,8 @@
 
 #include "matrices/su3.h"
 
-class Links
+struct Links
 {
-public:
     Links();
     ~Links();
     // Link variables being the matrices

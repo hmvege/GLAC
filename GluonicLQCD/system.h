@@ -3,22 +3,11 @@
 
 #include <random>
 #include <chrono>
-#include "actions/action.h"
-#include "actions/wilsongaugeaction.h"
-#include "observables/correlator.h"
-#include "config/parameters.h"
+#include "actions/actions.h"
+#include "observables/observables.h"
 #include "math/matrices/su3matrixgenerator.h"
-#include "math/latticemath.h"
-
-#include "parallelization/neighbourlist.h" // Make this into header?
-#include "parallelization/neighbours.h"
-#include "parallelization/index.h"
-
+#include "math/Links.h"
 #include "flow/flow.h"
-#include "io/fieldio.h"
-#include "io/observablesio.h"
-
-#include "observables/observablesampler.h"
 
 using std::chrono::steady_clock;
 using std::chrono::duration;

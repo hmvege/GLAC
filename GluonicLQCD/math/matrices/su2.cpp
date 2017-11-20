@@ -1,4 +1,6 @@
 #include "su2.h"
+#include <iostream>
+#include <cmath>
 
 SU2::SU2()
 {

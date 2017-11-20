@@ -1,4 +1,6 @@
 #include "wilsongaugeaction.h"
+#include "config/parameters.h"
+#include "math/functions.h"
 
 WilsonGaugeAction::WilsonGaugeAction(): Action()
 {

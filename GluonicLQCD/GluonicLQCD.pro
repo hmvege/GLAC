@@ -74,7 +74,10 @@ HEADERS += \
     config/configloader.h \
     lib/json.hpp \
     config/sysprint.h \
-    math/flowexpfunctions.h
+    math/flowexpfunctions.h \
+    actions/actions.h \
+    parallelization/parallel.h \
+    observables/observables.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx

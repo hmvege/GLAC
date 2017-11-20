@@ -1,5 +1,7 @@
 #include "topologicalcharge.h"
 #include "math/functions.h"
+#include "parallelization/parallel.h"
+#include "config/parameters.h"
 #include "clover.h"
 #include <cmath>
 

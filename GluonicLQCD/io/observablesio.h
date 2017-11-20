@@ -2,7 +2,6 @@
 #define OBSERVABLESIO_H
 
 #include "config/parameters.h"
-#include "parallelization/communicator.h"
 
 namespace IO {
         void writeObservablesToFile(double acceptanceRate,

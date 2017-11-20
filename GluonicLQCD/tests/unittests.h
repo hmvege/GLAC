@@ -1,8 +1,6 @@
 #ifndef UNITTESTS_H
 #define UNITTESTS_H
 
-#include "math/matrices/su3.h"
-
 // complex tests
 void SU3BaseTests();
 // Performance tests

@@ -2,7 +2,6 @@
 #define NEIGHBOURS_H
 
 #include "neighbourlist.h"
-//#include "communicator.h"
 
 class Neighbours
 {
@@ -102,16 +101,6 @@ public:
     NeighbourList* getNeighbours(int Np);
     int getListLength() { return m_numproc; }
     int getProcessorDimensionPosition(int dim) { return m_P[dim]; }
-
-
-    void printStuff() { // TEMP
-        printf("\nPROC POSITION: %d %d %d %d", m_P[0],m_P[1],m_P[2],m_P[3]);
-        printf("\nPROCS PER DIM: %d %d %d %d", m_Nx,m_Ny,m_Nz,m_Nt);
-        printf("\nNUMPROCS: %d RANK: %d", m_numproc,m_processRank);
-        for (int i = 0; i < m_numproc; i++) {
-            m_neighbourLists[i].print();
-        }
-    }
 };
 
 #endif // NEIGHBOURS_H

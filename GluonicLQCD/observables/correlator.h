@@ -2,16 +2,8 @@
 #define CORRELATOR_H
 
 #include "math/links.h"
-#include "parallelization/index.h"
-//#include "parallelization/neighbours.h"
-#include "parallelization/communicator.h"
 #include "tools/observablestorer.h"
 #include <vector>
-#include <iostream>
-
-
-using std::cout;
-using std::endl;
 
 class Correlator
 {

@@ -1,10 +1,8 @@
 #ifndef SYSPRINT_H
 #define SYSPRINT_H
 
-#include <iomanip>
-#include <iostream>
 #include "parameters.h"
-#include "parallelization/communicator.h"
+#include "parallelization/parallel.h"
 
 class SysPrint
 {

@@ -1,4 +1,9 @@
 #include "neighbourlist.h"
+#include <iostream>
+#include <iomanip>
+
+using std::cout;
+using std::endl;
 
 NeighbourList:: NeighbourList()
 {

@@ -1,5 +1,4 @@
 #include "index.h"
-#include <mpi.h>
 
 unsigned int Parallel::Index::m_N[] = {};
 unsigned int Parallel::Index::m_NTot[] = {};

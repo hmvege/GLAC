@@ -6,7 +6,6 @@
 #include "clover.h"
 #include "energydensity.h"
 #include "topologicalcharge.h"
-#include "config/parameters.h"
 
 class ObservableSampler : public Correlator
 {

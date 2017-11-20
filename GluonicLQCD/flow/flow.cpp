@@ -1,4 +1,6 @@
 #include "flow.h"
+#include "parallelization/index.h"
+#include "config/parameters.h"
 
 /*
  * A class for performing Wilson flow on a gauge field configuration.
