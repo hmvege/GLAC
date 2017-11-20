@@ -4,11 +4,10 @@
 #include "math/functions.h"
 #include "parallelization/index.h"
 
-const std::string Plaquette::m_observableName = "Plaquette";
-
 Plaquette::Plaquette(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
-    m_observable->setObservableName(m_observableName);
+    m_observable->setObservableName(m_observableNameCompact);
+    m_observable->setNormalizeObservableByProcessor(true);
 }
 
 Plaquette::~Plaquette()

@@ -35,7 +35,6 @@ SOURCES += main.cpp \
     io/fieldio.cpp \
     config/parameters.cpp \
     flow/flow.cpp \
-    observables/tools/observablestatistics.cpp \
     config/configloader.cpp \
     config/sysprint.cpp
 
@@ -72,7 +71,6 @@ HEADERS += \
     io/fieldio.h \
     config/parameters.h \
     flow/flow.h \
-    observables/tools/observablestatistics.h \
     config/configloader.h \
     lib/json.hpp \
     config/sysprint.h \

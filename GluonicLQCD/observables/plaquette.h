@@ -9,7 +9,8 @@ private:
     double m_multiplicationFactor;
     SU3 P;
     SU3 PTemp;
-    const static std::string m_observableName;
+    const std::string m_observableName = "Plaquette";
+    const std::string m_observableNameCompact = "plaq";
 public:
     Plaquette(bool storeFlowObservable);
     ~Plaquette();

@@ -5,37 +5,37 @@
 #include "io/observablesio.h"
 #include "parallelization/communicator.h"
 
-class ObservableStorer
+struct ObservableStorer
 {
-private:
+    ObservableStorer(int NSize);
+    ~ObservableStorer();
+
     // Observable name
     std::string m_observableName;
     // Bool to store if we are to normalize the data by number of processors
     bool m_normalizeObservableByProcessor = false;
-public:
-    ObservableStorer(int NSize);
-    ~ObservableStorer();
 
     // Observable data
     int m_NObs;
     double m_averagedObservable = 0;
     double m_varianceObservable = 0;
+    double m_averagedObservableSquared = 0;
     double m_stdObservable = 0;
-    double * m_observables; // SLOW COMPARED TO STACK? Making it public is the simplest way to make this work...
+    double * m_observables; // SLOW COMPARED TO STACK?
+    double * m_observablesSquared;
 
-    // THIS WILL BE MOVED TO CORRELATOR CLASS, MOST LIKELY!
+    // Runs statistics, perhaps create its own class? But that increases overhead, so maybe not
+    void gatherResults();
     void runStatistics();
     // Printers
     void printStatistics();
     // File writers
-    void writeObservableToFile();
+    void writeObservableToFile(double acceptanceRatio);
     void writeFlowObservableToFile(int configNumber);
     // Getters
     double getObservable(int position) { return m_observables[position]; }
     // Setters
-    void setObservableName(std::string observableName) {
-        m_observableName = observableName;
-    }
+    void setObservableName(std::string observableName) { m_observableName = observableName; }
     void setNormalizeObservableByProcessor(bool norm) { m_normalizeObservableByProcessor = norm; }
 };
 

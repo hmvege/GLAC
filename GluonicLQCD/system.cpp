@@ -1,11 +1,6 @@
 #include <random>   // For Mersenne-Twister19937
 #include <chrono>
 #include <cmath>    // For exp()
-#include <fstream> // REDUNDANT
-#include <iostream> // REDUNDANT
-#include <iomanip> // REDUNDANT
-#include <cstdio>   // For io C-style handling. // REDUNDANT
-#include <cstdlib> // REDUNDANT
 #include <mpi.h>
 #include "system.h"
 
@@ -86,6 +81,7 @@ System::~System()
      * Class destructor
      */
     delete [] m_lattice;
+    if (m_NFlows != 0) delete [] m_flowLattice;
 }
 
 void System::subLatticeSetup()
@@ -104,10 +100,24 @@ void System::subLatticeSetup()
         m_flowCorrelator->setN(m_N);
         m_flowCorrelator->setLatticeSize(m_subLatticeSize);
         m_flow = new Flow(m_S); // Ensure it does not go out of scope
+        m_flowLattice = new Links[m_subLatticeSize];
     }
     m_S->setN(m_N);
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
+}
+
+void System::copyToFlowLattice()
+{
+    /*
+     * Small function for copying the lattice to the flow lattice,
+     * as we need to ensure the old lattice remains unchanged.
+     */
+    for (int iLink = 0; iLink < m_subLatticeSize; iLink++) {
+        for (int mu = 0; mu < 4; mu++) {
+            m_flowLattice[iLink].U[mu] = m_lattice[iLink].U[mu];
+        }
+    }
 }
 
 void System::latticeSetup()
@@ -179,40 +189,37 @@ void System::thermalize()
         m_postUpdate = steady_clock::now(); // REDUNDANT?
         m_updateTime = duration_cast<duration<double>>(m_postUpdate - m_preUpdate);
         m_updateStorerTherm += m_updateTime.count();
-//        if (m_processRank == 0) {
-//            printf("\r%6.2f %% done. ", iTherm/double(m_NTherm)*100);
-//            std::fflush(stdout);
-//            if (iTherm % 20 == 0) { // Avg. time per update every 10th update
-//                printf("Avgerage update time(every 10th): %10.6f sec.", m_updateStorerTherm/double(iTherm));
-//            }
-//        }
+        if (m_processRank == 0) {
+            printf("\r%6.2f %% done. ", iTherm/double(m_NTherm)*100);
+            std::fflush(stdout);
+            if (iTherm % 20 == 0) { // Avg. time per update every 10th update
+                printf("Avgerage update time(every 10th): %10.6f sec.", m_updateStorerTherm/double(iTherm));
+            }
+        }
 
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (m_storeThermalizationObservables) {
             // Calculating the correlator
-//            m_observablePreThermalization[i] = m_correlator->calculate(m_lattice);
             m_correlator->calculate(m_lattice,iTherm);
 
             // Summing and sharing results across the processors
 //            MPI_Allreduce(&m_observablePreThermalization[i], &m_observablePreThermalization[i], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD); // Turn off!
             // Averaging the results
 //            m_observablePreThermalization[i] /= double(m_numprocs);
-
-//            if (m_processRank == 0) {
-//                printf("\n%-4d %-12.8f",i,m_observablePreThermalization[i]);
-//            }
             if (m_processRank == 0) {
                 m_correlator->printObservable(iTherm);
-//                printf("\n%-4d %-12.8f",iTherm,m_correlator->getObservable(iTherm)); // returns the observable at i(not averaged between by processors?)
             }
         }
     }
 
     // Taking the average of the acceptance rate across the processors.
-    if (m_NTherm != 0) MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
-
-    // Printing post-thermalization correlator and acceptance rate
-    if (m_processRank == 0 && m_NTherm != 0) printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
+    if (m_NTherm != 0) {
+        MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
+        // Printing post-thermalization correlator and acceptance rate
+        if (m_processRank == 0) {
+            printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
+        }
+    }
 }
 
 void System::updateLink(int latticeIndex, int mu)
@@ -259,84 +266,6 @@ void System::runMetropolis()
     /*
      * Runs the generation of gauge field configurations through the Metropolis algorithm.
      */
-    //// TESTS ==============================================================================
-//    // Common files
-//    loadFieldConfiguration("FlowTestRun_beta6.000000_spatial16_temporal16_threads8_config0.bin"); // 0.59486412, MAC
-////    loadFieldConfiguration("msg01.rec02.ildg-binary-data"); // jack
-//    double corr = m_correlator->calculate(m_lattice);
-//    MPI_Allreduce(&corr, &corr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//    corr /= double(m_numprocs);
-//    if (m_processRank == 0) cout << "Plaquette value: " << corr << endl;
-//    Flow WFlow(m_N, m_beta, m_numprocs, m_processRank);
-//    WFlow.setAction(m_S);
-//    /// OLD, run tests and compare times?
-////    Clover Clov;
-////    Clov.initializeIndexHandler(m_indexHandler);
-////    Clov.setN(m_N);
-////    Clov.setLatticeSize(m_latticeSize);
-////    TopologicalCharge TopCharge;
-////    TopCharge.initializeIndexHandler(m_indexHandler);
-////    TopCharge.setLatticeSize(m_latticeSize);
-////    TopCharge.setN(m_N);
-////    EnergyDensity Energy(0.0931, m_latticeSize);
-////    Energy.initializeIndexHandler(m_indexHandler);
-
-//    ObservableSampler OSampler(m_N,m_subLatticeSize,0.0931);
-
-//    int NFlows = 20;
-//    double * m_observableFlow = new double[NFlows];
-//    double * m_topologicalCharge = new double[NFlows];
-//    double * m_topologicalSusceptibility = new double[NFlows];
-//    double * m_actionDensity = new double[NFlows];
-//    for (int tau = 0; tau < NFlows; tau++) {
-//        m_topologicalCharge[tau] = 0;
-//        m_topologicalSusceptibility[tau] = 0;
-//        m_observableFlow[tau] = 0;
-//        m_actionDensity[tau] = 0;
-//    }
-//    double updateTime = 0;
-//    for (int tau = 0; tau < NFlows; tau++) {
-//        m_preUpdate = steady_clock::now();
-//        WFlow.flowField(m_lattice);
-
-//        OSampler.calculate(m_lattice);
-//        m_observableFlow[tau] = OSampler.getPlaquette();
-//        m_topologicalCharge[tau] = OSampler.getTopologicalCharge();
-//        m_actionDensity[tau] = OSampler.getEnergyDensity();
-
-//       /// OLD
-////        for (unsigned int x = 0; x < m_N[0]; x++) { // CLEAN UP AND MOVE THIS PART INTO ITS OWN CLASS FOR CALCULATING TOP CHARGE AND ENERGY?!
-////            for (unsigned int y = 0; y < m_N[1]; y++) { // HIDE IT, AS IT IS BIG AND UGLY!
-////                for (unsigned int z = 0; z < m_N[2]; z++) {
-////                    for (unsigned int t = 0; t < m_N[3]; t++) {
-////                        Clov.calculateClover(m_lattice,x,y,z,t);
-////                        m_topologicalCharge[tau] += TopCharge.calculate(Clov.m_clovers);
-////                        m_actionDensity[tau] += Energy.calculate(Clov.m_clovers);
-////                        m_observableFlow[tau] += m_correlator->calculate(Clov.m_plaquettes);
-////                    }
-////                }
-////            }
-////        }
-
-//        MPI_Allreduce(&m_topologicalCharge[tau], &m_topologicalCharge[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        MPI_Allreduce(&m_actionDensity[tau], &m_actionDensity[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        MPI_Allreduce(&m_observableFlow[tau], &m_observableFlow[tau], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-//        m_topologicalSusceptibility[tau] = pow(m_topologicalCharge[tau]*m_topologicalCharge[tau],0.25) * 0.1973/(0.0931*16);
-//        m_observableFlow[tau] /= double(m_numprocs);
-//        if (m_processRank == 0) printf("\n%5d %-5.4f %-18.16f %-18.16f %-18.16f %-18.16f", tau, 0.0931*sqrt(8*double(0.01*tau)), m_observableFlow[tau], m_topologicalCharge[tau], m_topologicalSusceptibility[tau], m_actionDensity[tau]);
-
-//        updateTime += (duration_cast<duration<double>>(steady_clock::now() - m_preUpdate)).count();
-
-//        if (m_processRank == 0) printf("  Update time: : %-.4f",updateTime / (tau+1));
-//    }
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    if (m_processRank == 0) printf("\nTime used to flow: %-.4f",updateTime);
-
-//    delete [] m_observableFlow;
-//    delete [] m_topologicalCharge;
-//    delete [] m_actionDensity;
-//    MPI_Finalize(); exit(1);
-    //// ===================================================================================
     // Variables for checking performance of the thermalization update.
     m_updateStorerTherm = 0;
 
@@ -347,7 +276,9 @@ void System::runMetropolis()
 
     // Printing header for main run
     if (m_processRank == 0) {
-        printf("\ni    %-*s Avg.Update-time  Accept/reject", m_correlator->getHeaderWidth(),m_correlator->getObservableName().c_str());
+        printf("\ni    ");
+        m_correlator->printHeader();
+        printf(" Avg.Update-time  Accept/reject");
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -376,6 +307,7 @@ void System::runMetropolis()
 
         // Averaging the gamma values
         m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
+
 //        m_observable[iConfig] = m_correlator->calculate(m_lattice);
 //        MPI_Allreduce(&m_observable[iConfig], &m_observable[iConfig], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 //        m_observable[iConfig] /= double(m_numprocs);
@@ -404,7 +336,7 @@ void System::runMetropolis()
         SysPrint::printLine();
     }
     m_correlator->runStatistics();
-    m_correlator->writeStatisticsToFile(); // Runs statistics, writes to file, and prints results (if verbose is on)
+    m_correlator->writeStatisticsToFile(getAcceptanceRate()); // Runs statistics, writes to file, and prints results (if verbose is on)
 }
 
 void System::flowConfiguration(int iConfig)
@@ -412,17 +344,16 @@ void System::flowConfiguration(int iConfig)
     /*
      * Flows configuration, performs flow statistics and writes it to a file.
      */
+    copyToFlowLattice();
     for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
-        m_flow->flowField(m_lattice);
-        m_flowCorrelator->calculate(m_lattice,iFlow);
+        m_flow->flowField(m_flowLattice);
+        m_flowCorrelator->calculate(m_flowLattice,iFlow);
     }
-    /* Make flow statistics, that is, the only stats that is needed is the sum of all configurations, which cant be reached untill end.
-         * So, either print flow during the run, or nothing.
-         * Then, write the flow values to file. */
-    m_flowCorrelator->runStatistics();
     // Write flow data to file
-    m_flowCorrelator->writeStatisticsToFile(iConfig);
+    m_flowCorrelator->writeFlowObservablesToFile(iConfig);
+    // After each configuration has been flowed, the values must be resetted.
+    m_flowCorrelator->reset();
 }
 
 
@@ -458,31 +389,6 @@ void System::flowConfigurations(std::vector<std::string> configurationNames)
     }
     printf("\nFlowing of %lu configurations done.", configurationNames.size());
 }
-
-//void System::runBasicStatistics()
-//{
-//    /*
-//     * Class instance for sampling statistics from our system.
-//     */
-//    double averagedObservableSquared = 0;
-//    // Performing an average over the Monte Carlo obtained values
-//    for (int alpha = 0; alpha < m_NCf; alpha++)
-//    {
-//        m_averagedObservable += m_observable[alpha];
-//        averagedObservableSquared += m_observable[alpha]*m_observable[alpha];
-//    }
-//    m_averagedObservable /= double(m_NCf);
-//    averagedObservableSquared /= double(m_NCf);
-//    m_varianceObservable = (averagedObservableSquared - m_averagedObservable*m_averagedObservable)/double(m_NCf);
-//    m_stdObservable = sqrt(m_varianceObservable);
-//    if (m_processRank == 0) {
-//        SysPrint::printLine();
-//        cout << "Average plaqutte:      " << m_averagedObservable << endl;
-//        cout << "Standard deviation:    " << m_stdObservable << endl;
-//        cout << "Variance:              " << m_varianceObservable << endl;
-//        SysPrint::printLine();
-//    }
-//}
 
 double System::getAcceptanceRate()
 {

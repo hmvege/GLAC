@@ -17,8 +17,6 @@ private:
     double m_P, m_E, m_Q;
     std::vector<int> m_position;
 
-    const int m_headerWidth = 42;
-
     // All observables in program
     Clover *m_clover = nullptr;
     Plaquette *m_plaquette = nullptr;
@@ -30,19 +28,20 @@ public:
 
     void calculate(Links *lattice, int iObs);
 
-    void writeStatisticsToFile();
-    void writeStatisticsToFile(int iConfig);
+    void writeStatisticsToFile(double acceptanceRatio);
+    void writeFlowObservablesToFile(int iConfig);
     void runStatistics();
 
     // Printers
     void printObservable(int iObs);
+    void printHeader();
 
     // Setters
+    void reset();
     void setLatticeSize(int latticeSize);
     void setN(unsigned int *N);
 
     // Getters
-    std::string getObservableName();
     double getObservable(int iObs);
     double getPlaquette() { return m_P; }
     double getTopologicalCharge() { return m_Q; }

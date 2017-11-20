@@ -28,13 +28,6 @@ public:
     Flow(Action *S);
     ~Flow();
     void flowField(Links *lattice);
-
-    void printTest() {
-        Parallel::Communicator::setBarrier();
-        m_S->printStuff();
-        cout << "FLOW EPS: " << m_epsilon << endl;
-        Parallel::Communicator::setBarrier();
-    }
 };
 
 #endif // FLOW_H

@@ -51,6 +51,11 @@ void Correlator::setN(unsigned int *N) // MOVE INTO CONSTRUCTOR?
     }
 }
 
+void Correlator::printHeader()
+{
+    printf("%-*s",m_headerWidth,m_observableName.c_str());
+}
+
 double Correlator::getObservable(int iObs)
 {
     return m_observable->m_observables[iObs];
@@ -63,33 +68,19 @@ void Correlator::printObservable(int iObs)
 
 void Correlator::runStatistics()
 {
-    int NObs = m_observable->m_NObs;
-    // Gathers results from processors
-    Parallel::Communicator::gatherDoubleResults(m_observable->m_observables,NObs);
-    // Temp holders
-    double averagedObservableSquared = 0;
-    for (int iObs = 0; iObs < NObs; iObs++)
-    {
-        m_observable->m_averagedObservable += m_observable->m_observables[iObs];
-        averagedObservableSquared += m_observable->m_observables[iObs]*m_observable->m_observables[iObs];
-    }
-    averagedObservableSquared /= double(NObs);
-    m_observable->m_averagedObservable /= double(NObs);
-    m_observable->m_varianceObservable = (averagedObservableSquared - m_observable->m_averagedObservable*m_observable->m_averagedObservable)/double(NObs);
-    m_observable->m_stdObservable = sqrt(m_observable->m_varianceObservable);
-    if (Parameters::getVerbose()) {
-        m_observable->printStatistics();
-    }
+    m_observable->gatherResults();
+    m_observable->runStatistics();
 }
 
-void Correlator::writeStatisticsToFile(int iConfig)
+void Correlator::writeFlowObservablesToFile(int iFlow)
 {
-    m_observable->writeFlowObservableToFile(iConfig);
+    m_observable->gatherResults();
+    m_observable->writeFlowObservableToFile(iFlow);
 }
 
-void Correlator::writeStatisticsToFile()
+void Correlator::writeStatisticsToFile(double acceptanceRatio)
 {
-    m_observable->writeObservableToFile();
+    m_observable->writeObservableToFile(acceptanceRatio);
 }
 
 void Correlator::storeFlow(bool storeFlowObservable)
@@ -104,4 +95,16 @@ void Correlator::storeFlow(bool storeFlowObservable)
             m_observable = new ObservableStorer(Parameters::getNCf());
         }
     }
+}
+
+void Correlator::reset()
+{
+    for (int i = 0; i < m_observable->m_NObs; i++) {
+        m_observable->m_observables[i] = 0;
+        m_observable->m_observablesSquared[i] = 0;
+    }
+    m_observable->m_stdObservable = 0;
+    m_observable->m_varianceObservable = 0;
+    m_observable->m_averagedObservable = 0;
+    m_observable->m_averagedObservableSquared = 0;
 }

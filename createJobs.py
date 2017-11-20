@@ -103,7 +103,7 @@ class Slurm:
             print json.dumps(json_dict,indent=4,separators=(', ', ': ')), "\n"
         else:
             with file("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),"w+") as json_file:
-                json.dump(json_dict,json_file)
+                json.dump(json_dict,json_file,indent=4)
                 shutil.copy("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),                   # src
                             "%s/input/%s/%s.bak" % (self.CURRENT_PATH,self.runName,self.json_file_name))   # dest
 
@@ -309,7 +309,7 @@ def main(args):
                         "NUpdates"                  : 10,
                         "storeCfgs"                 : True,
                         "storeThermCfgs"            : False,
-                        "verboseRun"                : True,
+                        "verboseRun"                : False,
                         "hotStart"                  : False,
                         "RSTHotStart"               : False,
                         "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
@@ -368,7 +368,7 @@ def main(args):
     job_parser.add_argument('-sc','--storeCfgs',                default=config_default["storeCfgs"],        type=bool,help='Specifying if we are to store configurations')
     job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],   type=bool,help='Specifies if we are to store the thermalization plaquettes')
     # Human readable output related variables
-    job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       action='store_true',help='Verbose run of GluonicLQCD. By default, it is on.')
+    job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       action='store_true',help='Verbose run of GluonicLQCD. By default, it is off.')
     # Setup related variables
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=bool,help='Hot start or cold start')
     job_parser.add_argument('-rsths', '--RSTHotStart',          default=config_default["RSTHotStart"],      type=bool,help='RST hot start is closer to unity')

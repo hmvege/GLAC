@@ -3,13 +3,12 @@
 #include "clover.h"
 #include <cmath>
 
-const std::string TopologicalCharge::m_observableName = "Topological charge";
-
 TopologicalCharge::TopologicalCharge(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     m_multiplicationFactor = 1.0/(32*M_PI*M_PI);
     populateLC(); // Fills the levi civita vector
-    m_observable->setObservableName(m_observableName);
+    m_observable->setObservableName(m_observableNameCompact);
+    m_observable->setNormalizeObservableByProcessor(false);
 }
 
 TopologicalCharge::~TopologicalCharge()

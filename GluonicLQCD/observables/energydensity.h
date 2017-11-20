@@ -8,7 +8,8 @@ class EnergyDensity : public Correlator
 private:
     double m_multiplicationFactor;
     double m_actionDensity;
-    static const std::string m_observableName;
+    const std::string m_observableName = "Energy density";
+    const std::string m_observableNameCompact = "energy";
 public:
     EnergyDensity(bool storeFlowObservable, double a, int latticeSize);
     EnergyDensity(bool storeFlowObservable);

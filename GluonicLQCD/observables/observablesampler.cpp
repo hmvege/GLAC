@@ -24,9 +24,6 @@ void ObservableSampler::calculate(Links *lattice, int iObs)
     /*
      * Samples plaquette, topological charge and action/energy density.
      */
-//    m_P = 0;
-//    m_E = 0;
-//    m_Q = 0;
     for (unsigned int i = 0; i < m_N[0]; i++) { // x
         for (unsigned int j = 0; j < m_N[1]; j++) { // y
             for (unsigned int k = 0; k < m_N[2]; k++) { // z
@@ -37,9 +34,6 @@ void ObservableSampler::calculate(Links *lattice, int iObs)
                     m_position[3] = l;
                     // Gets clover
                     m_clover->calculateClover(lattice,i,j,k,l);
-//                    m_P += m_plaquette.calculate(m_clover.m_plaquettes,iObs);
-//                    m_E += m_energyDensity.calculate(m_clover.m_clovers,iObs);
-//                    m_Q += m_topologicalCharge.calculate(m_clover.m_clovers);
                     m_plaquette->calculate(m_clover->m_plaquettes,iObs);
                     m_energyDensity->calculate(m_clover->m_clovers,iObs);
                     m_topologicalCharge->calculate(m_clover->m_clovers,iObs);
@@ -51,6 +45,9 @@ void ObservableSampler::calculate(Links *lattice, int iObs)
 
 void ObservableSampler::setLatticeSize(int latticeSize)
 {
+    /*
+     * Sets the lattice size of all the internal correlators.
+     */
     m_latticeSize = latticeSize;
     m_clover->setLatticeSize(m_latticeSize);
     m_plaquette->setLatticeSize(m_latticeSize);
@@ -58,26 +55,44 @@ void ObservableSampler::setLatticeSize(int latticeSize)
     m_topologicalCharge->setLatticeSize(m_latticeSize);
 }
 
-void ObservableSampler::writeStatisticsToFile()
+void ObservableSampler::writeStatisticsToFile(double acceptanceRatio)
 {
-    m_plaquette->writeStatisticsToFile();
-    m_energyDensity->writeStatisticsToFile();
-    m_topologicalCharge->writeStatisticsToFile();
+    /*
+     * Used by for writing the config stats to file.
+     */
+    m_plaquette->writeStatisticsToFile(acceptanceRatio);
+    m_energyDensity->writeStatisticsToFile(acceptanceRatio);
+    m_topologicalCharge->writeStatisticsToFile(acceptanceRatio);
 }
 
-void ObservableSampler::writeStatisticsToFile(int iConfig)
+void ObservableSampler::writeFlowObservablesToFile(int iFlow)
 {
-    m_plaquette->writeStatisticsToFile(iConfig);
-    m_energyDensity->writeStatisticsToFile(iConfig);
-    m_topologicalCharge->writeStatisticsToFile(iConfig);
+    /*
+     * Used in flow.
+     */
+    m_plaquette->writeFlowObservablesToFile(iFlow);
+    m_energyDensity->writeFlowObservablesToFile(iFlow);
+    m_topologicalCharge->writeFlowObservablesToFile(iFlow);
 }
 
 void ObservableSampler::runStatistics()
 {
-    cout << "Running stats" << endl;
+    /*
+     * Runs statistics for all the correlators.
+     */
     m_plaquette->runStatistics();
     m_energyDensity->runStatistics();
     m_topologicalCharge->runStatistics();
+}
+
+void ObservableSampler::reset()
+{
+    /*
+     * Resets internal values of the correlators(overflow otherwise).
+     */
+    m_plaquette->reset();
+    m_energyDensity->reset();
+    m_topologicalCharge->reset();
 }
 
 double ObservableSampler::getObservable(int iObs)
@@ -86,16 +101,18 @@ double ObservableSampler::getObservable(int iObs)
     return iObs*0.0;
 }
 
-void ObservableSampler::printObservable(int iObs)
+void ObservableSampler::printHeader()
 {
-    printf("\n%-4d   %-*.8f   %-*.8f   %-*.8f",iObs,12,m_plaquette->getObservable(iObs),
-                                                 12,m_topologicalCharge->getObservable(iObs),
-                                                 12,m_energyDensity->getObservable(iObs));
+    printf("%-*s %-*s %-*s",
+           m_headerWidth,m_plaquette->getObservableName().c_str(),
+           m_headerWidth,m_topologicalCharge->getObservableName().c_str(),
+           m_headerWidth,m_energyDensity->getObservableName().c_str());
 }
 
-std::string ObservableSampler::getObservableName()
+void ObservableSampler::printObservable(int iObs)
 {
-    return m_plaquette->getObservableName() + "   "
-            + m_topologicalCharge->getObservableName() + "   "
-            + m_energyDensity->getObservableName();
+    printf("\n%-4d %-*.4f %-*.4f %-*.4f",iObs,
+           m_headerWidth,m_plaquette->getObservable(iObs),
+           m_headerWidth,m_topologicalCharge->getObservable(iObs),
+           m_headerWidth,m_energyDensity->getObservable(iObs));
 }

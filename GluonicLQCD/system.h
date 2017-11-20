@@ -10,7 +10,7 @@
 #include "math/matrices/su3matrixgenerator.h"
 #include "math/latticemath.h"
 
-#include "parallelization/neighbourlist.h" // Make this into
+#include "parallelization/neighbourlist.h" // Make this into header?
 #include "parallelization/neighbours.h"
 #include "parallelization/index.h"
 
@@ -19,7 +19,6 @@
 #include "io/observablesio.h"
 
 #include "observables/observablesampler.h"
-//#include "observablestorer.h"
 
 using std::chrono::steady_clock;
 using std::chrono::duration;
@@ -33,12 +32,8 @@ private:
     /// Parameters that must be retrieved ///
     /////////////////////////////////////////
     // Lattice sizes
-    int m_NSpatial;
-    int m_NTemporal;
     unsigned int m_N[4];
     int m_latticeSize;
-    // Beta value constant
-    double m_beta;
     // Updating constants
     int m_NCf;
     int m_NCor;
@@ -50,9 +45,7 @@ private:
     bool m_systemIsThermalized = false;
     bool m_writeConfigsToFile = false;
     // Paralellization setup
-    int m_numprocs;
     int m_processRank;
-    int m_processorsPerDimension[4];
     int m_subLatticeSize;
 
     /////////////////////////////////////////
@@ -86,16 +79,16 @@ private:
     Action * m_S = nullptr;
 
     // Config correlator
-    void initCorrelator();
     Correlator * m_correlator = nullptr;
 
     // Flow correlator
-    void initFlowCorrelator();
     Correlator * m_flowCorrelator = nullptr;
 
     // Flow
     Flow * m_flow = nullptr;
     void flowConfiguration(int iConfig);
+    void copyToFlowLattice();
+    Links * m_flowLattice;
 
     // Function for updating our system using the Metropolis algorithm
     void update();

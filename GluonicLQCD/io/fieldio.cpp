@@ -21,7 +21,7 @@ void IO::FieldIO::writeFieldToFile(Links * lattice, int configNumber)
      *  configNumber   : (int) configuration number
      */
     MPI_File file;
-    std::string filename = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName()
+    std::string filename = Parameters::getFilePath() + Parameters::getOutputFolder() + "field_configurations/" + Parameters::getBatchName() +
                                             + "_beta" + std::to_string(Parameters::getBeta())
                                             + "_spatial" + std::to_string(Parameters::getNSpatial())
                                             + "_temporal" + std::to_string(Parameters::getNTemporal())

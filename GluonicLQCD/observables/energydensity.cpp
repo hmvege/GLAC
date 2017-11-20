@@ -2,11 +2,10 @@
 #include "clover.h"
 #include "math/functions.h"
 
-const std::string EnergyDensity::m_observableName = "Energy/action density";
-
 EnergyDensity::EnergyDensity(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
-    m_observable->setObservableName(m_observableName);
+    m_observable->setObservableName(m_observableNameCompact);
+    m_observable->setNormalizeObservableByProcessor(false);
 }
 
 EnergyDensity::~EnergyDensity()
@@ -67,5 +66,5 @@ void EnergyDensity::calculate(Links *lattice, int iObs)
 
 void EnergyDensity::printStatistics()
 {
-    if (Parameters::getVerbose()) m_observable->printStatistics();
+    m_observable->printStatistics();
 }
