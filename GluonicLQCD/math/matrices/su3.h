@@ -43,7 +43,6 @@ public:
     void identity();
     SU3 transpose();
     SU3 conjugate();
-    void copy(SU3 B);
     void setComplex(complex w, int i);
 
     // Complex number operations

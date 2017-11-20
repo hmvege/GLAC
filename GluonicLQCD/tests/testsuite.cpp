@@ -428,19 +428,19 @@ bool TestSuite::testSU2Multiplication(bool verbose)
 
 bool TestSuite::testSU2Transpose(bool verbose)
 {
-    s3.copy(s1);
+    s3 = s1;
     return operationSU2Test(verbose,s3.transpose(),sT,"transpose");
 }
 
 bool TestSuite::testSU2Conjugation(bool verbose)
 {
-    s3.copy(s1);
+    s3 = s1;
     return operationSU2Test(verbose,s3.conjugate(),sC,"conjugate");
 }
 
 bool TestSuite::testSU2ComplexConjugation(bool verbose)
 {
-    s3.copy(s1);
+    s3 = s1;
     s3.conjugate();
     return operationSU2Test(verbose,s3.transpose(),sCT,"conjugate transpose");
 }
@@ -463,19 +463,19 @@ bool TestSuite::testSU3Multiplication(bool verbose)
 
 bool TestSuite::testSU3Transpose(bool verbose)
 {
-    U3.copy(U1);
+    U3 = U1;
     return operationSU3Test(verbose,U3.transpose(),UT,"transpose");
 }
 
 bool TestSuite::testSU3Conjugation(bool verbose)
 {
-    U3.copy(U1);
+    U3 = U1;
     return operationSU3Test(verbose,U3.conjugate(),UC,"conjugate");
 }
 
 bool TestSuite::testSU3ComplexConjugation(bool verbose)
 {
-    U3.copy(U1);
+    U3 = U1;
     U3.conjugate();
     return operationSU3Test(verbose,U3.transpose(),UCT,"conjugate transpose");
 }

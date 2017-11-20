@@ -18,7 +18,6 @@ public:
     double mat[8];
 
     void print();
-    void copy(SU2 B);
     void zeros();
     void identity();
     void setComplex(complex w, int i);

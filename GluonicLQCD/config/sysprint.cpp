@@ -9,7 +9,7 @@ SysPrint::SysPrint()
 
 void SysPrint::printLine()
 {
-    for (int i = 0; i < 60; i++) cout << "=";
+    for (int i = 0; i < 100; i++) cout << "=";
     cout << endl;
 }
 

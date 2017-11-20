@@ -98,14 +98,6 @@ void Flow::flowField(Links *lattice)
             }
         }
     }
-
-//    Parallel::Communicator::setBarrier();
-//    for (int i = 0; i < 4; i++) {
-//        cout << m_N[i] << endl;
-//    }
-//    cout<<"GOOD FOR FLOW"<<endl;
-//    Parallel::Communicator::setBarrier();
-//    exit(1);
 }
 
 void Flow::setSU3ExpFunc()

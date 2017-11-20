@@ -208,14 +208,6 @@ SU3 SU3::conjugate()
     return *this;
 }
 
-void SU3::copy(SU3 B)
-{
-    for (int i = 0; i < 18; i++)
-    {
-        mat[i] = B.mat[i];
-    }
-}
-
 double SU3::norm(int i)
 {
     /*

@@ -91,14 +91,6 @@ void SU2::identity()
     mat[6] = 1;
 }
 
-void SU2::copy(SU2 B)
-{
-    for (int i = 0; i < 8; i++)
-    {
-        mat[i] = B.mat[i];
-    }
-}
-
 void SU2::setComplex(complex w, int i)
 {
     mat[i] = w.z[0];
