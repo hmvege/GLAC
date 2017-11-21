@@ -98,8 +98,10 @@ void ObservableSampler::reset()
 
 double ObservableSampler::getObservable(int iObs)
 {
-    printf("\ngetObservable not implemented for ObservableSampeler class.");
-    return iObs*0.0;
+    /*
+     * Returns plaquette value only.
+     */
+    return m_observable->getObservable(iObs);
 }
 
 void ObservableSampler::printHeader()
@@ -112,7 +114,7 @@ void ObservableSampler::printHeader()
 
 void ObservableSampler::printObservable(int iObs)
 {
-    printf("\n%-4d %-*.4f %-*.4f %-*.4f",iObs,
+    printf("%-*.4f %-*.4f %-*.4f",
            m_headerWidth,m_plaquette->getObservable(iObs),
            m_headerWidth,m_topologicalCharge->getObservable(iObs),
            m_headerWidth,m_energyDensity->getObservable(iObs));

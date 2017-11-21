@@ -294,7 +294,11 @@ void System::runMetropolis()
     // Printing header for main run
     if (m_processRank == 0) {
         printf("\ni    ");
-        m_correlator->printHeader();
+        if (m_NFlows == 0) {
+            m_correlator->printHeader();
+        } else {
+            m_flowCorrelator->printHeader();
+        }
         printf(" Avg.Update-time  Accept/reject");
     }
 
@@ -321,12 +325,19 @@ void System::runMetropolis()
         // Flowing configuration
         if (m_NFlows != 0) flowConfiguration(iConfig);
 
-        // Averaging the observable values
-        m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
+        // Averaging the observable values. Avoids calculating twice if we are flowing
+        if (m_NFlows == 0) {
+            m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
+        }
 
         if (m_processRank == 0) {
             // Printing the observables
-            m_correlator->printObservable(iConfig);
+            printf("\n%-4d ",iConfig);
+            if (m_NFlows == 0) {
+                m_correlator->printObservable(iConfig);
+            } else {
+                m_flowCorrelator->printObservable(0);
+            }
             printf(" %-12.8f",m_updateStorer/double((iConfig+1)*m_NCor));
             // Adding the acceptance ratio
             if (iConfig % 10 == 0) {
@@ -351,8 +362,10 @@ void System::runMetropolis()
         printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
         SysPrint::printLine();
     }
-    m_correlator->runStatistics();
-    m_correlator->writeStatisticsToFile(getAcceptanceRate()); // Runs statistics, writes to file, and prints results (if verbose is on)
+    if (m_NFlows == 0) {
+        m_correlator->runStatistics();
+        m_correlator->writeStatisticsToFile(getAcceptanceRate()); // Runs statistics, writes to file, and prints results (if verbose is on)
+    }
 }
 
 void System::flowConfiguration(int iConfig)

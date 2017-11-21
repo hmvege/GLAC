@@ -89,7 +89,7 @@ void Plaquette::runStatistics()
 
 void Plaquette::printObservable(int iObs)
 {
-    printf("\n%-4d %-*.8f",iObs,m_headerWidth,m_observable->m_observables[iObs]);
+    printf("%-*.8f",m_headerWidth,m_observable->m_observables[iObs]);
 }
 
 void Plaquette::printHeader()
