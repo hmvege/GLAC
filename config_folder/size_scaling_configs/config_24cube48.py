@@ -14,8 +14,8 @@
     "verboseRun"                : 1,
     "hotStart"                  : 0,
     "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
-    "observables"               : ["plaquette"], # Optional: topologicalCharge, energyDensity
-    "flowObservables"           : ["plaquette"], # Optional: topologicalCharge, energyDensity
+    "observables"               : ["plaq"], # Optional: topologicalCharge, energyDensity
+    "flowObservables"           : ["plaq"], # Optional: topologicalCharge, energyDensity
     "uTest"                     : 0,
     "uTestVerbose"              : 0,
     "SU3Eps"                    : 0.24,

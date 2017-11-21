@@ -1,5 +1,7 @@
 #include "index.h"
 
+#include <iostream>
+
 unsigned int Parallel::Index::m_N[] = {};
 unsigned int Parallel::Index::m_NTot[] = {};
 

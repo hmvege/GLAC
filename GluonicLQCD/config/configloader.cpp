@@ -1,4 +1,9 @@
 #include "configloader.h"
+#include <fstream>
+#include "lib/json.hpp"
+#include "parameters.h"
+#include "parallelization/parallel.h"
+
 
 using nlohmann::json;
 
@@ -15,6 +20,14 @@ namespace ConfigLoader {
             } else {
                 Parameters::setObservableList(observableVector);
             }
+        }
+
+        void setFieldConfigurations(json iterable) {
+            std::vector<std::string> fieldConfigFileNames;
+            for (unsigned int i = 0; i < iterable.size(); i++) {
+                fieldConfigFileNames.push_back(iterable[i]);
+            }
+            Parameters::setFieldConfigurationFileNames(fieldConfigFileNames);
         }
     }
 
@@ -61,6 +74,12 @@ namespace ConfigLoader {
         setObservable(j["observables"], false);
         // Flow observables setting
         setObservable(j["flowObservables"], true);
+        // Loads field configurations if they are present
+        if (j["load_field_configs"]) {
+            setFieldConfigurations(j["field_configs"]);
+            Parameters::setLoadFieldConfigurations(bool(j["load_field_configs"]));
+            Parameters::setLoadChromaConfigurations(bool(j["chroma_config"]));
+        }
         // Testing related variables
         Parameters::setUnitTesting(j["unitTesting"]);
         Parameters::setUnitTestingVerbose(j["unitTestingVerbose"]);

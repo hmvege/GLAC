@@ -23,6 +23,9 @@ public:
     void setPlaquetteStaples(SU3 *plaquetteStaples);
     // Getters
     virtual std::string getObservableName() { return m_observableName; }
+    // Printers
+    void printObservable(int iObs);
+    void printHeader();
 };
 
 #endif // PLAQUETTE_H

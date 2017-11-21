@@ -1,10 +1,7 @@
 #ifndef CONFIGLOADER_H
 #define CONFIGLOADER_H
 
-#include <fstream>
-#include "lib/json.hpp"
-#include "parameters.h"
-#include "parallelization/parallel.h"
+#include <string>
 
 namespace ConfigLoader
 {

@@ -33,6 +33,14 @@ def checkSubDimViability(subDims):
     for dim in subDims:
         if dim <= 2: exit("Error: %d is not a valid dimension" % dim)
 
+def setFieldConfigs(config,config_folder):
+    config["load_field_configs"] = True
+    if os.path.isdir("input/" + config_folder):
+        config["field_configs"] = [fpath for fpath in os.listdir("input/" + config_folder) if (os.path.splitext(fpath)[-1] == ".bin")]
+    else:
+        raise OSError("Error: %s is not a directory." % ("input/" + config_folder))
+    return config
+
 class Slurm:
     def __init__(self, dryrun):
         self.dryrun = dryrun
@@ -48,9 +56,15 @@ class Slurm:
         # Checking that we have an output folder.
         self._checkFolderPath('output')
         self._checkFolderPath('output/%s' % self.runName)
-        self._checkFolderPath('output/%s/flow_observables' % self.runName)
-        self._checkFolderPath('output/%s/field_configurations' % self.runName)
-        self._checkFolderPath('output/%s/observables' % self.runName)
+        if self.NFlows != 0:
+            self._checkFolderPath('output/%s/flow_observables' % self.runName)
+            for fobs in self.flow_observables:
+                self._checkFolderPath('output/%s/flow_observables/%s' % (self.runName,fobs))
+        if not self.load_field_configs:
+            self._checkFolderPath('output/%s/field_configurations' % self.runName)
+            self._checkFolderPath('output/%s/observables' % self.runName)
+            for obs in self.observables:
+                self._checkFolderPath('output/%s/observables/%s' % (self.runName,obs))
         self._checkFolderPath('input/%s' % self.runName)
 
     def _checkFolderPath(self, folder):
@@ -90,6 +104,9 @@ class Slurm:
         json_dict["expFunc"] = config_dict["expFunc"]
         json_dict["observables"] = config_dict["observables"]
         json_dict["flowObservables"] = config_dict["flowObservables"]
+        json_dict["load_field_configs"] = config_dict["load_field_configs"]
+        json_dict["chroma_config"] = config_dict["chroma_config"]
+        json_dict["field_configs"] = config_dict["field_configs"]
         # Testing related variables
         json_dict["unitTesting"] = config_dict["uTest"]
         json_dict["unitTestingVerbose"] = config_dict["uTestVerbose"]
@@ -118,6 +135,9 @@ class Slurm:
             # Retrieving config contents
             binary_filename         = job_config["bin_fn"]
             self.runName            = job_config["runName"]
+            self.observables        = job_config["observables"]
+            self.flow_observables   = job_config["flowObservables"]
+            self.load_field_configs = job_config["load_field_configs"]
             threads                 = job_config["threads"]
             beta                    = job_config["beta"]
             NSpatial                = job_config["N"]
@@ -125,7 +145,7 @@ class Slurm:
             NTherm                  = job_config["NTherm"]
             NCor                    = job_config["NCor"] 
             NCf                     = job_config["NCf"]
-            NFlows                  = job_config["NFlows"]
+            self.NFlows             = job_config["NFlows"]
             NUpdates                = job_config["NUpdates"]
             SU3Eps                  = job_config["SU3Eps"]
             flowEpsilon             = job_config["flowEpsilon"]
@@ -149,7 +169,7 @@ class Slurm:
             self._create_folders()
             self._create_json(job_config)
             if system == "local":
-                sys.exit("Config file for local producton created.")
+                sys.exit("Config file input/%s for local producton created."  % self.json_file_name)
 
             # Setting job name before creating content file.
             job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta,NSpatial,NTemporal,threads)
@@ -234,7 +254,7 @@ set -o errexit              # exit on errors
                     print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
 
             # Stores job in job dictionary
-            self.jobs[ID] = [partition,runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,NFlows,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims)),cpu_approx_runtime_hr,cpu_approx_runtime_min]
+            self.jobs[ID] = [partition,self.runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,self.NFlows,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims)),cpu_approx_runtime_hr,cpu_approx_runtime_min]
             
             # Changes name of job script
             if self.dryrun:
@@ -313,10 +333,11 @@ def main(args):
                         "hotStart"                  : False,
                         "RSTHotStart"               : False,
                         "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
-                        "observables"               : ["plaquette"], # Optional: topologicalCharge, energyDensity
-                        "flowObservables"           : ["plaquette"], # Optional: topologicalCharge, energyDensity
-                        "load_field_configs"        : False,    # ADD THIS POSSIBILITY
-                        "field_configs"             : [],       # Only add from command line when specified so
+                        "observables"               : ["plaq"], # Optional: topc, energy
+                        "flowObservables"           : ["plaq"], # Optional: topc, energy
+                        "load_field_configs"        : False,
+                        "chroma_config"             : False,
+                        "field_configs"             : [],
                         "uTest"                     : False,
                         "uTestVerbose"              : False,
                         "SU3Eps"                    : 0.24,
@@ -367,7 +388,7 @@ def main(args):
     job_parser.add_argument('-NFlows','--NFlows',               default=config_default["NFlows"],           type=int,help='number of flows to perform per configuration')
     job_parser.add_argument('-NUp', '--NUpdates',               default=config_default["NUpdates"],         type=int,help='number of updates per link')
     # Data storage related variables
-    job_parser.add_argument('-sc','--storeCfgs',                default=config_default["storeCfgs"],        type=bool,help='Specifying if we are to store configurations')
+    job_parser.add_argument('-sc', '--storeCfgs',                default=config_default["storeCfgs"],        type=bool,help='Specifying if we are to store configurations')
     job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],   type=bool,help='Specifies if we are to store the thermalization plaquettes')
     # Human readable output related variables
     job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       action='store_true',help='Verbose run of GluonicLQCD. By default, it is off.')
@@ -375,8 +396,8 @@ def main(args):
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=bool,help='Hot start or cold start')
     job_parser.add_argument('-rsths', '--RSTHotStart',          default=config_default["RSTHotStart"],      type=bool,help='RST hot start is closer to unity')
     job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],          type=str,help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
-    job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],      type=str,choices=['plaquette','topc','energy'],nargs='+',help='Observables to sample for in flow.')
-    job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],  type=str,choices=['plaquette','topc','energy'],nargs='+',help='Observables to sample for in flow.')
+    job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],      type=str,choices=['plaq','topc','energy'],nargs='+',help='Observables to sample for in flow.')
+    job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],  type=str,choices=['plaq','topc','energy'],nargs='+',help='Observables to sample for in flow.')
     # Data generation related variables
     job_parser.add_argument('-SU3Eps', '--SU3Epsilon',          default=config_default["SU3Eps"],           type=float,help='SU3 epsilon random increment value.')
     job_parser.add_argument('-fEps', '--flowEpsilon',           default=config_default["flowEpsilon"],      type=float,help='Flow epsilon derivative small change value.')
@@ -387,6 +408,8 @@ def main(args):
     job_parser.add_argument('-chr', '--cpu_approx_runtime_hr',  default=config_default["cpu_approx_runtime_hr"], type=int,help='Approximate cpu time in hours that will be used')
     job_parser.add_argument('-cmin', '--cpu_approx_runtime_min',default=config_default["cpu_approx_runtime_min"],type=int,help='Approximate cpu time in minutes that will be used')
     job_parser.add_argument('-ex','--exclude',                  default=False,                              type=str,nargs='+',help='Nodes to exclude.')
+    job_parser.add_argument('-lcfg','--load_configurations',    default=config_default["load_field_configs"],type=str,help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
+    job_parser.add_argument('-chroma','--chroma_config',        default=config_default["chroma_config"],   action='store_true',help='If flagged, loads the configuration as a chroma configuration.')
 
     ######## Abel specific commands ########
     job_parser.add_argument('--cpu_memory',                     default=config_default["cpu_memory"],       type=int,help='CPU memory to be allocated to each core')
@@ -397,17 +420,21 @@ def main(args):
     load_parser.add_argument('file',                            default=False,                              type=str, nargs='+', help='Loads config file')
     load_parser.add_argument('-s','--system',                   default=False,                              type=str, required=True,choices=['smaug','abel'],help='Cluster name')
     load_parser.add_argument('-p','--partition',                default="normal",                           type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
+    load_parser.add_argument('-lcfg','--load_configurations',   default=config_default["load_field_configs"],type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
+    load_parser.add_argument('--load_config_hr_time_estimate',  default=False,                              type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
     unit_test_parser.add_argument('system',                     default=False,      type=str, choices=['smaug','abel'],help='Specify system we are running on.')
     unit_test_parser.add_argument('-v', '--verbose',            default=False,      action='store_true', help='Prints more information during testing.')
 
+
     args = parser.parse_args()
     # args = parser.parse_args(['python', 'makeJobs.py', 'load', 'config_folder/size_scaling_configs/config_16cube32.py', 'config_folder/size_scaling_configs/config_24cube48.py', 'config_folder/size_scaling_configs/config_28cube56.py', 'config_folder/size_scaling_configs/config_32cube64.py', '-s', 'abel'])
     # args = parser.parse_args(["--dryrun","setup","smaug","-ex","smaug-a[1-8]","smaug-b[1-8]","-sq"])
-    # args = parser.parse_args(["--dryrun","load","config_folder/test_config_file.py","abel"])
+    # args = parser.parse_args(["--dryrun","load","config_folder/config_beta6_0.py","-s","abel","-lcfg","input","--load_config_hr_time_estimate","2"])
     # args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
+    # args = parser.parse_args(['--dryrun', 'setup', 'local', '4', '-N', '8', '-NT', '8', '-NCf', '100', '-NCor', '40', '-NFlows', '100', '-obs', 'plaq', 'topc', 'energy', '-fobs', 'plaq', 'topc', 'energy', '-b', '6.0', '-rn', 'TestRun1', '-sd', '8', '8', '4', '4', '-lcfg', 'input'])
 
     # Retrieves dryrun bool
     dryrun = args.dryrun
@@ -415,10 +442,25 @@ def main(args):
     # Initiates Slurm class for running jobs ect
     s = Slurm(dryrun)
 
-    # Loads a configuration into the world(or multiple!)
+    # Loads one or multiple configuration
     if args.subparser == 'load':
         configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
-        print configurations; exit(1);
+        if args.load_configurations and len(configurations) == 1:
+            configurations[0] = setFieldConfigs(config_default,args.load_configurations)
+            if not args.load_config_hr_time_estimate:
+                parser.print_help()
+                print("")
+                raise TypeError("Need an estimate of the runtime for the flowing of configurations.")
+            else:
+                configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
+        else:
+            raise TypeError("Can only assign one configuration file to a single set of field configurations.")
+        # Populate configuration with default values if certain keys are not present
+        for c in configurations:
+            for key in config_default.keys():
+                if not key in c:
+                    c[key] = config_default[key]
+
         s.submitJob(configurations,args.system,args.partition)
     elif args.subparser == 'setup':
         if not args.system: raise ValueError("System value %g: something is wrong in parser." % args.system)
@@ -459,6 +501,9 @@ def main(args):
             config_default["subDims"] = createSquare(config_default["threads"],config_default["N"],config_default["NT"])
         if args.exclude:
             excluded_nodes = ','.join(args.exclude)
+        if args.load_configurations:
+            config_default = setFieldConfigs(config_default,args.load_configurations)
+            config_default["chroma_config"] = args.chroma_config
         # Submitting job
         s.submitJob([config_default],system,partition,excluded_nodes)
     elif args.subparser == 'sbatch':

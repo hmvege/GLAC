@@ -35,7 +35,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Main program part
     System pureGauge;
     pureGauge.latticeSetup();
-    pureGauge.runMetropolis();
+    pureGauge.run();
 
     // Finalizing and printing time taken
     duration<double> programTime = duration_cast<duration<double>>(steady_clock::now() - programStart);

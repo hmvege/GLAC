@@ -59,15 +59,15 @@ void IO::writeFlowObservableToFile(double *observables,
         std::ofstream file;
         std::string fname = Parameters::getFilePath()
                           + Parameters::getOutputFolder()
-                          + "flow_observables/"
+                          + "flow_observables/" + observableName + "/"
                           + Parameters::getBatchName() + "_"
                           + observableName + "_flow_config" + std::to_string(configNumber) + ".dat";
         file.open(fname);
         file << "beta " << Parameters::getBeta() << endl;
         file << "NFlows " << Parameters::getNFlows() << endl;
         file << "FlowEpsilon " << Parameters::getFlowEpsilon() << endl;
-        for (int i = 0; i < Parameters::getNFlows(); i++) {
-            file << i << " " << a*sqrt(8*flowStep*(i+1)) << " " << observables[i] << endl;
+        for (int i = 0; i < Parameters::getNFlows() + 1; i++) {
+            file << i << " " << a*sqrt(8*flowStep*i) << " " << observables[i] << endl;
         }
         file.close();
         if (Parameters::getVerbose()) printf("\n%s written.",fname.c_str());

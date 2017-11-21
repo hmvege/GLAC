@@ -10,15 +10,19 @@ using std::endl;
 
 const int IO::FieldIO::m_linkDoubles = 72;
 const int IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);
-unsigned int IO::FieldIO::m_N[4];
+unsigned int IO::FieldIO::m_N[];
 
 IO::FieldIO::FieldIO()
 {
-    Parameters::getN(m_N);
 }
 
 IO::FieldIO::~FieldIO()
 {
+}
+
+void IO::FieldIO::init()
+{
+    Parameters::getN(m_N);
 }
 
 void IO::FieldIO::writeFieldToFile(Links * lattice, int configNumber)
@@ -63,7 +67,7 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Links *lattice)
      * - lattice
      */
     MPI_File file;
-    MPI_File_open(MPI_COMM_SELF, (Parameters::getFilePath() + Parameters::getOutputFolder() + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(MPI_COMM_SELF, (Parameters::getFilePath() + Parameters::getInputFolder() + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned int t = 0; t < m_N[3]; t++) {
@@ -80,7 +84,7 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Links *lattice)
         }
     }
     MPI_File_close(&file);
-    if (Parallel::Communicator::getProcessRank() == 0) cout << "Configuration " << Parameters::getOutputFolder() + filename << " loaded." << endl;
+    if (Parallel::Communicator::getProcessRank() == 0) cout << "Configuration " << Parameters::getInputFolder() + filename << " loaded." << endl;
 }
 
 void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Links *lattice)
@@ -91,7 +95,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Links *latt
      * - filename
      */
     MPI_File file;
-    MPI_File_open(MPI_COMM_SELF, (Parameters::getFilePath() + Parameters::getOutputFolder() + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(MPI_COMM_SELF, (Parameters::getFilePath() + Parameters::getInputFolder() + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     double temp = 0;
@@ -122,7 +126,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Links *latt
         }
     }
     MPI_File_close(&file);
-    if (Parallel::Communicator::getProcessRank() == 0) cout << "Configuration " << Parameters::getOutputFolder() + Parameters::getBatchName() << " loaded." << endl;
+    if (Parallel::Communicator::getProcessRank() == 0) cout << "Configuration " << Parameters::getInputFolder() + Parameters::getBatchName() << " loaded." << endl;
 }
 
 

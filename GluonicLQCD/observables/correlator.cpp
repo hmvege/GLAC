@@ -89,7 +89,7 @@ void Correlator::storeFlow(bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
     if (m_storeFlowObservable) {
-        m_observable = new ObservableStorer(Parameters::getNFlows());
+        m_observable = new ObservableStorer(Parameters::getNFlows() + 1); // +1 as we are storing the initial value at t=0 as well.
     } else {
         if (Parameters::getStoreThermalizationObservables()) {
             m_observable = new ObservableStorer(Parameters::getNCf() + Parameters::getNTherm() + 1);

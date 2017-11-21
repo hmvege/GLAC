@@ -56,37 +56,44 @@ void SysPrint::printSystemInfo()
         }
         cout << endl;
         cout << "Beta:                                  " << Parameters::m_beta << endl;
-        cout << "N configurations:                      " << Parameters::m_NCf << endl;
-        cout << "N correlation updates:                 " << Parameters::m_NCor << endl;
-        cout << "N thermalization updates:              " << Parameters::m_NTherm << endl;
+        if (!Parameters::getLoadFieldConfigurations()) {
+            cout << "N configurations:                      " << Parameters::m_NCf << endl;
+            cout << "N correlation updates:                 " << Parameters::m_NCor << endl;
+            cout << "N thermalization updates:              " << Parameters::m_NTherm << endl;
+        }
         if (Parameters::m_NFlows != 0) {
             cout << "N flow updates per configuration:      " << Parameters::m_NFlows << endl;
         }
-        cout << "N link updates:                        " << Parameters::m_NUpdates << endl;
+        if (!Parameters::getLoadFieldConfigurations()) {
+            cout << "N link updates:                        " << Parameters::m_NUpdates << endl;
+        }
         cout << "Output folder:                         " << Parameters::m_pwd + Parameters::m_outputFolder << endl;
         cout << "Input folder:                          " << Parameters::m_pwd + Parameters::m_inputFolder << endl;
-        cout << "Store configurations:                  " << getTrueOrFalseString(Parameters::m_storeConfigurations) << endl;
-        cout << "Store thermalization observables:      " << getTrueOrFalseString(Parameters::m_storeThermalizationObservables) << endl;
+        if (!Parameters::getLoadFieldConfigurations()) {
+            cout << "Store configurations:                  " << getTrueOrFalseString(Parameters::m_storeConfigurations) << endl;
+            cout << "Store thermalization observables:      " << getTrueOrFalseString(Parameters::m_storeThermalizationObservables) << endl;
+        }
         cout << "Exponentiation function:               " << Parameters::m_expFuncName << endl;
-        cout << "Observables:                           " << getListString(Parameters::m_observablesList) << endl;
+        if (!Parameters::getLoadFieldConfigurations()) {
+            cout << "Observables:                           " << getListString(Parameters::m_observablesList) << endl;
+        }
         if (Parameters::m_NFlows != 0) {
             cout << "Flow observables:                      " << getListString(Parameters::m_flowObservablesList) << endl;
-        }
-        if (Parameters::m_NFlows != 0) {
             cout << "Flow epsilon:                          " << Parameters::m_flowEpsilon << endl;
         }
-        cout << "SU3Eps:                                " << Parameters::m_SU3Eps << endl;
-        if (Parameters::m_verbose) {
-            cout << "Metropolis seed:                       ";
-            printf("%-16.1f\n",Parameters::m_metropolisSeed);
-            cout << "Random matrix seed:                    ";
-            printf("%-16.1f\n",Parameters::m_randomMatrixSeed);
+        if (!Parameters::getLoadFieldConfigurations()) {
+            cout << "SU3Eps:                                " << Parameters::m_SU3Eps << endl;
+            if (Parameters::m_verbose) {
+                cout << "Metropolis seed:                       ";
+                printf("%-16.1f\n",Parameters::m_metropolisSeed);
+                cout << "Random matrix seed:                    ";
+                printf("%-16.1f\n",Parameters::m_randomMatrixSeed);
+            }
+            cout << "Hot start:                             " << getTrueOrFalseString(Parameters::m_hotStart) << endl;
+            if (Parameters::m_hotStart) {
+                cout << "Random start close to unity:           " << getTrueOrFalseString(Parameters::m_RSTHotStart) << endl;
+            }
         }
-        cout << "Hot start:                             " << getTrueOrFalseString(Parameters::m_hotStart) << endl;
-        if (Parameters::m_hotStart) {
-            cout << "Random start close to unity:           " << getTrueOrFalseString(Parameters::m_RSTHotStart) << endl;
-        }
-
         printLine();
     }
 }

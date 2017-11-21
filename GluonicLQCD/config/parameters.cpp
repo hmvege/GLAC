@@ -64,6 +64,10 @@ std::string Parameters::m_expFuncName = "";
 std::vector<std::string> Parameters::m_observablesList = {};
 std::vector<std::string> Parameters::m_flowObservablesList = {};
 
+// Field configurations
+bool Parameters::m_loadFieldConfigurations = false;
+bool Parameters::m_loadChromaConfigurations = false;
+std::vector<std::string> Parameters::m_fieldConfigurationFileNames = {};
 
 Parameters::Parameters()
 {

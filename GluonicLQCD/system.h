@@ -92,16 +92,20 @@ private:
     // RNGs
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
-public:
-    System();
-    ~System();
-    void runMetropolis();
-    void latticeSetup();
 
     // Functions loading fields configurations from file
     void loadChroma(std::string configurationName);
     void load(std::string configurationName);
-    void flowConfigurations(std::vector<std::string> configurationNames);
+    void flowConfigurations();
+
+    // Function for running metropolis algorithm
+    void runMetropolis();
+public:
+    System();
+    ~System();
+    void run();
+    void latticeSetup();
+
 };
 
 #endif // METROPOLIS_H

@@ -36,7 +36,6 @@ System::System()
     // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
     m_generator = std::mt19937_64(Parameters::getMetropolisSeed());
     m_uniform_distribution = std::uniform_real_distribution<double>(0,1);
-    cout << Parallel::Communicator::getProcessRank() << " " << m_uniform_distribution.a() << " " << m_uniform_distribution.b() << endl;
 }
 
 void System::setAction()
@@ -60,7 +59,7 @@ void System::setObservable(std::vector<std::string> obsList, bool flow)
     bool topc = false;
     bool energy = false;
     for (unsigned int i = 0; i < obsList.size(); i++) {
-        if (obsList[i] == "plaquette") plaq = true;
+        if (obsList[i] == "plaq") plaq = true;
         if (obsList[i] == "topc") topc = true;
         if (obsList[i] == "energy") energy = true;
         // ADD USER OBS?
@@ -111,6 +110,7 @@ void System::subLatticeSetup()
         m_flow = new Flow(m_S); // Ensure it does not go out of scope
         m_flowLattice = new Links[m_subLatticeSize];
     }
+    IO::FieldIO::init();
     m_S->setN(m_N);
     m_correlator->setN(m_N);
     m_correlator->setLatticeSize(m_subLatticeSize);
@@ -135,34 +135,46 @@ void System::latticeSetup()
      * Sets up the lattice and its matrices.
      */
     subLatticeSetup();
-    if (Parameters::getHotStart()) {
-        // All starts with a completely random matrix.
-        for (int i = 0; i < m_subLatticeSize; i++)
-        {
-            for (int mu = 0; mu < 4; mu++)
+    if (!Parameters::getLoadFieldConfigurations()) {
+        if (Parameters::getHotStart()) {
+            // All starts with a completely random matrix.
+            for (int i = 0; i < m_subLatticeSize; i++)
             {
-                if (Parameters::getRSTHotStart())
+                for (int mu = 0; mu < 4; mu++)
                 {
-                    m_lattice[i].U[mu] = m_SU3Generator->generateRST(); // Random close to unity
-                } else {
-                    m_lattice[i].U[mu] = m_SU3Generator->generateRandom(); // Fully random
+                    if (Parameters::getRSTHotStart())
+                    {
+                        m_lattice[i].U[mu] = m_SU3Generator->generateRST(); // Random close to unity
+                    } else {
+                        m_lattice[i].U[mu] = m_SU3Generator->generateRandom(); // Fully random
+                    }
+                }
+            }
+        } else {
+            // Cold start: everything starts out at unity.
+            for (int i = 0; i < m_subLatticeSize; i++)
+            {
+                for (int mu = 0; mu < 4; mu++)
+                {
+                    m_lattice[i].U[mu].identity();
                 }
             }
         }
-    } else {
-        // Cold start: everything starts out at unity.
-        for (int i = 0; i < m_subLatticeSize; i++)
-        {
-            for (int mu = 0; mu < 4; mu++)
-            {
-                m_lattice[i].U[mu].identity();
-            }
-        }
+        if (m_processRank == 0) printf("\nLattice setup complete\n");
     }
-    if (m_processRank == 0) printf("\nLattice setup complete\n");
-    cout << Parallel::Communicator::getProcessRank() << " " << m_uniform_distribution.a() << " " << m_uniform_distribution.b() << endl;
     // Prints system info after setup is complete
     SysPrint::printSystemInfo();
+}
+
+void System::run()
+{
+    if (!Parameters::getLoadFieldConfigurations()) {
+        // Run regular metropolis
+        runMetropolis();
+    } else {
+        // Run flow on configurations;
+        flowConfigurations();
+    }
 }
 
 void System::thermalize()
@@ -322,7 +334,11 @@ void System::runMetropolis()
             }
         }
         // Writing field config to file
-        if (m_writeConfigsToFile) IO::FieldIO::writeFieldToFile(m_lattice,iConfig);
+        if (m_writeConfigsToFile)
+        {
+            IO::FieldIO::writeFieldToFile(m_lattice,iConfig);
+        }
+
     }
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
@@ -345,10 +361,20 @@ void System::flowConfiguration(int iConfig)
      * Flows configuration, performs flow statistics and writes it to a file.
      */
     copyToFlowLattice();
+
+    //////////////
+    //// TEMP ////
+    //////////////
+//    m_flowLattice->U[0].printMachine();
+//    m_lattice->U[0].printMachine();
+//    m_flowCorrelator->calculate(m_flowLattice,0);
+//    if (m_processRank == 0) m_flowCorrelator->printObservable(0);
+//    Parallel::Communicator::MPIExit("EXITINGAT FLOW CONFIGS");
+
     for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
         m_flow->flowField(m_flowLattice);
-        m_flowCorrelator->calculate(m_flowLattice,iFlow);
+        m_flowCorrelator->calculate(m_flowLattice,iFlow + 1);
     }
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);
@@ -374,20 +400,24 @@ void System::loadChroma(std::string configurationName)
      */
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
-//    if (Parameters.getConfigType == "chroma") SWITCH TO THIS!
     IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_lattice);
 }
 
-void System::flowConfigurations(std::vector<std::string> configurationNames)
+void System::flowConfigurations()
 {
     /*
      * Method for flowing several configurations given as a vector of strings.
      */
+    std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
     for (unsigned int i = 0; i < configurationNames.size(); i++) {
-        load(configurationNames[i]);
+        if (!Parameters::getLoadChromaConfigurations()) {
+            load(configurationNames[i]);
+        } else {
+            loadChroma(configurationNames[i]);
+        }
         flowConfiguration(i);
     }
-    printf("\nFlowing of %lu configurations done.", configurationNames.size());
+    if (m_processRank==0) printf("\nFlowing of %lu configurations done.", configurationNames.size());
 }
 
 double System::getAcceptanceRate()

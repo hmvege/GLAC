@@ -54,11 +54,14 @@ private:
     static double m_flowEpsilon;
     static double m_metropolisSeed;
     static double m_randomMatrixSeed;
-
     // Name of samplers
     static std::string m_expFuncName;
     static std::vector<std::string> m_observablesList;
     static std::vector<std::string> m_flowObservablesList;
+    // Field configurations
+    static bool m_loadFieldConfigurations;
+    static bool m_loadChromaConfigurations;
+    static std::vector<std::string> m_fieldConfigurationFileNames;
 
     static double calculateLatticeSpacing(double beta);
 public:
@@ -108,6 +111,10 @@ public:
     static void setExpFuncName(std::string expFuncName) { m_expFuncName = expFuncName;}
     static void setObservableList(std::vector<std::string> observablesList) { m_observablesList = observablesList; }
     static void setFlowObservablesList(std::vector<std::string> flowObservablesList) { m_flowObservablesList = flowObservablesList; }
+    // Field configurations
+    static void setLoadFieldConfigurations(bool loadFieldConfigurations) { m_loadFieldConfigurations = loadFieldConfigurations; }
+    static void setLoadChromaConfigurations(bool loadChromaConfigurations) { m_loadChromaConfigurations = loadChromaConfigurations; }
+    static void setFieldConfigurationFileNames(std::vector<std::string> fieldConfigurationFileNames) { m_fieldConfigurationFileNames = fieldConfigurationFileNames; }
 
     /////////////////
     //// Getters ////
@@ -153,6 +160,11 @@ public:
     static std::string getExpFuncName() { return m_expFuncName; }
     static std::vector<std::string> getObservablesList() { return m_observablesList; }
     static std::vector<std::string> getFlowObservablesList() { return m_flowObservablesList; }
+    // Field configurations
+    static bool getLoadFieldConfigurations() { return m_loadFieldConfigurations; }
+    static bool getLoadChromaConfigurations() { return m_loadChromaConfigurations; }
+    static std::vector<std::string> getFieldConfigurationFileNames() { return m_fieldConfigurationFileNames; }
+
 };
 
 #endif // PARAMETERS_H
