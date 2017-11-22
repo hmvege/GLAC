@@ -31,14 +31,22 @@ public:
     void writeFlowObservablesToFile(int iConfig);
     void runStatistics();
 
+    // Observable copyer
+    void copyObservable(int iObs, std::vector<double> obs);
+    std::vector<double> getObservablesVector(int iObs);
+
     // Printers
     void printObservable(int iObs);
     void printHeader();
+    void printStatistics();
 
     // Setters
     void reset();
     void setLatticeSize(int latticeSize);
     void setN(unsigned int *N);
+    void setPlaquetteObservable(int iObs, double obs) { m_plaquette->setObservable(iObs, obs); }
+    void setEnergyObservable(int iObs, double obs) { m_energyDensity->setObservable(iObs, obs); }
+    void setTopologicalChargeObservable(int iObs, double obs) { m_topologicalCharge->setObservable(iObs, obs); }
 
     // Getters
     double getObservable(int iObs);

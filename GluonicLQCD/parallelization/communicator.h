@@ -49,7 +49,7 @@ namespace Parallel {
         static void setN(unsigned int *N);
 
         // MPI
-        static void MPIExit(std::__1::string message);
+        static void MPIExit(std::string message);
         static void setBarrier();
         static void gatherDoubleResults(double * data, int N);
 

@@ -323,21 +323,23 @@ void System::runMetropolis()
             m_updateStorer += m_updateTime.count();
         }
         // Flowing configuration
-        if (m_NFlows != 0) flowConfiguration(iConfig);
+        if (m_NFlows != 0) {
+            // Copys lattice into flow-lattice in order to avoid overwriting when generating configurations
+            copyToFlowLattice();
+            flowConfiguration(iConfig);
+        }
 
         // Averaging the observable values. Avoids calculating twice if we are flowing
         if (m_NFlows == 0) {
             m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
+        } else {
+            m_correlator->copyObservable(iConfig, m_flowCorrelator->getObservablesVector(0));
         }
 
         if (m_processRank == 0) {
             // Printing the observables
             printf("\n%-4d ",iConfig);
-            if (m_NFlows == 0) {
-                m_correlator->printObservable(iConfig);
-            } else {
-                m_flowCorrelator->printObservable(0);
-            }
+            m_correlator->printObservable(iConfig);
             printf(" %-12.8f",m_updateStorer/double((iConfig+1)*m_NCor));
             // Adding the acceptance ratio
             if (iConfig % 10 == 0) {
@@ -362,10 +364,9 @@ void System::runMetropolis()
         printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
         SysPrint::printLine();
     }
-    if (m_NFlows == 0) {
-        m_correlator->runStatistics();
-        m_correlator->writeStatisticsToFile(getAcceptanceRate()); // Runs statistics, writes to file, and prints results (if verbose is on)
-    }
+    m_correlator->runStatistics();
+    m_correlator->writeStatisticsToFile(getAcceptanceRate()); // Runs statistics, writes to file, and prints results (if verbose is on)
+    m_correlator->printStatistics();
 }
 
 void System::flowConfiguration(int iConfig)
@@ -373,17 +374,11 @@ void System::flowConfiguration(int iConfig)
     /*
      * Flows configuration, performs flow statistics and writes it to a file.
      */
-    copyToFlowLattice();
-
-    //////////////
-    //// TEMP ////
-    //////////////
-//    m_flowLattice->U[0].printMachine();
-//    m_lattice->U[0].printMachine();
-//    m_flowCorrelator->calculate(m_flowLattice,0);
-//    if (m_processRank == 0) m_flowCorrelator->printObservable(0);
-//    Parallel::Communicator::MPIExit("EXITINGAT FLOW CONFIGS");
-
+    // After each configuration has been flowed, the values must be resetted.
+    m_flowCorrelator->reset();
+    // Calculates the flow observables at zeroth flow time
+    m_flowCorrelator->calculate(m_flowLattice,0);
+    // Runs the flow
     for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
         m_flow->flowField(m_flowLattice);
@@ -391,8 +386,6 @@ void System::flowConfiguration(int iConfig)
     }
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);
-    // After each configuration has been flowed, the values must be resetted.
-    m_flowCorrelator->reset();
 }
 
 

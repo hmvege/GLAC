@@ -6,7 +6,7 @@
 #include "actions/actions.h"
 #include "observables/observables.h"
 #include "math/matrices/su3matrixgenerator.h"
-#include "math/Links.h"
+#include "math/links.h"
 #include "flow/flow.h"
 
 using std::chrono::steady_clock;

@@ -101,6 +101,7 @@ double ObservableSampler::getObservable(int iObs)
     /*
      * Returns plaquette value only.
      */
+    Parallel::Communicator::MPIExit("getObservable inside the observable sampler should not be called --> exiting.");
     return m_observable->getObservable(iObs);
 }
 
@@ -118,4 +119,25 @@ void ObservableSampler::printObservable(int iObs)
            m_headerWidth,m_plaquette->getObservable(iObs),
            m_headerWidth,m_topologicalCharge->getObservable(iObs),
            m_headerWidth,m_energyDensity->getObservable(iObs));
+}
+
+void ObservableSampler::copyObservable(int iObs, std::vector<double> obs) {
+    setPlaquetteObservable(iObs,obs[0]);
+    setTopologicalChargeObservable(iObs,obs[1]);
+    setEnergyObservable(iObs,obs[2]);
+}
+
+std::vector<double> ObservableSampler::getObservablesVector(int iObs) {
+    std::vector<double> obs(3);
+    obs[0] = m_plaquette->getObservable(iObs);
+    obs[1] = m_topologicalCharge->getObservable(iObs);
+    obs[2] = m_energyDensity->getObservable(iObs);
+    return obs;
+}
+
+void ObservableSampler::printStatistics()
+{
+    m_plaquette->printStatistics();
+    m_topologicalCharge->printStatistics();
+    m_energyDensity->printStatistics();
 }

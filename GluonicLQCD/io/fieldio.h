@@ -2,7 +2,7 @@
 #define FIELDIO_H
 
 #include <string>
-#include "math/Links.h"
+#include "math/links.h"
 
 namespace IO {
     class FieldIO

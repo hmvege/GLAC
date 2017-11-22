@@ -1,7 +1,7 @@
 #ifndef FLOW_H
 #define FLOW_H
 
-#include "math/Links.h"
+#include "math/links.h"
 #include "math/flowexpfunctions.h"
 #include "actions/action.h"
 

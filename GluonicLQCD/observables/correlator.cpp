@@ -110,3 +110,25 @@ void Correlator::reset()
     m_observable->m_averagedObservable = 0;
     m_observable->m_averagedObservableSquared = 0;
 }
+
+void Correlator::copyObservable(int iObs, std::vector<double> obs) {
+    /*
+     * Used when we already have calculated the observable in the
+     */
+    m_observable->m_observables[iObs] = obs[0];
+}
+
+void Correlator::setObservable(int iObs, double obs) {
+    m_observable->m_observables[iObs] = obs;
+}
+
+std::vector<double> Correlator::getObservablesVector(int iObs) {
+    std::vector<double> obs(1);
+    obs[0] = m_observable->getObservable(iObs);
+    return obs;
+}
+
+void Correlator::printStatistics()
+{
+    m_observable->printStatistics();
+}

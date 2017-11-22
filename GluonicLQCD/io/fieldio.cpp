@@ -113,7 +113,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Links *latt
                             MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + link*18*sizeof(double) + i*sizeof(double), &temp, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
                             lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i] = reverseDouble(temp);
                             // Checking for corruption
-                            if (isnan(lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i]))
+                            if (std::isnan(lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i]))
                             {
                                 lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].printMachine();
                                 printf("\nConfiguration is corrupt.\n");

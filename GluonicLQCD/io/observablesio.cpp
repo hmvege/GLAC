@@ -25,7 +25,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
         std::ofstream file;
         std::string fname = Parameters::getFilePath()
                           + Parameters::getOutputFolder()
-                          + "observables/"
+                          + "observables/" + observableName + "_"
                           + Parameters::getBatchName() + ".dat";
         file.open(fname);
         file << "beta " << Parameters::getBeta() << endl;

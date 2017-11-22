@@ -70,7 +70,7 @@ void SysPrint::printSystemInfo()
         cout << "Output folder:                         " << Parameters::m_pwd + Parameters::m_outputFolder << endl;
         cout << "Input folder:                          " << Parameters::m_pwd + Parameters::m_inputFolder << endl;
         if (!Parameters::getLoadFieldConfigurations()) {
-            cout << "Store configurations:                  " << getTrueOrFalseString(Parameters::m_storeConfigurations) << endl;
+            cout << "Store field configurations:            " << getTrueOrFalseString(Parameters::m_storeConfigurations) << endl;
             cout << "Store thermalization observables:      " << getTrueOrFalseString(Parameters::m_storeThermalizationObservables) << endl;
         }
         cout << "Exponentiation function:               " << Parameters::m_expFuncName << endl;

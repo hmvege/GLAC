@@ -49,31 +49,40 @@ class Slurm:
         self.idFilesName = '.ids.json'
         if os.path.isfile(self.idFilesName) and not self.dryrun:
             self.jobs = json.load(open(self.idFilesName,"r"))
+            # try:
+            # except ValueError:
+            #     self.jobs = {}
         else:
             self.jobs = {}
+
+    def _createDictionary(self, **kwargs):
+        return_dict = {}
+        ordered_dict_list = []
+        for key, value in kwargs.items():
+            return_dict[key] = value
+        return return_dict
 
     def _create_folders(self):
         # Checking that we have an output folder.
         self._checkFolderPath('output')
-        self._checkFolderPath('output/%s' % self.runName)
+        self._checkFolderPath(os.path.join('output',self.runName))
         if self.NFlows != 0:
-            self._checkFolderPath('output/%s/flow_observables' % self.runName)
+            self._checkFolderPath(os.path.join('output',self.runName,'flow_observables'))
             for fobs in self.flow_observables:
-                self._checkFolderPath('output/%s/flow_observables/%s' % (self.runName,fobs))
+                self._checkFolderPath(os.path.join('output',self.runName,'flow_observables',fobs))
         if not self.load_field_configs:
-            self._checkFolderPath('output/%s/field_configurations' % self.runName)
-            self._checkFolderPath('output/%s/observables' % self.runName)
-            for obs in self.observables:
-                self._checkFolderPath('output/%s/observables/%s' % (self.runName,obs))
-        self._checkFolderPath('input/%s' % self.runName)
+            self._checkFolderPath(os.path.join('output',self.runName,'field_configurations'))
+            self._checkFolderPath(os.path.join('output',self.runName,'observables'))
+        self._checkFolderPath(os.path.join('input'))
+        self._checkFolderPath(os.path.join('input',self.runName))
 
     def _checkFolderPath(self, folder):
         # Function for checking if a folder exists, and if not creates on(unless we are doing a dryrun)
-        if not os.path.isdir('%s/%s' % (self.CURRENT_PATH,folder)):
+        if not os.path.isdir(os.path.join(self.CURRENT_PATH,folder)):
             if self.dryrun:
-                print '> mkdir %s/%s' % (self.CURRENT_PATH,folder)
+                print '> mkdir %s' % os.path.join(self.CURRENT_PATH,folder)
             else:
-                os.mkdir('%s/%s' % (self.CURRENT_PATH,folder))
+                os.mkdir(os.path.join(self.CURRENT_PATH,folder))
 
     def _create_json(self,config_dict):
         # Function that creates a json file for submitting to the c++ file.
@@ -121,8 +130,8 @@ class Slurm:
         else:
             with file("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),"w+") as json_file:
                 json.dump(json_dict,json_file,indent=4)
-                shutil.copy("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),                   # src
-                            "%s/input/%s/%s.bak" % (self.CURRENT_PATH,self.runName,self.json_file_name))   # dest
+                shutil.copy("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name), # src
+                            "%s/input/%s/%s.bak" % (self.CURRENT_PATH,self.runName,self.json_file_name)) # dest
 
 
     def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
@@ -132,11 +141,12 @@ class Slurm:
             sbatch_exclusions = ""
 
         for job_config in job_configurations:
+            # Checks if flow is sampling more observables than the regular config sampler, then sets it equal
+            if (job_config["NFlows"] != 0):
+                job_config["observables"] = job_config["flowObservables"]
             # Retrieving config contents
             binary_filename         = job_config["bin_fn"]
             self.runName            = job_config["runName"]
-            self.observables        = job_config["observables"]
-            self.flow_observables   = job_config["flowObservables"]
             self.load_field_configs = job_config["load_field_configs"]
             threads                 = job_config["threads"]
             beta                    = job_config["beta"]
@@ -148,6 +158,8 @@ class Slurm:
             self.NFlows             = job_config["NFlows"]
             NUpdates                = job_config["NUpdates"]
             SU3Eps                  = job_config["SU3Eps"]
+            self.flow_observables   = job_config["flowObservables"]
+            observables             = job_config["observables"]
             flowEpsilon             = job_config["flowEpsilon"]
             storeCfgs               = job_config["storeCfgs"]
             storeThermCfgs          = job_config["storeThermCfgs"]
@@ -254,8 +266,27 @@ set -o errexit              # exit on errors
                     print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
 
             # Stores job in job dictionary
-            self.jobs[ID] = [partition,self.runName,beta,NSpatial,NTemporal,NCf,NTherm,NCor,NUpdates,self.NFlows,SU3Eps,threads,bool(storeCfgs),bool(storeThermCfgs),bool(hotStart),' '.join(map(str,subDims)),cpu_approx_runtime_hr,cpu_approx_runtime_min]
-            
+            job_dict =  self._createDictionary( Partition = [0,9,partition],
+                                                RunName = [1,18,self.runName],
+                                                Beta = [2,5,beta],
+                                                N = [3,4,NSpatial],
+                                                NT = [4,4,NTemporal],
+                                                NCf = [5,4,NCf],
+                                                NTherm = [6,6,NTherm],
+                                                NCor = [7,4,NCor],
+                                                NUpdates = [8,9,NUpdates],
+                                                NFlows = [9,7,self.NFlows],
+                                                SU3Eps = [10,6,SU3Eps],
+                                                Threads = [11,8,threads],
+                                                StoreCfgs = [12,10,bool(storeCfgs)],
+                                                StoreThermCfgs = [13,len("StoreThermCfgs")+1,bool(storeThermCfgs)],
+                                                HotStart = [14,len("HotStart")+1,bool(hotStart)],
+                                                SubDims = [15,len("SubDims")+1,' '.join(map(str,subDims))],
+                                                CPU_hr = [16,7,cpu_approx_runtime_hr],
+                                                CPU_min = [17,7,cpu_approx_runtime_min])
+
+            self.jobs[ID] = job_dict
+
             # Changes name of job script
             if self.dryrun:
                 print '> mv %s job_%d.sh' % (job, ID)
@@ -263,15 +294,15 @@ set -o errexit              # exit on errors
                 os.system('mv %s job_%d.sh' % (job, ID))
 
         # Updates ID file
-        self.updateIdFile()
+        self.updateIDFile()
 
-    def updateIdFile(self):
+    def updateIDFile(self):
         # Rewrites the .ids.txt file with additional job ID
         if self.dryrun:
             print "Updating %s file." % self.idFilesName
         else:
-            with open(self.idFilesName,"w") as f:
-                json.dump(json.JSONEncoder(self.jobs),f)
+            with open(self.idFilesName,"w+") as f:
+                json.dump(self.jobs,f,indent=4)
 
     def cancelJob(self, jobID):
         if self.dryrun:
@@ -288,25 +319,26 @@ set -o errexit              # exit on errors
                 os.system("scancel %d" % i)
 
     def showIDwithNb(self):
-        header_labels = ['ID', 'Partition', 'Run-name', 'beta', 'N', 'NT', 'NCf', 'NTherm', 'NCor', 'NUpdates', 'NFlows', 'SU3Eps', 'threads', 'storeCfgs', 'storeThermCfgs', 'hotStart', 'subDims', 'Ap.Time[hr]', 'Ap.Time[min]']
-        widthChoser = lambda s: 7 if len(s) <= 6 else len(s)+2
-        colWidths = [widthChoser(i) for i in header_labels]
-        colWidths[2] = 15
-        for label,colWidth in zip(header_labels,colWidths):
-            print '{0:<{w}}'.format(label, w=colWidth),
-        print
-        for i in sorted(self.jobs):
-            print '{0:<{w}}'.format(i, w=colWidths[0]),
-            for j in xrange(len(self.jobs[i])):
-                print '{0:<{w}}'.format(self.jobs[i][j], w=colWidths[j+1]),
-            print
+        if len(self.jobs) == 0:
+            print "No jobs running"
+        else:
+            # Takes the jobs out of their dictionary, and zips values and keys together for creating a header
+            sorted_jobs = sorted(zip(self.jobs.values()[0].keys(),self.jobs.values()[0].values()),key=lambda i : i[-1][0])
+            print "{0:<{w}}".format("ID",w=5),
+            for i in sorted_jobs:
+                print "{0:<{w}}".format(i[0],w=i[-1][1]),
+            for jobID in self.jobs:
+                print "\n{0:<{w}}".format(jobID,w=5),
+                # Takes the jobs out of their dictionary, and zips values and keys together for printing their values
+                for item in sorted(zip(self.jobs[jobID].keys(),self.jobs[jobID].values()),key=lambda i : i[-1][0]):
+                    print "{0:<{w}}".format(item[-1][-1],w=item[-1][1]),
 
-    def clearIdFile(self):
+    def clearIDFile(self):
         self.jobs = {}
         if self.dryrun:
             print "Clearing ID file."
         else:
-            self.updateIdFile()
+            self.updateIDFile()
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -334,7 +366,7 @@ def main(args):
                         "RSTHotStart"               : False,
                         "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
                         "observables"               : ["plaq"], # Optional: topc, energy
-                        "flowObservables"           : ["plaq"], # Optional: topc, energy
+                        "flowObservables"           : ["plaq","topc","energy"], # Optional: topc, energy
                         "load_field_configs"        : False,
                         "chroma_config"             : False,
                         "field_configs"             : [],
@@ -428,13 +460,15 @@ def main(args):
     unit_test_parser.add_argument('system',                     default=False,      type=str, choices=['smaug','abel'],help='Specify system we are running on.')
     unit_test_parser.add_argument('-v', '--verbose',            default=False,      action='store_true', help='Prints more information during testing.')
 
-
     args = parser.parse_args()
     # args = parser.parse_args(['python', 'makeJobs.py', 'load', 'config_folder/size_scaling_configs/config_16cube32.py', 'config_folder/size_scaling_configs/config_24cube48.py', 'config_folder/size_scaling_configs/config_28cube56.py', 'config_folder/size_scaling_configs/config_32cube64.py', '-s', 'abel'])
     # args = parser.parse_args(["--dryrun","setup","smaug","-ex","smaug-a[1-8]","smaug-b[1-8]","-sq"])
     # args = parser.parse_args(["--dryrun","load","config_folder/config_beta6_0.py","-s","abel","-lcfg","input","--load_config_hr_time_estimate","2"])
     # args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
     # args = parser.parse_args(['--dryrun', 'setup', 'local', '4', '-N', '8', '-NT', '8', '-NCf', '100', '-NCor', '40', '-NFlows', '100', '-obs', 'plaq', 'topc', 'energy', '-fobs', 'plaq', 'topc', 'energy', '-b', '6.0', '-rn', 'TestRun1', '-sd', '8', '8', '4', '4', '-lcfg', 'input'])
+    # args = parser.parse_args(['setup', 'smaug', '64', '-N', '24', '-NT', '48', '-NTh', '300', '-fobs', 'plaq', 'topc', 'energy', '-NCf', '20', '-NFlows', '60', '-rn', 'topcPlaqTestSmaug', '-chr', '10', '-v'])
+    # args = parser.parse_args(['sbatch','--list_jobs'])
+    # args = parser.parse_args(['sbatch','--clearIDFile']) 
 
     # Retrieves dryrun bool
     dryrun = args.dryrun
@@ -514,7 +548,7 @@ def main(args):
         if args.list_jobs:
             s.showIDwithNb()
         if args.clearIDFile:
-            s.clearIdFile()
+            s.clearIDFile()
     elif args.subparser == 'utest':
         config_default["uTest"] = True
         config_default["cpu_approx_runtime_hr"] = 0

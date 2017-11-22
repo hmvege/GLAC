@@ -62,6 +62,11 @@ public:
     // Printers
     virtual void printObservable(int iObs);
     virtual void printHeader();
+    virtual void printStatistics();
+
+    // Observable copyer
+    virtual void copyObservable(int iObs, std::vector<double> obs);
+    virtual std::vector<double> getObservablesVector(int iObs);
 
     // Getters
     virtual double getObservable(int iObs);
@@ -70,10 +75,11 @@ public:
 
     // Setters
     virtual void reset();
+    virtual void setObservable(int iObs, double obs);
     virtual void setLatticeSize(int latticeSize);
     virtual void setLatticeSpacing(double a) { m_a = a; }
     void setN(unsigned int *N);
-    virtual void storeFlow(bool storeFlowObservable);// { m_storeFlowObservable = storeFlowObservable; } flytt denne til initialisering
+    virtual void storeFlow(bool storeFlowObservable);
 };
 
 

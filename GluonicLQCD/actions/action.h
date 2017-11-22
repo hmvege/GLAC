@@ -1,7 +1,7 @@
 #ifndef ACTION_H
 #define ACTION_H
 
-#include "math/Links.h"
+#include "math/links.h"
 #include "parallelization/parallel.h"
 #include <vector>
 
