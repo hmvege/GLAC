@@ -324,11 +324,11 @@ set -o errexit              # exit on errors
         else:
             # Takes the jobs out of their dictionary, and zips values and keys together for creating a header
             sorted_jobs = sorted(zip(self.jobs.values()[0].keys(),self.jobs.values()[0].values()),key=lambda i : i[-1][0])
-            print "{0:<{w}}".format("ID",w=5),
+            print "{0:<{w}}".format("ID",w=10),
             for i in sorted_jobs:
                 print "{0:<{w}}".format(i[0],w=i[-1][1]),
             for jobID in self.jobs:
-                print "\n{0:<{w}}".format(jobID,w=5),
+                print "\n{0:<{w}}".format(jobID,w=10),
                 # Takes the jobs out of their dictionary, and zips values and keys together for printing their values
                 for item in sorted(zip(self.jobs[jobID].keys(),self.jobs[jobID].values()),key=lambda i : i[-1][0]):
                     print "{0:<{w}}".format(item[-1][-1],w=item[-1][1]),
