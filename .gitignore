@@ -27,3 +27,4 @@ test_env
 # Smaug files
 *.slurm
 *.ids.json
+job*.sh
