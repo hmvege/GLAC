@@ -420,7 +420,7 @@ def main(args):
     job_parser.add_argument('-NFlows','--NFlows',               default=config_default["NFlows"],           type=int,help='number of flows to perform per configuration')
     job_parser.add_argument('-NUp', '--NUpdates',               default=config_default["NUpdates"],         type=int,help='number of updates per link')
     # Data storage related variables
-    job_parser.add_argument('-sc', '--storeCfgs',                default=config_default["storeCfgs"],        type=bool,help='Specifying if we are to store configurations')
+    job_parser.add_argument('-sc', '--storeCfgs',               default=config_default["storeCfgs"],        type=bool,help='Specifying if we are to store configurations')
     job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],   type=bool,help='Specifies if we are to store the thermalization plaquettes')
     # Human readable output related variables
     job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       action='store_true',help='Verbose run of GluonicLQCD. By default, it is off.')
@@ -441,7 +441,7 @@ def main(args):
     job_parser.add_argument('-cmin', '--cpu_approx_runtime_min',default=config_default["cpu_approx_runtime_min"],type=int,help='Approximate cpu time in minutes that will be used')
     job_parser.add_argument('-ex','--exclude',                  default=False,                              type=str,nargs='+',help='Nodes to exclude.')
     job_parser.add_argument('-lcfg','--load_configurations',    default=config_default["load_field_configs"],type=str,help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
-    job_parser.add_argument('-chroma','--chroma_config',        default=config_default["chroma_config"],   action='store_true',help='If flagged, loads the configuration as a chroma configuration.')
+    job_parser.add_argument('-chroma','--chroma_config',        default=config_default["chroma_config"],    action='store_true',help='If flagged, loads the configuration as a chroma configuration.')
 
     ######## Abel specific commands ########
     job_parser.add_argument('--cpu_memory',                     default=config_default["cpu_memory"],       type=int,help='CPU memory to be allocated to each core')
@@ -453,7 +453,8 @@ def main(args):
     load_parser.add_argument('-s','--system',                   default=False,                              type=str, required=True,choices=['smaug','abel'],help='Cluster name')
     load_parser.add_argument('-p','--partition',                default="normal",                           type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
     load_parser.add_argument('-lcfg','--load_configurations',   default=config_default["load_field_configs"],type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
-    load_parser.add_argument('--load_config_hr_time_estimate',  default=False,                              type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
+    load_parser.add_argument('-lhr','--load_config_hr_time_estimate',default=False,                         type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
+    load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=False,                       type=int,help='Approximate cpu time in minutes that will be used')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
@@ -480,13 +481,12 @@ def main(args):
     if args.subparser == 'load':
         configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
         if args.load_configurations and len(configurations) == 1:
-            configurations[0] = setFieldConfigs(config_default,args.load_configurations)
-            if not args.load_config_hr_time_estimate:
-                parser.print_help()
-                print("")
-                raise TypeError("Need an estimate of the runtime for the flowing of configurations.")
+            configurations[0] = setFieldConfigs(configurations[0],args.load_configurations)
+            if not args.load_config_min_time_estimate and not args.load_config_hr_time_estimate:
+                sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
             else:
                 configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
+                configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
         else:
             raise TypeError("Can only assign one configuration file to a single set of field configurations.")
         # Populate configuration with default values if certain keys are not present
