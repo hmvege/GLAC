@@ -31,25 +31,21 @@ void ObservableStorer::gatherResults()
     if (m_normalizeObservableByProcessor) {
         double numprocs = double(Parallel::Communicator::getNumProc());
         for (int i = 0; i < m_NObs; i++) {
-            m_observables[i] /= numprocs;
+            m_observables[i] /= double(numprocs);
         }
     }
 }
 
 void ObservableStorer::runStatistics()
 {
-    // Normalizes by the number of processors
-    double *observablesSquared = new double[m_NObs];
-    if (m_normalizeObservableByProcessor) {
-        for (int i = 0; i < m_NObs; i++) {
-            observablesSquared[i] = m_observables[i]*m_observables[i];
-        }
+    for (int i = 0; i < m_NObs; i++) {
+        m_observablesSquared[i] = m_observables[i]*m_observables[i];
     }
     // Gets average of the observable
     for (int i = 0; i < m_NObs; i++)
     {
         m_averagedObservable += m_observables[i];
-        m_averagedObservableSquared += observablesSquared[i];
+        m_averagedObservableSquared += m_observablesSquared[i];
     }
     m_averagedObservable /= double(m_NObs);
     m_averagedObservableSquared /= double(m_NObs);
@@ -62,9 +58,9 @@ void ObservableStorer::printStatistics()
     if (Parallel::Communicator::getProcessRank() == 0)
     {
         printf("\n%-20s ", m_observableName.c_str());
-        printf("%-20.15f ", m_averagedObservable);
-        printf("%-20.15f ", m_varianceObservable);
-        printf("%-20.15f ", m_stdObservable);
+        printf("%-25.15f ", m_averagedObservable);
+        printf("%-25.15f ", m_varianceObservable);
+        printf("%-25.15f ", m_stdObservable);
     }
 }
 

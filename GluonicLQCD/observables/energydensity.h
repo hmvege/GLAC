@@ -23,7 +23,8 @@ public:
     // Setters
     void setLatticeSpacing(double a);
     // Getters
-    virtual std::string getObservableName() { return m_observableName; }
+    std::string getObservableName() { return m_observableName; }
+    void runStatistics();
 };
 
 #endif // ENERGYDENSITY_H

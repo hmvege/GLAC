@@ -107,18 +107,32 @@ double ObservableSampler::getObservable(int iObs)
 
 void ObservableSampler::printHeader()
 {
-    printf("%-*s %-*s %-*s",
-           m_headerWidth,m_plaquette->getObservableName().c_str(),
-           m_headerWidth,m_topologicalCharge->getObservableName().c_str(),
-           m_headerWidth,m_energyDensity->getObservableName().c_str());
+    if (!m_storeFlowObservable) {
+        printf("\n    %-*s %-*s %-*s",
+               m_headerWidth,m_plaquette->getObservableName().c_str(),
+               m_headerWidth,m_topologicalCharge->getObservableName().c_str(),
+               m_headerWidth,m_energyDensity->getObservableName().c_str());
+    } else {
+        printf("\n    %-*s %-*s %-*s",
+               m_headerWidth,m_plaquette->getObservableName().c_str(),
+               m_headerWidth,m_topologicalCharge->getObservableName().c_str(),
+               m_headerWidth,m_energyDensity->getObservableName().c_str());
+    }
 }
 
 void ObservableSampler::printObservable(int iObs)
 {
-    printf("%-*.4f %-*.4f %-*.4f",
-           m_headerWidth,m_plaquette->getObservable(iObs),
-           m_headerWidth,m_topologicalCharge->getObservable(iObs),
-           m_headerWidth,m_energyDensity->getObservable(iObs));
+    if (!m_storeFlowObservable) {
+        printf("%-*.4f %-*.4f %-*.4f",
+               m_headerWidth,m_plaquette->getObservable(iObs),
+               m_headerWidth,m_topologicalCharge->getObservable(iObs),
+               m_headerWidth,m_energyDensity->getObservable(iObs));
+    } else {
+        printf("\n    %-*.4f %-*.4f %-*.4f",
+               m_headerWidth,m_plaquette->getObservable(iObs),
+               m_headerWidth,m_topologicalCharge->getObservable(iObs),
+               m_headerWidth,m_energyDensity->getObservable(iObs));
+    }
 }
 
 void ObservableSampler::copyObservable(int iObs, std::vector<double> obs) {

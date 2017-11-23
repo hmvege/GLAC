@@ -35,10 +35,11 @@ def checkSubDimViability(subDims):
 
 def setFieldConfigs(config,config_folder):
     config["load_field_configs"] = True
-    if os.path.isdir("input/" + config_folder):
-        config["field_configs"] = [fpath for fpath in os.listdir("input/" + config_folder) if (os.path.splitext(fpath)[-1] == ".bin")]
+    config["inputFolder"] = "/" + os.path.normpath(config_folder) + "/"
+    if os.path.isdir(config_folder):
+        config["field_configs"] = [fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")]
     else:
-        raise OSError("Error: %s is not a directory." % ("input/" + config_folder))
+        raise OSError("Error: %s is not a directory." % (config_folder))
     return config
 
 class Slurm:
@@ -49,9 +50,6 @@ class Slurm:
         self.idFilesName = '.ids.json'
         if os.path.isfile(self.idFilesName) and not self.dryrun:
             self.jobs = json.load(open(self.idFilesName,"r"))
-            # try:
-            # except ValueError:
-            #     self.jobs = {}
         else:
             self.jobs = {}
 
@@ -99,8 +97,8 @@ class Slurm:
         json_dict["NFlows"] = config_dict["NFlows"]
         json_dict["NUpdates"] = config_dict["NUpdates"]
         # Data storage related variables
-        json_dict["outputFolder"] = "/output/%s/" % config_dict["runName"]
-        json_dict["inputFolder"] = "/input/%s/" % config_dict["runName"]
+        json_dict["outputFolder"] = "/output/"
+        json_dict["inputFolder"] = config_dict["inputFolder"]
         json_dict["storeConfigurations"] = config_dict["storeCfgs"]
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
         # Human readable output related variables
@@ -369,6 +367,7 @@ def main(args):
                         "flowObservables"           : ["plaq","topc","energy"], # Optional: topc, energy
                         "load_field_configs"        : False,
                         "chroma_config"             : False,
+                        "inputFolder"               : "/input/",
                         "field_configs"             : [],
                         "uTest"                     : False,
                         "uTestVerbose"              : False,
@@ -481,6 +480,11 @@ def main(args):
     if args.subparser == 'load':
         configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
         if args.load_configurations and len(configurations) == 1:
+            # Requiring flow to be specified if we are loading configurations to flow
+            for c in configurations:
+                if c["NFlows"] == 0:
+                    sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
+            # Requiring an new estimate of the run time if we are flowing
             configurations[0] = setFieldConfigs(configurations[0],args.load_configurations)
             if not args.load_config_min_time_estimate and not args.load_config_hr_time_estimate:
                 sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
@@ -538,6 +542,9 @@ def main(args):
         if args.load_configurations:
             config_default = setFieldConfigs(config_default,args.load_configurations)
             config_default["chroma_config"] = args.chroma_config
+            # Requiring flow to be specified if we are loading configurations to flow
+            if config_default["NFlows"] == 0:
+                sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
         # Submitting job
         s.submitJob([config_default],system,partition,excluded_nodes)
     elif args.subparser == 'sbatch':

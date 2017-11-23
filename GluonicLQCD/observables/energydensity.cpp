@@ -63,6 +63,12 @@ void EnergyDensity::calculate(Links *lattice, int iObs)
 //    return m_actionDensity;//*m_multiplicationFactor; // Temporary off
 }
 
+void EnergyDensity::runStatistics()
+{
+    m_observable->gatherResults();
+    m_observable->runStatistics();
+}
+
 void EnergyDensity::printStatistics()
 {
     m_observable->printStatistics();

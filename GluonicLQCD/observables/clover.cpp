@@ -80,7 +80,7 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
 //            SU3 A;
 //            A = (U1 + U2 + U3 + U4);
 //            m_clovers[cloverIndex(mu,nu-m_overCounter)] = (A - A.inv()) * (1/8.0); // Using the old luscher definition
-            m_clovers[cloverIndex(mu,nu-m_overCounter)] = (U1 - U1.inv()) * (1/2.0);
+            m_clovers[cloverIndex(mu,nu-m_overCounter)] = (U1 - U1.inv()) * (1/8.0);
             m_clovers[3*nu + mu] = m_clovers[cloverIndex(mu,nu-m_overCounter)].inv();
 //            m_clovers[cloverIndex(mu,nu-m_overCounter)].printMachine();
 //            exit(1);

@@ -31,8 +31,6 @@ System::System()
     m_writeConfigsToFile                = Parameters::getStoreConfigurations();
     // Sets pointers to use
     m_SU3Generator = new SU3MatrixGenerator;
-    setAction();
-    setObservable(Parameters::getObservablesList(),false);
     // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
     m_generator = std::mt19937_64(Parameters::getMetropolisSeed());
     m_uniform_distribution = std::uniform_real_distribution<double>(0,1);
@@ -102,6 +100,9 @@ void System::subLatticeSetup()
     m_subLatticeSize = Parameters::getSubLatticeSize();
     // Creates (sub) lattice
     m_lattice = new Links[m_subLatticeSize];
+    // Sets pointers
+    setAction();
+    setObservable(Parameters::getObservablesList(),false);
     // Passes the index handler and dimensionality to the action and correlator classes.
     if (m_NFlows != 0) {
         setObservable(Parameters::getFlowObservablesList(),true);
@@ -386,6 +387,9 @@ void System::flowConfiguration(int iConfig)
     }
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);
+    if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose()) {
+        m_flowCorrelator->printObservable(m_NFlows);
+    }
 }
 
 
@@ -396,7 +400,7 @@ void System::load(std::string configurationName)
      */
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
-    IO::FieldIO::loadFieldConfiguration(configurationName,m_lattice);
+    IO::FieldIO::loadFieldConfiguration(configurationName,m_flowLattice);
 }
 
 void System::loadChroma(std::string configurationName)
@@ -406,7 +410,7 @@ void System::loadChroma(std::string configurationName)
      */
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
-    IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_lattice);
+    IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_flowLattice);
 }
 
 void System::flowConfigurations()
@@ -414,6 +418,9 @@ void System::flowConfigurations()
     /*
      * Method for flowing several configurations given as a vector of strings.
      */
+    if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose()) {
+        m_flowCorrelator->printHeader();
+    }
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
     for (unsigned int i = 0; i < configurationNames.size(); i++) {
         if (!Parameters::getLoadChromaConfigurations()) {

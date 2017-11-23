@@ -25,6 +25,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
         std::ofstream file;
         std::string fname = Parameters::getFilePath()
                           + Parameters::getOutputFolder()
+                          + Parameters::getBatchName() + "/"
                           + "observables/" + observableName + "_"
                           + Parameters::getBatchName() + ".dat";
         file.open(fname);
@@ -57,12 +58,12 @@ void IO::writeFlowObservableToFile(double *observables,
         double a = Parameters::getLatticeSpacing();
         double flowStep = Parameters::getFlowEpsilon();
         std::ofstream file;
-        std::string fname = Parameters::getFilePath()
-                          + Parameters::getOutputFolder()
+        std::string fname = Parameters::getOutputFolder()
+                          + Parameters::getBatchName() + "/"
                           + "flow_observables/" + observableName + "/"
                           + Parameters::getBatchName() + "_"
                           + observableName + "_flow_config" + std::to_string(configNumber) + ".dat";
-        file.open(fname);
+        file.open(Parameters::getFilePath() + fname);
         file << "beta " << Parameters::getBeta() << endl;
         file << "NFlows " << Parameters::getNFlows() << endl;
         file << "FlowEpsilon " << Parameters::getFlowEpsilon() << endl;
@@ -70,7 +71,7 @@ void IO::writeFlowObservableToFile(double *observables,
             file << i << " " << a*sqrt(8*flowStep*i) << " " << observables[i] << endl;
         }
         file.close();
-        if (Parameters::getVerbose()) printf("\n%s written.",fname.c_str());
+        if (Parameters::getVerbose()) printf("\n    %s written.",fname.c_str());
         std::setprecision(oldPrecision);
     }
 }

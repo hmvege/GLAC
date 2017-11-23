@@ -33,6 +33,7 @@ void Correlator::calculate(Links * lattice, int iObs)
     /*
      * Default correlator is not implemented. Pushes to observable array at position iObs.
      */
+    printf("\nENTERING BASE");
     lattice[iObs].U[0].zeros(); // TEMP
     printf("\nIf you see this, something is wrong! Should not call correlator.cpp");
 }
@@ -65,7 +66,11 @@ double Correlator::getObservable(int iObs)
 
 void Correlator::printObservable(int iObs)
 {
-    printf("%-*.8f",m_headerWidth,m_observable->m_observables[iObs]);
+    if (!m_storeFlowObservable) {
+        printf("%-*.8f",m_headerWidth,m_observable->m_observables[iObs]);
+    } else {
+        printf("\n    %-*.8f",m_headerWidth,m_observable->m_observables[iObs]);
+    }
 }
 
 void Correlator::runStatistics()

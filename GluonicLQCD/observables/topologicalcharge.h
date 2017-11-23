@@ -45,6 +45,7 @@ public:
     void calculate(SU3 *clovers, int iObs);
     void calculate(Links *lattice, int iObs);
 
+    // Stats
     void runStatistics();
     // Printers
     void printStatistics();
