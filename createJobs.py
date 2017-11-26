@@ -35,8 +35,7 @@ def checkSubDimViability(subDims):
 
 def setFieldConfigs(config,config_folder):
     config["load_field_configs"] = True
-    config["inputFolder"] = "/" + os.path.normpath(config_folder) + "/"
-    print config["inputFolder"]; sys.exit("EXITED AT LINE 39 WHILE CHECKING THE EXACT INPUT FOLDER.")
+    config["inputFolder"] = os.path.normpath(config_folder) + "/"
     if os.path.isdir(config_folder):
         config["field_configs"] = [fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")]
     else:
@@ -192,7 +191,7 @@ class Slurm:
 
             # Setting run-command
             run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,binary_filename,os.path.join(self.inputFolder,self.json_file_name))
-            print "run_command: ", run_command
+
             # Chosing system
             if system == "smaug":
                 # Smaug batch file.
@@ -218,6 +217,7 @@ class Slurm:
                 if threads % tasks_per_node != 0:
                     raise ValueError("Tasks(number of threads) have to be divisible by 16.")
 
+#SBATCH --ntasks-per-node={7:<1d} # Not needed, possibly
                 content ='''#!/bin/bash
 #SBATCH --job-name={0:<s}
 #SBATCH --account={1:<s}
@@ -226,8 +226,7 @@ class Slurm:
 #SBATCH --partition={4:<s}
 #SBATCH --ntasks={5:<d}
 #SBATCH --nodes={6:<1d}
-#SBATCH --ntasks-per-node={7:<1d}
-{8:<s}
+{7:<s}
 
 source /cluster/bin/jobsetup
 
@@ -236,9 +235,9 @@ module load openmpi.gnu     # loads mpi
 
 set -o errexit              # exit on errors
 
-{9:<s}
+{8:<s}
 
-'''.format(job_name, account_name, estimated_time, cpu_memory, partition, threads, nodes, tasks_per_node, sbatch_exclusions, run_command)
+'''.format(job_name, account_name, estimated_time, cpu_memory, partition, threads, nodes, sbatch_exclusions, run_command)
             elif system == "local":
                 sys.exit("Error: this is a local production run. Should never see this error message.")
 
