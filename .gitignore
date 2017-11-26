@@ -28,3 +28,6 @@ test_env
 *.slurm
 *.ids.json
 job*.sh
+
+# Plot figures
+*.png

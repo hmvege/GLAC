@@ -4,7 +4,7 @@ class Bootstrap:
 	"""
 	Class for creating a bootstrap sample.
 	"""
-	def __init__(self, data, N_BS, bootstrap_statistics = np.mean, index_lists=[], seed=None):
+	def __init__(self, data, N_BS, bootstrap_statistics = np.mean, F = lambda x : x, non_bs_stats = lambda x: x, index_lists=[], seed=None):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
@@ -25,11 +25,13 @@ class Bootstrap:
 		# Gets and sets bootstrapped values 
 		self.bs_data_raw = data[index_lists]
 		self.bs_data = bootstrap_statistics(self.bs_data_raw,axis=1)
+		self.bs_data = F(self.bs_data)
 		self.bs_avg = np.mean(self.bs_data)
 		self.bs_var = np.var(self.bs_data)
 		self.bs_std = np.std(self.bs_data)
 
 		# Gets and sets non-bootstrapped values
+		data = F(non_bs_stats(data))
 		self.avg_original = np.average(data)
 		self.var_original = np.var(data)
 		self.std_original = np.std(data)

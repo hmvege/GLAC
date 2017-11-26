@@ -23,8 +23,8 @@ void runUnitTests();
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
     Parallel::Communicator::init(&numberOfArguments, &cmdLineArguments);
-    ConfigLoader::load(cmdLineArguments[1]);
-
+    if (Parallel::Communicator::getProcessRank() == 0) printf("Okay after initializing comms.");
+    ConfigLoader::load(std::string(cmdLineArguments[1]));
     // Unit tester
     if (Parameters::getUnitTesting() && Parallel::Communicator::getProcessRank() == 0) runUnitTests();
 

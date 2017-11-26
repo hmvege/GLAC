@@ -36,6 +36,7 @@ def checkSubDimViability(subDims):
 def setFieldConfigs(config,config_folder):
     config["load_field_configs"] = True
     config["inputFolder"] = "/" + os.path.normpath(config_folder) + "/"
+    print config["inputFolder"]; sys.exit("EXITED AT LINE 39 WHILE CHECKING THE EXACT INPUT FOLDER.")
     if os.path.isdir(config_folder):
         config["field_configs"] = [fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")]
     else:
@@ -62,17 +63,17 @@ class Slurm:
 
     def _create_folders(self):
         # Checking that we have an output folder.
-        self._checkFolderPath('output')
-        self._checkFolderPath(os.path.join('output',self.runName))
+        self._checkFolderPath(self.outputFolder)
+        self._checkFolderPath(os.path.join(self.outputFolder,self.runName))
         if self.NFlows != 0:
-            self._checkFolderPath(os.path.join('output',self.runName,'flow_observables'))
+            self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'flow_observables'))
             for fobs in self.flow_observables:
-                self._checkFolderPath(os.path.join('output',self.runName,'flow_observables',fobs))
+                self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'flow_observables',fobs))
         if not self.load_field_configs:
-            self._checkFolderPath(os.path.join('output',self.runName,'field_configurations'))
-            self._checkFolderPath(os.path.join('output',self.runName,'observables'))
-        self._checkFolderPath(os.path.join('input'))
-        self._checkFolderPath(os.path.join('input',self.runName))
+            self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'field_configurations'))
+            self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'observables'))
+        self._checkFolderPath(os.path.join(self.inputFolder))
+        self._checkFolderPath(os.path.join(self.inputFolder,self.runName))
 
     def _checkFolderPath(self, folder):
         # Function for checking if a folder exists, and if not creates on(unless we are doing a dryrun)
@@ -97,8 +98,8 @@ class Slurm:
         json_dict["NFlows"] = config_dict["NFlows"]
         json_dict["NUpdates"] = config_dict["NUpdates"]
         # Data storage related variables
-        json_dict["outputFolder"] = "/output/"
-        json_dict["inputFolder"] = config_dict["inputFolder"]
+        json_dict["outputFolder"] = "/" + config_dict["outputFolder"] + "/"
+        json_dict["inputFolder"] = "/" + config_dict["inputFolder"] + "/"
         json_dict["storeConfigurations"] = config_dict["storeCfgs"]
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
         # Human readable output related variables
@@ -126,10 +127,10 @@ class Slurm:
             print "Writing json configuration file:\n"
             print json.dumps(json_dict,indent=4,separators=(', ', ': ')), "\n"
         else:
-            with file("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name),"w+") as json_file:
+            with file(os.path.join(self.CURRENT_PATH,self.inputFolder,self.json_file_name),"w+") as json_file:
                 json.dump(json_dict,json_file,indent=4)
-                shutil.copy("%s/input/%s" % (self.CURRENT_PATH,self.json_file_name), # src
-                            "%s/input/%s/%s.bak" % (self.CURRENT_PATH,self.runName,self.json_file_name)) # dest
+                shutil.copy(os.path.join(self.CURRENT_PATH,self.inputFolder,self.json_file_name), # src
+                            "%s.bak" % os.path.join(self.CURRENT_PATH,self.inputFolder,self.runName,self.json_file_name)) # dest
 
 
     def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
@@ -157,6 +158,8 @@ class Slurm:
             NUpdates                = job_config["NUpdates"]
             SU3Eps                  = job_config["SU3Eps"]
             self.flow_observables   = job_config["flowObservables"]
+            self.inputFolder        = job_config["inputFolder"]
+            self.outputFolder       = job_config["outputFolder"]
             observables             = job_config["observables"]
             flowEpsilon             = job_config["flowEpsilon"]
             storeCfgs               = job_config["storeCfgs"]
@@ -171,7 +174,7 @@ class Slurm:
             cpu_approx_runtime_min  = job_config["cpu_approx_runtime_min"]
 
             # Checks that binary file exists in expected location
-            if not os.path.isfile("%s/%s" % (self.CURRENT_PATH,binary_filename)):
+            if not os.path.isfile(os.path.join(self.CURRENT_PATH,binary_filename)):
                 exit("Error: binary file path not in expected location %s/%s" % (self.CURRENT_PATH,binary_filename))
 
             if len(subDims) != 0:
@@ -179,7 +182,7 @@ class Slurm:
             self._create_folders()
             self._create_json(job_config)
             if system == "local":
-                sys.exit("Config file input/%s for local producton created."  % self.json_file_name)
+                sys.exit("Config file %s for local producton created."  % os.path.join(self.inputFolder,self.json_file_name))
 
             # Setting job name before creating content file.
             job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta,NSpatial,NTemporal,threads)
@@ -188,8 +191,8 @@ class Slurm:
             estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr,cpu_approx_runtime_min)
 
             # Setting run-command
-            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,binary_filename,self.json_file_name)
-
+            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,binary_filename,os.path.join(self.inputFolder,self.json_file_name))
+            print "run_command: ", run_command
             # Chosing system
             if system == "smaug":
                 # Smaug batch file.
@@ -249,7 +252,7 @@ set -o errexit              # exit on errors
                 outfile.write(content)
                 outfile.close()
 
-            cmd = ['sbatch', os.getcwd() + "/" + job]
+            cmd = ['sbatch', os.path.join(os.getcwd(),job)]
 
             # Submits job
             if self.dryrun:
@@ -342,8 +345,8 @@ set -o errexit              # exit on errors
 
 def main(args):
     # Default configuration file.
-    if not os.path.isdir(os.getcwd() + "/build"):
-        raise EnvironmentError("Build folder is not present at location %s." % (os.getcwd() + "/build"))
+    if not os.path.isdir(os.path.join(os.getcwd(),"build")):
+        raise EnvironmentError("Build folder is not present at location %s." % os.path.join(os.getcwd(),"build"))
 
     # Default config
     config_default = {  "bin_fn"                    : "build/GluonicLQCD",
@@ -367,7 +370,8 @@ def main(args):
                         "flowObservables"           : ["plaq","topc","energy"], # Optional: topc, energy
                         "load_field_configs"        : False,
                         "chroma_config"             : False,
-                        "inputFolder"               : "/input/",
+                        "inputFolder"               : "input",
+                        "outputFolder"              : "output",
                         "field_configs"             : [],
                         "uTest"                     : False,
                         "uTestVerbose"              : False,
@@ -479,20 +483,21 @@ def main(args):
     # Loads one or multiple configuration
     if args.subparser == 'load':
         configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
-        if args.load_configurations and len(configurations) == 1:
-            # Requiring flow to be specified if we are loading configurations to flow
-            for c in configurations:
-                if c["NFlows"] == 0:
-                    sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
-            # Requiring an new estimate of the run time if we are flowing
-            configurations[0] = setFieldConfigs(configurations[0],args.load_configurations)
-            if not args.load_config_min_time_estimate and not args.load_config_hr_time_estimate:
-                sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
+        if args.load_configurations:
+            if len(configurations) == 1:
+                # Requiring flow to be specified if we are loading configurations to flow
+                for c in configurations:
+                    if c["NFlows"] == 0:
+                        sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
+                # Requiring an new estimate of the run time if we are flowing
+                configurations[0] = setFieldConfigs(configurations[0],args.load_configurations)
+                if not args.load_config_min_time_estimate and not args.load_config_hr_time_estimate:
+                    sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
+                else:
+                    configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
+                    configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
             else:
-                configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
-                configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
-        else:
-            raise TypeError("Can only assign one configuration file to a single set of field configurations.")
+                raise TypeError("Can only assign one configuration file to a single set of field configurations.")
         # Populate configuration with default values if certain keys are not present
         for c in configurations:
             for key in config_default.keys():
