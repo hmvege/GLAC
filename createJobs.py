@@ -189,7 +189,7 @@ class Slurm:
             estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr,cpu_approx_runtime_min)
 
             # Setting run-command
-            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,binary_filename,os.path.join(self.inputFolder,self.json_file_name))
+            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,binary_filename,os.path.join("input",self.json_file_name))
 
             # Chosing system
             if system == "smaug":
