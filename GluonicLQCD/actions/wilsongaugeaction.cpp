@@ -64,16 +64,30 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
 //    m_staple *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
 
     // MORNINGSTAR METHOD
+//    Omega = m_staple.inv();
+//    Omega -= m_staple;
+//    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/6.0;
+//    m_X = Omega*0.5;
+//    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
+//        m_X.mat[i] -= tempDiag;
+//    }
+
     Omega = m_staple.inv();
     Omega -= m_staple;
-    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/6.0;
-    Q = Omega*0.5;
+    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
     for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
-        Q.mat[i] -= tempDiag;
+        Omega.mat[i] -= tempDiag;
     }
-    m_X = Q*0.5;
+    m_X = Omega*0.5;
+
+//    m_X = Q;
 //    std::cout<<"MORNINGSTAR:"<<std::endl;
-//    m_X.printMachine();
+//    if (isnan(m_X[0])) {
+//        if (Parallel::Communicator::getProcessRank() == 0) {
+//            m_X.printMachine();
+//        }
+//        Parallel::Communicator::MPIExit("Exiting at wilson gauge action");
+//    }
 
     /////// FIX LUSHCER METHOD ///////
     // LUSCHER METHOD

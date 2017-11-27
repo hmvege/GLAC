@@ -66,6 +66,10 @@ void TopologicalCharge::calculate(SU3 *clovers, int iObs)
         topCharge += traceRealMultiplication(clovers[2*i],clovers[2*i+1]);
     }
     m_observable->m_observables[iObs] += topCharge*m_multiplicationFactor;
+    // Jacks data should give for flow at t=0 3.29640613544198
+//    Parallel::Communicator::setBarrier();
+//    Parallel::Communicator::MPIExit("Exiting at wilson gauge action");
+
 //    return topCharge*m_multiplicationFactor;
 }
 

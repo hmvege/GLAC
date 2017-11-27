@@ -66,7 +66,7 @@ class Slurm:
         self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName))
         if self.NFlows != 0:
             self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables'))
-            for fobs in self.flow_observables:
+            for fobs in ["plaq","topc","energy"]:
                 self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables',fobs))
         if not self.load_field_configs:
             self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'field_configurations'))
@@ -422,13 +422,13 @@ def main(args):
     job_parser.add_argument('-NFlows','--NFlows',               default=config_default["NFlows"],           type=int,help='number of flows to perform per configuration')
     job_parser.add_argument('-NUp', '--NUpdates',               default=config_default["NUpdates"],         type=int,help='number of updates per link')
     # Data storage related variables
-    job_parser.add_argument('-sc', '--storeCfgs',               default=config_default["storeCfgs"],        type=bool,help='Specifying if we are to store configurations')
-    job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],   type=bool,help='Specifies if we are to store the thermalization plaquettes')
+    job_parser.add_argument('-sc', '--storeCfgs',               default=config_default["storeCfgs"],        type=int,choices=[0,1],help='Specifying if we are to store configurations')
+    job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],   type=int,choices=[0,1],help='Specifies if we are to store the thermalization plaquettes')
     # Human readable output related variables
     job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       action='store_true',help='Verbose run of GluonicLQCD. By default, it is off.')
     # Setup related variables
-    job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=bool,help='Hot start or cold start')
-    job_parser.add_argument('-rsths', '--RSTHotStart',          default=config_default["RSTHotStart"],      type=bool,help='RST hot start is closer to unity')
+    job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=int,choices=[0,1],help='Hot start or cold start')
+    job_parser.add_argument('-rsths', '--RSTHotStart',          default=config_default["RSTHotStart"],      type=int,choices=[0,1],help='RST hot start is closer to unity')
     job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],          type=str,help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
     job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],      type=str,choices=['plaq','topc','energy'],nargs='+',help='Observables to sample for in flow.')
     job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],  type=str,choices=['plaq','topc','energy'],nargs='+',help='Observables to sample for in flow.')
@@ -514,16 +514,19 @@ def main(args):
         config_default["N"]                         = args.NSpatial
         config_default["NT"]                        = args.NTemporal
         config_default["beta"]                      = args.beta
-        config_default["NCf"]                       = args.NConfigs
+        if args.NConfigs == 0:
+            config_default["NCf"]                   = 1
+        else:
+            config_default["NCf"]                       = args.NConfigs
         config_default["NCor"]                      = args.NCor
         config_default["NTherm"]                    = args.NTherm
         config_default["NFlows"]                    = args.NFlows
         config_default["NUpdates"]                  = args.NUpdates
-        config_default["storeCfgs"]                 = args.storeCfgs
-        config_default["storeThermCfgs"]            = args.storeThermCfgs
+        config_default["storeCfgs"]                 = bool(args.storeCfgs)
+        config_default["storeThermCfgs"]            = bool(args.storeThermCfgs)
         config_default["verboseRun"]                = args.verboseRun
-        config_default["hotStart"]                  = args.hotStart
-        config_default["RSTHotStart"]               = args.RSTHotStart
+        config_default["hotStart"]                  = bool(args.hotStart)
+        config_default["RSTHotStart"]               = bool(args.RSTHotStart)
         config_default["expFunc"]                   = args.expFunc
         config_default["observables"]               = args.observables
         config_default["flowObservables"]           = args.flowObservables
