@@ -42,6 +42,13 @@ protected:
         }
         nuIndex[nu] = 1;
     }
+    inline void updateLorentzIndex(int *lorentz, int dir) {
+        for (int i = 0; i < 4; i++)
+        {
+            lorentz[i] = 0;
+        }
+        lorentz[dir] = 1;
+    }
     // Function for accessing the clover index
     inline int cloverIndex(int mu, int nu)
     {

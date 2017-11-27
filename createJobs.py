@@ -63,16 +63,16 @@ class Slurm:
     def _create_folders(self):
         # Checking that we have an output folder.
         self._checkFolderPath(self.outputFolder)
-        self._checkFolderPath(os.path.join(self.outputFolder,self.runName))
+        self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName))
         if self.NFlows != 0:
-            self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'flow_observables'))
+            self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables'))
             for fobs in self.flow_observables:
-                self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'flow_observables',fobs))
+                self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables',fobs))
         if not self.load_field_configs:
-            self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'field_configurations'))
-            self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'observables'))
-        self._checkFolderPath(os.path.join(self.inputFolder))
-        self._checkFolderPath(os.path.join("input",self.runName))
+            self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'field_configurations'))
+            self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'observables'))
+        self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.inputFolder))
+        self._checkFolderPath(os.path.join(self.CURRENT_PATH,"input",self.runName))
 
     def _checkFolderPath(self, folder):
         # Function for checking if a folder exists, and if not creates on(unless we are doing a dryrun)
@@ -180,7 +180,7 @@ class Slurm:
             self._create_folders()
             self._create_json(job_config)
             if system == "local":
-                sys.exit("Config file %s for local producton created."  % os.path.join(self.inputFolder,self.json_file_name))
+                sys.exit("Config file %s for local producton created."  % os.path.join(self.CURRENT_PATH,self.inputFolder,self.json_file_name))
 
             # Setting job name before creating content file.
             job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta,NSpatial,NTemporal,threads)
@@ -189,7 +189,7 @@ class Slurm:
             estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr,cpu_approx_runtime_min)
 
             # Setting run-command
-            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,binary_filename,os.path.join("input",self.json_file_name))
+            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.CURRENT_PATH,"input",self.json_file_name))
 
             # Chosing system
             if system == "smaug":
@@ -250,7 +250,7 @@ set -o errexit              # exit on errors
                 outfile.write(content)
                 outfile.close()
 
-            cmd = ['sbatch', os.path.join(os.getcwd(),job)]
+            cmd = ['sbatch', os.path.join(self.CURRENT_PATH,job)]
 
             # Submits job
             if self.dryrun:

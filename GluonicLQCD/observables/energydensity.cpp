@@ -27,9 +27,9 @@ void EnergyDensity::setLatticeSpacing(double a) // NEED TO DOUBLE CHECK THIS WIT
 void EnergyDensity::calculate(SU3 *clovers, int iObs)
 {
     m_actionDensity = 0;
-    for (unsigned int i = 0; i < 12; i++)
+    for (unsigned int i = 0; i < 3; i++)
     {
-        m_actionDensity += traceSparseImagMultiplication(clovers[i],clovers[i]); // Might check this one with Andrea
+        m_actionDensity += traceSparseImagMultiplication(clovers[2*i],clovers[2*i+1]); // Might check this one with Andrea
     }
     m_observable->m_observables[iObs] += m_actionDensity;
 //    return m_actionDensity;//*m_multiplicationFactor; // Correct or not?
@@ -51,9 +51,9 @@ void EnergyDensity::calculate(Links *lattice, int iObs)
                     m_position[2] = k;
                     m_position[3] = l;
                     Clov.calculateClover(lattice,i,j,k,l);
-                    for (unsigned int i = 0; i < 12; i++)
+                    for (unsigned int i = 0; i < 3; i++)
                     {
-                        m_actionDensity += traceSparseImagMultiplication(Clov.m_clovers[i],Clov.m_clovers[i]);
+                        m_actionDensity += traceSparseImagMultiplication(Clov.m_clovers[2*i],Clov.m_clovers[2*i+1]);
                     }
                 }
             }

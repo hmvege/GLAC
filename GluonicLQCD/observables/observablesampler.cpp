@@ -108,12 +108,12 @@ double ObservableSampler::getObservable(int iObs)
 void ObservableSampler::printHeader()
 {
     if (!m_storeFlowObservable) {
-        printf("\n    %-*s %-*s %-*s",
+        printf("%-*s %-*s %-*s",
                m_headerWidth,m_plaquette->getObservableName().c_str(),
                m_headerWidth,m_topologicalCharge->getObservableName().c_str(),
                m_headerWidth,m_energyDensity->getObservableName().c_str());
     } else {
-        printf("\n    %-*s %-*s %-*s",
+        printf("%-*s %-*s %-*s",
                m_headerWidth,m_plaquette->getObservableName().c_str(),
                m_headerWidth,m_topologicalCharge->getObservableName().c_str(),
                m_headerWidth,m_energyDensity->getObservableName().c_str());

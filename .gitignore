@@ -31,3 +31,6 @@ job*.sh
 
 # Plot figures
 *.png
+
+# Jacks data
+jacks_data

@@ -7,7 +7,7 @@
 
 TopologicalCharge::TopologicalCharge(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
-    m_multiplicationFactor = 1.0/(32*M_PI*M_PI);
+    m_multiplicationFactor = 1.0/(16*16*M_PI*M_PI);
     populateLC(); // Fills the levi civita vector
     m_observable->setObservableName(m_observableNameCompact);
     m_observable->setNormalizeObservableByProcessor(false);
@@ -37,31 +37,33 @@ void TopologicalCharge::calculate(Links *lattice, int iObs)
                     m_position[2] = k;
                     m_position[3] = l;
                     Clov.calculateClover(lattice,i,j,k,l);
-                    for (unsigned int i = 0; i < m_leviCivita.size(); i++)
+//                    for (unsigned int i = 0; i < m_leviCivita.size(); i++)
+                    for (unsigned int i = 0; i < 3; i++)
                     {
-                        G1 = Clov.m_clovers[m_leviCivita[i].ci[0]];
-                        G2 = Clov.m_clovers[m_leviCivita[i].ci[1]];
-//                        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn; // When off diagonal complex elements are zero
-                        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn; // When off diagonal complex elements are not zero
-
+                        traceRealMultiplication(Clov.m_clovers[2*i],Clov.m_clovers[2*i+1]);
+//                        G1 = Clov.m_clovers[m_leviCivita[i].ci[0]];
+//                        G2 = Clov.m_clovers[m_leviCivita[i].ci[1]];
+////                        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn; // When off diagonal complex elements are zero
+//                        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn; // When off diagonal complex elements are not zero
                     }
                 }
             }
         }
     }
 //    return topCharge*m_multiplicationFactor;
-    m_observable->m_observables[iObs] =  topCharge*m_multiplicationFactor;
+    m_observable->m_observables[iObs] = topCharge*m_multiplicationFactor;
 }
 
 void TopologicalCharge::calculate(SU3 *clovers, int iObs)
 {
     topCharge = 0;
-    for (unsigned int i = 0; i < m_leviCivita.size(); i++)
+    for (unsigned int i = 0; i < 3; i++)
     {
-        G1 = clovers[m_leviCivita[i].ci[0]];
-        G2 = clovers[m_leviCivita[i].ci[1]];
-        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
+//        G1 = clovers[m_leviCivita[i].ci[0]];
+//        G2 = clovers[m_leviCivita[i].ci[1]];
+//        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
 //        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
+        topCharge += traceRealMultiplication(clovers[2*i],clovers[2*i+1]);
     }
     m_observable->m_observables[iObs] += topCharge*m_multiplicationFactor;
 //    return topCharge*m_multiplicationFactor;
@@ -124,7 +126,7 @@ int TopologicalCharge::getLCSign(LeviCivita LC)
 
 void TopologicalCharge::printStatistics()
 {
-    if (Parameters::getVerbose()) m_observable->printStatistics();
+    m_observable->printStatistics();
 }
 
 void TopologicalCharge::runStatistics()
