@@ -35,7 +35,7 @@ def checkSubDimViability(subDims):
 
 def setFieldConfigs(config,config_folder):
     config["load_field_configs"] = True
-    config["inputFolder"] = os.path.normpath(config_folder) + "/"
+    config["inputFolder"] = os.path.normpath(config_folder)
     if os.path.isdir(config_folder):
         config["field_configs"] = [fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")]
     else:
@@ -72,7 +72,7 @@ class Slurm:
             self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'field_configurations'))
             self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'observables'))
         self._checkFolderPath(os.path.join(self.inputFolder))
-        self._checkFolderPath(os.path.join(self.inputFolder,self.runName))
+        self._checkFolderPath(os.path.join("input",self.runName))
 
     def _checkFolderPath(self, folder):
         # Function for checking if a folder exists, and if not creates on(unless we are doing a dryrun)
@@ -126,11 +126,10 @@ class Slurm:
             print "Writing json configuration file:\n"
             print json.dumps(json_dict,indent=4,separators=(', ', ': ')), "\n"
         else:
-            with file(os.path.join(self.CURRENT_PATH,self.inputFolder,self.json_file_name),"w+") as json_file:
+            with file(os.path.join(self.CURRENT_PATH,"input",self.json_file_name),"w+") as json_file:
                 json.dump(json_dict,json_file,indent=4)
-                shutil.copy(os.path.join(self.CURRENT_PATH,self.inputFolder,self.json_file_name), # src
-                            "%s.bak" % os.path.join(self.CURRENT_PATH,self.inputFolder,self.runName,self.json_file_name)) # dest
-
+            shutil.copy(os.path.join(self.CURRENT_PATH,"input",self.json_file_name), # src
+                "%s.bak" % os.path.join(self.CURRENT_PATH,"input",self.runName,self.json_file_name)) # dest
 
     def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
         if excluded_nodes:
@@ -260,6 +259,7 @@ set -o errexit              # exit on errors
             else:
                 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
                 tmp = proc.stdout.read()
+                # tmp = "123 456" # Used for bug-hunting
                 try:
                     ID = int(tmp.split()[-1]) # ID of job
                 except IndexError:
