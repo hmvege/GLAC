@@ -28,11 +28,11 @@ struct ObservableStorer
     // Printers
     void printStatistics();
 
-    // TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-    void printStuff() {
-        printf("\nObservable: %s N: %d",m_observableName.c_str(),m_NObs);
-    }
-    // TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+//    // TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+//    void printStuff() {
+//        printf("\nObservable: %s N: %d",m_observableName.c_str(),m_NObs);
+//    }
+//    // TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 
     // File writers
     void writeObservableToFile(double acceptanceRatio);

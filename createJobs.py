@@ -531,7 +531,7 @@ def main(args):
         config_default["observables"]               = args.observables
         config_default["flowObservables"]           = args.flowObservables
         config_default["SU3Eps"]                    = args.SU3Epsilon
-        config_default["fEps"]                      = args.flowEpsilon
+        config_default["flowEpsilon"]               = args.flowEpsilon
         config_default["metropolisSeed"]            = args.metropolisSeed
         config_default["randomMatrixSeed"]          = args.randomMatrixSeed
         config_default["cpu_approx_runtime_hr"]     = args.cpu_approx_runtime_hr

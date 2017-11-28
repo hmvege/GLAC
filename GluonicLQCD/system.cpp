@@ -379,17 +379,20 @@ void System::flowConfiguration(int iConfig)
     m_flowCorrelator->reset();
     // Calculates the flow observables at zeroth flow time
     m_flowCorrelator->calculate(m_flowLattice,0);
+    if (Parameters::getVerbose()) {
+        m_flowCorrelator->printObservable(0);
+    }
     // Runs the flow
     for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
         m_flow->flowField(m_flowLattice);
         m_flowCorrelator->calculate(m_flowLattice,iFlow + 1);
+        if (Parameters::getVerbose()) {
+            m_flowCorrelator->printObservable(iFlow + 1);
+        }
     }
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);
-    if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose()) {
-        m_flowCorrelator->printObservable(m_NFlows);
-    }
 }
 
 
@@ -418,16 +421,20 @@ void System::flowConfigurations()
     /*
      * Method for flowing several configurations given as a vector of strings.
      */
-    if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose()) {
-        m_flowCorrelator->printHeader();
-    }
+    // Loads the vector of configurations to flow.
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
     for (unsigned int i = 0; i < configurationNames.size(); i++) {
+        // Loads configuration, either in chroma format(reversed doubles) or regular format.
         if (!Parameters::getLoadChromaConfigurations()) {
             load(configurationNames[i]);
         } else {
             loadChroma(configurationNames[i]);
         }
+        // Prints a new header for each flow.
+        if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose()) {
+            m_flowCorrelator->printHeader();
+        }
+        // Flows the configuration loaded
         flowConfiguration(i);
     }
     if (m_processRank==0) printf("\nFlowing of %lu configurations done.", configurationNames.size());

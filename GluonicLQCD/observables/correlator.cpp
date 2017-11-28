@@ -81,7 +81,9 @@ void Correlator::runStatistics()
 
 void Correlator::writeFlowObservablesToFile(int iFlow)
 {
+//    printf("\nRANK=%d %f",Parallel::Communicator::getProcessRank(), m_observable->m_observables[0]);
     m_observable->gatherResults();
+//    printf("\nRANK=%d %f",Parallel::Communicator::getProcessRank(), m_observable->m_observables[0]);
     m_observable->writeFlowObservableToFile(iFlow);
 }
 

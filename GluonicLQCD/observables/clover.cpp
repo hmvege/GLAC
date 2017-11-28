@@ -92,16 +92,16 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
     int rhoIndex[4];
     int sigmaIndex[4];
     // CHROMA METHOD
+    double tempDiag1, tempDiag2;
     int mu = 0;
     SU3 clov1, clov2,I;
     I.identity();
     updateMuIndex(mu);
-    m_overCounter = 0; // Dirty method of ensuring cloverIndex returns right value.
     for (int nu = 1; nu < 4; nu++)
     {
         updateNuIndex(nu);
 
-        // First clover
+        // First clover. Definition from R Wohler 1985, more symmetric than other methods.
         // First leaf
         U1 = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
         U1 *= Parallel::Communicator::getPositiveLink(lattice,m_position,mu,muIndex,nu);
@@ -112,26 +112,26 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
         m_plaquettes[2*(nu-1)] = U1;
 //        printf("\n nu=%d      2*(nu-1) = %d", nu, 2*(nu-1));
         // Second leaf
-        U2 = lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu];
-        U2 *= Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,nu,nuIndex,mu,muIndex,mu).inv();
-        U2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,mu,muIndex,nu).inv();
-        U2Temp = Parallel::Communicator::getNegativeLink(lattice,m_position,mu,muIndex,mu);
-        U2 *= U2Temp;
+        U2 = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
+        U2 *= Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,mu,muIndex,nu,nuIndex,nu).inv();
+        U2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,nuIndex,mu).inv();
+        U2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,nuIndex,nu);
+//        U2 *= U2Temp;
         clov1 -= U2;
 
         // Third leaf
-        U3 = U2Temp.inv();
+        U3 = Parallel::Communicator::getNegativeLink(lattice,m_position,mu,muIndex,mu).inv();
         U3 *= Parallel::Communicator::getNeighboursNeighbourNegativeLink(lattice,m_position,mu,muIndex,nu,nuIndex,nu).inv();
         U3 *= Parallel::Communicator::getNeighboursNeighbourNegativeLink(lattice,m_position,mu,muIndex,nu,nuIndex,mu);
-        U3Temp = Parallel::Communicator::getNegativeLink(lattice,m_position,nu,nuIndex,nu);
-        U3 *= U3Temp;
+        U3 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,nuIndex,nu);
+//        U3 *= U3Temp;
         clov1 += U3;
 
         // Fourth leaf
-        U4 = U3Temp.inv();
-        U4 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,nuIndex,mu);
-        U4 *= Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,mu,muIndex,nu,nuIndex,nu);
-        U4 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].inv();
+        U4 = Parallel::Communicator::getNegativeLink(lattice,m_position,mu,muIndex,mu).inv();
+        U4 *= Parallel::Communicator::getNegativeLink(lattice,m_position,mu,muIndex,nu);
+        U4 *= Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,nu,nuIndex,mu,muIndex,mu);
+        U4 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu].inv();
         clov1 -= U4;
 
         int rho = nu % 3;
@@ -150,34 +150,49 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
         U1 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[sigma].inv();
         clov2 = U1;
 
-        m_plaquettes[2*nu - 1] = U1; // 2*(nu-1) + 1 = 2*nu - 2 + 1 = 2*nu - 1
-//        printf("\n nu=%d      2*nu - 1 = %d", nu, 2*nu - 1);
+        // Gets lattice for temp use
+//        U2Temp = Parallel::Communicator::getNegativeLink(lattice,m_position,sigma,sigmaIndex,sigma);
+//        U3Temp = Parallel::Communicator::getNegativeLink(lattice,m_position,rho,rhoIndex,rho).inv();
 
+        m_plaquettes[2*nu - 1] = U1; // 2*(nu-1) + 1 = 2*nu - 2 + 1 = 2*nu - 1
         // Second leaf
-        U2 = lattice[Parallel::Index::getIndex(i,j,k,l)].U[sigma];
-        U2 *= Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,sigma,sigmaIndex,rho,rhoIndex,rho).inv();
-        U2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,rho,rhoIndex,sigma).inv();
-        U2Temp = Parallel::Communicator::getNegativeLink(lattice,m_position,rho,rhoIndex,rho);
-        U2 *= U2Temp;
+        U2 = lattice[Parallel::Index::getIndex(i,j,k,l)].U[rho];
+        U2 *= Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,rho,rhoIndex,sigma,sigmaIndex,sigma).inv();
+        U2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,sigma,sigmaIndex,rho).inv();
+        U2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,sigma,sigmaIndex,sigma);
+//        U2 *= U2Temp;
         clov2 -= U2;
 
         // Third leaf
-        U3 = U2Temp.inv();
+//        U3 = U3Temp;
+        U3 = Parallel::Communicator::getNegativeLink(lattice,m_position,rho,rhoIndex,rho).inv();
         U3 *= Parallel::Communicator::getNeighboursNeighbourNegativeLink(lattice,m_position,rho,rhoIndex,sigma,sigmaIndex,sigma).inv();
         U3 *= Parallel::Communicator::getNeighboursNeighbourNegativeLink(lattice,m_position,rho,rhoIndex,sigma,sigmaIndex,rho);
-        U3Temp = Parallel::Communicator::getNegativeLink(lattice,m_position,sigma,sigmaIndex,sigma);
-        U3 *= U3Temp;
+        U3 *= Parallel::Communicator::getNegativeLink(lattice,m_position,sigma,sigmaIndex,sigma);
+//        U3 *= U2Temp;
         clov2 += U3;
 
         // Fourth leaf
-        U4 = U3Temp.inv();
-        U4 *= Parallel::Communicator::getNegativeLink(lattice,m_position,sigma,sigmaIndex,rho);
-        U4 *= Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,rho,rhoIndex,sigma,sigmaIndex,sigma);
-        U4 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[rho].inv();
+        U4 = Parallel::Communicator::getNegativeLink(lattice,m_position,rho,rhoIndex,rho).inv();
+//        U4 = U3Temp;
+        U4 *= Parallel::Communicator::getNegativeLink(lattice,m_position,rho,rhoIndex,sigma);
+        U4 *= Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,sigma,sigmaIndex,rho,rhoIndex,rho);
+        U4 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[sigma].inv();
         clov2 -= U4;
 
-        clov1 = (clov1 - clov1.inv()) - I*clov1.trace()/3.0;
-        clov2 = (clov2 - clov2.inv()) - I*clov2.trace()/3.0;
+        // Makes matrices anti hermitian and traceless
+        U1 = clov1.inv();
+        U2 = clov2.inv();
+        clov1 -= U1;
+        clov2 -= U2;
+        tempDiag1 = (clov1[1] + clov1[9] + clov1[17])/3.0;
+        tempDiag2 = (clov2[1] + clov2[9] + clov2[17])/3.0;
+        for (int i = 1; i < 18; i+=8) {
+            clov1[i] -= tempDiag1;
+            clov2[i] -= tempDiag2;
+        }
+
+//        if (Parallel::Communicator::getProcessRank() == 0) printf("\n%d %d",2*(nu - 1),2*nu - 1);
 
         m_clovers[2*(nu - 1)] = clov1;
         m_clovers[2*nu - 1] = clov2;

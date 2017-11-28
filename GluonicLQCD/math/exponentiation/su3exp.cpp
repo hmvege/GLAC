@@ -19,7 +19,7 @@ SU3 SU3Exp::exp(SU3 Q)
      * Takes the exponential of an Hermitian matrix using the Morningstar method.
      */
     f0.zeros();
-    Q.makeHermitian();
+    Q.makeAntiHermitian();
 
     QSquared = Q*Q;
     QCubed = Q*QSquared;

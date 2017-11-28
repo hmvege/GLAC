@@ -71,7 +71,7 @@ void IO::writeFlowObservableToFile(double *observables,
             file << i << " " << a*sqrt(8*flowStep*i) << " " << observables[i] << endl;
         }
         file.close();
-        if (Parameters::getVerbose()) printf("\n    %s written.",fname.c_str());
+//        if (Parameters::getVerbose()) printf("\n    %s written.",fname.c_str());
         std::setprecision(oldPrecision);
     }
 }

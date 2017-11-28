@@ -1,6 +1,7 @@
 #include "observablesampler.h"
 #include "parallelization/parallel.h"
 #include "config/parameters.h"
+#include <cmath>
 
 ObservableSampler::ObservableSampler(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
@@ -113,7 +114,7 @@ void ObservableSampler::printHeader()
                m_headerWidth,m_topologicalCharge->getObservableName().c_str(),
                m_headerWidth,m_energyDensity->getObservableName().c_str());
     } else {
-        printf("%-*s %-*s %-*s",
+        printf("\ni    t       %-*s %-*s %-*s",
                m_headerWidth,m_plaquette->getObservableName().c_str(),
                m_headerWidth,m_topologicalCharge->getObservableName().c_str(),
                m_headerWidth,m_energyDensity->getObservableName().c_str());
@@ -123,15 +124,26 @@ void ObservableSampler::printHeader()
 void ObservableSampler::printObservable(int iObs)
 {
     if (!m_storeFlowObservable) {
-        printf("%-*.4f %-*.4f %-*.4f",
+        printf("%-*.8f %-*.8f %-*.8f",
                m_headerWidth,m_plaquette->getObservable(iObs),
                m_headerWidth,m_topologicalCharge->getObservable(iObs),
                m_headerWidth,m_energyDensity->getObservable(iObs));
     } else {
-        printf("\n    %-*.4f %-*.4f %-*.4f",
-               m_headerWidth,m_plaquette->getObservable(iObs),
-               m_headerWidth,m_topologicalCharge->getObservable(iObs),
-               m_headerWidth,m_energyDensity->getObservable(iObs));
+        double plaqObs = m_plaquette->getObservable(iObs); // TEMP TEMP TEMP!
+        double topcObs = m_topologicalCharge->getObservable(iObs);
+        double energyObs = m_energyDensity->getObservable(iObs);
+        Parallel::Communicator::gatherDoubleResults(&plaqObs,1);
+        Parallel::Communicator::gatherDoubleResults(&topcObs,1);
+        Parallel::Communicator::gatherDoubleResults(&energyObs,1);
+        Parallel::Communicator::setBarrier();
+        if (Parallel::Communicator::getProcessRank() == 0) {
+            printf("\n%-4d %-2.4f  %-*.14f %-*.14f %-*.14f",
+                   iObs,
+                   m_a*sqrt(8*Parameters::getFlowEpsilon()*iObs),
+                   m_headerWidth,plaqObs,
+                   m_headerWidth,topcObs,
+                   m_headerWidth,energyObs);
+        }
     }
 }
 

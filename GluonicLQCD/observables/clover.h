@@ -7,7 +7,7 @@ class Clover : public Correlator
 {
 private:
     SU3 U1,U2,U3,U4,U2Temp,U3Temp;
-    int m_overCounter = 0;
+//    int m_overCounter = 0;
 public:
     Clover(bool storeFlowObservable);
     ~Clover();

@@ -40,7 +40,7 @@ void TopologicalCharge::calculate(Links *lattice, int iObs)
 //                    for (unsigned int i = 0; i < m_leviCivita.size(); i++)
                     for (unsigned int i = 0; i < 3; i++)
                     {
-                        traceRealMultiplication(Clov.m_clovers[2*i],Clov.m_clovers[2*i+1]);
+                        topCharge -= traceRealMultiplication(Clov.m_clovers[2*i],Clov.m_clovers[2*i+1]);
 //                        G1 = Clov.m_clovers[m_leviCivita[i].ci[0]];
 //                        G2 = Clov.m_clovers[m_leviCivita[i].ci[1]];
 ////                        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn; // When off diagonal complex elements are zero
@@ -63,7 +63,8 @@ void TopologicalCharge::calculate(SU3 *clovers, int iObs)
 //        G2 = clovers[m_leviCivita[i].ci[1]];
 //        topCharge += traceSparseImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
 //        topCharge += traceImagMultiplication(G1,G2)*m_leviCivita[i].sgn;
-        topCharge += traceRealMultiplication(clovers[2*i],clovers[2*i+1]);
+        topCharge -= traceRealMultiplication(clovers[2*i],clovers[2*i+1]);
+//        topCharge -= (clovers[2*i]*clovers[2*i+1]).trace().re();
     }
     m_observable->m_observables[iObs] += topCharge*m_multiplicationFactor;
     // Jacks data should give for flow at t=0 3.29640613544198
