@@ -180,7 +180,7 @@ class Slurm:
             self._create_folders()
             self._create_json(job_config)
             if system == "local":
-                sys.exit("Config file %s for local producton created."  % os.path.join(self.CURRENT_PATH,self.inputFolder,self.json_file_name))
+                sys.exit("Config file %s for local producton created."  % os.path.join(self.CURRENT_PATH,"input",self.json_file_name))
 
             # Setting job name before creating content file.
             job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta,NSpatial,NTemporal,threads)
