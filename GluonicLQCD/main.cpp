@@ -11,13 +11,6 @@ using std::chrono::steady_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 
-/*
- * SETUP INSTRUCTIONS: (UPDATE THIS!)
- * Set all parameters
- * Set correlators
- * Set and run system
- */
-
 void runUnitTests();
 
 int main(int numberOfArguments, char* cmdLineArguments[])

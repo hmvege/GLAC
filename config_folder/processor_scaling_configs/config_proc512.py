@@ -9,15 +9,15 @@
     "NTherm"                    : 0,
     "NFlows"                    : 0,
     "NUpdates"                  : 10,
-    "storeCfgs"                 : 0,
-    "storeThermCfgs"            : 0,
-    "verboseRun"                : 1,
-    "hotStart"                  : 0,
+    "storeCfgs"                 : False,
+    "storeThermCfgs"            : False,
+    "verboseRun"                : False,
+    "hotStart"                  : False,
     "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
     "observables"               : ["plaq"], # Optional: topologicalCharge, energyDensity
     "flowObservables"           : ["plaq"], # Optional: topologicalCharge, energyDensity
-    "uTest"                     : 0,
-    "uTestVerbose"              : 0,
+    "uTest"                     : False,
+    "uTestVerbose"              : False,
     "SU3Eps"                    : 0.24,
     "flowEpsilon"               : 0.01,
     "metropolisSeed"            : 0,
