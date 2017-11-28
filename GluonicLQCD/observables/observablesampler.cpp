@@ -140,7 +140,7 @@ void ObservableSampler::printObservable(int iObs)
             printf("\n%-4d %-2.4f  %-*.14f %-*.14f %-*.14f",
                    iObs,
                    m_a*sqrt(8*Parameters::getFlowEpsilon()*iObs),
-                   m_headerWidth,plaqObs,
+                   m_headerWidth,plaqObs/double(Parallel::Communicator::getNumProc()),
                    m_headerWidth,topcObs,
                    m_headerWidth,energyObs);
         }
