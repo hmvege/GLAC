@@ -36,7 +36,9 @@ SOURCES += main.cpp \
     config/parameters.cpp \
     flow/flow.cpp \
     config/configloader.cpp \
-    config/sysprint.cpp
+    config/sysprint.cpp \
+    math/lattice.cpp \
+    observables/mastersampler.cpp
 
 HEADERS += \
     system.h \
@@ -77,7 +79,9 @@ HEADERS += \
     math/flowexpfunctions.h \
     actions/actions.h \
     parallelization/parallel.h \
-    observables/observables.h
+    observables/observables.h \
+    math/lattice.h \
+    observables/mastersampler.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx
