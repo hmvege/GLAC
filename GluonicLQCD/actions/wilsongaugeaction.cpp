@@ -97,13 +97,23 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
 //    m_staple = m_staple.inv()*lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu];
 //    m_staple = m_staple*lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].inv();
 
+
+//    // Derivative test
+//    m_staple.setComplex(complex(1,1),0);
+//    m_staple.setComplex(complex(1,2),2);
+//    m_staple.setComplex(complex(1,3),4);
+//    m_staple.setComplex(complex(2,1),6);
+//    m_staple.setComplex(complex(2,2),8);
+//    m_staple.setComplex(complex(2,3),10);
+//    m_staple.setComplex(complex(3,1),12);
+//    m_staple.setComplex(complex(3,2),14);
+//    m_staple.setComplex(complex(3,3),16);
 //    Parallel::Communicator::setBarrier();
 //    if (Parallel::Communicator::getProcessRank() == 0) {
 //        printf("\n");
-//        m_staple.inv().printMachine();
+//        m_staple.printMachine();
 //    }
 //    Parallel::Communicator::setBarrier();
-//    Parallel::Communicator::MPIExit("EXITS");
 
     // When first flowed topc is 4.51027660073873, I have the correct method
 
@@ -116,7 +126,7 @@ SU3 WilsonGaugeAction::getActionDerivative(Links * lattice, unsigned int i, unsi
     }
     m_X = Omega*0.5;
 
-//    //    Parallel::Communicator::setBarrier();
+//    Parallel::Communicator::setBarrier();
 //    if (Parallel::Communicator::getProcessRank() == 0) {
 //        printf("\n");
 //        m_X.printMachine();

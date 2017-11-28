@@ -315,7 +315,8 @@ void Parallel::Communicator::setBarrier()
 
 void Parallel::Communicator::MPIExit(std::string message)
 {
-    printf("\n%s", message.c_str());
+    if (m_processRank == 0) printf("\n%s", message.c_str());
+    setBarrier();
     MPI_Finalize();
     exit(m_processRank);
 }

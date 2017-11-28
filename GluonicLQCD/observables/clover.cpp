@@ -192,12 +192,7 @@ void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, uns
             clov2[i] -= tempDiag2;
         }
 
-//        if (Parallel::Communicator::getProcessRank() == 0) printf("\n%d %d",2*(nu - 1),2*nu - 1);
-
         m_clovers[2*(nu - 1)] = clov1;
         m_clovers[2*nu - 1] = clov2;
-//        clov1.printMachine();
-//        clov2.printMachine();
     }
-//    Parallel::Communicator::MPIExit("\nExiting at clover.cpp");
 }
