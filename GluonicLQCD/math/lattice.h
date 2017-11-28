@@ -6,6 +6,8 @@ class Lattice
 {
 public:
     Lattice();
+
+
 };
 
 #endif // LATTICE_H

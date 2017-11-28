@@ -37,7 +37,6 @@ SOURCES += main.cpp \
     flow/flow.cpp \
     config/configloader.cpp \
     config/sysprint.cpp \
-    math/lattice.cpp \
     observables/mastersampler.cpp
 
 HEADERS += \
