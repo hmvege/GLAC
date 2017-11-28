@@ -517,7 +517,7 @@ def main(args):
         if args.NConfigs == 0:
             config_default["NCf"]                   = 1
         else:
-            config_default["NCf"]                       = args.NConfigs
+            config_default["NCf"]                   = args.NConfigs
         config_default["NCor"]                      = args.NCor
         config_default["NTherm"]                    = args.NTherm
         config_default["NFlows"]                    = args.NFlows

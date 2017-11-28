@@ -65,24 +65,10 @@ void Plaquette::runStatistics()
     /*
      * Statistics. Should perhaps make into its own class?
      */
-//    int NObs = m_observable->m_NObs;
     // Gathers results from processors
     m_observable->gatherResults();
+    // Runs statistics, normalization defined in initialization
     m_observable->runStatistics();
-//    Parallel::Communicator::gatherDoubleResults(m_observable->m_observables,NObs);
-//    for (int iObs = 0; iObs < NObs; iObs++) {
-//        m_observable->m_observables[iObs] /= double(Parallel::Communicator::getNumProc()); // For plaquette only
-//    }
-//    // Temp holders
-//    double averagedObservableSquared = 0;
-//    for (int iObs = 0; iObs < NObs; iObs++) {
-//        m_observable->m_averagedObservable += m_observable->m_observables[iObs];
-//        averagedObservableSquared += m_observable->m_observables[iObs]*m_observable->m_observables[iObs];
-//    }
-//    averagedObservableSquared /= double(NObs);
-//    m_observable->m_averagedObservable /= double(NObs);
-//    m_observable->m_varianceObservable = (averagedObservableSquared - m_observable->m_averagedObservable*m_observable->m_averagedObservable)/double(NObs);
-//    m_observable->m_stdObservable = sqrt(m_observable->m_varianceObservable);
 }
 
 void Plaquette::printObservable(int iObs)

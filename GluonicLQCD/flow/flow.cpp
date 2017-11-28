@@ -120,21 +120,3 @@ void Flow::setSU3ExpFunc()
         printf("SU3 exp. func. %s not recognized",Parameters::getExpFuncName().c_str());
     }
 }
-
-inline void Flow::updateLattice(Links *lattice)
-{
-    /*
-     * Updates the lattice new values from m_tempLattice.
-     */
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_tempLattice[Parallel::Index::getIndex(x,y,z,t)].U[mu];
-                    }
-                }
-            }
-        }
-    }
-}

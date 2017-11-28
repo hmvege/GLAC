@@ -137,7 +137,7 @@ void ObservableSampler::printObservable(int iObs)
         Parallel::Communicator::gatherDoubleResults(&energyObs,1);
         Parallel::Communicator::setBarrier();
         if (Parallel::Communicator::getProcessRank() == 0) {
-            printf("\n%-4d %-2.4f  %-*.14f %-*.14f %-*.14f",
+            printf("\n%-4d %-2.4f  %-*.15f %-*.15f %-*.15f",
                    iObs,
                    m_a*sqrt(8*Parameters::getFlowEpsilon()*iObs),
                    m_headerWidth,plaqObs/double(Parallel::Communicator::getNumProc()),
