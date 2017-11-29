@@ -8,7 +8,7 @@
 bool Parallel::Communicator::muDir = 0;
 bool Parallel::Communicator::nuDir = 0;
 Neighbours Parallel::Communicator::m_neighbourLists;
-SU3 Parallel::Communicator::exchangeU(0);
+SU3 Parallel::Communicator::exchangeU; // Carefull! This might give a bug!
 unsigned int Parallel::Communicator::m_N[4];
 // Variables used externally
 int Parallel::Communicator::m_processRank = 0;

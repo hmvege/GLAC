@@ -4,6 +4,8 @@
 #include "config/parameters.h"
 #include "config/configloader.h"
 
+#include "observables/mastersampler.h"
+
 #include "tests/unittests.h"
 #include "tests/testsuite.h"
 
@@ -25,9 +27,11 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     programStart = steady_clock::now();
 
     // Main program part
-    System pureGauge;
-    pureGauge.latticeSetup();
-    pureGauge.run();
+    MasterSampler C;
+    C.calculate();
+//    System pureGauge;
+//    pureGauge.latticeSetup();
+//    pureGauge.run();
 
     // Finalizing and printing time taken
     duration<double> programTime = duration_cast<duration<double>>(steady_clock::now() - programStart);

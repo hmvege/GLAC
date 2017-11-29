@@ -115,7 +115,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Links *latt
                             // Checking for corruption
                             if (std::isnan(lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].mat[i]))
                             {
-                                lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].printMachine();
+                                lattice[Parallel::Index::getIndex(x,y,z,t)].U[link].print();
                                 printf("\nConfiguration is corrupt.\n");
                                 exit(1);
                             }

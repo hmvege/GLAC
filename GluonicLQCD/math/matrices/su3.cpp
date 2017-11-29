@@ -6,40 +6,30 @@ using std::cout;
 using std::endl;
 
 
-SU3::SU3()
-{
-    /*
-     * Default constructor.
-     */
-}
+//SU3::SU3()
+//{
+//    /*
+//     * Default constructor.
+//     */
+//}
 
-SU3::SU3(double fill)
-{
-    /*
-     * SU3 initialiser with fill as variable.
-     */
-    for (int i = 0; i < 18; i++) {
-        mat[i] = fill;
-    }
-}
+//SU3::~SU3()
+//{
+//    /*
+//     * Destructor.
+//     */
+//}
 
-SU3::~SU3()
-{
-    /*
-     * Destructor.
-     */
-}
-
-SU3 &SU3::operator=(const SU3 &B)
-{
-    /*
-     * Copy assignement operator.
-     */
-    for (int i = 0; i < 18; i++) {
-        mat[i] = B.mat[i];
-    }
-    return *this;
-}
+//SU3 &SU3::operator=(const SU3 &B)
+//{
+//    /*
+//     * Copy assignement operator.
+//     */
+//    for (int i = 0; i < 18; i++) {
+//        mat[i] = B.mat[i];
+//    }
+//    return *this;
+//}
 
 SU3 &SU3::operator+=(SU3 B)
 {
@@ -113,11 +103,22 @@ SU3 &SU3::operator*=(double a)
     return *this;
 }
 
-SU3 &SU3::operator-=(double a)
+SU3 &SU3::operator+=(complex z)
 {
-    for (int i = 0; i < 18; i++)
+    for (int i = 0; i < 18; i+=2)
     {
-        mat[i] -= a;
+        mat[i] += z.z[0];
+        mat[i+1] += z.z[1];
+    }
+    return *this;
+}
+
+SU3 &SU3::operator-=(complex z)
+{
+    for (int i = 0; i < 18; i+=2)
+    {
+        mat[i] -= z.z[0];
+        mat[i+1] -= z.z[1];
     }
     return *this;
 }
@@ -244,27 +245,6 @@ void SU3::setComplex(complex w, int i)
     mat[i+1] = w.z[1];
 }
 
-void SU3::print()
-{
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            printf("%12.8f",mat[6*i + 2*j]);
-            if (mat[6*i + 2*j + 1] < 0)
-            {
-                printf(" - ");
-            }
-            else
-            {
-                printf(" + ");
-            }
-            printf("%12.8fi",fabs(mat[6*i + 2*j + 1]));
-        }
-        printf("\n");
-    }
-}
-
 complex SU3::trace()
 {
     return complex(mat[0] + mat[8] + mat[16], mat[1] + mat[9] + mat[17]);
@@ -287,13 +267,13 @@ SU3 SU3::makeHermitian()
 SU3 SU3::makeAntiHermitian()
 {
     /*
-     * IS THIS RIGHT?
+     * Multiplies by (i). Ensure this is correct in unit tests!
      */
     double temp;
     for (int i = 0; i < 9; i++) {
         temp = mat[2*i];
-        mat[2*i] = mat[2*i+1];
-        mat[2*i+1] = -temp;
+        mat[2*i] = -mat[2*i+1];
+        mat[2*i+1] = temp;
     }
     return *this;
 }
@@ -316,9 +296,8 @@ SU3 SU3::getRe()
     return *this;
 }
 
-void SU3::printMachine()
+void SU3::print()
 {
-    // CHANGE TO PRINTF!
     for (int i = 0; i < 3; i++) // Machine friendly way
     {
         if (i == 0) {
