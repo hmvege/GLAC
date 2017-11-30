@@ -1,5 +1,6 @@
 #include "mastersampler.h"
 
+#include "parallelization/communicator.h"
 
 MasterSampler::MasterSampler()
 {
@@ -10,29 +11,31 @@ MasterSampler::MasterSampler()
     Lattice <SU3> A, B;
     A.allocate(dim);
     B.allocate(dim);
-    for (int i = 0; i < latticeSize; i++) {
-        A[i].identity();
-        B[i].identity();
-    }
-    printf("\nA.N=%d B.N=%d",A.m_latticeSize,B.m_latticeSize);
+    A.identity();
+    B.identity();
+    printf("\nA.N=%d B.N=%d\n",A.m_latticeSize,B.m_latticeSize);
     B *= 1000;
     B[latticeSize-1][1] = 10;
     B[latticeSize-1][17] = 10;
+    Parallel::Communicator::setBarrier();
+    if (Parallel::Communicator::getProcessRank() == 0) A[latticeSize-1].print();
     A += B;
-    A += B;
-//    for (int i = 0; i < N; i++) {
-//        A[i].print();
-//    }
+    Parallel::Communicator::setBarrier();
+    if (Parallel::Communicator::getProcessRank() == 0) A[latticeSize-1].print();
+    A -= B;
+    Parallel::Communicator::setBarrier();
+    if (Parallel::Communicator::getProcessRank() == 0) A[latticeSize-1].print();
     A = A + B;
-//    A[0].print();
-//    A[N-1].print();
+
     for (int i = 0; i < latticeSize; i++) {
         A[i] *= 2;
     }
-    A.sum();
-    A[0].print();
-    B = A;
-    B[0].print();
+    SU3 a = sum(A);
+//    a.print();
+//    A[0].print();
+    int mu = 1;
+    A = shift(B,FORWARDS,mu);
+//    B[0].print();
 
 }
 

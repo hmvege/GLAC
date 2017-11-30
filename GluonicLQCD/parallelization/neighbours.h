@@ -97,6 +97,8 @@ public:
 
     void initialize(int processRank, int numproc, int * processorsPerDim);
 
+    int &operator [](int iProcDir) { return m_neighbourLists[m_processRank][iProcDir]; } // Returns neighbour list for iP processor.
+
     // Getters
     NeighbourList* getNeighbours(int Np);
     int getListLength() { return m_numproc; }

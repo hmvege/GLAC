@@ -22,14 +22,14 @@ namespace Parallel {
         static unsigned int m_N[4];
 
         // Private fetchSU3 functions
-        static void MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
-        static void MPIfetchSU3Negative(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
+        inline static void MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
+        inline static void MPIfetchSU3Negative(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
     public:
         Communicator();
         ~Communicator();
 
         // Public variables
-        static Neighbours m_neighbourLists;
+        static Neighbours m_NLists;
 
         // Initializers
         static void init(int *numberOfArguments, char ***cmdLineArguments);
@@ -49,7 +49,7 @@ namespace Parallel {
         static void setN(unsigned int *N);
 
         // MPI
-        static void MPIExit(std::string message);
+        static void MPIExit(std::string message); // INLINE HERE!!!
         static void setBarrier();
         static void gatherDoubleResults(double * data, int N);
 

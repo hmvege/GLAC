@@ -10,6 +10,8 @@ struct NeighbourList
 
     int rank;
     void print();
+
+    int &operator [](int i) { return list[i]; }
 };
 
 #endif // NEIGHBOURLIST_H
