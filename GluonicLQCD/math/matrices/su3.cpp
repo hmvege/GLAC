@@ -5,31 +5,9 @@
 using std::cout;
 using std::endl;
 
-
-//SU3::SU3()
-//{
-//    /*
-//     * Default constructor.
-//     */
-//}
-
-//SU3::~SU3()
-//{
-//    /*
-//     * Destructor.
-//     */
-//}
-
-//SU3 &SU3::operator=(const SU3 &B)
-//{
-//    /*
-//     * Copy assignement operator.
-//     */
-//    for (int i = 0; i < 18; i++) {
-//        mat[i] = B.mat[i];
-//    }
-//    return *this;
-//}
+///////////////////////////////
+//// Overloading operators ////
+///////////////////////////////
 
 SU3 &SU3::operator+=(SU3 B)
 {
@@ -134,6 +112,18 @@ SU3 &SU3::operator*=(complex z)
     }
     return *this;
 }
+
+SU3 &SU3::operator =(const double& other)
+{
+    for (int i = 0; i < 18; i++) {
+        mat[i] = other;
+    }
+    return *this;
+}
+
+///////////////////////////////
+//// SU3 specific functions ///
+///////////////////////////////
 
 SU3 SU3::inv()
 {

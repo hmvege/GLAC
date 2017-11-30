@@ -15,26 +15,9 @@ public:
     // Destructor
     ~SU3() {}
 
-//    // Copy constructor
-//    SU3 (const SU3& other)
-//    {
-////        for (int i = 0; i < 18; i++) mat[i] = other.mat[i];
-//        std::memcpy(&mat,&other.mat,144); // sizeof(double)*18 = 144
-//    }
-
-//    // Move constructor
-//    SU3 (SU3 &&other) noexcept : mat{other.mat}
-//    {
-////        for (int i = 0; i < 18; i++) mat[i] = other.mat[i];
-//    }
-
     // Copy assignement operator
     SU3 &operator =(const SU3& other)
     {
-//        SU3 tmp(other);
-//        *this = std::move(tmp);
-//        return *this;
-
         for (int i = 0; i < 18; i++)
         {
             mat[i] = other.mat[i];
@@ -42,17 +25,11 @@ public:
         return *this;
     }
 
-//    // Move assignement operator
-//    SU3&operator= (SU3&& other) noexcept {
-//        for (int i = 0; i < 18; i++)
-//        {
-//            mat[i] = other.mat[i];
-//        }
-//        return *this;
-//    }
-
     // Element retrieval overloading
     double &operator[](int i) { return mat[i]; }
+
+    // Overloading the setting operator
+    SU3 &operator =(const double& other);
 
     // SU3 matrix operations overloading
     SU3 &operator+=(SU3 B);

@@ -10,45 +10,36 @@ class Lattice
 private:
     std::vector<T> m_sites;
 public:
-    int m_N, m_Nx, m_Ny, m_Nz, m_Nt;
+    std::vector<int> m_dim; // Lattice dimensions
+    int m_latticeSize;
     // Default contructor
     Lattice() {}
+    Lattice(std::vector<int>latticeDimensions) {
+        allocate(latticeDimensions);
+    }
 
     // Destructor
     ~Lattice() {}
 
     // Copy constructor
-    Lattice(const Lattice<T>& other)
+    Lattice(const Lattice<T>& other) :
+        m_dim(other.m_dim),
+        m_latticeSize(other.m_latticeSize)
     {
-//        printf("\nPRE: %d\n",m_N);
-//        std::memcpy(&m_N,&other.m_N,sizeof(int));
-        m_N = other.m_N;
-        m_Nx = other.m_Nx;
-        m_Ny = other.m_Ny;
-        m_Nz = other.m_Nz;
-        m_Nt = other.m_Nt;
-//        allocate(m_N,m_Nx,m_Ny,m_Nz,m_Nt);
-//        std::memcpy(&m_sites,&other.m_sites,sizeof(other.m_sites));
-//        printf("\n%lu",sizeof(T));
-        std::memcpy(&m_sites,&other.m_sites,sizeof(T)*m_N); // This should be 144*2, sizeof(T)*m_N
-        printf("\nCopy constructor N = %d bytes = %lu\n",m_N,m_N*sizeof(T));
+        m_sites.resize(m_latticeSize);
+        std::memcpy(&m_sites[0],&other.m_sites[0],sizeof(T)*m_latticeSize);
     }
 
     // Move constructor
     Lattice(Lattice<T> && other) noexcept :
         m_sites(other.m_sites),
-        m_N(other.m_N),
-        m_Nx(other.m_Nx),
-        m_Ny(other.m_Ny),
-        m_Nz(other.m_Nz),
-        m_Nt(other.m_Nt)
+        m_dim(other.m_dim),
+        m_latticeSize(other.m_latticeSize)
     {
-        printf("\nMove constructor\n");
     }
 
     // Copy assignement operator
-    Lattice &operator =(const Lattice<T>& other) {
-        printf("\nCopy assignement operator\n");
+    Lattice &operator =(const Lattice& other) {
         Lattice tmp(other);
         *this = std::move(tmp);
         return *this;
@@ -56,19 +47,13 @@ public:
 
     // Move assignement operator
     Lattice &operator= (Lattice<T>&& other) noexcept {
-        m_N = other.m_N;
-        m_Nx = other.m_Nx;
-        m_Ny = other.m_Ny;
-        m_Nz = other.m_Nz;
-        m_Nt = other.m_Nt;
-//        m_sites.resize(m_N);
+        m_latticeSize = other.m_latticeSize;
+        m_dim  = other.m_dim;
         m_sites = other.m_sites;
-//        other.m_sites.clear();
-        printf("\nMove assignement operator\n");
         return *this;
     }
 
-    void allocate(int N, int Nx, int Ny, int Nz, int Nt);
+    void allocate(std::vector<int> dim);
 
     // Overloading lattice position getter
     T &operator[](int i) { return m_sites[i]; }
@@ -84,6 +69,15 @@ public:
     Lattice<T> &operator-=(complex B);
     Lattice<T> &operator*=(complex B);
     Lattice<T> &operator/=(complex B);
+
+    // Lattice based operations SHOULD NOT BE CLASS MEMBERS, BUT HEADER FUNCTIONS!!!
+    Lattice<double> realTrace();
+    Lattice<double> imagTrace();
+    Lattice<complex> trace();
+    Lattice<T> sum();
+    // Lattice value setters
+    void identity();
+    void zeros();
 };
 
 //////////////////////////////////////////
@@ -121,6 +115,11 @@ inline Lattice<T> operator/(Lattice<T> A, double b) {
     return A;
 }
 
+//template <>
+//inline Lattice<double> operator+(Lattice<double> A, b) {
+//    A += b;
+//}
+
 // External complex operator overloading
 template <class T>
 inline Lattice<T> operator+(Lattice<T> A, complex b) {
@@ -153,7 +152,7 @@ inline Lattice<T> operator/(Lattice<T> A, complex b) {
 template <class T>
 inline Lattice<T> &Lattice<T>::operator+=(Lattice<T> B) {
     printf("\nAdding!");
-    for (int iSite = 0; iSite < m_N; iSite++) {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] += B[iSite];
     }
     return *this;
@@ -161,7 +160,7 @@ inline Lattice<T> &Lattice<T>::operator+=(Lattice<T> B) {
 
 template <class T>
 inline Lattice<T> &Lattice<T>::operator-=(Lattice<T> B) {
-    for (int iSite = 0; iSite < m_N; iSite++) {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] -= B[iSite];
     }
     return *this;
@@ -169,7 +168,7 @@ inline Lattice<T> &Lattice<T>::operator-=(Lattice<T> B) {
 
 template <class T>
 inline Lattice<T> &Lattice<T>::operator*=(Lattice<T> B) {
-    for (int iSite = 0; iSite < m_N; iSite++) {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] *= B[iSite];
     }
     return *this;
@@ -178,7 +177,7 @@ inline Lattice<T> &Lattice<T>::operator*=(Lattice<T> B) {
 // Double operator overloading
 template <class T>
 inline Lattice<T> &Lattice<T>::operator*=(double b) {
-    for (int iSite = 0; iSite < m_N; iSite++) {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] *= b;
     }
     return *this;
@@ -186,7 +185,7 @@ inline Lattice<T> &Lattice<T>::operator*=(double b) {
 
 template <class T>
 inline Lattice<T> &Lattice<T>::operator/=(double b) {
-    for (int iSite = 0; iSite < m_N; iSite++) {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] /= b;
     }
     return *this;
@@ -195,7 +194,7 @@ inline Lattice<T> &Lattice<T>::operator/=(double b) {
 // Complex operator overloading
 template <class T>
 inline Lattice<T> &Lattice<T>::operator+=(complex b) {
-    for (int iSite = 0; iSite < m_N; iSite++) {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] += b;
     }
     return *this;
@@ -203,7 +202,7 @@ inline Lattice<T> &Lattice<T>::operator+=(complex b) {
 
 template <class T>
 inline Lattice<T> &Lattice<T>::operator-=(complex b) {
-    for (int iSite = 0; iSite < m_N; iSite++) {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] -= b;
     }
     return *this;
@@ -211,7 +210,7 @@ inline Lattice<T> &Lattice<T>::operator-=(complex b) {
 
 template <class T>
 inline Lattice<T> &Lattice<T>::operator*=(complex b) {
-    for (int iSite = 0; iSite < m_N; iSite++) {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] *= b;
     }
     return *this;
@@ -219,22 +218,80 @@ inline Lattice<T> &Lattice<T>::operator*=(complex b) {
 
 template <class T>
 inline Lattice<T> &Lattice<T>::operator/=(complex b) {
-    for (int iSite = 0; iSite < m_N; iSite++) {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] /= b;
     }
     return *this;
 }
 
+//////////////////////////////////////////
+////////// Lattice operations ////////////
+//////////////////////////////////////////
+template <class T>
+inline Lattice<double> Lattice<T>::realTrace()
+{
+    Lattice<double> tempTraceSum(m_dim);
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
+        tempTraceSum[iSite] = (m_sites[iSite][0] + m_sites[iSite][8] + m_sites[iSite][16]);
+    }
+    return tempTraceSum;
+}
+
+template <class T>
+inline Lattice<double> Lattice<T>::imagTrace()
+{
+    Lattice<double> tempTraceSum(m_dim);
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
+        tempTraceSum[iSite] = (m_sites[iSite][1] + m_sites[iSite][9] + m_sites[iSite][17]);
+    }
+    return tempTraceSum;
+}
+
+template <class T>
+inline Lattice<complex> Lattice<T>::trace()
+{
+    Lattice<complex> tempTraceSum(m_dim);
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
+        tempTraceSum[iSite] = complex(m_sites[iSite][0] + m_sites[iSite][8] + m_sites[iSite][16],
+                                      m_sites[iSite][1] + m_sites[iSite][9] + m_sites[iSite][17]);
+    }
+    return tempTraceSum;
+}
+
+template <class T>
+inline Lattice<T> Lattice<T>::sum()
+{
+    T latticeSum = 0;
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
+        latticeSum += m_sites[iSite];
+    }
+    return latticeSum;
+}
+
+//////////////////////////////////////////
+///////// Lattice value setters //////////
+//////////////////////////////////////////
+
+template <class T>
+inline void Lattice<T>::identity() {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
+        m_sites[iSite].identity();
+    }
+}
+
+template <class T>
+inline void Lattice<T>::zeros() {
+    for (int iSite = 0; iSite < m_latticeSize; iSite++) {
+        m_sites[iSite].zeros();
+    }
+}
 
 // Allocates memory to the lattice. Has to be called every time(unless we are copying)
 template <class T>
-inline void Lattice<T>::allocate(int N, int Nx, int Ny, int Nz, int Nt) {
-    m_N = N;
-    m_Nx = Nx;
-    m_Ny = Ny;
-    m_Nz = Nz;
-    m_Nt = Nt;
-    m_sites.resize(m_N);
+inline void Lattice<T>::allocate(std::vector<int> dim) {
+    m_latticeSize = dim[0] * dim[1] * dim[2] * dim[3];
+    m_dim = dim;
+    m_sites.resize(m_latticeSize);
 }
 
 #endif // LATTICE_H
