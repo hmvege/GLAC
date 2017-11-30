@@ -16,12 +16,15 @@ EnergyDensity::EnergyDensity(bool storeFlowObservable, double a, int latticeSize
 {
     setLatticeSpacing(a);
     setLatticeSize(latticeSize);
-    m_multiplicationFactor = (m_a*m_a*m_a*m_a)/(3*double(m_latticeSize));
+//    m_multiplicationFactor = (m_a*m_a*m_a*m_a)/(3*double(m_latticeSize));
+    m_multiplicationFactor = 1.0/double(m_latticeSize);
 }
 
 void EnergyDensity::setLatticeSpacing(double a) // NEED TO DOUBLE CHECK THIS WITH ANDREA!
 {
-    m_multiplicationFactor = (a*a*a*a)/(3*double(m_latticeSize));
+//    m_multiplicationFactor = (a*a*a*a)/(3*double(m_latticeSize));
+    m_a = a;
+    m_multiplicationFactor = 1.0/double(m_latticeSize);
 }
 
 void EnergyDensity::calculate(SU3 *clovers, int iObs)
@@ -29,9 +32,10 @@ void EnergyDensity::calculate(SU3 *clovers, int iObs)
     m_actionDensity = 0;
     for (unsigned int i = 0; i < 3; i++)
     {
-        m_actionDensity += traceSparseImagMultiplication(clovers[2*i],clovers[2*i+1]); // Might check this one with Andrea
+        m_actionDensity += traceRealMultiplication(clovers[2*i],clovers[2*i]); // Might check this one with Andrea
+        m_actionDensity += traceRealMultiplication(clovers[2*i+1],clovers[2*i+1]); // Might check this one with Andrea
     }
-    m_observable->m_observables[iObs] += m_actionDensity;
+    m_observable->m_observables[iObs] += m_actionDensity * m_multiplicationFactor;
 //    return m_actionDensity;//*m_multiplicationFactor; // Correct or not?
 }
 
