@@ -1,14 +1,14 @@
 #include "mastersampler.h"
 
 #include "parallelization/communicator.h"
-
+#include "config/parameters.h"
 #include "io/fieldio.h"
 
 //using namespace LatticeOperations;
 
 MasterSampler::MasterSampler()
 {
-    m_multiplicationFactor = 1;
+    m_multiplicationFactor = 18.0*double(Parameters::getLatticeSize());
 //    int Nx = 2, Ny = 1, Nz = 1, Nt = 1;
 //    std::vector<int> dim = {Nx,Ny,Nz,Nt};
 //    int latticeSize = Nx*Ny*Nz*Nt;
@@ -55,11 +55,51 @@ MasterSampler::MasterSampler()
 
 void MasterSampler::calculate()
 {
+    // Initializes lattice
     Lattice <SU3> lattice[4];
-    IO::FieldIO::loadLatticeFieldConfiguration("/Users/hansmathiasmamenvege/Programming/FYSSP100/GluonAction/output/INSERTNAMEHERE.bin",lattice);
-    int Nx = 2, Ny = 1, Nz = 1, Nt = 1;
-    std::vector<int> dim = {Nx,Ny,Nz,Nt};
+    unsigned int N[4] = {8, 8, 8, 16};
+    Parallel::Communicator::initializeSubLattice();
+    IO::FieldIO::init();
+    Parameters::getN(N);
+    std::vector<int> dim = {int(N[0]),int(N[1]),int(N[2]),int(N[3])};
+    printf("\n%d %d %d %d \n",int(N[0]),int(N[1]),int(N[2]),int(N[3]));
+    for (int mu = 0; mu < 4; mu++) {
+        lattice[mu].allocate(dim);
+        lattice[mu].identity();
+    }
+
+    // Loads configuration into lattice
+    std::string fname = "LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin";
+    IO::FieldIO::loadLatticeFieldConfiguration(fname,lattice);
+//    Parallel::Communicator::setBarrier();
+//    printf("\nLOADED LATTICE!");
+    printf("\n");
+    // Initializes samples for the
     Lattice <SU3> PTemp(dim), P(dim);
+    P.zeros();
+
+
+    //TEST
+    PTemp.identity();
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        for (int i = 0; i < P.m_latticeSize; i++) {
+            PTemp[i] = 1;
+        }
+    }
+    Parallel::Communicator::setBarrier();
+//    P[0].print();
+    P = shift(PTemp,BACKWARDS,0); // TEST ALL 8 COMBINATIONS!
+//    P = shift(PTemp,BACKWARDS,1); // TEST ALL 8 COMBINATIONS!
+//    P = shift(PTemp,BACKWARDS,2); // TEST ALL 8 COMBINATIONS!
+//    P = shift(PTemp,BACKWARDS,3); // TEST ALL 8 COMBINATIONS!
+//    P = shift(PTemp,FORWARDS,0); // TEST ALL 8 COMBINATIONS!
+//    P = shift(PTemp,FORWARDS,1); // TEST ALL 8 COMBINATIONS!
+//    P = shift(PTemp,FORWARDS,2); // TEST ALL 8 COMBINATIONS!
+//    P = shift(PTemp,FORWARDS,3); // TEST ALL 8 COMBINATIONS!
+    P[Parallel::Index::getIndex(5,0,5,5)].print(); CHECK THAT PROC 1 RECEIVES FROM 0 AND VICA VERSA BY SETTING UP IF TEST FOR PROC AND BARRIERS!
+    Parallel::Communicator::setBarrier();
+    exit(1);
+
     for (int mu = 0; mu < 4; mu++) {
         for (int nu = mu+1; nu < 4; nu++) {
             PTemp = lattice[mu];

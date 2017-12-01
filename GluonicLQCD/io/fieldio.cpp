@@ -33,7 +33,8 @@ void IO::FieldIO::writeFieldToFile(Links * lattice, int configNumber)
      *  configNumber   : (int) configuration number
      */
     MPI_File file;
-    std::string filename = Parameters::getFilePath() + Parameters::getOutputFolder() + "field_configurations/" + Parameters::getBatchName() +
+    std::string filename = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/"
+                                            + Parameters::getBatchName()
                                             + "_beta" + std::to_string(Parameters::getBeta())
                                             + "_spatial" + std::to_string(Parameters::getNSpatial())
                                             + "_temporal" + std::to_string(Parameters::getNTemporal())
@@ -101,6 +102,10 @@ void IO::FieldIO::loadLatticeFieldConfiguration(std::string filename, Lattice<SU
     MPI_File_open(MPI_COMM_SELF, (Parameters::getFilePath() + Parameters::getInputFolder() + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
+    //    printf("\nFILENAME: %s\n", (Parameters::getFilePath() + Parameters::getInputFolder() + filename).c_str());
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    exit(1);
+
     for (unsigned int mu = 0; mu < 4; mu++) {
         for (unsigned int t = 0; t < m_N[3]; t++) {
             nt = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(3) * m_N[3] + t);
@@ -117,6 +122,7 @@ void IO::FieldIO::loadLatticeFieldConfiguration(std::string filename, Lattice<SU
         }
     }
     MPI_File_close(&file);
+
     if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration %s loaded", (Parameters::getFilePath() + Parameters::getInputFolder() + filename).c_str());
 }
 
