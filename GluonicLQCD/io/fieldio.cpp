@@ -40,7 +40,6 @@ void IO::FieldIO::writeFieldToFile(Links * lattice, int configNumber)
                                             + "_temporal" + std::to_string(Parameters::getNTemporal())
                                             + "_threads" + std::to_string(Parallel::Communicator::getNumProc())
                                             + "_config" + std::to_string(configNumber) + ".bin";
-    printf("\n%s\n",filename.c_str());
 
     MPI_File_open(MPI_COMM_SELF, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
