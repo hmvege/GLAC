@@ -3,6 +3,7 @@
 
 #include <string>
 #include "math/links.h"
+#include "math/lattice.h"
 
 namespace IO {
     class FieldIO
@@ -21,6 +22,8 @@ namespace IO {
         static void writeFieldToFile(Links * lattice, int configNumber);
         static void loadFieldConfiguration(std::string filename, Links * lattice);
         static void loadChromaFieldConfiguration(std::string filename, Links *lattice);
+
+        static void loadLatticeFieldConfiguration(std::string filename, Lattice<SU3> *lattice);
     };
 }
 
