@@ -56,7 +56,7 @@ MasterSampler::MasterSampler()
 void MasterSampler::calculate()
 {
     Lattice <SU3> lattice[4];
-    IO::FieldIO::loadLatticeFieldConfiguration("",lattice);
+    IO::FieldIO::loadLatticeFieldConfiguration("/Users/hansmathiasmamenvege/Programming/FYSSP100/GluonAction/output/INSERTNAMEHERE.bin",lattice);
     int Nx = 2, Ny = 1, Nz = 1, Nt = 1;
     std::vector<int> dim = {Nx,Ny,Nz,Nt};
     Lattice <SU3> PTemp(dim), P(dim);
@@ -70,5 +70,6 @@ void MasterSampler::calculate()
         }
     }
     double observable = sum(realTrace(P))/m_multiplicationFactor;
+    MPI_Allreduce(&observable,&observable,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
     printf("\nPlaquette = %20.16f\n",observable);
 }
