@@ -73,7 +73,9 @@ void SysPrint::printSystemInfo()
             cout << "Store field configurations:            " << getTrueOrFalseString(Parameters::m_storeConfigurations) << endl;
             cout << "Store thermalization observables:      " << getTrueOrFalseString(Parameters::m_storeThermalizationObservables) << endl;
         }
-        cout << "Exponentiation function:               " << Parameters::m_expFuncName << endl;
+        if (Parameters::m_NFlows != 0) {
+            cout << "Exponentiation function:               " << Parameters::m_expFuncName << endl;
+        }
         if (!Parameters::getLoadFieldConfigurations()) {
             cout << "Observables:                           " << getListString(Parameters::m_observablesList) << endl;
         }
