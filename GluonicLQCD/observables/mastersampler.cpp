@@ -63,6 +63,7 @@ void MasterSampler::calculate()
     Parallel::Index::setN(N);
     Parallel::Communicator::setN(N);
     Parallel::Communicator::initializeSubLattice();
+    m_multiplicationFactor = 18.0*double(Parameters::getSubLatticeSize());
     IO::FieldIO::init();
 //    Parameters::getN(N);
     std::vector<int> dim = {int(N[0]),int(N[1]),int(N[2]),int(N[3])};
@@ -81,9 +82,6 @@ void MasterSampler::calculate()
     // Initializes samples for the
     Lattice <SU3> PTemp(dim), P(dim);
     P.zeros();
-
-    //TEST
-    PTemp.identity();
 
     for (int mu = 0; mu < 4; mu++) {
         for (int nu = mu+1; nu < 4; nu++) {
