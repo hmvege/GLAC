@@ -57,10 +57,14 @@ void MasterSampler::calculate()
 {
     // Initializes lattice
     Lattice <SU3> lattice[4];
-    unsigned int N[4] = {8, 8, 8, 16};
+    unsigned int N[4] = {8, 4, 8, 16};
+    Parameters::setSubLatticePreset(true);
+    Parameters::setN(N);
+    Parallel::Index::setN(N);
+    Parallel::Communicator::setN(N);
     Parallel::Communicator::initializeSubLattice();
     IO::FieldIO::init();
-    Parameters::getN(N);
+//    Parameters::getN(N);
     std::vector<int> dim = {int(N[0]),int(N[1]),int(N[2]),int(N[3])};
     printf("\n%d %d %d %d \n",int(N[0]),int(N[1]),int(N[2]),int(N[3]));
     for (int mu = 0; mu < 4; mu++) {
@@ -86,6 +90,11 @@ void MasterSampler::calculate()
             PTemp[i] = 2;
         }
     }
+    if (Parallel::Communicator::getProcessRank() == 1) {
+        for (int i = 0; i < P.m_latticeSize; i++) {
+            PTemp[i] = 0.11111111;
+        }
+    }
     Parallel::Communicator::setBarrier();
 //    P[0].print();
     P = shift(PTemp,BACKWARDS,0); // TEST ALL 8 COMBINATIONS!
@@ -96,14 +105,15 @@ void MasterSampler::calculate()
 //    P = shift(PTemp,FORWARDS,1); // TEST ALL 8 COMBINATIONS!
 //    P = shift(PTemp,FORWARDS,2); // TEST ALL 8 COMBINATIONS!
 //    P = shift(PTemp,FORWARDS,3); // TEST ALL 8 COMBINATIONS!
-    if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\n Rank = 0");
-        P[Parallel::Index::getIndex(5,0,5,5)].print(); //CHECK THAT PROC 1 RECEIVES FROM 0 AND VICA VERSA BY SETTING UP IF TEST FOR PROC AND BARRIERS!
-    }
     Parallel::Communicator::setBarrier();
     if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\n Rank = 1");
-        P[Parallel::Index::getIndex(5,0,5,5)].print();
+        printf("\n Rank = %d\n",Parallel::Communicator::getProcessRank());
+        P[Parallel::Index::getIndex(2,0,2,2)].print(); //CHECK THAT PROC 1 RECEIVES FROM 0 AND VICA VERSA BY SETTING UP IF TEST FOR PROC AND BARRIERS!
+    }
+    Parallel::Communicator::setBarrier();
+    if (Parallel::Communicator::getProcessRank() == 1) {
+        printf("\n Rank = %d\n",Parallel::Communicator::getProcessRank());
+        P[Parallel::Index::getIndex(2,0,2,2)].print();
     }
     Parallel::Communicator::setBarrier();
     exit(1);

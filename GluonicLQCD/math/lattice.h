@@ -387,8 +387,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 }
             }
             // Ensures all results have been sent and received
-            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
             for (int ix = 0; ix < L.m_dim[0]; ix++) {
                 for (int iz = 0; iz < L.m_dim[2]; iz++) {
                     for (int it = 0; it < L.m_dim[3]; it++) {
