@@ -83,7 +83,7 @@ void MasterSampler::calculate()
     PTemp.identity();
     if (Parallel::Communicator::getProcessRank() == 0) {
         for (int i = 0; i < P.m_latticeSize; i++) {
-            PTemp[i] = 1;
+            PTemp[i] = 2;
         }
     }
     Parallel::Communicator::setBarrier();
@@ -96,7 +96,15 @@ void MasterSampler::calculate()
 //    P = shift(PTemp,FORWARDS,1); // TEST ALL 8 COMBINATIONS!
 //    P = shift(PTemp,FORWARDS,2); // TEST ALL 8 COMBINATIONS!
 //    P = shift(PTemp,FORWARDS,3); // TEST ALL 8 COMBINATIONS!
-    P[Parallel::Index::getIndex(5,0,5,5)].print(); CHECK THAT PROC 1 RECEIVES FROM 0 AND VICA VERSA BY SETTING UP IF TEST FOR PROC AND BARRIERS!
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        printf("\n Rank = 0");
+        P[Parallel::Index::getIndex(5,0,5,5)].print(); //CHECK THAT PROC 1 RECEIVES FROM 0 AND VICA VERSA BY SETTING UP IF TEST FOR PROC AND BARRIERS!
+    }
+    Parallel::Communicator::setBarrier();
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        printf("\n Rank = 1");
+        P[Parallel::Index::getIndex(5,0,5,5)].print();
+    }
     Parallel::Communicator::setBarrier();
     exit(1);
 
