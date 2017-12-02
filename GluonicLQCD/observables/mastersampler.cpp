@@ -57,7 +57,7 @@ void MasterSampler::calculate()
 {
     // Initializes lattice
     Lattice <SU3> lattice[4];
-    unsigned int N[4] = {8, 4, 8, 16};
+    unsigned int N[4] = {4, 8, 8, 16};
     Parameters::setSubLatticePreset(true);
     Parameters::setN(N);
     Parallel::Index::setN(N);
@@ -82,41 +82,8 @@ void MasterSampler::calculate()
     Lattice <SU3> PTemp(dim), P(dim);
     P.zeros();
 
-
     //TEST
     PTemp.identity();
-    if (Parallel::Communicator::getProcessRank() == 0) {
-        for (int i = 0; i < P.m_latticeSize; i++) {
-            PTemp[i] = 2;
-        }
-    }
-    if (Parallel::Communicator::getProcessRank() == 1) {
-        for (int i = 0; i < P.m_latticeSize; i++) {
-            PTemp[i] = 0.11111111;
-        }
-    }
-    Parallel::Communicator::setBarrier();
-//    P[0].print();
-    P = shift(PTemp,BACKWARDS,0); // TEST ALL 8 COMBINATIONS!
-//    P = shift(PTemp,BACKWARDS,1); // TEST ALL 8 COMBINATIONS!
-//    P = shift(PTemp,BACKWARDS,2); // TEST ALL 8 COMBINATIONS!
-//    P = shift(PTemp,BACKWARDS,3); // TEST ALL 8 COMBINATIONS!
-//    P = shift(PTemp,FORWARDS,0); // TEST ALL 8 COMBINATIONS!
-//    P = shift(PTemp,FORWARDS,1); // TEST ALL 8 COMBINATIONS!
-//    P = shift(PTemp,FORWARDS,2); // TEST ALL 8 COMBINATIONS!
-//    P = shift(PTemp,FORWARDS,3); // TEST ALL 8 COMBINATIONS!
-    Parallel::Communicator::setBarrier();
-    if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\n Rank = %d\n",Parallel::Communicator::getProcessRank());
-        P[Parallel::Index::getIndex(2,0,2,2)].print(); //CHECK THAT PROC 1 RECEIVES FROM 0 AND VICA VERSA BY SETTING UP IF TEST FOR PROC AND BARRIERS!
-    }
-    Parallel::Communicator::setBarrier();
-    if (Parallel::Communicator::getProcessRank() == 1) {
-        printf("\n Rank = %d\n",Parallel::Communicator::getProcessRank());
-        P[Parallel::Index::getIndex(2,0,2,2)].print();
-    }
-    Parallel::Communicator::setBarrier();
-    exit(1);
 
     for (int mu = 0; mu < 4; mu++) {
         for (int nu = mu+1; nu < 4; nu++) {
