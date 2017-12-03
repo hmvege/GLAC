@@ -359,7 +359,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 for (int iy = 0; iy < L.m_dim[1]; iy++) {
                     for (int iz = 0; iz < L.m_dim[2]; iz++) {
                         for (int it = 0; it < L.m_dim[3]; it++) {
-                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)];
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix-1,iy,iz,it)];
                         }
                     }
                 }
@@ -375,7 +375,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            break;
+            return _L;
         }
         case 1: {
             sendCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
@@ -395,7 +395,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 for (int iy = 1; iy < L.m_dim[1]; iy++) {
                     for (int iz = 0; iz < L.m_dim[2]; iz++) {
                         for (int it = 0; it < L.m_dim[3]; it++) {
-                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)];
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy-1,iz,it)];
                         }
                     }
                 }
@@ -410,7 +410,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            break;
+            return _L;
         }
         case 2: {
             sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
@@ -430,7 +430,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 for (int iy = 0; iy < L.m_dim[1]; iy++) {
                     for (int iz = 1; iz < L.m_dim[2]; iz++) {
                         for (int it = 0; it < L.m_dim[3]; it++) {
-                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)];
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz-1,it)];
                         }
                     }
                 }
@@ -445,7 +445,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            break;
+            return _L;
         }
         case 3: {
             sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
@@ -465,7 +465,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 for (int iy = 0; iy < L.m_dim[1]; iy++) {
                     for (int iz = 0; iz < L.m_dim[2]; iz++) {
                         for (int it = 1; it < L.m_dim[3]; it++) {
-                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)];
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it-1)];
                         }
                     }
                 }
@@ -480,7 +480,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            break;
+            return _L;
         }
         }
         break;
@@ -506,7 +506,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 for (int iy = 0; iy < L.m_dim[1]; iy++) {
                     for (int iz = 0; iz < L.m_dim[2]; iz++) {
                         for (int it = 0; it < L.m_dim[3]; it++) {
-                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)];
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix+1,iy,iz,it)];
                         }
                     }
                 }
@@ -521,7 +521,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            break;
+            return _L;
         }
         case 1: { // y direction
             sendCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
@@ -541,7 +541,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 for (int iy = 0; iy < L.m_dim[1] - 1; iy++) {
                     for (int iz = 0; iz < L.m_dim[2]; iz++) {
                         for (int it = 0; it < L.m_dim[3]; it++) {
-                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)];
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy+1,iz,it)];
                         }
                     }
                 }
@@ -556,25 +556,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-//            if (Parallel::Communicator::getProcessRank() == 0) {
-//                _L.m_sites[Parallel::Index::getIndex(2,7,2,2)].print();
-//                for (int ix = 0; ix < L.m_dim[0]; ix++) {
-//                    for (int iy = 0; iy < L.m_dim[1]; iy++) {
-//                        for (int iz = 0; iz < L.m_dim[2]; iz++) {
-//                            for (int it = 0; it < L.m_dim[3]; it++) {
-//                                if (_L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)][0] == 3.0) {
-//                                    _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)].print();
-//                                    printf("\n %d %d %d %d",ix,iy,iz,it);
-//                                    exit(1);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            MPI_Barrier(MPI_COMM_WORLD);
-//            exit(1);
-            break;
+            return _L;
         }
         case 2: { // z direction
             sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
@@ -594,7 +576,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 for (int iy = 0; iy < L.m_dim[1]; iy++) {
                     for (int iz = 0; iz < L.m_dim[2] - 1; iz++) {
                         for (int it = 0; it < L.m_dim[3]; it++) {
-                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)];
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz+1,it)];
                         }
                     }
                 }
@@ -609,7 +591,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            break;
+            return _L;
         }
         case 3: { // t direction
             sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
@@ -629,7 +611,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 for (int iy = 0; iy < L.m_dim[1]; iy++) {
                     for (int iz = 0; iz < L.m_dim[2]; iz++) {
                         for (int it = 0; it < L.m_dim[3] - 1; it++) {
-                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)];
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it+1)];
                         }
                     }
                 }
@@ -644,12 +626,13 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            break;
+            return _L;
         }
         }
         break;
     }
     }
+    Parallel::Communicator::MPIExit("ERROR IN SHIFT-EXIT!");
     return _L;
 }
 
