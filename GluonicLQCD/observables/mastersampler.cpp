@@ -77,10 +77,21 @@ void MasterSampler::calculate()
     // Loads configuration into lattice
     std::string fname = "LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin"; // 0.593424
     IO::FieldIO::loadLatticeFieldConfiguration(fname,lattice);
-    lattice[0][0].print();
-    lattice[0][lattice[0].m_latticeSize-1].print();
-    lattice[1][0].print();
-    lattice[1][lattice[0].m_latticeSize-1].print();
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        printf("\n RANK 0 point 0,0,0,0\nmu=0\n");
+        lattice[0][0].print();
+        printf("\nmu=1\n");
+        lattice[1][0].print();
+    }
+    Parallel::Communicator::setBarrier();
+    if (Parallel::Communicator::getProcessRank() == 1) {
+        printf("\n RANK 1 point 0,0,0,0\nmu=0\n");
+        lattice[0][0].print();
+        printf("\nmu=1\n");
+        lattice[1][0].print();
+    }
+//    lattice[0][lattice[0].m_latticeSize-1].print();
+//    lattice[1][lattice[0].m_latticeSize-1].print();
     exit(1);
 //    Parallel::Communicator::setBarrier();
 //    printf("\nLOADED LATTICE!");
