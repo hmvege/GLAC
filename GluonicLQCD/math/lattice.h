@@ -240,10 +240,11 @@ inline void Lattice<T>::zeros() {
 
 template <class T>
 inline Lattice<T> Lattice<T>::inv() {
+    Lattice<T> _L(m_dim);
     for (int iSite = 0; iSite < m_latticeSize; iSite++) {
-        m_sites[iSite].inv();
+        _L.m_sites[iSite] = m_sites[iSite].inv();
     }
-    return *this; // Okay to do this?? Do I need to initialize a new lattice??
+    return _L; // Okay to do this?? Do I need to initialize a new lattice??
 }
 
 // Allocates memory to the lattice. Has to be called every time(unless we are copying)
@@ -295,6 +296,17 @@ inline T sum(Lattice<T> L)
     latticeSum = 0.0;
     for (int iSite = 0; iSite < L.m_latticeSize; iSite++) {
         latticeSum += L[iSite];
+    }
+    return latticeSum;
+}
+
+template <class T>
+inline double sumRealTrace(Lattice<T> L)
+{
+    double latticeSum;
+    latticeSum = 0.0;
+    for (int iSite = 0; iSite < L.m_latticeSize; iSite++) {
+        latticeSum += L[iSite][0] + L[iSite][8] + L[iSite][16];
     }
     return latticeSum;
 }

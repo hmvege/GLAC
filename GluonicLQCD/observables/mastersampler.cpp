@@ -70,17 +70,18 @@ void MasterSampler::calculate()
     printf("\n%d %d %d %d \n",int(N[0]),int(N[1]),int(N[2]),int(N[3]));
     for (int mu = 0; mu < 4; mu++) {
         lattice[mu].allocate(dim);
-        lattice[mu].identity();
+//        lattice[mu].identity();
     }
 
     // Loads configuration into lattice
-    std::string fname = "LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin";
+    std::string fname = "LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin"; // 0.593424
     IO::FieldIO::loadLatticeFieldConfiguration(fname,lattice);
 //    Parallel::Communicator::setBarrier();
 //    printf("\nLOADED LATTICE!");
     printf("\n");
     // Initializes samples for the
     Lattice <SU3> PTemp(dim), P(dim);
+    PTemp.zeros();
     P.zeros();
 
     for (int mu = 0; mu < 4; mu++) {
@@ -92,7 +93,9 @@ void MasterSampler::calculate()
             P += PTemp;
         }
     }
-    double observable = sum(realTrace(P))/m_multiplicationFactor;
+//    double observable = sum(realTrace(P))/m_multiplicationFactor;
+    double observable = sumRealTrace(P)/m_multiplicationFactor;
     MPI_Allreduce(&observable,&observable,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+    observable /= double(Parallel::Communicator::getNumProc());
     printf("\nPlaquette = %20.16f\n",observable);
 }
