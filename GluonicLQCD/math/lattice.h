@@ -547,8 +547,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 }
             }
             // Ensures all results have been sent and received
-            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
             for (int ix = 0; ix < L.m_dim[0]; ix++) {
                 for (int iz = 0; iz < L.m_dim[2]; iz++) {
                     for (int it = 0; it < L.m_dim[3]; it++) {
@@ -556,6 +556,24 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
+//            if (Parallel::Communicator::getProcessRank() == 0) {
+//                _L.m_sites[Parallel::Index::getIndex(2,7,2,2)].print();
+//                for (int ix = 0; ix < L.m_dim[0]; ix++) {
+//                    for (int iy = 0; iy < L.m_dim[1]; iy++) {
+//                        for (int iz = 0; iz < L.m_dim[2]; iz++) {
+//                            for (int it = 0; it < L.m_dim[3]; it++) {
+//                                if (_L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)][0] == 3.0) {
+//                                    _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)].print();
+//                                    printf("\n %d %d %d %d",ix,iy,iz,it);
+//                                    exit(1);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            MPI_Barrier(MPI_COMM_WORLD);
+//            exit(1);
             break;
         }
         case 2: { // z direction
