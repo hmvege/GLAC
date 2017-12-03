@@ -136,6 +136,13 @@ void System::latticeSetup()
      * Sets up the lattice and its matrices.
      */
     subLatticeSetup();
+    printf("\nLOADING!\n");
+    IO::FieldIO::loadFieldConfiguration("LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin",m_lattice);
+    printf("\n");
+    m_lattice[0].U[0].printMachine();
+    m_lattice[0].U[1].printMachine();
+    printf("\nEXITING!\n");
+    exit(1);
     if (!Parameters::getLoadFieldConfigurations()) {
         if (Parameters::getHotStart()) {
             // All starts with a completely random matrix.
