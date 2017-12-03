@@ -284,7 +284,7 @@ inline Lattice<complex> trace(Lattice<T> L)
     Lattice<complex> tempTraceSum(L.m_dim);
     for (int iSite = 0; iSite < L.m_latticeSize; iSite++) {
         tempTraceSum[iSite] = complex(L[iSite][0] + L[iSite][8] + L[iSite][16],
-                L[iSite][1] + L[iSite][9] + L[iSite][17]);
+                                      L[iSite][1] + L[iSite][9] + L[iSite][17]);
     }
     return tempTraceSum;
 }

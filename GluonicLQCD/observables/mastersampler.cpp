@@ -70,32 +70,47 @@ void MasterSampler::calculate()
     printf("\n%d %d %d %d \n",int(N[0]),int(N[1]),int(N[2]),int(N[3]));
     for (int mu = 0; mu < 4; mu++) {
         lattice[mu].allocate(dim);
-//        lattice[mu].identity();
+        lattice[mu].identity();
     }
-
 
     // Loads configuration into lattice
     std::string fname = "LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin"; // 0.593424
     IO::FieldIO::loadLatticeFieldConfiguration(fname,lattice);
-    if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\n RANK 0 point 0,0,0,0\nmu=0\n");
-        lattice[0][0].print();
-        printf("\nmu=1\n");
-        lattice[1][0].print();
+    for (int mu = 0; mu < 4; mu++) {
+        for (int iSite = 0; iSite < lattice[mu].m_latticeSize; iSite++) {
+            for (int iMat = 0; iMat < 18; iMat++) {
+                if (lattice[mu][iSite][iMat] == 0 || lattice[mu][iSite][iMat] == 1) {
+                    printf("\n\nERROR!\n\n");
+                }
+            }
+        }
     }
-    Parallel::Communicator::setBarrier();
-    if (Parallel::Communicator::getProcessRank() == 1) {
-        printf("\n RANK 1 point 0,0,0,0\nmu=0\n");
-        lattice[0][0].print();
-        printf("\nmu=1\n");
-        lattice[1][0].print();
-    }
+
+    /// Prints the lattice ends and beginnings to compare with old lattice version(in flow branch)
+//    if (Parallel::Communicator::getProcessRank() == 0) {
+//        printf("\n RANK 0 point 0,0,0,0\nmu=0\n");
+//        lattice[0][0].print();
+//        printf("\nmu=1\n");
+//        lattice[1][0].print();
+//        printf("\nEND POINT_POINT:\n");
+//        lattice[3][lattice[3].m_latticeSize-1].print();
+//    }
+//    Parallel::Communicator::setBarrier();
+//    if (Parallel::Communicator::getProcessRank() == 1) {
+//        printf("\n RANK 1 point 0,0,0,0\nmu=0\n");
+//        lattice[0][0].print();
+//        printf("\nmu=1\n");
+//        lattice[1][0].print();
+//        printf("\nEND POINT_POINT:\n");
+//        lattice[3][lattice[3].m_latticeSize-1].print();
+//    }
 //    lattice[0][lattice[0].m_latticeSize-1].print();
 //    lattice[1][lattice[0].m_latticeSize-1].print();
-    exit(1);
+//    exit(1);
 //    Parallel::Communicator::setBarrier();
 //    printf("\nLOADED LATTICE!");
-    printf("\n");
+//    printf("\n");
+
     // Initializes samples for the
     Lattice <SU3> PTemp(dim), P(dim);
     P.zeros();
@@ -129,119 +144,119 @@ void MasterSampler::calculate()
 //    }
 //    printf("\n%d",err);
 
-    // Testing the shifting of the lattice class
-    double shiftedValue = 3.0;
-    // Runs over different shifts
-    int err;
-    for (int mu = 0; mu < 4; mu++) {
-        err = 0;
-        switch (mu) {
-        case 0:
-            PTemp.identity();
-            for (int iy = 0; iy < P.m_dim[1]; iy++) {
-                for (int iz = 0; iz < P.m_dim[2]; iz++) {
-                    for (int it = 0; it < P.m_dim[3]; it++) {
-                        for (int j = 0; j < 18; j++) {
-                            PTemp[Parallel::Index::getIndex(P.m_dim[0]-1,iy,iz,it)] = shiftedValue;
-                        }
-                    }
-                }
-            }
-            Parallel::Communicator::setBarrier();
-            P = shift(PTemp,BACKWARDS,mu);
-            for (int iy = 0; iy < P.m_dim[1]; iy++) {
-                for (int iz = 0; iz < P.m_dim[2]; iz++) {
-                    for (int it = 0; it < P.m_dim[3]; it++) {
-                        for (int j = 0; j < 18; j++) {
-                            if (P[Parallel::Index::getIndex(0,iy,iz,it)][j] != shiftedValue) {
-                                err++;
-                            }
-                        }
-                    }
-                }
-            }
-            if (Parallel::Communicator::getProcessRank() == 0) printf("\n X forwards shift errors: %d\n", err);
-            break;
-        case 1:
-            PTemp.identity();
-            for (int ix = 0; ix < P.m_dim[0]; ix++) {
-                for (int iz = 0; iz < P.m_dim[2]; iz++) {
-                    for (int it = 0; it < P.m_dim[3]; it++) {
-                        for (int j = 0; j < 18; j++) {
-                            PTemp[Parallel::Index::getIndex(ix,P.m_dim[1]-1,iz,it)] = shiftedValue;
-                        }
-                    }
-                }
-            }
-            Parallel::Communicator::setBarrier();
-            P = shift(PTemp,BACKWARDS,mu);
-            for (int ix = 0; ix < P.m_dim[0]; ix++) {
-                for (int iz = 0; iz < P.m_dim[2]; iz++) {
-                    for (int it = 0; it < P.m_dim[3]; it++) {
-                        for (int j = 0; j < 18; j++) {
-                            if (P[Parallel::Index::getIndex(ix,0,iz,it)][j] != shiftedValue) {
-                                err++;
-                            }
-                        }
-                    }
-                }
-            }
-            if (Parallel::Communicator::getProcessRank() == 0) printf("\n Y forwards shift errors: %d\n", err);
-            break;
-        case 2:
-            PTemp.identity();
-            for (int ix = 0; ix < P.m_dim[0]; ix++) {
-                for (int iy = 0; iy < P.m_dim[1]; iy++) {
-                    for (int it = 0; it < P.m_dim[3]; it++) {
-                        for (int j = 0; j < 18; j++) {
-                            PTemp[Parallel::Index::getIndex(ix,iy,P.m_dim[2]-1,it)] = shiftedValue;
-                        }
-                    }
-                }
-            }
-            Parallel::Communicator::setBarrier();
-            P = shift(PTemp,BACKWARDS,mu);
-            for (int ix = 0; ix < P.m_dim[0]; ix++) {
-                for (int iy = 0; iy < P.m_dim[1]; iy++) {
-                    for (int it = 0; it < P.m_dim[3]; it++) {
-                        for (int j = 0; j < 18; j++) {
-                            if (P[Parallel::Index::getIndex(ix,iy,0,it)][j] != shiftedValue) {
-                                err++;
-                            }
-                        }
-                    }
-                }
-            }
-            if (Parallel::Communicator::getProcessRank() == 0) printf("\n Z forwards shift errors: %d\n", err);
-            break;
-        case 3:
-            PTemp.identity();
-            for (int ix = 0; ix < P.m_dim[0]; ix++) {
-                for (int iy = 0; iy < P.m_dim[1]; iy++) {
-                    for (int iz = 0; iz < P.m_dim[2]; iz++) {
-                        for (int j = 0; j < 18; j++) {
-                            PTemp[Parallel::Index::getIndex(ix,iy,iz,P.m_dim[3]-1)] = shiftedValue;
-                        }
-                    }
-                }
-            }
-            Parallel::Communicator::setBarrier();
-            P = shift(PTemp,BACKWARDS,mu);
-            for (int ix = 0; ix < P.m_dim[0]; ix++) {
-                for (int iy = 0; iy < P.m_dim[1]; iy++) {
-                    for (int iz = 0; iz < P.m_dim[2]; iz++) {
-                        for (int j = 0; j < 18; j++) {
-                            if (P[Parallel::Index::getIndex(ix,iy,iz,0)][j] != shiftedValue) {
-                                err++;
-                            }
-                        }
-                    }
-                }
-            }
-            if (Parallel::Communicator::getProcessRank() == 0) printf("\n T forwards shift errors: %d\n", err);
-            break;
-        }
-    }
+//    /// Testing the shifting of the lattice class
+//    double shiftedValue = 3.0;
+//    // Runs over different shifts
+//    int err;
+//    for (int mu = 0; mu < 4; mu++) {
+//        err = 0;
+//        switch (mu) {
+//        case 0:
+//            PTemp.identity();
+//            for (int iy = 0; iy < P.m_dim[1]; iy++) {
+//                for (int iz = 0; iz < P.m_dim[2]; iz++) {
+//                    for (int it = 0; it < P.m_dim[3]; it++) {
+//                        for (int j = 0; j < 18; j++) {
+//                            PTemp[Parallel::Index::getIndex(P.m_dim[0]-1,iy,iz,it)] = shiftedValue;
+//                        }
+//                    }
+//                }
+//            }
+//            Parallel::Communicator::setBarrier();
+//            P = shift(PTemp,BACKWARDS,mu);
+//            for (int iy = 0; iy < P.m_dim[1]; iy++) {
+//                for (int iz = 0; iz < P.m_dim[2]; iz++) {
+//                    for (int it = 0; it < P.m_dim[3]; it++) {
+//                        for (int j = 0; j < 18; j++) {
+//                            if (P[Parallel::Index::getIndex(0,iy,iz,it)][j] != shiftedValue) {
+//                                err++;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            if (Parallel::Communicator::getProcessRank() == 0) printf("\n X forwards shift errors: %d\n", err);
+//            break;
+//        case 1:
+//            PTemp.identity();
+//            for (int ix = 0; ix < P.m_dim[0]; ix++) {
+//                for (int iz = 0; iz < P.m_dim[2]; iz++) {
+//                    for (int it = 0; it < P.m_dim[3]; it++) {
+//                        for (int j = 0; j < 18; j++) {
+//                            PTemp[Parallel::Index::getIndex(ix,P.m_dim[1]-1,iz,it)] = shiftedValue;
+//                        }
+//                    }
+//                }
+//            }
+//            Parallel::Communicator::setBarrier();
+//            P = shift(PTemp,BACKWARDS,mu);
+//            for (int ix = 0; ix < P.m_dim[0]; ix++) {
+//                for (int iz = 0; iz < P.m_dim[2]; iz++) {
+//                    for (int it = 0; it < P.m_dim[3]; it++) {
+//                        for (int j = 0; j < 18; j++) {
+//                            if (P[Parallel::Index::getIndex(ix,0,iz,it)][j] != shiftedValue) {
+//                                err++;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            if (Parallel::Communicator::getProcessRank() == 0) printf("\n Y forwards shift errors: %d\n", err);
+//            break;
+//        case 2:
+//            PTemp.identity();
+//            for (int ix = 0; ix < P.m_dim[0]; ix++) {
+//                for (int iy = 0; iy < P.m_dim[1]; iy++) {
+//                    for (int it = 0; it < P.m_dim[3]; it++) {
+//                        for (int j = 0; j < 18; j++) {
+//                            PTemp[Parallel::Index::getIndex(ix,iy,P.m_dim[2]-1,it)] = shiftedValue;
+//                        }
+//                    }
+//                }
+//            }
+//            Parallel::Communicator::setBarrier();
+//            P = shift(PTemp,BACKWARDS,mu);
+//            for (int ix = 0; ix < P.m_dim[0]; ix++) {
+//                for (int iy = 0; iy < P.m_dim[1]; iy++) {
+//                    for (int it = 0; it < P.m_dim[3]; it++) {
+//                        for (int j = 0; j < 18; j++) {
+//                            if (P[Parallel::Index::getIndex(ix,iy,0,it)][j] != shiftedValue) {
+//                                err++;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            if (Parallel::Communicator::getProcessRank() == 0) printf("\n Z forwards shift errors: %d\n", err);
+//            break;
+//        case 3:
+//            PTemp.identity();
+//            for (int ix = 0; ix < P.m_dim[0]; ix++) {
+//                for (int iy = 0; iy < P.m_dim[1]; iy++) {
+//                    for (int iz = 0; iz < P.m_dim[2]; iz++) {
+//                        for (int j = 0; j < 18; j++) {
+//                            PTemp[Parallel::Index::getIndex(ix,iy,iz,P.m_dim[3]-1)] = shiftedValue;
+//                        }
+//                    }
+//                }
+//            }
+//            Parallel::Communicator::setBarrier();
+//            P = shift(PTemp,BACKWARDS,mu);
+//            for (int ix = 0; ix < P.m_dim[0]; ix++) {
+//                for (int iy = 0; iy < P.m_dim[1]; iy++) {
+//                    for (int iz = 0; iz < P.m_dim[2]; iz++) {
+//                        for (int j = 0; j < 18; j++) {
+//                            if (P[Parallel::Index::getIndex(ix,iy,iz,0)][j] != shiftedValue) {
+//                                err++;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            if (Parallel::Communicator::getProcessRank() == 0) printf("\n T forwards shift errors: %d\n", err);
+//            break;
+//        }
+//    }
 
 //    exit(1);
     P.zeros();
@@ -252,9 +267,9 @@ void MasterSampler::calculate()
             PTemp *= shift(lattice[mu],FORWARDS,nu).inv();
             PTemp *= lattice[nu].inv();
             P += PTemp;
+//            P += lattice[mu]*shift(lattice[nu],FORWARDS,mu)*shift(lattice[mu],FORWARDS,nu).inv()*lattice[nu].inv();
         }
     }
-//    double observable = sum(realTrace(P))/m_multiplicationFactor;
     double observable = sumRealTrace(P)/m_multiplicationFactor;
     MPI_Allreduce(&observable,&observable,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
     observable /= double(Parallel::Communicator::getNumProc());
