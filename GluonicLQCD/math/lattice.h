@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <mpi.h>
-#include "math/complex.h"
 #include "parallelization/index.h"
 #include "parallelization/neighbours.h"
 #include "functions.h"

@@ -8,7 +8,7 @@
 
 Flow::Flow(Action *S)
 {
-    Parameters::getN(m_N);
+    m_N = Parameters::getN();
     m_epsilon = Parameters::getFlowEpsilon();
     m_subLatticeSize = Parameters::getSubLatticeSize();
     m_tempLattice = new Lattice<SU3>[4];
@@ -38,7 +38,7 @@ void Flow::flowField(Lattice<SU3> *lattice)
     }
     // Sets "Z1" in temporary lattice
     for (unsigned int mu = 0; mu < 4; mu++) {
-        m_tempLattice[mu] = m_S->getActionDerivative(lattice[mu],mu)*(m_epsilon*0.8888888888888888) - m_tempLattice[mu]*m_epsilon*0.4722222222222222;
+        m_tempLattice[mu] = m_S->getActionDerivative(lattice,mu)*(m_epsilon*0.8888888888888888) - m_tempLattice[mu]*m_epsilon*0.4722222222222222;
     }
     // Sets W2 in main lattice
     for (unsigned int mu = 0; mu < 4; mu++) {

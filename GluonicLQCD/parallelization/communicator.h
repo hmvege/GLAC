@@ -2,9 +2,7 @@
 #define COMMUNICATOR_H
 
 #include <vector>
-#include "neighbours.h"
 #include "math/lattice.h"
-#include "math/matrices/su3.h"
 
 namespace Parallel {
 class Communicator

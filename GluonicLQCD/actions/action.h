@@ -2,7 +2,6 @@
 #define ACTION_H
 
 #include "math/lattice.h"
-#include "parallelization/parallel.h"
 #include <vector>
 
 using std::cout;
@@ -20,11 +19,6 @@ public:
     virtual ~Action();
     virtual double getDeltaAction(SU3 U, SU3 UPrime);
     virtual void computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
-    // Setters
-    void setN(std::vector<unsigned int> N);
-    // Getters
-    std::vector<unsigned int> getN() { return m_N; }
-
     virtual Lattice<SU3> getActionDerivative(Lattice<SU3> * lattice, int mu);
 };
 

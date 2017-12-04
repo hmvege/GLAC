@@ -15,8 +15,7 @@ namespace IO {
         static const int m_SU3Doubles;
         static const int m_SU3Size;
 
-
-        static std::vector<unsigned int> m_N[4];
+        static std::vector<unsigned int> m_N;
         static inline double reverseDouble(const double inDouble);
     public:
         FieldIO();

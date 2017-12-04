@@ -4,9 +4,9 @@
 #pragma once
 
 #include "correlator.h"
-#include "plaquette.h"
 #include "energydensity.h"
+#include "plaquette.h"
 #include "topologicalcharge.h"
-#include "observablesampler.h"
+#include "mastersampler.h"
 
 #endif // OBSERVABLES_H

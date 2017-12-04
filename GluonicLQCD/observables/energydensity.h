@@ -7,10 +7,15 @@
 class EnergyDensity : public Correlator
 {
 private:
-    double m_multiplicationFactor;
-    double m_actionDensity;
     const std::string m_observableName = "Energy density";
     const std::string m_observableNameCompact = "energy";
+
+    // Indexes for retrieving the clovers
+    int mu = 0, rho, sigma;
+    double m_energyDensity;
+    double m_multiplicationFactor;
+    Lattice <double> m_tempDiag;
+    Lattice<SU3> m_clov1, m_clov2, m_U2Temp, m_U3Temp, m_temp;
 public:
     EnergyDensity(bool storeFlowObservable, double a, int latticeSize);
     EnergyDensity(bool storeFlowObservable);
@@ -19,8 +24,6 @@ public:
 
     // Printers
     void printStatistics();
-    // Setters
-    void setLatticeSpacing(double a);
     // Getters
     std::string getObservableName() { return m_observableName; }
     void runStatistics();

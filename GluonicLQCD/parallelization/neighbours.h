@@ -104,7 +104,7 @@ public:
     static int get(int iProcDir) { return m_neighbourLists[m_processRank][iProcDir]; } // Returns neighbour list for iP processor.
 
     // Getters
-    static std::vector<NeighbourList> getNeighbours(int Np);
+    static NeighbourList* getNeighbours(int Np);
     static int getListLength() { return m_numproc; }
     static int getProcessorDimensionPosition(int dim) { return m_P[dim]; }
 };

@@ -73,9 +73,9 @@ void System::setObservable(std::vector<std::string> obsList, bool flow)
     else {
         // All other cases, might as well initialize the full machinery
         if (flow) {
-            m_flowCorrelator = new ObservableSampler(flow);
+            m_flowCorrelator = new MasterSampler(flow);
         } else {
-            m_correlator = new ObservableSampler(flow);
+            m_correlator = new MasterSampler(flow);
         }
     }
 }
@@ -96,7 +96,7 @@ void System::subLatticeSetup()
      * Sets up the sub-lattices.
      */
     Parallel::Communicator::initializeSubLattice();
-    Parameters::getN(m_N);
+    m_N = Parameters::getN();
     m_subLatticeSize = Parameters::getSubLatticeSize();
     // Creates/allocates (sub) lattice
     m_lattice = new Lattice<SU3>[4];
@@ -109,15 +109,10 @@ void System::subLatticeSetup()
     // Passes the index handler and dimensionality to the action and correlator classes.
     if (m_NFlows != 0) {
         setObservable(Parameters::getFlowObservablesList(),true);
-        m_flowCorrelator->setN(m_N);
-        m_flowCorrelator->setLatticeSize(m_subLatticeSize);
         m_flow = new Flow(m_S); // Ensure it does not go out of scope
         m_flowLattice = new Lattice<SU3>[4];
     }
     IO::FieldIO::init();
-    m_S->setN(m_N);
-    m_correlator->setN(m_N);
-    m_correlator->setLatticeSize(m_subLatticeSize);
 }
 
 void System::copyToFlowLattice()

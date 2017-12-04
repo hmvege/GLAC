@@ -7,7 +7,7 @@ int Parallel::Neighbours::m_Ny = 0;
 int Parallel::Neighbours::m_Nz = 0;
 int Parallel::Neighbours::m_Nt = 0; // Prosessors per dimension
 int Parallel::Neighbours::m_P[4]; // Prosessor coordinate
-std::vector<NeighbourList> Parallel::Neighbours::m_neighbourLists = {0,0,0,0};
+std::vector<NeighbourList> Parallel::Neighbours::m_neighbourLists;
 
 Parallel::Neighbours::Neighbours()
 {
@@ -54,7 +54,7 @@ void Parallel::Neighbours::generateNeighbourList()
     }
 }
 
-std::vector<NeighbourList> Parallel::Neighbours::getNeighbours(int Np) {
+NeighbourList * Parallel::Neighbours::getNeighbours(int Np) {
     /*
      * Must return a list. Therefore, returning a reference. Failure to do so, will result in segfault error.
      * Arguments:

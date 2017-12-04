@@ -17,9 +17,6 @@ protected:
     // Lattice spacing
     double m_a;
 
-    // Position vector for handling the shift-method in parallelization
-    std::vector<unsigned int> m_position;
-
     // Observable name
     const int m_headerWidth = 20;
     const std::string m_observableName = "Correlator";
@@ -55,9 +52,9 @@ public:
     // Setters
     virtual void reset();
     virtual void setObservable(int iObs, double obs);
-    virtual void setLatticeSize(int latticeSize);
-    virtual void setLatticeSpacing(double a) { m_a = a; }
-    void setN(std::vector<unsigned int> N);
+//    virtual void setLatticeSize(int latticeSize);
+//    virtual void setLatticeSpacing(double a) { m_a = a; }
+//    void setN(std::vector<unsigned int> N);
     virtual void storeFlow(bool storeFlowObservable);
 };
 

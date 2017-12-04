@@ -10,9 +10,7 @@ SOURCES += main.cpp \
     observables/correlator.cpp \
     observables/plaquette.cpp \
     observables/topologicalcharge.cpp \
-    observables/clover.cpp \
     observables/energydensity.cpp \
-    observables/observablesampler.cpp \
     observables/tools/observablestorer.cpp \
     math/functions.cpp \
     math/links.cpp \
@@ -46,9 +44,7 @@ HEADERS += \
     observables/correlator.h \
     observables/plaquette.h \
     observables/topologicalcharge.h \
-    observables/clover.h \
     observables/energydensity.h \
-    observables/observablesampler.h \
     observables/tools/observablestorer.h \
     math/functions.h \
     math/links.h \
@@ -78,9 +74,9 @@ HEADERS += \
     math/flowexpfunctions.h \
     actions/actions.h \
     parallelization/parallel.h \
-    observables/observables.h \
     math/lattice.h \
-    observables/mastersampler.h
+    observables/mastersampler.h \
+    observables/observables.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx

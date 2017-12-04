@@ -1,11 +1,9 @@
 #include "action.h"
+#include "config/parameters.h"
 
 Action::Action()
 {
-    m_N.resize(4);
-    for (int i = 0; i < 4; i++) {
-        m_N[i] = 0;
-    }
+    m_N = Parameters::getN();
     m_position = std::vector<int>(4,0);
 }
 
@@ -26,11 +24,6 @@ void Action::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j
     cout << "In Action::computeStaple: If you are seeing this, something is wrong!" << endl;
     exit(1);
     lattice[mu][i+j+k+l].print();
-}
-
-void Action::setN(std::vector<unsigned int> N)
-{
-    m_N = N;
 }
 
 Lattice<SU3> Action::getActionDerivative(Lattice<SU3> *lattice, int mu)
