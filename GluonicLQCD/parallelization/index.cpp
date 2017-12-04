@@ -1,5 +1,8 @@
 #include "index.h"
 
+std::vector<unsigned int> Parallel::Index::m_N;
+std::vector<unsigned int> Parallel::Index::m_NTot;
+
 Parallel::Index::Index()
 {
     /*

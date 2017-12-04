@@ -7,17 +7,21 @@
 class MasterSampler : public Correlator
 {
 private:
+    int mu;
     double m_plaqMultiplicationFactor, m_topcMultiplicationFactor, m_energyMultiplicationFactor;
-//    Lattice<SU3> clov1(dim), clov2(dim), U2Temp(dim), U3Temp(dim), Temp1(dim);
     double m_topCharge, m_energy, m_plaquette;
     Lattice <double> m_tempDiag;
-    int mu;
     Lattice<SU3> m_clov1, m_clov2, m_U2Temp, m_U3Temp, m_temp;
 
+    // Creates a object that store the observable
+    ObservableStorer * m_plaqObservable = nullptr;
+    ObservableStorer * m_topcObservable = nullptr;
+    ObservableStorer * m_energyObservable = nullptr;
 public:
     MasterSampler(bool flow);
     ~MasterSampler() {}
     void calculate(Lattice<SU3> * lattice, int iObs);
+    void storeFlow(bool storeFlowObservable);
 };
 
 #endif // MASTERSAMPLER_H

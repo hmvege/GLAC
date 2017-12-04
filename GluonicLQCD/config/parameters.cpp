@@ -7,10 +7,9 @@ int Parameters::m_NTemporal = 0;
 int Parameters::m_latticeSize = 1;
 
 // Sub lattice / parallel related variables
-std::vector<unsigned int> m_N = {0,0,0,0};
-//unsigned int Parameters::m_N[4] = {0};
+std::vector<unsigned int> Parameters::m_N;
 int Parameters::m_subLatticeSize = 1;
-int Parameters::m_processorsPerDimension[4] = {0};
+int Parameters::m_processorsPerDimension[4] = {0,0,0,0};
 bool Parameters::m_subLatticeSizePreset = false;
 
 // Physical lattice size dependent values

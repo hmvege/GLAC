@@ -7,16 +7,43 @@
 
 //using namespace LatticeOperations;
 
-MasterSampler::MasterSampler(bool flow) : Correlator(flow)
+MasterSampler::MasterSampler(bool flow) : Correlator()
 {
+    // Sets up observable storage containers
+    storeFlow(flow);
+
+    // Sets up multiplication factors
     m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
     m_topcMultiplicationFactor = 1.0/(16*16*M_PI*M_PI);
     m_energyMultiplicationFactor = 1.0/double(m_latticeSize);
+
+    // Allocates memory to the helper variables
     m_clov1.allocate(m_N);
     m_clov2.allocate(m_N);
     m_U2Temp.allocate(m_N);
     m_U3Temp.allocate(m_N);
     m_temp.allocate(m_N);
+}
+
+void MasterSampler::storeFlow(bool storeFlowObservable)
+{
+    m_storeFlowObservable = storeFlowObservable;
+    if (m_storeFlowObservable) {
+        // +1 as we are storing the initial value at t=0 as well.
+        m_plaqObservable = new ObservableStorer(Parameters::getNFlows() + 1);
+        m_topcObservable = new ObservableStorer(Parameters::getNFlows() + 1);
+        m_energyObservable = new ObservableStorer(Parameters::getNFlows() + 1);
+    } else {
+        if (Parameters::getStoreThermalizationObservables()) {
+            m_plaqObservable = new ObservableStorer(Parameters::getNCf() + Parameters::getNTherm() + 1);
+            m_topcObservable = new ObservableStorer(Parameters::getNCf() + Parameters::getNTherm() + 1);
+            m_energyObservable = new ObservableStorer(Parameters::getNCf() + Parameters::getNTherm() + 1);
+        } else {
+            m_plaqObservable = new ObservableStorer(Parameters::getNCf());
+            m_topcObservable = new ObservableStorer(Parameters::getNCf());
+            m_energyObservable = new ObservableStorer(Parameters::getNCf());
+        }
+    }
 }
 
 void MasterSampler::calculate(Lattice<SU3> *lattice, int iObs)
@@ -165,22 +192,25 @@ void MasterSampler::calculate(Lattice<SU3> *lattice, int iObs)
     //////// PLAQUETTE ////////
     ///////////////////////////
     m_plaquette *= m_plaqMultiplicationFactor;
-    MPI_Allreduce(&m_plaquette,&m_plaquette,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-    m_plaquette /= double(Parallel::Communicator::getNumProc());
-    if (Parallel::Communicator::getProcessRank() == 0) printf("\nPlaquette           = %20.16f",m_plaquette);
+    (*m_plaqObservable)[iObs] = m_plaquette;
+//    MPI_Allreduce(&m_plaquette,&m_plaquette,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+//    m_plaquette /= double(Parallel::Communicator::getNumProc());
+//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nPlaquette           = %20.16f",m_plaquette);
 
     ///////////////////////////
     //// TOPOLOGICAL CHARGE ///
     ///////////////////////////
     m_topCharge *= m_topcMultiplicationFactor;
-    MPI_Allreduce(&m_topCharge,&m_topCharge,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-    if (Parallel::Communicator::getProcessRank() == 0) printf("\nTopological charge  = %20.16f",m_topCharge);
+    (*m_topcObservable)[iObs] = m_topCharge;
+//    MPI_Allreduce(&m_topCharge,&m_topCharge,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nTopological charge  = %20.16f",m_topCharge);
 
     ///////////////////////////
     ///////// ENERGY //////////
     ///////////////////////////
     m_energy *= m_energyMultiplicationFactor;
-    MPI_Allreduce(&m_energy,&m_energy,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-    if (Parallel::Communicator::getProcessRank() == 0) printf("\nEnergy              = %20.16f",m_energy);
+    (*m_energyObservable)[iObs] = m_energy;
+//    MPI_Allreduce(&m_energy,&m_energy,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nEnergy              = %20.16f",m_energy);
 
 }

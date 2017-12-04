@@ -29,6 +29,7 @@ protected:
     bool m_storeFlowObservable = false;
 public:
     Correlator(bool storeFlowObservable);
+    Correlator();
     virtual ~Correlator();
     virtual void calculate(Lattice<SU3> *lattice, int iObs);
     virtual void writeStatisticsToFile(double acceptanceRatio);
@@ -52,9 +53,6 @@ public:
     // Setters
     virtual void reset();
     virtual void setObservable(int iObs, double obs);
-//    virtual void setLatticeSize(int latticeSize);
-//    virtual void setLatticeSpacing(double a) { m_a = a; }
-//    void setN(std::vector<unsigned int> N);
     virtual void storeFlow(bool storeFlowObservable);
 };
 

@@ -34,7 +34,7 @@ private:
     bool m_systemIsThermalized = false;
     bool m_writeConfigsToFile = false;
     // Paralellization setup
-    int m_processRank;
+    int m_processRank; // Move to communicator/printer...?
     int m_subLatticeSize;
 
     /////////////////////////////////////////
