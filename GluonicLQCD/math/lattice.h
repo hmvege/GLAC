@@ -6,6 +6,7 @@
 #include "math/complex.h"
 #include "parallelization/index.h"
 #include "parallelization/communicator.h"
+#include "functions.h"
 
 template <class T>
 class Lattice
@@ -290,6 +291,28 @@ inline Lattice<complex> trace(Lattice<T> L)
 }
 
 template <class T>
+inline Lattice<T> subtractImag(Lattice <T> L, Lattice <double> other)
+{
+    for (int iSite = 0; iSite < L.m_latticeSize; iSite++) {
+        L[iSite][1] -= other[iSite];
+        L[iSite][9] -= other[iSite];
+        L[iSite][17] -= other[iSite];
+    }
+    return L;
+}
+
+template <class T>
+inline Lattice<T> subtractReal(Lattice <T> L, Lattice <double> other)
+{
+    for (int iSite = 0; iSite < L.m_latticeSize; iSite++) {
+        L[iSite][0] -= other[iSite];
+        L[iSite][8] -= other[iSite];
+        L[iSite][16] -= other[iSite];
+    }
+    return L;
+}
+
+template <class T>
 inline T sum(Lattice<T> L)
 {
     T latticeSum;
@@ -307,6 +330,17 @@ inline double sumRealTrace(Lattice<T> L)
     latticeSum = 0.0;
     for (int iSite = 0; iSite < L.m_latticeSize; iSite++) {
         latticeSum += L[iSite][0] + L[iSite][8] + L[iSite][16];
+    }
+    return latticeSum;
+}
+
+template <class SU3>
+inline double sumRealTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
+{
+    double latticeSum;
+    latticeSum = 0.0;
+    for (int iSite = 0; iSite < L1.m_latticeSize; iSite++) {
+        latticeSum += traceRealMultiplication(L1[iSite],L2[iSite]);
     }
     return latticeSum;
 }

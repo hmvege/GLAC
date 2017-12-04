@@ -7,9 +7,8 @@
 class MasterSampler
 {
 private:
-    double m_multiplicationFactor;
-//    SU3 P;
-//    SU3 PTemp;
+    double m_plaqMultiplicationFactor, m_topcMultiplicationFactor, m_energyMultiplicationFactor;
+    int m_latticeSize;
 public:
     MasterSampler();
     ~MasterSampler() {}
