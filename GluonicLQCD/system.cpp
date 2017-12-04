@@ -413,7 +413,7 @@ void System::loadChroma(std::string configurationName)
      */
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
-    IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_flowLattice);
+//    IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_flowLattice);
 }
 
 void System::flowConfigurations()

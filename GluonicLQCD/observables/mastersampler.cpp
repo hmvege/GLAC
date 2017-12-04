@@ -20,7 +20,8 @@ void MasterSampler::calculate()
 {
     // Initializes lattice
     Lattice <SU3> lattice[4];
-    unsigned int N[4] = {4, 8, 8, 16};
+//    unsigned int N[4] = {4, 8, 8, 16};
+    unsigned int N[4] = {8, 16, 16, 32};
     Parameters::setSubLatticePreset(true);
     Parameters::setN(N);
     Parallel::Index::setN(N);
@@ -39,10 +40,16 @@ void MasterSampler::calculate()
     m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
     m_topcMultiplicationFactor = 1.0/(16*16*M_PI*M_PI);
     m_energyMultiplicationFactor = 1.0/double(m_latticeSize);
-
     // Loads configuration into lattice
-    std::string fname = "LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin"; // 0.593424
-    IO::FieldIO::loadLatticeFieldConfiguration(fname,lattice);
+//    std::string fname = "LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin"; // 0.593424
+    std::string fname = "cfg1.bin";
+    /* OLD RESULTS
+     * i    t       Plaquette            Topological Charge   Energy density
+     * 0    0.0000  0.547953942333639    3.296406135441979    -287.015267559672225
+     * 1    0.1666  0.776686560011090    4.510276600738750    -234.477794772672866
+     */
+//    IO::FieldIO::loadLatticeFieldConfiguration(fname,lattice);
+    IO::FieldIO::loadChromaFieldConfiguration(fname,lattice);
     for (int mu = 0; mu < 4; mu++) {
         for (int iSite = 0; iSite < lattice[mu].m_latticeSize; iSite++) {
             for (int iMat = 0; iMat < 18; iMat++) {
@@ -89,7 +96,7 @@ void MasterSampler::calculate()
 
         // Third leaf
         Temp1 = U3Temp;
-        Temp1 *= shift(shift(lattice[nu],BACKWARDS,mu),BACKWARDS,mu).inv();
+        Temp1 *= shift(shift(lattice[nu],BACKWARDS,mu),BACKWARDS,nu).inv();
         Temp1 *= shift(shift(lattice[mu],BACKWARDS,mu),BACKWARDS,nu);
         Temp1 *= U2Temp;
         clov1 += Temp1;
@@ -140,7 +147,7 @@ void MasterSampler::calculate()
         Temp1 *= shift(lattice[sigma],BACKWARDS,rho);
         Temp1 *= shift(shift(lattice[rho],FORWARDS,sigma),BACKWARDS,rho);
         Temp1 *= lattice[sigma].inv();
-        clov2 += Temp1;
+        clov2 -= Temp1;
 
         // Makes first clover anti hermitian and traceless
         Temp1 = clov1.inv();
@@ -200,7 +207,6 @@ void MasterSampler::calculate()
     ///////////////////////////
     topCharge *= m_topcMultiplicationFactor;
     MPI_Allreduce(&topCharge,&topCharge,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-    topCharge /= double(Parallel::Communicator::getNumProc());
     if (Parallel::Communicator::getProcessRank() == 0) printf("\nTopological charge  = %20.16f",topCharge);
 
     ///////////////////////////
@@ -208,7 +214,6 @@ void MasterSampler::calculate()
     ///////////////////////////
     energy *= m_energyMultiplicationFactor;
     MPI_Allreduce(&energy,&energy,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-    energy /= double(Parallel::Communicator::getNumProc());
     if (Parallel::Communicator::getProcessRank() == 0) printf("\nEnergy              = %20.16f",energy);
 
 }
