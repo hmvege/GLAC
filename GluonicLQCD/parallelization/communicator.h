@@ -19,7 +19,7 @@ namespace Parallel {
         static SU3 exchangeU;
 
         // Sub lattice dimensions
-        static unsigned int m_N[4];
+        static std::vector<unsigned int> m_N;
 
         // Private fetchSU3 functions
         inline static void MPIfetchSU3Positive(Links *lattice, std::vector<int> n, int mu, int SU3Dir);
@@ -46,7 +46,7 @@ namespace Parallel {
         static int getNumProc() { return m_numprocs; }
 
         // Setters
-        static void setN(unsigned int *N);
+        static void setN(std::vector<unsigned int> N);
 
         // MPI
         static void MPIExit(std::string message); // INLINE HERE!!!

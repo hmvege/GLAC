@@ -6,7 +6,6 @@ Correlator::Correlator(bool storeFlowObservable)
 {
     storeFlow(storeFlowObservable);
     // Initiates the lattice dimensions
-    m_N = new unsigned int[4];
     // Sets position vector to zero
     m_position = std::vector<int>(4,0);
 
@@ -25,7 +24,6 @@ void Correlator::setLatticeSize(int latticeSize)
 Correlator::~Correlator()
 {
     delete m_observable;
-    delete [] m_N;
 }
 
 void Correlator::calculate(Links * lattice, int iObs)
@@ -47,7 +45,7 @@ void Correlator::calculate(SU3 *U, int iObs)
     printf("\nIf you see this, something is wrong! Should not call correlator.cpp");
 }
 
-void Correlator::setN(unsigned int *N) // MOVE INTO CONSTRUCTOR?
+void Correlator::setN(std::vector<unsigned int> N) // MOVE INTO CONSTRUCTOR?
 {
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];

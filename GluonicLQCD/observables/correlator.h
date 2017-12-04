@@ -9,7 +9,7 @@ class Correlator
 {
 protected:
     // Lattice dimension array
-    unsigned int *m_N;
+    std::vector<unsigned int> m_N;
     // (sub)lattice size
     double m_latticeSize;
     // Lattice spacing
@@ -85,7 +85,7 @@ public:
     virtual void setObservable(int iObs, double obs);
     virtual void setLatticeSize(int latticeSize);
     virtual void setLatticeSpacing(double a) { m_a = a; }
-    void setN(unsigned int *N);
+    void setN(std::vector<unsigned int> N);
     virtual void storeFlow(bool storeFlowObservable);
 };
 

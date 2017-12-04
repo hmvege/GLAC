@@ -12,18 +12,19 @@ namespace IO {
         // For writing to file
         static const int m_linkDoubles;// = 72;
         static const int m_linkSize;// = m_linkDoubles*sizeof(double);
+        static const int m_SU3Doubles;
+        static const int m_SU3Size;
 
-        static unsigned int m_N[4];
+
+        static std::vector<unsigned int> m_N[4];
         static inline double reverseDouble(const double inDouble);
     public:
         FieldIO();
         ~FieldIO();
         static void init();
-        static void writeFieldToFile(Links * lattice, int configNumber);
-        static void loadFieldConfiguration(std::string filename, Links * lattice);
+        static void writeFieldToFile(Lattice<SU3> *lattice, int configNumber);
+        static void loadFieldConfiguration(std::string filename, Lattice<SU3> *lattice);
         static void loadChromaFieldConfiguration(std::string filename, Lattice<SU3> *lattice);
-
-        static void loadLatticeFieldConfiguration(std::string filename, Lattice<SU3> *lattice);
     };
 }
 

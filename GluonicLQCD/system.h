@@ -6,7 +6,7 @@
 #include "actions/actions.h"
 #include "observables/observables.h"
 #include "math/matrices/su3matrixgenerator.h"
-#include "math/links.h"
+#include "math/lattice.h"
 #include "flow/flow.h"
 
 using std::chrono::steady_clock;
@@ -21,7 +21,7 @@ private:
     /// Parameters that must be retrieved ///
     /////////////////////////////////////////
     // Lattice sizes
-    unsigned int m_N[4];
+    std::vector<unsigned int> m_N;
     int m_latticeSize;
     // Updating constants
     int m_NCf;
@@ -51,7 +51,7 @@ private:
     void subLatticeSetup();
 
     // Lattice variables
-    Links * m_lattice;
+    Lattice<SU3> *m_lattice;
     SU3 m_updatedMatrix;
 
     // Time counting
@@ -77,11 +77,11 @@ private:
     Flow * m_flow = nullptr;
     void flowConfiguration(int iConfig);
     void copyToFlowLattice();
-    Links * m_flowLattice;
+    Lattice<SU3> * m_flowLattice;
 
     // Function for updating our system using the Metropolis algorithm
     void update();
-    void updateLink(int latticeIndex, int mu);
+    inline void updateLink(int iSite, int mu);
 
     // Thermalization function
     void thermalize();

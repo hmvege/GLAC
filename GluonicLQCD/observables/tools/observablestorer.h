@@ -19,7 +19,7 @@ struct ObservableStorer
     double m_varianceObservable = 0;
     double m_averagedObservableSquared = 0;
     double m_stdObservable = 0;
-    double * m_observables; // SLOW COMPARED TO STACK?
+    double * m_observables; // SLOW COMPARED TO STACK? --> OVERLOAD THIS!!!
     double * m_observablesSquared;
 
     // Runs statistics, perhaps create its own class? But that increases overhead, so maybe not
@@ -27,12 +27,6 @@ struct ObservableStorer
     void runStatistics();
     // Printers
     void printStatistics();
-
-//    // TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-//    void printStuff() {
-//        printf("\nObservable: %s N: %d",m_observableName.c_str(),m_NObs);
-//    }
-//    // TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 
     // File writers
     void writeObservableToFile(double acceptanceRatio);

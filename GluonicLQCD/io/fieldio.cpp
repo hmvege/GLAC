@@ -8,9 +8,11 @@
 using std::cout;
 using std::endl;
 
-const int IO::FieldIO::m_linkDoubles = 72;
+const int IO::FieldIO::m_SU3Doubles = 18;
+const int IO::FieldIO::m_SU3Size = m_SU3Doubles*sizeof(double);
+const int IO::FieldIO::m_linkDoubles = m_SU3Doubles*4;
 const int IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);
-unsigned int IO::FieldIO::m_N[];
+std::vector<unsigned int> IO::FieldIO::m_N = {0,0,0,0};
 
 IO::FieldIO::FieldIO()
 {
@@ -22,10 +24,10 @@ IO::FieldIO::~FieldIO()
 
 void IO::FieldIO::init()
 {
-    Parameters::getN(m_N);
+    Parameters::getN(&m_N);
 }
 
-void IO::FieldIO::writeFieldToFile(Links * lattice, int configNumber)
+void IO::FieldIO::writeFieldToFile(Lattice<SU3> lattice, int configNumber)
 {
     /*
      * C-method for writing out configuration to file.
@@ -52,7 +54,9 @@ void IO::FieldIO::writeFieldToFile(Links * lattice, int configNumber)
                 ny = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (unsigned int x = 0; x < m_N[0]; x++) {
                     nx = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(0) * m_N[0] + x);
-                    MPI_File_write_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize, &lattice[Parallel::Index::getIndex(x,y,z,t)], m_linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                    for (int mu = 0; mu < 4; mu++) {
+                        MPI_File_write_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                    }
                 }
             }
         }
@@ -60,37 +64,7 @@ void IO::FieldIO::writeFieldToFile(Links * lattice, int configNumber)
     MPI_File_close(&file);
 }
 
-void IO::FieldIO::loadFieldConfiguration(std::string filename, Links *lattice)
-{
-    /*
-     * Method for loading a field configuration and running the plaquettes on them.
-     * Arguments:
-     * - filename
-     * - lattice
-     */
-    MPI_File file;
-    MPI_File_open(MPI_COMM_SELF, (Parameters::getFilePath() + Parameters::getInputFolder() + filename).c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-    MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
-
-    for (unsigned int t = 0; t < m_N[3]; t++) {
-        nt = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (unsigned int z = 0; z < m_N[2]; z++) {
-            nz = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (unsigned int y = 0; y < m_N[1]; y++) {
-                ny = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (unsigned int x = 0; x < m_N[0]; x++) {
-                    nx = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(0) * m_N[0] + x);
-                    MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize, &lattice[Parallel::Index::getIndex(x,y,z,t)], m_linkDoubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
-                }
-            }
-        }
-    }
-    MPI_File_close(&file);
-    if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration %s loaded", (Parameters::getFilePath() + Parameters::getInputFolder() + filename).c_str());
-}
-
-
-void IO::FieldIO::loadLatticeFieldConfiguration(std::string filename, Lattice<SU3> *lattice)
+void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lattice)
 {
     /*
      * Method for loading a field configuration and running the plaquettes on them.
@@ -111,7 +85,7 @@ void IO::FieldIO::loadLatticeFieldConfiguration(std::string filename, Lattice<SU
                     ny = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(1) * m_N[1] + y);
                     for (unsigned int x = 0; x < m_N[0]; x++) {
                         nx = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(0) * m_N[0] + x);
-                        MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*18*sizeof(double), &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], 18, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                        MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     }
                 }
             }
@@ -145,7 +119,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
                         nx = (Parallel::Communicator::m_NLists.getProcessorDimensionPosition(0) * m_N[0] + x);
 
                         for (int i = 0; i < 18; i++) {
-                            MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*18*sizeof(double) + i*sizeof(double), &temp, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                            MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size + i*sizeof(double), &temp, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
                             lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] = reverseDouble(temp);
                             // Checking for corruption
                             if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))

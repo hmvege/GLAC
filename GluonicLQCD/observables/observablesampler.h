@@ -10,7 +10,7 @@
 class ObservableSampler : public Correlator
 {
 private:
-    unsigned int m_N[4];
+    std::vector<unsigned int> m_N;
     int m_latticeSize;
     double m_a;
     double m_P, m_E, m_Q;

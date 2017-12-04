@@ -21,9 +21,9 @@ private:
 public:
     WilsonGaugeAction();
     ~WilsonGaugeAction();
-    double getDeltaAction(Links *lattice, SU3 UPrime, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
-    void computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
-    SU3 getActionDerivative(Links * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    double getDeltaAction(SU3 U, SU3 UPrime);
+    void computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    SU3 getActionDerivative(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
 
     inline void updateMuIndex(int mu) {
         for (int i = 0; i < 4; i++)

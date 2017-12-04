@@ -30,10 +30,10 @@ System::System()
     m_storeThermalizationObservables    = Parameters::getStoreThermalizationObservables();
     m_writeConfigsToFile                = Parameters::getStoreConfigurations();
     // Sets pointers to use
-    m_SU3Generator = new SU3MatrixGenerator;
+    m_SU3Generator                      = new SU3MatrixGenerator;
     // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
-    m_generator = std::mt19937_64(Parameters::getMetropolisSeed());
-    m_uniform_distribution = std::uniform_real_distribution<double>(0,1);
+    m_generator                         = std::mt19937_64(Parameters::getMetropolisSeed());
+    m_uniform_distribution              = std::uniform_real_distribution<double>(0,1);
 }
 
 void System::setAction()
@@ -98,8 +98,11 @@ void System::subLatticeSetup()
     Parallel::Communicator::initializeSubLattice();
     Parameters::getN(m_N);
     m_subLatticeSize = Parameters::getSubLatticeSize();
-    // Creates (sub) lattice
-    m_lattice = new Links[m_subLatticeSize];
+    // Creates/allocates (sub) lattice
+    m_lattice = new Lattice<SU3>[4];
+    for (int mu = 0; mu < 4; mu++) {
+        m_lattice[mu].allocate(m_N);
+    }
     // Sets pointers
     setAction();
     setObservable(Parameters::getObservablesList(),false);
@@ -109,7 +112,7 @@ void System::subLatticeSetup()
         m_flowCorrelator->setN(m_N);
         m_flowCorrelator->setLatticeSize(m_subLatticeSize);
         m_flow = new Flow(m_S); // Ensure it does not go out of scope
-        m_flowLattice = new Links[m_subLatticeSize];
+        m_flowLattice = new Lattice<SU3>[4];
     }
     IO::FieldIO::init();
     m_S->setN(m_N);
@@ -123,10 +126,8 @@ void System::copyToFlowLattice()
      * Small function for copying the lattice to the flow lattice,
      * as we need to ensure the old lattice remains unchanged.
      */
-    for (int iLink = 0; iLink < m_subLatticeSize; iLink++) {
-        for (int mu = 0; mu < 4; mu++) {
-            m_flowLattice[iLink].U[mu] = m_lattice[iLink].U[mu];
-        }
+    for (int mu = 0; mu < 4; mu++) {
+        m_flowLattice[mu] = m_lattice[mu];
     }
 }
 
@@ -139,25 +140,25 @@ void System::latticeSetup()
     if (!Parameters::getLoadFieldConfigurations()) {
         if (Parameters::getHotStart()) {
             // All starts with a completely random matrix.
-            for (int i = 0; i < m_subLatticeSize; i++)
+            for (int mu = 0; mu < 4; mu++)
             {
-                for (int mu = 0; mu < 4; mu++)
+                for (int iSite = 0; iSite < m_subLatticeSize; iSite++)
                 {
                     if (Parameters::getRSTHotStart())
                     {
-                        m_lattice[i].U[mu] = m_SU3Generator->generateRST(); // Random close to unity
+                        m_lattice[mu][iSite] = m_SU3Generator->generateRST(); // Random close to unity
                     } else {
-                        m_lattice[i].U[mu] = m_SU3Generator->generateRandom(); // Fully random
+                        m_lattice[mu][iSite] = m_SU3Generator->generateRandom(); // Fully random
                     }
                 }
             }
         } else {
             // Cold start: everything starts out at unity.
-            for (int i = 0; i < m_subLatticeSize; i++)
+            for (int mu = 0; mu < 4; mu++)
             {
-                for (int mu = 0; mu < 4; mu++)
+                for (int iSite = 0; iSite < m_subLatticeSize; iSite++)
                 {
-                    m_lattice[i].U[mu].identity();
+                    m_lattice[mu][iSite].identity();
                 }
             }
         }
@@ -240,7 +241,7 @@ void System::thermalize()
     }
 }
 
-void System::updateLink(int latticeIndex, int mu)
+void System::updateLink(int iSite, int mu)
 {
     /*
      * Private function used for updating our system. Updates a single gauge link.
@@ -249,7 +250,7 @@ void System::updateLink(int latticeIndex, int mu)
      *  mu  : Lorentz getIndex
      */
 //    m_updatedMatrix = m_SU3Generator->generateRandom()*m_lattice[latticeIndex].U[mu]; // Shorter method of updating matrix
-    m_updatedMatrix = m_SU3Generator->generateRST()*m_lattice[latticeIndex].U[mu]; // Shorter method of updating matrix
+    m_updatedMatrix = m_SU3Generator->generateRST()*m_lattice[mu][iSite]; // Shorter method of updating matrix
 }
 
 void System::update()
@@ -266,9 +267,9 @@ void System::update()
                         for (int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(Parallel::Index::getIndex(x,y,z,t), mu);
-                            if (exp(-m_S->getDeltaAction(m_lattice, m_updatedMatrix, x, y, z, t, mu)) > m_uniform_distribution(m_generator))
+                            if (exp(-m_S->getDeltaAction(m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_updatedMatrix)) > m_uniform_distribution(m_generator))
                             {
-                                m_lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_updatedMatrix;
+                                m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)] = m_updatedMatrix;
                                 m_acceptanceCounter++;
                             }
                         }
@@ -413,7 +414,7 @@ void System::loadChroma(std::string configurationName)
      */
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
-//    IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_flowLattice);
+    IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_flowLattice);
 }
 
 void System::flowConfigurations()

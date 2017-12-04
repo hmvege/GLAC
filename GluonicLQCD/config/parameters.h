@@ -14,7 +14,7 @@ private:
     static int m_NTemporal;
     static int m_latticeSize;
     // Sub lattice / parallel related variables
-    static unsigned int m_N[4];
+    static std::vector<unsigned int> m_N;
     static int m_subLatticeSize;
     static int m_processorsPerDimension[4];
     static bool m_subLatticeSizePreset;
@@ -103,7 +103,7 @@ public:
     // Lattice related variables, initiated after config input
     static void setLatticeSize(int latticeSize) { m_latticeSize = latticeSize; }
     // Sub lattice / parallel related variables
-    static void setN(unsigned int *N) { for (int i = 0; i < 4; i++) m_N[i] = N[i]; }
+    static void setN(std::vector<unsigned int> N) { for (int i = 0; i < 4; i++) m_N[i] = N[i]; }
     static void setSubLatticePreset(bool subLatticeSizePreset) { m_subLatticeSizePreset = subLatticeSizePreset; }
     static void setSubLatticeSize(int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
     static void setProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
@@ -152,7 +152,7 @@ public:
     static double getLatticeSpacing() { return m_a; }
     static int getLatticeSize() { return m_latticeSize; }
     // Sub lattice / parallel related variables
-    static void getN(unsigned int *N) { for (int i = 0; i < 4; i++) N[i] = m_N[i]; }
+    static void getN(std::vector<unsigned int> &N) { for (int i = 0; i < 4; i++) N[i] = m_N[i]; }
     static bool getSubLatticePreset() { return m_subLatticeSizePreset; }
     static int getSubLatticeSize() { return m_subLatticeSize; }
     static void getProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
