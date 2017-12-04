@@ -48,6 +48,7 @@ void MasterSampler::storeFlow(bool storeFlowObservable)
 
 void MasterSampler::calculate(Lattice<SU3> *lattice, int iObs)
 {
+    LEGGE TIL PRINTETING FUNKSJONALITET I DENNE KLASSEN SLIK SOM I GAMLE OBSERVABLESAMPLER!
     // Initializes lattice
 //    unsigned int N[4] = {4, 8, 8, 16};
 //    std::vector<unsigned int> N = {8, 16, 16, 32};
