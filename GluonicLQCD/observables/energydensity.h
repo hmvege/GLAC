@@ -15,8 +15,7 @@ public:
     EnergyDensity(bool storeFlowObservable, double a, int latticeSize);
     EnergyDensity(bool storeFlowObservable);
     ~EnergyDensity();
-    void calculate(SU3 *clovers, int iObs);
-    void calculate(Links *lattice, int iObs);
+    void calculate(Lattice<SU3> *lattice, int iObs);
 
     // Printers
     void printStatistics();

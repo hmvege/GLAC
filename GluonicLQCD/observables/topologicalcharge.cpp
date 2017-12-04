@@ -17,7 +17,7 @@ TopologicalCharge::~TopologicalCharge()
 
 }
 
-void TopologicalCharge::calculate(Links *lattice, int iObs)
+void TopologicalCharge::calculate(Lattice<SU3> *lattice, int iObs)
 {
     /*
      * Function to be used when no clover is provided. SHOULD BE TESTED
@@ -44,17 +44,7 @@ void TopologicalCharge::calculate(Links *lattice, int iObs)
             }
         }
     }
-    m_observable->m_observables[iObs] = topCharge*m_multiplicationFactor;
-}
-
-void TopologicalCharge::calculate(SU3 *clovers, int iObs)
-{
-    topCharge = 0;
-    for (unsigned int i = 0; i < 3; i++)
-    {
-        topCharge -= traceRealMultiplication(clovers[2*i],clovers[2*i+1]);
-    }
-    m_observable->m_observables[iObs] += topCharge*m_multiplicationFactor;
+    (*m_observable)[iObs] = topCharge*m_multiplicationFactor;
 }
 
 void TopologicalCharge::printStatistics()

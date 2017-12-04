@@ -73,3 +73,17 @@ void ObservableStorer::writeFlowObservableToFile(int configNumber)
 {
     IO::writeFlowObservableToFile(m_observables,m_observableName,configNumber);
 }
+
+void ObservableStorer::reset()
+{
+    // Gets average of the observable
+    for (int i = 0; i < m_NObs; i++)
+    {
+        m_averagedObservable = 0;
+        m_averagedObservableSquared = 0;
+    }
+    m_averagedObservable = 0;
+    m_averagedObservableSquared = 0;
+    m_varianceObservable = 0;
+    m_stdObservable = 0;
+}

@@ -16,7 +16,7 @@ public:
 
     SU3 m_clovers[6];
     SU3 m_plaquettes[6];
-    void calculateClover(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l);
+    void calculateClover(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l);
 };
 
 #endif // CLOVER_H

@@ -36,7 +36,7 @@ void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, unsigned int i, uns
         // Getting first part of staple
         m_staple1 = Parallel::Communicator::getPositiveLink(lattice,m_position,mu,m_muIndex,nu);
         m_staple1 *= Parallel::Communicator::getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv();
-        m_staple1 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu].inv();
+        m_staple1 *= lattice[nu][Parallel::Index::getIndex(i,j,k,l)].inv();
         // Getting second part of staple
         m_staple2 = Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv();
         m_staple2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv();
@@ -47,22 +47,60 @@ void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, unsigned int i, uns
     }
 }
 
-SU3 WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, int mu)
 {
     // Computes the staple for current link
-    computeStaple(lattice,i,j,k,l,mu);
+//    m_staple.zeros();
+//    for (int nu = 0; nu < 4; nu++)
+//    {
+//        if (mu == nu) continue;
+//        // Getting first part of staple
+//        m_staple1 = shift(lattice[nu],FORWARDS,mu);
+//        m_staple1 *= shift(lattice[mu],FORWARDS,nu).inv();
+//        m_staple1 *= lattice[nu].inv();
+//        // Getting second part of staple
+//        m_staple2 = shift(shift(lattice[nu],FORWARDS,mu),BACKWARDS,nu).inv();
+//        m_staple2 *= shift(lattice[mu],BACKWARDS,nu).inv();
+//        m_staple2 *= shift(lattice[nu],BACKWARDS,nu);
+//        // Sums staple
+//        m_staple += m_staple1;
+//        m_staple += m_staple2;
+//    }
 
-    // Multiplying staple together with link
-    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method
+//    // Multiplying staple together with link
+//    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method
+    m_plaq.zeros();
+    for (int nu = 0; nu < 4; nu++)
+    {
+        if (mu == nu) continue;
+        // Getting first part of staple
+        m_temp = shift(lattice[nu],FORWARDS,mu);
+        m_temp *= shift(lattice[mu],FORWARDS,nu).inv();
+        m_temp *= lattice[nu].inv();
+        // Sums staple
+        m_plaq+= m_temp + shift(m_temp,BACKWARDS,nu).inv();
+    }
+
+    m_temp = m_plaq.inv();
+    m_temp -= m_plaq;
+    tempDiag = imagTrace(m_temp)/3.0;
+//    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
+    m_temp = subtractImag(m_temp,tempDiag);
+//    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
+//        Omega.mat[i] -= tempDiag;
+//    }
+    m_temp *= 0.5;
+    return m_temp;
+//    m_X = Omega*0.5;
 
     // MORNINGSTAR METHOD
-    Omega = m_staple.inv();
-    Omega -= m_staple;
-    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
-    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
-        Omega.mat[i] -= tempDiag;
-    }
-    m_X = Omega*0.5;
+//    Omega = m_staple.inv();
+//    Omega -= m_staple;
+//    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
+//    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
+//        Omega.mat[i] -= tempDiag;
+//    }
+//    m_X = Omega*0.5;
 
     /////// FIX LUSHCER METHOD ///////
     // LUSCHER METHOD
@@ -92,5 +130,5 @@ SU3 WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, unsigned int i
 //    m_X.mat[14] = - m_X.mat[10];
 //    m_X.mat[15] = m_X.mat[11];
 
-    return m_X;
+//    return m_X;
 }

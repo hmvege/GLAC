@@ -7,20 +7,20 @@ class Plaquette : public Correlator
 {
 private:
     double m_multiplicationFactor;
-    SU3 P;
-    SU3 PTemp;
+    double m_tempObservable = 0;
+    // Initializes temporary sample storer
+    Lattice<SU3> m_temp;
+    // Observable names, human readability and for io
     const std::string m_observableName = "Plaquette";
     const std::string m_observableNameCompact = "plaq";
 public:
     Plaquette(bool storeFlowObservable);
     ~Plaquette();
-    void calculate(Links *lattice, int iObs);
-    void calculate(SU3 *plaquetteStaples, int iObs);
+    void calculate(Lattice<SU3> *lattice, int iObs);
     // Statistics getter
     void runStatistics();
     // Setters
     void setLatticeSize(int latticeSize);
-    void setPlaquetteStaples(SU3 *plaquetteStaples);
     // Getters
     std::string getObservableName() { return m_observableName; }
     // Printers

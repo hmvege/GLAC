@@ -14,8 +14,7 @@ public:
     TopologicalCharge(bool storeFlowObservable);
     ~TopologicalCharge();
 
-    void calculate(SU3 *clovers, int iObs);
-    void calculate(Links *lattice, int iObs);
+    void calculate(Lattice<SU3> *lattice, int iObs);
 
     // Stats
     void runStatistics();

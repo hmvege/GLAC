@@ -27,7 +27,7 @@ Clover::~Clover()
 
 }
 
-void Clover::calculateClover(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l)
+void Clover::calculateClover(Lattice<SU3> * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l)
 {
     m_position[0] = i;
     m_position[1] = j;

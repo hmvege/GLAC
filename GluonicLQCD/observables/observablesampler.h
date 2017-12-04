@@ -25,7 +25,7 @@ public:
     ObservableSampler(bool storeFlowObservable);
     ~ObservableSampler();
 
-    void calculate(Links *lattice, int iObs);
+    void calculate(Lattice<SU3> *lattice, int iObs);
 
     void writeStatisticsToFile(double acceptanceRatio);
     void writeFlowObservablesToFile(int iConfig);

@@ -12,18 +12,20 @@ private:
     // Action based constants
     double m_beta;
     double m_multiplicationFactor;
-    SU3 m_staple, m_X, m_staple1, m_staple2;
-
+//    SU3 m_staple, m_X, m_staple1, m_staple2;
+    SU3 m_staple, m_staple1, m_staple2;
+    Lattice<SU3> m_plaq,m_temp;
+    Lattice<double> tempDiag;
     // FOR ALTERNATIVE DERIVATIVE METHOD!
-    SU3 Q, C, Omega;
-    double tempDiag;
+//    SU3 Q, C, Omega;
+//    double tempDiag;
 
 public:
     WilsonGaugeAction();
     ~WilsonGaugeAction();
     double getDeltaAction(SU3 U, SU3 UPrime);
     void computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
-    SU3 getActionDerivative(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    Lattice<SU3> getActionDerivative(Lattice<SU3> *lattice, int mu);
 
     inline void updateMuIndex(int mu) {
         for (int i = 0; i < 4; i++)

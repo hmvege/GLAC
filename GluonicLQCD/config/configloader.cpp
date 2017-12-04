@@ -62,7 +62,7 @@ namespace ConfigLoader {
         Parameters::setRSTHotStart(bool(j["RSTHotStart"]));
         // Sub dimension setting
         if (!j["subDims"].empty()) {
-            unsigned int tempN[4] = {j["subDims"][0],j["subDims"][1],j["subDims"][2],j["subDims"][3]};
+            std::vector<unsigned int> tempN = {j["subDims"][0],j["subDims"][1],j["subDims"][2],j["subDims"][3]};
             Parameters::setN(tempN);
             Parameters::setSubLatticePreset(true);
             Parallel::Communicator::setN(tempN);

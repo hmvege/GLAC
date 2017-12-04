@@ -25,7 +25,7 @@ public:
     // Getters
     std::vector<unsigned int> getN() { return m_N; }
 
-    virtual SU3 getActionDerivative(Lattice<SU3> * lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    virtual Lattice<SU3> getActionDerivative(Lattice<SU3> * lattice, int mu);
 };
 
 

@@ -1,22 +1,30 @@
 #include "neighbours.h"
 
-Neighbours::Neighbours()
+int Parallel::Neighbours::m_processRank;
+int Parallel::Neighbours::m_numproc;
+int Parallel::Neighbours::m_Nx = 0;
+int Parallel::Neighbours::m_Ny = 0;
+int Parallel::Neighbours::m_Nz = 0;
+int Parallel::Neighbours::m_Nt = 0; // Prosessors per dimension
+int Parallel::Neighbours::m_P[4]; // Prosessor coordinate
+std::vector<NeighbourList> Parallel::Neighbours::m_neighbourLists = {0,0,0,0};
+
+Parallel::Neighbours::Neighbours()
 {
 }
 
-Neighbours::~Neighbours()
+Parallel::Neighbours::~Neighbours()
 {
-    delete [] m_neighbourLists;
 }
 
-void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim) {
+void Parallel::Neighbours::initialize(int processRank, int numproc, int * processorsPerDim) {
     m_processRank = processRank;
     m_numproc = numproc;
     m_Nx = processorsPerDim[0];
     m_Ny = processorsPerDim[1];
     m_Nz = processorsPerDim[2];
     m_Nt = processorsPerDim[3];
-    m_neighbourLists = new NeighbourList[m_numproc];
+    m_neighbourLists.resize(m_numproc);
     generateNeighbourList();
     m_P[0] = processRank % m_Nx;
     m_P[1] = (processRank / m_Nx) % m_Ny;
@@ -24,7 +32,7 @@ void Neighbours::initialize(int processRank, int numproc, int * processorsPerDim
     m_P[3] = (processRank / (m_Nx * m_Ny * m_Nz)) % m_Nt;
 }
 
-void Neighbours::generateNeighbourList()
+void Parallel::Neighbours::generateNeighbourList()
 {
     /*
      * Neighbour list values defined as:
@@ -46,7 +54,7 @@ void Neighbours::generateNeighbourList()
     }
 }
 
-NeighbourList* Neighbours::getNeighbours(int Np) {
+std::vector<NeighbourList> Parallel::Neighbours::getNeighbours(int Np) {
     /*
      * Must return a list. Therefore, returning a reference. Failure to do so, will result in segfault error.
      * Arguments:

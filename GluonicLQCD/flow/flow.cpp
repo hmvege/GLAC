@@ -11,7 +11,8 @@ Flow::Flow(Action *S)
     Parameters::getN(m_N);
     m_epsilon = Parameters::getFlowEpsilon();
     m_subLatticeSize = Parameters::getSubLatticeSize();
-    m_tempLattice = new Links[m_subLatticeSize];
+    m_tempLattice = new Lattice<SU3>[4];
+    for (int mu = 0; mu < 4; mu++) m_tempLattice[mu].allocate(m_N);
     m_S = S;
     setSU3ExpFunc();
 }
@@ -21,83 +22,35 @@ Flow::~Flow()
     delete [] m_tempLattice;
 }
 
-void Flow::flowField(Links *lattice)
+void Flow::flowField(Lattice<SU3> *lattice)
 {
     /*
      * Performs a single flow on the lattice.
      */
     // W0 is simply just the original lattice times epsilon
     // Sets Z0 in temporary lattice
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_S->getActionDerivative(lattice,x,y,z,t,mu);
-                    }
-                }
-            }
-        }
+    for (unsigned int mu = 0; mu < 4; mu++) {
+        m_tempLattice[mu] = m_S->getActionDerivative(lattice,mu);
     }
     // Sets W1 in main lattice
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_SU3ExpFunc->exp(m_tempLattice[Parallel::Index::getIndex(x,y,z,t)].U[mu]*m_epsilon*0.25)*lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu];
-                    }
-                }
-            }
-        }
+    for (unsigned int mu = 0; mu < 4; mu++) {
+        lattice[mu] = matrixExp(lattice[mu]*(m_epsilon*0.25))*m_tempLattice[mu];
     }
     // Sets "Z1" in temporary lattice
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_S->getActionDerivative(lattice,x,y,z,t,mu)*m_epsilon*0.8888888888888888 - m_tempLattice[Parallel::Index::getIndex(x,y,z,t)].U[mu]*m_epsilon*0.4722222222222222;
-                    }
-                }
-            }
-        }
+    for (unsigned int mu = 0; mu < 4; mu++) {
+        m_tempLattice[mu] = m_S->getActionDerivative(lattice[mu],mu)*(m_epsilon*0.8888888888888888) - m_tempLattice[mu]*m_epsilon*0.4722222222222222;
     }
     // Sets W2 in main lattice
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_SU3ExpFunc->exp(m_tempLattice[Parallel::Index::getIndex(x,y,z,t)].U[mu])*lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu];
-                    }
-                }
-            }
-        }
+    for (unsigned int mu = 0; mu < 4; mu++) {
+        lattice[mu] = matrixExp(m_tempLattice[mu])*lattice[mu];
     }
     // Sets "Z2" in temporary lattice
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        m_tempLattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_S->getActionDerivative(lattice,x,y,z,t,mu)*0.75*m_epsilon - m_tempLattice[Parallel::Index::getIndex(x,y,z,t)].U[mu];
-                    }
-                }
-            }
-        }
+    for (unsigned int mu = 0; mu < 4; mu++) {
+        m_tempLattice[mu] = m_S->getActionDerivative(lattice,mu)*0.75*m_epsilon - m_tempLattice[mu];
     }
     // Sets V_{t+1} in main lattice
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu] = m_SU3ExpFunc->exp(m_tempLattice[Parallel::Index::getIndex(x,y,z,t)].U[mu])*lattice[Parallel::Index::getIndex(x,y,z,t)].U[mu];
-                    }
-                }
-            }
-        }
+    for (unsigned int mu = 0; mu < 4; mu++) {
+        lattice[mu] = matrixExp(m_tempLattice[mu])*lattice[mu];
     }
 }
 
@@ -119,4 +72,18 @@ void Flow::setSU3ExpFunc()
     } else {
         printf("SU3 exp. func. %s not recognized",Parameters::getExpFuncName().c_str());
     }
+}
+
+Lattice<SU3> Flow::matrixExp(Lattice<SU3> lattice)
+{
+    for (unsigned int ix = 0; ix < m_N[0]; ix++) {
+        for (unsigned int iy = 0; iy < m_N[1]; iy++) {
+            for (unsigned int iz = 0; iz < m_N[2]; iz++) {
+                for (unsigned int it = 0; it < m_N[3]; it++) {
+                    lattice[Parallel::Index::getIndex(ix,iy,iz,it)] = m_SU3ExpFunc->exp(lattice[Parallel::Index::getIndex(ix,iy,iz,it)]);
+                }
+            }
+        }
+    }
+    return lattice;
 }

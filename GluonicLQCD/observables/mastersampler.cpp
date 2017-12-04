@@ -50,15 +50,7 @@ void MasterSampler::calculate()
      */
 //    IO::FieldIO::loadLatticeFieldConfiguration(fname,lattice);
     IO::FieldIO::loadChromaFieldConfiguration(fname,lattice);
-    for (int mu = 0; mu < 4; mu++) {
-        for (int iSite = 0; iSite < lattice[mu].m_latticeSize; iSite++) {
-            for (int iMat = 0; iMat < 18; iMat++) {
-                if (lattice[mu][iSite][iMat] == 0 || lattice[mu][iSite][iMat] == 1) {
-                    printf("\n\nERROR!\n\n"); // Sanity check for us loading correct matrix...
-                }
-            }
-        }
-    }
+
 
     ///////////////////////////
     //// SYMMETRIC CLOVER /////
@@ -172,31 +164,6 @@ void MasterSampler::calculate()
     ///////////////////////////
     //////// PLAQUETTE ////////
     ///////////////////////////
-
-//    // Initializes samples for the
-//    Lattice<SU3>Temp2(dim);
-//    Temp1.zeros();
-//    Temp2.zeros();
-
-//    for (int mu = 0; mu < 4; mu++) {
-//        for (int nu = mu+1; nu < 4; nu++) {
-//            Temp1 = lattice[mu];
-//            Temp1 *= shift(lattice[nu],FORWARDS,mu);
-//            Temp1 *= shift(lattice[mu],FORWARDS,nu).inv();
-//            Temp1 *= lattice[nu].inv();
-//            Temp2 += Temp1;
-//        }
-//    }
-//    double observable = sumRealTrace(Temp2)*m_plaqMultiplicationFactor;
-
-//    MPI_Allreduce(&observable,&observable,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-//    observable /= double(Parallel::Communicator::getNumProc());
-//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nPlaquette = %20.16f\n",observable);
-
-//    plaquette *= m_plaqMultiplicationFactor;
-//    MPI_Allreduce(&observable,&observable,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-//    observable /= double(Parallel::Communicator::getNumProc());
-//    printf("\nPlaquette = %20.16f\n",observable);
     plaquette *= m_plaqMultiplicationFactor;
     MPI_Allreduce(&plaquette,&plaquette,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
     plaquette /= double(Parallel::Communicator::getNumProc());

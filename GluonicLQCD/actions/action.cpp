@@ -25,7 +25,7 @@ void Action::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j
 {
     cout << "In Action::computeStaple: If you are seeing this, something is wrong!" << endl;
     exit(1);
-    lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].print();
+    lattice[mu][i+j+k+l].print();
 }
 
 void Action::setN(std::vector<unsigned int> N)
@@ -33,9 +33,9 @@ void Action::setN(std::vector<unsigned int> N)
     m_N = N;
 }
 
-SU3 Action::getActionDerivative(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+Lattice<SU3> Action::getActionDerivative(Lattice<SU3> *lattice, int mu)
 {
     cout << "In Action::getActionDerivative: If you are seeing this, something is wrong!" << endl;
     exit(1);
-    lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu].print();
+    lattice[mu][0].print();
 }

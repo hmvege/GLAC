@@ -21,7 +21,7 @@ ObservableSampler::~ObservableSampler()
 
 }
 
-void ObservableSampler::calculate(Links *lattice, int iObs)
+void ObservableSampler::calculate(Lattice<SU3> *lattice, int iObs)
 {
     /*
      * Samples plaquette, topological charge and action/energy density.

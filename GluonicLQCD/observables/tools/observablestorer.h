@@ -3,11 +3,9 @@
 
 #include <string>
 
-struct ObservableStorer
+class ObservableStorer
 {
-    ObservableStorer(int NSize);
-    ~ObservableStorer();
-
+private:
     // Observable name
     std::string m_observableName;
     // Bool to store if we are to normalize the data by number of processors
@@ -21,6 +19,15 @@ struct ObservableStorer
     double m_stdObservable = 0;
     double * m_observables; // SLOW COMPARED TO STACK? --> OVERLOAD THIS!!!
     double * m_observablesSquared;
+public:
+    ObservableStorer(int NSize);
+    ~ObservableStorer();
+
+    // Accessor for the observable
+    double &operator[](int iObs) { return m_observables[iObs]; }
+
+//    double &operator-=(SU3 B);
+//    double &operator*=(SU3 B);
 
     // Runs statistics, perhaps create its own class? But that increases overhead, so maybe not
     void gatherResults();
@@ -36,6 +43,7 @@ struct ObservableStorer
     // Setters
     void setObservableName(std::string observableName) { m_observableName = observableName; }
     void setNormalizeObservableByProcessor(bool norm) { m_normalizeObservableByProcessor = norm; }
+    void reset();
 };
 
 #endif // OBSERVABLESTORER_H
