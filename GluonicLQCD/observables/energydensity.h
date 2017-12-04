@@ -22,6 +22,7 @@ public:
     void printStatistics();
     // Setters
     void setLatticeSpacing(double a);
+    void setLatticeSize(int latticeSize);
     // Getters
     std::string getObservableName() { return m_observableName; }
     void runStatistics();

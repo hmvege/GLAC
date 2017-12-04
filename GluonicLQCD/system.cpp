@@ -136,26 +136,6 @@ void System::latticeSetup()
      * Sets up the lattice and its matrices.
      */
     subLatticeSetup();
-    printf("\nLOADING!\n");
-    IO::FieldIO::loadFieldConfiguration("LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin",m_lattice);
-    if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\n RANK 0 point 0,0,0,0\nmu=0\n");
-        m_lattice[0].U[0].printMachine();
-        printf("\nmu=1\n");
-        m_lattice[0].U[1].printMachine();
-        printf("\nEND POINT_POINT:\n");
-        m_lattice[m_subLatticeSize-1].U[3].printMachine();
-    }
-    Parallel::Communicator::setBarrier();
-    if (Parallel::Communicator::getProcessRank() == 1) {
-        printf("\n RANK 1 point 0,0,0,0\nmu=0\n");
-        m_lattice[0].U[0].printMachine();
-        printf("\nmu=1\n");
-        m_lattice[0].U[1].printMachine();
-        printf("\nEND POINT_POINT:\n");
-        m_lattice[m_subLatticeSize-1].U[3].printMachine();
-    }
-    exit(1);
     if (!Parameters::getLoadFieldConfigurations()) {
         if (Parameters::getHotStart()) {
             // All starts with a completely random matrix.

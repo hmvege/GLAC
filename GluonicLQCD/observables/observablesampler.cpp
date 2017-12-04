@@ -7,9 +7,9 @@ ObservableSampler::ObservableSampler(bool storeFlowObservable) : Correlator(stor
 {
     m_clover = new Clover(storeFlowObservable);
     m_topologicalCharge = new TopologicalCharge(storeFlowObservable);
-    m_energyDensity = new EnergyDensity(storeFlowObservable);
     m_plaquette = new Plaquette(storeFlowObservable);
     m_a = Parameters::getLatticeSpacing();
+    m_energyDensity = new EnergyDensity(storeFlowObservable,m_a,Parameters::getSubLatticeSize());
     m_energyDensity->setLatticeSpacing(m_a);
     setLatticeSize(Parameters::getSubLatticeSize());
     Parameters::getN(m_N);
