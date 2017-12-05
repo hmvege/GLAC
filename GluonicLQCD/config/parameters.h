@@ -103,7 +103,7 @@ public:
     // Lattice related variables, initiated after config input
     static void setLatticeSize(int latticeSize) { m_latticeSize = latticeSize; }
     // Sub lattice / parallel related variables
-    static void setN(std::vector<unsigned int> N) { for (int i = 0; i < 4; i++) m_N[i] = N[i]; }
+    static void setN(std::vector<unsigned int> N) { m_N = N; }
     static void setSubLatticePreset(bool subLatticeSizePreset) { m_subLatticeSizePreset = subLatticeSizePreset; }
     static void setSubLatticeSize(int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
     static void setProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }

@@ -21,7 +21,7 @@ Correlator::Correlator()
 
 Correlator::~Correlator()
 {
-    delete m_observable;
+    delete [] m_observable;
 }
 
 void Correlator::calculate(Lattice<SU3> *lattice, int iObs)
@@ -65,7 +65,7 @@ void Correlator::writeFlowObservablesToFile(int iFlow)
     m_observable->writeFlowObservableToFile(iFlow);
 }
 
-void Correlator::writeStatisticsToFile(double acceptanceRatio)
+void Correlator::writeObservableToFile(double acceptanceRatio)
 {
     m_observable->writeObservableToFile(acceptanceRatio);
 }

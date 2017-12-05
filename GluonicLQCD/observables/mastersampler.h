@@ -22,6 +22,14 @@ public:
     ~MasterSampler() {}
     void calculate(Lattice<SU3> * lattice, int iObs);
     void storeFlow(bool storeFlowObservable);
+
+    void writeObservableToFile(double acceptanceRatio);
+    void writeFlowObservablesToFile(int iFlow);
+    void reset();
+    void runStatistics();
+    void printHeader();
+    void printObservable(int iObs);
+    void printStatistics();
 };
 
 #endif // MASTERSAMPLER_H

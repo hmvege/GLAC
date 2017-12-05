@@ -44,11 +44,92 @@ void MasterSampler::storeFlow(bool storeFlowObservable)
             m_energyObservable = new ObservableStorer(Parameters::getNCf());
         }
     }
+    m_plaqObservable->setNormalizeObservableByProcessor(true);
+}
+
+void MasterSampler::writeFlowObservablesToFile(int iFlow)
+{
+    m_plaqObservable->writeFlowObservableToFile(iFlow);
+    m_topcObservable->writeFlowObservableToFile(iFlow);
+    m_energyObservable->writeFlowObservableToFile(iFlow);
+}
+
+void MasterSampler::writeObservableToFile(double acceptanceRatio)
+{
+    m_plaqObservable->writeObservableToFile(acceptanceRatio);
+    m_topcObservable->writeObservableToFile(acceptanceRatio);
+    m_energyObservable->writeObservableToFile(acceptanceRatio);
+}
+
+void MasterSampler::reset()
+{
+    /*
+     * For resetting the flow observables between each flow.
+     */
+    m_plaqObservable->reset();
+    m_topcObservable->reset();
+    m_energyObservable->reset();
+
+}
+
+void MasterSampler::runStatistics()
+{
+    m_plaqObservable->runStatistics();
+    m_topcObservable->runStatistics();
+    m_energyObservable->runStatistics();
+}
+
+void MasterSampler::printHeader()
+{
+    if (!m_storeFlowObservable) {
+        printf("%-*s %-*s %-*s",
+               m_headerWidth,m_plaqObservable->getObservableName().c_str(),
+               m_headerWidth,m_topcObservable->getObservableName().c_str(),
+               m_headerWidth,m_energyObservable->getObservableName().c_str());
+    } else {
+        printf("\ni    t       %-*s %-*s %-*s",
+               m_headerWidth,m_plaqObservable->getObservableName().c_str(),
+               m_headerWidth,m_topcObservable->getObservableName().c_str(),
+               m_headerWidth,m_energyObservable->getObservableName().c_str());
+    }
+}
+
+void MasterSampler::printObservable(int iObs)
+{
+    if (!m_storeFlowObservable) {
+        printf("%-*.8f %-*.8f %-*.8f",
+               m_headerWidth,m_plaqObservable->getObservable(iObs),
+               m_headerWidth,m_topcObservable->getObservable(iObs),
+               m_headerWidth,m_energyObservable->getObservable(iObs));
+    } else {
+        double plaqObs = m_plaqObservable->getObservable(iObs); // TEMP TEMP TEMP!
+        double topcObs = m_topcObservable->getObservable(iObs);
+        double energyObs = m_energyObservable->getObservable(iObs);
+        Parallel::Communicator::gatherDoubleResults(&plaqObs,1);
+        Parallel::Communicator::gatherDoubleResults(&topcObs,1);
+        Parallel::Communicator::gatherDoubleResults(&energyObs,1);
+        Parallel::Communicator::setBarrier();
+        if (Parallel::Communicator::getProcessRank() == 0) {
+            printf("\n%-4d %-2.4f  %-*.15f %-*.15f %-*.15f",
+                   iObs,
+                   m_a*sqrt(8*Parameters::getFlowEpsilon()*iObs),
+                   m_headerWidth,plaqObs/double(Parallel::Communicator::getNumProc()),
+                   m_headerWidth,topcObs,
+                   m_headerWidth,energyObs);
+        }
+    }
+}
+
+void MasterSampler::printStatistics()
+{
+    m_plaqObservable->printStatistics();
+    m_topcObservable->printStatistics();
+    m_energyObservable->printStatistics();
 }
 
 void MasterSampler::calculate(Lattice<SU3> *lattice, int iObs)
 {
-    LEGGE TIL PRINTETING FUNKSJONALITET I DENNE KLASSEN SLIK SOM I GAMLE OBSERVABLESAMPLER!
+//    LEGGE TIL PRINTETING FUNKSJONALITET I DENNE KLASSEN SLIK SOM I GAMLE OBSERVABLESAMPLER!
     // Initializes lattice
 //    unsigned int N[4] = {4, 8, 8, 16};
 //    std::vector<unsigned int> N = {8, 16, 16, 32};

@@ -40,6 +40,7 @@ public:
     void writeFlowObservableToFile(int configNumber);
     // Getters
     double getObservable(int position) { return m_observables[position]; }
+    std::string getObservableName() { return m_observableName; }
     // Setters
     void setObservableName(std::string observableName) { m_observableName = observableName; }
     void setNormalizeObservableByProcessor(bool norm) { m_normalizeObservableByProcessor = norm; }

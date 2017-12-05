@@ -37,7 +37,6 @@ namespace ConfigLoader {
         json j;
         i >> j;
 //        if (Parallel::Communicator::getProcessRank() == 0) std::cout << std::setw(4) << j << std::endl;
-
         // Lattice related run variables
         Parameters::setNSpatial(j["NSpatial"]);
         Parameters::setNTemporal(j["NTemporal"]);

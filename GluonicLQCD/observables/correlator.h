@@ -32,7 +32,7 @@ public:
     Correlator();
     virtual ~Correlator();
     virtual void calculate(Lattice<SU3> *lattice, int iObs);
-    virtual void writeStatisticsToFile(double acceptanceRatio);
+    virtual void writeObservableToFile(double acceptanceRatio);
     virtual void writeFlowObservablesToFile(int iFlow);
     virtual void runStatistics();
 

@@ -362,7 +362,7 @@ void System::runMetropolis()
         SysPrint::printLine();
     }
     m_correlator->runStatistics();
-    m_correlator->writeStatisticsToFile(getAcceptanceRate()); // Runs statistics, writes to file, and prints results (if verbose is on)
+    m_correlator->writeObservableToFile(getAcceptanceRate()); // Runs statistics, writes to file, and prints results (if verbose is on)
     m_correlator->printStatistics();
 }
 

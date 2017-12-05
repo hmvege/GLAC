@@ -32,6 +32,7 @@ void Parallel::Index::setNTot(int NSpatial, int NTemporal)
      * Takes:
      *  N       : an array of ints of length 4, where each element is the dimension size of either x,y,z or t
      */
+    m_NTot.resize(4);
     for (int i = 0; i < 3; i++) {
         m_NTot[i] = (unsigned int) NSpatial;
     }
