@@ -104,6 +104,40 @@ Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, int m
 //        m_latticeStaple += m_tempStaple1 + shift(m_tempStaple1,FORWARDS,nu).inv();
 //    }
 
+//    m_staple.zeros();
+//    updateMuIndex(mu);
+//    m_position[0] = i;
+//    m_position[1] = j;
+//    m_position[2] = k;
+//    m_position[3] = l;
+//    for (int nu = 0; nu < 4; nu++) {
+//        if (mu == nu) continue;
+//        updateNuIndex(nu);
+//        // Getting first part of staple
+//        m_staple1 = Parallel::Communicator::getPositiveLink(lattice,m_position,mu,m_muIndex,nu);
+//        m_staple1 *= Parallel::Communicator::getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv();
+//        m_staple1 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu].inv();
+//        // Getting second part of staple
+//        m_staple2 = Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv();
+//        m_staple2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv();
+//        m_staple2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
+//        // Sums staple
+//        m_staple += m_staple1;
+//        m_staple += m_staple2;
+//    }
+//    // Computes the staple for current link
+//    computeStaple(lattice,i,j,k,l,mu);
+//    // Multiplying staple together with link
+//    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method
+//    // MORNINGSTAR METHOD
+//    Omega = m_staple.inv();
+//    Omega -= m_staple;
+//    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
+//    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
+//        Omega.mat[i] -= tempDiag;
+//    }
+//    m_X = Omega*0.5;
+
     m_latticeStaple = lattice[mu]*m_latticeStaple;
 
     m_tempStaple1 = m_latticeStaple.inv();
@@ -139,7 +173,6 @@ Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, int m
 //    }
 //    m_X = Omega*0.5;
 
-    /////// FIX LUSHCER METHOD ///////
     // LUSCHER METHOD
     // Multiply the product of this with each of the 8 T^a generators
     // Take trace, real, and the multiply with beta/3

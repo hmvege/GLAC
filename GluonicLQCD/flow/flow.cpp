@@ -30,17 +30,29 @@ void Flow::flowField(Lattice<SU3> *lattice)
     /*
      * Performs a single flow on the lattice.
      */
+    printf("\nBEFORE ACTION DERIVATIVE\n");
+    lattice[0][0].print();
+    Parallel::Communicator::setBarrier();
     // W0 is simply just the original lattice times epsilon
     // Sets Z0 in temporary lattice
     for (unsigned int mu = 0; mu < 4; mu++) {
         m_tempLattice[mu] = m_S->getActionDerivative(lattice,mu);
     }
+    printf("\nAFTER ACTION DERIVATIVE\n");
+    Parallel::Communicator::setBarrier();
+    lattice[0][0].print();
+    Parallel::Communicator::setBarrier();
+    m_tempLattice[0][0].print();
+    Parallel::Communicator::setBarrier();
     // Sets W1 in main lattice
     for (unsigned int mu = 0; mu < 4; mu++) {
         lattice[mu] = matrixExp(m_tempLattice[mu]*(m_epsilon*0.25))*lattice[mu];
     }
-    printf("\n");
+    printf("\nAFTER MATRIX EXPONENTIATION\n");
+    Parallel::Communicator::setBarrier();
     lattice[0][0].print();
+    Parallel::Communicator::setBarrier();
+    m_tempLattice[0][0].print();
     Parallel::Communicator::setBarrier();
     exit(1);
 //    for (unsigned int x = 0; x < m_N[0]; x++) {
