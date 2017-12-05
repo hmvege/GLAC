@@ -39,6 +39,12 @@ void Flow::flowField(Links *lattice)
             }
         }
     }
+//    printf("\n");
+//    m_tempLattice[0].U[0].printMachine();
+//    Parallel::Communicator::setBarrier();
+//    lattice[0].U[0].printMachine();
+//    Parallel::Communicator::setBarrier();
+//    exit(1);
     // Sets W1 in main lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
