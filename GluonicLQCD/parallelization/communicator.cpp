@@ -324,10 +324,9 @@ void Parallel::Communicator::MPIExit(std::string message)
 
 void Parallel::Communicator::gatherDoubleResults(double * data, int N)
 {
-    double *tempData = new double[N]; // Possibly bad?! TEST
+    double tempData[N]; // Possibly bad?! TEST
     MPI_Allreduce(data,tempData,N,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
     for (int i = 0; i < N; i++) data[i] = tempData[i];
-    delete [] tempData;
 }
 
 void Parallel::Communicator::setN(std::vector<unsigned int> N)

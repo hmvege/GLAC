@@ -15,7 +15,7 @@ MasterSampler::MasterSampler(bool flow) : Correlator()
     // Sets up multiplication factors
     m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
     m_topcMultiplicationFactor = 1.0/(16*16*M_PI*M_PI);
-    m_energyMultiplicationFactor = 1.0/double(m_latticeSize);
+    m_energyMultiplicationFactor = 1.0/double(Parameters::getLatticeSize()); // Cant divide by size if we are not normalizing as well
 
     // Allocates memory to the helper variables
     m_clov1.allocate(m_N);
@@ -154,40 +154,6 @@ std::vector<double> MasterSampler::getObservablesVector(int iObs)
 
 void MasterSampler::calculate(Lattice<SU3> *lattice, int iObs)
 {
-//    LEGGE TIL PRINTETING FUNKSJONALITET I DENNE KLASSEN SLIK SOM I GAMLE OBSERVABLESAMPLER!
-    // Initializes lattice
-//    unsigned int N[4] = {4, 8, 8, 16};
-//    std::vector<unsigned int> N = {8, 16, 16, 32};
-//    Parameters::setSubLatticePreset(true);
-//    Parameters::setN(N);
-//    Parallel::Index::setN(N);
-//    Parallel::Communicator::setN(N);
-//    Parallel::Communicator::initializeSubLattice();
-//    m_multiplicationFactor = 18.0*double(Parameters::getSubLatticeSize());
-//    IO::FieldIO::init();
-//    N = Parameters::getN();
-//    printf("\n%d %d %d %d \n",int(N[0]),int(N[1]),int(N[2]),int(N[3]));
-//    for (int mu = 0; mu < 4; mu++) {
-//        lattice[mu].allocate(N);
-//        lattice[mu].identity();
-//    }
-
-//    m_latticeSize = Parameters::getSubLatticeSize();
-//    m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
-//    m_topcMultiplicationFactor = 1.0/(16*16*M_PI*M_PI);
-//    m_energyMultiplicationFactor = 1.0/double(m_latticeSize);
-    // Loads configuration into lattice
-//    std::string fname = "LatticeOperationsTestConfig_beta6.000000_spatial8_temporal16_threads4_config0.bin"; // 0.593424
-//    std::string fname = "cfg1.bin";
-    /* OLD RESULTS
-     * i    t       Plaquette            Topological Charge   Energy density
-     * 0    0.0000  0.547953942333639    3.296406135441979    -287.015267559672225
-     * 1    0.1666  0.776686560011090    4.510276600738750    -234.477794772672866
-     */
-//    IO::FieldIO::loadLatticeFieldConfiguration(fname,lattice);
-//    IO::FieldIO::loadChromaFieldConfiguration(fname,lattice);
-
-
     ///////////////////////////
     //// SYMMETRIC CLOVER /////
     ///////////////////////////

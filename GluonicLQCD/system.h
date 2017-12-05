@@ -22,7 +22,7 @@ private:
     /////////////////////////////////////////
     // Lattice sizes
     std::vector<unsigned int> m_N;
-    int m_latticeSize;
+    unsigned int m_latticeSize;
     // Updating constants
     int m_NCf;
     int m_NCor;
@@ -35,7 +35,7 @@ private:
     bool m_writeConfigsToFile = false;
     // Paralellization setup
     int m_processRank; // Move to communicator/printer...?
-    int m_subLatticeSize;
+    unsigned int m_subLatticeSize;
 
     /////////////////////////////////////////
     /////// Parameters and functions ////////

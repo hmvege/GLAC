@@ -12,10 +12,10 @@ private:
     // Total lattice sizes
     static int m_NSpatial;
     static int m_NTemporal;
-    static int m_latticeSize;
+    static unsigned int m_latticeSize;
     // Sub lattice / parallel related variables
     static std::vector<unsigned int> m_N;
-    static int m_subLatticeSize;
+    static unsigned int m_subLatticeSize;
     static int m_processorsPerDimension[4];
     static bool m_subLatticeSizePreset;
     // Beta value constant
@@ -150,11 +150,11 @@ public:
     static double getRandomMatrixSeed() { return m_randomMatrixSeed; }
     // Lattice related variables, initiated after config input
     static double getLatticeSpacing() { return m_a; }
-    static int getLatticeSize() { return m_latticeSize; }
+    static unsigned int getLatticeSize() { return m_latticeSize; }
     // Sub lattice / parallel related variables
     static std::vector<unsigned int> getN() { return m_N; }
     static bool getSubLatticePreset() { return m_subLatticeSizePreset; }
-    static int getSubLatticeSize() { return m_subLatticeSize; }
+    static unsigned int getSubLatticeSize() { return m_subLatticeSize; }
     static void getProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
     // Name of samplers
     static std::string getExpFuncName() { return m_expFuncName; }

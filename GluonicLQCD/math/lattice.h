@@ -29,7 +29,7 @@ public:
         m_latticeSize(other.m_latticeSize)
     {
         m_sites.resize(m_latticeSize);
-        std::memcpy(&m_sites[0],&other.m_sites[0],sizeof(T)*m_latticeSize);
+        memcpy(&m_sites[0],&other.m_sites[0],sizeof(T)*m_latticeSize);
     }
 
     // Move constructor

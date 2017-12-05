@@ -26,9 +26,6 @@ public:
     // Accessor for the observable
     double &operator[](int iObs) { return m_observables[iObs]; }
 
-//    double &operator-=(SU3 B);
-//    double &operator*=(SU3 B);
-
     // Runs statistics, perhaps create its own class? But that increases overhead, so maybe not
     void gatherResults();
     void runStatistics();

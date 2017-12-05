@@ -140,7 +140,7 @@ void System::latticeSetup()
             // All starts with a completely random matrix.
             for (int mu = 0; mu < 4; mu++)
             {
-                for (int iSite = 0; iSite < m_subLatticeSize; iSite++)
+                for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++)
                 {
                     if (Parameters::getRSTHotStart())
                     {
@@ -154,7 +154,7 @@ void System::latticeSetup()
             // Cold start: everything starts out at unity.
             for (int mu = 0; mu < 4; mu++)
             {
-                for (int iSite = 0; iSite < m_subLatticeSize; iSite++)
+                for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++)
                 {
                     m_lattice[mu][iSite].identity();
                 }
@@ -389,11 +389,6 @@ void System::flowConfiguration(int iConfig)
         if (Parameters::getVerbose()) {
             m_flowCorrelator->printObservable(iFlow + 1);
         }
-        /*
-         * i    t       Plaquette            Topological Charge   Energy density
-         * 0    0.0000  0.547953942333639    3.296406135441979    -287.015267559672225
-         * 1    0.1666  0.776686560011090    4.510276600738750    -234.477794772672866
-         */
     }
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);

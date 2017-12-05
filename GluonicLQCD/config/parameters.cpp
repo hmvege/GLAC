@@ -4,11 +4,11 @@
 // Lattice specific constants
 int Parameters::m_NSpatial = 0;
 int Parameters::m_NTemporal = 0;
-int Parameters::m_latticeSize = 1;
+unsigned int Parameters::m_latticeSize = 1;
 
 // Sub lattice / parallel related variables
 std::vector<unsigned int> Parameters::m_N;
-int Parameters::m_subLatticeSize = 1;
+unsigned int Parameters::m_subLatticeSize = 1;
 int Parameters::m_processorsPerDimension[4] = {0,0,0,0};
 bool Parameters::m_subLatticeSizePreset = false;
 
@@ -102,15 +102,13 @@ double Parameters::calculateLatticeSpacing(double beta)
 void Parameters::setNSpatial(int NSpatial)
 {
     m_NSpatial = NSpatial;
-    m_latticeSize *= NSpatial;
-    m_latticeSize *= NSpatial;
-    m_latticeSize *= NSpatial;
+    m_latticeSize *= (unsigned int) NSpatial*NSpatial*NSpatial;
 }
 
 void Parameters::setNTemporal(int NTemporal)
 {
     m_NTemporal = NTemporal;
-    m_latticeSize *= NTemporal;
+    m_latticeSize *= (unsigned int) NTemporal;
 }
 
 void Parameters::setMetropolisSeed(double metropolisSeed)
