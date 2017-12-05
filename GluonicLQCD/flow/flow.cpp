@@ -27,6 +27,10 @@ void Flow::flowField(Links *lattice)
      * Performs a single flow on the lattice.
      */
     // W0 is simply just the original lattice times epsilon
+//    printf("\nBEFORE ACTION DERIVATIVE\n");
+//    Parallel::Communicator::setBarrier();
+//    lattice[0].U[0].printMachine();
+//    Parallel::Communicator::setBarrier();
     // Sets Z0 in temporary lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
@@ -39,12 +43,12 @@ void Flow::flowField(Links *lattice)
             }
         }
     }
-//    printf("\n");
-//    m_tempLattice[0].U[0].printMachine();
+//    printf("\nAFTER ACTION DERIVATIVE\n");
 //    Parallel::Communicator::setBarrier();
 //    lattice[0].U[0].printMachine();
 //    Parallel::Communicator::setBarrier();
-//    exit(1);
+//    m_tempLattice[0].U[0].printMachine();
+//    Parallel::Communicator::setBarrier();
     // Sets W1 in main lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
@@ -57,6 +61,13 @@ void Flow::flowField(Links *lattice)
             }
         }
     }
+//    printf("\nAFTER MATRIX EXPONENTIATION\n");
+//    Parallel::Communicator::setBarrier();
+//    lattice[0].U[0].printMachine();
+//    Parallel::Communicator::setBarrier();
+//    m_tempLattice[0].U[0].printMachine();
+//    Parallel::Communicator::setBarrier();
+//    exit(1);
     // Sets "Z1" in temporary lattice
     for (unsigned int x = 0; x < m_N[0]; x++) {
         for (unsigned int y = 0; y < m_N[1]; y++) {
