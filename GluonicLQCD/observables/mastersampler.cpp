@@ -52,8 +52,14 @@ void MasterSampler::storeFlow(bool storeFlowObservable)
 
 void MasterSampler::writeFlowObservablesToFile(int iFlow)
 {
+    // Gathers and writes plaquette results to file
+    m_plaqObservable->gatherResults();
     m_plaqObservable->writeFlowObservableToFile(iFlow);
+    // Gathers and writes topological charge results to file
+    m_topcObservable->gatherResults();
     m_topcObservable->writeFlowObservableToFile(iFlow);
+    // Gathers and writes energy results to file
+    m_energyObservable->gatherResults();
     m_energyObservable->writeFlowObservableToFile(iFlow);
 }
 

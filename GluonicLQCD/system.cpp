@@ -394,7 +394,6 @@ void System::flowConfiguration(int iConfig)
          * 0    0.0000  0.547953942333639    3.296406135441979    -287.015267559672225
          * 1    0.1666  0.776686560011090    4.510276600738750    -234.477794772672866
          */
-        exit(1);
     }
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);

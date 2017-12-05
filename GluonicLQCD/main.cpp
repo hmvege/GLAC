@@ -27,8 +27,6 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     programStart = steady_clock::now();
 
     // Main program part
-//    MasterSampler C;
-//    C.calculate();
     System pureGauge;
     pureGauge.latticeSetup();
     pureGauge.run();

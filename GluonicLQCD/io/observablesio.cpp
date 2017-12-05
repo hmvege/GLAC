@@ -34,6 +34,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
         file << "NCor " << Parameters::getNCor() << endl;
         file << "NCf " << Parameters::getNCf() << endl;
         file << "NTherm " << Parameters::getNTherm() << endl;
+        file << std::fixed << std::setprecision(15);
         file << "Average" << observableName << " " << averagedObservable << endl;
         file << "Variance" << observableName << " " << varianceObservable << endl;
         file << "std"  << observableName << " " << stdObservable << endl;
@@ -67,6 +68,7 @@ void IO::writeFlowObservableToFile(double *observables,
         file << "beta " << Parameters::getBeta() << endl;
         file << "NFlows " << Parameters::getNFlows() << endl;
         file << "FlowEpsilon " << Parameters::getFlowEpsilon() << endl;
+        file << std::fixed << std::setprecision(15);
         for (int i = 0; i < Parameters::getNFlows() + 1; i++) {
             file << i << " " << a*sqrt(8*flowStep*i) << " " << observables[i] << endl;
         }

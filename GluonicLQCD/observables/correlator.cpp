@@ -55,6 +55,9 @@ void Correlator::printObservable(int iObs)
 
 void Correlator::runStatistics()
 {
+    /*
+     * Used before writeObservableToFile()
+     */
     m_observable->gatherResults();
     m_observable->runStatistics();
 }
