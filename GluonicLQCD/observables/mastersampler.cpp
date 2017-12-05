@@ -45,6 +45,9 @@ void MasterSampler::storeFlow(bool storeFlowObservable)
         }
     }
     m_plaqObservable->setNormalizeObservableByProcessor(true);
+    m_plaqObservable->setObservableName("plaq");
+    m_topcObservable->setObservableName("topc");
+    m_energyObservable->setObservableName("energy");
 }
 
 void MasterSampler::writeFlowObservablesToFile(int iFlow)
@@ -125,6 +128,22 @@ void MasterSampler::printStatistics()
     m_plaqObservable->printStatistics();
     m_topcObservable->printStatistics();
     m_energyObservable->printStatistics();
+}
+
+void MasterSampler::copyObservable(int iObs, std::vector<double> obs)
+{
+    m_plaqObservable[iObs] = obs[0];
+    m_topcObservable[iObs] = obs[1];
+    m_energyObservable[iObs] = obs[2];
+}
+
+std::vector<double> MasterSampler::getObservablesVector(int iObs)
+{
+    std::vector<double> obs(3);
+    obs[0] = (*m_plaqObservable)[iObs];
+    obs[1] = (*m_topcObservable)[iObs];
+    obs[2] = (*m_energyObservable)[iObs];
+    return obs;
 }
 
 void MasterSampler::calculate(Lattice<SU3> *lattice, int iObs)

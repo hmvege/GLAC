@@ -111,6 +111,9 @@ void System::subLatticeSetup()
         setObservable(Parameters::getFlowObservablesList(),true);
         m_flow = new Flow(m_S); // Ensure it does not go out of scope
         m_flowLattice = new Lattice<SU3>[4];
+        for (int mu = 0; mu < 4; mu++) {
+            m_flowLattice[mu].allocate(m_N);
+        }
     }
     IO::FieldIO::init();
 }
@@ -386,6 +389,12 @@ void System::flowConfiguration(int iConfig)
         if (Parameters::getVerbose()) {
             m_flowCorrelator->printObservable(iFlow + 1);
         }
+        /*
+         * i    t       Plaquette            Topological Charge   Energy density
+         * 0    0.0000  0.547953942333639    3.296406135441979    -287.015267559672225
+         * 1    0.1666  0.776686560011090    4.510276600738750    -234.477794772672866
+         */
+        exit(1);
     }
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);

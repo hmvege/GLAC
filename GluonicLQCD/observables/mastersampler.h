@@ -30,6 +30,8 @@ public:
     void printHeader();
     void printObservable(int iObs);
     void printStatistics();
+    std::vector<double> getObservablesVector(int iObs);
+    void copyObservable(int iObs, std::vector<double> obs);
 };
 
 #endif // MASTERSAMPLER_H

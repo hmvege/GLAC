@@ -10,6 +10,10 @@ WilsonGaugeAction::WilsonGaugeAction(): Action()
         m_muIndex[i] = 0;
         m_nuIndex[i] = 0;
     }
+    m_latticeStaple.allocate(m_N);
+    m_tempStaple1.allocate(m_N);
+    m_tempStaple2.allocate(m_N);
+    m_tempDiag.allocate(m_N);
 }
 
 WilsonGaugeAction::~WilsonGaugeAction()
@@ -50,48 +54,81 @@ void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, unsigned int i, uns
 Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, int mu)
 {
     // Computes the staple for current link
-//    m_staple.zeros();
+//    m_latticeStaple.zeros();
 //    for (int nu = 0; nu < 4; nu++)
 //    {
 //        if (mu == nu) continue;
 //        // Getting first part of staple
-//        m_staple1 = shift(lattice[nu],FORWARDS,mu);
-//        m_staple1 *= shift(lattice[mu],FORWARDS,nu).inv();
-//        m_staple1 *= lattice[nu].inv();
+//        m_tempStaple1 = shift(lattice[nu],FORWARDS,mu);
+//        m_tempStaple1 *= shift(lattice[mu],FORWARDS,nu).inv();
+//        m_tempStaple1 *= lattice[nu].inv();
 //        // Getting second part of staple
-//        m_staple2 = shift(shift(lattice[nu],FORWARDS,mu),BACKWARDS,nu).inv();
-//        m_staple2 *= shift(lattice[mu],BACKWARDS,nu).inv();
-//        m_staple2 *= shift(lattice[nu],BACKWARDS,nu);
+//        m_tempStaple2 = shift(shift(lattice[nu],FORWARDS,mu),BACKWARDS,nu).inv();
+//        m_tempStaple2 *= shift(lattice[mu],BACKWARDS,nu).inv();
+//        m_tempStaple2 *= shift(lattice[nu],BACKWARDS,nu);
 //        // Sums staple
-//        m_staple += m_staple1;
-//        m_staple += m_staple2;
+//        m_latticeStaple += m_tempStaple1;
+//        m_latticeStaple += m_tempStaple2;
 //    }
 
-//    // Multiplying staple together with link
+    // Multiplying staple together with link
 //    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method
-    m_plaq.zeros();
+
+    m_latticeStaple.zeros();
     for (int nu = 0; nu < 4; nu++)
     {
         if (mu == nu) continue;
-        // Getting first part of staple
-        m_temp = shift(lattice[nu],FORWARDS,mu);
-        m_temp *= shift(lattice[mu],FORWARDS,nu).inv();
-        m_temp *= lattice[nu].inv();
-        // Sums staple
-        m_plaq+= m_temp + shift(m_temp,BACKWARDS,nu).inv();
+        // Retrieves first staple part
+        m_tempStaple1 = shift(lattice[nu],FORWARDS,mu);
+        // Sets up staple to pass
+        m_tempStaple2 = m_tempStaple1.inv();
+        m_tempStaple2 *= lattice[mu].inv();
+        m_tempStaple2 *= lattice[nu];
+        // Multiplies together local staple
+        m_tempStaple1 *= shift(lattice[mu],FORWARDS,nu).inv();
+        m_tempStaple1 *= lattice[nu].inv();
+        // Sums the staples
+        m_latticeStaple += m_tempStaple1;
+        m_latticeStaple += shift(m_tempStaple2,BACKWARDS,nu);
     }
 
-    m_temp = m_plaq.inv();
-    m_temp -= m_plaq;
-    tempDiag = imagTrace(m_temp)/3.0;
-//    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
-    m_temp = subtractImag(m_temp,tempDiag);
-//    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
-//        Omega.mat[i] -= tempDiag;
+//    m_latticeStaple.zeros();
+//    for (int nu = 0; nu < 4; nu++)
+//    {
+//        if (mu == nu) continue;
+//        // Getting first part of staple
+//        m_tempStaple1 = shift(lattice[nu],FORWARDS,mu);
+//        m_tempStaple1 *= shift(lattice[mu],FORWARDS,nu).inv();
+//        m_tempStaple1 *= lattice[nu].inv();
+//        // Sums staple
+//        m_latticeStaple += m_tempStaple1 + shift(m_tempStaple1,FORWARDS,nu).inv();
 //    }
-    m_temp *= 0.5;
-    return m_temp;
-//    m_X = Omega*0.5;
+
+    m_latticeStaple = lattice[mu]*m_latticeStaple;
+
+    m_tempStaple1 = m_latticeStaple.inv();
+    m_tempStaple1 -= m_latticeStaple;
+    m_tempDiag = imagTrace(m_tempStaple1)/3.0;
+    m_tempStaple1 = subtractImag(m_tempStaple1,m_tempDiag);
+    m_tempStaple1 *= 0.5;
+    return m_tempStaple1;
+
+//    SU3 Omega,m_X; // THIS METHOD RETURNS THE SAME AS THE ONE ABOVE!!
+//    double tempDiag;
+//    for (unsigned int i = 0; i < lattice[0].m_latticeSize; i++) {
+//        m_staple = m_latticeStaple[i];
+//        Omega = m_staple.inv();
+//        Omega -= m_staple;
+//        tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
+//        for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
+//            Omega.mat[i] -= tempDiag;
+//        }
+//        m_X = Omega*0.5;
+//        m_tempStaple1[i] = m_X;
+//    }
+
+//    return m_tempStaple1;
+
 
     // MORNINGSTAR METHOD
 //    Omega = m_staple.inv();

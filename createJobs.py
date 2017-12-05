@@ -225,9 +225,11 @@ class Slurm:
 #SBATCH --partition={4:<s}
 #SBATCH --ntasks={5:<d}
 #SBATCH --nodes={6:<1d}
+#SBATCH --mail-type=END
 {7:<s}
 
 source /cluster/bin/jobsetup
+
 
 module purge                # clear any inherited modules
 module load openmpi.gnu     # loads mpi
