@@ -37,3 +37,5 @@ jacks_data
 
 # HPC profiler related stuff
 hpctoolkit*
+GluonicLQCD.hpcstruct
+workspace

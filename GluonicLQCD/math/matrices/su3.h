@@ -37,9 +37,11 @@ public:
     SU3 &operator =(const double& other);
 
     // SU3 matrix operations overloading
-    SU3 &operator+=(SU3 B);
+    SU3 &operator+=(SU3& B);
+    SU3 &operator+=(SU3&& B);
     SU3 &operator-=(SU3 B);
-    SU3 &operator*=(SU3 B);
+    SU3 &operator*=(SU3& B);
+    SU3 &operator*=(SU3&& B);
     // Complex matrix operations overloading
     SU3 &operator+=(complex z);
     SU3 &operator-=(complex z);
