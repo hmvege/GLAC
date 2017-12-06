@@ -16,7 +16,8 @@ private:
     // Temporary lattice to use when flowing
     Lattice<SU3> * m_tempLattice, m_tempExpLattice;
     // Updates the lattice with the exponantiated lattice values
-    inline Lattice<SU3> matrixExp(Lattice<SU3> lattice);
+    inline Lattice<SU3> matrixExp(const Lattice<SU3> &lattice);
+    inline Lattice<SU3> matrixExp(Lattice<SU3> &&lattice);
     // SU3 exponentiation function
     SU3Exp *m_SU3ExpFunc = nullptr;
     void setSU3ExpFunc();

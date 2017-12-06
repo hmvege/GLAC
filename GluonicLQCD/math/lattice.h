@@ -18,7 +18,6 @@ public:
     Lattice() {}
     Lattice(std::vector<unsigned int>latticeDimensions) {
         allocate(latticeDimensions);
-//        printf("\nAllocating memory in default constructor!!!");
     }
 
     // Destructor
@@ -42,9 +41,8 @@ public:
 
     // Copy assignement operator
     Lattice &operator =(const Lattice& other) {
-        Lattice tmp(other); // Unneeded?
+        Lattice tmp(other);
         *this = std::move(tmp);
-//        *this = std::move(other);
         return *this;
     }
 
@@ -62,10 +60,10 @@ public:
     T &operator[](int i) { return m_sites[i]; }
     // Overloading lattice operations
     Lattice<T> &operator+=(Lattice<T>& B);
-    Lattice<T> &operator-=(Lattice<T>& B);
-    Lattice<T> &operator*=(Lattice<T>& B);
     Lattice<T> &operator+=(Lattice<T>&& B);
+    Lattice<T> &operator-=(Lattice<T>& B);
     Lattice<T> &operator-=(Lattice<T>&& B);
+    Lattice<T> &operator*=(Lattice<T>& B);
     Lattice<T> &operator*=(Lattice<T>&& B);
     // Operators using doubles, operations affect the whole of lattice
     Lattice<T> &operator*=(double B);
@@ -78,7 +76,6 @@ public:
     // Lattice value setters
     void identity();
     void zeros();
-//    Lattice<T> inv();
 };
 
 //////////////////////////////////////////
@@ -311,43 +308,23 @@ inline void Lattice<T>::allocate(std::vector<unsigned int> dim) {
 ////////// Lattice functions /////////////
 //////////////////////////////////////////
 template <class T>
-inline Lattice<double> realTrace(Lattice<T> &L)
+inline Lattice<double> realTrace(Lattice<T> L)
 {
     Lattice<double> tempTraceSum(L.m_dim);
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
         tempTraceSum[iSite] = (L[iSite][0] + L[iSite][8] + L[iSite][16]);
     }
-    return std::move(tempTraceSum);
+    return tempTraceSum;
 }
 
 template <class T>
-inline Lattice<double> realTrace(Lattice<T> &&L)
-{
-    Lattice<double> tempTraceSum(L.m_dim);
-    for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
-        tempTraceSum[iSite] = (L[iSite][0] + L[iSite][8] + L[iSite][16]);
-    }
-    return std::move(tempTraceSum);
-}
-
-template <class T>
-inline Lattice<double> imagTrace(Lattice<T> &L)
+inline Lattice<double> imagTrace(Lattice<T> L)
 {
     Lattice<double> tempTraceSum(L.m_dim);
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
         tempTraceSum[iSite] = (L[iSite][1] + L[iSite][9] + L[iSite][17]);
     }
-    return std::move(tempTraceSum);
-}
-
-template <class T>
-inline Lattice<double> imagTrace(Lattice<T> &&L)
-{
-    Lattice<double> tempTraceSum(L.m_dim);
-    for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
-        tempTraceSum[iSite] = (L[iSite][1] + L[iSite][9] + L[iSite][17]);
-    }
-    return std::move(tempTraceSum);
+    return tempTraceSum;
 }
 
 template <class T>
@@ -362,12 +339,12 @@ inline Lattice<complex> trace(Lattice<T> L)
 }
 
 template <class T>
-inline Lattice<T> subtractImag(Lattice <T> &L, Lattice <double> &other)
+inline Lattice<T> subtractImag(Lattice <T> &L, const Lattice <double> &other)
 {
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
-        L[iSite][1] -= other[iSite];
-        L[iSite][9] -= other[iSite];
-        L[iSite][17] -= other[iSite];
+        L[iSite][1] -= other.m_sites[iSite];
+        L[iSite][9] -= other.m_sites[iSite];
+        L[iSite][17] -= other.m_sites[iSite];
     }
     return std::move(L);
 }
@@ -384,12 +361,12 @@ inline Lattice<T> subtractImag(Lattice <T> &&L, Lattice <double> &&other)
 }
 
 template <class T>
-inline Lattice<T> subtractReal(Lattice <T> &L, Lattice <double> &other)
+inline Lattice<T> subtractReal(Lattice <T> &L, const Lattice <double> &other)
 {
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
-        L[iSite][0] -= other[iSite];
-        L[iSite][8] -= other[iSite];
-        L[iSite][16] -= other[iSite];
+        L[iSite][0] -= other.m_sites[iSite];
+        L[iSite][8] -= other.m_sites[iSite];
+        L[iSite][16] -= other.m_sites[iSite];
     }
     return std::move(L);
 }
@@ -438,10 +415,10 @@ inline double sumRealTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
     return latticeSum;
 }
 
-template <class T>
-inline Lattice<T> inv(Lattice<T> &B)
+template <class SU3>
+inline Lattice<SU3> inv(Lattice<SU3> &B)
 {
-    Lattice<T> _L;
+    Lattice<SU3> _L;
     _L.allocate(B.m_dim);
     for (unsigned int iSite = 0; iSite < B.m_latticeSize; iSite++) {
         _L.m_sites[iSite] = B.m_sites[iSite].inv();
@@ -449,10 +426,10 @@ inline Lattice<T> inv(Lattice<T> &B)
     return std::move(_L);
 }
 
-template <class T>
-inline Lattice<T> inv(Lattice<T> &&B)
+template <class SU3>
+inline Lattice<SU3> inv(Lattice<SU3> &&B)
 {
-    Lattice<T> _L;
+    Lattice<SU3> _L;
     _L.allocate(B.m_dim);
     for (unsigned int iSite = 0; iSite < B.m_latticeSize; iSite++) {
         _L.m_sites[iSite] = B.m_sites[iSite].inv();

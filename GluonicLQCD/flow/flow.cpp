@@ -35,8 +35,6 @@ void Flow::flowField(Lattice<SU3> *lattice)
     for (unsigned int mu = 0; mu < 4; mu++) {
         m_tempLattice[mu] = m_S->getActionDerivative(lattice,mu);
     }
-//    printf("EXists in flow field!");
-//    exit(1);
     // Sets W1 in main lattice
     for (unsigned int mu = 0; mu < 4; mu++) {
         lattice[mu] = matrixExp(m_tempLattice[mu]*(m_epsilon*0.25))*lattice[mu];
@@ -44,7 +42,6 @@ void Flow::flowField(Lattice<SU3> *lattice)
     // Sets "Z1" in temporary lattice
     for (unsigned int mu = 0; mu < 4; mu++) {
         m_tempLattice[mu] = m_S->getActionDerivative(lattice,mu)*(m_epsilon*0.8888888888888888) - m_tempLattice[mu]*(m_epsilon*0.4722222222222222);
-//        m_tempLattice[mu] -= m_tempLattice[mu]*(m_epsilon*0.4722222222222222);
     }
     // Sets W2 in main lattice
     for (unsigned int mu = 0; mu < 4; mu++) {
@@ -80,17 +77,18 @@ void Flow::setSU3ExpFunc()
     }
 }
 
-Lattice<SU3> Flow::matrixExp(Lattice<SU3> lattice)
+inline Lattice<SU3> Flow::matrixExp(const Lattice<SU3> &lattice)
 {
-//    m_tempExpLattice.zeros();
-    for (unsigned int ix = 0; ix < m_N[0]; ix++) {
-        for (unsigned int iy = 0; iy < m_N[1]; iy++) {
-            for (unsigned int iz = 0; iz < m_N[2]; iz++) {
-                for (unsigned int it = 0; it < m_N[3]; it++) {
-                    m_tempExpLattice[Parallel::Index::getIndex(ix,iy,iz,it)] = m_SU3ExpFunc->exp(lattice[Parallel::Index::getIndex(ix,iy,iz,it)]);
-                }
-            }
-        }
+    for (unsigned int iSite = 0; iSite < lattice.m_latticeSize; iSite++) {
+        m_tempExpLattice.m_sites[iSite] = m_SU3ExpFunc->exp(lattice.m_sites[iSite]);
+    }
+    return m_tempExpLattice;
+}
+
+inline Lattice<SU3> Flow::matrixExp(Lattice<SU3> &&lattice)
+{
+    for (unsigned int iSite = 0; iSite < lattice.m_latticeSize; iSite++) {
+        m_tempExpLattice.m_sites[iSite] = m_SU3ExpFunc->exp(lattice.m_sites[iSite]);
     }
     return m_tempExpLattice;
 }
