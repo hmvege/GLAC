@@ -15,15 +15,22 @@ public:
     // Matrix specific functionss
     double &operator[](int i) { return mat[i]; }
     SU3 &operator =(const SU3 &B);
-    SU3 &operator+=(SU3 B);
-    SU3 &operator-=(SU3 B);
-    SU3 &operator*=(SU3 B);
+
+    // SU3 operations
+    SU3 &operator+=(const SU3 &B);
+    SU3 &operator+=(SU3 &&B);
+    SU3 &operator*=(const SU3 &B);
+    SU3 &operator*=(SU3 &&B);
+    SU3 &operator-=(const SU3 &B);
+    SU3 &operator-=(SU3 &&B);
     SU3 &operator*=(complex z);
+
+    // POD operations
     SU3 &operator/=(double a);
     SU3 &operator*=(double a);
     SU3 &operator-=(double a);
+
     void print();
-    void printMachine();
     complex get(int i, int j) { return complex(mat[6*i + 2*j],mat[6*i + 2*j+1]); }
 
     complex trace();

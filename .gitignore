@@ -34,3 +34,9 @@ job*.sh
 
 # Jacks data
 jacks_data
+
+# HPC stuff
+GluonicLQCD.hpcstruct
+hpctoolkit-GluonicLQCD-database/
+hpctoolkit-GluonicLQCD-measurements/
+workspace/

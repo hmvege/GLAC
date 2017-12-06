@@ -1,5 +1,6 @@
 #include "energydensity.h"
 #include "clover.h"
+#include "config/parameters.h"
 
 EnergyDensity::EnergyDensity(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
@@ -24,13 +25,12 @@ void EnergyDensity::setLatticeSpacing(double a) // NEED TO DOUBLE CHECK THIS WIT
 {
 //    m_multiplicationFactor = (a*a*a*a)/(3*double(m_latticeSize));
     m_a = a;
-    m_multiplicationFactor = 1.0/double(m_latticeSize);
 }
 
 void EnergyDensity::setLatticeSize(int latticeSize)
 {
     m_latticeSize = latticeSize;
-    m_multiplicationFactor = 1.0/double(latticeSize);
+    m_multiplicationFactor = 1.0/double(m_latticeSize);
 }
 
 void EnergyDensity::calculate(SU3 *clovers, int iObs)

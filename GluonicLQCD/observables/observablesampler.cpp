@@ -53,7 +53,7 @@ void ObservableSampler::setLatticeSize(int latticeSize)
     m_latticeSize = latticeSize;
     m_clover->setLatticeSize(m_latticeSize);
     m_plaquette->setLatticeSize(m_latticeSize);
-    m_energyDensity->setLatticeSize(m_latticeSize);
+    m_energyDensity->setLatticeSize(Parameters::getLatticeSize());
     m_topologicalCharge->setLatticeSize(m_latticeSize);
 }
 
