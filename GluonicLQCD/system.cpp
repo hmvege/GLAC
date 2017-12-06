@@ -97,6 +97,7 @@ void System::subLatticeSetup()
      */
     Parallel::Communicator::initializeSubLattice();
     m_N = Parameters::getN();
+//    _internal::initializeLatticeOperations(m_N);
     m_subLatticeSize = Parameters::getSubLatticeSize();
     // Creates/allocates (sub) lattice
     m_lattice = new Lattice<SU3>[4];

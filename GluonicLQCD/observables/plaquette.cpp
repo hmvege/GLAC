@@ -6,6 +6,12 @@
 #include <vector>
 #include <cmath>
 
+//using LatOps::FORWARDS;
+//using LatOps::BACKWARDS;
+//using LatOps::shift;
+//using LatOps::sumRealTrace;
+//using LatOps::inv;
+
 Plaquette::Plaquette(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     m_observable->setObservableName(m_observableNameCompact);
@@ -30,8 +36,8 @@ void Plaquette::calculate(Lattice<SU3> *lattice, int iObs)
         for (int nu = mu+1; nu < 4; nu++) {
             m_temp = lattice[mu];
             m_temp *= shift(lattice[nu],FORWARDS,mu);
-            m_temp *= shift(lattice[mu],FORWARDS,nu).inv();
-            m_temp *= lattice[nu].inv();
+            m_temp *= inv(shift(lattice[mu],FORWARDS,nu));
+            m_temp *= inv(lattice[nu]);
             m_tempObservable += sumRealTrace(m_temp);
         }
     }

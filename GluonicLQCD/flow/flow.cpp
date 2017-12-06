@@ -35,6 +35,8 @@ void Flow::flowField(Lattice<SU3> *lattice)
     for (unsigned int mu = 0; mu < 4; mu++) {
         m_tempLattice[mu] = m_S->getActionDerivative(lattice,mu);
     }
+//    printf("EXists in flow field!");
+//    exit(1);
     // Sets W1 in main lattice
     for (unsigned int mu = 0; mu < 4; mu++) {
         lattice[mu] = matrixExp(m_tempLattice[mu]*(m_epsilon*0.25))*lattice[mu];
@@ -42,6 +44,7 @@ void Flow::flowField(Lattice<SU3> *lattice)
     // Sets "Z1" in temporary lattice
     for (unsigned int mu = 0; mu < 4; mu++) {
         m_tempLattice[mu] = m_S->getActionDerivative(lattice,mu)*(m_epsilon*0.8888888888888888) - m_tempLattice[mu]*(m_epsilon*0.4722222222222222);
+//        m_tempLattice[mu] -= m_tempLattice[mu]*(m_epsilon*0.4722222222222222);
     }
     // Sets W2 in main lattice
     for (unsigned int mu = 0; mu < 4; mu++) {

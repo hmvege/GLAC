@@ -2,6 +2,13 @@
 #include "config/parameters.h"
 #include "math/functions.h"
 
+//using LatOps::FORWARDS;
+//using LatOps::BACKWARDS;
+//using LatOps::shift;
+//using LatOps::imagTrace;
+//using LatOps::subtractImag;
+//using LatOps::inv;
+
 WilsonGaugeAction::WilsonGaugeAction(): Action()
 {
     m_beta = Parameters::getBeta();
@@ -54,26 +61,6 @@ void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, unsigned int i, uns
 Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, int mu)
 {
     // Computes the staple for current link
-//    m_latticeStaple.zeros();
-//    for (int nu = 0; nu < 4; nu++)
-//    {
-//        if (mu == nu) continue;
-//        // Getting first part of staple
-//        m_tempStaple1 = shift(lattice[nu],FORWARDS,mu);
-//        m_tempStaple1 *= shift(lattice[mu],FORWARDS,nu).inv();
-//        m_tempStaple1 *= lattice[nu].inv();
-//        // Getting second part of staple
-//        m_tempStaple2 = shift(shift(lattice[nu],FORWARDS,mu),BACKWARDS,nu).inv();
-//        m_tempStaple2 *= shift(lattice[mu],BACKWARDS,nu).inv();
-//        m_tempStaple2 *= shift(lattice[nu],BACKWARDS,nu);
-//        // Sums staple
-//        m_latticeStaple += m_tempStaple1;
-//        m_latticeStaple += m_tempStaple2;
-//    }
-
-    // Multiplying staple together with link
-//    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method
-
     m_latticeStaple.zeros();
     for (int nu = 0; nu < 4; nu++)
     {
@@ -81,90 +68,27 @@ Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, int m
         // Retrieves first staple part
         m_tempStaple1 = shift(lattice[nu],FORWARDS,mu);
         // Sets up staple to pass
-        m_tempStaple2 = m_tempStaple1.inv();
-        m_tempStaple2 *= lattice[mu].inv();
+        m_tempStaple2 = inv(m_tempStaple1);
+        m_tempStaple2 *= inv(lattice[mu]);
         m_tempStaple2 *= lattice[nu];
         // Multiplies together local staple
-        m_tempStaple1 *= shift(lattice[mu],FORWARDS,nu).inv();
-        m_tempStaple1 *= lattice[nu].inv();
+        m_tempStaple1 *= inv(shift(lattice[mu],FORWARDS,nu));
+        m_tempStaple1 *= inv(lattice[nu]);
         // Sums the staples
         m_latticeStaple += m_tempStaple1;
         m_latticeStaple += shift(m_tempStaple2,BACKWARDS,nu);
     }
 
-//    m_latticeStaple.zeros();
-//    for (int nu = 0; nu < 4; nu++)
-//    {
-//        if (mu == nu) continue;
-//        // Getting first part of staple
-//        m_tempStaple1 = shift(lattice[nu],FORWARDS,mu);
-//        m_tempStaple1 *= shift(lattice[mu],FORWARDS,nu).inv();
-//        m_tempStaple1 *= lattice[nu].inv();
-//        // Sums staple
-//        m_latticeStaple += m_tempStaple1 + shift(m_tempStaple1,FORWARDS,nu).inv();
-//    }
-
-//    m_staple.zeros();
-//    updateMuIndex(mu);
-//    m_position[0] = i;
-//    m_position[1] = j;
-//    m_position[2] = k;
-//    m_position[3] = l;
-//    for (int nu = 0; nu < 4; nu++) {
-//        if (mu == nu) continue;
-//        updateNuIndex(nu);
-//        // Getting first part of staple
-//        m_staple1 = Parallel::Communicator::getPositiveLink(lattice,m_position,mu,m_muIndex,nu);
-//        m_staple1 *= Parallel::Communicator::getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv();
-//        m_staple1 *= lattice[Parallel::Index::getIndex(i,j,k,l)].U[nu].inv();
-//        // Getting second part of staple
-//        m_staple2 = Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv();
-//        m_staple2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv();
-//        m_staple2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
-//        // Sums staple
-//        m_staple += m_staple1;
-//        m_staple += m_staple2;
-//    }
-//    // Computes the staple for current link
-//    computeStaple(lattice,i,j,k,l,mu);
-//    // Multiplying staple together with link
-//    m_staple = lattice[Parallel::Index::getIndex(i,j,k,l)].U[mu]*m_staple; // My method
-//    // MORNINGSTAR METHOD
-//    Omega = m_staple.inv();
-//    Omega -= m_staple;
-//    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
-//    for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
-//        Omega.mat[i] -= tempDiag;
-//    }
-//    m_X = Omega*0.5;
-
+    // Multiplying staple together with link
     m_latticeStaple = lattice[mu]*m_latticeStaple;
 
-    m_tempStaple1 = m_latticeStaple.inv();
+    // MORNINGSTAR METHOD
+    m_tempStaple1 = inv(m_latticeStaple);
     m_tempStaple1 -= m_latticeStaple;
     m_tempDiag = imagTrace(m_tempStaple1)/3.0;
     m_tempStaple1 = subtractImag(m_tempStaple1,m_tempDiag);
     m_tempStaple1 *= 0.5;
     return m_tempStaple1;
-
-//    SU3 Omega,m_X; // THIS METHOD RETURNS THE SAME AS THE ONE ABOVE!!
-//    double tempDiag;
-//    for (unsigned int i = 0; i < lattice[0].m_latticeSize; i++) {
-//        m_staple = m_latticeStaple[i];
-//        Omega = m_staple.inv();
-//        Omega -= m_staple;
-//        tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
-//        for (int i = 1; i < 18; i+=8) { // 8 is subtracting from identity
-//            Omega.mat[i] -= tempDiag;
-//        }
-//        m_X = Omega*0.5;
-//        m_tempStaple1[i] = m_X;
-//    }
-
-//    return m_tempStaple1;
-
-
-    // MORNINGSTAR METHOD
 //    Omega = m_staple.inv();
 //    Omega -= m_staple;
 //    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;
