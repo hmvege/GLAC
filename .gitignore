@@ -34,3 +34,6 @@ job*.sh
 
 # Jacks data
 jacks_data
+
+# HPC profiler related stuff
+hpctoolkit*

@@ -78,12 +78,14 @@ HEADERS += \
     observables/mastersampler.h \
     observables/observables.h
 
+#QMAKE_PRE_LINK = hpclink #??
+
 # MPI Settings
 QMAKE_CXX = mpicxx
 QMAKE_CXX_RELEASE = $$QMAKE_CXX
 QMAKE_CXX_DEBUG = $$QMAKE_CXX
 QMAKE_LINK = $$QMAKE_CXX
-QMAKE_CC = mpicc
+QMAKE_CC = hpclink mpicc
 
 QMAKE_CFLAGS += -O3 -std=c++11 $$system(mpicc --showme:compile)
 QMAKE_LFLAGS += $$system(mpicxx --showme:link)
