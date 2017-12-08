@@ -4,14 +4,6 @@
 #include "config/parameters.h"
 #include <cmath>
 
-//using LatOps::FORWARDS;
-//using LatOps::BACKWARDS;
-//using LatOps::shift;
-//using LatOps::imagTrace;
-//using LatOps::subtractImag;
-//using LatOps::sumRealTraceMultiplication;
-//using LatOps::inv;
-
 TopologicalCharge::TopologicalCharge(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     m_multiplicationFactor = 1.0/(16*16*M_PI*M_PI);

@@ -1,13 +1,5 @@
 #include "energydensity.h"
 
-//using LatOps::FORWARDS;
-//using LatOps::BACKWARDS;
-//using LatOps::shift;
-//using LatOps::imagTrace;
-//using LatOps::subtractImag;
-//using LatOps::sumRealTraceMultiplication;
-//using LatOps::inv;
-
 EnergyDensity::EnergyDensity(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     m_observable->setObservableName(m_observableNameCompact);

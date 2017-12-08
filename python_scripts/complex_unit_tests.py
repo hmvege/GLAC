@@ -43,6 +43,14 @@ def write_to_cpp(mat,mat_name,N):
 	# exit(1)
 	return string
 
+def write_complex_to_cpp(w,name):
+	string = ""
+	if (type(w)==complex):
+		string = "z%s = complex(%g,%g);" % (name,w.real,w.imag)
+	elif (type(w)==np.float64 or type(w)==float):
+		string = "z%s = %.15g;" % (name,w)
+	return string
+
 def write_matrices_contigious_complex_su3():
 	s1 = np.matrix([[1+1j,1+2j],[2+1j,2+2j]])
 	s2 = np.matrix([[4+4j,4+5j],[5+4j,5+5j]])
@@ -72,6 +80,31 @@ def write_matrices_contigious_complex_su3():
 	print "// Complex conjugate of s1"
 	print write_to_cpp(s1.H,"sCT",N)
 
+def complex_class_unit_tests():
+	z1 = 1.0 + 2.0j
+	z2 = 3.0 + 4.0j
+
+	print "// Adding"
+	print write_complex_to_cpp(z1+z2,"Add")
+	print "// Subtracting"
+	print write_complex_to_cpp(z1-z2,"Sub")
+	print "// Multiplying"
+	print write_complex_to_cpp(z1*z2,"Mul")
+	print "// Division"
+	print write_complex_to_cpp(z1/z2,"Div")
+	print "// Conjugate 1, conjugate()/c()"
+	print write_complex_to_cpp(z1.conjugate(),"Conj")
+	# complex.
+	# print "// Conjugate 2, c()"
+	# print write_complex_to_cpp(z1.conjugate())
+	print "// Norm"
+	print write_complex_to_cpp(np.linalg.norm(z1),"Norm")
+	print "// Norm squared"
+	print write_complex_to_cpp(np.linalg.norm(z1)**2,"NormSquared")
+	print "// Set to minus operator"
+	print write_complex_to_cpp(-z1,"SetToMinus")
+
 if __name__ == '__main__':
 	# write_old_matrices()
-	write_matrices_contigious_complex_su3()
+	# write_matrices_contigious_complex_su3()
+	complex_class_unit_tests()

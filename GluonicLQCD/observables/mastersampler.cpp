@@ -5,17 +5,6 @@
 #include "config/parameters.h"
 #include "io/fieldio.h"
 
-//using LatOps::FORWARDS;
-//using LatOps::BACKWARDS;
-//using LatOps::shift;
-//using LatOps::imagTrace;
-//using LatOps::subtractImag;
-//using LatOps::sumRealTrace;
-//using LatOps::sumRealTraceMultiplication;
-//using LatOps::inv;
-
-//using namespace LatticeOperations;
-
 MasterSampler::MasterSampler(bool flow) : Correlator()
 {
     // Sets up observable storage containers
