@@ -18,7 +18,9 @@ TestSuite::TestSuite()
     // Initiating the SU3 Matrix generator
     m_SU3Generator = new SU3MatrixGenerator;
 
-    //// 3x3 COMPLEX MATRICES
+    /////////////////////////////
+    //// 3x3 COMPLEX MATRICES ///
+    /////////////////////////////
     // Setting up matrix U1
     U1.setComplex(complex(1,1),0);
     U1.setComplex(complex(1,2),2);
@@ -135,7 +137,10 @@ TestSuite::TestSuite()
     UTrace.setComplex(complex(6,4),12);
     UTrace.setComplex(complex(9,5),14);
     UTrace.setComplex(complex(2,6),16);
-    /// 2x2 COMPLEX MATRICE
+
+    /////////////////////////////
+    //// 2x2 COMPLEX MATRICE ////
+    /////////////////////////////
     // s1
     s1.setComplex(complex(1,1),0);
     s1.setComplex(complex(1,2),2);
@@ -176,6 +181,25 @@ TestSuite::TestSuite()
     sCT.setComplex(complex(2,-1),2);
     sCT.setComplex(complex(1,-2),4);
     sCT.setComplex(complex(2,-2),6);
+
+    /////////////////////////////
+    //// Complex unit testing ///
+    /////////////////////////////
+    complex z1(1,2);
+    complex z2(3,4);
+    // Adding
+    // Subtracting
+    // Multiplying
+    // Division
+    // Conjugate 1, conjugate()
+    // Conjugate 2, c()
+    // Norm
+    // Norm squared
+    // Set to minus operator
+
+    /////////////////////////////
+    //// Lattice operations /////
+    /////////////////////////////
 }
 
 void TestSuite::runFullTestSuite(bool verbose)
@@ -310,6 +334,13 @@ bool TestSuite::runFunctionsTest(bool verbose)
     return passed;
 }
 
+bool TestSuite::runComplexTest(bool verbose)
+{
+    /*
+     * Function for testing all aspects of the complex class
+     */
+}
+
 // Comparison functions ===================================
 inline bool TestSuite::compareSU2(SU2 A, SU2 B)
 {
@@ -363,6 +394,7 @@ inline complex TestSuite::dot2(complex * a, complex * b) {
     return returnSum;
 }
 
+
 // Matrix operation tester ================================
 bool TestSuite::operationSU2Test(bool verbose, SU2 results, SU2 solution, std::string operation)
 {
@@ -414,7 +446,10 @@ bool TestSuite::operationSU3Test(bool verbose, SU3 results, SU3 solution, std::s
     }
 }
 
-// 2x2 MATRIX TESTS =======================================
+
+////////////////////////////////////
+///////// 2x2 MATRIX TESTS /////////
+////////////////////////////////////
 bool TestSuite::testSU2Addition(bool verbose)
 {
     return operationSU2Test(verbose,s1+s2,sAdd,"addition");
@@ -449,7 +484,9 @@ bool TestSuite::testSU2ComplexConjugation(bool verbose)
     return operationSU2Test(verbose,s3.transpose(),sCT,"conjugate transpose");
 }
 
-// 3x3 MATRIX TESTS =======================================
+////////////////////////////////////
+///////// 3x3 MATRIX TESTS /////////
+////////////////////////////////////
 bool TestSuite::testSU3Addition(bool verbose)
 {
     return operationSU3Test(verbose,U1+U2,UAdd,"addition");
@@ -484,7 +521,9 @@ bool TestSuite::testSU3ComplexConjugation(bool verbose)
     return operationSU3Test(verbose,U3.transpose(),UCT,"conjugate transpose");
 }
 
-// SU2 PROPERTIES TESTS ===================================
+////////////////////////////////////
+/////// SU2 PROPERTIES TESTS ///////
+////////////////////////////////////
 bool TestSuite::testSU2Hermicity(bool verbose)
 {
     /*
@@ -639,7 +678,9 @@ bool TestSuite::checkSU2Determinant(bool verbose, SU2 H)
     return passed;
 }
 
-// SU3 PROPERTIES TESTS ===================================
+////////////////////////////////////
+/////// SU3 PROPERTIES TESTS ///////
+////////////////////////////////////
 bool TestSuite::testSU3Hermicity(bool verbose)
 {
     /*
@@ -816,7 +857,11 @@ bool TestSuite::checkSU3Determinant(bool verbose, SU3 H)
     return passed;
 }
 
-// Other tests
+
+
+////////////////////////////////////
+/////////// OTHER TESTS ////////////
+////////////////////////////////////
 bool TestSuite::testSU3TraceMultiplication(bool verbose)
 {
     /*
@@ -835,6 +880,8 @@ bool TestSuite::testSU3TraceMultiplication(bool verbose)
     }
     return passed;
 }
+
+// Test 3 other trace functions as well
 
 bool TestSuite::testRSTMultiplication(bool verbose)
 {
@@ -882,3 +929,8 @@ void TestSuite::testMatrix(SU3 X, bool verbose)
         cout << "SUCCESS: All tests passed." << endl;
     }
 }
+
+////////////////////////////////////
+////////// COMPLEX TESTS ///////////
+////////////////////////////////////
+bool TestSuite::testComplex()

@@ -19,6 +19,8 @@ private:
     double m_epsilon;
     double m_epsilonSquared;
     double m_sqrtOneMinusEpsSquared;
+    double m_projectionFactor[2];
+    double m_columnLength = 0;
     inline SU3 RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t);
     inline SU3 RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 t);
 
@@ -43,12 +45,109 @@ public:
     ~SU3MatrixGenerator();
     SU3 generateRandom();
     SU3 generateRST();
-    inline SU2 generateSU2();
+    SU2 generateSU2();
 
     // Testers
     SU3 testRSTMultiplication(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplication(r,s,t); }
     SU3 testRSTMultiplicationInverse(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplicationInverse(r,s,t); }
 };
+
+
+inline SU3 SU3MatrixGenerator::generateRandom()
+{
+    /*
+     * Generatores a random SU3 matrix.
+     * Index map:
+     * H =
+     * 0 1 2    0  1   2  3    4  5
+     * 3 4 5 =  6  7   8  9   10 11
+     * 6 7 8   12 13  14 15   16 17
+     */
+    H.zeros();
+    // Populating the matrix
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            H[6*i + 2*j] = m_uniform_distribution(m_generator);
+            H[6*i + 2*j + 1] = m_uniform_distribution(m_generator);
+        }
+    }
+    // Normalizing first column
+    m_columnLength = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        m_columnLength += H[6*i]*H[6*i] + H[6*i+1]*H[6*i+1];
+    }
+    m_columnLength = sqrt(m_columnLength);
+    for (int i = 0; i < 3; i++)
+    {
+        H[6*i] /= m_columnLength;
+        H[6*i+1] /= m_columnLength;
+    }
+    // Using Gram-Schmitt to orthogonalize the second column
+    m_projectionFactor[0] = 0;
+    m_projectionFactor[1] = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        m_projectionFactor[0] += H[6*i+2]*H[6*i] + H[6*i+3]*H[6*i+1];
+        m_projectionFactor[1] += H[6*i+3]*H[6*i] - H[6*i+2]*H[6*i+1];
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        H[6*i+2] -= H[6*i]*m_projectionFactor[0] - H[6*i+1]*m_projectionFactor[1];
+        H[6*i+3] -= H[6*i]*m_projectionFactor[1] + H[6*i+1]*m_projectionFactor[0];
+    }
+    // Normalizing second column
+    m_columnLength = 0;
+    for (int i = 0; i < 3; i++)
+    {
+        m_columnLength += H[6*i+2]*H[6*i+2] + H[6*i+3]*H[6*i+3];
+    }
+    m_columnLength = sqrt(m_columnLength);
+    for (int i = 0; i < 3; i++)
+    {
+        H[6*i+2] /= m_columnLength;
+        H[6*i+3] /= m_columnLength;
+    }
+    // Taking cross product to produce the last column of our matrix
+    H[4] = H[8]*H[12] - H[9]*H[13] - H[14]*H[6] + H[15]*H[7];
+    H[5] = H[14]*H[7] + H[15]*H[6] - H[8]*H[13] - H[9]*H[12];
+    H[10] = H[14]*H[0] - H[15]*H[1] - H[2]*H[12] + H[3]*H[13];
+    H[11] = H[2]*H[13] + H[3]*H[12] - H[14]*H[1] - H[15]*H[0];
+    H[16] = H[2]*H[6] - H[3]*H[7] - H[8]*H[0] + H[9]*H[1];
+    H[17] = H[8]*H[1] + H[9]*H[0] - H[2]*H[7] - H[3]*H[6];
+
+    return H;
+}
+
+inline SU3 SU3MatrixGenerator::generateRST()
+{
+    /*
+     * Generatores a random SU3 matrix close to unity.
+     * Index map:
+     * r,s,t =
+     * 0 1
+     * 2 3
+     * R,S,T =
+     * 0 1 2
+     * 3 4 5
+     * 6 7 8
+     * H =
+     * 0 1 2    0  1   2  3    4  5
+     * 3 4 5 =  6  7   8  9   10 11
+     * 6 7 8   12 13  14 15   16 17
+     */
+    // Generates SU2 matrices
+    r = generateSU2();
+    s = generateSU2();
+    t = generateSU2();
+    if (m_SU2_uniform_distribution(m_generator) < 0) {
+        return RSTMatrixMultiplicationInverse(r,s,t);
+    } else {
+        return RSTMatrixMultiplication(r,s,t);
+    }
+}
 
 inline SU2 SU3MatrixGenerator::generateSU2()
 {

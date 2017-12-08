@@ -14,7 +14,8 @@ public:
     std::vector<T> m_sites;
     std::vector<unsigned int> m_dim; // Lattice dimensions
     unsigned int m_latticeSize;
-    // Default contructor
+
+    // Default contructors
     Lattice() {}
     Lattice(std::vector<unsigned int>latticeDimensions) {
         allocate(latticeDimensions);
@@ -269,40 +270,6 @@ inline void Lattice<T>::allocate(std::vector<unsigned int> dim) {
     m_dim = dim;
     m_sites.resize(m_latticeSize);
 }
-
-//class _internal {
-//public:
-//    //namespace { // Anonymous namespace for handling shifting and certain elements.
-//    // Cubes for sharing SU3 elements
-//    static std::vector<SU3> m_sendCube;
-//    static std::vector<SU3> m_recvCube;
-//    static std::vector<SU3> m_sendCube;
-//    static std::vector<SU3> m_recvCube;
-//    static std::vector<SU3> m_sendCube;
-//    static std::vector<SU3> m_recvCube;
-//    static std::vector<SU3> m_sendCube;
-//    static std::vector<SU3> m_recvCube;
-//    // Lattice to be used when shifting, statically allocated, in order to save time.
-//    static Lattice<SU3> _L;
-
-//    static void initializeLatticeOperations(std::vector<unsigned int> dim)
-//    {
-//        // X cubes resizing
-//        m_sendCube.resize(dim[1]*dim[2]*dim[3]);
-//        m_recvCube.resize(dim[1]*dim[2]*dim[3]);
-//        // Y cubes resizing
-//        m_sendCube.resize(dim[0]*dim[2]*dim[3]);
-//        m_recvCube.resize(dim[0]*dim[2]*dim[3]);
-//        // Z cubes resizing
-//        m_sendCube.resize(dim[0]*dim[1]*dim[3]);
-//        m_recvCube.resize(dim[0]*dim[1]*dim[3]);
-//        // T cubes resizing
-//        m_sendCube.resize(dim[0]*dim[1]*dim[2]);
-//        m_recvCube.resize(dim[0]*dim[1]*dim[2]);
-//        // Sharing cube resizing(used in inverse and as return lattice for certain problems
-//       _L.allocate(dim);
-//    }
-//};
 
 //////////////////////////////////////////
 ////////// Lattice functions /////////////

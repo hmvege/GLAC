@@ -40,10 +40,4 @@ def main(args):
 	print "SUB-LATTICE-DIMENSIONS: ", N[::-1]
 
 if __name__ == '__main__':
-	m_N = [10, 10, 10]
-	i = 9
-	j = 9
-	k = 9
-	l = 9
-	print i + m_N[0]*(j + m_N[1]*(k + m_N[2]*l))
 	main(sys.argv[1:])

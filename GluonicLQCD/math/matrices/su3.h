@@ -15,11 +15,6 @@ public:
     // Destructor
     ~SU3() {}
 
-//    // Copy constructor
-//    SU3(const SU3& other) {
-//        std::memcpy(&mat[0],&other.mat[0],18);
-//    }
-
     // Copy assignement operator
     SU3 &operator =(const SU3& other)
     {

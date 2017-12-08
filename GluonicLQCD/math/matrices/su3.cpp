@@ -113,12 +113,6 @@ complex SU3::c(int i)
     return complex(mat[2*i],mat[2*i+1]);
 }
 
-void SU3::setComplex(complex w, int i)
-{
-    mat[i] = w.z[0];
-    mat[i+1] = w.z[1];
-}
-
 complex SU3::trace()
 {
     return complex(mat[0] + mat[8] + mat[16], mat[1] + mat[9] + mat[17]);
@@ -150,6 +144,12 @@ SU3 SU3::makeAntiHermitian()
         mat[2*i+1] = temp;
     }
     return *this;
+}
+
+void SU3::setComplex(complex w, int i)
+{
+    mat[i] = w.z[0];
+    mat[i+1] = w.z[1];
 }
 
 SU3 SU3::getIm()

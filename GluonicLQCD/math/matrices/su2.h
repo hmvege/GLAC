@@ -25,18 +25,25 @@ public:
     SU2 inv();
 
     // Getters, mostly using .mat[]
-    double get(int i, int j, int k) { return mat[(4*i + 2*j) + k]; } // k is complex number of a position.
-    double &operator[](int i) { return mat[i]; }
+    inline double get(int i, int j, int k) { return mat[(4*i + 2*j) + k]; } // k is complex number of a position.
+    inline double &operator[](int i) { return mat[i]; }
 
     // Operations
     SU2 &operator=(const SU2 &B);
-    SU2 &operator+=(SU2 B);
-    SU2 &operator-=(SU2 B);
-    SU2 &operator*=(SU2 B);
+    // Basic operations overloading with itself
+    SU2 &operator+=(const SU2 &B);
+    SU2 &operator+=(SU2 &&B);
+    SU2 &operator-=(const SU2 &B);
+    SU2 &operator-=(SU2 &&B);
+    SU2 &operator*=(const SU2 &B);
+    SU2 &operator*=(SU2 &&B);
+
     SU2 &operator*=(double B);
 };
 
-
+///////////////////////////////////////
+//////// Operator overloading /////////
+///////////////////////////////////////
 inline SU2 operator+(SU2 A, SU2 B)
 {
 A += B;
