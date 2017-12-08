@@ -105,13 +105,13 @@ double SU3::normSquared(int i)
     return mat[i]*mat[i] + mat[i+1]*mat[i+1];
 }
 
-complex SU3::c(int i)
-{
-    /*
-     * Returns the complex conjugate of the object instance.
-     */
-    return complex(mat[2*i],mat[2*i+1]);
-}
+//complex SU3::c(int i)
+//{
+//    /*
+//     * Returns the complex conjugate of the object instance.
+//     */
+//    return complex(mat[2*i],-mat[2*i+1]);
+//}
 
 complex SU3::trace()
 {
@@ -152,23 +152,23 @@ void SU3::setComplex(complex w, int i)
     mat[i+1] = w.z[1];
 }
 
-SU3 SU3::getIm()
-{
-    for (int i = 0; i < 18; i+=2)
-    {
-        mat[i] = 0;
-    }
-    return *this;
-}
+//SU3 SU3::getIm()
+//{
+//    for (int i = 0; i < 18; i+=2)
+//    {
+//        mat[i] = 0;
+//    }
+//    return *this;
+//}
 
-SU3 SU3::getRe()
-{
-    for (int i = 1; i < 18; i+=2)
-    {
-        mat[i] = 0;
-    }
-    return *this;
-}
+//SU3 SU3::getRe()
+//{
+//    for (int i = 1; i < 18; i+=2)
+//    {
+//        mat[i] = 0;
+//    }
+//    return *this;
+//}
 
 void SU3::print()
 {

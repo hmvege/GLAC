@@ -319,7 +319,7 @@ void Parallel::Communicator::MPIExit(std::string message)
     if (m_processRank == 0) printf("\n%s", message.c_str());
     setBarrier();
     MPI_Finalize();
-    exit(m_processRank);
+    exit(0);
 }
 
 void Parallel::Communicator::gatherDoubleResults(double * data, int N)

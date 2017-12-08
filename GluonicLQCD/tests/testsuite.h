@@ -19,10 +19,11 @@ private:
     double zNorm, zNormSquared;
 
     // Lattice test variables. Since only the matrix changes, we can reuse previous variables
-    Lattice<SU3> latticeSU3;
-    Lattice<complex> latticeComplex;
-    double latticeDoubleValue;
-    Lattice<double> latticeDouble;
+    std::vector<unsigned int> m_dim;
+    Lattice<SU3> latticeSU3_U1, latticeSU3_U2;
+    Lattice<complex> latticeComplex_z1, latticeComplex_z2;
+    double latticeDoubleValue1, latticeDoubleValue2;
+    Lattice<double> latticeDouble1, latticeDouble2;
 
     // Limit we demand matrix properties to be retained at
     double m_eps = 2*1e-14;
@@ -43,9 +44,9 @@ private:
     bool operationSU3Test(SU3 results, SU3 solution, std::string operation);
 
     // Inline matrix comparing functions
-    inline bool compareSU3(SU3 A, SU3 B);
-    inline bool compareSU2(SU2 A, SU2 B);
-    inline bool compareComplex(complex a, complex b);
+    inline bool compareSU3(const SU3 A, const SU3 B);
+    inline bool compareSU2(const SU2 A, const SU2 B);
+    inline bool compareComplex(const complex a, const complex b);
 
     // Inline complex dot product function
     inline complex dot(complex * a, complex * b);
@@ -98,10 +99,11 @@ private:
     bool testComplexSetToMinus();
 
     // Lattice class tests
-    bool testLatticeAddition(); // Test su3, complex and double
+    bool testLatticeAddition();
     bool testLatticeSubtraction();
     bool testLatticeMultiplication();
     bool testLatticeDivision();
+    bool testTrace();
     bool testLatticeRealTrace();
     bool testLatticeImagTrace();
     bool testLatticeSubtractReal();
@@ -117,6 +119,13 @@ private:
     bool testSU3TraceMultiplication();
     bool testRSTMultiplication();
 
+    // Test communications functions!
+    // Test the lattice shift method!
+
+    // Test SU3 trace
+    // Test SU3 makeHermitian
+    // Test SU3 makeAntiHermitian
+    // Test SU3
 
 public:
     TestSuite();

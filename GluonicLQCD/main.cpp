@@ -20,7 +20,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Parallel::Communicator::init(&numberOfArguments, &cmdLineArguments);
     ConfigLoader::load(std::string(cmdLineArguments[1]));
     // Unit tester
-    if (Parameters::getUnitTesting() && Parallel::Communicator::getProcessRank() == 0) runUnitTests();
+    if (Parameters::getUnitTesting()) runUnitTests();
 
     // Program timers
     steady_clock::time_point programStart;
@@ -43,10 +43,12 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
 void runUnitTests()
 {
+    if (Parallel::Communicator::getProcessRank() == 0) {
 //    runBoolTest(1e9);
     TestSuite unitTester;
     unitTester.runFullTestSuite(Parameters::getUnitTestingVerbose());
 //    SU3BaseTests();
 //    runMatrixPerformanceTest(std::time(nullptr),1e7,true,false);
+    }
     Parallel::Communicator::MPIExit("Unit tests complete.");
 }

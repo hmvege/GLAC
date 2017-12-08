@@ -27,7 +27,7 @@ void SU3BaseTests()
     cout << "b = " << b << endl;
     a *= b;
     cout << "a*b = " << a << endl;
-    cout << "conjugate(a) = " << a.c() << endl;
+//    cout << "conjugate(a) = " << a.c() << endl;
     c += d;
     cout << "1+1j + 2+2j = " << c << endl;
 

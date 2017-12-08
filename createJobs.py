@@ -61,16 +61,17 @@ class Slurm:
         return return_dict
 
     def _create_folders(self):
-        # Checking that we have an output folder.
-        self._checkFolderPath(self.outputFolder)
-        self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName))
-        if self.NFlows != 0:
-            self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables'))
-            for fobs in ["plaq","topc","energy"]:
-                self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables',fobs))
-        if not self.load_field_configs:
-            self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'field_configurations'))
-            self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'observables'))
+        if not self.uTest:
+            # Checking that we have an output folder.
+            self._checkFolderPath(self.outputFolder)
+            self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName))
+            if self.NFlows != 0:
+                self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables'))
+                for fobs in ["plaq","topc","energy"]:
+                    self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables',fobs))
+            if not self.load_field_configs:
+                self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'field_configurations'))
+                self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'observables'))
         self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.inputFolder))
         self._checkFolderPath(os.path.join(self.CURRENT_PATH,"input",self.runName))
 
@@ -166,7 +167,7 @@ class Slurm:
             RSTHotStart             = job_config["RSTHotStart"]
             subDims                 = job_config["subDims"]
             verboseRun              = job_config["verboseRun"]
-            uTest                   = job_config["uTest"]
+            self.uTest              = job_config["uTest"]
             uTestVerbose            = job_config["uTestVerbose"]
             cpu_approx_runtime_hr   = job_config["cpu_approx_runtime_hr"]
             cpu_approx_runtime_min  = job_config["cpu_approx_runtime_min"]
@@ -177,6 +178,7 @@ class Slurm:
 
             if len(subDims) != 0:
                 checkSubDimViability(subDims)
+            
             self._create_folders()
             self._create_json(job_config)
             if system == "local":
@@ -351,7 +353,7 @@ def main(args):
 
     # Default config
     config_default = {  "bin_fn"                    : "build/GluonicLQCD",
-                        "runName"                   : "defaultTestRun",
+                        "runName"                   : "defaultRun",
                         "N"                         : 24,
                         "NT"                        : 48,
                         "subDims"                   : [],
@@ -462,7 +464,7 @@ def main(args):
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
-    unit_test_parser.add_argument('system',                     default=False,      type=str, choices=['smaug','abel'],help='Specify system we are running on.')
+    unit_test_parser.add_argument('system',                     default=False,      type=str, choices=['smaug','abel','local'],help='Specify system we are running on.')
     unit_test_parser.add_argument('-v', '--verbose',            default=False,      action='store_true', help='Prints more information during testing.')
 
     args = parser.parse_args()
@@ -566,9 +568,10 @@ def main(args):
         if args.clearIDFile:
             s.clearIDFile()
     elif args.subparser == 'utest':
+        config_default["runName"] = "defaultTestRun"
         config_default["uTest"] = True
         config_default["cpu_approx_runtime_hr"] = 0
-        config_default["cpu_approx_runtime_min"] = 10
+        config_default["cpu_approx_runtime_min"] = 20
         partition = "normal"
         excluded_nodes = ""
         system = args.system

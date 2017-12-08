@@ -43,6 +43,8 @@ public:
     SU3 &operator-=(complex z);
     SU3 &operator*=(complex z);
     // Double matrix operations overloading
+    SU3 &operator+=(double a);
+    SU3 &operator-=(double a);
     SU3 &operator/=(double a);
     SU3 &operator*=(double a);
 
@@ -60,8 +62,8 @@ public:
     SU3 makeAntiHermitian();
 
     // Returns a matrix of only real/imaginary elements
-    SU3 getIm();
-    SU3 getRe();
+//    SU3 getIm();
+//    SU3 getRe();
 
     // Returns the inverse of the matrix(the conjugate transpose)
     SU3 inv();
@@ -84,11 +86,11 @@ public:
     // Complex number operations
     double norm(int i);
     double normSquared(int i);
-    complex c(int i);
-    double re(int i) const { return mat[i]; } // But why constant?
-    double im(int i) const { return mat[i+1]; }
-    void setRe(int i, double re) { mat[i] = re; } // A bit redundant?
-    void setIm(int i, double im) { mat[i+1] = im; }
+//    complex c(int i);
+//    double re(int i) const { return mat[i]; } // But why constant?
+//    double im(int i) const { return mat[i+1]; }
+//    void setRe(int i, double re) { mat[i] = re; } // A bit redundant?
+//    void setIm(int i, double im) { mat[i+1] = im; }
 };
 
 ///////////////////////////////////////
@@ -114,6 +116,18 @@ inline SU3 operator*(SU3 A, SU3 B)
 }
 
 // Double operator overloading
+inline SU3 operator+(SU3 A, double a)
+{
+    A += a;
+    return A;
+}
+
+inline SU3 operator-(SU3 A, double a)
+{
+    A -= a;
+    return A;
+}
+
 inline SU3 operator/(SU3 A, double a)
 {
     A /= a;
@@ -253,6 +267,24 @@ inline SU3 &SU3::operator*=(SU3&& B)
     for (int i = 0; i < 18; i++)
     {
         mat[i] = temp[i];
+    }
+    return *this;
+}
+
+inline SU3 &SU3::operator+=(double a)
+{
+    for (int i = 0; i < 18; i++)
+    {
+        mat[i] += a;
+    }
+    return *this;
+}
+
+inline SU3 &SU3::operator-=(double a)
+{
+    for (int i = 0; i < 18; i++)
+    {
+        mat[i] -= a;
     }
     return *this;
 }

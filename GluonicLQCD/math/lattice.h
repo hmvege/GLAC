@@ -256,10 +256,40 @@ inline void Lattice<T>::identity() {
     }
 }
 
+template <>
+inline void Lattice<complex>::identity() {
+    for (unsigned int iSite = 0; iSite < m_latticeSize; iSite++) {
+        m_sites[iSite].z[0] = 1.0;
+        m_sites[iSite].z[1] = 0.0;
+    }
+}
+
+template <>
+inline void Lattice<double>::identity() {
+    for (unsigned int iSite = 0; iSite < m_latticeSize; iSite++) {
+        m_sites[iSite] = 1.0;
+    }
+}
+
 template <class T>
 inline void Lattice<T>::zeros() {
     for (unsigned int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite].zeros();
+    }
+}
+
+template <>
+inline void Lattice<complex>::zeros() {
+    for (unsigned int iSite = 0; iSite < m_latticeSize; iSite++) {
+        m_sites[iSite].z[0] = 0;
+        m_sites[iSite].z[1] = 0;
+    }
+}
+
+template <>
+inline void Lattice<double>::zeros() {
+    for (unsigned int iSite = 0; iSite < m_latticeSize; iSite++) {
+        m_sites[iSite] = 0;
     }
 }
 
@@ -274,8 +304,8 @@ inline void Lattice<T>::allocate(std::vector<unsigned int> dim) {
 //////////////////////////////////////////
 ////////// Lattice functions /////////////
 //////////////////////////////////////////
-template <class T>
-inline Lattice<double> realTrace(Lattice<T> L)
+template <class SU3>
+inline Lattice<double> realTrace(Lattice<SU3> L)
 {
     Lattice<double> tempTraceSum(L.m_dim);
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
@@ -284,8 +314,8 @@ inline Lattice<double> realTrace(Lattice<T> L)
     return tempTraceSum;
 }
 
-template <class T>
-inline Lattice<double> imagTrace(Lattice<T> L)
+template <class SU3>
+inline Lattice<double> imagTrace(Lattice<SU3> L)
 {
     Lattice<double> tempTraceSum(L.m_dim);
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
@@ -294,8 +324,8 @@ inline Lattice<double> imagTrace(Lattice<T> L)
     return tempTraceSum;
 }
 
-template <class T>
-inline Lattice<complex> trace(Lattice<T> L)
+template <class SU3>
+inline Lattice<complex> trace(Lattice<SU3> L)
 {
     Lattice<complex> tempTraceSum(L.m_dim);
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
@@ -305,8 +335,8 @@ inline Lattice<complex> trace(Lattice<T> L)
     return tempTraceSum;
 }
 
-template <class T>
-inline Lattice<T> subtractImag(Lattice <T> &L, const Lattice <double> &other)
+template <class SU3>
+inline Lattice<SU3> subtractImag(Lattice <SU3> &L, const Lattice <double> &other)
 {
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
         L[iSite][1] -= other.m_sites[iSite];
@@ -316,8 +346,8 @@ inline Lattice<T> subtractImag(Lattice <T> &L, const Lattice <double> &other)
     return std::move(L);
 }
 
-template <class T>
-inline Lattice<T> subtractImag(Lattice <T> &&L, Lattice <double> &&other)
+template <class SU3>
+inline Lattice<SU3> subtractImag(Lattice <SU3> &&L, Lattice <double> &&other)
 {
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
         L[iSite][1] -= other[iSite];
@@ -327,8 +357,8 @@ inline Lattice<T> subtractImag(Lattice <T> &&L, Lattice <double> &&other)
     return std::move(L);
 }
 
-template <class T>
-inline Lattice<T> subtractReal(Lattice <T> &L, const Lattice <double> &other)
+template <class SU3>
+inline Lattice<SU3> subtractReal(Lattice <SU3> &L, const Lattice <double> &other)
 {
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
         L[iSite][0] -= other.m_sites[iSite];
@@ -338,8 +368,8 @@ inline Lattice<T> subtractReal(Lattice <T> &L, const Lattice <double> &other)
     return std::move(L);
 }
 
-template <class T>
-inline Lattice<T> subtractReal(Lattice <T> &&L, Lattice <double> &&other)
+template <class SU3>
+inline Lattice<SU3> subtractReal(Lattice <SU3> &&L, Lattice <double> &&other)
 {
     for (unsigned int iSite = 0; iSite < L.m_latticeSize; iSite++) {
         L[iSite][0] -= other[iSite];
@@ -360,8 +390,8 @@ inline T sum(Lattice<T> L)
     return latticeSum;
 }
 
-template <class T>
-inline double sumRealTrace(Lattice<T> L)
+template <class SU3>
+inline double sumRealTrace(Lattice<SU3> L)
 {
     double latticeSum;
     latticeSum = 0.0;
