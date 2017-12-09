@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <ctime>
 #include <cmath>
+#include "parallelization/communicator.h"
 
 using std::cout;
 using std::endl;
@@ -137,6 +138,26 @@ TestSuite::TestSuite()
     UTrace.setComplex(complex(6,4),12);
     UTrace.setComplex(complex(9,5),14);
     UTrace.setComplex(complex(2,6),16);
+    // Hermitian U1 matrix
+    U1Hermitian.setComplex(complex(-4,0),0);
+    U1Hermitian.setComplex(complex(-3,1),2);
+    U1Hermitian.setComplex(complex(-2,2),4);
+    U1Hermitian.setComplex(complex(-3,-1),6);
+    U1Hermitian.setComplex(complex(-2,0),8);
+    U1Hermitian.setComplex(complex(-1,1),10);
+    U1Hermitian.setComplex(complex(-2,-2),12);
+    U1Hermitian.setComplex(complex(-1,-1),14);
+    U1Hermitian.setComplex(complex(0,0),16);
+    // Anti-hermitian U1 matrix
+    U1AntiHermitian.setComplex(complex(0,-4),0);
+    U1AntiHermitian.setComplex(complex(-1,-3),2);
+    U1AntiHermitian.setComplex(complex(-2,-2),4);
+    U1AntiHermitian.setComplex(complex(1,-3),6);
+    U1AntiHermitian.setComplex(complex(0,-2),8);
+    U1AntiHermitian.setComplex(complex(-1,-1),10);
+    U1AntiHermitian.setComplex(complex(2,-2),12);
+    U1AntiHermitian.setComplex(complex(1,-1),14);
+    U1AntiHermitian.setComplex(complex(0,0),16);
 
     /////////////////////////////
     //// 2x2 COMPLEX MATRICE ////
@@ -274,7 +295,8 @@ bool TestSuite::runSU3Tests()
      */
     if (m_verbose) cout << "Running SU3 property tests." << endl;
     bool passed = (testSU3Hermicity() && testSU3Orthogonality() && testSU3Norm()
-                   && testSU3Determinant());
+                   && testSU3Determinant() && testAntiHermitian() && testHermitian()
+                   && testTrace());
     if (passed) {
         cout << "PASSED: SU3 properties." << endl;
     } else {
@@ -933,6 +955,61 @@ bool TestSuite::checkSU3Determinant(SU3 H)
     return passed;
 }
 
+bool TestSuite::testSU3Trace()
+{
+    /*
+     * Tests the trace function of the SU3 matrix class.
+     */
+    bool passed = true;
+    complex U1TraceResult(6,6);
+    if (!compareComplex(U1.trace(),U1TraceResult)) {
+        passed = false;
+        cout << "    FAILED: trace() of a SU3 matrix is not correct." << endl;
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: SU3 trace is correct." << endl;
+    return passed;
+}
+
+bool TestSuite::testHermitian()
+{
+    /*
+     * Tests that a matrix becomes hermitian if .makeHermitian() is used.
+     * Translates an anti-hermitian matrix to a hermitian one.
+     */
+    bool passed = true;
+    SU3 U = U1AntiHermitian;
+    U.makeHermitian();
+    for (int i = 0; i < 18; i++) {
+        if (fabs(U.mat[i] - U1Hermitian.mat[i]) > 1e-15) {
+            passed = false;
+            cout << "    FAILED: makeHermitian() of a SU3 matrix is not correct." << endl;
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: makeHermitian() is correct." << endl;
+    return passed;
+}
+
+bool TestSuite::testAntiHermitian()
+{
+    /*
+     * Tests that a matrix becomes anti-hermitian if .makeAntiHermitian() is used.
+     * Translates an hermitian matrix to a anti-hermitian one.
+     */
+    bool passed = true;
+    SU3 U = U1Hermitian;
+    U.makeAntiHermitian();
+    for (int i = 0; i < 18; i++) {
+        if (fabs(U.mat[i] - U1AntiHermitian.mat[i]) > 1e-15) {
+            passed = false;
+            cout << "    FAILED: makeAntiHermitian() of a SU3 matrix is not correct." << endl;
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: makeAntiHermitian() is correct." << endl;
+    return passed;
+}
+
 ////////////////////////////////////
 /////////// OTHER TESTS ////////////
 ////////////////////////////////////
@@ -1427,5 +1504,12 @@ bool TestSuite::testLatticeInverse() {
     return passed;
 }
 
+bool TestSuite::testLatticeShift() {
+    /*
+     * Tests the lattice shift function.
+     */
+    bool passed = true;
 
 
+    return passed;
+}

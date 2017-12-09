@@ -9,7 +9,7 @@ class TestSuite
 {
 private:
     // SU3 Test variables
-    SU3 U1, U2, U3, UAdd, USub, UMul, UC, UT, UCT, UTrace, U_RST;
+    SU3 U1, U2, U3, UAdd, USub, UMul, UC, UT, UCT, UTrace, U_RST, U1Hermitian, U1AntiHermitian;
 
     // SU2 Test variables
     SU2 s1, s2, s3, sAdd, sSub, sMul, sC, sT, sCT, s_r, s_s, s_t;
@@ -87,6 +87,9 @@ private:
     bool checkSU3Norm(SU3 H);
     bool testSU3Determinant();
     bool checkSU3Determinant(SU3 H);
+    bool testSU3Trace();
+    bool testHermitian();
+    bool testAntiHermitian();
 
     // Complex class tests
     bool testComplexAddition();
@@ -112,6 +115,7 @@ private:
     bool testLatticeSumRealTrace();
     bool testLatticeSumRealTraceMultiplication();
     bool testLatticeInverse();
+    bool testLatticeShift();
 
 
     // Other tests

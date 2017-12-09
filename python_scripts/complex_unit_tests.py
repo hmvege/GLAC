@@ -13,6 +13,7 @@ def write_old_matrices():
 	U2 = np.matrix([[4+4j,4+5j,4+6j],[5+4j,5+5j,5+6j],[6+4j,6+5j,6+6j]])
 
 	print "Original matrices: \nU1 = \n", U1, "\nU2 = \n", U2
+	print "Trace: ", np.trace(U1)
 
 	print "// Adding"
 	print write_to_cpp_old(U1+U2,"UAdd")
@@ -32,14 +33,21 @@ def write_old_matrices():
 	print "// Complex conjugate of U1"
 	print write_to_cpp_old(U1.H,"UCT")
 
+	print "// Hermitian U1 matrix"
+	print write_to_cpp((U1+U1.H) - np.trace((U1+U1.H))*0.5,"U1Hermitian",3)
+
+	print "// Anti-hermitian U1 matrix"
+	print write_to_cpp((U1-U1.H) - np.trace((U1-U1.H))*0.5,"U1AntiHermitian",3)
+
+
 def write_to_cpp(mat,mat_name,N):
 	string = ""
 	for i in xrange(N):
 		for j in xrange(N):
 			string += "%s.setComplex(complex(%g,%g),%d);" % (mat_name,np.real(mat[i,j]),np.imag(mat[i,j]),int(2*N*i + 2*j))
 			# if i != 1 and j != 1: string += "\n"
-			if (j!=1): string += "\n"
-		if (i!=1): string += "\n"
+			if (j!=N-1): string += "\n"
+		if (i!=N-1): string += "\n"
 	# exit(1)
 	return string
 
@@ -105,6 +113,6 @@ def complex_class_unit_tests():
 	print write_complex_to_cpp(-z1,"SetToMinus")
 
 if __name__ == '__main__':
-	# write_old_matrices()
-	# write_matrices_contigious_complex_su3()
+	write_old_matrices()
+	write_matrices_contigious_complex_su3()
 	complex_class_unit_tests()
