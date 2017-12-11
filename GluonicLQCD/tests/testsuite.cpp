@@ -1560,6 +1560,9 @@ bool TestSuite::testLatticeShift() {
             m_lattice[mu][iSite] = m_processRank;
         }
     }
+    Parallel::Communicator::setBarrier();
+    Parallel::Neighbours::getNeighbours(m_processRank)->print();
+    Parallel::Communicator::setBarrier();
     Lattice<SU3>L;
     L.allocate(m_dim);
     for (int dir = 0; dir < 8; dir++) {
@@ -1570,25 +1573,32 @@ bool TestSuite::testLatticeShift() {
             // Forwards
             L = shift(m_lattice[0],FORWARDS,dir % 2);
         }
+        if (dir / 2 == 0) position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),1,1,1); // x direction
+        else if (dir / 2 == 1) position = Parallel::Index::getIndex(1,(L.m_dim[1] - 1) * (dir % 2),1,1); // y direction
+        else if (dir / 2 == 2) position = Parallel::Index::getIndex(1,1,(L.m_dim[2] - 1) * (dir % 2),1); // z direction
+        else position = Parallel::Index::getIndex(1,1,1,(L.m_dim[3] - 1) * (dir % 2)); // t direction
+        printf("RANK: %d DIR: %d RECEIVING FROM: %d VALUE: %f SHOULD EQUAL: %d \n",m_processRank,dir,((dir + 1) % 2) + dir / 2 * 2,L[position][0],Parallel::Neighbours::get((dir+1)%2 + (dir/2)*2));
         // Compare opposite value with:
         for (unsigned int i = 0; i < L.m_dim[(dir / 2 + 1) % 4]; i++) {
             for (unsigned int j = 0; j < L.m_dim[(dir / 2 + 2) % 4]; j++) {
                 for (unsigned int k = 0; k < L.m_dim[(dir / 2 + 3) % 4]; k++) {
-                    if (dir / 2 == 0) position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),i,j,k);
-                    else if (dir / 2 == 1) position = Parallel::Index::getIndex(i,(L.m_dim[1] - 1) * (dir % 2),j,k);
-                    else if (dir / 2 == 2) position = Parallel::Index::getIndex(i,j,(L.m_dim[2] - 1) * (dir % 2),k);
-                    else position = Parallel::Index::getIndex(i,j,k,(L.m_dim[3] - 1) * (dir % 2));
+                    if (dir / 2 == 0) position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),i,j,k); // x direction
+                    else if (dir / 2 == 1) position = Parallel::Index::getIndex(i,(L.m_dim[1] - 1) * (dir % 2),j,k); // y direction
+                    else if (dir / 2 == 2) position = Parallel::Index::getIndex(i,j,(L.m_dim[2] - 1) * (dir % 2),k); // z direction
+                    else position = Parallel::Index::getIndex(i,j,k,(L.m_dim[3] - 1) * (dir % 2)); // t direction
                     for (unsigned int iMat = 0; iMat < 18; iMat++) {
                         if (L.m_sites[position].mat[iMat] != double(Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2))) {
                             passed = false;
                             break;
                         }
                     }
+//                    if (!passed) break;
                 }
             }
         }
     }
 
+    Parallel::Communicator::setBarrier();
     if (passed) {
         if (m_processRank == 0) cout << "    SUCCESS: Lattice shift." << endl;
     } else {
