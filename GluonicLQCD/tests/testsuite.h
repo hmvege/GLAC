@@ -29,6 +29,13 @@ private:
     double m_eps = 2*1e-14;
     double m_tracedMatrix;
 
+    // Variables used for full lattice testing
+    int m_processRank;
+    int m_numprocs;
+    int m_N, m_NT;
+    unsigned int m_subLatticeSize;
+    Lattice<SU3> * m_lattice;
+
     // Verbose storage
     bool m_verbose = false;
 
@@ -106,7 +113,7 @@ private:
     bool testLatticeSubtraction();
     bool testLatticeMultiplication();
     bool testLatticeDivision();
-    bool testTrace();
+    bool testLatticeTrace();
     bool testLatticeRealTrace();
     bool testLatticeImagTrace();
     bool testLatticeSubtractReal();
@@ -115,24 +122,22 @@ private:
     bool testLatticeSumRealTrace();
     bool testLatticeSumRealTraceMultiplication();
     bool testLatticeInverse();
-    bool testLatticeShift();
-
 
     // Other tests
-//    bool testGaugeInvariance();
     bool testSU3TraceMultiplication();
     bool testRSTMultiplication();
 
+    bool fullLatticeTests();
+    bool testLatticeShift();
+    bool testFieldGaugeInvariance(std::string gaugeFieldName, std::vector<unsigned int> dim);
+//    bool testGaugeInvariance();
     // Test communications functions!
+    // Test all-gather
     // Test the lattice shift method!
-
-    // Test SU3 trace
-    // Test SU3 makeHermitian
-    // Test SU3 makeAntiHermitian
-    // Test SU3
 
 public:
     TestSuite();
+    ~TestSuite();
 
     void runFullTestSuite(bool verbose);
     bool runComplexTests();

@@ -4,6 +4,8 @@
 #include <ctime>
 #include <cmath>
 #include "parallelization/communicator.h"
+#include "io/fieldio.h"
+#include "config/parameters.h"
 
 using std::cout;
 using std::endl;
@@ -229,7 +231,21 @@ TestSuite::TestSuite()
     /////////////////////////////
     latticeDoubleValue1 = 2.5;
     latticeDoubleValue2 = 1.5;
-    m_dim = {16,16,16,32};
+    m_N = 8;
+    m_NT = 16;
+    Parameters::setLatticeSize(1);
+    Parameters::setNSpatial(m_N);
+    Parameters::setNTemporal(m_NT);
+    Parameters::setSubLatticePreset(false);
+    Parallel::Communicator::initializeSubLattice();
+    m_subLatticeSize = Parameters::getSubLatticeSize();
+    m_dim = Parameters::getN();
+    // Creates/allocates (sub) lattice
+    m_lattice = new Lattice<SU3>[4];
+    for (int mu = 0; mu < 4; mu++) {
+        m_lattice[mu].allocate(m_dim);
+    }
+    IO::FieldIO::init();
     latticeSU3_U1.allocate(m_dim);
     latticeSU3_U2.allocate(m_dim);
     latticeComplex_z1.allocate(m_dim);
@@ -244,6 +260,13 @@ TestSuite::TestSuite()
         latticeDouble1[iSite] = latticeDoubleValue1;
         latticeDouble2[iSite] = latticeDoubleValue2;
     }
+    // Initializes parallel usage.
+    m_processRank = Parallel::Communicator::getProcessRank();
+    m_numprocs = Parallel::Communicator::getNumProc();
+}
+
+TestSuite::~TestSuite() {
+    delete [] m_lattice;
 }
 
 void TestSuite::runFullTestSuite(bool verbose)
@@ -252,15 +275,20 @@ void TestSuite::runFullTestSuite(bool verbose)
      * Function that runs all available tests.
      */
     m_verbose = verbose;
-    for (int i = 0; i < 60; i++) cout << "=";
-    cout << endl;
-    if (run3x3MatrixTests() & run2x2MatrixTests() & runSU2Tests() & runSU3Tests() & runFunctionsTest() & runComplexTests() & runLatticeTests()) {
-        cout << "SUCCESS: All tests passed." << endl;
-    } else {
-        cout << "FAILURE: One or more test(s) failed." << endl;
+    bool passed = fullLatticeTests();
+    if (m_processRank == 0) {
+        passed = (passed & run3x3MatrixTests() & run2x2MatrixTests() & runSU2Tests() & runSU3Tests() & runFunctionsTest()
+                  & runComplexTests() & runLatticeTests());
+        for (int i = 0; i < 60; i++) cout << "=";
+        cout << endl;
+        if (passed) {
+            cout << "SUCCESS: All tests passed." << endl;
+        } else {
+            cout << "FAILURE: One or more test(s) failed." << endl;
+        }
+        for (int i = 0; i < 60; i++) cout << "=";
+        cout << endl;
     }
-    for (int i = 0; i < 60; i++) cout << "=";
-    cout << endl;
 }
 
 bool TestSuite::runSU2Tests()
@@ -296,7 +324,7 @@ bool TestSuite::runSU3Tests()
     if (m_verbose) cout << "Running SU3 property tests." << endl;
     bool passed = (testSU3Hermicity() && testSU3Orthogonality() && testSU3Norm()
                    && testSU3Determinant() && testAntiHermitian() && testHermitian()
-                   && testTrace());
+                   && testSU3Trace());
     if (passed) {
         cout << "PASSED: SU3 properties." << endl;
     } else {
@@ -409,7 +437,7 @@ bool TestSuite::runLatticeTests()
     if (m_verbose) cout << "Running lattice tests." << endl;
     bool passed = (testLatticeAddition() && testLatticeSubtraction() && testLatticeMultiplication() && testLatticeDivision() && testLatticeRealTrace()
                    && testLatticeImagTrace() && testLatticeSubtractReal() && testLatticeSubtractImag() && testLatticeSum() && testLatticeSumRealTrace()
-                   && testLatticeSumRealTraceMultiplication() && testLatticeInverse());
+                   && testLatticeSumRealTraceMultiplication() && testLatticeInverse() && testLatticeTrace());
     if (passed) {
         cout << "PASSED: Lattice operations and functions." << endl;
     } else {
@@ -418,6 +446,25 @@ bool TestSuite::runLatticeTests()
     return passed;
 }
 
+bool TestSuite::fullLatticeTests()
+{
+    /*
+     * Tests that require an entire lattice(with sublattices) to run tests on.
+     */
+    bool passed = true;
+    // Initializes
+    if (m_processRank == 0 && m_verbose) {
+        printf("Running Lattice parallel tests on sublattice of size %d^3 x %d.\n",m_N,m_NT);
+    }
+    // Runs tests
+    if (testLatticeShift()) {
+        if (m_processRank == 0) cout << "PASSED: Parallel lattice tests." << endl;
+    } else {
+        passed = false;
+        if (m_processRank == 0) cout << "FAILURE: Parallel lattice tests." << endl;
+    }
+    return passed;
+}
 
 ////////////////////////////////////
 ////// Comparison functions ////////
@@ -490,7 +537,6 @@ inline complex TestSuite::dot2(complex * a, complex * b) {
     return returnSum;
 }
 
-
 ////////////////////////////////////
 ///// Matrix operation tester //////
 ////////////////////////////////////
@@ -543,7 +589,6 @@ bool TestSuite::operationSU3Test(SU3 results, SU3 solution, std::string operatio
         return false;
     }
 }
-
 
 ////////////////////////////////////
 ///////// 2x2 MATRIX TESTS /////////
@@ -1337,7 +1382,7 @@ bool TestSuite::testLatticeRealTrace() {
      */
     bool passed = true ;
     Lattice<double>tempDoubleLattice(m_dim);
-    double tempDoubleTrace= U1.trace().z[0];
+    double tempDoubleTrace = U1.trace().z[0];
     tempDoubleLattice = realTrace(latticeSU3_U1);
     for (unsigned int iSite = 0; iSite < tempDoubleLattice.m_latticeSize; iSite++) {
         if (tempDoubleLattice[iSite] != tempDoubleTrace) {
@@ -1373,7 +1418,7 @@ bool TestSuite::testLatticeImagTrace() {
     return passed;
 }
 
-bool TestSuite::testTrace() {
+bool TestSuite::testLatticeTrace() {
     /*
      * Tests taking the trace of a lattice object(complex return value).
      */
@@ -1509,7 +1554,55 @@ bool TestSuite::testLatticeShift() {
      * Tests the lattice shift function.
      */
     bool passed = true;
+    int position;
+    for (int mu = 0; mu < 4; mu++) {
+        for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++) {
+            m_lattice[mu][iSite] = m_processRank;
+        }
+    }
+    Lattice<SU3>L;
+    L.allocate(m_dim);
+    for (int dir = 0; dir < 8; dir++) {
+        if (dir % 2 == 0) {
+            // Backwards
+            L = shift(m_lattice[0],BACKWARDS,dir % 2);
+        } else {
+            // Forwards
+            L = shift(m_lattice[0],FORWARDS,dir % 2);
+        }
+        // Compare opposite value with:
+        for (unsigned int i = 0; i < L.m_dim[(dir / 2 + 1) % 4]; i++) {
+            for (unsigned int j = 0; j < L.m_dim[(dir / 2 + 2) % 4]; j++) {
+                for (unsigned int k = 0; k < L.m_dim[(dir / 2 + 3) % 4]; k++) {
+                    if (dir / 2 == 0) position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),i,j,k);
+                    else if (dir / 2 == 1) position = Parallel::Index::getIndex(i,(L.m_dim[1] - 1) * (dir % 2),j,k);
+                    else if (dir / 2 == 2) position = Parallel::Index::getIndex(i,j,(L.m_dim[2] - 1) * (dir % 2),k);
+                    else position = Parallel::Index::getIndex(i,j,k,(L.m_dim[3] - 1) * (dir % 2));
+                    for (unsigned int iMat = 0; iMat < 18; iMat++) {
+                        if (L.m_sites[position].mat[iMat] != double(Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2))) {
+                            passed = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    if (passed) {
+        if (m_processRank == 0) cout << "    SUCCESS: Lattice shift." << endl;
+    } else {
+        if (m_processRank == 0) cout << "    FAILED: Lattice shift." << endl;
+    }
+
+    return passed;
+}
+
+bool TestSuite::testFieldGaugeInvariance(std::string gaugeFieldName, std::vector<unsigned int> dim) {
+    /*
+     * Tests if the lattice remaince gauge invariant
+     */
+    bool passed = true;
 
     return passed;
 }

@@ -43,12 +43,10 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
 void runUnitTests()
 {
-    if (Parallel::Communicator::getProcessRank() == 0) {
 //    runBoolTest(1e9);
     TestSuite unitTester;
     unitTester.runFullTestSuite(Parameters::getUnitTestingVerbose());
 //    SU3BaseTests();
 //    runMatrixPerformanceTest(std::time(nullptr),1e7,true,false);
-    }
     Parallel::Communicator::MPIExit("Unit tests complete.");
 }

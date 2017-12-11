@@ -568,6 +568,9 @@ def main(args):
         if args.clearIDFile:
             s.clearIDFile()
     elif args.subparser == 'utest':
+        #ADD:
+        # - OPTION TO SET DIMENSIONS TO TEST FOR!
+        # - OPTION TO LOAD AND TEST A LATTICE!
         config_default["runName"] = "defaultTestRun"
         config_default["uTest"] = True
         config_default["cpu_approx_runtime_hr"] = 0

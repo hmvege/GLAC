@@ -5,13 +5,13 @@ class GetDirectoryTree:
 	def __init__(self,batch_name):
 		self.flow_tree = {}
 		self.obs_tree = {}
+		self.CURRENT_FOLDER = os.getcwd()
 		self.output_folder = "output"
 		self.observables_list = ["plaq","topc","energy"]
 
 		# Checks that the output folder actually exist
 		if not os.path.isdir(os.path.join("..",self.output_folder)):
 			raise EnvironmentError("No folder name output at location %s" % os.path.join("..",self.output_folder))
-
 		# Retrieves folders and subfolders
 		self.batch_folder = os.path.join("..",self.output_folder,batch_name)
 
