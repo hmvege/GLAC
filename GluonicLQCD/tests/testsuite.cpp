@@ -6,6 +6,7 @@
 #include "parallelization/communicator.h"
 #include "io/fieldio.h"
 #include "config/parameters.h"
+#include "observables/plaquette.h"
 
 using std::cout;
 using std::endl;
@@ -15,9 +16,15 @@ TestSuite::TestSuite()
     /*
      * Class for running unit tests.
      */
+    // Initializes parallel usage.
+    m_processRank = Parallel::Communicator::getProcessRank();
+    m_numprocs = Parallel::Communicator::getNumProc();
+
     // Initiating the Mersenne Twister random number generator
-    m_generator = std::mt19937_64(std::time(nullptr));
+    Parameters::setRandomMatrixSeed(-1);
+    m_generator = std::mt19937_64(std::time(nullptr) + m_processRank);
     m_uniform_distribution = std::uniform_real_distribution<double>(0,1); // Print out max values to ensure we dont go out of scope!!
+
     // Initiating the SU3 Matrix generator
     m_SU3Generator = new SU3MatrixGenerator;
 
@@ -231,20 +238,12 @@ TestSuite::TestSuite()
     /////////////////////////////
     latticeDoubleValue1 = 2.5;
     latticeDoubleValue2 = 1.5;
-    m_N = 8;
-    m_NT = 16;
-    Parameters::setLatticeSize(1);
-    Parameters::setNSpatial(m_N);
-    Parameters::setNTemporal(m_NT);
+    m_N = Parameters::getNSpatial();
+    m_NT = Parameters::getNTemporal();
     Parameters::setSubLatticePreset(false);
     Parallel::Communicator::initializeSubLattice();
     m_subLatticeSize = Parameters::getSubLatticeSize();
     m_dim = Parameters::getN();
-    // Creates/allocates (sub) lattice
-    m_lattice = new Lattice<SU3>[4];
-    for (int mu = 0; mu < 4; mu++) {
-        m_lattice[mu].allocate(m_dim);
-    }
     IO::FieldIO::init();
     latticeSU3_U1.allocate(m_dim);
     latticeSU3_U2.allocate(m_dim);
@@ -260,13 +259,9 @@ TestSuite::TestSuite()
         latticeDouble1[iSite] = latticeDoubleValue1;
         latticeDouble2[iSite] = latticeDoubleValue2;
     }
-    // Initializes parallel usage.
-    m_processRank = Parallel::Communicator::getProcessRank();
-    m_numprocs = Parallel::Communicator::getNumProc();
 }
 
 TestSuite::~TestSuite() {
-    delete [] m_lattice;
 }
 
 void TestSuite::runFullTestSuite(bool verbose)
@@ -275,6 +270,10 @@ void TestSuite::runFullTestSuite(bool verbose)
      * Function that runs all available tests.
      */
     m_verbose = verbose;
+    if (m_processRank == 0) {
+        for (int i = 0; i < 60; i++) cout << "=";
+        cout << endl;
+    }
     bool passed = fullLatticeTests();
     if (m_processRank == 0) {
         passed = (passed & run3x3MatrixTests() & run2x2MatrixTests() & runSU2Tests() & runSU3Tests() & runFunctionsTest()
@@ -454,10 +453,13 @@ bool TestSuite::fullLatticeTests()
     bool passed = true;
     // Initializes
     if (m_processRank == 0 && m_verbose) {
-        printf("Running Lattice parallel tests on sublattice of size %d^3 x %d.\n",m_N,m_NT);
+        printf("Running Lattice parallel tests on sublattice of size %d^3 x %d.",m_N,m_NT);
     }
     // Runs tests
-    if (testLatticeShift()) {
+    if (Parameters::getCheckFieldGaugeInvariance()) {
+        passed = testFieldGaugeInvariance();
+    }
+    if (passed && testLatticeShift()) {
         if (m_processRank == 0) cout << "PASSED: Parallel lattice tests." << endl;
     } else {
         passed = false;
@@ -1554,45 +1556,64 @@ bool TestSuite::testLatticeShift() {
      * Tests the lattice shift function.
      */
     bool passed = true;
-    int position;
-    for (int mu = 0; mu < 4; mu++) {
-        for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++) {
-            m_lattice[mu][iSite] = m_processRank;
-        }
-    }
-    Parallel::Communicator::setBarrier();
-    Parallel::Neighbours::getNeighbours(m_processRank)->print();
-    Parallel::Communicator::setBarrier();
+    unsigned int position;
+    unsigned int N1,N2,N3;
     Lattice<SU3>L;
     L.allocate(m_dim);
     for (int dir = 0; dir < 8; dir++) {
+        // Sets the lattice sites with the value of the processor they are running on.
+        for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++) {
+            L[iSite] = double(m_processRank);
+        }
         if (dir % 2 == 0) {
             // Backwards
-            L = shift(m_lattice[0],BACKWARDS,dir % 2);
+            L = shift(L,BACKWARDS,dir / 2);
         } else {
             // Forwards
-            L = shift(m_lattice[0],FORWARDS,dir % 2);
+            L = shift(L,FORWARDS,dir / 2);
         }
-        if (dir / 2 == 0) position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),1,1,1); // x direction
-        else if (dir / 2 == 1) position = Parallel::Index::getIndex(1,(L.m_dim[1] - 1) * (dir % 2),1,1); // y direction
-        else if (dir / 2 == 2) position = Parallel::Index::getIndex(1,1,(L.m_dim[2] - 1) * (dir % 2),1); // z direction
-        else position = Parallel::Index::getIndex(1,1,1,(L.m_dim[3] - 1) * (dir % 2)); // t direction
-        printf("RANK: %d DIR: %d RECEIVING FROM: %d VALUE: %f SHOULD EQUAL: %d \n",m_processRank,dir,((dir + 1) % 2) + dir / 2 * 2,L[position][0],Parallel::Neighbours::get((dir+1)%2 + (dir/2)*2));
-        // Compare opposite value with:
-        for (unsigned int i = 0; i < L.m_dim[(dir / 2 + 1) % 4]; i++) {
-            for (unsigned int j = 0; j < L.m_dim[(dir / 2 + 2) % 4]; j++) {
-                for (unsigned int k = 0; k < L.m_dim[(dir / 2 + 3) % 4]; k++) {
-                    if (dir / 2 == 0) position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),i,j,k); // x direction
-                    else if (dir / 2 == 1) position = Parallel::Index::getIndex(i,(L.m_dim[1] - 1) * (dir % 2),j,k); // y direction
-                    else if (dir / 2 == 2) position = Parallel::Index::getIndex(i,j,(L.m_dim[2] - 1) * (dir % 2),k); // z direction
-                    else position = Parallel::Index::getIndex(i,j,k,(L.m_dim[3] - 1) * (dir % 2)); // t direction
+        if (dir / 2 == 0) {
+            N1 = L.m_dim[1];
+            N2 = L.m_dim[2];
+            N3 = L.m_dim[3];
+        }
+        else if (dir / 2 == 1) {
+            N1 = L.m_dim[0];
+            N2 = L.m_dim[2];
+            N3 = L.m_dim[3];
+        }
+        else if (dir / 2 == 2) {
+            N1 = L.m_dim[0];
+            N2 = L.m_dim[1];
+            N3 = L.m_dim[3];
+        }
+        else {
+            N1 = L.m_dim[0];
+            N2 = L.m_dim[1];
+            N3 = L.m_dim[2];
+        }
+        // Loops over cube and checks that it has received the correct values
+        for (unsigned int i = 0; i < N1; i++) {
+            for (unsigned int j = 0; j < N2; j++) {
+                for (unsigned int k = 0; k < N3; k++) {
+                    if (dir / 2 == 0) { // x direction
+                        position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),i,j,k);
+                    } else if (dir / 2 == 1) { // y direction
+                        position = Parallel::Index::getIndex(i,(L.m_dim[1] - 1) * (dir % 2),j,k);
+                    } else if (dir / 2 == 2) { // z direction
+                        position = Parallel::Index::getIndex(i,j,(L.m_dim[2] - 1) * (dir % 2),k);
+                    } else if (dir / 2 == 3) { // t direction
+                        position = Parallel::Index::getIndex(i,j,k,(L.m_dim[3] - 1) * (dir % 2));
+                    }
+                    // Compares matrices at position.
                     for (unsigned int iMat = 0; iMat < 18; iMat++) {
                         if (L.m_sites[position].mat[iMat] != double(Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2))) {
                             passed = false;
+                            exit(m_processRank);
                             break;
                         }
                     }
-//                    if (!passed) break;
+                    if (!passed) break;
                 }
             }
         }
@@ -1608,11 +1629,58 @@ bool TestSuite::testLatticeShift() {
     return passed;
 }
 
-bool TestSuite::testFieldGaugeInvariance(std::string gaugeFieldName, std::vector<unsigned int> dim) {
+bool TestSuite::testFieldGaugeInvariance() {
     /*
      * Tests if the lattice remaince gauge invariant
      */
     bool passed = true;
-
+    double obsBefore = 0, obsAfter = 0;
+    // Temporary sets the number of observables we are to store to 2
+    int tempNCf = Parameters::getNCf();
+    Parameters::setNCf(2);
+    // Temporary changes the input folder for the files, as the file is provided from the command line
+    std::string tempInputFolderPath = Parameters::getInputFolder();
+    Parameters::setInputFolder(std::string("/"));
+    // Initializes the observable - the plaquette
+    Plaquette P(false);
+    P.setLatticeSize(m_subLatticeSize);
+    // Initializes the lattice and allocates it with correct dimensions
+    Lattice<SU3> L[4];
+    for (int i = 0; i < 4; i++) L[i].allocate(m_dim);
+    // Retrieves the gauge field to check the gauge invariance of
+    std::string gaugeFieldFileName = Parameters::getGaugeFieldToCheck();
+    IO::FieldIO::loadFieldConfiguration(gaugeFieldFileName,L);
+    // Calculates the plaquette of the lattice
+    P.calculate(L,0);
+    obsBefore = P.getObservable(0);
+    MPI_Allreduce(&obsBefore,&obsBefore,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+    obsBefore /= double(m_numprocs);
+    if (m_processRank == 0 && m_verbose) printf("\n    Plaquette before gauge transformation: %20.16f\n",obsBefore);
+    // Sets up the gauge invariance lattice and populates it with random SU3 matrices.
+    Lattice<SU3> Omega,OmegaNext;
+    Omega.allocate(m_dim);
+    for (unsigned int iSite = 0; iSite < Omega.m_latticeSize; iSite++) {
+        Omega[iSite] = m_SU3Generator->generateRST();
+    }
+    // Loops over the different directions and performs the gauge transformation.
+    for (int mu = 0; mu < 4; mu++) {
+        // Left hand multiplies.
+        OmegaNext = inv(shift(Omega,FORWARDS,mu));
+        L[mu] = Omega*L[mu]*OmegaNext;
+    }
+    // Calculates the plaquette after the gauge transformation
+    P.calculate(L,1);
+    obsAfter = P.getObservable(1);
+    MPI_Allreduce(&obsAfter,&obsAfter,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+    obsAfter /= double(m_numprocs);
+    if (m_processRank == 0 && m_verbose) printf("    Plaquette after gauge transformation:  %20.16f\n",obsAfter);
+    if (fabs(obsAfter - obsBefore) > 1e-15) {
+        passed = false;
+        if (m_processRank == 0) cout << "    FAILED: Lattice " << gaugeFieldFileName << " is not invariant under a SU3 gauge transformation." << endl;
+    } else {
+        if (m_processRank == 0) cout << "    SUCCESS: Lattice " << gaugeFieldFileName << " is invariant under a SU3 gauge transformation." << endl;
+    }
+    Parameters::setNCf(tempNCf);
+    Parameters::setInputFolder(tempInputFolderPath);
     return passed;
 }

@@ -34,7 +34,6 @@ private:
     int m_numprocs;
     int m_N, m_NT;
     unsigned int m_subLatticeSize;
-    Lattice<SU3> * m_lattice;
 
     // Verbose storage
     bool m_verbose = false;
@@ -127,14 +126,10 @@ private:
     bool testSU3TraceMultiplication();
     bool testRSTMultiplication();
 
+    // Paralell tests
     bool fullLatticeTests();
     bool testLatticeShift();
-    bool testFieldGaugeInvariance(std::string gaugeFieldName, std::vector<unsigned int> dim);
-//    bool testGaugeInvariance();
-    // Test communications functions!
-    // Test all-gather
-    // Test the lattice shift method!
-
+    bool testFieldGaugeInvariance();
 public:
     TestSuite();
     ~TestSuite();

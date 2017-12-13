@@ -21,7 +21,7 @@ Correlator::Correlator()
 
 Correlator::~Correlator()
 {
-    delete [] m_observable;
+    delete m_observable;
 }
 
 void Correlator::calculate(Lattice<SU3> *lattice, int iObs)
@@ -29,8 +29,7 @@ void Correlator::calculate(Lattice<SU3> *lattice, int iObs)
     /*
      * Default correlator is not implemented. Pushes to observable array at position iObs.
      */
-    printf("\nENTERING BASE");
-    lattice[0][iObs].zeros(); // TEMP
+    lattice[0][iObs].zeros();
     printf("\nIf you see this, something is wrong! Should not call correlator.cpp");
 }
 

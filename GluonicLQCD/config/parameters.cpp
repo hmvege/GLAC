@@ -52,6 +52,8 @@ std::string Parameters::m_outputFolder = "/output/";
 // Unit testing
 bool Parameters::m_unitTesting = false;
 bool Parameters::m_unitTestingVerbose = false;
+bool Parameters::m_testLatticeGaugeInvariance = false;
+std::string Parameters::m_latticeFileNameToCheck = "";
 
 // Data generation related variables
 double Parameters::m_SU3Eps = 0.24;

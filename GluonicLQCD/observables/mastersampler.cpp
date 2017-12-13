@@ -23,6 +23,13 @@ MasterSampler::MasterSampler(bool flow) : Correlator()
     m_temp.allocate(m_N);
 }
 
+MasterSampler::~MasterSampler()
+{
+    delete m_plaqObservable;
+    delete m_topcObservable;
+    delete m_energyObservable;
+}
+
 void MasterSampler::storeFlow(bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
@@ -198,9 +205,9 @@ void MasterSampler::calculate(Lattice<SU3> *lattice, int iObs)
         m_temp *= inv(lattice[nu]);
         m_clov1 -= m_temp;
 
-        int rho = nu % 3;
+        rho = nu % 3;
         rho++;
-        int sigma = rho % 3;
+        sigma = rho % 3;
         sigma++;
 
         // Second clover

@@ -14,65 +14,6 @@ using std::endl;
 using std::setw;
 using std::setprecision;
 
-void SU3BaseTests()
-{
-    /*
-     * Basic tests of the complex class.
-     */
-    complex a = complex(1,1);
-    complex b = complex(2,2);
-    complex c = complex(1,1);
-    complex d = complex(2,2);
-    cout << "a = " << a << endl;
-    cout << "b = " << b << endl;
-    a *= b;
-    cout << "a*b = " << a << endl;
-//    cout << "conjugate(a) = " << a.c() << endl;
-    c += d;
-    cout << "1+1j + 2+2j = " << c << endl;
-
-    a /= b;
-    cout << "a/b = " << a << endl;
-
-//    SU3 A, B, C, D;
-//    for (int i = 0; i < 3; i++)
-//    {
-//        for (int j = 0; j < 3; j++)
-//        {
-//            A.setComplex(complex(i,j), 3*i+j);
-//            B.setComplex(complex(i*i,j*j), 3*i+j);
-//            C.setComplex(complex(0,0), 3*i+j);
-//            D.setComplex(complex(0,0), 3*i+j);
-////            A.mat[(i*3+j)] = complex(i,j);
-////            B.mat[(i*3+j)] = complex(i*i,j*j);
-////            C.mat[(i*3+j)] = complex(0,0);
-////            D.mat[(i*3+j)] = complex(0,0);
-//        }
-//    }
-
-//    cout << endl;
-//    cout << "Printing A" << endl;
-//    A.print();
-//    cout << endl;
-//    cout << "Printing B" << endl;
-//    B.print();
-//    cout << "Getting middle element of A" << endl;
-//    cout << A.get(1,1) << endl;
-//    C += A;
-//    C = A + B;
-//    D = A * B;
-//    cout << "Printing D" << endl;
-//    D.print();
-//    cout << endl;
-//    cout << "Printing the first column of matrix D: " << endl;
-//    for (int i = 0; i < 3; i++) {
-//        cout << "D[" <<i<<"] = "<< D.mat[6*i] << " + i" << D.mat[6*i+1] << endl;
-//    }
-//    cout << endl;
-//    cout << "SU3 base test completed." << endl;
-}
-
-
 void runMatrixPerformanceTest(double seed, int NTests, bool testMatrix, bool testComplex) {
     /*
      * For running performance tests of the matrix multiplication contained in SU3.

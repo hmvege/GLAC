@@ -82,6 +82,10 @@ namespace ConfigLoader {
         // Testing related variables
         Parameters::setUnitTesting(j["unitTesting"]);
         Parameters::setUnitTestingVerbose(j["unitTestingVerbose"]);
+        if (!j["uTestFieldGaugeInvarince"].empty()) {
+            Parameters::setCheckFieldGaugeInvariance(true);
+            Parameters::setGaugeFieldToCheck(j["uTestFieldGaugeInvarince"]);
+        }
         // Data generation related variables
         Parameters::setSU3Eps(j["SU3Eps"]);
         Parameters::setFlowEpsilon(j["flowEpsilon"]);

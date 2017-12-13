@@ -49,6 +49,8 @@ private:
     // Unit testing
     static bool m_unitTesting;
     static bool m_unitTestingVerbose;
+    static bool m_testLatticeGaugeInvariance;
+    static std::string m_latticeFileNameToCheck;
     // Data generation related variables
     static double m_SU3Eps;
     static double m_flowEpsilon;
@@ -95,6 +97,8 @@ public:
     // Testing related variables
     static void setUnitTesting(bool unitTesting) { m_unitTesting = unitTesting; }
     static void setUnitTestingVerbose(bool unitTestingVerbose) { m_unitTestingVerbose = unitTestingVerbose; }
+    static void setCheckFieldGaugeInvariance(bool testLatticeGaugeInvariance) { m_testLatticeGaugeInvariance = testLatticeGaugeInvariance; }
+    static void setGaugeFieldToCheck(std::string latticeFileNameToCheck) { m_latticeFileNameToCheck = latticeFileNameToCheck; }
     // Data generation related variables
     static void setFlowEpsilon(double flowEpsilon) { m_flowEpsilon = flowEpsilon; }
     static void setSU3Eps(double SU3Eps) { m_SU3Eps = SU3Eps; }
@@ -143,6 +147,8 @@ public:
     // Testing related variables
     static bool getUnitTesting() { return m_unitTesting; }
     static bool getUnitTestingVerbose() { return m_unitTestingVerbose; }
+    static bool getCheckFieldGaugeInvariance() { return m_testLatticeGaugeInvariance; }
+    static std::string getGaugeFieldToCheck() { return m_latticeFileNameToCheck; }
     // Data generation related variables
     static double getFlowEpsilon() { return m_flowEpsilon; }
     static double getSU3Eps() { return m_SU3Eps; }
@@ -164,7 +170,6 @@ public:
     static bool getLoadFieldConfigurations() { return m_loadFieldConfigurations; }
     static bool getLoadChromaConfigurations() { return m_loadChromaConfigurations; }
     static std::vector<std::string> getFieldConfigurationFileNames() { return m_fieldConfigurationFileNames; }
-
 };
 
 #endif // PARAMETERS_H

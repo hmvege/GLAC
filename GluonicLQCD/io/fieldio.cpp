@@ -92,7 +92,6 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
         }
     }
     MPI_File_close(&file);
-
     if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration %s loaded", (Parameters::getFilePath() + Parameters::getInputFolder() + filename).c_str());
 }
 

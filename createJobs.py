@@ -34,10 +34,11 @@ def checkSubDimViability(subDims):
         if dim <= 2: exit("Error: %d is not a valid dimension" % dim)
 
 def setFieldConfigs(config,config_folder):
+    # Populates list of sorted field configs from folder config_folder into the config dictionary.
     config["load_field_configs"] = True
     config["inputFolder"] = os.path.normpath(config_folder)
     if os.path.isdir(config_folder):
-        config["field_configs"] = [fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")]
+        config["field_configs"] = sorted([fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")])
     else:
         raise OSError("Error: %s is not a directory." % (config_folder))
     return config
@@ -64,24 +65,24 @@ class Slurm:
         if not self.uTest:
             # Checking that we have an output folder.
             self._checkFolderPath(self.outputFolder)
-            self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName))
+            self._checkFolderPath(os.path.join(self.outputFolder,self.runName))
             if self.NFlows != 0:
-                self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables'))
+                self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'flow_observables'))
                 for fobs in ["plaq","topc","energy"]:
-                    self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'flow_observables',fobs))
+                    self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'flow_observables',fobs))
             if not self.load_field_configs:
-                self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'field_configurations'))
-                self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.outputFolder,self.runName,'observables'))
-        self._checkFolderPath(os.path.join(self.CURRENT_PATH,self.inputFolder))
-        self._checkFolderPath(os.path.join(self.CURRENT_PATH,"input",self.runName))
+                self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'field_configurations'))
+                self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'observables'))
+        self._checkFolderPath(os.path.join(self.inputFolder))
+        self._checkFolderPath(os.path.join("input",self.runName))
 
     def _checkFolderPath(self, folder):
         # Function for checking if a folder exists, and if not creates on(unless we are doing a dryrun)
-        if not os.path.isdir(os.path.join(self.CURRENT_PATH,folder)):
+        if not os.path.isdir(os.path.join(self.base_folder,folder)):
             if self.dryrun:
-                print '> mkdir %s' % os.path.join(self.CURRENT_PATH,folder)
+                print '> mkdir %s' % os.path.join(self.base_folder,folder)
             else:
-                os.mkdir(os.path.join(self.CURRENT_PATH,folder))
+                os.mkdir(os.path.join(self.base_folder,folder))
 
     def _create_json(self,config_dict):
         # Function that creates a json file for submitting to the c++ file.
@@ -105,7 +106,7 @@ class Slurm:
         # Human readable output related variables
         json_dict["verbose"] = config_dict["verboseRun"]
         # Setup related variables
-        json_dict["pwd"] = self.CURRENT_PATH
+        json_dict["pwd"] = config_dict["base_folder"]
         json_dict["batchName"] = config_dict["runName"]
         json_dict["hotStart"] = config_dict["hotStart"]
         json_dict["RSTHotStart"] = config_dict["RSTHotStart"]
@@ -118,6 +119,7 @@ class Slurm:
         # Testing related variables
         json_dict["unitTesting"] = config_dict["uTest"]
         json_dict["unitTestingVerbose"] = config_dict["uTestVerbose"]
+        json_dict["uTestFieldGaugeInvarince"] = config_dict["uTestFieldGaugeInvarince"]
         # Data generation related variables
         json_dict["SU3Eps"] = config_dict["SU3Eps"]
         json_dict["flowEpsilon"] = config_dict["flowEpsilon"]
@@ -127,10 +129,10 @@ class Slurm:
             print "Writing json configuration file:\n"
             print json.dumps(json_dict,indent=4,separators=(', ', ': ')), "\n"
         else:
-            with file(os.path.join(self.CURRENT_PATH,"input",self.json_file_name),"w+") as json_file:
+            with file(os.path.join(self.base_folder,"input",self.json_file_name),"w+") as json_file:
                 json.dump(json_dict,json_file,indent=4)
-            shutil.copy(os.path.join(self.CURRENT_PATH,"input",self.json_file_name), # src
-                "%s.bak" % os.path.join(self.CURRENT_PATH,"input",self.runName,self.json_file_name)) # dest
+            shutil.copy(os.path.join(self.base_folder,"input",self.json_file_name), # src
+                "%s.bak" % os.path.join(self.base_folder,"input",self.runName,self.json_file_name)) # dest
 
     def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
         if excluded_nodes:
@@ -143,6 +145,7 @@ class Slurm:
             if (job_config["NFlows"] != 0):
                 job_config["observables"] = job_config["flowObservables"]
             # Retrieving config contents
+            self.base_folder        = job_config["base_folder"]
             binary_filename         = job_config["bin_fn"]
             self.runName            = job_config["runName"]
             self.load_field_configs = job_config["load_field_configs"]
@@ -182,7 +185,7 @@ class Slurm:
             self._create_folders()
             self._create_json(job_config)
             if system == "local":
-                sys.exit("Config file %s for local producton created."  % os.path.join(self.CURRENT_PATH,"input",self.json_file_name))
+                sys.exit("Config file %s for local producton created."  % os.path.join(self.base_folder,"input",self.json_file_name))
 
             # Setting job name before creating content file.
             job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta,NSpatial,NTemporal,threads)
@@ -191,7 +194,7 @@ class Slurm:
             estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr,cpu_approx_runtime_min)
 
             # Setting run-command
-            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.CURRENT_PATH,"input",self.json_file_name))
+            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.base_folder,"input",self.json_file_name))
 
             # Chosing system
             if system == "smaug":
@@ -354,8 +357,8 @@ def main(args):
     # Default config
     config_default = {  "bin_fn"                    : "build/GluonicLQCD",
                         "runName"                   : "defaultRun",
-                        "N"                         : 24,
-                        "NT"                        : 48,
+                        "N"                         : 8, # Small lattice as default
+                        "NT"                        : 16,
                         "subDims"                   : [],
                         "beta"                      : 6.0,
                         "NCf"                       : 100,
@@ -373,11 +376,13 @@ def main(args):
                         "flowObservables"           : ["plaq","topc","energy"], # Optional: topc, energy
                         "load_field_configs"        : False,
                         "chroma_config"             : False,
+                        "base_folder"               : os.getcwd(),
                         "inputFolder"               : "input",
                         "outputFolder"              : "output",
                         "field_configs"             : [],
                         "uTest"                     : False,
                         "uTestVerbose"              : False,
+                        "uTestFieldGaugeInvarince"  : "",
                         "SU3Eps"                    : 0.24,
                         "flowEpsilon"               : 0.01,
                         "metropolisSeed"            : 0,
@@ -428,7 +433,7 @@ def main(args):
     # Data storage related variables
     job_parser.add_argument('-sc', '--storeCfgs',               default=config_default["storeCfgs"],        type=int,choices=[0,1],help='Specifying if we are to store configurations')
     job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],   type=int,choices=[0,1],help='Specifies if we are to store the thermalization plaquettes')
-    # Human readable output related variables
+    job_parser.add_argument('-bf', '--base_folder',             default=config_default["base_folder"],      type=str,help='Sets the base folder. Default is os.path.getcwd().')    # Human readable output related variables
     job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       action='store_true',help='Verbose run of GluonicLQCD. By default, it is off.')
     # Setup related variables
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=int,choices=[0,1],help='Hot start or cold start')
@@ -461,11 +466,17 @@ def main(args):
     load_parser.add_argument('-lcfg','--load_configurations',   default=config_default["load_field_configs"],type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
     load_parser.add_argument('-lhr','--load_config_hr_time_estimate',default=False,                         type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
     load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=False,                       type=int,help='Approximate cpu time in minutes that will be used')
+    load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],       type=str,help='Sets the base folder. Default is os.path.getcwd().')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
-    unit_test_parser.add_argument('system',                     default=False,      type=str, choices=['smaug','abel','local'],help='Specify system we are running on.')
-    unit_test_parser.add_argument('-v', '--verbose',            default=False,      action='store_true', help='Prints more information during testing.')
+    unit_test_parser.add_argument('system',                     default=False,                              type=str, choices=['smaug','abel','local'],help='Specify system we are running on.')
+    unit_test_parser.add_argument('-v', '--verbose',            default=False,                              action='store_true', help='Prints more information during testing.')
+    unit_test_parser.add_argument('-cgi','--check_gauge_invariance', default=False,                         type=str, help='Loads and checks the gauge field invariance of a field.')
+    unit_test_parser.add_argument('-N',   '--NSpatial',         default=False,                              type=int,help='spatial lattice dimension')
+    unit_test_parser.add_argument('-NT',  '--NTemporal',        default=False,                              type=int,help='temporal lattice dimension')
+
+    print "="*80,"\n","NOT IMPLEMENTED: \n Unit test parser: -cgi, -N -NT \n Job load parser & Manual job setup: -bf, --baseFolder\n","="*80,"\n"
 
     args = parser.parse_args()
     # args = parser.parse_args(['python', 'makeJobs.py', 'load', 'config_folder/size_scaling_configs/config_16cube32.py', 'config_folder/size_scaling_configs/config_24cube48.py', 'config_folder/size_scaling_configs/config_28cube56.py', 'config_folder/size_scaling_configs/config_32cube64.py', '-s', 'abel'])
@@ -503,10 +514,10 @@ def main(args):
                 raise TypeError("Can only assign one configuration file to a single set of field configurations.")
         # Populate configuration with default values if certain keys are not present
         for c in configurations:
+            config_default["base_folder"] = args.base_folder
             for key in config_default.keys():
                 if not key in c:
                     c[key] = config_default[key]
-
         s.submitJob(configurations,args.system,args.partition)
     elif args.subparser == 'setup':
         if not args.system: raise ValueError("System value %g: something is wrong in parser." % args.system)
@@ -542,6 +553,7 @@ def main(args):
         config_default["cpu_approx_runtime_min"]    = args.cpu_approx_runtime_min
         config_default["account_name"]              = args.account_name
         config_default["cpu_memory"]                = args.cpu_memory
+        config_default["base_folder"]               = args.base_folder
         # Non-trivial default values
         if args.subDims:
             checkSubDimViability(args.subDims)
@@ -579,6 +591,12 @@ def main(args):
         excluded_nodes = ""
         system = args.system
         config_default["uTestVerbose"] = args.verbose
+        if args.check_gauge_invariance:
+            config_default["uTestFieldGaugeInvarince"] = args.check_gauge_invariance
+            if not args.NSpatial or not args.NTemporal:
+                sys.exit("ERROR: need to specifiy dimensions of loaded lattice.")
+            config_default["N"] = args.NSpatial
+            config_default["NT"] = args.NTemporal
         # Submitting job
         s.submitJob([config_default],system,partition,excluded_nodes)
     else:

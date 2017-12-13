@@ -36,7 +36,7 @@ public:
     void writeObservableToFile(double acceptanceRatio);
     void writeFlowObservableToFile(int configNumber);
     // Getters
-    double getObservable(int position) { return m_observables[position]; }
+    double getObservable(int iObs) { return m_observables[iObs]; }
     std::string getObservableName() { return m_observableName; }
     // Setters
     void setObservableName(std::string observableName) { m_observableName = observableName; }
