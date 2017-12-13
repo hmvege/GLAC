@@ -466,7 +466,8 @@ def main(args):
     load_parser.add_argument('-lcfg','--load_configurations',   default=config_default["load_field_configs"],type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
     load_parser.add_argument('-lhr','--load_config_hr_time_estimate',default=False,                         type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
     load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=False,                       type=int,help='Approximate cpu time in minutes that will be used')
-    load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],       type=str,help='Sets the base folder. Default is os.path.getcwd().')
+    load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],      type=str,help='Sets the base folder. Default is os.path.getcwd().')
+    load_parser.add_argument('-nf','--no_flow',                 default=False,                              action='store_true',help='number of flows to perform per configuration')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
@@ -475,8 +476,6 @@ def main(args):
     unit_test_parser.add_argument('-cgi','--check_gauge_invariance', default=False,                         type=str, help='Loads and checks the gauge field invariance of a field.')
     unit_test_parser.add_argument('-N',   '--NSpatial',         default=False,                              type=int,help='spatial lattice dimension')
     unit_test_parser.add_argument('-NT',  '--NTemporal',        default=False,                              type=int,help='temporal lattice dimension')
-
-    print "="*80,"\n","NOT IMPLEMENTED: \n Unit test parser: -cgi, -N -NT \n Job load parser & Manual job setup: -bf, --baseFolder\n","="*80,"\n"
 
     args = parser.parse_args()
     # args = parser.parse_args(['python', 'makeJobs.py', 'load', 'config_folder/size_scaling_configs/config_16cube32.py', 'config_folder/size_scaling_configs/config_24cube48.py', 'config_folder/size_scaling_configs/config_28cube56.py', 'config_folder/size_scaling_configs/config_32cube64.py', '-s', 'abel'])
@@ -515,6 +514,8 @@ def main(args):
         # Populate configuration with default values if certain keys are not present
         for c in configurations:
             config_default["base_folder"] = args.base_folder
+            if args.no_flow:
+                c["NFlows"] = 0
             for key in config_default.keys():
                 if not key in c:
                     c[key] = config_default[key]
@@ -580,9 +581,6 @@ def main(args):
         if args.clearIDFile:
             s.clearIDFile()
     elif args.subparser == 'utest':
-        #ADD:
-        # - OPTION TO SET DIMENSIONS TO TEST FOR!
-        # - OPTION TO LOAD AND TEST A LATTICE!
         config_default["runName"] = "defaultTestRun"
         config_default["uTest"] = True
         config_default["cpu_approx_runtime_hr"] = 0
