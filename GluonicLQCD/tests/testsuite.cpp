@@ -21,7 +21,6 @@ TestSuite::TestSuite()
     m_numprocs = Parallel::Communicator::getNumProc();
 
     // Initiating the Mersenne Twister random number generator
-    Parameters::setRandomMatrixSeed(-1);
     m_generator = std::mt19937_64(std::time(nullptr) + m_processRank);
     m_uniform_distribution = std::uniform_real_distribution<double>(0,1); // Print out max values to ensure we dont go out of scope!!
 
