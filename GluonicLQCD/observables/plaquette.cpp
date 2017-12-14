@@ -10,6 +10,7 @@ Plaquette::Plaquette(bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     m_observable->setObservableName(m_observableNameCompact);
     m_observable->setNormalizeObservableByProcessor(true);
+    setLatticeSize(Parameters::getSubLatticeSize());
 }
 
 Plaquette::~Plaquette()

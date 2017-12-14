@@ -143,9 +143,9 @@ void MasterSampler::printStatistics()
 
 void MasterSampler::copyObservable(int iObs, std::vector<double> obs)
 {
-    m_plaqObservable[iObs] = obs[0];
-    m_topcObservable[iObs] = obs[1];
-    m_energyObservable[iObs] = obs[2];
+    (*m_plaqObservable)[iObs] = obs[0];
+    (*m_topcObservable)[iObs] = obs[1];
+    (*m_energyObservable)[iObs] = obs[2];
 }
 
 std::vector<double> MasterSampler::getObservablesVector(int iObs)

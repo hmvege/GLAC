@@ -97,7 +97,6 @@ void System::subLatticeSetup()
      */
     Parallel::Communicator::initializeSubLattice();
     m_N = Parameters::getN();
-//    _internal::initializeLatticeOperations(m_N);
     m_subLatticeSize = Parameters::getSubLatticeSize();
     // Creates/allocates (sub) lattice
     m_lattice = new Lattice<SU3>[4];
@@ -208,11 +207,11 @@ void System::thermalize()
         m_updateTime = duration_cast<duration<double>>(steady_clock::now() - m_preUpdate);
         m_updateStorerTherm += m_updateTime.count();
         if (m_processRank == 0 && iTherm % 20 == 0) { // Progress and Avg. time per update every 10th update
-            printf("\r%6.2f %% done. Avg. update time: %10.6f sec", iTherm/double(m_NTherm)*100, m_updateStorerTherm/double(iTherm));
-            if (!m_storeThermalizationObservables) {
-                // Flushes if we are not storing any thermalization observables
-                std::fflush(stdout);
-            }
+            printf("\n%6.2f %% done. Avg. update time: %10.6f sec", iTherm/double(m_NTherm)*100, m_updateStorerTherm/double(iTherm));
+//            if (!m_storeThermalizationObservables) {
+//                // Flushes if we are not storing any thermalization observables
+//                std::fflush(stdout);
+//            }
         }
 
         // Print correlator every somehting or store them all(useful when doing the thermalization).
@@ -227,7 +226,7 @@ void System::thermalize()
 
     // Printing out the avg. update time one more time at the end, to avoid unfinnished percentage sign
     if (m_processRank == 0) {
-        printf("\r%6.2f %% done. Avg. update time: %10.6f sec", 100.0, m_updateStorerTherm/double(m_NTherm + 1));
+        printf("\n%6.2f %% done. Avg. update time: %10.6f sec", 100.0, m_updateStorerTherm/double(m_NTherm + 1));
     }
 
     // Taking the average of the acceptance rate across the processors.
@@ -295,11 +294,7 @@ void System::runMetropolis()
     // Printing header for main run
     if (m_processRank == 0) {
         printf("\ni    ");
-        if (m_NFlows == 0) {
-            m_correlator->printHeader();
-        } else {
-            m_flowCorrelator->printHeader();
-        }
+        m_correlator->printHeader();
         printf(" Avg.Update-time  Accept/reject");
     }
 
@@ -308,6 +303,7 @@ void System::runMetropolis()
 
     // Variables for checking performance of the update.
     m_updateStorer = 0;
+
 
     // Main part of algorithm
     for (int iConfig = 0; iConfig < m_NCf; iConfig++)
@@ -336,6 +332,9 @@ void System::runMetropolis()
         } else {
             m_correlator->copyObservable(iConfig, m_flowCorrelator->getObservablesVector(0));
         }
+//        Parallel::Communicator::setBarrier();
+//        cout << "OKAY" << endl;
+//        Parallel::Communicator::MPIExit("OKAYOKAY!");
 
         if (m_processRank == 0) {
             // Printing the observables
