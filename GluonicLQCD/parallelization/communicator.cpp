@@ -230,7 +230,7 @@ void Parallel::Communicator::init(int *numberOfArguments, char ***cmdLineArgumen
     MPI_Comm_rank (MPI_COMM_WORLD, &m_processRank);
 
     if ((*numberOfArguments) != 2) {
-        Parallel::Communicator::MPIExit("Error: please provide a json file to parse.");
+        MPIExit("Error: please provide a json file to parse.");
     }
     checkProcessorValidity();
 }

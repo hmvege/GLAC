@@ -86,7 +86,7 @@ class Slurm:
 
     def _create_json(self,config_dict):
         # Function that creates a json file for submitting to the c++ file.
-        self.json_file_name = "config.json"
+        self.json_file_name = "config_%s.json" % self.runName
         json_dict = {}
         # Lattice related run variables
         json_dict["NSpatial"] = config_dict["N"]
@@ -516,6 +516,7 @@ def main(args):
             config_default["base_folder"] = args.base_folder
             if args.no_flow:
                 c["NFlows"] = 0
+                c["flowObservables"] = []
             for key in config_default.keys():
                 if not key in c:
                     c[key] = config_default[key]

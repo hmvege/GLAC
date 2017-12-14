@@ -332,9 +332,6 @@ void System::runMetropolis()
         } else {
             m_correlator->copyObservable(iConfig, m_flowCorrelator->getObservablesVector(0));
         }
-//        Parallel::Communicator::setBarrier();
-//        cout << "OKAY" << endl;
-//        Parallel::Communicator::MPIExit("OKAYOKAY!");
 
         if (m_processRank == 0) {
             // Printing the observables
