@@ -56,7 +56,7 @@ void Plaquette::printObservable(int iObs)
     if (!m_storeFlowObservable) {
         printf("%-*.8f",m_headerWidth,(*m_observable)[iObs]);
     } else {
-        printf("\n    %-*.8f",m_headerWidth,(*m_observable)[iObs]);
+        printf("\n%-4d %-*.8f",iObs,m_headerWidth,(*m_observable)[iObs]);
     }
 }
 

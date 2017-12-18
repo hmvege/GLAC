@@ -2,12 +2,13 @@ from LQCDAnalyser import Bootstrap, Jackknife, Autocorrelation
 import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd
 
 class GetDirectoryTree:
-	def __init__(self,batch_name):
+	def __init__(self,batch_name,output_folder="output",dryrun=False):
 		self.flow_tree = {}
 		self.obs_tree = {}
 		self.CURRENT_FOLDER = os.getcwd()
-		self.output_folder = "output"
+		self.output_folder = output_folder
 		self.observables_list = ["plaq","topc","energy"]
+		self.dryrun = dryrun
 
 		# Checks that the output folder actually exist
 		if not os.path.isdir(os.path.join("..",self.output_folder)):
@@ -40,8 +41,15 @@ class GetDirectoryTree:
 					for obs_file in os.listdir(obs_path):
 						flow_obs_dir_list.append(os.path.join(obs_path,obs_file))
 					self.flow_tree[flow_obs] = flow_obs_dir_list
-				# for i in self.flow_tree[flow_obs]:
-				# 	print i
+		print "Directory tree built."
+
+		# Creates figures folder
+		self.figures_path = os.path.join("..","figures",batch_name)
+		if not os.path.isdir(self.figures_path):
+			if self.dryrun:
+				print '> mkdir %s' % self.figures_path
+			else:
+				os.mkdir(self.figures_path)
 
 	def getFlow(self,obs):
 		if obs in self.flow_tree.keys():
@@ -68,6 +76,7 @@ class GetFolderContents:
 		# Goes through files in folder and reads the contents into a file
 		for file in folder:
 			# Gets the metadata
+			print "    Reading file: %s" % file
 			with open(file) as f:
 				while read_meta_data:
 					line = f.readline().split(" ")
@@ -90,51 +99,62 @@ class GetFolderContents:
 		if flow: self.data_x = np.asarray(self.data_x) # Only provided in flow
 		self.data_y = np.asarray(self.data_y)
 
-def plot_flow_plaquette(x,y,y_error,meta_data,batch_name,N_bs=False):
+	print "Data retrieved."
+
+def plot_flow_plaquette(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
 	plt.figure()
-	plt.errorbar(x,y,yerr=y_error,fmt="o",label="Plaquette")
+	plt.errorbar(x,y,yerr=y_error,fmt=".",label="Plaquette")
 	plt.xlabel(r"$\sqrt{8t_{flow}}$")
 	plt.ylabel(r"$P_{\mu\nu}$")
-	plt.title(r"$N_{flow}=%2d$, $\beta=%.2f$" % (meta_data["NFlows"],meta_data["beta"]))
+	if not N_bs:
+		plt.title(r"$N_{flow}=%2d$, $\beta=%.2f$" % (meta_data["NFlows"],meta_data["beta"]))
+	else:
+		plt.title(r"$N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (meta_data["NFlows"],meta_data["beta"],N_bs))
 	plt.grid(True)
 	if not N_bs:
-		fname = "../figures/flow_plaquette_%s.png" % batch_name
+		fname = "../figures/%s/flow_plaquette_%s.png" % (batch_name,batch_name)
 	else:
-		fname = "../figures/flow_plaquette_%s_Nbs%d.png" % (batch_name,N_bs)
-	plt.savefig(fname)
+		fname = "../figures/%s/flow_plaquette_%s_Nbs%d.png" % (batch_name,batch_name,N_bs)
+	if not dryrun: plt.savefig(fname)
 	print "Figure created in %s" % fname
 
-def plot_flow_topc(x,y,y_error,meta_data,batch_name,N_bs=False):
+def plot_flow_topc(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
 	plt.figure()
-	plt.errorbar(x,y,yerr=y_error,fmt="o",label="Topological Charge")
+	plt.errorbar(x,y,yerr=y_error,fmt=".",label="Topological Charge")
 	plt.xlabel(r"$\sqrt{8t_{flow}}$")
-	plt.ylabel(r"$P_{\mu\nu}$")
-	plt.title(r"$N_{flow}=%2d$, $\beta=%.2f$" % (meta_data["NFlows"],meta_data["beta"]))
+	plt.ylabel(r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$")
+	if not N_bs:
+		plt.title(r"$N_{flow}=%2d$, $\beta=%.2f$" % (meta_data["NFlows"],meta_data["beta"]))
+	else:
+		plt.title(r"$N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (meta_data["NFlows"],meta_data["beta"],N_bs))
 	plt.grid(True)
 	if not N_bs:
-		fname = "../figures/flow_topc_%s.png" % batch_name
+		fname = "../figures/%s/flow_topc_%s.png" % (batch_name,batch_name)
 	else:
-		fname = "../figures/flow_topc_%s_Nbs%d.png" % (batch_name,N_bs)
-	plt.savefig(fname)
+		fname = "../figures/%s/flow_topc_%s_Nbs%d.png" % (batch_name,batch_name,N_bs)
+	if not dryrun: plt.savefig(fname)
 	print "Figure created in %s" % fname
 
-def plot_flow_energy(x,y,y_error,meta_data,batch_name,N_bs=False):
+def plot_flow_energy(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
 	plt.figure()
-	plt.errorbar(x,y,yerr=y_error,fmt="o",label="Energy")
+	plt.errorbar(x,y,yerr=y_error,fmt=".",label="Energy")
 	plt.xlabel(r"$\sqrt{8t_{flow}}$")
 	plt.ylabel(r"$\langle E \rangle$")
-	plt.title(r"$N_{flow}=%2d$, $\beta=%.2f$" % (meta_data["NFlows"],meta_data["beta"]))
+	if not N_bs:
+		plt.title(r"$N_{flow}=%2d$, $\beta=%.2f$" % (meta_data["NFlows"],meta_data["beta"]))
+	else:
+		plt.title(r"$N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (meta_data["NFlows"],meta_data["beta"],N_bs))
 	plt.grid(True)
 	if not N_bs:
-		fname = "../figures/flow_energy_%s.png" % batch_name
+		fname = "../figures/%s/flow_energy_%s.png" % (batch_name,batch_name)
 	else:
-		fname = "../figures/flow_energy_%s_Nbs%d.png" % (batch_name,N_bs)
-	plt.savefig(fname)
+		fname = "../figures/%s/flow_energy_%s_Nbs%d.png" % (batch_name,batch_name,N_bs)
+	if not dryrun: plt.savefig(fname)
 	print "Figure created in %s" % fname
 
-def plot_flow_topsus(x,y,y_error,meta_data,batch_name,N_bs=False):
+def plot_flow_topsus(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
 	plt.figure()
-	plt.errorbar(x,y,yerr=y_error,fmt="o",label="Topological susceptibility")
+	plt.errorbar(x,y,yerr=y_error,fmt=".",label="Topological susceptibility")
 	plt.xlabel(r"$\sqrt{8t_{flow}}$")
 	plt.ylabel(r"$\chi_t^{1/4}[GeV]$")
 	if not N_bs:
@@ -143,10 +163,10 @@ def plot_flow_topsus(x,y,y_error,meta_data,batch_name,N_bs=False):
 		plt.title(r"$\chi_t^{1/4}=\frac{\hbar c}{aV^{1/4}}\langle Q^2 \rangle^{1/4}$, $\beta=%.2f$, $N_{bs}=%d$" % (meta_data["beta"],N_bs))
 	plt.grid(True)
 	if not N_bs:
-		fname = "../figures/flow_topsus_%s.png" % batch_name
+		fname = "../figures/%s/flow_topsus_%s.png" % (batch_name,batch_name)
 	else:
-		fname = "../figures/flow_topsus_%s_Nbs%d.png" % (batch_name,N_bs)
-	plt.savefig(fname)
+		fname = "../figures/%s/flow_topsus_%s_Nbs%d.png" % (batch_name,batch_name,N_bs)
+	if not dryrun: plt.savefig(fname)
 	print "Figure created in %s" % fname
 
 class AnalyseFlowObservable:
@@ -174,11 +194,16 @@ def getLatticeSpacing(beta):
 	return a
 
 hbarc = 0.19732697 #eV micro m
-a     = 0.0931404061721 #fm
-V     = 8**3 * 8
+
+# # Beta 6.0
+# a     = getLatticeSpacing(6.0)
+# V     = 24**3 * 48
+# const = hbarc/a/V**(1./4)
+
+# Beta 6.1
+a     = getLatticeSpacing(6.1)
+V     = 28**3 * 56
 const = hbarc/a/V**(1./4)
-# const = 0.05717046003979148			# Jack's constant
-# const = const / 0.05717046003979148
 
 def chi(Q_squared):
 	# Q should be averaged
@@ -187,10 +212,9 @@ def chi(Q_squared):
 def stat(x,axis=None):
 	return np.mean(x**2,axis=axis)
 
-
 def main(args):
 	if not args:
-		args = ['verboseTest']
+		args = ['prodRunBeta6_1']
 
 	DList = GetDirectoryTree(args[0])
 	N_BS = 200
@@ -228,14 +252,14 @@ def main(args):
 	plot_flow_energy(flow_time,flow_energy_analysis.bs_data,flow_energy_analysis.bs_data_std,flow_energy_data.meta_data,args[0],N_bs=N_BS)
 	plot_flow_topsus(flow_time,flow_topsus_analysis.bs_data,flow_topsus_analysis.bs_data_std,flow_energy_data.meta_data,args[0],N_bs=N_BS)
 
-	# Configuration observables
-	plaq_file = DList.getObs("plaq")
-	topc_file = DList.getObs("topc")
-	energy_file = DList.getObs("energy")
+	# # Configuration observables
+	# plaq_file = DList.getObs("plaq")
+	# topc_file = DList.getObs("topc")
+	# energy_file = DList.getObs("energy")
 
-	plaq_analysis = GetFolderContents(plaq_file)
-	topc_analysis = GetFolderContents(topc_file)
-	energy_analysis = GetFolderContents(energy_file)
+	# plaq_analysis = GetFolderContents(plaq_file)
+	# topc_analysis = GetFolderContents(topc_file)
+	# energy_analysis = GetFolderContents(energy_file)
 
 
 if __name__ == '__main__':

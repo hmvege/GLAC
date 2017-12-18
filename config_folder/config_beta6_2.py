@@ -7,7 +7,7 @@
     "NCf"                       : 500,
     "NCor"                      : 200,
     "NTherm"                    : 1000,
-    "NFlows"                    : 0,
+    "NFlows"                    : 1000,
     "NUpdates"                  : 10,
     "storeCfgs"                 : True,
     "storeThermCfgs"            : False,

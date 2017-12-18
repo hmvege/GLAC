@@ -1,4 +1,4 @@
-import os, subprocess, time, sys, argparse, json, ast, shutil
+import os, subprocess, time, sys, argparse, json, ast, shutil, re
 
 def getArgMaxIndex(N):
     # For getting the maximum index of an list.
@@ -38,10 +38,18 @@ def setFieldConfigs(config,config_folder):
     config["load_field_configs"] = True
     config["inputFolder"] = os.path.normpath(config_folder)
     if os.path.isdir(config_folder):
-        config["field_configs"] = sorted([fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")])
+        config["field_configs"] = natural_sort([fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")])
     else:
         raise OSError("Error: %s is not a directory." % (config_folder))
     return config
+
+def natural_sort(l):
+    # Natural sorting
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [convert(c) for c in re.split('(\d+)',key)]
+    # print text.split(".")[-2].split("_")[-1]
+    # return [atoi(c) for c in re.split("(\d+)",text.split(".")[-2].split("_")[-1])]
+    return sorted(l,key=alphanum_key)
 
 class Slurm:
     def __init__(self, dryrun):
@@ -99,14 +107,17 @@ class Slurm:
         json_dict["NFlows"] = config_dict["NFlows"]
         json_dict["NUpdates"] = config_dict["NUpdates"]
         # Data storage related variables
+        # temp_outputFolder = os.path.normpath("/" + config_dict["outputFolder"] + "/").replace("//","/")
+        # json_dict["outputFolder"] = "/" + os.path.relpath(temp_outputFolder,self.base_folder) + "/"
         json_dict["outputFolder"] = "/" + config_dict["outputFolder"] + "/"
-        json_dict["inputFolder"] = "/" + config_dict["inputFolder"] + "/"
+        temp_inputFolder = os.path.normpath("/" + config_dict["inputFolder"] + "/").replace("//","/")
+        json_dict["inputFolder"] = "/" + os.path.relpath(temp_inputFolder,self.base_folder) + "/"
         json_dict["storeConfigurations"] = config_dict["storeCfgs"]
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
         # Human readable output related variables
         json_dict["verbose"] = config_dict["verboseRun"]
         # Setup related variables
-        json_dict["pwd"] = config_dict["base_folder"]
+        json_dict["pwd"] = os.path.normpath(config_dict["base_folder"])
         json_dict["batchName"] = config_dict["runName"]
         json_dict["hotStart"] = config_dict["hotStart"]
         json_dict["RSTHotStart"] = config_dict["RSTHotStart"]
@@ -230,7 +241,7 @@ class Slurm:
 #SBATCH --partition={4:<s}
 #SBATCH --ntasks={5:<d}
 #SBATCH --nodes={6:<1d}
-#SBATCH --mail-type=END
+#SBATCH --mail-type=BEGIN,TIME_LIMIT_10,END
 {7:<s}
 
 source /cluster/bin/jobsetup
@@ -377,8 +388,8 @@ def main(args):
                         "load_field_configs"        : False,
                         "chroma_config"             : False,
                         "base_folder"               : os.getcwd(),
-                        "inputFolder"               : "input",
-                        "outputFolder"              : "output",
+                        "inputFolder"               : os.path.join(os.getcwd(),"input"),
+                        "outputFolder"              : "output",#os.path.join(os.getcwd(),"output"),
                         "field_configs"             : [],
                         "uTest"                     : False,
                         "uTestVerbose"              : False,

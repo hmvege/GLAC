@@ -191,6 +191,7 @@ void System::thermalize()
         if (m_processRank == 0) {
             printf("\ni    ");
             m_correlator->printHeader();
+            printf("\n%-4d ",0);
             m_correlator->printObservable(0);
         }
     }
@@ -219,6 +220,7 @@ void System::thermalize()
             // Calculating the correlator
             m_correlator->calculate(m_lattice,iTherm);
             if (m_processRank == 0) {
+                printf("\n%-4d ",iTherm);
                 m_correlator->printObservable(iTherm);
             }
         }
@@ -336,7 +338,7 @@ void System::runMetropolis()
         if (m_processRank == 0) {
             // Printing the observables
             printf("\n%-4d ",iConfig);
-            m_correlator->printObservable(iConfig);
+            m_correlator->printObservable(iConfig + m_NThermSteps);
             printf(" %-12.8f",m_updateStorer/double((iConfig+1)*m_NCor));
             // Adding the acceptance ratio
             if (iConfig % 10 == 0) {
