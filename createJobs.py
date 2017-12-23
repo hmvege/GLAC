@@ -205,7 +205,10 @@ class Slurm:
             estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr,cpu_approx_runtime_min)
 
             # Setting run-command
-            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.base_folder,"input",self.json_file_name))
+            if not system == 'laconia':
+                run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.base_folder,"input",self.json_file_name))
+            else :
+                run_command = "mpirun -np {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.base_folder,"input",self.json_file_name))
 
             # Chosing system
             if system == "smaug":
@@ -255,10 +258,26 @@ set -o errexit              # exit on errors
 {8:<s}
 
 '''.format(job_name, account_name, estimated_time, cpu_memory, partition, threads, nodes, sbatch_exclusions, run_command)
+            elif system == "laconia":
+                sys.exit("Error: not implemented setup for system: %s" % system)
+                content = '''
+#! /bin/bash -login
+#PBS -A {1:<s}
+#PBS -l walltime={2:<s},nodes={5:<1d}:ppn={4:<d},mem={3:<4d}GB
+#PBS -N {0:<s}
+#PBS -M h.m.m.vege@fys.uio.no
+#PBS -m bea
+module load GNU/4.9
+module load OpenMPI/1.10.0
+{6:<s}
+'''.format(job_name, account_name, estimated_time, cpu_memory, threads, nodes, run_command)
             elif system == "local":
                 sys.exit("Error: this is a local production run. Should never see this error message.")
 
-            job = 'jobfile.slurm'
+            if not system == "laconia":
+                job = 'jobfile.slurm'
+            else:
+                job = 'jobfile.qsub'
 
             # Writies slurm file to be submitted
             if self.dryrun:
@@ -268,7 +287,10 @@ set -o errexit              # exit on errors
                 outfile.write(content)
                 outfile.close()
 
-            cmd = ['sbatch', os.path.join(self.CURRENT_PATH,job)]
+            if not system == "laconia":
+                cmd = ['sbatch', os.path.join(self.CURRENT_PATH,job)]
+            else:
+                cmd = ['qsub', os.path.join(self.CURRENT_PATH,job)]
 
             # Submits job
             if self.dryrun:
@@ -427,7 +449,7 @@ def main(args):
 
     ######## Manual job setup ########
     job_parser = subparser.add_parser('setup', help='Sets up the job.')
-    job_parser.add_argument('system',                           default=False,                              type=str, choices=['smaug','abel','local'],help='Specify system we are running on.')
+    job_parser.add_argument('system',                           default=False,                              type=str, choices=['smaug','abel','laconia','local'],help='Specify system we are running on.')
     job_parser.add_argument('threads',                          default=False,                              type=int,help='Number of threads to run on')
     job_parser.add_argument('-p',   '--partition',              default="normal",                           type=str,help='Specify partition to run program on.')
     job_parser.add_argument('-rn',  '--run_name',               default=config_default["runName"],          type=str,help='Specifiy the run name')
@@ -472,7 +494,7 @@ def main(args):
     ######## Job load parser ########
     load_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
     load_parser.add_argument('file',                            default=False,                              type=str, nargs='+', help='Loads config file')
-    load_parser.add_argument('-s','--system',                   default=False,                              type=str, required=True,choices=['smaug','abel'],help='Cluster name')
+    load_parser.add_argument('-s','--system',                   default=False,                              type=str, required=True,choices=['smaug','abel','laconia'],help='Cluster name')
     load_parser.add_argument('-p','--partition',                default="normal",                           type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
     load_parser.add_argument('-lcfg','--load_configurations',   default=config_default["load_field_configs"],type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
     load_parser.add_argument('-lhr','--load_config_hr_time_estimate',default=False,                         type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
@@ -482,7 +504,7 @@ def main(args):
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
-    unit_test_parser.add_argument('system',                     default=False,                              type=str, choices=['smaug','abel','local'],help='Specify system we are running on.')
+    unit_test_parser.add_argument('system',                     default=False,                              type=str, choices=['smaug','abel','laconia','local'],help='Specify system we are running on.')
     unit_test_parser.add_argument('-v', '--verbose',            default=False,                              action='store_true', help='Prints more information during testing.')
     unit_test_parser.add_argument('-cgi','--check_gauge_invariance', default=False,                         type=str, help='Loads and checks the gauge field invariance of a field.')
     unit_test_parser.add_argument('-N',   '--NSpatial',         default=False,                              type=int,help='spatial lattice dimension')

@@ -52,7 +52,6 @@ public:
     SU3 testRSTMultiplicationInverse(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplicationInverse(r,s,t); }
 };
 
-
 inline SU3 SU3MatrixGenerator::generateRandom()
 {
     /*
@@ -231,7 +230,6 @@ inline SU3 SU3MatrixGenerator::RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t)
     return X;
 }
 
-
 inline SU3 SU3MatrixGenerator::RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 t)
 {
     /*
@@ -273,6 +271,5 @@ inline SU3 SU3MatrixGenerator::RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 
 
     return X;
 }
-
 
 #endif // SU3MATRIXGENERATOR_H

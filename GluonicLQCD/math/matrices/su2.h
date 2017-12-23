@@ -9,8 +9,14 @@ using std::endl;
 class SU2
 {
 public:
-    SU2();
-    ~SU2();
+    SU2() {
+        for (int i = 0; i < 8; i++)
+        {
+            mat[i] = 0;
+        }
+    }
+
+    ~SU2() {}
 
     double mat[8];
 
@@ -66,6 +72,151 @@ inline SU2 operator*(SU2 A, double b)
 {
 A *= b;
 return A;
+}
+
+///////////////////////////////
+//// SU2 operator functions ///
+///////////////////////////////
+
+
+inline SU2 &SU2::operator=(const SU2 &B)
+{
+    /*
+     * Copy assignement operator.
+     */
+    for (int i = 0; i < 8; i++) {
+        mat[i] = B.mat[i];
+    }
+    return *this;
+}
+
+inline SU2 &SU2::operator+=(const SU2 &B)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        mat[i] += B.mat[i];
+    }
+    return *this;
+}
+
+inline SU2 &SU2::operator+=(SU2 &&B)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        mat[i] += B.mat[i];
+    }
+    return *this;
+}
+
+inline SU2 &SU2::operator-=(const SU2 &B)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        mat[i] -= B.mat[i];
+    }
+    return *this;
+}
+
+inline SU2 &SU2::operator-=(SU2 &&B)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        mat[i] -= B.mat[i];
+    }
+    return *this;
+}
+
+inline SU2 &SU2::operator*=(double b)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        mat[i] *= b;
+    }
+    return *this;
+}
+
+inline SU2 &SU2::operator*=(const SU2 &B)
+{
+    double temp[8];
+
+    temp[0] = mat[0]*B.mat[0] - mat[1]*B.mat[1] + mat[2]*B.mat[4] - mat[3]*B.mat[5];
+    temp[1] = mat[0]*B.mat[1] + mat[1]*B.mat[0] + mat[2]*B.mat[5] + mat[3]*B.mat[4];
+    temp[2] = mat[0]*B.mat[2] - mat[1]*B.mat[3] + mat[2]*B.mat[6] - mat[3]*B.mat[7];
+    temp[3] = mat[0]*B.mat[3] + mat[1]*B.mat[2] + mat[2]*B.mat[7] + mat[3]*B.mat[6];
+    temp[4] = mat[4]*B.mat[0] - mat[5]*B.mat[1] + mat[6]*B.mat[4] - mat[7]*B.mat[5];
+    temp[5] = mat[4]*B.mat[1] + mat[5]*B.mat[0] + mat[6]*B.mat[5] + mat[7]*B.mat[4];
+    temp[6] = mat[4]*B.mat[2] - mat[5]*B.mat[3] + mat[6]*B.mat[6] - mat[7]*B.mat[7];
+    temp[7] = mat[4]*B.mat[3] + mat[5]*B.mat[2] + mat[6]*B.mat[7] + mat[7]*B.mat[6];
+
+    for (int i = 0; i < 8; i++)
+    {
+        mat[i] = temp[i];
+    }
+    return *this;
+}
+
+inline SU2 &SU2::operator*=(SU2 &&B)
+{
+    double temp[8];
+
+    temp[0] = mat[0]*B.mat[0] - mat[1]*B.mat[1] + mat[2]*B.mat[4] - mat[3]*B.mat[5];
+    temp[1] = mat[0]*B.mat[1] + mat[1]*B.mat[0] + mat[2]*B.mat[5] + mat[3]*B.mat[4];
+    temp[2] = mat[0]*B.mat[2] - mat[1]*B.mat[3] + mat[2]*B.mat[6] - mat[3]*B.mat[7];
+    temp[3] = mat[0]*B.mat[3] + mat[1]*B.mat[2] + mat[2]*B.mat[7] + mat[3]*B.mat[6];
+    temp[4] = mat[4]*B.mat[0] - mat[5]*B.mat[1] + mat[6]*B.mat[4] - mat[7]*B.mat[5];
+    temp[5] = mat[4]*B.mat[1] + mat[5]*B.mat[0] + mat[6]*B.mat[5] + mat[7]*B.mat[4];
+    temp[6] = mat[4]*B.mat[2] - mat[5]*B.mat[3] + mat[6]*B.mat[6] - mat[7]*B.mat[7];
+    temp[7] = mat[4]*B.mat[3] + mat[5]*B.mat[2] + mat[6]*B.mat[7] + mat[7]*B.mat[6];
+
+    for (int i = 0; i < 8; i++)
+    {
+        mat[i] = temp[i];
+    }
+    return *this;
+}
+
+///////////////////////////////
+//// SU2 specific functions ///
+///////////////////////////////
+
+inline SU2 SU2::inv()
+{
+    SU2 R;
+    R[0] = mat[0];
+    R[1] = -mat[1];
+
+    R[2] = mat[4];
+    R[3] = -mat[5];
+
+    R[4] = mat[2];
+    R[5] = -mat[3];
+
+    R[6] = mat[6];
+    R[7] = -mat[7];
+
+    return R;
+}
+
+///////////////////////////////
+////// Matrix functions ///////
+///////////////////////////////
+
+inline void SU2::zeros()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        mat[i] = 0;
+    }
+}
+
+inline void SU2::identity()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        mat[i] = 0;
+    }
+    mat[0] = 1;
+    mat[6] = 1;
 }
 
 #endif // SU2_H

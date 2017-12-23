@@ -21,20 +21,16 @@ class Bootstrap:
 			self.seed = seed
 		if len(index_lists) == 0: # Allows user to send in a predefined list if needed
 			index_lists = np.random.randint(N, size=(N_BS, N))
-
-		# Gets and sets bootstrapped values 
 		self.bs_data_raw = data[index_lists]
-		self.bs_data = bootstrap_statistics(self.bs_data_raw,axis=1)
-		self.bs_data = F(self.bs_data)
+		self.bs_data = F(bootstrap_statistics(self.bs_data_raw,axis=1))
 		self.bs_avg = np.mean(self.bs_data)
 		self.bs_var = np.var(self.bs_data)
 		self.bs_std = np.std(self.bs_data)
-
 		# Gets and sets non-bootstrapped values
-		data = F(non_bs_stats(data))
-		self.avg_original = np.average(data)
-		self.var_original = np.var(data)
-		self.std_original = np.std(data)
+		function_data = F(non_bs_stats(data))
+		self.avg_original = np.average(function_data)
+		self.var_original = np.var(function_data)
+		self.std_original = np.std(function_data)
 
 		# Sets some global class variables
 		self.shape = self.bs_avg.shape
@@ -81,7 +77,7 @@ class Jackknife:
 	"""
 	Class for performing a statistical jack knife.
 	"""
-	def __init__(self, data):
+	def __init__(self, data): # , statistics = np.mean, F = lambda x : x, statistics = lambda x: x
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
@@ -96,7 +92,8 @@ class Jackknife:
 		self.avg_original = np.average(data)
 		self.var_original = np.var(data)
 		self.std_original = np.std(data)
-
+		print "ADD FUNCTION/STATS TO JACKKNIFE!"
+		exit(1);
 		# Performs jackknife and sets variables
 		self.jk_data = np.zeros(self.N) # Jack knifed data
 		for i in xrange(self.N):

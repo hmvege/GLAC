@@ -5,45 +5,6 @@
 using std::cout;
 using std::endl;
 
-///////////////////////////////
-//// SU3 specific functions ///
-///////////////////////////////
-
-SU3 SU3::inv()
-{
-    /*
-     * Takes the inverse of the matrix(which is transpose and conjugate).
-     * Index map:
-     * H =
-     * 0 1 2    0  1   2  3    4  5
-     * 3 4 5 =  6  7   8  9   10 11
-     * 6 7 8   12 13  14 15   16 17
-     */
-    SU3 R;
-    // Upper triangular
-    R.mat[6]  =  mat[2];
-    R.mat[7]  = -mat[3];
-    R.mat[12] =  mat[4];
-    R.mat[13] = -mat[5];
-    R.mat[14] =  mat[10];
-    R.mat[15] = -mat[11];
-    // Upper triangular
-    R.mat[2]  =  mat[6];
-    R.mat[3]  = -mat[7];
-    R.mat[4]  =  mat[12];
-    R.mat[5]  = -mat[13];
-    R.mat[10] =  mat[14];
-    R.mat[11] = -mat[15];
-    // Diagonals
-    R.mat[0]  =  mat[0];
-    R.mat[1]  = -mat[1];
-    R.mat[8]  =  mat[8];
-    R.mat[9]  = -mat[9];
-    R.mat[16] =  mat[16];
-    R.mat[17] = -mat[17];
-    return R;
-}
-
 void SU3::zeros()
 {
     for (int i = 0; i < 18; i++) {
@@ -108,34 +69,6 @@ double SU3::normSquared(int i)
 complex SU3::trace()
 {
     return complex(mat[0] + mat[8] + mat[16], mat[1] + mat[9] + mat[17]);
-}
-
-SU3 SU3::makeHermitian()
-{
-    /*
-     * An anti-hermitian matrix is made hermitian by multiplying by (-i)
-     */
-    double temp;
-    for (int i = 0; i < 9; i++) {
-        temp = mat[2*i];
-        mat[2*i] = mat[2*i+1];
-        mat[2*i+1] = -temp;
-    }
-    return *this;
-}
-
-SU3 SU3::makeAntiHermitian()
-{
-    /*
-     * Multiplies by (i). Ensure this is correct in unit tests!
-     */
-    double temp;
-    for (int i = 0; i < 9; i++) {
-        temp = mat[2*i];
-        mat[2*i] = -mat[2*i+1];
-        mat[2*i+1] = temp;
-    }
-    return *this;
 }
 
 void SU3::setComplex(complex w, int i)

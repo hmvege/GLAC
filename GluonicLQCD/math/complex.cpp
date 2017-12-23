@@ -38,6 +38,10 @@ complex::complex(const complex &b )
     z[1] = b.im();
 }
 
+///////////////////////////////
+////// Complex functions //////
+///////////////////////////////
+
 double complex::norm()
 {
     /*
@@ -61,7 +65,6 @@ complex complex::conjugate()
      */
     z[1] = -z[1];
     return *this;
-//    return complex(z[0],-z[1]);
 }
 
 complex complex::c()

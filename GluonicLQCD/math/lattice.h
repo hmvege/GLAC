@@ -455,11 +455,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
     _L.allocate(L.m_dim);// MOVE THIS TO INITIALIZATION/HEADER-THING?
     std::vector<SU3> sendCube; // Move indexes to index in order to avoid 2 integer multiplications)
     std::vector<SU3> recvCube; // MOVE THIS TO HEADER; SO WE DONT ALLOCATE EVERY TIME!
+    // INSTEAD OF CUBE INDEX, JUST DO INDEX WITH DIMENSION SET TO ZERO
     MPI_Request sendReq,recvReq;
-//    printf("\n%d\n",_L.m_latticeSize);
-//    printf("\n%lu\n",sendCube.size());
-//    MPI_Barrier(MPI_COMM_WORLD);
-//    exit(1);
     switch(direction) {
     case BACKWARDS: {
         switch(lorentzVector) {
@@ -759,7 +756,6 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
         break;
     }
     }
-//    _L.zeros();
     return _L;
 }
 
