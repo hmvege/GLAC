@@ -322,6 +322,13 @@ void Parallel::Communicator::MPIExit(std::string message)
     exit(0);
 }
 
+void Parallel::Communicator::MPIPrint(std::string message)
+{
+    setBarrier();
+    if (m_processRank == 0) printf("\n%s", message.c_str());
+    setBarrier();
+}
+
 void Parallel::Communicator::gatherDoubleResults(double * data, int N)
 {
     double tempData[N]; // Possibly bad?! TEST

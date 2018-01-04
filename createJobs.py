@@ -51,7 +51,10 @@ def natural_sort(l):
     # return [atoi(c) for c in re.split("(\d+)",text.split(".")[-2].split("_")[-1])]
     return sorted(l,key=alphanum_key)
 
-class Slurm:
+class JobCreator:
+    """
+    Class for initializing jobs.
+    """
     def __init__(self, dryrun):
         self.dryrun = dryrun
         self.CURRENT_PATH = os.getcwd()
@@ -114,6 +117,8 @@ class Slurm:
         json_dict["inputFolder"] = "/" + os.path.relpath(temp_inputFolder,self.base_folder) + "/"
         json_dict["storeConfigurations"] = config_dict["storeCfgs"]
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
+        # For loading and running from a configuration
+        json_dict["load_config_and_run"] = config_dict["load_config_and_run"]
         # Human readable output related variables
         json_dict["verbose"] = config_dict["verboseRun"]
         # Setup related variables
@@ -408,6 +413,7 @@ def main(args):
                         "observables"               : ["plaq"], # Optional: topc, energy
                         "flowObservables"           : ["plaq","topc","energy"], # Optional: topc, energy
                         "load_field_configs"        : False,
+                        "load_config_and_run"       : "",
                         "chroma_config"             : False,
                         "base_folder"               : os.getcwd(),
                         "inputFolder"               : os.path.join(os.getcwd(),"input"),
@@ -452,13 +458,13 @@ def main(args):
     job_parser.add_argument('system',                           default=False,                              type=str, choices=['smaug','abel','laconia','local'],help='Specify system we are running on.')
     job_parser.add_argument('threads',                          default=False,                              type=int,help='Number of threads to run on')
     job_parser.add_argument('-p',   '--partition',              default="normal",                           type=str,help='Specify partition to run program on.')
-    job_parser.add_argument('-rn',  '--run_name',               default=config_default["runName"],          type=str,help='Specifiy the run name')
+    job_parser.add_argument('-rn',  '--run_name',               default=config_default["runName"],          type=str,help='Specify the run name')
     # Lattice related run variables
     job_parser.add_argument('-N',   '--NSpatial',               default=config_default["N"],                type=int,help='spatial lattice dimension')
     job_parser.add_argument('-NT',  '--NTemporal',              default=config_default["NT"],               type=int,help='temporal lattice dimension')
     job_parser.add_argument('-sd', '--subDims',                 default=False,                              type=int,nargs=4,help='List of sub lattice dimension sizes, length 4')
     job_parser.add_argument('-b',   '--beta',                   default=config_default["beta"],             type=float,help='beta value')
-    job_parser.add_argument('-NCf', '--NConfigs',               default=config_default["NCf"],              type=int,help='number of configurations to generate')
+    job_parser.add_argument('-NCfg', '--NConfigs',              default=config_default["NCf"],              type=int,help='number of configurations to generate')
     job_parser.add_argument('-NCor', '--NCor',                  default=config_default["NCor"],             type=int,help='number of correlation updates to perform')
     job_parser.add_argument('-NTh', '--NTherm',                 default=config_default["NTherm"],           type=int,help='number of thermalization steps')
     job_parser.add_argument('-NFlows','--NFlows',               default=config_default["NFlows"],           type=int,help='number of flows to perform per configuration')
@@ -497,6 +503,9 @@ def main(args):
     load_parser.add_argument('-s','--system',                   default=False,                              type=str, required=True,choices=['smaug','abel','laconia'],help='Cluster name')
     load_parser.add_argument('-p','--partition',                default="normal",                           type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
     load_parser.add_argument('-lcfg','--load_configurations',   default=config_default["load_field_configs"],type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
+    load_parser.add_argument('-lcfgr','--load_config_and_run',  default=False,                              type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfg argument.')
+    load_parser.add_argument('-NCfg','--NConfigs',              default=False,                              type=int, help='N configurations to generate based on loaded configuration.')
+    load_parser.add_argument('-chroma','--chroma_config',       default=config_default["chroma_config"],    action='store_true',help='If flagged, loads the configuration as a chroma configuration.')
     load_parser.add_argument('-lhr','--load_config_hr_time_estimate',default=False,                         type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
     load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=False,                       type=int,help='Approximate cpu time in minutes that will be used')
     load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],      type=str,help='Sets the base folder. Default is os.path.getcwd().')
@@ -515,21 +524,24 @@ def main(args):
     # args = parser.parse_args(["--dryrun","setup","smaug","-ex","smaug-a[1-8]","smaug-b[1-8]","-sq"])
     # args = parser.parse_args(["--dryrun","load","config_folder/config_beta6_0.py","-s","abel","-lcfg","input","--load_config_hr_time_estimate","2"])
     # args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
-    # args = parser.parse_args(['--dryrun', 'setup', 'local', '4', '-N', '8', '-NT', '8', '-NCf', '100', '-NCor', '40', '-NFlows', '100', '-obs', 'plaq', 'topc', 'energy', '-fobs', 'plaq', 'topc', 'energy', '-b', '6.0', '-rn', 'TestRun1', '-sd', '8', '8', '4', '4', '-lcfg', 'input'])
-    # args = parser.parse_args(['setup', 'smaug', '64', '-N', '24', '-NT', '48', '-NTh', '300', '-fobs', 'plaq', 'topc', 'energy', '-NCf', '20', '-NFlows', '60', '-rn', 'topcPlaqTestSmaug', '-chr', '10', '-v'])
+    # args = parser.parse_args(['--dryrun', 'setup', 'local', '4', '-N', '8', '-NT', '8', '-NCfg', '100', '-NCor', '40', '-NFlows', '100', '-obs', 'plaq', 'topc', 'energy', '-fobs', 'plaq', 'topc', 'energy', '-b', '6.0', '-rn', 'TestRun1', '-sd', '8', '8', '4', '4', '-lcfg', 'input'])
+    # args = parser.parse_args(['setup', 'smaug', '64', '-N', '24', '-NT', '48', '-NTh', '300', '-fobs', 'plaq', 'topc', 'energy', '-NCfg', '20', '-NFlows', '60', '-rn', 'topcPlaqTestSmaug', '-chr', '10', '-v'])
     # args = parser.parse_args(['sbatch','--list_jobs'])
     # args = parser.parse_args(['sbatch','--clearIDFile']) 
 
     # Retrieves dryrun bool
     dryrun = args.dryrun
 
-    # Initiates Slurm class for running jobs ect
-    s = Slurm(dryrun)
+    # Initiates JobCreator class for running jobs ect
+    s = JobCreator(dryrun)
 
     # Loads one or multiple configuration
     if args.subparser == 'load':
         configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
         if args.load_configurations:
+            if args.load_config_and_run:
+                # Error catching in case user is using load_config_and_run together with load_configurations.
+                sys.exit("ERROR: can not load and run configurations(-lcfgr) together with load configurations(-lcfg).")
             if len(configurations) == 1:
                 # Requiring flow to be specified if we are loading configurations to flow
                 for c in configurations:
@@ -544,6 +556,16 @@ def main(args):
                     configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
             else:
                 raise TypeError("Can only assign one configuration file to a single set of field configurations.")
+        if args.load_config_and_run:
+            if not args.NConfigs:
+                # Error catching, as we require to know how many addition configurations we wish to create from loaded configuration.
+                sys.exit("ERROR: we require to know how many addition configurations we wish to create from loaded configuration(specified by -lcfgr).")
+            if len(configurations) != 1:
+                exit("ERROR: can only load and run configuration from one configuration setup(.py configuration file).")
+            configurations[0]["load_config_and_run"] = args.load_config_and_run
+            configurations[0]["NCf"] = args.NConfigs
+            configurations[0]["NTherm"] = 0
+            configurations[0]["NFlows"] = 0
         # Populate configuration with default values if certain keys are not present
         for c in configurations:
             config_default["base_folder"] = args.base_folder

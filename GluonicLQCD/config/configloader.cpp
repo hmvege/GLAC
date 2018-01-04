@@ -79,6 +79,14 @@ namespace ConfigLoader {
             Parameters::setLoadFieldConfigurations(bool(j["load_field_configs"]));
             Parameters::setLoadChromaConfigurations(bool(j["chroma_config"]));
         }
+        // Sets a field configuration to load for later, running the metropolis algorithm from the loaded configuration
+        if (!j["load_config_and_run"].empty()) {
+            std::vector<std::string> tempVec;
+            tempVec.push_back(j["load_config_and_run"]);
+            setFieldConfigurations(tempVec);
+            Parameters::setNCf(j["NCf"]);
+            Parameters::setLoadConfigAndRun(true);
+        }
         // Testing related variables
         Parameters::setUnitTesting(j["unitTesting"]);
         Parameters::setUnitTestingVerbose(j["unitTestingVerbose"]);

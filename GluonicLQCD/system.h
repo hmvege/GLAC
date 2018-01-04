@@ -97,6 +97,7 @@ private:
     void loadChroma(std::string configurationName);
     void load(std::string configurationName);
     void flowConfigurations();
+    void loadConfigurationAndRunMetropolis();
 
     // Function for running metropolis algorithm
     void runMetropolis();

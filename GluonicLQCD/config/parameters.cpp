@@ -71,6 +71,9 @@ bool Parameters::m_loadFieldConfigurations = false;
 bool Parameters::m_loadChromaConfigurations = false;
 std::vector<std::string> Parameters::m_fieldConfigurationFileNames = {};
 
+// Variable for storing if we are to load and run from a given configuration
+bool Parameters::m_loadConfigAndRun = false;
+
 Parameters::Parameters()
 {
 

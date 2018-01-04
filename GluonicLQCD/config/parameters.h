@@ -64,6 +64,8 @@ private:
     static bool m_loadFieldConfigurations;
     static bool m_loadChromaConfigurations;
     static std::vector<std::string> m_fieldConfigurationFileNames;
+    // Variable for storing if we are to load and run from a given configuration
+    static bool m_loadConfigAndRun;
 
     static double calculateLatticeSpacing(double beta);
 public:
@@ -119,6 +121,8 @@ public:
     static void setLoadFieldConfigurations(bool loadFieldConfigurations) { m_loadFieldConfigurations = loadFieldConfigurations; }
     static void setLoadChromaConfigurations(bool loadChromaConfigurations) { m_loadChromaConfigurations = loadChromaConfigurations; }
     static void setFieldConfigurationFileNames(std::vector<std::string> fieldConfigurationFileNames) { m_fieldConfigurationFileNames = fieldConfigurationFileNames; }
+    // Variable for storing if we are to load and run from a given configuration
+    static void setLoadConfigAndRun(bool loadConfigAndRun) { m_loadConfigAndRun = loadConfigAndRun; }
 
     /////////////////
     //// Getters ////
@@ -170,6 +174,8 @@ public:
     static bool getLoadFieldConfigurations() { return m_loadFieldConfigurations; }
     static bool getLoadChromaConfigurations() { return m_loadChromaConfigurations; }
     static std::vector<std::string> getFieldConfigurationFileNames() { return m_fieldConfigurationFileNames; }
+    // Variable for storing if we are to load and run from a given configuration
+    static bool getLoadConfigAndRun() { return m_loadConfigAndRun; }
 };
 
 #endif // PARAMETERS_H

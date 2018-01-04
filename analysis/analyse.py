@@ -270,7 +270,7 @@ def chi(Q_squared):
 def stat(x,axis=None):
 	return np.mean(x**2,axis=axis)
 
-class Analyse:
+class Analyse(object):
 	observable_name = "Missing_Observable_Name"
 	x_label = "Missing x-label"
 	y_label = "Missing y-label"
@@ -307,9 +307,19 @@ class Analyse:
 		self.a = getLatticeSpacing(self.beta)
 		self.r = 0.5 # Sommer Parameters
 
-	def boot(self,N_bs):
+	def plot_boot(self,N_bs):
 		self.N_bs = N_bs
 		self.analysis.boot(N_bs)
+		self.y = self.analysis.bs_data
+		self.y_std = self.analysis.bs_data_std
+		self.unanalyzed_y = self.analysis.non_bs_data
+		self.unanalyzed_y_std = self.analysis.non_bs_data_std
+
+	def jackknife(self):
+		None
+
+	def autocorrelation(self):
+		None
 
 	def plot(self,plot_bs=True):
 		# Checks that the flow has been performed.
@@ -318,6 +328,54 @@ class Analyse:
 
 		# Retrieves relevant data
 		x = self.a * np.sqrt(8*self.x)
+		if plot_bs:
+			y = self.y
+			y_std = self.y
+		else:
+			y = self.unanalyzed_y
+			y_std = self.unanalyzed_y_std
+
+		# Plotting commands
+		plt.figure()
+		plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
+		plt.xlabel(self.x_label)
+		plt.ylabel(self.y_label)
+		plt.grid(True)
+		if plot_bs:
+			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta,self.N_bs)
+			fname = "../figures/{0:<s}/flow_{2:<s}_{0:<s}_Nbs{1:<d}.png".format(self.batch_name,self.N_bs,"".join(self.observable_name.lower().split(" ")))
+		else:
+			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name, self.data.meta_data["NFlows"],self.beta)
+			fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+		plt.title(title_string)
+		if not self.dryrun: plt.savefig(fname)
+		print "Figure created in %s" % fname
+
+class AnalysePlaquette(Analyse):
+	observable_name = "Plaquette"
+	x_label = r"$a\sqrt{8t_{flow}}$"
+	y_label = r"$P_{\mu\nu}$"
+
+	def __init__(self,files,observable,batch_name,flow=True,data=None,dryrun=False):
+		super(AnalysePlaquette,self).__init__(files,observable,batch_name,flow=True,data=None,dryrun=False)
+
+class AnalyseTopologicalCharge(Analyse):
+	observable_name = "Topological Charge"
+	x_label = r"$a\sqrt{8t_{flow}}$"
+	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
+
+class AnalyseEnergy(Analyse):
+	observable_name = "Energy"
+	x_label = r"$t$"
+	y_label = r"$\langle E \rangle t^2$"
+
+	def plot(self,plot_bs=True):
+		# Checks that the flow has been performed.
+		if self.N_bs == None:
+			raise ValueError("Flow has not been performed yet.")
+
+		# Retrieves relevant data
+		x = self.x
 		if plot_bs:
 			y = self.analysis.bs_data
 			y_std = self.analysis.bs_data_std
@@ -341,53 +399,6 @@ class Analyse:
 		if not self.dryrun: plt.savefig(fname)
 		print "Figure created in %s" % fname
 
-class AnalysePlaquette(Analyse):
-	observable_name = "Plaquette"
-	x_label = r"$a\sqrt{8t_{flow}}$"
-	y_label = r"$P_{\mu\nu}$"
-
-class AnalyseTopologicalCharge(Analyse):
-	observable_name = "Topological Charge"
-	x_label = r"$a\sqrt{8t_{flow}}$"
-	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
-
-class AnalyseEnergy(Analyse):
-	observable_name = "Energy"
-	x_label = r"$t$"
-	y_label = r"$\langle E \rangle t^2$"
-
-	# def plot(self,plot_bs=True):
-	# 	# Checks that the flow has been performed.
-	# 	if self.N_bs == None:
-	# 		raise ValueError("Flow has not been performed yet.")
-
-	# 	# Retrieves relevant data
-	# 	x = self.a * np.sqrt(8*self.x)
-	# 	if plot_bs:
-	# 		y = self.analysis.bs_data
-	# 		y_std = self.analysis.bs_data_std
-	# 	else:
-	# 		y = self.analysis.non_bs_data
-	# 		y_std = self.analysis.non_bs_data_std
-
-	# 	# Plotting commands
-	# 	plt.figure()
-	# 	plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
-	# 	plt.xlabel(self.x_label)
-	# 	plt.ylabel(self.y_label)
-	# 	plt.grid(True)
-	# 	if plot_bs:
-	# 		title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta,self.N_bs)
-	# 		fname = "../figures/{0:<s}/flow_{2:<s}_{0:<s}_Nbs{1:<d}.png".format(self.batch_name,self.N_bs,"".join(self.observable_name.lower().split(" ")))
-	# 	else:
-	# 		title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name, self.data.meta_data["NFlows"],self.beta)
-	# 		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
-	# 	plt.title(title_string)
-	# 	if not self.dryrun: plt.savefig(fname)
-	# 	print "Figure created in %s" % fname
-
-
-
 class AnalyseTopologicalSusceptibility(Analyse):
 	observable_name = "Topological Susceptibility"
 	x_label = r"$a\sqrt{8t_{flow}}$"
@@ -395,16 +406,15 @@ class AnalyseTopologicalSusceptibility(Analyse):
 
 	def plot(self,plot_bs=True):
 		None
+
 def main(args):
 	if not args:
-		# args = ['prodRunBeta6_1','plaq','topc','energy','topsus']
-		args = ['prodRunBeta6_0','plaq','topc','energy','topsus']
+		args = ['prodRunBeta6_1','plaq','topc','energy','topsus']
+		# args = ['prodRunBeta6_0','plaq','topc','energy','topsus']
 
 	DList = GetDirectoryTree(args[0])
 	N_bs = 200
 	dryrun = False
-
-	sys.exit("EXITING: Missing complete plotter functions.")
 
 	# Analyses plaquette data if present in arguments
 	if 'plaq' in args:
@@ -413,6 +423,8 @@ def main(args):
 		plaq_analysis.plot()
 		plaq_analysis.plot(plot_bs=False)
 
+	sys.exit("EXITING: Missing complete plotter functions.")
+
 	if 'topc' in args:
 		topc_analysis = AnalyseTopologicalCharge(DList.getFlow("topc"), "topc", args[0], flow=True, dryrun = dryrun)
 		topc_analysis.boot(N_bs)
@@ -420,7 +432,7 @@ def main(args):
 		topc_analysis.plot(plot_bs=False)
 
 		if 'topsus' in args:
-			topsus_analysis = AnalyseTopologicalCharge(DList.getFlow("topc"), "topsus", args[0], flow=True, dryrun = dryrun)
+			topsus_analysis = AnalyseTopologicalCharge(DList.getFlow("topc"), "topsus", args[0], flow=True, dryrun = dryrun, data=topc_analysis.data)
 			topsus_analysis.boot(N_bs)
 			topsus_analysis.plot()
 			topsus_analysis.plot(plot_bs=False)

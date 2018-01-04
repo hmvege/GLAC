@@ -168,9 +168,11 @@ void System::latticeSetup()
 
 void System::run()
 {
-    if (!Parameters::getLoadFieldConfigurations()) {
+    if (!Parameters::getLoadFieldConfigurations() && !Parameters::getLoadConfigAndRun()) {
         // Run regular metropolis
         runMetropolis();
+    } else if (Parameters::getLoadConfigAndRun()) {
+        loadConfigurationAndRunMetropolis();
     } else {
         // Run flow on configurations;
         flowConfigurations();
@@ -306,7 +308,6 @@ void System::runMetropolis()
     // Variables for checking performance of the update.
     m_updateStorer = 0;
 
-
     // Main part of algorithm
     for (int iConfig = 0; iConfig < m_NCf; iConfig++)
     {
@@ -314,8 +315,8 @@ void System::runMetropolis()
         {
             // Pre timer
             m_preUpdate = steady_clock::now();
-
             update();
+            Parallel::Communicator::MPIPrint("Updating");
 
             // Post timer
             m_updateTime = duration_cast<duration<double>>(steady_clock::now() - m_preUpdate);
@@ -323,6 +324,7 @@ void System::runMetropolis()
         }
         // Flowing configuration
         if (m_NFlows != 0) {
+            Parallel::Communicator::MPIPrint("BAD!!");
             // Copys lattice into flow-lattice in order to avoid overwriting when generating configurations
             copyToFlowLattice();
             flowConfiguration(iConfig);
@@ -330,8 +332,10 @@ void System::runMetropolis()
 
         // Averaging the observable values. Avoids calculating twice if we are flowing
         if (m_NFlows == 0) {
+            Parallel::Communicator::MPIPrint("Caluclating observables");
             m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
         } else {
+            Parallel::Communicator::MPIPrint("BAD!!");
             m_correlator->copyObservable(iConfig, m_flowCorrelator->getObservablesVector(0));
         }
 
@@ -391,6 +395,26 @@ void System::flowConfiguration(int iConfig)
     }
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);
+}
+
+void System::loadConfigurationAndRunMetropolis()
+{
+    /*
+     * Method for loading and running Metropolis updates from a specific configuration.
+     */
+    m_systemIsThermalized = true;
+    // Loads the configuration we are flowing from(should only be one).
+    std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
+    if (configurationNames.size() != 1) {
+        Parallel::Communicator::MPIExit("Should only be one configuration loaded(there are currently " + std::to_string(configurationNames.size()) + "configurations.");
+    }
+    // Loads configuration, either in chroma format(reversed doubles) or regular format.
+    if (!Parameters::getLoadChromaConfigurations()) {
+        load(configurationNames[0]);
+    } else {
+        loadChroma(configurationNames[0]);
+    }
+    runMetropolis();
 }
 
 

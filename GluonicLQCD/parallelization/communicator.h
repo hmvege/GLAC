@@ -45,7 +45,8 @@ public:
     static void setN(std::vector<unsigned int> N);
 
     // MPI
-    static void MPIExit(std::string message); // INLINE HERE!!!
+    static void MPIExit(std::string message);
+    static void MPIPrint(std::string message);
     static void setBarrier();
     static void gatherDoubleResults(double * data, int N);
 
