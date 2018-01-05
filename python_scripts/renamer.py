@@ -20,12 +20,14 @@ def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=Fa
 		raise IOError("%s is not a valid new batch folder." % NEW_BATCH_FOLDER)
 
 	# Normalizes paths
-	print RENAME_FOLDERS
 	RENAME_FOLDERS = [os.path.normpath(p) for p in RENAME_FOLDERS]
-	print RENAME_FOLDERS
+	CURRENT_PATH = os.path.normpath(CURRENT_PATH)
+	if NEW_BATCH_FOLDER: NEW_BATCH_FOLDER = os.path.normpath(NEW_BATCH_FOLDER)
 
 	for FOLDER in RENAME_FOLDERS:
 		RENAME_FOLDER_PATH = os.path.join(CURRENT_PATH,FOLDER)
+
+		# Sorts the folder files
 		RENAME_FOLDER_FILES = natural_sort(os.listdir(RENAME_FOLDER_PATH))
 
 		# Raises error if not all files in folder observable files of type .dat 
