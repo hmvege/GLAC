@@ -57,6 +57,9 @@ def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=Fa
 			# Sets up the new file path
 			new_file_path = os.path.join(CURRENT_PATH,NEW_FOLDER,new_file_name)
 
+			if os.path.isfile(new_file_path):
+				raise IOError("WARNING: %s already exists" % new_file_path)
+
 			# Performs the move/renaming of observable
 			if verbose:
 				print "> mv %s %s" % (file_path,new_file_path)
