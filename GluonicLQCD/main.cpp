@@ -1,10 +1,7 @@
 #include <chrono>
-#include <mpi.h>
 #include "system.h"
 #include "config/parameters.h"
 #include "config/configloader.h"
-
-#include "observables/mastersampler.h"
 
 #include "tests/unittests.h"
 #include "tests/testsuite.h"

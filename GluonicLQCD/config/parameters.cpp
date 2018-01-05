@@ -73,6 +73,7 @@ std::vector<std::string> Parameters::m_fieldConfigurationFileNames = {};
 
 // Variable for storing if we are to load and run from a given configuration
 bool Parameters::m_loadConfigAndRun = false;
+int Parameters::m_configStartNumber = 0;
 
 Parameters::Parameters()
 {

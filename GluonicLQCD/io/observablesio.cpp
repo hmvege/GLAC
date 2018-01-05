@@ -63,7 +63,7 @@ void IO::writeFlowObservableToFile(double *observables,
                           + Parameters::getBatchName() + "/"
                           + "flow_observables/" + observableName + "/"
                           + Parameters::getBatchName() + "_"
-                          + observableName + "_flow_config" + std::to_string(configNumber) + ".dat";
+                          + observableName + "_flow_config" + std::to_string(configNumber + Parameters::getConfigStartNumber()) + ".dat";
         file.open(Parameters::getFilePath() + fname);
         file << "beta " << Parameters::getBeta() << endl;
         file << "NFlows " << Parameters::getNFlows() << endl;

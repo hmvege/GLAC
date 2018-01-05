@@ -66,6 +66,7 @@ private:
     static std::vector<std::string> m_fieldConfigurationFileNames;
     // Variable for storing if we are to load and run from a given configuration
     static bool m_loadConfigAndRun;
+    static int m_configStartNumber;
 
     static double calculateLatticeSpacing(double beta);
 public:
@@ -123,6 +124,7 @@ public:
     static void setFieldConfigurationFileNames(std::vector<std::string> fieldConfigurationFileNames) { m_fieldConfigurationFileNames = fieldConfigurationFileNames; }
     // Variable for storing if we are to load and run from a given configuration
     static void setLoadConfigAndRun(bool loadConfigAndRun) { m_loadConfigAndRun = loadConfigAndRun; }
+    static void setConfigStartNumber(int configStartNumber) { m_configStartNumber = configStartNumber; }
 
     /////////////////
     //// Getters ////
@@ -176,6 +178,7 @@ public:
     static std::vector<std::string> getFieldConfigurationFileNames() { return m_fieldConfigurationFileNames; }
     // Variable for storing if we are to load and run from a given configuration
     static bool getLoadConfigAndRun() { return m_loadConfigAndRun; }
+    static int getConfigStartNumber() { return m_configStartNumber; }
 };
 
 #endif // PARAMETERS_H

@@ -87,6 +87,9 @@ namespace ConfigLoader {
             Parameters::setNCf(j["NCf"]);
             Parameters::setLoadConfigAndRun(true);
         }
+        if (j["config_start_number"] != 0) {
+            Parameters::setConfigStartNumber(j["config_start_number"]);
+        }
         // Testing related variables
         Parameters::setUnitTesting(j["unitTesting"]);
         Parameters::setUnitTestingVerbose(j["unitTestingVerbose"]);

@@ -119,6 +119,7 @@ class JobCreator:
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
         # For loading and running from a configuration
         json_dict["load_config_and_run"] = config_dict["load_config_and_run"]
+        json_dict["config_start_number"] = config_dict["config_start_number"]
         # Human readable output related variables
         json_dict["verbose"] = config_dict["verboseRun"]
         # Setup related variables
@@ -414,6 +415,7 @@ def main(args):
                         "flowObservables"           : ["plaq","topc","energy"], # Optional: topc, energy
                         "load_field_configs"        : False,
                         "load_config_and_run"       : "",
+                        "config_start_number"       : 0,
                         "chroma_config"             : False,
                         "base_folder"               : os.getcwd(),
                         "inputFolder"               : os.path.join(os.getcwd(),"input"),
@@ -510,6 +512,7 @@ def main(args):
     load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=False,                       type=int,help='Approximate cpu time in minutes that will be used')
     load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],      type=str,help='Sets the base folder. Default is os.path.getcwd().')
     load_parser.add_argument('-nf','--no_flow',                 default=False,                              action='store_true',help='number of flows to perform per configuration')
+    load_parser.add_argument('-cfgnum','--config_start_number', default=config_default["config_start_number"],type=int,help='Starts naming the configuration from this number')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
@@ -566,6 +569,10 @@ def main(args):
             configurations[0]["NCf"] = args.NConfigs
             configurations[0]["NTherm"] = 0
             configurations[0]["NFlows"] = 0
+            if args.load_config_min_time_estimate:
+                configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
+            if args.load_config_hr_time_estimate:
+                configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
         # Populate configuration with default values if certain keys are not present
         for c in configurations:
             config_default["base_folder"] = args.base_folder
@@ -575,6 +582,7 @@ def main(args):
             for key in config_default.keys():
                 if not key in c:
                     c[key] = config_default[key]
+            c["config_start_number"] = args.config_start_number
         s.submitJob(configurations,args.system,args.partition)
     elif args.subparser == 'setup':
         if not args.system: raise ValueError("System value %g: something is wrong in parser." % args.system)

@@ -90,6 +90,12 @@ inline Lattice<T> operator+(Lattice<T> A, Lattice<T>& B) {
 }
 
 template <class T>
+inline Lattice<T> operator+(Lattice<T> A, Lattice<T>&& B) {
+    A += B;
+    return A;
+}
+
+template <class T>
 inline Lattice<T> operator-(Lattice<T> A, Lattice<T>& B) {
     A -= B;
     return A;
@@ -103,6 +109,12 @@ inline Lattice<T> operator-(Lattice<T> A, Lattice<T>&& B) {
 
 template <class T>
 inline Lattice<T> operator*(Lattice<T> A, Lattice<T>& B) {
+    A *= B;
+    return A;
+}
+
+template <class T>
+inline Lattice<T> operator*(Lattice<T> A, Lattice<T>&& B) {
     A *= B;
     return A;
 }
@@ -443,8 +455,6 @@ enum DIR {
     FORWARDS = 1
 };
 
-
-//template <class T>
 inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
 {
     /*
