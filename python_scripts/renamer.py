@@ -6,7 +6,7 @@ def natural_sort(l):
     alphanum_key = lambda key: [convert(c) for c in re.split('(\d+)',key)]
     return sorted(l,key=alphanum_key)
 
-def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=False,CURRENT_PATH=os.getcwd()):
+def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=False,OLD_CURRENT_PATH=os.getcwd()):
 	# Checks all folders given are actual folders.	
 	for folder in folders:
 		if not os.path.isdir(folder):
@@ -21,11 +21,14 @@ def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=Fa
 
 	# Normalizes paths
 	RENAME_FOLDERS = [os.path.normpath(p) for p in RENAME_FOLDERS]
-	CURRENT_PATH = os.path.normpath(CURRENT_PATH)
+	OLD_CURRENT_PATH = os.path.normpath(OLD_CURRENT_PATH)
+	CURRENT_PATH = os.getcwd()
 	if NEW_BATCH_FOLDER: NEW_BATCH_FOLDER = os.path.normpath(NEW_BATCH_FOLDER)
 
+	print CURRENT_PATH, OLD_CURRENT_PATH
+
 	for FOLDER in RENAME_FOLDERS:
-		RENAME_FOLDER_PATH = os.path.join(CURRENT_PATH,FOLDER)
+		RENAME_FOLDER_PATH = os.path.join(OLD_CURRENT_PATH,FOLDER)
 
 		# Sorts the folder files
 		RENAME_FOLDER_FILES = natural_sort(os.listdir(RENAME_FOLDER_PATH))
@@ -46,7 +49,7 @@ def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=Fa
 
 		# Renames all observable files in folder to provided config number
 		for i,file_name in enumerate(RENAME_FOLDER_FILES):
-			file_path = os.path.join(CURRENT_PATH,FOLDER,file_name)
+			file_path = os.path.join(OLD_CURRENT_PATH,FOLDER,file_name)
 			file_base, temp = file_name.split("config")
 			cfg_number, extension = temp.split(".")
 			new_file_name = file_base + "config" + str(i+starting_integer) + "." + extension
@@ -58,7 +61,7 @@ def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=Fa
 			if verbose:
 				print "> mv %s %s" % (file_path,new_file_path)
 			else:
-				print "> mv %s %s" % (os.path.relpath(file_path,CURRENT_PATH),os.path.relpath(new_file_path,CURRENT_PATH))
+				print "> mv %s %s" % (os.path.relpath(file_path,OLD_CURRENT_PATH),os.path.relpath(new_file_path,CURRENT_PATH))
 
 			# Dryrun, will not perform the move
 			if not dryrun:
@@ -90,10 +93,10 @@ Assumes name scheme of [batch_name]beta[beta_value]_[observable_type]_[optional:
 	######## Program options ########
 	parser.add_argument('folders', 			type=str, nargs='+', help='Folders to rename')
 	parser.add_argument('--move_to_folder',	type=str, default=False,help='Moves observables to the a new folder.')
-	parser.add_argument('--base_path',		type=str, default=os.getcwd(),help='Base folder')
+	parser.add_argument('--old_base_path',		type=str, default=os.getcwd(),help='Base folder')
 	parser.add_argument('starting_integer',	type=int, help='Config integer to start new config counting from')
 
 	args = parser.parse_args()
 	# args = parser.parse_args(["--dryrun","../output/prodRunBeta6_1_15obs/flow_observables/energy","../output/prodRunBeta6_1_15obs/flow_observables/plaq","../output/prodRunBeta6_1_15obs/flow_observables/topc","485","--move_to_folder","../output/prodRunBeta6_1/flow_observables","-v"])
 
-	main(args.folders,args.starting_integer,dryrun=args.dryrun,NEW_BATCH_FOLDER=args.move_to_folder,verbose=args.verbose,CURRENT_PATH=args.base_path)
+	main(args.folders,args.starting_integer,dryrun=args.dryrun,NEW_BATCH_FOLDER=args.move_to_folder,verbose=args.verbose,OLD_CURRENT_PATH=args.old_base_path)
