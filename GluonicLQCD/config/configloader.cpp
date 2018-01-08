@@ -80,7 +80,7 @@ namespace ConfigLoader {
             Parameters::setLoadChromaConfigurations(bool(j["chroma_config"]));
         }
         // Sets a field configuration to load for later, running the metropolis algorithm from the loaded configuration
-        if (!j["load_config_and_run"].empty()) {
+        if (j["load_config_and_run"].empty()) {
             std::vector<std::string> tempVec;
             tempVec.push_back(j["load_config_and_run"]);
             setFieldConfigurations(tempVec);

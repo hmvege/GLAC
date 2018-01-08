@@ -1,8 +1,10 @@
 #include "communicator.h"
 #include "neighbours.h"
 #include "index.h"
+#include "parallelparameters.h"
 #include "config/parameters.h"
 #include <mpi.h>
+#include <cmath>
 
 // Internal variables
 bool Parallel::Communicator::muDir = 0;
@@ -35,7 +37,7 @@ void Parallel::Communicator::MPIfetchSU3Positive(Lattice<SU3> *lattice, std::vec
      */
     MPI_Sendrecv(&lattice[SU3Dir][Index::getIndex(n[0],n[1],n[2],n[3])],18,MPI_DOUBLE,Neighbours::getNeighbours(m_processRank)->list[2*mu],0, // Send
             &exchangeU,18,MPI_DOUBLE,Neighbours::getNeighbours(m_processRank)->list[2*mu+1],0,                                               // Receive
-            MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
 }
 
 void Parallel::Communicator::MPIfetchSU3Negative(Lattice<SU3> *lattice, std::vector<int> n, int mu, int SU3Dir)
@@ -50,7 +52,7 @@ void Parallel::Communicator::MPIfetchSU3Negative(Lattice<SU3> *lattice, std::vec
      */
     MPI_Sendrecv(&lattice[SU3Dir][Index::getIndex(n[0],n[1],n[2],n[3])],18,MPI_DOUBLE,Neighbours::getNeighbours(m_processRank)->list[2*mu+1],0,  // Send
             &exchangeU,18,MPI_DOUBLE,Neighbours::getNeighbours(m_processRank)->list[2*mu],0,                                            // Receive
-            MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
 }
 
 SU3 Parallel::Communicator::getPositiveLink(Lattice<SU3> *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
@@ -118,7 +120,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourLink(Lattice<SU3> * lattice, s
         n[mu] = 0;
         MPI_Sendrecv(&lattice[SU3Dir][Index::getIndex(n[0]-nuIndex[0],n[1]-nuIndex[1],n[2]-nuIndex[2],n[3]-nuIndex[3])],18,MPI_DOUBLE, Neighbours::getNeighbours(m_processRank)->list[2*mu],0,   // Send
                 &exchangeU,18,MPI_DOUBLE,Neighbours::getNeighbours(m_processRank)->list[2*mu+1],0,                                                                                              // Receive
-                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
         return exchangeU;
     }
     else if (nuDir && (!muDir)) { // (nuDir & ~muDir)
@@ -126,7 +128,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourLink(Lattice<SU3> * lattice, s
         n[nu] = m_N[nu] - 1;
         MPI_Sendrecv(&lattice[SU3Dir][Index::getIndex(n[0]+muIndex[0],n[1]+muIndex[1],n[2]+muIndex[2],n[3]+muIndex[3])],18,MPI_DOUBLE, Neighbours::getNeighbours(m_processRank)->list[2*nu+1],0, // Send
                 &exchangeU,18,MPI_DOUBLE,Neighbours::getNeighbours(m_processRank)->list[2*nu],0,                                                                                        // Receive
-                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
         return exchangeU;
     }
     else if (muDir && nuDir) { // muDir & nuDir
@@ -135,7 +137,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourLink(Lattice<SU3> * lattice, s
         n[nu] = m_N[nu] - 1;
         MPI_Sendrecv(&lattice[SU3Dir][Index::getIndex(n[0],n[1],n[2],n[3])],18,MPI_DOUBLE, Neighbours::getNeighbours((Neighbours::getNeighbours(m_processRank)->list[2*mu]))->list[2*nu+1],0,// Send
                 &exchangeU,18,MPI_DOUBLE,Neighbours::getNeighbours((Neighbours::getNeighbours(m_processRank)->list[2*mu+1]))->list[2*nu],0,                                             // Receive
-                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
         return exchangeU;
     }
     else {
@@ -166,7 +168,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
         n[mu] = m_N[mu] - 1;
         MPI_Sendrecv(&lattice[SU3Dir][Index::getIndex(n[0]-nuIndex[0],n[1]-nuIndex[1],n[2]-nuIndex[2],n[3]-nuIndex[3])],18,MPI_DOUBLE, Neighbours::getNeighbours(m_processRank)->list[2*mu],0,   // Send
                 &exchangeU,18,MPI_DOUBLE,Neighbours::getNeighbours(m_processRank)->list[2*mu+1],0,                                                                                               // Receive
-                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
         return exchangeU;
     }
     else if (nuDir && (!muDir)) { // (nuDir & ~muDir)
@@ -174,7 +176,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
         n[nu] = m_N[nu] - 1;
         MPI_Sendrecv(&lattice[SU3Dir][Index::getIndex(n[0]-muIndex[0],n[1]-muIndex[1],n[2]-muIndex[2],n[3]-muIndex[3])],18,MPI_DOUBLE, Neighbours::getNeighbours(m_processRank)->list[2*nu+1],0, // Send
                 &exchangeU,18,MPI_DOUBLE,Neighbours::getNeighbours(m_processRank)->list[2*nu],0,                                                                                        // Receive
-                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
         return exchangeU;
     }
     else if (muDir && nuDir) { // muDir & nuDir
@@ -183,7 +185,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
         n[nu] = m_N[nu] - 1;
         MPI_Sendrecv(&lattice[SU3Dir][Index::getIndex(n[0],n[1],n[2],n[3])],18,MPI_DOUBLE, Neighbours::getNeighbours((Neighbours::getNeighbours(m_processRank)->list[2*mu]))->list[2*nu+1],0,// Send
                 &exchangeU,18,MPI_DOUBLE,Neighbours::getNeighbours((Neighbours::getNeighbours(m_processRank)->list[2*mu+1]))->list[2*nu],0,                                             // Receive
-                MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
         return exchangeU;
     }
     else {
@@ -232,6 +234,41 @@ void Parallel::Communicator::init(int *numberOfArguments, char ***cmdLineArgumen
     if ((*numberOfArguments) != 2) {
         MPIExit("Error: please provide a json file to parse.");
     }
+
+    int maxProcRank = m_numprocs;
+    int binaryCounter = 1;
+    int counter = 0;
+    int rest = 0;
+
+    while ((maxProcRank - binaryCounter) != 0) {
+        binaryCounter = pow(2,counter);
+        counter++;
+
+        rest = maxProcRank % binaryCounter;
+        if (rest != 0) {
+            maxProcRank -= rest;
+        }
+    }
+
+    if (m_processRank >= maxProcRank) {
+        Parallel::ParallelParameters::active = false;
+    } else {
+        Parallel::ParallelParameters::active = true;
+    }
+
+    m_numprocs = maxProcRank;
+
+    // Creating world group
+    MPI_Comm_group(MPI_COMM_WORLD,&Parallel::ParallelParameters::WORLD_GROUP);
+
+    // Create group based on active processors
+    int activeProcs[m_numprocs];
+    for (int i = 0; i < m_numprocs; i++) activeProcs[i] = i;
+    MPI_Group_incl(Parallel::ParallelParameters::WORLD_GROUP,m_numprocs,activeProcs,&Parallel::ParallelParameters::ACTIVE_GROUP);
+
+    // Creates a new communications group for all the active processors
+    MPI_Comm_create_group(MPI_COMM_WORLD,Parallel::ParallelParameters::ACTIVE_GROUP,0,&Parallel::ParallelParameters::ACTIVE_COMM);
+
     checkProcessorValidity();
 }
 
@@ -317,6 +354,9 @@ void Parallel::Communicator::setBarrier()
 void Parallel::Communicator::MPIExit(std::string message)
 {
     if (m_processRank == 0) printf("\n%s", message.c_str());
+    MPI_Group_free(&Parallel::ParallelParameters::WORLD_GROUP);
+    MPI_Group_free(&Parallel::ParallelParameters::ACTIVE_GROUP);
+    MPI_Comm_free(&Parallel::ParallelParameters::ACTIVE_COMM);
     setBarrier();
     MPI_Finalize();
     exit(0);
@@ -332,7 +372,7 @@ void Parallel::Communicator::MPIPrint(std::string message)
 void Parallel::Communicator::gatherDoubleResults(double * data, int N)
 {
     double tempData[N]; // Possibly bad?! TEST
-    MPI_Allreduce(data,tempData,N,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+    MPI_Allreduce(data,tempData,N,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
     for (int i = 0; i < N; i++) data[i] = tempData[i];
 }
 

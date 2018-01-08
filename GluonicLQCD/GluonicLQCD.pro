@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     flow/flow.cpp \
     config/configloader.cpp \
     config/sysprint.cpp \
-    observables/mastersampler.cpp
+    observables/mastersampler.cpp \
+    parallelization/parallelparameters.cpp
 
 HEADERS += \
     system.h \
@@ -75,7 +76,8 @@ HEADERS += \
     parallelization/parallel.h \
     math/lattice.h \
     observables/mastersampler.h \
-    observables/observables.h
+    observables/observables.h \
+    parallelization/parallelparameters.h
 
 #QMAKE_PRE_LINK = hpclink #??
 

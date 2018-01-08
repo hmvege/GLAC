@@ -5,5 +5,6 @@
 
 #include "communicator.h"
 #include "index.h"
+#include "parallelparameters.h"
 
 #endif // PARALLEL_H

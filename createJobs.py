@@ -627,6 +627,8 @@ def main(args):
             config_default["subDims"] = createSquare(config_default["threads"],config_default["N"],config_default["NT"])
         if args.exclude:
             excluded_nodes = ','.join(args.exclude)
+        if args.load_config_and_run != False:
+            config_default["load_config_and_run"] = True
         if args.load_configurations:
             config_default = setFieldConfigs(config_default,args.load_configurations)
             config_default["chroma_config"] = args.chroma_config

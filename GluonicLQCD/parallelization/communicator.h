@@ -50,6 +50,13 @@ public:
     static void setBarrier();
     static void gatherDoubleResults(double * data, int N);
 
+//    // MPI Groups
+//    static MPI_Group ACTIVE_GROUP,WORLD_GROUP;
+//    static MPI_Comm ACTIVE_COMM;
+
+//    // Variable for storing if processor is active(will always seek maximum possible of cores divisible to 2^n
+//    static bool m_active;
+
     // Validity checkers
     static void checkProcessorValidity();
     static void checkSubLatticeDimensionsValidity();

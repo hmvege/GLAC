@@ -122,7 +122,6 @@ void MasterSampler::printObservable(int iObs)
         Parallel::Communicator::gatherDoubleResults(&plaqObs,1);
         Parallel::Communicator::gatherDoubleResults(&topcObs,1);
         Parallel::Communicator::gatherDoubleResults(&energyObs,1);
-        Parallel::Communicator::setBarrier();
         if (Parallel::Communicator::getProcessRank() == 0) {
             printf("\n%-4d %-2.4f  %-*.15f %-*.15f %-*.15f",
                    iObs,

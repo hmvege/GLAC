@@ -5,6 +5,7 @@
 #include <mpi.h>
 #include "parallelization/index.h"
 #include "parallelization/neighbours.h"
+#include "parallelization/parallelparameters.h"
 #include "functions.h"
 
 template <class T>

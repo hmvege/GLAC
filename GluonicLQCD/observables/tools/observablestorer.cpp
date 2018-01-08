@@ -25,7 +25,7 @@ void ObservableStorer::gatherResults()
 {
     // Performing an average over the Monte Carlo obtained values
     for (int iBuffer = 0; iBuffer < m_NObs; iBuffer++) {
-        MPI_Allreduce(&m_observables[iBuffer], &m_observables[iBuffer], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        MPI_Allreduce(&m_observables[iBuffer], &m_observables[iBuffer], 1, MPI_DOUBLE, MPI_SUM, Parallel::ParallelParameters::ACTIVE_COMM);
     }
     // Normalizing by the number of processors if specified
     if (m_normalizeObservableByProcessor) {

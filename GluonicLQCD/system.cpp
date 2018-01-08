@@ -18,22 +18,26 @@ System::System()
      * Class for calculating correlators using the System algorithm.
      * Reads in from Parameters, and sets the action accordingly.
      */
-    // Retrieving communication related variables
-    m_processRank                       = Parallel::Communicator::getProcessRank();
-    // Retrieving program parameters
-    m_latticeSize                       = Parameters::getLatticeSize();
-    m_NCf                               = Parameters::getNCf();
-    m_NCor                              = Parameters::getNCor();
-    m_NTherm                            = Parameters::getNTherm();
-    m_NUpdates                          = Parameters::getNUpdates();
-    m_NFlows                            = Parameters::getNFlows();
-    m_storeThermalizationObservables    = Parameters::getStoreThermalizationObservables();
-    m_writeConfigsToFile                = Parameters::getStoreConfigurations();
-    // Sets pointers to use
-    m_SU3Generator                      = new SU3MatrixGenerator;
-    // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
-    m_generator                         = std::mt19937_64(Parameters::getMetropolisSeed());
-    m_uniform_distribution              = std::uniform_real_distribution<double>(0,1);
+    if (Parallel::ParallelParameters::active) {
+        // Retrieving communication related variables
+        m_processRank                       = Parallel::Communicator::getProcessRank();
+        // Retrieving program parameters
+        m_latticeSize                       = Parameters::getLatticeSize();
+        m_NCf                               = Parameters::getNCf();
+        m_NCor                              = Parameters::getNCor();
+        m_NTherm                            = Parameters::getNTherm();
+        m_NUpdates                          = Parameters::getNUpdates();
+        m_NFlows                            = Parameters::getNFlows();
+        m_storeThermalizationObservables    = Parameters::getStoreThermalizationObservables();
+        m_writeConfigsToFile                = Parameters::getStoreConfigurations();
+        // Sets pointers to use
+        m_SU3Generator                      = new SU3MatrixGenerator;
+        // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
+        m_generator                         = std::mt19937_64(Parameters::getMetropolisSeed());
+        m_uniform_distribution              = std::uniform_real_distribution<double>(0,1);
+
+    }
+    Parallel::Communicator::setBarrier();
 }
 
 void System::setAction()
@@ -134,49 +138,55 @@ void System::latticeSetup()
     /*
      * Sets up the lattice and its matrices.
      */
-    subLatticeSetup();
-    if (!Parameters::getLoadFieldConfigurations()) {
-        if (Parameters::getHotStart()) {
-            // All starts with a completely random matrix.
-            for (int mu = 0; mu < 4; mu++)
-            {
-                for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++)
+    if (Parallel::ParallelParameters::active) {
+        subLatticeSetup();
+        if (!Parameters::getLoadFieldConfigurations()) {
+            if (Parameters::getHotStart()) {
+                // All starts with a completely random matrix.
+                for (int mu = 0; mu < 4; mu++)
                 {
-                    if (Parameters::getRSTHotStart())
+                    for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++)
                     {
-                        m_lattice[mu][iSite] = m_SU3Generator->generateRST(); // Random close to unity
-                    } else {
-                        m_lattice[mu][iSite] = m_SU3Generator->generateRandom(); // Fully random
+                        if (Parameters::getRSTHotStart())
+                        {
+                            m_lattice[mu][iSite] = m_SU3Generator->generateRST(); // Random close to unity
+                        } else {
+                            m_lattice[mu][iSite] = m_SU3Generator->generateRandom(); // Fully random
+                        }
+                    }
+                }
+            } else {
+                // Cold start: everything starts out at unity.
+                for (int mu = 0; mu < 4; mu++)
+                {
+                    for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++)
+                    {
+                        m_lattice[mu][iSite].identity();
                     }
                 }
             }
-        } else {
-            // Cold start: everything starts out at unity.
-            for (int mu = 0; mu < 4; mu++)
-            {
-                for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++)
-                {
-                    m_lattice[mu][iSite].identity();
-                }
-            }
+            if (m_processRank == 0) printf("\nLattice setup complete\n");
         }
-        if (m_processRank == 0) printf("\nLattice setup complete\n");
+        // Prints system info after setup is complete
+        SysPrint::printSystemInfo();
     }
-    // Prints system info after setup is complete
-    SysPrint::printSystemInfo();
+    Parallel::Communicator::setBarrier();
 }
 
 void System::run()
 {
-    if (!Parameters::getLoadFieldConfigurations() && !Parameters::getLoadConfigAndRun()) {
-        // Run regular metropolis
-        runMetropolis();
-    } else if (Parameters::getLoadConfigAndRun()) {
-        loadConfigurationAndRunMetropolis();
-    } else {
-        // Run flow on configurations;
-        flowConfigurations();
+    if (Parallel::ParallelParameters::active) {
+        if (!Parameters::getLoadFieldConfigurations() && !Parameters::getLoadConfigAndRun()) {
+            // Run regular metropolis
+            runMetropolis();
+        } else if (Parameters::getLoadConfigAndRun()) {
+            loadConfigurationAndRunMetropolis();
+        } else {
+            // Run flow on configurations;
+            flowConfigurations();
+        }
     }
+    Parallel::Communicator::setBarrier(); // For waiting for all processors to finish at equal times
 }
 
 void System::thermalize()
@@ -235,7 +245,7 @@ void System::thermalize()
 
     // Taking the average of the acceptance rate across the processors.
     if (m_NTherm != 0) {
-        MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
+        MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
         // Printing post-thermalization correlator and acceptance rate
         if (m_processRank == 0) {
             printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
@@ -316,7 +326,6 @@ void System::runMetropolis()
             // Pre timer
             m_preUpdate = steady_clock::now();
             update();
-            Parallel::Communicator::MPIPrint("Updating");
 
             // Post timer
             m_updateTime = duration_cast<duration<double>>(steady_clock::now() - m_preUpdate);
@@ -324,7 +333,6 @@ void System::runMetropolis()
         }
         // Flowing configuration
         if (m_NFlows != 0) {
-            Parallel::Communicator::MPIPrint("BAD!!");
             // Copys lattice into flow-lattice in order to avoid overwriting when generating configurations
             copyToFlowLattice();
             flowConfiguration(iConfig);
@@ -332,10 +340,8 @@ void System::runMetropolis()
 
         // Averaging the observable values. Avoids calculating twice if we are flowing
         if (m_NFlows == 0) {
-            Parallel::Communicator::MPIPrint("Caluclating observables");
             m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
         } else {
-            Parallel::Communicator::MPIPrint("BAD!!");
             m_correlator->copyObservable(iConfig, m_flowCorrelator->getObservablesVector(0));
         }
 
@@ -357,7 +363,7 @@ void System::runMetropolis()
 
     }
     // Taking the average of the acceptance rate across the processors.
-    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,MPI_COMM_WORLD);
+    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
     if (m_processRank == 0) {
         printf("\n");
         SysPrint::printLine();
