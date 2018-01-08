@@ -487,8 +487,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 }
             }
             // Sends and receives packages
-            MPI_Isend(&sendCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(1),0,MPI_COMM_WORLD,&sendReq);
-            MPI_Irecv(&recvCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(0),0,MPI_COMM_WORLD,&recvReq);
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(1),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(0),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
             for (unsigned int ix = 1; ix < L.m_dim[0]; ix++) {
                 for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
@@ -523,8 +523,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(3),0,MPI_COMM_WORLD,&sendReq);
-            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(2),0,MPI_COMM_WORLD,&recvReq);
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(3),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(2),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
             for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
                 for (unsigned int iy = 1; iy < L.m_dim[1]; iy++) {
@@ -558,8 +558,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(5),0,MPI_COMM_WORLD,&sendReq);
-            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(4),0,MPI_COMM_WORLD,&recvReq);
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(5),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(4),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
             for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
                 for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
@@ -593,8 +593,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(7),0,MPI_COMM_WORLD,&sendReq);
-            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(6),0,MPI_COMM_WORLD,&recvReq);
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(7),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(6),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
             for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
                 for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
@@ -634,8 +634,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                 }
             }
             // Sends and receives packages
-            MPI_Isend(&sendCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(0),0,MPI_COMM_WORLD,&sendReq);
-            MPI_Irecv(&recvCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(1),0,MPI_COMM_WORLD,&recvReq);
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(0),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(1),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
             for (unsigned int ix = 0; ix < L.m_dim[0] - 1; ix++) {
                 for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
@@ -669,8 +669,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(2),0,MPI_COMM_WORLD,&sendReq);
-            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(3),0,MPI_COMM_WORLD,&recvReq);
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(2),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(3),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
             for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
                 for (unsigned int iy = 0; iy < L.m_dim[1] - 1; iy++) {
@@ -704,8 +704,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(4),0,MPI_COMM_WORLD,&sendReq);
-            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(5),0,MPI_COMM_WORLD,&recvReq);
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(4),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(5),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
             for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
                 for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
@@ -739,8 +739,8 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
                     }
                 }
             }
-            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(6),0,MPI_COMM_WORLD,&sendReq);
-            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(7),0,MPI_COMM_WORLD,&recvReq);
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(6),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(7),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
             for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
                 for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {

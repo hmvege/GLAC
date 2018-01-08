@@ -9,6 +9,9 @@ output/*
 # Config folder
 # config_folder
 
+# Config files
+config_folder/beta6_0test_config.py
+
 # Input files
 input/*
 

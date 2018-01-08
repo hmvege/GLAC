@@ -307,7 +307,7 @@ class Analyse(object):
 		self.a = getLatticeSpacing(self.beta)
 		self.r = 0.5 # Sommer Parameters
 
-	def plot_boot(self,N_bs):
+	def boot(self,N_bs):
 		self.N_bs = N_bs
 		self.analysis.boot(N_bs)
 		self.y = self.analysis.bs_data
@@ -375,7 +375,7 @@ class AnalyseEnergy(Analyse):
 			raise ValueError("Flow has not been performed yet.")
 
 		# Retrieves relevant data
-		x = self.x
+		x = self.x/0.5**2
 		if plot_bs:
 			y = self.analysis.bs_data
 			y_std = self.analysis.bs_data_std

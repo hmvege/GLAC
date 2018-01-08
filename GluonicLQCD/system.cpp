@@ -35,7 +35,6 @@ System::System()
         // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
         m_generator                         = std::mt19937_64(Parameters::getMetropolisSeed());
         m_uniform_distribution              = std::uniform_real_distribution<double>(0,1);
-
     }
     Parallel::Communicator::setBarrier();
 }
