@@ -432,13 +432,13 @@ def main(args):
 		topc_analysis.plot(plot_bs=False)
 
 		if 'topsus' in args:
-			topsus_analysis = AnalyseTopologicalCharge(DList.getFlow("topc"), "topsus", args[0], flow=True, dryrun = dryrun, data=topc_analysis.data)
+			topsus_analysis = AnalyseTopologicalSusceptibility(DList.getFlow("topc"), "topsus", args[0], flow=True, dryrun = dryrun, data=topc_analysis.data)
 			topsus_analysis.boot(N_bs)
 			topsus_analysis.plot()
 			topsus_analysis.plot(plot_bs=False)
 
 	if 'energy' in args:
-		energy_analysis = AnalyseTopologicalCharge(DList.getFlow("energy"), "energy", args[0], flow=True, dryrun = dryrun)
+		energy_analysis = AnalyseEnergy(DList.getFlow("energy"), "energy", args[0], flow=True, dryrun = dryrun)
 		energy_analysis.boot(N_bs)
 		energy_analysis.plot()
 		energy_analysis.plot(plot_bs=False)
