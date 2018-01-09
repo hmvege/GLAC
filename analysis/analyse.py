@@ -411,10 +411,12 @@ def main(args):
 	if not args:
 		args = ['prodRunBeta6_1','plaq','topc','energy','topsus']
 		# args = ['prodRunBeta6_0','plaq','topc','energy','topsus']
+		# args = ['beta6_1','plaq','topc','energy','topsus']
 
-	DList = GetDirectoryTree(args[0])
+	DList = GetDirectoryTree(args[0],output_folder="output")
 	N_bs = 200
 	dryrun = False
+	print DList
 
 	# Analyses plaquette data if present in arguments
 	if 'plaq' in args:
