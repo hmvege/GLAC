@@ -1,7 +1,9 @@
-from LQCDAnalyser import Bootstrap, Jackknife, Autocorrelation
+# from LQCDAnalyser import Bootstrap, Jackknife, Autocorrelation
 from tools.folderreadingtools import GetDirectoryTree, GetFolderContents
+from statistics.jackknife import Jackknife
+from statistics.bootstrap import Bootstrap
+from statistics.autocorrelation import Autocorrelation
 import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd
-
 
 def plot_flow_plaquette(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
 	plt.figure()
@@ -177,9 +179,9 @@ class AnalyseFlow(object):
 			self.unanalyzed_y[i] = bs.avg_original
 			self.unanalyzed_y_std[i] = bs.std_original
 
-	def jackknife(self,statistics = np.mean, F = lambda x : x):
+	def jackknife(self,data_statistics = np.mean, F = lambda x : x):
 		for i in xrange(self.NFlows):
-			jk = Jackknife(self.y[i])
+			jk = Jackknife(self.y[i],F = F, data_statistics = data_statistics)
 			self.jk_y[i] = jk.jk_avg
 			self.jk_y_std[i] = jk.jk_std
 
@@ -312,10 +314,11 @@ def main(args):
 	# Analyses plaquette data if present in arguments
 	if 'plaq' in args:
 		plaq_analysis = AnalysePlaquette(DList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
-		plaq_analysis.boot(N_bs,plot=True)
-		plaq_analysis.plot_boot()
-		plaq_analysis.plot_original()
-		plaq_analysis.jackknife()
+		# plaq_analysis.boot(N_bs,plot=True)
+		# plaq_analysis.plot_boot()
+		# plaq_analysis.plot_original()
+		plaq_analysis.jackknife(data_statistics=np.mean,F=lambda x : x)
+		exit(1)
 		plaq_analysis.plot_jackknife()
 		plaq_analysis.plot_autocorrelation()
 

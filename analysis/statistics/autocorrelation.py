@@ -1,5 +1,7 @@
 import numpy as np, matplotlib.pyplot as plt, sys, os
 
+__all__ = ["Autocorrelation"]
+
 class Autocorrelation:
 	"""
 	Class for performing an autocorrelation analysis.
@@ -28,7 +30,7 @@ class Autocorrelation:
 		"""
 		return self.R
 
-	def plot_autocorrelation(self, title, filename, lims = 1):
+	def plot_autocorrelation(self, title, filename, lims = 1,dryrun=False):
 		"""
 		Plots the autocorrelation.
 		"""
@@ -49,7 +51,8 @@ class Autocorrelation:
 		ax.set_title(title)
 		ax.grid(True)
 		ax.legend()
-		fig.savefig("autocorrelation_%s.png" % filename)
+		if dryrun:
+			fig.savefig("autocorrelation_%s.png" % filename)
 
 def alternate_autocorrelation(data):
     acf = np.zeros(len(data)/2)
@@ -66,7 +69,7 @@ def main():
 	
 	# Autocorrelation
 	ac = Autocorrelation(data)
-	ac.plot_autocorrelation(r"Autocorrelation for $\beta = 6.1$", "beta6_1")
+	ac.plot_autocorrelation(r"Autocorrelation for $\beta = 6.1$", "beta6_1",dryrun=True)
 
 	plt.show()
 

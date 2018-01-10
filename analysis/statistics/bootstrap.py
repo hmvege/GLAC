@@ -1,5 +1,7 @@
 import numpy as np, matplotlib.pyplot as plt, sys, os
 
+__all__ = ["Bootstrap"]
+
 class Bootstrap:
 	"""
 	Class for creating a bootstrap sample.
