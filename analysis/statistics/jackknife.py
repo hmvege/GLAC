@@ -26,7 +26,7 @@ class Jackknife:
 		# Performs jackknife and sets variables
 		self.jk_data = np.zeros(self.N) # Jack knifed data
 		for i in xrange(self.N):
-			self.jk_data[i] = np.average(np.concatenate([data[:i-1],data[i:]]))
+			self.jk_data[i] = F(data_statistics(np.concatenate([data[:i-1],data[i:]])))
 		self.jk_avg = np.average(self.jk_data)
 		self.jk_avg_unbiased = self.avg_original - (self.N - 1) * (self.jk_avg - self.avg_original)
 		self.jk_var = np.var(self.jk_data)
