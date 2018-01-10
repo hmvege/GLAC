@@ -511,8 +511,8 @@ def main(args):
     load_parser.add_argument('-lhr','--load_config_hr_time_estimate',default=False,                         type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
     load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=False,                       type=int,help='Approximate cpu time in minutes that will be used')
     load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],      type=str,help='Sets the base folder. Default is os.path.getcwd().')
-    load_parser.add_argument('-nf','--no_flow',                 default=False,                              action='store_true',help='number of flows to perform per configuration')
-    load_parser.add_argument('-cfgnum','--config_start_number', default=config_default["config_start_number"],type=int,help='Starts naming the configuration from this number')
+    load_parser.add_argument('-nf','--no_flow',                 default=False,                              action='store_true',help='If toggled, will not perform any flows.')
+    load_parser.add_argument('-cfgnum','--config_start_number', default=config_default["config_start_number"],type=int,help='Starts naming the configuration from this number.')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
