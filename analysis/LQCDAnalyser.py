@@ -31,7 +31,6 @@ class Bootstrap:
 		self.avg_original = np.average(function_data)
 		self.var_original = np.var(function_data)
 		self.std_original = np.std(function_data)
-
 		# Sets some global class variables
 		self.shape = self.bs_avg.shape
 		self.N_BS = N_BS
@@ -209,7 +208,7 @@ def autocorrelation(data):
 
 def main():
 	# Data to load and analyse
-	data = np.loadtxt("data/prodRun1.dat",skiprows=8)
+	data = np.loadtxt("data/plaqFlow.dat",skiprows=3)
 	
 	# Histogram bins
 	N_bins = 20

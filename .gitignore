@@ -42,3 +42,6 @@ jacks_data
 hpctoolkit*
 GluonicLQCD.hpcstruct
 workspace
+
+# Python junk
+*.pyc
