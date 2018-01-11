@@ -26,27 +26,20 @@ class Autocorrelation:
 
 	def __call__(self):
 		"""
-		Returns the auto-correlation
+		Returns the auto-correlation.
 		"""
 		return self.R
 
-	# def __add__(self,other):
-	# 	"""
-	# 	Enables adding of two autocorrelations. DOSENT REALLY MAKES SENSE!
-	# 	"""
-	# 	if type(other) != Autocorrelation:
-	# 		raise TypeError("%s should be of type Autocorrelation." % other)
- # 		new_data = np.concatenate((self.R,other.R),axis=0)
-	# 	return new_data
-
 	def __len__(self):
+		"""
+		Returns the length of the auto-correlation results.
+		"""
 		return len(self.R)
 
 	def plot_autocorrelation(self, title, filename, lims = 1,dryrun=False):
 		"""
 		Plots the autocorrelation.
 		"""
-
 		fig = plt.figure(dpi=300)
 		ax = fig.add_subplot(111)
 		ax.plot(range(self.N/2),self.R,color="r",label="Autocorrelation")

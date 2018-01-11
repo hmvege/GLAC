@@ -1,4 +1,3 @@
-# from LQCDAnalyser import Bootstrap, Jackknife, Autocorrelation
 from tools.folderreadingtools import GetDirectoryTree, GetFolderContents
 from statistics.jackknife import Jackknife
 from statistics.bootstrap import Bootstrap
@@ -117,6 +116,7 @@ class AnalyseFlow(object):
 	y_label = "Missing y-label"
 	mark_interval = 5
 	error_mark_interval = 5
+	autocorrelations_limits = 1
 
 	def __init__(self,files,observable,batch_name,data=None,dryrun=False,flow=True):
 		# Sets up global constants
@@ -210,12 +210,17 @@ class AnalyseFlow(object):
 		if not self.jackknife_performed:
 			raise ValueError("Jackknifing has not been performed yet.")
 
+		# Sets up the x axis array to be plotted
+		x = self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
+
+		# Sets up the title and filename strings
+		title_string = r"Jacknife of %s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta)
+		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_jackknife.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+
 		# Plots the jackknifed data
 		plt.figure()
-		plt.errorbar(self.x,self.jk_y,yerr=self.jk_y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
+		plt.errorbar(x,self.jk_y,yerr=self.jk_y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
 		plt.title(title_string)
-		title_string = r"Jacknife of %s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta)
-		fname = "../figures/{0:<s}/flow_{2:<s}_{0:<s}_jackknife.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
 		if not self.dryrun: 
 			plt.savefig(fname,dpi=300)
 		print "Figure created in %s" % fname
@@ -224,20 +229,33 @@ class AnalyseFlow(object):
 		# Checks that autocorrelations has been performed.
 		if not self.autocorrelation_performed:
 			raise ValueError("Autocorrelation has not been performed yet.")
-		
-		# Finds the maximum value at each MC time.
-		y = np.zeros(self.N_configurations / 2)
-		for i in xrange(self.N_configurations / 2):
+
+		# sets up the autocorrelation
+		N_autocorr = self.N_configurations / 2
+
+		# Finds the maximum value at each MC time and sets up the y array
+		x = range(N_autocorr)
+		y = np.zeros(N_autocorr)
+		for i in xrange(N_autocorr):
 			y[i] = np.max(self.autocorrelations[:,i])
 
-		# Plots the autocorrelations
-		plt.figure()
-		plt.plot(range(self.N_configurations / 2),y,fmt=".",color="0",label=self.observable_name)
-		plt.title(title_string)
+		# Sets up the title and filename strings
 		title_string = r"Autocorrelation of %s $N_{flow}=%2d$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta,self.N_configurations)
-		fname = "../figures/{0:<s}/flow_{2:<s}_{0:<s}_autocorrelation.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_autocorrelation.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+
+		# Plots the autocorrelations
+		fig = plt.figure(dpi=300)
+		ax = fig.add_subplot(111)
+		ax.plot(x,y,color="0",label=self.observable_name)
+		ax.set_ylim(-self.autocorrelations_limits,self.autocorrelations_limits)
+		ax.set_xlim(0,N_autocorr)
+		ax.set_xlabel(r"Lag $h$")
+		ax.set_ylabel(r"$R = \frac{C_h}{C_0}$")
+		ax.set_title(title_string)
+		ax.grid(True)
+		ax.legends()
 		if not self.dryrun: 
-			plt.savefig(fname,dpi=300)
+			ax.savefig(fname,dpi=300)
 		print "Figure created in %s" % fname
 
 	def plot_boot(self,plot_bs=True):
@@ -245,7 +263,7 @@ class AnalyseFlow(object):
 		if not self.bootstrap_performed and plot_bs:
 			raise ValueError("Bootstrap has not been performed yet.")
 
-		# Retrieves relevant data
+		# Retrieves relevant data and sets up the arrays to be plotted
 		x = self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
 		if plot_bs:
 			y = self.bs_y
@@ -254,18 +272,20 @@ class AnalyseFlow(object):
 			y = self.unanalyzed_y
 			y_std = self.unanalyzed_y_std
 
-		# Plots either bootstrapped or regular stuff
-		plt.figure()
-		plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
-		plt.xlabel(self.x_label)
-		plt.ylabel(self.y_label)
-		plt.grid(True)
+		# Sets up the title and filename strings
 		if plot_bs:
 			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta,self.N_bs)
 			fname = "../figures/{0:<s}/flow_{2:<s}_{0:<s}_Nbs{1:<d}.png".format(self.batch_name,self.N_bs,"".join(self.observable_name.lower().split(" ")))
 		else:
 			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name, self.data.meta_data["NFlows"],self.beta)
 			fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+
+		# Plots either bootstrapped or regular stuff
+		plt.figure()
+		plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
+		plt.xlabel(self.x_label)
+		plt.ylabel(self.y_label)
+		plt.grid(True)
 		plt.title(title_string)
 		if not self.dryrun:
 			plt.savefig(fname,dpi=300)
@@ -275,6 +295,9 @@ class AnalyseFlow(object):
 		self.plot_boot(plot_bs=False)
 
 class AnalysePlaquette(AnalyseFlow):
+	"""
+	Plaquette analysis class.
+	"""
 	observable_name = "Plaquette"
 	x_label = r"$a\sqrt{8t_{flow}}$"
 	y_label = r"$P_{\mu\nu}$"
@@ -283,11 +306,17 @@ class AnalysePlaquette(AnalyseFlow):
 		super(AnalysePlaquette,self).__init__(files,observable,batch_name,data=None,dryrun=False)
 
 class AnalyseTopologicalCharge(AnalyseFlow):
+	"""
+	Topological charge analysis class. NOT TESTED
+	"""
 	observable_name = "Topological Charge"
 	x_label = r"$a\sqrt{8t_{flow}}$"
 	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
 
 class AnalyseEnergy(AnalyseFlow):
+	"""
+	Energy/action density analysis class. NOT TESTED
+	"""
 	observable_name = "Energy"
 	x_label = r"$t$"
 	y_label = r"$\langle E \rangle t^2$"
@@ -323,6 +352,9 @@ class AnalyseEnergy(AnalyseFlow):
 		print "Figure created in %s" % fname
 
 class AnalyseTopologicalSusceptibility(AnalyseFlow):
+	"""
+	Topological susceptibility analysis class. NOT TESTED / NOT COMPLETED
+	"""
 	observable_name = "Topological Susceptibility"
 	x_label = r"$a\sqrt{8t_{flow}}$"
 	y_label = r"$\chi_t^{1/4}[GeV]$"
@@ -359,15 +391,13 @@ def main(args):
 	# Analyses plaquette data if present in arguments
 	if 'plaq' in args:
 		plaq_analysis = AnalysePlaquette(DList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
-		# plaq_analysis.boot(N_bs,plot=True)
-		# plaq_analysis.jackknife(data_statistics=np.average,F=lambda x : x)
+		plaq_analysis.boot(N_bs)
+		plaq_analysis.jackknife()
 		plaq_analysis.autocorrelation()
-		# plaq_analysis.plot_boot()
-		# plaq_analysis.plot_original()
-		# plaq_analysis.plot_jackknife()
+		plaq_analysis.plot_boot()
+		plaq_analysis.plot_original()
+		plaq_analysis.plot_jackknife()
 		plaq_analysis.plot_autocorrelation()
-		exit(1)
-
 
 	sys.exit("EXITING: Missing complete plotter functions.")
 
