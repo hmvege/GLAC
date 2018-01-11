@@ -37,6 +37,7 @@ def setFieldConfigs(config,config_folder):
     # Populates list of sorted field configs from folder config_folder into the config dictionary.
     config["load_field_configs"] = True
     config["inputFolder"] = os.path.normpath(config_folder)
+    # print "LINE 40, setFieldConfigs()", config["inputFolder"]
     if os.path.isdir(config_folder):
         config["field_configs"] = natural_sort([fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")])
     else:
@@ -114,6 +115,7 @@ class JobCreator:
         # json_dict["outputFolder"] = "/" + os.path.relpath(temp_outputFolder,self.base_folder) + "/"
         json_dict["outputFolder"] = "/" + config_dict["outputFolder"] + "/"
         temp_inputFolder = os.path.normpath("/" + config_dict["inputFolder"] + "/").replace("//","/")
+        # print "LINE 118, _create_json(): ", temp_inputFolder
         json_dict["inputFolder"] = "/" + os.path.relpath(temp_inputFolder,self.base_folder) + "/"
         json_dict["storeConfigurations"] = config_dict["storeCfgs"]
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
@@ -178,6 +180,7 @@ class JobCreator:
             SU3Eps                  = job_config["SU3Eps"]
             self.flow_observables   = job_config["flowObservables"]
             self.inputFolder        = job_config["inputFolder"]
+            # print "LINE 183, submitJob(): ", self.inputFolder
             self.outputFolder       = job_config["outputFolder"]
             observables             = job_config["observables"]
             flowEpsilon             = job_config["flowEpsilon"]
@@ -439,7 +442,8 @@ def main(args):
     Program for starting large parallel Lattice Quantum Chromo Dynamics jobs.
     '''
     parser = argparse.ArgumentParser(prog='GluonicLQCD job creator', description=description_string)
-
+    # print "LINE 445, main(): ", config_default["inputFolder"]
+    
     ######## Prints program version if prompted ########
     parser.add_argument('--version', action='version', version='%(prog)s 1.0.1')
     parser.add_argument('--dryrun', default=False, action='store_true', help='Dryrun to no perform any critical actions.')
@@ -509,7 +513,7 @@ def main(args):
     load_parser.add_argument('-NCfg','--NConfigs',              default=False,                              type=int, help='N configurations to generate based on loaded configuration.')
     load_parser.add_argument('-chroma','--chroma_config',       default=config_default["chroma_config"],    action='store_true',help='If flagged, loads the configuration as a chroma configuration.')
     load_parser.add_argument('-lhr','--load_config_hr_time_estimate',default=False,                         type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
-    load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=False,                       type=int,help='Approximate cpu time in minutes that will be used')
+    load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=False,                       type=int,help='Approximate cpu time in minutes that will be used.')
     load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],      type=str,help='Sets the base folder. Default is os.path.getcwd().')
     load_parser.add_argument('-nf','--no_flow',                 default=False,                              action='store_true',help='If toggled, will not perform any flows.')
     load_parser.add_argument('-cfgnum','--config_start_number', default=config_default["config_start_number"],type=int,help='Starts naming the configuration from this number.')
@@ -548,7 +552,7 @@ def main(args):
             if len(configurations) == 1:
                 # Requiring flow to be specified if we are loading configurations to flow
                 for c in configurations:
-                    if c["NFlows"] == 0:
+                    if c["NFlows"] == 0 or args.no_flow:
                         sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
                 # Requiring an new estimate of the run time if we are flowing
                 configurations[0] = setFieldConfigs(configurations[0],args.load_configurations)
