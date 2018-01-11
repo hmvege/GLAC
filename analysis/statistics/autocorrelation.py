@@ -30,6 +30,18 @@ class Autocorrelation:
 		"""
 		return self.R
 
+	# def __add__(self,other):
+	# 	"""
+	# 	Enables adding of two autocorrelations. DOSENT REALLY MAKES SENSE!
+	# 	"""
+	# 	if type(other) != Autocorrelation:
+	# 		raise TypeError("%s should be of type Autocorrelation." % other)
+ # 		new_data = np.concatenate((self.R,other.R),axis=0)
+	# 	return new_data
+
+	def __len__(self):
+		return len(self.R)
+
 	def plot_autocorrelation(self, title, filename, lims = 1,dryrun=False):
 		"""
 		Plots the autocorrelation.

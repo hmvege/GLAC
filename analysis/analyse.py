@@ -147,15 +147,18 @@ class AnalyseFlow(object):
 		self.unanalyzed_y_std = np.zeros(self.NFlows)
 
 		# Bootstrap data
+		self.bootstrap_performed = False
 		self.bs_y = np.zeros(self.NFlows)
 		self.bs_y_std = np.zeros(self.NFlows)
 
 		# Jackknifed data
+		self.jackknife_performed = False
 		self.jk_y = np.zeros(self.NFlows)
 		self.jk_y_std = np.zeros(self.NFlows)
 
 		# Autocorrelation data
-		self.autocorrelations = np.zeros((self.NFlows,self.N_configurations))
+		self.autocorrelation_performed = False
+		self.autocorrelations = np.zeros((self.NFlows,self.N_configurations / 2))
 
 		# Gets the lattice spacing
 		self.beta = self.data.meta_data["beta"]
@@ -179,27 +182,68 @@ class AnalyseFlow(object):
 			self.unanalyzed_y[i] = bs.avg_original
 			self.unanalyzed_y_std[i] = bs.std_original
 
+		# Sets performed flag to true
+		self.bootstrap_performed = True
+
 	def jackknife(self,data_statistics = np.mean, F = lambda x : x):
 		for i in xrange(self.NFlows):
-			jk = Jackknife(self.y[i],F = F, data_statistics = data_statistics)
+			jk = Jackknife(self.y[:,i],F = F, data_statistics = data_statistics)
 			self.jk_y[i] = jk.jk_avg
 			self.jk_y_std[i] = jk.jk_std
 
+		# Sets performed flag to true
+		self.jackknife_performed = True
+
 	def autocorrelation(self):
 		for i in xrange(self.NFlows):
-			ac = Autocorrelation(self.y[i])
+			ac = Autocorrelation(self.y[:,i])
 			self.autocorrelations[i] = ac()
+			# # Small progressbar
+			# sys.stdout.write("\r%3.1f%% done" % (100*float(i)/float(self.NFlows)))
+			# sys.stdout.flush()
+
+		# Sets performed flag to true
+		self.autocorrelation_performed = True
 
 	def plot_jackknife(self):
-		None
+		# Checks that jacknifing has been performed.
+		if not self.jackknife_performed:
+			raise ValueError("Jackknifing has not been performed yet.")
+
+		# Plots the jackknifed data
+		plt.figure()
+		plt.errorbar(self.x,self.jk_y,yerr=self.jk_y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
+		plt.title(title_string)
+		title_string = r"Jacknife of %s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta)
+		fname = "../figures/{0:<s}/flow_{2:<s}_{0:<s}_jackknife.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+		if not self.dryrun: 
+			plt.savefig(fname,dpi=300)
+		print "Figure created in %s" % fname
 
 	def plot_autocorrelation(self):
-		None
+		# Checks that autocorrelations has been performed.
+		if not self.autocorrelation_performed:
+			raise ValueError("Autocorrelation has not been performed yet.")
+		
+		# Finds the maximum value at each MC time.
+		y = np.zeros(self.N_configurations / 2)
+		for i in xrange(self.N_configurations / 2):
+			y[i] = np.max(self.autocorrelations[:,i])
+
+		# Plots the autocorrelations
+		plt.figure()
+		plt.plot(range(self.N_configurations / 2),y,fmt=".",color="0",label=self.observable_name)
+		plt.title(title_string)
+		title_string = r"Autocorrelation of %s $N_{flow}=%2d$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta,self.N_configurations)
+		fname = "../figures/{0:<s}/flow_{2:<s}_{0:<s}_autocorrelation.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+		if not self.dryrun: 
+			plt.savefig(fname,dpi=300)
+		print "Figure created in %s" % fname
 
 	def plot_boot(self,plot_bs=True):
-		# Checks that the flow has been performed.
-		if self.N_bs == None and plot_bs:
-			raise ValueError("Flow has not been performed yet.")
+		# Checks that the bootstrap has been performed.
+		if not self.bootstrap_performed and plot_bs:
+			raise ValueError("Bootstrap has not been performed yet.")
 
 		# Retrieves relevant data
 		x = self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
@@ -210,7 +254,7 @@ class AnalyseFlow(object):
 			y = self.unanalyzed_y
 			y_std = self.unanalyzed_y_std
 
-		# Plotting commands
+		# Plots either bootstrapped or regular stuff
 		plt.figure()
 		plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
 		plt.xlabel(self.x_label)
@@ -223,7 +267,8 @@ class AnalyseFlow(object):
 			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name, self.data.meta_data["NFlows"],self.beta)
 			fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
 		plt.title(title_string)
-		if not self.dryrun: plt.savefig(fname,dpi=300)
+		if not self.dryrun:
+			plt.savefig(fname,dpi=300)
 		print "Figure created in %s" % fname
 
 	def plot_original(self):
@@ -315,12 +360,13 @@ def main(args):
 	if 'plaq' in args:
 		plaq_analysis = AnalysePlaquette(DList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
 		# plaq_analysis.boot(N_bs,plot=True)
+		# plaq_analysis.jackknife(data_statistics=np.average,F=lambda x : x)
+		plaq_analysis.autocorrelation()
 		# plaq_analysis.plot_boot()
 		# plaq_analysis.plot_original()
-		plaq_analysis.jackknife(data_statistics=np.mean,F=lambda x : x)
-		exit(1)
-		plaq_analysis.plot_jackknife()
+		# plaq_analysis.plot_jackknife()
 		plaq_analysis.plot_autocorrelation()
+		exit(1)
 
 
 	sys.exit("EXITING: Missing complete plotter functions.")
