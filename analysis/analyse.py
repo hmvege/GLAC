@@ -4,23 +4,6 @@ from statistics.bootstrap import Bootstrap
 from statistics.autocorrelation import Autocorrelation
 import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd
 
-def plot_flow_plaquette(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
-	plt.figure()
-	plt.errorbar(getLatticeSpacing(meta_data["beta"])*np.sqrt(8*x),y,yerr=y_error,fmt=".",color="0",ecolor="r",label="Plaquette",markevery=5,errorevery=5)
-	plt.xlabel(r"$a\sqrt{8t_{flow}}$")
-	plt.ylabel(r"$P_{\mu\nu}$")
-	if not N_bs:
-		plt.title(r"Plaquette $N_{flow}=%2d$, $\beta=%.2f$" % (meta_data["NFlows"],meta_data["beta"]))
-	else:
-		plt.title(r"Plaquette $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (meta_data["NFlows"],meta_data["beta"],N_bs))
-	plt.grid(True)
-	if not N_bs:
-		fname = "../figures/%s/flow_plaquette_%s.png" % (batch_name,batch_name)
-	else:
-		fname = "../figures/%s/flow_plaquette_%s_Nbs%d.png" % (batch_name,batch_name,N_bs)
-	if not dryrun: plt.savefig(fname)
-	print "Figure created in %s" % fname
-
 def plot_flow_topc(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
 	plt.figure()
 	plt.errorbar(getLatticeSpacing(meta_data["beta"])*np.sqrt(8*x),y,yerr=y_error,fmt=".",color="0",ecolor="r",label="Topological Charge",markevery=5,errorevery=5)
@@ -71,44 +54,6 @@ def plot_flow_topsus(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
 		fname = "../figures/%s/flow_topsus_%s_Nbs%d.png" % (batch_name,batch_name,N_bs)
 	if not dryrun: plt.savefig(fname)
 	print "Figure created in %s" % fname
-
-# class AnalyseFlowObservable:
-# 	def __init__(self,data):
-# 		self.y = data.data_y
-# 		self.N_configurations, self.NFlows = self.y.shape
-# 		# Non-bootstrapped data
-# 		self.non_bs_data = np.zeros(self.NFlows)
-# 		self.non_bs_data_std = np.zeros(self.NFlows)
-# 		# Bootstrap data
-# 		self.bs_data = np.zeros(self.NFlows)
-# 		self.bs_data_std = np.zeros(self.NFlows)
-# 		# Jackknifed data
-# 		self.jk_data = np.zeros(self.NFlows)
-# 		self.jk_data_std = np.zeros(self.NFlows)
-# 		# Autocorrelation data
-# 		self.autocorrelations = np.zeros((self.NFlows,self.N_configurations))
-
-# 	def boot(self,N_bs,B_statistic = np.mean, F = lambda x : x, non_bs_stats = lambda x : x):
-# 		for i in xrange(self.NFlows):
-# 			bs = Bootstrap(self.y[:,i],N_bs, bootstrap_statistics = B_statistic, F = F, non_bs_stats = non_bs_stats)
-# 			self.non_bs_data[i] = bs.avg_original
-# 			self.non_bs_data_std[i] = bs.std_original
-# 			self.bs_data[i] = bs.bs_avg
-# 			self.bs_data_std[i] = bs.bs_std
-
-# 	def jackknife(self,statistics = np.mean, F = lambda x : x):
-# 		for i in xrange(self.NFlows):
-# 			jk = Jackknife(self.y[i])
-# 			self.jk_data[i] = jk.jk_avg
-# 			self.jk_data_std[i] = jk.jk_std
-
-# 	def autocorrelate(self):
-# 		for i in xrange(self.NFlows):
-# 			ac = Autocorrelation(self.y[i])
-# 			self.autocorrelations[i] = ac()
-
-def stat(x,axis=None):
-	return np.mean(x**2,axis=axis)
 
 class AnalyseFlow(object):
 	observable_name = "Missing_Observable_Name"
@@ -253,9 +198,9 @@ class AnalyseFlow(object):
 		ax.set_ylabel(r"$R = \frac{C_h}{C_0}$")
 		ax.set_title(title_string)
 		ax.grid(True)
-		ax.legends()
+		ax.legend()
 		if not self.dryrun: 
-			ax.savefig(fname,dpi=300)
+			fig.savefig(fname,dpi=300)
 		print "Figure created in %s" % fname
 
 	def plot_boot(self,plot_bs=True):
@@ -292,6 +237,9 @@ class AnalyseFlow(object):
 		print "Figure created in %s" % fname
 
 	def plot_original(self):
+		"""
+		Plots the default analysis, mean and std of the observable.
+		"""
 		self.plot_boot(plot_bs=False)
 
 class AnalysePlaquette(AnalyseFlow):
@@ -299,7 +247,7 @@ class AnalysePlaquette(AnalyseFlow):
 	Plaquette analysis class.
 	"""
 	observable_name = "Plaquette"
-	x_label = r"$a\sqrt{8t_{flow}}$"
+	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$P_{\mu\nu}$"
 
 	def __init__(self,files,observable,batch_name,data=None,dryrun=False):
@@ -310,7 +258,7 @@ class AnalyseTopologicalCharge(AnalyseFlow):
 	Topological charge analysis class. NOT TESTED
 	"""
 	observable_name = "Topological Charge"
-	x_label = r"$a\sqrt{8t_{flow}}$"
+	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
 
 class AnalyseEnergy(AnalyseFlow):
@@ -318,8 +266,8 @@ class AnalyseEnergy(AnalyseFlow):
 	Energy/action density analysis class. NOT TESTED
 	"""
 	observable_name = "Energy"
-	x_label = r"$t$"
-	y_label = r"$\langle E \rangle t^2$"
+	x_label = r"$t/r_0^2$"
+	y_label = r"$\langle E \rangle t^2$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
 
 	def plot_boot(self,plot_bs=True):
 		# Checks that the flow has been performed.
@@ -356,8 +304,8 @@ class AnalyseTopologicalSusceptibility(AnalyseFlow):
 	Topological susceptibility analysis class. NOT TESTED / NOT COMPLETED
 	"""
 	observable_name = "Topological Susceptibility"
-	x_label = r"$a\sqrt{8t_{flow}}$"
-	y_label = r"$\chi_t^{1/4}[GeV]$"
+	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi_t^{1/4}[GeV]"
 
 	def __init__(self,files,observable,batch_name,lattice_sizee,data=None,dryrun=False):
 		self.set_size(lattice_size)
@@ -377,6 +325,11 @@ class AnalyseTopologicalSusceptibility(AnalyseFlow):
 		# Q should be averaged
 		return self.const*Q_squared**(1./4)
 
+	@staticmethod
+	def stat(x,axis=None):
+		return np.mean(x**2,axis=axis)
+
+
 def main(args):
 	if not args:
 		# args = ['prodRunBeta6_1','plaq','topc','energy','topsus']
@@ -389,35 +342,47 @@ def main(args):
 	# print DList
 
 	# Analyses plaquette data if present in arguments
-	if 'plaq' in args:
-		plaq_analysis = AnalysePlaquette(DList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
-		plaq_analysis.boot(N_bs)
-		plaq_analysis.jackknife()
-		plaq_analysis.autocorrelation()
-		plaq_analysis.plot_boot()
-		plaq_analysis.plot_original()
-		plaq_analysis.plot_jackknife()
-		plaq_analysis.plot_autocorrelation()
-
-	sys.exit("EXITING: Missing complete plotter functions.")
+	# if 'plaq' in args:
+	# 	plaq_analysis = AnalysePlaquette(DList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
+	# 	plaq_analysis.boot(N_bs)
+	# 	plaq_analysis.jackknife()
+	# 	plaq_analysis.autocorrelation()
+	# 	plaq_analysis.plot_boot()
+	# 	plaq_analysis.plot_original()
+	# 	plaq_analysis.plot_jackknife()
+	# 	plaq_analysis.plot_autocorrelation()
 
 	if 'topc' in args:
 		topc_analysis = AnalyseTopologicalCharge(DList.getFlow("topc"), "topc", args[0], dryrun = dryrun)
 		topc_analysis.boot(N_bs)
+		topc_analysis.jackknife()
+		topc_analysis.autocorrelation()
 		topc_analysis.plot_boot()
-		topc_analysis.plot_boot(plot_bs=False)
+		topc_analysis.plot_original()
+		topc_analysis.plot_jackknife()
+		topc_analysis.plot_autocorrelation()
+
+		sys.exit("EXITING: Missing complete plotter functions.")
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
 			topsus_analysis.boot(N_bs)
+			topsus_analysis.jackknife()
+			topsus_analysis.autocorrelation()
 			topsus_analysis.plot_boot()
-			topsus_analysis.plot_boot(plot_bs=False)
+			topsus_analysis.plot_original()
+			topsus_analysis.plot_jackknife()
+			topsus_analysis.plot_autocorrelation()
 
 	if 'energy' in args:
 		energy_analysis = AnalyseEnergy(DList.getFlow("energy"), "energy", args[0], dryrun = dryrun)
 		energy_analysis.boot(N_bs)
+		energy_analysis.jackknife()
+		energy_analysis.autocorrelation()
 		energy_analysis.plot_boot()
-		energy_analysis.plot_boot(plot_bs=False)
+		energy_analysis.plot_original()
+		energy_analysis.plot_jackknife()
+		energy_analysis.plot_autocorrelation()
 
 	# plt.show()
 	# print flow_plaq_data.meta_data
