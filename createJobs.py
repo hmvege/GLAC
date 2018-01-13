@@ -48,8 +48,6 @@ def natural_sort(l):
     # Natural sorting
     convert = lambda text: int(text) if text.isdigit() else text.lower()
     alphanum_key = lambda key: [convert(c) for c in re.split('(\d+)',key)]
-    # print text.split(".")[-2].split("_")[-1]
-    # return [atoi(c) for c in re.split("(\d+)",text.split(".")[-2].split("_")[-1])]
     return sorted(l,key=alphanum_key)
 
 class JobCreator:
