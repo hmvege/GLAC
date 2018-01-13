@@ -112,9 +112,10 @@ class JobCreator:
         # temp_outputFolder = os.path.normpath("/" + config_dict["outputFolder"] + "/").replace("//","/")
         # json_dict["outputFolder"] = "/" + os.path.relpath(temp_outputFolder,self.base_folder) + "/"
         json_dict["outputFolder"] = "/" + config_dict["outputFolder"] + "/"
-        temp_inputFolder = os.path.normpath("/" + config_dict["inputFolder"] + "/").replace("//","/")
-        # print "LINE 118, _create_json(): ", temp_inputFolder
-        json_dict["inputFolder"] = "/" + os.path.relpath(temp_inputFolder,self.base_folder) + "/"
+        json_dict["inputFolder"] = "/" + config_dict["inputFolder"] + "/"
+        # temp_inputFolder = os.path.normpath("/" + config_dict["inputFolder"] + "/").replace("//","/")
+        # # print "LINE 118, _create_json(): ", temp_inputFolder
+        # json_dict["inputFolder"] = "/" + os.path.relpath(temp_inputFolder,self.base_folder) + "/"
         json_dict["storeConfigurations"] = config_dict["storeCfgs"]
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
         # For loading and running from a configuration
@@ -266,7 +267,11 @@ set -o errexit              # exit on errors
 
 '''.format(job_name, account_name, estimated_time, cpu_memory, partition, threads, nodes, sbatch_exclusions, run_command)
             elif system == "laconia":
-                sys.exit("Error: not implemented setup for system: %s" % system)
+                account_name = "ptg"
+                threads = 28
+                nodes = 19
+                cpu_memory = job_config["cpu_memory"]
+                # sys.exit("Error: not implemented setup for system: %s" % system) # Also, has to load module load Qt/5.6.2
                 content = '''
 #! /bin/bash -login
 #PBS -A {1:<s}
@@ -308,7 +313,12 @@ module load OpenMPI/1.10.0
                 tmp = proc.stdout.read()
                 # tmp = "123 456" # Used for bug-hunting
                 try:
-                    ID = int(tmp.split()[-1]) # ID of job
+                    if not system == "laconia":
+                        ID = int(tmp.split()[-1]) # ID of job
+                    else:
+                        tmp2 = tmp.split()[-1]
+                        tmp2 = tmp2.split(".")[0]
+                        ID = int(tmp2) # ID of laconia job
                 except IndexError:
                     print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
 
@@ -419,7 +429,7 @@ def main(args):
                         "config_start_number"       : 0,
                         "chroma_config"             : False,
                         "base_folder"               : os.getcwd(),
-                        "inputFolder"               : os.path.join(os.getcwd(),"input"),
+                        "inputFolder"               : "input",
                         "outputFolder"              : "output",#os.path.join(os.getcwd(),"output"),
                         "field_configs"             : [],
                         "uTest"                     : False,

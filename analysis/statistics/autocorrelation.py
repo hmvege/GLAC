@@ -54,6 +54,8 @@ class Autocorrelation:
 		ax.set_xlabel(r"Lag $h$")
 		ax.set_ylabel(r"$R = \frac{C_h}{C_0}$")
 		ax.set_title(title)
+		start, end = ax.get_ylim()
+		ax.yaxis.set_ticks(np.arange(start, end, 0.2))
 		ax.grid(True)
 		ax.legend()
 		if dryrun:

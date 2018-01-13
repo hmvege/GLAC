@@ -120,8 +120,9 @@ class AnalyseFlow(object):
 
 	def boot(self,N_bs,B_statistic = np.mean, F = lambda x : x, non_bs_stats = lambda x : x):
 		self.N_bs = N_bs
+		index_lists = np.random.randint(self.N_configurations, size=(self.N_bs, self.N_configurations))
 		for i in xrange(self.NFlows):
-			bs = Bootstrap(self.y[:,i],N_bs, bootstrap_statistics = B_statistic, F = F, non_bs_stats = non_bs_stats)
+			bs = Bootstrap(self.y[:,i],N_bs, bootstrap_statistics = B_statistic, F = F, non_bs_stats = non_bs_stats, index_lists = index_lists)
 			self.bs_y[i] = bs.bs_avg
 			self.bs_y_std[i] = bs.bs_std
 			self.unanalyzed_y[i] = bs.avg_original
@@ -150,13 +151,15 @@ class AnalyseFlow(object):
 		# Sets performed flag to true
 		self.autocorrelation_performed = True
 
-	def plot_jackknife(self):
+	def plot_jackknife(self, x = None, y_function = lambda x : x):
 		# Checks that jacknifing has been performed.
 		if not self.jackknife_performed:
 			raise ValueError("Jackknifing has not been performed yet.")
 
 		# Sets up the x axis array to be plotted
-		x = self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
+		if not x:
+			# Default x axis points is the flow time
+			x = self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
 
 		# Sets up the title and filename strings
 		title_string = r"Jacknife of %s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta)
@@ -165,6 +168,8 @@ class AnalyseFlow(object):
 		# Plots the jackknifed data
 		plt.figure()
 		plt.errorbar(x,self.jk_y,yerr=self.jk_y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
+		plt.xlabel(self.x_label)
+		plt.xlabel(self.y_label)
 		plt.title(title_string)
 		if not self.dryrun: 
 			plt.savefig(fname,dpi=300)
@@ -191,25 +196,29 @@ class AnalyseFlow(object):
 		# Plots the autocorrelations
 		fig = plt.figure(dpi=300)
 		ax = fig.add_subplot(111)
-		ax.plot(x,y,color="0",label=self.observable_name)
+		ax.plot(x,np.abs(y),color="0",label=self.observable_name)
 		ax.set_ylim(-self.autocorrelations_limits,self.autocorrelations_limits)
 		ax.set_xlim(0,N_autocorr)
 		ax.set_xlabel(r"Lag $h$")
 		ax.set_ylabel(r"$R = \frac{C_h}{C_0}$")
 		ax.set_title(title_string)
+		start, end = ax.get_ylim()
+		ax.yaxis.set_ticks(np.arange(start, end, 0.2))
 		ax.grid(True)
 		ax.legend()
 		if not self.dryrun: 
 			fig.savefig(fname,dpi=300)
 		print "Figure created in %s" % fname
 
-	def plot_boot(self,plot_bs=True):
+	def plot_boot(self,plot_bs=True, x = None, y_function = lambda x : x):
 		# Checks that the bootstrap has been performed.
 		if not self.bootstrap_performed and plot_bs:
 			raise ValueError("Bootstrap has not been performed yet.")
 
 		# Retrieves relevant data and sets up the arrays to be plotted
-		x = self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
+		if not x:
+			# Default x axis points is the flow time
+			x = self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
 		if plot_bs:
 			y = self.bs_y
 			y_std = self.bs_y_std
@@ -250,9 +259,6 @@ class AnalysePlaquette(AnalyseFlow):
 	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$P_{\mu\nu}$"
 
-	def __init__(self,files,observable,batch_name,data=None,dryrun=False):
-		super(AnalysePlaquette,self).__init__(files,observable,batch_name,data=None,dryrun=False)
-
 class AnalyseTopologicalCharge(AnalyseFlow):
 	"""
 	Topological charge analysis class. NOT TESTED
@@ -269,36 +275,6 @@ class AnalyseEnergy(AnalyseFlow):
 	x_label = r"$t/r_0^2$"
 	y_label = r"$\langle E \rangle t^2$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
 
-	def plot_boot(self,plot_bs=True):
-		# Checks that the flow has been performed.
-		if self.N_bs == None:
-			raise ValueError("Flow has not been performed yet.")
-
-		# Retrieves relevant data
-		x = self.x/0.5**2
-		if plot_bs:
-			y = self.analysis.bs_data
-			y_std = self.analysis.bs_data_std
-		else:
-			y = self.analysis.non_bs_data
-			y_std = self.analysis.non_bs_data_std
-
-		# Plotting commands
-		plt.figure()
-		plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
-		plt.xlabel(self.x_label)
-		plt.ylabel(self.y_label)
-		plt.grid(True)
-		if plot_bs:
-			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta,self.N_bs)
-			fname = "../figures/{0:<s}/flow_{2:<s}_{0:<s}_Nbs{1:<d}.png".format(self.batch_name,self.N_bs,"".join(self.observable_name.lower().split(" ")))
-		else:
-			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name, self.data.meta_data["NFlows"],self.beta)
-			fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
-		plt.title(title_string)
-		if not self.dryrun: plt.savefig(fname)
-		print "Figure created in %s" % fname
-
 class AnalyseTopologicalSusceptibility(AnalyseFlow):
 	"""
 	Topological susceptibility analysis class. NOT TESTED / NOT COMPLETED
@@ -307,15 +283,25 @@ class AnalyseTopologicalSusceptibility(AnalyseFlow):
 	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\chi_t^{1/4}[GeV]"
 
-	def __init__(self,files,observable,batch_name,lattice_sizee,data=None,dryrun=False):
-		self.set_size(lattice_size)
-		super(AnalysePlaquette,self).__init__(files,observable,batch_name,data=None,dryrun=False)
+	def __init__(self,files,observable,batch_name,data=None,dryrun=False):
+		super(AnalyseTopologicalSusceptibility,self).__init__(files,observable,batch_name,data=None,dryrun=False)
+		self.set_size()
 
-	def plot(self,plot_bs=True):
-		None
+	def set_size(self):
+		self.a = getLatticeSpacing(meta_data["beta"])
+		
+		# Ugly, hardcoded lattice size setting
+		if meta_data["beta"] == 6.0:
+			lattice_size = 24**3*48
+		else if meta_data["beta"] == 6.1:
+			lattice_size = 28**3*56
+		else if meta_data["beta"] == 6.2:
+			lattice_size = 32**3*64
+		else if meta_data["beta"] == 6.45:
+			lattice_size = 48**3*96
+		else:
+			raise ValueError("Unrecognized beta value: %g" % meta_data["beta"])
 
-	def set_size(self,beta_value, lattice_size):
-		self.a = getLatticeSpacing(beta_value)
 		self.V = lattice_size
 		self.hbarc = 0.19732697 #eV micro m
 		self.const = self.hbarc/self.a/self.V**(1./4)
@@ -329,21 +315,20 @@ class AnalyseTopologicalSusceptibility(AnalyseFlow):
 	def stat(x,axis=None):
 		return np.mean(x**2,axis=axis)
 
-
 def main(args):
 	if not args:
 		# args = ['prodRunBeta6_1','plaq','topc','energy','topsus']
 		# args = ['prodRunBeta6_0','plaq','topc','energy','topsus']
 		args = ['beta6_1','plaq','topc','energy','topsus']
 
-	DList = GetDirectoryTree(args[0],output_folder="data")
+	DirectoryList = GetDirectoryTree(args[0],output_folder="data")
 	N_bs = 200
 	dryrun = False
-	# print DList
+	# print DirectoryList
 
 	# Analyses plaquette data if present in arguments
 	# if 'plaq' in args:
-	# 	plaq_analysis = AnalysePlaquette(DList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
+	# 	plaq_analysis = AnalysePlaquette(DirectoryList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
 	# 	plaq_analysis.boot(N_bs)
 	# 	plaq_analysis.jackknife()
 	# 	plaq_analysis.autocorrelation()
@@ -353,29 +338,30 @@ def main(args):
 	# 	plaq_analysis.plot_autocorrelation()
 
 	if 'topc' in args:
-		topc_analysis = AnalyseTopologicalCharge(DList.getFlow("topc"), "topc", args[0], dryrun = dryrun)
-		topc_analysis.boot(N_bs)
-		topc_analysis.jackknife()
-		topc_analysis.autocorrelation()
-		topc_analysis.plot_boot()
-		topc_analysis.plot_original()
-		topc_analysis.plot_jackknife()
-		topc_analysis.plot_autocorrelation()
+		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), "topc", args[0], dryrun = dryrun)
+		# topc_analysis.boot(N_bs)
+		# topc_analysis.jackknife()
+		# topc_analysis.autocorrelation()
+		# topc_analysis.plot_boot()
+		# topc_analysis.plot_original()
+		# topc_analysis.plot_jackknife()
+		# topc_analysis.plot_autocorrelation()
 
-		sys.exit("EXITING: Missing complete plotter functions.")
 
 		if 'topsus' in args:
-			topsus_analysis = AnalyseTopologicalSusceptibility(DList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
-			topsus_analysis.boot(N_bs)
-			topsus_analysis.jackknife()
-			topsus_analysis.autocorrelation()
+			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
+			topsus_analysis.boot(N_bs,B_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = topsus_analysis.stat)
+			topsus_analysis.jackknife(data_statistics = lambda x : np.mean(x**2), F = topsus_analysis.chi)
+			# topsus_analysis.autocorrelation() # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_jackknife()
 			topsus_analysis.plot_autocorrelation()
 
+		sys.exit("EXITING: Missing complete plotter functions.")
+
 	if 'energy' in args:
-		energy_analysis = AnalyseEnergy(DList.getFlow("energy"), "energy", args[0], dryrun = dryrun)
+		energy_analysis = AnalyseEnergy(DirectoryList.getFlow("energy"), "energy", args[0], dryrun = dryrun)
 		energy_analysis.boot(N_bs)
 		energy_analysis.jackknife()
 		energy_analysis.autocorrelation()
@@ -387,52 +373,6 @@ def main(args):
 	# plt.show()
 	# print flow_plaq_data.meta_data
 	exit(1)
-
-	# Flow observables
-	flow_plaq_file = DList.getFlow("plaq")
-	flow_topc_file = DList.getFlow("topc")
-	flow_energy_file = DList.getFlow("energy") # Multiply by -1/4 on each clover, or, said in another way multiply by 1/16?
-
-	flow_plaq_data = GetFolderContents(flow_plaq_file,flow=True)
-	flow_topc_data = GetFolderContents(flow_topc_file,flow=True)
-	flow_energy_data = GetFolderContents(flow_energy_file,flow=True)
-
-	flow_time = flow_topc_data.data_x*0.01 # Scales to be in flow-time
-
-	flow_plaq_analysis = AnalyseFlowObservable(flow_plaq_data)
-	flow_topc_analysis = AnalyseFlowObservable(flow_topc_data)
-	flow_energy_analysis = AnalyseFlowObservable(flow_energy_data)
-	flow_topsus_analysis = AnalyseFlowObservable(flow_topc_data)
-	
-	flow_plaq_analysis.boot(N_BS)
-	flow_topc_analysis.boot(N_BS)
-	flow_energy_analysis.boot(N_BS)
-	flow_topsus_analysis.boot(N_BS, B_statistic = stat, F = chi, non_bs_stats = lambda x : x**2)
-
-	# Plaquette
-	plot_flow_plaquette(flow_time,flow_plaq_analysis.non_bs_data,flow_plaq_analysis.non_bs_data_std,flow_topc_data.meta_data,args[0])
-	plot_flow_plaquette(flow_time,flow_plaq_analysis.bs_data,flow_plaq_analysis.bs_data_std,flow_topc_data.meta_data,args[0],N_bs=N_BS)
-
-	# Topological Charge
-	plot_flow_topc(flow_time,flow_topc_analysis.non_bs_data,flow_topc_analysis.non_bs_data_std,flow_topc_data.meta_data,args[0])
-	plot_flow_topc(flow_time,flow_topc_analysis.bs_data,flow_topc_analysis.bs_data_std,flow_topc_data.meta_data,args[0],N_bs=N_BS)
-
-	# Action/energy density
-	plot_flow_energy(flow_time,flow_energy_analysis.non_bs_data,flow_energy_analysis.non_bs_data_std,flow_energy_data.meta_data,args[0])
-	plot_flow_energy(flow_time,flow_energy_analysis.bs_data,flow_energy_analysis.bs_data_std,flow_energy_data.meta_data,args[0],N_bs=N_BS)
-
-	# Topological Susceptibility
-	plot_flow_topsus(flow_time,flow_topsus_analysis.non_bs_data,flow_topsus_analysis.non_bs_data_std,flow_energy_data.meta_data,args[0])
-	plot_flow_topsus(flow_time,flow_topsus_analysis.bs_data,flow_topsus_analysis.bs_data_std,flow_energy_data.meta_data,args[0],N_bs=N_BS)
-
-	# Configuration observables
-	plaq_file = DList.getObs("plaq")
-	topc_file = DList.getObs("topc")
-	energy_file = DList.getObs("energy")
-
-	plaq_analysis = GetFolderContents(plaq_file)
-	topc_analysis = GetFolderContents(topc_file)
-	energy_analysis = GetFolderContents(energy_file)
 
 if __name__ == '__main__':
 	main(sys.argv[1:])
