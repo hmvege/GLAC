@@ -144,9 +144,9 @@ class AnalyseFlow(object):
 		for i in xrange(self.NFlows):
 			ac = Autocorrelation(self.y[:,i])
 			self.autocorrelations[i] = ac()
-			# # Small progressbar
-			# sys.stdout.write("\r%3.1f%% done" % (100*float(i)/float(self.NFlows)))
-			# sys.stdout.flush()
+			# Small progressbar
+			sys.stdout.write("\r%3.1f%% done" % (100*float(i)/float(self.NFlows)))
+			sys.stdout.flush()
 
 		# Sets performed flag to true
 		self.autocorrelation_performed = True
@@ -281,7 +281,7 @@ class AnalyseTopologicalSusceptibility(AnalyseFlow):
 	"""
 	observable_name = "Topological Susceptibility"
 	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\chi_t^{1/4}[GeV]"
+	y_label = r"$\chi_t^{1/4}[GeV]$"
 
 	def __init__(self,files,observable,batch_name,data=None,dryrun=False):
 		super(AnalyseTopologicalSusceptibility,self).__init__(files,observable,batch_name,data=None,dryrun=False)
@@ -315,7 +315,7 @@ class AnalyseTopologicalSusceptibility(AnalyseFlow):
 		return np.mean(x**2,axis=axis)
 
 def main(args):
-	DirectoryList = GetDirectoryTree(args[0],output_folder="output")
+	DirectoryList = GetDirectoryTree(args[0],output_folder=args[1])
 	N_bs = 200
 	dryrun = False
 	# print DirectoryList
@@ -368,10 +368,11 @@ def main(args):
 
 if __name__ == '__main__':
 	if not sys.argv[1:]:
-		args = [['prodRunBeta6_0','plaq','topc','energy','topsus'],
-				['prodRunBeta6_1','plaq','topc','energy','topsus']]
+		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
+		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data','plaq','topc','energy','topsus'],
+				['beta6_1','data','plaq','topc','energy','topsus']]
 		for a in args:
 			main(a)
-		# args = [['beta6_0','plaq','topc','energy','topsus'],['beta6_1','plaq','topc','energy','topsus']]
 	else:
 		main(sys.argv[1:])
