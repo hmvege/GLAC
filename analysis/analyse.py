@@ -322,16 +322,19 @@ class AnalyseTopologicalCharge(AnalyseFlow):
 			plt.savefig(fname)
 		print "Figure created in %s" % fname
 
+	def plot_mc_history(self):
+		None
+
 class AnalyseEnergy(AnalyseFlow):
 	"""
 	Energy/action density analysis class. NOT TESTED
 	"""
 	observable_name = "Energy"
 	x_label = r"$t/r_0^2$"
-	y_label = r"$\langle E \rangle t^2$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
+	y_label = r"$t^2\langle E \rangle$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
 
 	def correction_function(self, y):
-		return -0.5*y*self.x*self.x
+		return -0.5*y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"]
 
 class AnalyseTopologicalSusceptibility(AnalyseFlow):
 	"""
@@ -393,8 +396,8 @@ def main(args):
 		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), "topc", args[0], dryrun = dryrun)
 		topc_analysis.boot(N_bs)
 		topc_analysis.jackknife()
-		# topc_analysis.autocorrelation()
-		# topc_analysis.plot_autocorrelation()
+		topc_analysis.autocorrelation()
+		topc_analysis.plot_autocorrelation()
 		topc_analysis.plot_boot()
 		topc_analysis.plot_original()
 		topc_analysis.plot_jackknife()
@@ -417,24 +420,25 @@ def main(args):
 		energy_analysis = AnalyseEnergy(DirectoryList.getFlow("energy"), "energy", args[0], dryrun = dryrun)
 		energy_analysis.boot(N_bs)
 		energy_analysis.jackknife()
-		energy_analysis.autocorrelation()
-		energy_analysis.plot_autocorrelation()
-		energy_analysis.plot_boot(x = energy_analysis.x / r0**2, correction_function = energy_analysis.correction_function)
-		energy_analysis.plot_original(x = energy_analysis.x / r0**2, correction_function = energy_analysis.correction_function)
-		energy_analysis.plot_jackknife(x = energy_analysis.x / r0**2, correction_function = energy_analysis.correction_function)
+		# energy_analysis.autocorrelation()
+		# energy_analysis.plot_autocorrelation()
+		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2
+		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
+		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
+		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
 
 if __name__ == '__main__':
 	if not sys.argv[1:]:
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data','plaq','topc','energy','topsus'],
+				['beta6_1','data','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data','topc'],
-				['beta6_1','data','topc']]
+		# args = [['beta6_0','data','energy'],
+		# 		['beta6_1','data','energy']]
 
-		# args = [['beta6_1','data','topc']]
+		# args = [['beta6_1','data','energy']]
 
 		for a in args:
 			main(a)
