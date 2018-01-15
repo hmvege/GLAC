@@ -90,16 +90,19 @@ class AnalyseFlow(object):
 		# Non-bootstrapped data
 		self.unanalyzed_y = np.zeros(self.NFlows)
 		self.unanalyzed_y_std = np.zeros(self.NFlows)
+		self.unanalyzed_y_hist_data = np.zeros(self.N_configurations)
 
 		# Bootstrap data
 		self.bootstrap_performed = False
 		self.bs_y = np.zeros(self.NFlows)
 		self.bs_y_std = np.zeros(self.NFlows)
+		self.bs_y_hist_data = np.zeros(self.N_configurations)
 
 		# Jackknifed data
 		self.jackknife_performed = False
 		self.jk_y = np.zeros(self.NFlows)
 		self.jk_y_std = np.zeros(self.NFlows)
+		self.jk_y_hist_data = np.zeros(self.N_configurations)
 
 		# Autocorrelation data
 		self.autocorrelation_performed = False
@@ -128,6 +131,11 @@ class AnalyseFlow(object):
 			self.unanalyzed_y[i] = bs.avg_original
 			self.unanalyzed_y_std[i] = bs.std_original
 
+			# Stores last data for plotting in histogram later
+			if (i == (self.NFlows - 1)):
+				self.bs_y_hist_data = bs.bs_data
+				self.unanalyzed_y_hist_data = bs.data_original
+
 		# Sets performed flag to true
 		self.bootstrap_performed = True
 
@@ -136,17 +144,27 @@ class AnalyseFlow(object):
 			jk = Jackknife(self.y[:,i],F = F, data_statistics = data_statistics)
 			self.jk_y[i] = jk.jk_avg
 			self.jk_y_std[i] = jk.jk_std
+			if (i == (self.NFlows - 1)):
+				self.jk_y_hist_data = jk.jk_data
 
 		# Sets performed flag to true
 		self.jackknife_performed = True
 
 	def autocorrelation(self):
+		print "Calculating autocorrelation:"
+
+		# Gets autocorrelation
 		for i in xrange(self.NFlows):
 			ac = Autocorrelation(self.y[:,i])
 			self.autocorrelations[i] = ac()
 			# Small progressbar
-			sys.stdout.write("\r%3.1f%% done" % (100*float(i)/float(self.NFlows)))
+			sys.stdout.write("\r%4.1f%% done" % (100*float(i)/float(self.NFlows)))
 			sys.stdout.flush()
+
+		# Finalizes
+		sys.stdout.write("\r100.0%% done")
+		sys.stdout.flush()
+		print "Autocorrelation done."
 
 		# Sets performed flag to true
 		self.autocorrelation_performed = True
@@ -266,33 +284,41 @@ class AnalyseTopologicalCharge(AnalyseFlow):
 
 	def plot_histogram(self):
 		# Sets up plotting variables
-		Nbins = 45
+		Nbins = 30
 		title_string = r"Spread of Topological Charge $Q$, $\beta=%.2f$" % float(self.data.meta_data["beta"])
 		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_histogram.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
 
 		# Sets up plot
 		fig = plt.figure(dpi=300)
+
 		# Adds unanalyzed data
 		ax1 = fig.add_subplot(311)
-		ax1.hist(self.unanalyzed_y,bins=Nbins,label="Unanalyzed")
+		x1, y1, _ = ax1.hist(self.unanalyzed_y_hist_data,bins=Nbins,label="Unanalyzed")
 		ax1.legend()
 		ax1.grid("on")
-		ax1.set_title(title_stringt)
+		ax1.set_title(title_string)
+
 		# Adds bootstrapped data
 		ax2 = fig.add_subplot(312)
-		ax2.hist(self.bs_y,bins=Nbins,label="Bootstrap")
+		x2, y2, _ = ax2.hist(self.bs_y_hist_data,bins=Nbins,label="Bootstrap")
 		ax2.grid("on")
 		ax2.legend()
 		ax2.set_ylabel("Hits")
+
 		# Adds jackknifed histogram
 		ax3 = fig.add_subplot(313)
-		ax3.hist(self.jk_y,bins=Nbins,label="Jackknife")
+		x3, y3, _ = ax3.hist(self.jk_y_hist_data,bins=Nbins,label="Jackknife")
 		ax3.legend()
 		ax3.grid("on")
 		ax3.set_xlabel(R"$Q$")
 
+		xlim_max = np.max([abs(y1),(y2),(y3)])
+		ax1.set_xlim(-xlim_max,xlim_max)
+		ax2.set_xlim(-xlim_max,xlim_max)
+		ax3.set_xlim(-xlim_max,xlim_max)
+
 		# Saves figure
-		if not dryrun:
+		if not self.dryrun:
 			plt.savefig(fname)
 		print "Figure created in %s" % fname
 
@@ -367,8 +393,8 @@ def main(args):
 		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), "topc", args[0], dryrun = dryrun)
 		topc_analysis.boot(N_bs)
 		topc_analysis.jackknife()
-		topc_analysis.autocorrelation()
-		topc_analysis.plot_autocorrelation()
+		# topc_analysis.autocorrelation()
+		# topc_analysis.plot_autocorrelation()
 		topc_analysis.plot_boot()
 		topc_analysis.plot_original()
 		topc_analysis.plot_jackknife()
@@ -407,6 +433,8 @@ if __name__ == '__main__':
 
 		args = [['beta6_0','data','topc'],
 				['beta6_1','data','topc']]
+
+		# args = [['beta6_1','data','topc']]
 
 		for a in args:
 			main(a)
