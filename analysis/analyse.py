@@ -264,6 +264,38 @@ class AnalyseTopologicalCharge(AnalyseFlow):
 	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
 
+	def plot_histogram(self):
+		# Sets up plotting variables
+		Nbins = 45
+		title_string = r"Spread of Topological Charge $Q$, $\beta=%.2f$" % float(self.data.meta_data["beta"])
+		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_histogram.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+
+		# Sets up plot
+		fig = plt.figure(dpi=300)
+		# Adds unanalyzed data
+		ax1 = fig.add_subplot(311)
+		ax1.hist(self.unanalyzed_y,bins=Nbins,label="Unanalyzed")
+		ax1.legend()
+		ax1.grid("on")
+		ax1.set_title(title_stringt)
+		# Adds bootstrapped data
+		ax2 = fig.add_subplot(312)
+		ax2.hist(self.bs_y,bins=Nbins,label="Bootstrap")
+		ax2.grid("on")
+		ax2.legend()
+		ax2.set_ylabel("Hits")
+		# Adds jackknifed histogram
+		ax3 = fig.add_subplot(313)
+		ax3.hist(self.jk_y,bins=Nbins,label="Jackknife")
+		ax3.legend()
+		ax3.grid("on")
+		ax3.set_xlabel(R"$Q$")
+
+		# Saves figure
+		if not dryrun:
+			plt.savefig(fname)
+		print "Figure created in %s" % fname
+
 class AnalyseEnergy(AnalyseFlow):
 	"""
 	Energy/action density analysis class. NOT TESTED
@@ -340,6 +372,7 @@ def main(args):
 		topc_analysis.plot_boot()
 		topc_analysis.plot_original()
 		topc_analysis.plot_jackknife()
+		topc_analysis.plot_histogram()
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
@@ -370,8 +403,13 @@ if __name__ == '__main__':
 	if not sys.argv[1:]:
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
-		args = [['beta6_0','data','plaq','topc','energy','topsus'],
-				['beta6_1','data','plaq','topc','energy','topsus']]
+
+		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data','plaq','topc','energy','topsus']]
+
+		args = [['beta6_0','data','topc'],
+				['beta6_1','data','topc']]
+
 		for a in args:
 			main(a)
 	else:
