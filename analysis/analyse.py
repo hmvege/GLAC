@@ -397,8 +397,6 @@ def main(args):
 		energy_analysis.plot_original(x = energy_analysis.x / r0**2, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = energy_analysis.x / r0**2, correction_function = energy_analysis.correction_function)
 
-	# plt.show()
-
 if __name__ == '__main__':
 	if not sys.argv[1:]:
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
