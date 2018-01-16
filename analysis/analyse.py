@@ -382,16 +382,16 @@ if __name__ == '__main__':
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data','plaq','topc','energy','topsus'],
+				['beta6_1','data','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_0','data','energy'],
 		# 		['beta6_1','data','energy']]
 
-		# args = [['beta6_1','data','energy']]
+		# args = [['beta6_0','data','energy']]
 
-		args = [['beta6_0','data','plaq'],
-				['beta6_1','data','plaq']]
+		# args = [['beta6_0','data','plaq'],
+		# 		['beta6_1','data','plaq']]
 
 		for a in args:
 			main(a)

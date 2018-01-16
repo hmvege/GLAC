@@ -1,4 +1,4 @@
-import sys, os, numpy as np
+import sys, os, numpy as np, re
 
 class GetDirectoryTree:
 	def __init__(self,batch_name,output_folder="output",dryrun=False):
@@ -31,7 +31,7 @@ class GetDirectoryTree:
 			# Creates the flow observables path
 			flow_path = os.path.join(self.batch_folder,"flow_observables")
 			# Goes through the flow observables
-			for flow_obs in (self.observables_list):
+			for flow_obs in self.observables_list:
 				# Creates flow observables path
 				obs_path = os.path.join(flow_path,flow_obs)
 				# Checks if the flow observable path exists
@@ -40,7 +40,8 @@ class GetDirectoryTree:
 					flow_obs_dir_list = []
 					for obs_file in os.listdir(obs_path):
 						flow_obs_dir_list.append(os.path.join(obs_path,obs_file))
-					self.flow_tree[flow_obs] = flow_obs_dir_list
+					# Sorts list by natural sorting
+					self.flow_tree[flow_obs] = self.natural_sort(flow_obs_dir_list)
 		print "Directory tree built."
 
 		# Creates figures folder
@@ -50,6 +51,13 @@ class GetDirectoryTree:
 				print '> mkdir %s' % self.figures_path
 			else:
 				os.mkdir(self.figures_path)
+
+	@staticmethod
+	def natural_sort(l):
+	    # Natural sorting
+	    convert = lambda text: int(text) if text.isdigit() else text.lower()
+	    alphanum_key = lambda key: [convert(c) for c in re.split('(\d+)',key)]
+	    return sorted(l,key=alphanum_key)
 
 	def getFlow(self,obs):
 		"""
