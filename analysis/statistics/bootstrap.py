@@ -28,11 +28,12 @@ class Bootstrap:
 		self.bs_avg = np.average(self.bs_data)
 		self.bs_var = np.var(self.bs_data)
 		self.bs_std = np.std(self.bs_data)
+
 		# Gets and sets non-bootstrapped values
-		function_data = F(non_bs_stats(data))
-		self.avg_original = np.average(function_data)
-		self.var_original = np.var(function_data)
-		self.std_original = np.std(function_data)
+		self.data_original = F(non_bs_stats(data))
+		self.avg_original = np.average(self.data_original)
+		self.var_original = np.var(self.data_original)
+		self.std_original = np.std(self.data_original)
 
 		# Sets some global class variables
 		self.shape = self.bs_avg.shape

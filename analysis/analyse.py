@@ -90,16 +90,19 @@ class AnalyseFlow(object):
 		# Non-bootstrapped data
 		self.unanalyzed_y = np.zeros(self.NFlows)
 		self.unanalyzed_y_std = np.zeros(self.NFlows)
+		self.unanalyzed_y_hist_data = np.zeros(self.N_configurations)
 
 		# Bootstrap data
 		self.bootstrap_performed = False
 		self.bs_y = np.zeros(self.NFlows)
 		self.bs_y_std = np.zeros(self.NFlows)
+		self.bs_y_hist_data = np.zeros(self.N_configurations)
 
 		# Jackknifed data
 		self.jackknife_performed = False
 		self.jk_y = np.zeros(self.NFlows)
 		self.jk_y_std = np.zeros(self.NFlows)
+		self.jk_y_hist_data = np.zeros(self.N_configurations)
 
 		# Autocorrelation data
 		self.autocorrelation_performed = False
@@ -128,6 +131,11 @@ class AnalyseFlow(object):
 			self.unanalyzed_y[i] = bs.avg_original
 			self.unanalyzed_y_std[i] = bs.std_original
 
+			# Stores last data for plotting in histogram later
+			if (i == (self.NFlows - 1)):
+				self.bs_y_hist_data = bs.bs_data
+				self.unanalyzed_y_hist_data = bs.data_original
+
 		# Sets performed flag to true
 		self.bootstrap_performed = True
 
@@ -136,17 +144,27 @@ class AnalyseFlow(object):
 			jk = Jackknife(self.y[:,i],F = F, data_statistics = data_statistics)
 			self.jk_y[i] = jk.jk_avg
 			self.jk_y_std[i] = jk.jk_std
+			if (i == (self.NFlows - 1)):
+				self.jk_y_hist_data = jk.jk_data
 
 		# Sets performed flag to true
 		self.jackknife_performed = True
 
 	def autocorrelation(self):
+		print "Calculating autocorrelation:"
+
+		# Gets autocorrelation
 		for i in xrange(self.NFlows):
 			ac = Autocorrelation(self.y[:,i])
 			self.autocorrelations[i] = ac()
 			# Small progressbar
-			sys.stdout.write("\r%3.1f%% done" % (100*float(i)/float(self.NFlows)))
+			sys.stdout.write("\r%4.1f%% done" % (100*float(i)/float(self.NFlows)))
 			sys.stdout.flush()
+
+		# Finalizes
+		sys.stdout.write("\r100.0%% done")
+		sys.stdout.flush()
+		print "Autocorrelation done."
 
 		# Sets performed flag to true
 		self.autocorrelation_performed = True
@@ -264,16 +282,59 @@ class AnalyseTopologicalCharge(AnalyseFlow):
 	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
 
+	def plot_histogram(self):
+		# Sets up plotting variables
+		Nbins = 30
+		title_string = r"Spread of Topological Charge $Q$, $\beta=%.2f$" % float(self.data.meta_data["beta"])
+		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_histogram.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+
+		# Sets up plot
+		fig = plt.figure(dpi=300)
+
+		# Adds unanalyzed data
+		ax1 = fig.add_subplot(311)
+		x1, y1, _ = ax1.hist(self.unanalyzed_y_hist_data,bins=Nbins,label="Unanalyzed")
+		ax1.legend()
+		ax1.grid("on")
+		ax1.set_title(title_string)
+
+		# Adds bootstrapped data
+		ax2 = fig.add_subplot(312)
+		x2, y2, _ = ax2.hist(self.bs_y_hist_data,bins=Nbins,label="Bootstrap")
+		ax2.grid("on")
+		ax2.legend()
+		ax2.set_ylabel("Hits")
+
+		# Adds jackknifed histogram
+		ax3 = fig.add_subplot(313)
+		x3, y3, _ = ax3.hist(self.jk_y_hist_data,bins=Nbins,label="Jackknife")
+		ax3.legend()
+		ax3.grid("on")
+		ax3.set_xlabel(R"$Q$")
+
+		xlim_max = np.max([abs(y1),(y2),(y3)])
+		ax1.set_xlim(-xlim_max,xlim_max)
+		ax2.set_xlim(-xlim_max,xlim_max)
+		ax3.set_xlim(-xlim_max,xlim_max)
+
+		# Saves figure
+		if not self.dryrun:
+			plt.savefig(fname)
+		print "Figure created in %s" % fname
+
+	def plot_mc_history(self):
+		None
+
 class AnalyseEnergy(AnalyseFlow):
 	"""
 	Energy/action density analysis class. NOT TESTED
 	"""
 	observable_name = "Energy"
 	x_label = r"$t/r_0^2$"
-	y_label = r"$\langle E \rangle t^2$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
+	y_label = r"$t^2\langle E \rangle$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
 
 	def correction_function(self, y):
-		return -0.5*y*self.x*self.x
+		return -0.5*y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"]
 
 class AnalyseTopologicalSusceptibility(AnalyseFlow):
 	"""
@@ -340,6 +401,7 @@ def main(args):
 		topc_analysis.plot_boot()
 		topc_analysis.plot_original()
 		topc_analysis.plot_jackknife()
+		topc_analysis.plot_histogram()
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
@@ -358,18 +420,26 @@ def main(args):
 		energy_analysis = AnalyseEnergy(DirectoryList.getFlow("energy"), "energy", args[0], dryrun = dryrun)
 		energy_analysis.boot(N_bs)
 		energy_analysis.jackknife()
-		energy_analysis.autocorrelation()
-		energy_analysis.plot_autocorrelation()
-		energy_analysis.plot_boot(x = energy_analysis.x / r0**2, correction_function = energy_analysis.correction_function)
-		energy_analysis.plot_original(x = energy_analysis.x / r0**2, correction_function = energy_analysis.correction_function)
-		energy_analysis.plot_jackknife(x = energy_analysis.x / r0**2, correction_function = energy_analysis.correction_function)
+		# energy_analysis.autocorrelation()
+		# energy_analysis.plot_autocorrelation()
+		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2
+		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
+		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
+		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
 
 if __name__ == '__main__':
 	if not sys.argv[1:]:
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
-		args = [['beta6_0','data','plaq','topc','energy','topsus'],
-				['beta6_1','data','plaq','topc','energy','topsus']]
+
+		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data','plaq','topc','energy','topsus']]
+
+		# args = [['beta6_0','data','energy'],
+		# 		['beta6_1','data','energy']]
+
+		args = [['beta6_1','data','energy']]
+
 		for a in args:
 			main(a)
 	else:
