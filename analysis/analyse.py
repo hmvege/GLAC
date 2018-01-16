@@ -335,29 +335,30 @@ def main(args):
 		plaq_analysis = AnalysePlaquette(DirectoryList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
 		plaq_analysis.boot(N_bs)
 		plaq_analysis.jackknife()
-		plaq_analysis.autocorrelation()
-		plaq_analysis.plot_autocorrelation()
+		# plaq_analysis.autocorrelation()
+		# plaq_analysis.plot_autocorrelation()
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_jackknife()
 
-	if 'topc' in args:
+	if 'topc' in args or 'topsus' in args:
 		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), "topc", args[0], dryrun = dryrun)
-		topc_analysis.boot(N_bs)
-		topc_analysis.jackknife()
-		topc_analysis.autocorrelation()
-		topc_analysis.plot_autocorrelation()
-		topc_analysis.plot_boot()
-		topc_analysis.plot_original()
-		topc_analysis.plot_jackknife()
-		topc_analysis.plot_histogram()
+		if 'topc' in args:
+			topc_analysis.boot(N_bs)
+			topc_analysis.jackknife()
+			# topc_analysis.autocorrelation()
+			# topc_analysis.plot_autocorrelation()
+			topc_analysis.plot_boot()
+			topc_analysis.plot_original()
+			topc_analysis.plot_jackknife()
+			topc_analysis.plot_histogram()
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
-			topsus_analysis.boot(N_bs,B_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = topsus_analysis.stat)
+			topsus_analysis.boot(N_bs,B_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = lambda x : x**2)
 			topsus_analysis.jackknife(data_statistics = lambda x : np.mean(x**2), F = topsus_analysis.chi)
-			topsus_analysis.autocorrelation() # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
-			topsus_analysis.plot_autocorrelation()
+			# topsus_analysis.autocorrelation() # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			# topsus_analysis.plot_autocorrelation()
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_jackknife()
@@ -384,10 +385,13 @@ if __name__ == '__main__':
 		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
 		# 		['beta6_1','data','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data','energy'],
-				['beta6_1','data','energy']]
+		# args = [['beta6_0','data','energy'],
+		# 		['beta6_1','data','energy']]
 
 		# args = [['beta6_1','data','energy']]
+
+		args = [['beta6_0','data','plaq'],
+				['beta6_1','data','plaq']]
 
 		for a in args:
 			main(a)
