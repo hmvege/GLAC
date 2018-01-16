@@ -94,6 +94,16 @@ class JobCreator:
             else:
                 os.mkdir(os.path.join(self.base_folder,folder))
 
+    def _clean_file_Path(self,p):
+        # Cleans file-path of base folder and of extraneous slashes
+        if p.startswith(os.path.abspath(self.base_folder) + os.sep):
+            temp_p = os.path.normpath(os.sep + p + os.sep).replace("//",os.sep)
+            temp_p = os.path.relpath(temp_p,self.base_folder)
+        else:
+            temp_p = p
+        temp_p = (os.sep + os.path.normpath(temp_p) + os.sep).replace("//",os.sep)
+        return temp_p
+
     def _create_json(self,config_dict):
         # Function that creates a json file for submitting to the c++ file.
         self.json_file_name = "config_%s.json" % self.runName
@@ -109,13 +119,8 @@ class JobCreator:
         json_dict["NFlows"] = config_dict["NFlows"]
         json_dict["NUpdates"] = config_dict["NUpdates"]
         # Data storage related variables
-        # temp_outputFolder = os.path.normpath("/" + config_dict["outputFolder"] + "/").replace("//","/")
-        # json_dict["outputFolder"] = "/" + os.path.relpath(temp_outputFolder,self.base_folder) + "/"
-        json_dict["outputFolder"] = "/" + config_dict["outputFolder"] + "/"
-        json_dict["inputFolder"] = "/" + config_dict["inputFolder"] + "/"
-        # temp_inputFolder = os.path.normpath("/" + config_dict["inputFolder"] + "/").replace("//","/")
-        # # print "LINE 118, _create_json(): ", temp_inputFolder
-        # json_dict["inputFolder"] = "/" + os.path.relpath(temp_inputFolder,self.base_folder) + "/"
+        json_dict["outputFolder"] = self._clean_file_Path(config_dict["outputFolder"])
+        json_dict["inputFolder"] = self._clean_file_Path(config_dict["inputFolder"])
         json_dict["storeConfigurations"] = config_dict["storeCfgs"]
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
         # For loading and running from a configuration
