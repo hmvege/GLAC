@@ -557,6 +557,9 @@ def main(args):
 
     # Loads one or multiple configuration
     if args.subparser == 'load':
+        """
+        COMMAND FOR LOADING SCRIPT JOBS AND GENERATING CONFIGS OR FLOWING
+        """
         configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
         if args.load_configurations:
             if args.load_config_and_run:
@@ -567,6 +570,8 @@ def main(args):
                 for c in configurations:
                     if c["NFlows"] == 0 or args.no_flow:
                         sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
+                    # Sets the number of configurations to run for to be zero just in case
+                    c["NCf"] = 0
                 # Requiring an new estimate of the run time if we are flowing
                 configurations[0] = setFieldConfigs(configurations[0],args.load_configurations)
                 if not args.load_config_min_time_estimate and not args.load_config_hr_time_estimate:
@@ -576,6 +581,7 @@ def main(args):
                     configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
             else:
                 raise TypeError("Can only assign one configuration file to a single set of field configurations.")
+        # For loading and running configurations
         if args.load_config_and_run:
             if not args.NConfigs:
                 # Error catching, as we require to know how many addition configurations we wish to create from loaded configuration.
@@ -602,6 +608,9 @@ def main(args):
             c["config_start_number"] = args.config_start_number
         s.submitJob(configurations,args.system,args.partition)
     elif args.subparser == 'setup':
+        """
+        COMMAND FOR SETTING UP JOBS WITHOUT ANY PREDEFINED SCRIPTS
+        """
         if not args.system: raise ValueError("System value %g: something is wrong in parser." % args.system)
         excluded_nodes = ""
         system = args.system
@@ -655,6 +664,9 @@ def main(args):
         # Submitting job
         s.submitJob([config_default],system,partition,excluded_nodes)
     elif args.subparser == 'sbatch':
+        """
+        COMMAND FOR VIEWING JOBS
+        """
         if args.scancel:
             s.cancelJob(args.scancel)
         if args.scancel_all:
@@ -664,6 +676,9 @@ def main(args):
         if args.clearIDFile:
             s.clearIDFile()
     elif args.subparser == 'utest':
+        """
+        COMMAND FOR UNIT TESTING
+        """
         config_default["runName"] = "defaultTestRun"
         config_default["uTest"] = True
         config_default["cpu_approx_runtime_hr"] = 0
@@ -681,6 +696,9 @@ def main(args):
         # Submitting job
         s.submitJob([config_default],system,partition,excluded_nodes)
     else:
+        """
+        ERROR CATCHING
+        """
         print 'Parse error: %s \n--> exiting' % args
         exit(0)
 
