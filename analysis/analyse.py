@@ -4,58 +4,7 @@ from statistics.bootstrap import Bootstrap
 from statistics.autocorrelation import Autocorrelation
 import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd
 
-def plot_flow_topc(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
-	plt.figure()
-	plt.errorbar(getLatticeSpacing(meta_data["beta"])*np.sqrt(8*x),y,yerr=y_error,fmt=".",color="0",ecolor="r",label="Topological Charge",markevery=5,errorevery=5)
-	plt.xlabel(r"$a\sqrt{8t_{flow}}$")
-	plt.ylabel(r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$")
-	if not N_bs:
-		plt.title(r"Topological Charge $N_{flow}=%2d$, $\beta=%.2f$" % (meta_data["NFlows"],meta_data["beta"]))
-	else:
-		plt.title(r"Topological Charge $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (meta_data["NFlows"],meta_data["beta"],N_bs))
-	plt.grid(True)
-	if not N_bs:
-		fname = "../figures/%s/flow_topc_%s.png" % (batch_name,batch_name)
-	else:
-		fname = "../figures/%s/flow_topc_%s_Nbs%d.png" % (batch_name,batch_name,N_bs)
-	if not dryrun: plt.savefig(fname)
-	print "Figure created in %s" % fname
-
-def plot_flow_energy(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
-	plt.figure()
-	plt.errorbar(x,-0.5*y*x**2,yerr=y_error,fmt=".",color="0",ecolor="r",label="Energy",markevery=5,errorevery=5)
-	plt.xlabel(r"$t$")
-	plt.ylabel(r"$\langle E \rangle t^2$")
-	if not N_bs:
-		plt.title(r"Energy Density $N_{flow}=%2d$, $\beta=%.2f$" % (meta_data["NFlows"],meta_data["beta"]))
-	else:
-		plt.title(r"Energy Density $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (meta_data["NFlows"],meta_data["beta"],N_bs))
-	plt.grid(True)
-	if not N_bs:
-		fname = "../figures/%s/flow_energy_%s.png" % (batch_name,batch_name)
-	else:
-		fname = "../figures/%s/flow_energy_%s_Nbs%d.png" % (batch_name,batch_name,N_bs)
-	if not dryrun: plt.savefig(fname)
-	print "Figure created in %s" % fname
-
-def plot_flow_topsus(x,y,y_error,meta_data,batch_name,N_bs=False,dryrun=False):
-	plt.figure()
-	plt.errorbar(getLatticeSpacing(meta_data["beta"])*np.sqrt(8*x),y,yerr=y_error,fmt=".",color="0",ecolor="r",label="Topological susceptibility",markevery=5,errorevery=5)
-	plt.xlabel(r"$a\sqrt{8t_{flow}}$")
-	plt.ylabel(r"$\chi_t^{1/4}[GeV]$")
-	if not N_bs:
-		plt.title(r"$\chi_t^{1/4}=\frac{\hbar c}{aV^{1/4}}\langle Q^2 \rangle^{1/4}$, $\beta=%.2f$" % (meta_data["beta"]))
-	else:
-		plt.title(r"$\chi_t^{1/4}=\frac{\hbar c}{aV^{1/4}}\langle Q^2 \rangle^{1/4}$, $\beta=%.2f$, $N_{bs}=%d$" % (meta_data["beta"],N_bs))
-	plt.grid(True)
-	if not N_bs:
-		fname = "../figures/%s/flow_topsus_%s.png" % (batch_name,batch_name)
-	else:
-		fname = "../figures/%s/flow_topsus_%s_Nbs%d.png" % (batch_name,batch_name,N_bs)
-	if not dryrun: plt.savefig(fname)
-	print "Figure created in %s" % fname
-
-class AnalyseFlow(object):
+class FlowAnalyser(object):
 	observable_name = "Missing_Observable_Name"
 	x_label = "Missing x-label"
 	y_label = "Missing y-label"
@@ -266,7 +215,7 @@ class AnalyseFlow(object):
 		"""
 		self.plot_boot(plot_bs=False, x = x, correction_function = correction_function)
 
-class AnalysePlaquette(AnalyseFlow):
+class AnalysePlaquette(FlowAnalyser):
 	"""
 	Plaquette analysis class.
 	"""
@@ -274,7 +223,7 @@ class AnalysePlaquette(AnalyseFlow):
 	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$P_{\mu\nu}$"
 
-class AnalyseTopologicalCharge(AnalyseFlow):
+class AnalyseTopologicalCharge(FlowAnalyser):
 	"""
 	Topological charge analysis class. NOT TESTED
 	"""
@@ -325,18 +274,18 @@ class AnalyseTopologicalCharge(AnalyseFlow):
 	def plot_mc_history(self):
 		None
 
-class AnalyseEnergy(AnalyseFlow):
+class AnalyseEnergy(FlowAnalyser):
 	"""
 	Energy/action density analysis class. NOT TESTED
 	"""
 	observable_name = "Energy"
-	x_label = r"$t/r_0^2$"
-	y_label = r"$t^2\langle E \rangle$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
+	x_label = r"$a^2t/r_0^2$" # Dimensionsless
+	y_label = r"$a^2 t^2\langle E \rangle$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
 
 	def correction_function(self, y):
-		return -0.5*y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"]
+		return -y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"]*self.a**2 # factor 0.5 left out, see paper by 
 
-class AnalyseTopologicalSusceptibility(AnalyseFlow):
+class AnalyseTopologicalSusceptibility(FlowAnalyser):
 	"""
 	Topological susceptibility analysis class. NOT TESTED / NOT COMPLETED
 	"""
@@ -422,7 +371,7 @@ def main(args):
 		energy_analysis.jackknife()
 		# energy_analysis.autocorrelation()
 		# energy_analysis.plot_autocorrelation()
-		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2
+		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
@@ -435,10 +384,10 @@ if __name__ == '__main__':
 		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
 		# 		['beta6_1','data','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data','energy'],
-		# 		['beta6_1','data','energy']]
+		args = [['beta6_0','data','energy'],
+				['beta6_1','data','energy']]
 
-		args = [['beta6_1','data','energy']]
+		# args = [['beta6_1','data','energy']]
 
 		for a in args:
 			main(a)
