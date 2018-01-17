@@ -237,34 +237,38 @@ class AnalyseTopologicalCharge(FlowAnalyser):
 		title_string = r"Spread of Topological Charge $Q$, $\beta=%.2f$" % float(self.data.meta_data["beta"])
 		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_histogram.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
 
-		# Sets up plot
-		fig = plt.figure(dpi=300)
+		# # Sets up plot
+		# fig = plt.figure(dpi=300)
 
-		# Adds unanalyzed data
-		ax1 = fig.add_subplot(311)
-		x1, y1, _ = ax1.hist(self.unanalyzed_y_hist_data,bins=Nbins,label="Unanalyzed")
-		ax1.legend()
-		ax1.grid("on")
-		ax1.set_title(title_string)
+		# # Adds unanalyzed data
+		# ax1 = fig.add_subplot(311)
+		# x1, y1, _ = ax1.hist(self.unanalyzed_y_hist_data,bins=Nbins,label="Unanalyzed")
+		# ax1.legend()
+		# ax1.grid("on")
+		# ax1.set_title(title_string)
 
-		# Adds bootstrapped data
-		ax2 = fig.add_subplot(312)
-		x2, y2, _ = ax2.hist(self.bs_y_hist_data,bins=Nbins,label="Bootstrap")
-		ax2.grid("on")
-		ax2.legend()
-		ax2.set_ylabel("Hits")
+		# # Adds bootstrapped data
+		# ax2 = fig.add_subplot(312)
+		# x2, y2, _ = ax2.hist(self.bs_y_hist_data,bins=Nbins/2,label="Bootstrap")
+		# ax2.grid("on")
+		# ax2.legend()
+		# ax2.set_ylabel("Hits")
 
-		# Adds jackknifed histogram
-		ax3 = fig.add_subplot(313)
-		x3, y3, _ = ax3.hist(self.jk_y_hist_data,bins=Nbins,label="Jackknife")
-		ax3.legend()
-		ax3.grid("on")
-		ax3.set_xlabel(R"$Q$")
+		# # Adds jackknifed histogram
+		# ax3 = fig.add_subplot(313)
+		# x3, y3, _ = ax3.hist(self.jk_y_hist_data,bins=Nbins/2,label="Jackknife")
+		# ax3.legend()
+		# ax3.grid("on")
+		# ax3.set_xlabel(R"$Q$")
 
-		xlim_max = np.max([abs(y1),(y2),(y3)])
-		ax1.set_xlim(-xlim_max,xlim_max)
-		ax2.set_xlim(-xlim_max,xlim_max)
-		ax3.set_xlim(-xlim_max,xlim_max)
+		# xlim_max = np.max([abs(y1),(y2),(y3)])
+		# ax1.set_xlim(-xlim_max,xlim_max)
+		# ax2.set_xlim(-xlim_max,xlim_max)
+		# ax3.set_xlim(-xlim_max,xlim_max)
+		plt.figure()
+		plt.plot(self.y[:,-1])
+		plt.xlim(0,500)
+		fname = "mchistory" + self.batch_name
 
 		# Saves figure
 		if not self.dryrun:
@@ -335,8 +339,8 @@ def main(args):
 		plaq_analysis = AnalysePlaquette(DirectoryList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
 		plaq_analysis.boot(N_bs)
 		plaq_analysis.jackknife()
-		# plaq_analysis.autocorrelation()
-		# plaq_analysis.plot_autocorrelation()
+		plaq_analysis.autocorrelation()
+		plaq_analysis.plot_autocorrelation()
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_jackknife()
@@ -345,20 +349,20 @@ def main(args):
 		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), "topc", args[0], dryrun = dryrun)
 		if 'topc' in args:
 			topc_analysis.boot(N_bs)
-			topc_analysis.jackknife()
+			# topc_analysis.jackknife()
 			# topc_analysis.autocorrelation()
 			# topc_analysis.plot_autocorrelation()
-			topc_analysis.plot_boot()
-			topc_analysis.plot_original()
-			topc_analysis.plot_jackknife()
+			# topc_analysis.plot_boot()
+			# topc_analysis.plot_original()
+			# topc_analysis.plot_jackknife()
 			topc_analysis.plot_histogram()
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
 			topsus_analysis.boot(N_bs,B_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = lambda x : x**2)
 			topsus_analysis.jackknife(data_statistics = lambda x : np.mean(x**2), F = topsus_analysis.chi)
-			# topsus_analysis.autocorrelation() # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
-			# topsus_analysis.plot_autocorrelation()
+			topsus_analysis.autocorrelation() # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			topsus_analysis.plot_autocorrelation()
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_jackknife()
@@ -370,8 +374,8 @@ def main(args):
 		energy_analysis = AnalyseEnergy(DirectoryList.getFlow("energy"), "energy", args[0], dryrun = dryrun)
 		energy_analysis.boot(N_bs)
 		energy_analysis.jackknife()
-		# energy_analysis.autocorrelation()
-		# energy_analysis.plot_autocorrelation()
+		energy_analysis.autocorrelation()
+		energy_analysis.plot_autocorrelation()
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
@@ -382,11 +386,11 @@ if __name__ == '__main__':
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data','plaq','topc','energy','topsus'],
-				['beta6_1','data','plaq','topc','energy','topsus']]
+		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data','energy'],
-		# 		['beta6_1','data','energy']]
+		args = [['beta6_0','data','topc'],
+				['beta6_1','data','topc']]
 
 		# args = [['beta6_0','data','energy']]
 
