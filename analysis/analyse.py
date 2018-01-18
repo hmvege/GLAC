@@ -220,14 +220,14 @@ class FlowAnalyser(object):
 		self.plot_boot(plot_bs=False, x = x, correction_function = correction_function)
 
 	def plot_histogram(self, flow_time, Nbins = 30, x_axis_limit = 500):
-		# Sets up plotting variables
 		# Setting proper flow-time 
 		if flow_time < 0:
-			flow_time = len(self.unanalyzed_y_data) - flow_time - 1
+			flow_time = len(self.unanalyzed_y_data) - abs(flow_time) - 1
 			assert len(self.unanalyzed_y_data) == len(self.bs_y_data) == len(self.jk_y_data), "Flow lengths of data sets is not equal!"
 		
+		# Sets up plotting variables
 		title_string = r"Spread of %s, $\beta=%.2f$, flow time $t=%.2f$" % (self.observable_name, float(self.data.meta_data["beta"]), flow_time*self.data.meta_data["FlowEpsilon"])
-		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_histogram.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_flowt_{2:<d}_histogram.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")),abs(flow_time))
 
 		# Sets up plot
 		fig = plt.figure(dpi=300)
@@ -253,14 +253,11 @@ class FlowAnalyser(object):
 		ax3.grid("on")
 		ax3.set_xlabel(R"$Q$")
 
-		# xlim_max = np.max([abs(y1),(y2),(y3)])
-		# ax1.set_xlim(-xlim_max,xlim_max)
-		# ax2.set_xlim(-xlim_max,xlim_max)
-		# ax3.set_xlim(-xlim_max,xlim_max)
-		# plt.figure()
-		# plt.plot(self.y[:,flow_time])
-		# plt.xlim(0,x_axis_limit)
-		# fname = "mchistory_" + self.batch_name
+		# Sets the x-axes to be equal
+		xlim_max = np.max([np.max(_y) for _y in [np.abs(y1),np.abs(y2),np.abs(y3)]])
+		ax1.set_xlim(-xlim_max,xlim_max)
+		ax2.set_xlim(-xlim_max,xlim_max)
+		ax3.set_xlim(-xlim_max,xlim_max)
 
 		# Saves figure
 		if not self.dryrun:
@@ -354,7 +351,7 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 
 def main(args):
 	DirectoryList = GetDirectoryTree(args[0],output_folder=args[1])
-	N_bs = 200
+	N_bs = 500
 	dryrun = False
 	# print DirectoryList
 
@@ -378,11 +375,11 @@ def main(args):
 			topc_analysis.jackknife()
 			# topc_analysis.autocorrelation()
 			# topc_analysis.plot_autocorrelation()
-			topc_analysis.plot_mc_history(0)
-			topc_analysis.plot_mc_history(-1)
-			topc_analysis.plot_boot()
-			topc_analysis.plot_original()
-			topc_analysis.plot_jackknife()
+			# topc_analysis.plot_mc_history(0)
+			# topc_analysis.plot_mc_history(-1)
+			# topc_analysis.plot_boot()
+			# topc_analysis.plot_original()
+			# topc_analysis.plot_jackknife()
 			topc_analysis.plot_histogram(0)
 			topc_analysis.plot_histogram(-1)
 
@@ -426,7 +423,7 @@ if __name__ == '__main__':
 		# args = [['beta6_0','data','topc'],
 		# 		['beta6_1','data','topc']]
 
-		# args = [['beta6_1','data','energy']]
+		# args = [['beta6_1','data','topc']]
 
 		# args = [['beta6_0','data','plaq'],
 		# 		['beta6_1','data','plaq']]
