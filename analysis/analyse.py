@@ -266,7 +266,7 @@ class FlowAnalyser(object):
 		"""
 		Plots the Monte Carlo history at a given flow time 
 		"""
-		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_\text{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.data.meta_data["FlowEpsilon"])
+		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.data.meta_data["FlowEpsilon"])
 		fname = "../figures/{0:<s}/mchistory_{0:<s}_beta_{1:<s}_flow_time_{2:<d}".format(self.batch_name, str(self.beta).replace('.','_'), flow_time)
 
 		fig = plt.figure(dpi=300)
