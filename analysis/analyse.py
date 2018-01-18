@@ -92,9 +92,9 @@ class FlowAnalyser(object):
 		# Sets performed flag to true
 		self.bootstrap_performed = True
 
-	def jackknife(self,data_statistics = np.mean, F = lambda x : x):
+	def jackknife(self, jk_statistics = np.average, F = lambda x : x, non_jk_statistics = lambda x : x):
 		for i in xrange(self.NFlows):
-			jk = Jackknife(self.y[:,i],F = F, data_statistics = data_statistics)
+			jk = Jackknife(self.y[:,i],F = F, jk_statistics = jk_statistics, non_jk_statistics = non_jk_statistics)
 			self.jk_y[i] = jk.jk_avg
 			self.jk_y_std[i] = jk.jk_std
 			self.jk_y_data[i] = jk.jk_data
