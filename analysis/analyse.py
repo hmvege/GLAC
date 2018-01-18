@@ -221,7 +221,12 @@ class FlowAnalyser(object):
 
 	def plot_histogram(self, flow_time, Nbins = 30, x_axis_limit = 500):
 		# Sets up plotting variables
-		title_string = r"Spread of %s $Q$, $\beta=%.2f$" % (self.observable_name, float(self.data.meta_data["beta"]))
+		# Setting proper flow-time 
+		if flow_time < 0:
+			flow_time = len(self.unanalyzed_y_data) - flow_time - 1
+			assert len(self.unanalyzed_y_data) == len(self.bs_y_data) == len(self.jk_y_data), "Flow lengths of data sets is not equal!"
+		
+		title_string = r"Spread of %s, $\beta=%.2f$, flow time $t=%.2f$" % (self.observable_name, float(self.data.meta_data["beta"]), flow_time*self.data.meta_data["FlowEpsilon"])
 		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_histogram.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
 
 		# Sets up plot
@@ -378,7 +383,8 @@ def main(args):
 			topc_analysis.plot_boot()
 			topc_analysis.plot_original()
 			topc_analysis.plot_jackknife()
-			topc_analysis.plot_histogram()
+			topc_analysis.plot_histogram(0)
+			topc_analysis.plot_histogram(-1)
 
 
 		if 'topsus' in args:
