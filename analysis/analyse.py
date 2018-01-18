@@ -266,7 +266,7 @@ class FlowAnalyser(object):
 		"""
 		Plots the Monte Carlo history at a given flow time 
 		"""
-		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_\text{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.meta_data["FlowEpsilon"])
+		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_\text{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.data.meta_data["FlowEpsilon"])
 		fname = "../figures/{0:<s}/mchistory_{0:<s}_beta_{1:<s}_flow_time_{2:<d}".format(self.batch_name, str(self.beta).replace('.','_'), flow_time)
 
 		fig = plt.figure(dpi=300)
@@ -358,8 +358,8 @@ def main(args):
 		plaq_analysis = AnalysePlaquette(DirectoryList.getFlow("plaq"), "plaq", args[0], dryrun = dryrun)
 		plaq_analysis.boot(N_bs)
 		plaq_analysis.jackknife()
-		plaq_analysis.autocorrelation()
-		plaq_analysis.plot_autocorrelation()
+		# plaq_analysis.autocorrelation()
+		# plaq_analysis.plot_autocorrelation()
 		plaq_analysis.plot_mc_history(0)
 		plaq_analysis.plot_mc_history(-1)
 		plaq_analysis.plot_boot()
@@ -371,8 +371,8 @@ def main(args):
 		if 'topc' in args:
 			topc_analysis.boot(N_bs)
 			topc_analysis.jackknife()
-			topc_analysis.autocorrelation()
-			topc_analysis.plot_autocorrelation()
+			# topc_analysis.autocorrelation()
+			# topc_analysis.plot_autocorrelation()
 			topc_analysis.plot_mc_history(0)
 			topc_analysis.plot_mc_history(-1)
 			topc_analysis.plot_boot()
@@ -385,8 +385,8 @@ def main(args):
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
 			topsus_analysis.boot(N_bs,B_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = lambda x : x**2)
 			topsus_analysis.jackknife(jk_statistics = lambda x : np.mean(x**2), F = topsus_analysis.chi, non_jk_statistics = lambda x : x**2)
-			topsus_analysis.autocorrelation() # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
-			topsus_analysis.plot_autocorrelation()
+			# topsus_analysis.autocorrelation() # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			# topsus_analysis.plot_autocorrelation()
 			topsus_analysis.plot_mc_history(0)
 			topsus_analysis.plot_mc_history(-1)
 			topsus_analysis.plot_boot()
@@ -400,8 +400,8 @@ def main(args):
 		energy_analysis = AnalyseEnergy(DirectoryList.getFlow("energy"), "energy", args[0], dryrun = dryrun)
 		energy_analysis.boot(N_bs)
 		energy_analysis.jackknife()
-		energy_analysis.autocorrelation()
-		energy_analysis.plot_autocorrelation()
+		# energy_analysis.autocorrelation()
+		# energy_analysis.plot_autocorrelation()
 		energy_analysis.plot_mc_history(0)
 		energy_analysis.plot_mc_history(-1)
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
