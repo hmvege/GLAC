@@ -26,7 +26,7 @@ class Jackknife:
 		self.jk_avg_biased = np.average(self.jk_data)
 		
 		# Gets and sets non-bootstrapped values
-		data = F(non_jk_stats(data))
+		data = F(non_jk_statistics(data))
 		self.avg_original = np.average(data)
 		self.var_original = np.var(data)
 		self.std_original = np.std(data)
