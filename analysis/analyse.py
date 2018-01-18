@@ -103,20 +103,17 @@ class FlowAnalyser(object):
 		self.jackknife_performed = True
 
 	def autocorrelation(self):
-		print "Calculating autocorrelation:"
-
 		# Gets autocorrelation
 		for i in xrange(self.NFlows):
 			ac = Autocorrelation(self.y[:,i])
 			self.autocorrelations[i] = ac()
 			# Small progressbar
-			sys.stdout.write("\r%4.1f%% done" % (100*float(i)/float(self.NFlows)))
+			sys.stdout.write("\rCalculating autocorrelation: %4.1f%% done" % (100*float(i)/float(self.NFlows)))
 			sys.stdout.flush()
 
 		# Finalizes
-		sys.stdout.write("\r100.0%% done")
+		sys.stdout.write("\rCalculating autocorrelation: 100.0%% done")
 		sys.stdout.flush()
-		print "Autocorrelation done."
 
 		# Sets performed flag to true
 		self.autocorrelation_performed = True

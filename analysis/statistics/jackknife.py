@@ -20,7 +20,7 @@ class Jackknife:
 		# Performs jackknife and sets variables
 		self.jk_data = np.zeros(self.N) # Jack knifed data
 		for i in xrange(self.N):
-			self.jk_data[i] = F(np.data_statistics(np.concatenate([data[:i-1],data[i:]])))
+			self.jk_data[i] = F(jk_statistics(np.concatenate([data[:i-1],data[i:]])))
 		self.jk_var = np.var(self.jk_data)
 		self.jk_std = np.sqrt(self.jk_var)
 		self.jk_avg_biased = np.average(self.jk_data)
@@ -45,18 +45,6 @@ class Jackknife:
 		Length given as number of bootstraps.
 		"""
 		return self.shape[0]
-
-	def get_average(self):
-		"""
-		Returns the biased average of the jack knife method.
-		"""
-		return self.jk_avg
-
-	def get_average_unbiased(self):
-		"""
-		Returns the unbiased average of the jack knife method.
-		"""
-		return self.jk_avg_unbiased
 
 	def __str__(self):
 		"""
