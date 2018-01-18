@@ -17,6 +17,7 @@ namespace IO {
 
         static std::vector<unsigned int> m_N;
         static inline double reverseDouble(const double inDouble);
+        static inline bool check_file_existence (const std::string fname);
     public:
         FieldIO();
         ~FieldIO();

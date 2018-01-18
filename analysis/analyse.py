@@ -39,23 +39,22 @@ class FlowAnalyser(object):
 		# Non-bootstrapped data
 		self.unanalyzed_y = np.zeros(self.NFlows)
 		self.unanalyzed_y_std = np.zeros(self.NFlows)
-		self.unanalyzed_y_hist_data = np.zeros(self.N_configurations)
+		self.unanalyzed_y_data = np.zeros((self.NFlows,self.N_configurations))
 
 		# Bootstrap data
 		self.bootstrap_performed = False
 		self.bs_y = np.zeros(self.NFlows)
 		self.bs_y_std = np.zeros(self.NFlows)
-		self.bs_y_hist_data = np.zeros(self.N_configurations)
 
 		# Jackknifed data
 		self.jackknife_performed = False
 		self.jk_y = np.zeros(self.NFlows)
 		self.jk_y_std = np.zeros(self.NFlows)
-		self.jk_y_hist_data = np.zeros(self.N_configurations)
+		self.jk_y_data = np.zeros((self.NFlows,self.N_configurations))
 
 		# Autocorrelation data
 		self.autocorrelation_performed = False
-		self.autocorrelations = np.zeros((self.NFlows,self.N_configurations / 2))
+		self.autocorrelations = np.zeros((self.NFlows,self.N_configurations/2))
 
 		# Gets the lattice spacing
 		self.beta = self.data.meta_data["beta"]
@@ -71,7 +70,13 @@ class FlowAnalyser(object):
 		return a
 
 	def boot(self,N_bs,B_statistic = np.mean, F = lambda x : x, non_bs_stats = lambda x : x):
+		# Stores number of bootstraps
 		self.N_bs = N_bs
+		
+		# Sets up raw bootstrap values
+		self.bs_y_data = np.zeros((self.NFlows,self.N_bs))
+		
+		# Generates random lists
 		index_lists = np.random.randint(self.N_configurations, size=(self.N_bs, self.N_configurations))
 		for i in xrange(self.NFlows):
 			bs = Bootstrap(self.y[:,i],N_bs, bootstrap_statistics = B_statistic, F = F, non_bs_stats = non_bs_stats, index_lists = index_lists)
@@ -81,9 +86,8 @@ class FlowAnalyser(object):
 			self.unanalyzed_y_std[i] = bs.std_original
 
 			# Stores last data for plotting in histogram later
-			if (i == (self.NFlows - 1)):
-				self.bs_y_hist_data = bs.bs_data
-				self.unanalyzed_y_hist_data = bs.data_original
+			self.bs_y_data[i] = bs.bs_data
+			self.unanalyzed_y_data[i] = bs.data_original
 
 		# Sets performed flag to true
 		self.bootstrap_performed = True
@@ -93,8 +97,7 @@ class FlowAnalyser(object):
 			jk = Jackknife(self.y[:,i],F = F, data_statistics = data_statistics)
 			self.jk_y[i] = jk.jk_avg
 			self.jk_y_std[i] = jk.jk_std
-			if (i == (self.NFlows - 1)):
-				self.jk_y_hist_data = jk.jk_data
+			self.jk_y_data[i] = jk.jk_data
 
 		# Sets performed flag to true
 		self.jackknife_performed = True
@@ -147,7 +150,7 @@ class FlowAnalyser(object):
 		# Plots the jackknifed data
 		self.__plot_core(x,correction_function(self.jk_y),self.jk_y_std,title_string,fname)
 
-	def plot_autocorrelation(self):
+	def plot_autocorrelation(self,plot_abs_value=True):
 		# Checks that autocorrelations has been performed.
 		if not self.autocorrelation_performed:
 			raise ValueError("Autocorrelation has not been performed yet.")
@@ -158,8 +161,12 @@ class FlowAnalyser(object):
 		# Finds the maximum value at each MC time and sets up the y array
 		x = range(N_autocorr)
 		y = np.zeros(N_autocorr)
-		for i in xrange(N_autocorr):
-			y[i] = np.max(self.autocorrelations[:,i])
+		# for i in xrange(N_autocorr):
+			# y[i] = np.max(self.autocorrelations[:,i])
+		if plot_abs_value:
+			y = np.abs(self.autocorrelations[0,:])
+		else:
+			y = self.autocorrelations[0,:]
 
 		# Sets up the title and filename strings
 		title_string = r"Autocorrelation of %s $N_{flow}=%2d$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta,self.N_configurations)
@@ -168,7 +175,7 @@ class FlowAnalyser(object):
 		# Plots the autocorrelations
 		fig = plt.figure(dpi=300)
 		ax = fig.add_subplot(111)
-		ax.plot(x,np.abs(y),color="0",label=self.observable_name)
+		ax.plot(x,y,color="0",label=self.observable_name)
 		ax.set_ylim(-self.autocorrelations_limits,self.autocorrelations_limits)
 		ax.set_xlim(0,N_autocorr)
 		ax.set_xlabel(r"Lag $h$")
@@ -215,6 +222,68 @@ class FlowAnalyser(object):
 		"""
 		self.plot_boot(plot_bs=False, x = x, correction_function = correction_function)
 
+	def plot_histogram(self, flow_time, Nbins = 30, x_axis_limit = 500):
+		# Sets up plotting variables
+		title_string = r"Spread of %s $Q$, $\beta=%.2f$" % (self.observable_name, float(self.data.meta_data["beta"]))
+		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_histogram.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+
+		# Sets up plot
+		fig = plt.figure(dpi=300)
+
+		# Adds unanalyzed data
+		ax1 = fig.add_subplot(311)
+		x1, y1, _ = ax1.hist(self.unanalyzed_y_data[flow_time],bins=Nbins,label="Unanalyzed")
+		ax1.legend()
+		ax1.grid("on")
+		ax1.set_title(title_string)
+
+		# Adds bootstrapped data
+		ax2 = fig.add_subplot(312)
+		x2, y2, _ = ax2.hist(self.bs_y_data[flow_time],bins=Nbins/2,label="Bootstrap")
+		ax2.grid("on")
+		ax2.legend()
+		ax2.set_ylabel("Hits")
+
+		# Adds jackknifed histogram
+		ax3 = fig.add_subplot(313)
+		x3, y3, _ = ax3.hist(self.jk_y_data[flow_time],bins=Nbins/2,label="Jackknife")
+		ax3.legend()
+		ax3.grid("on")
+		ax3.set_xlabel(R"$Q$")
+
+		# xlim_max = np.max([abs(y1),(y2),(y3)])
+		# ax1.set_xlim(-xlim_max,xlim_max)
+		# ax2.set_xlim(-xlim_max,xlim_max)
+		# ax3.set_xlim(-xlim_max,xlim_max)
+		# plt.figure()
+		# plt.plot(self.y[:,flow_time])
+		# plt.xlim(0,x_axis_limit)
+		# fname = "mchistory_" + self.batch_name
+
+		# Saves figure
+		if not self.dryrun:
+			plt.savefig(fname)
+		print "Figure created in %s" % fname
+
+	def plot_mc_history(self,flow_time):
+		"""
+		Plots the Monte Carlo history at a given flow time 
+		"""
+		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_\text{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.meta_data["FlowEpsilon"])
+		fname = "../figures/{0:<s}/mchistory_{0:<s}_beta_{1:<s}_flow_time_{2:<d}".format(self.batch_name, str(self.beta).replace('.','_'), flow_time)
+
+		fig = plt.figure(dpi=300)
+		ax = fig.add_subplot(111)
+		ax.plot(self.unanalyzed_y_data[flow_time],color="0",label=self.observable_name)
+		ax.set_xlabel(r"Monte Carlo time")
+		ax.set_ylabel(r"")
+		ax.set_title(title_string)
+		ax.grid(True)
+		ax.legend()
+		if not self.dryrun: 
+			fig.savefig(fname,dpi=300)
+		print "Figure created in %s" % fname
+
 class AnalysePlaquette(FlowAnalyser):
 	"""
 	Plaquette analysis class.
@@ -230,53 +299,6 @@ class AnalyseTopologicalCharge(FlowAnalyser):
 	observable_name = "Topological Charge"
 	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
-
-	def plot_histogram(self):
-		# Sets up plotting variables
-		Nbins = 30
-		title_string = r"Spread of Topological Charge $Q$, $\beta=%.2f$" % float(self.data.meta_data["beta"])
-		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_histogram.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
-
-		# # Sets up plot
-		# fig = plt.figure(dpi=300)
-
-		# # Adds unanalyzed data
-		# ax1 = fig.add_subplot(311)
-		# x1, y1, _ = ax1.hist(self.unanalyzed_y_hist_data,bins=Nbins,label="Unanalyzed")
-		# ax1.legend()
-		# ax1.grid("on")
-		# ax1.set_title(title_string)
-
-		# # Adds bootstrapped data
-		# ax2 = fig.add_subplot(312)
-		# x2, y2, _ = ax2.hist(self.bs_y_hist_data,bins=Nbins/2,label="Bootstrap")
-		# ax2.grid("on")
-		# ax2.legend()
-		# ax2.set_ylabel("Hits")
-
-		# # Adds jackknifed histogram
-		# ax3 = fig.add_subplot(313)
-		# x3, y3, _ = ax3.hist(self.jk_y_hist_data,bins=Nbins/2,label="Jackknife")
-		# ax3.legend()
-		# ax3.grid("on")
-		# ax3.set_xlabel(R"$Q$")
-
-		# xlim_max = np.max([abs(y1),(y2),(y3)])
-		# ax1.set_xlim(-xlim_max,xlim_max)
-		# ax2.set_xlim(-xlim_max,xlim_max)
-		# ax3.set_xlim(-xlim_max,xlim_max)
-		plt.figure()
-		plt.plot(self.y[:,-1])
-		plt.xlim(0,500)
-		fname = "mchistory" + self.batch_name
-
-		# Saves figure
-		if not self.dryrun:
-			plt.savefig(fname)
-		print "Figure created in %s" % fname
-
-	def plot_mc_history(self):
-		None
 
 class AnalyseEnergy(FlowAnalyser):
 	"""
@@ -357,6 +379,7 @@ def main(args):
 			# topc_analysis.plot_jackknife()
 			topc_analysis.plot_histogram()
 
+
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
 			topsus_analysis.boot(N_bs,B_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = lambda x : x**2)
@@ -376,6 +399,8 @@ def main(args):
 		energy_analysis.jackknife()
 		energy_analysis.autocorrelation()
 		energy_analysis.plot_autocorrelation()
+		energy_analysis.plot_mc_history(0)
+		energy_analysis.plot_mc_history(-1)
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
@@ -389,10 +414,10 @@ if __name__ == '__main__':
 		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
 		# 		['beta6_1','data','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data','topc'],
-				['beta6_1','data','topc']]
+		# args = [['beta6_0','data','topc'],
+		# 		['beta6_1','data','topc']]
 
-		# args = [['beta6_0','data','energy']]
+		args = [['beta6_1','data','energy']]
 
 		# args = [['beta6_0','data','plaq'],
 		# 		['beta6_1','data','plaq']]
@@ -401,3 +426,5 @@ if __name__ == '__main__':
 			main(a)
 	else:
 		main(sys.argv[1:])
+
+	plt.show()

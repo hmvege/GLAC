@@ -17,19 +17,27 @@ class Jackknife:
 		self.N = len(data)
 		self.shape = self.N
 
+
+		# data = F(data_statistics(data))
+
 		# Gets and sets non-bootstrapped values
-		self.avg_original = np.average(data)
+		self.avg_original = data_statistics(data)
 		self.var_original = np.var(data)
 		self.std_original = np.std(data)
 
 		# Performs jackknife and sets variables
 		self.jk_data = np.zeros(self.N) # Jack knifed data
 		for i in xrange(self.N):
-			self.jk_data[i] = F(data_statistics(np.concatenate([data[:i-1],data[i:]])))
-		self.jk_avg = np.average(self.jk_data)
-		self.jk_avg_unbiased = self.avg_original - (self.N - 1) * (self.jk_avg - self.avg_original)
+			self.jk_data[i] = np.average(np.concatenate([data[:i-1],data[i:]]))
+
+		# F(data_statistics())
+		# self.jk_var = self.__calculate_variance(self.jk_data, self.avg_original)
 		self.jk_var = np.var(self.jk_data)
-		self.jk_std = np.std(self.jk_data)
+		self.jk_std = np.sqrt(self.jk_var)
+		self.jk_avg_biased = data_statistics(self.jk_data)
+
+		# Returns the unbiased estimator/average
+		self.jk_avg = self.avg_original - (self.N - 1) * (data_statistics(self.jk_data) - self.avg_original)
 
 	def __call__(self):
 		"""
@@ -55,15 +63,15 @@ class Jackknife:
 		"""
 		return self.jk_avg_unbiased
 
-	def get_variance(self):
+	def __calculate_variance(self,jackknifed_dataset, avg_orginal):
 		"""
 		Returns the variance of the jack knife method.
 		"""
-		self.var = 0
-		for i in xrange(N):
-			self.var += (jackknifed_dataset[i] - mean_biased)**2
-		self.var = (N - 1) / float(N) * var
-		return self.var
+		var = 0
+		for i in xrange(self.N):
+			var += (jackknifed_dataset[i] - avg_orginal)**2
+		var = (self.N - 1) / float(self.N) * var
+		return var
 
 	def __str__(self):
 		"""

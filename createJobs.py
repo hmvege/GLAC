@@ -511,6 +511,8 @@ def main(args):
     job_parser.add_argument('-ex','--exclude',                  default=False,                              type=str,nargs='+',help='Nodes to exclude.')
     job_parser.add_argument('-lcfg','--load_configurations',    default=config_default["load_field_configs"],type=str,help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
     job_parser.add_argument('-chroma','--chroma_config',        default=config_default["chroma_config"],    action='store_true',help='If flagged, loads the configuration as a chroma configuration.')
+    job_parser.add_argument('-lcfgr','--load_config_and_run',   default=False,                              type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfg argument.')
+    job_parser.add_argument('-cfgnum','--config_start_number', default=config_default["config_start_number"],type=int,help='Starts naming the configuration from this number.')
 
     ######## Abel specific commands ########
     job_parser.add_argument('--cpu_memory',                     default=config_default["cpu_memory"],       type=int,help='CPU memory to be allocated to each core')
@@ -654,7 +656,8 @@ def main(args):
         if args.exclude:
             excluded_nodes = ','.join(args.exclude)
         if args.load_config_and_run != False:
-            config_default["load_config_and_run"] = True
+            config_default["load_config_and_run"] = args.load_config_and_run
+        config_default["config_start_number"] = args.config_start_number
         if args.load_configurations:
             config_default = setFieldConfigs(config_default,args.load_configurations)
             config_default["chroma_config"] = args.chroma_config

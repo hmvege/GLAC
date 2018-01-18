@@ -44,7 +44,8 @@ private:
     int m_NThermSteps = 0;
 
     // For handling the acceptance rate
-    unsigned long int m_acceptanceCounter = 0;
+    unsigned long long int m_acceptanceCounter = 0;
+    double m_acceptanceScore = 0;
     double getAcceptanceRate();
 
     // Function for initializing the sub lattice.

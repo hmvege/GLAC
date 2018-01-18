@@ -174,11 +174,18 @@ void System::latticeSetup()
 
 void System::run()
 {
+    /*
+     * Overarching run function, which sets us of to three posibilities:
+     *  - run regular metropolis to generate configurations
+     *  - load a thermalized configuration and run metropolis to generate configurations
+     *  - loads a set of configurations and flows them
+     */
     if (Parallel::ParallelParameters::active) {
         if (!Parameters::getLoadFieldConfigurations() && !Parameters::getLoadConfigAndRun()) {
             // Run regular metropolis
             runMetropolis();
         } else if (Parameters::getLoadConfigAndRun()) {
+            // Loads a configuration(which is assumed to be thermalized), and then continue generating from that configuration
             loadConfigurationAndRunMetropolis();
         } else {
             // Run flow on configurations;
@@ -244,10 +251,10 @@ void System::thermalize()
 
     // Taking the average of the acceptance rate across the processors.
     if (m_NTherm != 0) {
-        MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
+        MPI_Allreduce(&m_acceptanceScore,&m_acceptanceScore,1,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
         // Printing post-thermalization correlator and acceptance rate
         if (m_processRank == 0) {
-            printf("\nTermalization complete. Acceptance rate: %f",double(m_acceptanceCounter)/double(4*m_latticeSize*m_NUpdates*m_NTherm));
+            printf("\nTermalization complete. Acceptance rate: %f",m_acceptanceScore/double(m_NTherm));
         }
     }
 }
@@ -289,6 +296,9 @@ void System::update()
             }
         }
     }
+    // Updates acceptance storer
+    m_acceptanceScore += double(m_acceptanceCounter)/double(4*m_NUpdates*Parameters::getSubLatticeSize());
+    m_acceptanceCounter = 0;
 }
 
 void System::runMetropolis()
@@ -298,7 +308,6 @@ void System::runMetropolis()
      */
     // Variables for checking performance of the thermalization update.
     m_updateStorerTherm = 0;
-
     // System thermalization
     if (!m_systemIsThermalized) {
         thermalize();
@@ -313,6 +322,7 @@ void System::runMetropolis()
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
     m_acceptanceCounter = 0;
+    m_acceptanceScore = 0;
 
     // Variables for checking performance of the update.
     m_updateStorer = 0;
@@ -351,7 +361,7 @@ void System::runMetropolis()
             printf(" %-12.8f",m_updateStorer/double((iConfig+1)*m_NCor));
             // Adding the acceptance ratio
             if (iConfig % 10 == 0) {
-                printf("     %-12.8f", double(m_acceptanceCounter)/double(4*m_subLatticeSize*(iConfig+1)*m_NUpdates*m_NCor));
+                printf("     %-12.8f", m_acceptanceScore/double((iConfig+1)*m_NCor));
             }
         }
         // Writing field config to file
@@ -362,7 +372,7 @@ void System::runMetropolis()
 
     }
     // Taking the average of the acceptance rate across the processors.
-    MPI_Allreduce(&m_acceptanceCounter,&m_acceptanceCounter,1,MPI_UNSIGNED_LONG,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
+    MPI_Allreduce(&m_acceptanceScore,&m_acceptanceScore,1,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
     if (m_processRank == 0) {
         printf("\n");
         SysPrint::printLine();
@@ -419,6 +429,7 @@ void System::loadConfigurationAndRunMetropolis()
     } else {
         loadChroma(configurationNames[0]);
     }
+    Parallel::Communicator::MPIExit("TEST-->exiting in loadConfigurationAndRunMetropolis");
     runMetropolis();
 }
 
@@ -430,7 +441,11 @@ void System::load(std::string configurationName)
      */
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
-    IO::FieldIO::loadFieldConfiguration(configurationName,m_flowLattice);
+    if (m_NFlows != 0) {
+        IO::FieldIO::loadFieldConfiguration(configurationName,m_flowLattice);
+    } else {
+        IO::FieldIO::loadFieldConfiguration(configurationName,m_lattice);
+    }
 }
 
 void System::loadChroma(std::string configurationName)
@@ -440,7 +455,11 @@ void System::loadChroma(std::string configurationName)
      */
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
-    IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_flowLattice);
+    if (m_NFlows != 0) {
+        IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_flowLattice);
+    } else {
+        IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_lattice);
+    }
 }
 
 void System::flowConfigurations()
@@ -472,5 +491,6 @@ double System::getAcceptanceRate()
     /*
      * Returns the acceptance ratio of the main run of the System algorithm.
      */
-    return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_NUpdates*m_latticeSize*4); // Times 4 from the Lorentz indices
+//    return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_NUpdates*m_latticeSize*4); // Times 4 from the Lorentz indices
+    return m_acceptanceScore/double(m_NCf*m_NCor*Parallel::Communicator::getNumProc());
 }
