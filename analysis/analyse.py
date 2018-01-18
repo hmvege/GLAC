@@ -121,7 +121,7 @@ class FlowAnalyser(object):
 		# Sets performed flag to true
 		self.autocorrelation_performed = True
 
-	def __plot_core(self,x,y,y_std,title_string,fname):
+	def __plot_error_core(self,x,y,y_std,title_string,fname):
 		# Plots the jackknifed data
 		plt.figure()
 		plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
@@ -148,9 +148,9 @@ class FlowAnalyser(object):
 		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_jackknife.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
 
 		# Plots the jackknifed data
-		self.__plot_core(x,correction_function(self.jk_y),self.jk_y_std,title_string,fname)
+		self.__plot_error_core(x,correction_function(self.jk_y),self.jk_y_std,title_string,fname)
 
-	def plot_autocorrelation(self,plot_abs_value=True):
+	def plot_autocorrelation(self,plot_abs_value=False):
 		# Checks that autocorrelations has been performed.
 		if not self.autocorrelation_performed:
 			raise ValueError("Autocorrelation has not been performed yet.")
@@ -214,7 +214,7 @@ class FlowAnalyser(object):
 			fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
 
 		# Plots either bootstrapped or regular stuff
-		self.__plot_core(x,correction_function(y),y_std,title_string,fname)
+		self.__plot_error_core(x,correction_function(y),y_std,title_string,fname)
 
 	def plot_original(self, x = None, correction_function = lambda x : x):
 		"""
@@ -363,6 +363,8 @@ def main(args):
 		plaq_analysis.jackknife()
 		plaq_analysis.autocorrelation()
 		plaq_analysis.plot_autocorrelation()
+		plaq_analysis.plot_mc_history(0)
+		plaq_analysis.plot_mc_history(-1)
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_jackknife()
@@ -371,21 +373,25 @@ def main(args):
 		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), "topc", args[0], dryrun = dryrun)
 		if 'topc' in args:
 			topc_analysis.boot(N_bs)
-			# topc_analysis.jackknife()
-			# topc_analysis.autocorrelation()
-			# topc_analysis.plot_autocorrelation()
-			# topc_analysis.plot_boot()
-			# topc_analysis.plot_original()
-			# topc_analysis.plot_jackknife()
+			topc_analysis.jackknife()
+			topc_analysis.autocorrelation()
+			topc_analysis.plot_autocorrelation()
+			topc_analysis.plot_mc_history(0)
+			topc_analysis.plot_mc_history(-1)
+			topc_analysis.plot_boot()
+			topc_analysis.plot_original()
+			topc_analysis.plot_jackknife()
 			topc_analysis.plot_histogram()
 
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data)
 			topsus_analysis.boot(N_bs,B_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = lambda x : x**2)
-			topsus_analysis.jackknife(data_statistics = lambda x : np.mean(x**2), F = topsus_analysis.chi)
+			topsus_analysis.jackknife(jk_statistics = lambda x : np.mean(x**2), F = topsus_analysis.chi, non_jk_statistics = lambda x : x**2)
 			topsus_analysis.autocorrelation() # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 			topsus_analysis.plot_autocorrelation()
+			topsus_analysis.plot_mc_history(0)
+			topsus_analysis.plot_mc_history(-1)
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_jackknife()
@@ -411,13 +417,13 @@ if __name__ == '__main__':
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data','plaq','topc','energy','topsus'],
+				['beta6_1','data','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_0','data','topc'],
 		# 		['beta6_1','data','topc']]
 
-		args = [['beta6_1','data','energy']]
+		# args = [['beta6_1','data','energy']]
 
 		# args = [['beta6_0','data','plaq'],
 		# 		['beta6_1','data','plaq']]

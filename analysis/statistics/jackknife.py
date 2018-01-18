@@ -6,7 +6,7 @@ class Jackknife:
 	"""
 	Class for performing a statistical jack knife.
 	"""
-	def __init__(self, data, F = lambda x: x, data_statistics = np.average): # , statistics = np.mean, F = lambda x : x, statistics = lambda x: x
+	def __init__(self, data, F = lambda x: x, jk_statistics = np.average, non_jk_statistics = lambda x : x):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
@@ -17,27 +17,22 @@ class Jackknife:
 		self.N = len(data)
 		self.shape = self.N
 
-
-		# data = F(data_statistics(data))
-
-		# Gets and sets non-bootstrapped values
-		self.avg_original = data_statistics(data)
-		self.var_original = np.var(data)
-		self.std_original = np.std(data)
-
 		# Performs jackknife and sets variables
 		self.jk_data = np.zeros(self.N) # Jack knifed data
 		for i in xrange(self.N):
-			self.jk_data[i] = np.average(np.concatenate([data[:i-1],data[i:]]))
-
-		# F(data_statistics())
-		# self.jk_var = self.__calculate_variance(self.jk_data, self.avg_original)
+			self.jk_data[i] = F(np.data_statistics(np.concatenate([data[:i-1],data[i:]])))
 		self.jk_var = np.var(self.jk_data)
 		self.jk_std = np.sqrt(self.jk_var)
-		self.jk_avg_biased = data_statistics(self.jk_data)
+		self.jk_avg_biased = np.average(self.jk_data)
+		
+		# Gets and sets non-bootstrapped values
+		data = F(non_jk_stats(data))
+		self.avg_original = np.average(data)
+		self.var_original = np.var(data)
+		self.std_original = np.std(data)
 
 		# Returns the unbiased estimator/average
-		self.jk_avg = self.avg_original - (self.N - 1) * (data_statistics(self.jk_data) - self.avg_original)
+		self.jk_avg = self.avg_original - (self.N - 1) * (np.average(self.jk_data) - self.avg_original)
 
 	def __call__(self):
 		"""
@@ -62,16 +57,6 @@ class Jackknife:
 		Returns the unbiased average of the jack knife method.
 		"""
 		return self.jk_avg_unbiased
-
-	def __calculate_variance(self,jackknifed_dataset, avg_orginal):
-		"""
-		Returns the variance of the jack knife method.
-		"""
-		var = 0
-		for i in xrange(self.N):
-			var += (jackknifed_dataset[i] - avg_orginal)**2
-		var = (self.N - 1) / float(self.N) * var
-		return var
 
 	def __str__(self):
 		"""
