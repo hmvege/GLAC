@@ -33,7 +33,7 @@ def checkSubDimViability(subDims):
     for dim in subDims:
         if dim <= 2: exit("Error: %d is not a valid dimension" % dim)
 
-def setFieldConfigs(config,config_folder):
+def setFieldConfigs(config,config_folder,config_start_number):
     # Populates list of sorted field configs from folder config_folder into the config dictionary.
     config["load_field_configs"] = True
     config["inputFolder"] = os.path.normpath(config_folder)
@@ -42,6 +42,13 @@ def setFieldConfigs(config,config_folder):
         config["field_configs"] = natural_sort([fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")])
     else:
         raise OSError("Error: %s is not a directory." % (config_folder))
+
+    corrected_configs = [] 
+    for cfg in config["field_configs"]:
+        cfg_number = (cfg.split("config")[-1]).split(".")[0]
+        if int(cfg_number) >= config_start_number:
+            corrected_configs.append(cfg)
+    config["field_configs"] = corrected_configs
     return config
 
 def natural_sort(l):
@@ -575,7 +582,7 @@ def main(args):
                     # Sets the number of configurations to run for to be zero just in case
                     c["NCf"] = 0
                 # Requiring an new estimate of the run time if we are flowing
-                configurations[0] = setFieldConfigs(configurations[0],args.load_configurations)
+                configurations[0] = setFieldConfigs(configurations[0],args.load_configurations,args.config_start_number)
                 if not args.load_config_min_time_estimate and not args.load_config_hr_time_estimate:
                     sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
                 else:
@@ -659,7 +666,7 @@ def main(args):
             config_default["load_config_and_run"] = args.load_config_and_run
         config_default["config_start_number"] = args.config_start_number
         if args.load_configurations:
-            config_default = setFieldConfigs(config_default,args.load_configurations)
+            config_default = setFieldConfigs(config_default,args.load_configurations,args.config_start_number)
             config_default["chroma_config"] = args.chroma_config
             # Requiring flow to be specified if we are loading configurations to flow
             if config_default["NFlows"] == 0:

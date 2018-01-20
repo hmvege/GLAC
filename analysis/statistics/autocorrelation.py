@@ -1,12 +1,18 @@
-import numpy as np, matplotlib.pyplot as plt, sys, os
+import numpy as np, matplotlib.pyplot as plt, sys, os, time
 
 __all__ = ["Autocorrelation"]
+
+def time_decorater(func):
+	pre_time = time.clock()
+	def time_wrapper(*args,**kwargs):
+		func(args,kwargs)
+	print "Time used on %s: %.2f secs/ %.2f minutes" % (func.__name__, (pre_time - time.clock()), (pre_time - time.clock())/60.)
 
 class Autocorrelation:
 	"""
 	Class for performing an autocorrelation analysis.
 	"""
-	def __init__(self, data):
+	def __init__(self, data, use_numpy = False):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to get autocorrelation for
@@ -16,13 +22,17 @@ class Autocorrelation:
 		avg_data = np.average(data)
 		self.N = len(data)
 		self.data = data
-		C0 = np.var(data)
-		C = np.zeros(self.N/2)
-		for h in xrange((self.N)/2):
-			for i in xrange(0, self.N - h):
-				C[h] += (data[i] - avg_data)*(data[i+h] - avg_data)
-			C[h] /= (self.N - h)
-		self.R = C / C0
+		self.C0 = np.var(data)
+		# C = np.zeros(self.N/2)
+		# for h in xrange((self.N)/2):
+		# 	for i in xrange(0, self.N - h):
+		# 		C[h] += (data[i] - avg_data)*(data[i+h] - avg_data)
+		# 	C[h] /= (self.N - h)
+		# self.R = C / self.C0
+		if use_numpy:
+			self.R = self._get_numpy_autocorrelation(data) / self.C0
+		else:
+			self.R = self._get_autocorrelation(data) / self.C0
 
 	def __call__(self):
 		"""
@@ -35,6 +45,34 @@ class Autocorrelation:
 		Returns the length of the auto-correlation results.
 		"""
 		return len(self.R)
+
+	def _get_autocorrelation(self, data):
+		"""
+		Gets the autocorrelation from a dataset.
+		Args:
+			Data, (numpy array): dataset to find the autocorrelation in
+		Returns:
+			C(t)  (numpy array): unnormalized autocorrelation times 
+		"""
+		C = np.zeros(self.N/2)
+		for h in xrange((self.N)/2):
+			for i in xrange(0, self.N - h):
+				C[h] += (data[i] - avg_data)*(data[i+h] - avg_data)
+			C[h] /= (self.N - h)
+		return C
+
+	def _get_numpy_autocorrelation(self, data):
+		"""
+		Numpy method for finding autocorrelation in a dataset. h is the lag. TIME THIS VERSUS REGULAR!!
+		Args:
+			Data, (numpy array): dataset to find the autocorrelation in
+		Returns:
+			C(t)  (numpy array): unnormalized autocorrelation times 
+		"""
+		C = np.zeros(self.N/2)
+		for h in range(0, self.N/2):
+			C[h] = np.corrcoef(np.array([data[0:self.N-h],data[h:self.N]]))[0,1]
+		return C
 
 	def plot_autocorrelation(self, title, filename, lims = 1,dryrun=False):
 		"""
@@ -61,11 +99,15 @@ class Autocorrelation:
 		if dryrun:
 			fig.savefig("autocorrelation_%s.png" % filename)
 
-def alternate_autocorrelation(data):
-    acf = np.zeros(len(data)/2)
-    for k in range(0, len(data)/2):
-        acf[k] = np.corrcoef(np.array([data[0:len(data)-k],data[k:len(data)]]))[0,1]
-    return acf
+class IntegratedAutoCorrelationTime:
+	"""
+	Finds the integrated autocorrelation time
+	"""
+	def __init__(self, ac_data):
+		"""
+		Takes an array of autocorrelation data, should be of size NFlows * NConfigurations/2
+		"""
+		None
 
 def main():
 	# Data to load and analyse
@@ -78,7 +120,7 @@ def main():
 	ac = Autocorrelation(data)
 	ac.plot_autocorrelation(r"Autocorrelation for $\beta = 6.1$", "beta6_1",dryrun=True)
 
-	plt.show()
+	# plt.show()
 
 if __name__ == '__main__':
 	main()

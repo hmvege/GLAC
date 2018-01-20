@@ -433,4 +433,4 @@ if __name__ == '__main__':
 	else:
 		main(sys.argv[1:])
 
-	plt.show()
+	# plt.show()
