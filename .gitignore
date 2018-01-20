@@ -45,3 +45,5 @@ workspace
 
 # Python junk
 *.pyc
+
+!analysis/statistics/tests/plaq.dat
