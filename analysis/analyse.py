@@ -55,6 +55,7 @@ class FlowAnalyser(object):
 		# Autocorrelation data
 		self.autocorrelation_performed = False
 		self.autocorrelations = np.zeros((self.NFlows,self.N_configurations/2))
+		self.autocorrelation_error_correction = np.zeros(self.NFlows)
 
 		# Gets the lattice spacing
 		self.beta = self.data.meta_data["beta"]
