@@ -79,21 +79,26 @@ namespace ConfigLoader {
             Parameters::setLoadFieldConfigurations(bool(j["load_field_configs"]));
             Parameters::setLoadChromaConfigurations(bool(j["chroma_config"]));
         }
-        // Sets a field configuration to load for later, running the metropolis algorithm from the loaded configuration
-        if (j["load_config_and_run"].empty()) { // Has to be positive in order to load and run configuration
+        // Sets a field configuration to load, and then run the metropolis algorithm from the loaded configuration that is assumed to be thermalized
+        std::string config_to_load = j["load_config_and_run"];
+        if (config_to_load.length() != 0) { // If this is not empty, I will load and run a configuration
             std::vector<std::string> tempVec;
             tempVec.push_back(j["load_config_and_run"]);
             setFieldConfigurations(tempVec);
             Parameters::setNCf(j["NCf"]);
             Parameters::setLoadConfigAndRun(true);
+            printf("ERROR!!\n");
         }
+
         if (!j["config_start_number"].empty()) {
             Parameters::setConfigStartNumber(j["config_start_number"]);
         }
         // Testing related variables
         Parameters::setUnitTesting(j["unitTesting"]);
         Parameters::setUnitTestingVerbose(j["unitTestingVerbose"]);
-        if (!j["uTestFieldGaugeInvarince"].empty()) {
+        // Checking if we have provideda gauge field to test
+        std::string test_gauge_field = j["uTestFieldGaugeInvarince"];
+        if (test_gauge_field.length() != 0) {
             Parameters::setCheckFieldGaugeInvariance(true);
             Parameters::setGaugeFieldToCheck(j["uTestFieldGaugeInvarince"]);
         }

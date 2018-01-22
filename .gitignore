@@ -11,6 +11,7 @@ output/*
 
 # Config files
 config_folder/beta6_0test_config.py
+config_folder/test_config_file.py
 
 # Input files
 input/*
@@ -46,4 +47,5 @@ workspace
 # Python junk
 *.pyc
 
+# Files to include regardless of rule
 !analysis/statistics/tests/plaq.dat

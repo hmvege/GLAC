@@ -36,13 +36,18 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
      *  configNumber   : (int) configuration number
      */
     MPI_File file;
+
+    // Converting config number to a more machine friendly layout
+    char cfg_number[6];
+    sprintf(cfg_number,"%05d",configNumber + Parameters::getConfigStartNumber());
+
     std::string filename = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/"
                                             + Parameters::getBatchName()
                                             + "_beta" + std::to_string(Parameters::getBeta())
                                             + "_spatial" + std::to_string(Parameters::getNSpatial())
                                             + "_temporal" + std::to_string(Parameters::getNTemporal())
                                             + "_threads" + std::to_string(Parallel::Communicator::getNumProc())
-                                            + "_config" + std::to_string(configNumber + Parameters::getConfigStartNumber()) + ".bin";
+                                            + "_config" + std::string(cfg_number) + ".bin";
 
     MPI_File_open(MPI_COMM_SELF, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;

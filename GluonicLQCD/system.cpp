@@ -139,7 +139,7 @@ void System::latticeSetup()
      */
     if (Parallel::ParallelParameters::active) {
         subLatticeSetup();
-        if (!Parameters::getLoadFieldConfigurations()) {
+        if (!Parameters::getLoadFieldConfigurations() && !Parameters::getLoadConfigAndRun()) {
             if (Parameters::getHotStart()) {
                 // All starts with a completely random matrix.
                 for (int mu = 0; mu < 4; mu++)
@@ -429,7 +429,6 @@ void System::loadConfigurationAndRunMetropolis()
     } else {
         loadChroma(configurationNames[0]);
     }
-    Parallel::Communicator::MPIExit("TEST-->exiting in loadConfigurationAndRunMetropolis");
     runMetropolis();
 }
 

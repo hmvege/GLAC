@@ -84,7 +84,7 @@ class Autocorrelation:
 		"""
 		avg_data = np.average(data)
 		C = np.zeros(self.N/2)
-		for h in xrange((self.N)/2): # PARALLELIZE THIS FOR LOOP!
+		for h in xrange((self.N)/2):
 			for i in xrange(0, self.N - h):
 				C[h] += (data[i] - avg_data)*(data[i+h] - avg_data)
 			C[h] /= (self.N - h)
@@ -100,7 +100,7 @@ class Autocorrelation:
 			C(t)  (numpy array): normalized autocorrelation times 
 		"""
 		R = np.zeros(self.N/2)
-		for h in range(0, self.N/2): # PARALLELIZE THIS FOR LOOP!
+		for h in range(0, self.N/2):
 			R[h] = np.corrcoef(np.array([data[0:self.N-h],data[h:self.N]]))[0,1]
 		return R
 

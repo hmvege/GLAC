@@ -103,7 +103,7 @@ class GetFolderContents:
 	"""
 	def __init__(self,folder,flow=False):
 		if folder == None:
-			print "No observables found in folder: %s" % folder
+			print "    No observables found in folder: %s" % folder
 		else:
 			read_meta_data = True
 			retrieved_flow_time = False
@@ -118,10 +118,12 @@ class GetFolderContents:
 			if type(folder) != list:
 				folder = [folder]
 
+			N_files = len(folder)
+
 			# Goes through files in folder and reads the contents into a file
-			for file in folder:
+			for i,file in enumerate(folder):
 				# Gets the metadata
-				print "    Reading file: %s" % file
+				# print "    Reading file: %s" % file
 				with open(file) as f:
 					while read_meta_data:
 						line = f.readline().split(" ")
@@ -145,9 +147,14 @@ class GetFolderContents:
 					retrieved_indexing = True
 				self.data_y.append(y)
 
+				# Small progressbar
+				sys.stdout.write("\rData retrieved: %4.1f%% done" % (100*float(i)/float(N_files)))
+				sys.stdout.flush()
+
 			self.data_y = np.asarray(self.data_y)
 
-			print "Data retrieved."
+			# Small progressbar
+			sys.stdout.write("\rData retrieved: 100.0%% done\n")
 
 if __name__ == '__main__':
 	sys.exit("Exiting module.")

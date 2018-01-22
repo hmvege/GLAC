@@ -2,7 +2,7 @@ from tools.folderreadingtools import GetDirectoryTree, GetFolderContents
 from statistics.jackknife import Jackknife
 from statistics.bootstrap import Bootstrap
 from statistics.autocorrelation import Autocorrelation
-import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd, multiprocessing, pickle
+import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd, multiprocessing, pickle, time
 
 #### Parallel helper functions ####
 def _autocorrelation_parallel_core(input_values):
@@ -27,8 +27,8 @@ class FlowAnalyser(object):
 	observable_name = "Missing_Observable_Name"
 	x_label = "Missing x-label"
 	y_label = "Missing y-label"
-	mark_interval = 5
-	error_mark_interval = 5
+	mark_interval = 1
+	error_mark_interval = 1
 	autocorrelations_limits = 1
 
 	def __init__(self,files,observable,batch_name,data=None,dryrun=False,flow=True, parallel = False, numprocs = 4):
@@ -42,7 +42,10 @@ class FlowAnalyser(object):
 		self.parallel = parallel
 		self.numprocs = numprocs
 
-		print "Running analysis on run %s" % observable
+		print "="*100
+		print "Batch:       %s" % self.batch_name
+		print "Observables: %s" % self.observable_name
+		print "="*100
 
 		# Enables possibility of providing data
 		if data == None:
@@ -55,6 +58,7 @@ class FlowAnalyser(object):
 		# Sets up variables
 		self.y = self.data.data_y
 		self.x = self.data.data_x
+
 		self.N_configurations, self.NFlows = self.y.shape
 
 		# Small error checking in retrieving number of flows
@@ -178,12 +182,16 @@ class FlowAnalyser(object):
 			# Populating autocorrelation results
 			for i in xrange(self.NFlows):
 				self.autocorrelations[i] = results[i][0]
-				self.autocorrelation_error_correction[i] = results[i][1]
+				self.autocorrelation_error_correction[i] = np.sqrt(results[i][1])
 		else:
 			for i in xrange(self.NFlows):
 				ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy)
 				self.autocorrelations[i] = ac()
-				self.autocorrelation_error_correction[i] = 2*ac.integrated_autocorrelation_time()
+				self.autocorrelation_error_correction[i] = np.sqrt(2*ac.integrated_autocorrelation_time())
+
+				# if i > 750: 
+				# 	print 2*(0.5 + np.sum(ac.R)), self.autocorrelation_error_correction[i]
+
 				# Small progressbar
 				sys.stdout.write("\rCalculating autocorrelation: %4.1f%% done" % (100*float(i)/float(self.NFlows)))
 				sys.stdout.flush()
@@ -205,6 +213,7 @@ class FlowAnalyser(object):
 		if not self.dryrun: 
 			plt.savefig(fname,dpi=300)
 		print "Figure created in %s" % fname
+		plt.close()
 
 	def plot_jackknife(self, x = None, correction_function = lambda x : x):
 		# Checks that jacknifing has been performed.
@@ -234,6 +243,10 @@ class FlowAnalyser(object):
 
 		# sets up the autocorrelation
 		N_autocorr = self.N_configurations / 2
+
+		# Converts flow_time if it is minus 1
+		if flow_time == -1:
+			flow_time = self.NFlows - 1
 
 		# Finds the maximum value at each MC time and sets up the y array
 		x = range(N_autocorr)
@@ -265,6 +278,7 @@ class FlowAnalyser(object):
 		if not self.dryrun: 
 			fig.savefig(fname,dpi=300)
 		print "Figure created in %s" % fname
+		plt.close()
 
 	def plot_boot(self,plot_bs=True, x = None, correction_function = lambda x : x):
 		# Checks that the bootstrap has been performed.
@@ -302,7 +316,7 @@ class FlowAnalyser(object):
 	def plot_histogram(self, flow_time, Nbins = 30, x_axis_limit = 500):
 		# Setting proper flow-time 
 		if flow_time < 0:
-			flow_time = len(self.unanalyzed_y_data) - abs(flow_time) - 1
+			flow_time = len(self.unanalyzed_y_data) - abs(flow_time)
 			assert len(self.unanalyzed_y_data) == len(self.bs_y_data) == len(self.jk_y_data), "Flow lengths of data sets is not equal!"
 		
 		# Sets up plotting variables
@@ -343,17 +357,22 @@ class FlowAnalyser(object):
 		if not self.dryrun:
 			plt.savefig(fname)
 		print "Figure created in %s" % fname
+		plt.close()
 
-	def plot_mc_history(self,flow_time):
+	def plot_mc_history(self,flow_time,correction_function = lambda x : x):
 		"""
 		Plots the Monte Carlo history at a given flow time 
 		"""
+		# Converts flow_time if it is minus 1
+		if flow_time == -1:
+			flow_time = self.NFlows - 1
+
 		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.data.meta_data["FlowEpsilon"])
-		fname = "../figures/{0:<s}/mchistory_{0:<s}_beta_{1:<s}_flow_time_{2:<d}".format(self.batch_name, str(self.beta).replace('.','_'), flow_time)
+		fname = "../figures/{0:<s}/mchistory_{3:<s}_{0:<s}_beta_{1:<s}_flow_time_{2:<d}.png".format(self.batch_name, str(self.beta).replace('.','_'), flow_time, self.observable_name)
 
 		fig = plt.figure(dpi=300)
 		ax = fig.add_subplot(111)
-		ax.plot(self.unanalyzed_y_data[flow_time],color="0",label=self.observable_name)
+		ax.plot(correction_function(self.unanalyzed_y_data[flow_time]),color="0",label=self.observable_name)
 		ax.set_xlabel(r"Monte Carlo time")
 		ax.set_ylabel(r"")
 		ax.set_title(title_string)
@@ -362,6 +381,7 @@ class FlowAnalyser(object):
 		if not self.dryrun: 
 			fig.savefig(fname,dpi=300)
 		print "Figure created in %s" % fname
+		plt.close()
 
 class AnalysePlaquette(FlowAnalyser):
 	"""
@@ -449,10 +469,14 @@ def main(args):
 	DirectoryList = GetDirectoryTree(args[0],output_folder=args[1])
 	N_bs = 500
 	dryrun = False
-	parallel = False
-	numprocs = 4
+	parallel = True
+	numprocs = 8
 	use_numpy_in_autocorrelation = True
 	# print DirectoryList
+
+	# Analysis timers
+	pre_time = time.clock()
+	observable_strings = []
 
 	# Analyses plaquette data if present in arguments
 	if 'plaq' in args:
@@ -466,6 +490,7 @@ def main(args):
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_jackknife()
+		observable_strings.append(plaq_analysis.observable_name)
 
 	if 'topc' in args or 'topsus' in args:
 		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), "topc", args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
@@ -474,13 +499,15 @@ def main(args):
 			topc_analysis.jackknife()
 			topc_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
 			topc_analysis.plot_autocorrelation(0)
+			topc_analysis.plot_autocorrelation(-1)
 			topc_analysis.plot_mc_history(0)
 			topc_analysis.plot_mc_history(-1)
 			topc_analysis.plot_boot()
 			topc_analysis.plot_original()
 			topc_analysis.plot_jackknife()
-			topc_analysis.plot_histogram(0)
-			topc_analysis.plot_histogram(-1)
+			# topc_analysis.plot_histogram(0)
+			# topc_analysis.plot_histogram(-1)
+			observable_strings.append(topc_analysis.observable_name)
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs)
@@ -488,11 +515,10 @@ def main(args):
 			topsus_analysis.jackknife(jk_statistics = topsus_analysis.stat, F = topsus_analysis.chi, non_jk_statistics = topsus_analysis.return_x_squared)
 			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 			topsus_analysis.plot_autocorrelation(0)
-			topsus_analysis.plot_mc_history(0)
-			topsus_analysis.plot_mc_history(-1)
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_jackknife()
+			observable_strings.append(topsus_analysis.observable_name)
 
 	if 'energy' in args:
 		r0 = 0.5
@@ -502,27 +528,35 @@ def main(args):
 		energy_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
 		energy_analysis.plot_autocorrelation(0)
 		energy_analysis.plot_mc_history(0)
-		energy_analysis.plot_mc_history(-1)
+		energy_analysis.plot_mc_history(-1,correction_function = lambda y : - y*energy_analysis.x[-1]*energy_analysis.x[-1]*energy_analysis.data.meta_data["FlowEpsilon"]*energy_analysis.data.meta_data["FlowEpsilon"]*energy_analysis.a**2)
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
+		observable_strings.append(energy_analysis.observable_name)
+
+	post_time = time.clock()
+	print "="*100
+	print "Analysis of batch %s observables %s in %.2f minutes" % (args[0], ", ".join([i.lower() for i in observable_strings]), (post_time-pre_time)/60.0)
+	print "="*100
 
 if __name__ == '__main__':
 	if not sys.argv[1:]:
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data','plaq','topc','energy','topsus'],
-				['beta6_1','data','plaq','topc','energy','topsus']]
+		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_0','data','topsus'],
 		# 		['beta6_1','data','topsus']]
 
 		# args = [['beta6_1','data','topc']]
 
-		# args = [['beta6_0','data','plaq'],
-		# 		['beta6_1','data','plaq']]
+		args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
+
+		# args = [['beta6_2','data','plaq','topc','energy','topsus']]
+		# args = [['beta6_2','data','energy']]
 
 		for a in args:
 			main(a)
