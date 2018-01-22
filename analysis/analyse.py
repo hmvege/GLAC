@@ -7,7 +7,7 @@ import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd, multiproces
 #### Parallel helper functions ####
 def _autocorrelation_parallel_core(input_values):
 	ac = Autocorrelation(input_values[0],use_numpy=input_values[1])
-	return ac(),2*ac.integrated_autocorrelation_time()
+	return ac(),2*np.sqrt(ac.integrated_autocorrelation_time())
 
 def _bootstrap_parallel_core(input_values):
 	data, N_bs, bs_statistic, F, non_bs_stats, index_lists = input_values
@@ -449,7 +449,7 @@ def main(args):
 	DirectoryList = GetDirectoryTree(args[0],output_folder=args[1])
 	N_bs = 500
 	dryrun = False
-	parallel = True
+	parallel = False
 	numprocs = 4
 	use_numpy_in_autocorrelation = True
 	# print DirectoryList
@@ -513,13 +513,13 @@ if __name__ == '__main__':
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data','plaq','topc','energy','topsus'],
+				['beta6_1','data','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data','topsus'],
-				['beta6_1','data','topsus']]
+		# args = [['beta6_0','data','topsus'],
+		# 		['beta6_1','data','topsus']]
 
-		# args = [['beta6_0','data','topsus']]
+		# args = [['beta6_1','data','topc']]
 
 		# args = [['beta6_0','data','plaq'],
 		# 		['beta6_1','data','plaq']]
