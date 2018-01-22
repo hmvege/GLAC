@@ -31,7 +31,9 @@ class Autocorrelation:
 	def __init__(self, data, use_numpy = False, time_autocorrelation = False):
 		"""
 		Args:
-			data 					(numpy array): 	dataset to get autocorrelation for
+			data 							(numpy array): 	dataset to get autocorrelation for
+			[optional] use_numpy			(bool): 		uses numpy to perform the autocorrelation
+			[optional] time_autocorrealtion	(bool): 		times the autocorrelation function
 		Returns:
 			Object containing the autocorrelation values
 		"""
@@ -69,7 +71,7 @@ class Autocorrelation:
 			2*tau_int (float)
 		"""
 		self.tau_int = 0.5 + np.sum(self.R)
-		return tau_int
+		return self.tau_int
 
 	@timing_function
 	def _get_autocorrelation(self, data):
@@ -121,15 +123,15 @@ class Autocorrelation:
 		if dryrun:
 			fig.savefig("tests/autocorrelation_%s.png" % filename)
 
-class IntegratedAutoCorrelationTime:
-	"""
-	Finds the integrated autocorrelation time
-	"""
-	def __init__(self, ac_objects):
-		"""
-		Takes an list/array of autocorrelation objects, should be of size NFlows * NConfigurations/2
-		"""
-		None
+# class IntegratedAutoCorrelationTime:
+# 	"""
+# 	Finds the integrated autocorrelation time
+# 	"""
+# 	def __init__(self, ac_objects):
+# 		"""
+# 		Takes an list/array of autocorrelation objects, should be of size NFlows * NConfigurations/2
+# 		"""
+# 		None
 
 def main():
 	# Data to load and analyse
