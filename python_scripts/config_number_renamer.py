@@ -38,7 +38,16 @@ def folder_looper(folder, dryrun, verbose = True):
 		old_config_number = files_stripped[-1]
 
 		# Sets up new configuration number
-		new_config_number = "{:0>5d}".format(files_stripped[-1])
+		try:
+			new_config_number = "{0:0>5d}".format(files_stripped[-1])
+		except ValueError:
+			print "ValueError:"
+			print file
+			print file_path
+			print files_stripped
+			print old_config_number
+			print folder
+			exit(1)
 
 		# Sets up new file name
 		new_file_name = file_head.split('config')[0] + 'config' + new_config_number + file_ext

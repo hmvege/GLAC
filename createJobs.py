@@ -337,7 +337,7 @@ module load OpenMPI/1.10.0
 
             # Stores job in job dictionary
             job_dict =  self._createDictionary( Partition = [0,9,partition],
-                                                RunName = [1,18,self.runName],
+                                                RunName = [1,40,self.runName],
                                                 Beta = [2,5,beta],
                                                 N = [3,4,NSpatial],
                                                 NT = [4,4,NTemporal],
@@ -402,6 +402,22 @@ module load OpenMPI/1.10.0
                 # Takes the jobs out of their dictionary, and zips values and keys together for printing their values
                 for item in sorted(zip(self.jobs[jobID].keys(),self.jobs[jobID].values()),key=lambda i : i[-1][0]):
                     print "{0:<{w}}".format(item[-1][-1],w=item[-1][1]),
+
+    def printJobIDInfo(self,jobID):
+        jobID = str(jobID)
+        if len(self.jobs) == 0:
+            print "No jobs running"
+        else:
+            # Takes the jobs out of their dictionary, and zips values and keys together for creating a header
+            sorted_jobs = sorted(zip(self.jobs.values()[0].keys(),self.jobs.values()[0].values()),key=lambda i : i[-1][0])
+            print "{0:<{w}}".format("ID",w=10),
+            for i in sorted_jobs:
+                print "{0:<{w}}".format(i[0],w=i[-1][1]),
+            # Prints a single job
+            print "\n{0:<{w}}".format(jobID,w=10),
+            # Takes the jobs out of their dictionary, and zips values and keys together for printing their values
+            for item in sorted(zip(self.jobs[jobID].keys(),self.jobs[jobID].values()),key=lambda i : i[-1][0]):
+                print "{0:<{w}}".format(item[-1][-1],w=item[-1][1]),
 
     def clearIDFile(self):
         self.jobs = {}
@@ -479,6 +495,7 @@ def main(args):
     sbatch_group.add_argument('--scancel_all',                  default=False,      action='store_true',help='Cancel all jobs')
     sbatch_group.add_argument('--list_jobs',                    default=False,      action='store_true',help='List all jobs currently running.')
     sbatch_group.add_argument('--clearIDFile',                  default=False,      action='store_true',help='Clears the job ID file.')
+    sbatch_group.add_argument('-id', '--list_job_id',           default=False,      type=int,help='Shows details about job with given ID.')
 
     ######## Manual job setup ########
     job_parser = subparser.add_parser('setup', help='Sets up the job.')
@@ -500,7 +517,7 @@ def main(args):
     job_parser.add_argument('-sc', '--storeCfgs',               default=config_default["storeCfgs"],        type=int,choices=[0,1],help='Specifying if we are to store configurations')
     job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],   type=int,choices=[0,1],help='Specifies if we are to store the thermalization plaquettes')
     job_parser.add_argument('-bf', '--base_folder',             default=config_default["base_folder"],      type=str,help='Sets the base folder. Default is os.path.getcwd().')    # Human readable output related variables
-    job_parser.add_argument('-v', '--verboseRun',               default=config_default["verboseRun"],       action='store_true',help='Verbose run of GluonicLQCD. By default, it is off.')
+    job_parser.add_argument('-vr', '--verboseRun',               default=config_default["verboseRun"],      action='store_true',help='Verbose run of GluonicLQCD. By default, it is off.')
     # Setup related variables
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],         type=int,choices=[0,1],help='Hot start or cold start')
     job_parser.add_argument('-rsths', '--RSTHotStart',          default=config_default["RSTHotStart"],      type=int,choices=[0,1],help='RST hot start is closer to unity')
@@ -540,6 +557,7 @@ def main(args):
     load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],      type=str,help='Sets the base folder. Default is os.path.getcwd().')
     load_parser.add_argument('-nf','--no_flow',                 default=False,                              action='store_true',help='If toggled, will not perform any flows.')
     load_parser.add_argument('-cfgnum','--config_start_number', default=config_default["config_start_number"],type=int,help='Starts naming the configuration from this number.')
+    load_parser.add_argument('-rn',  '--run_name',              default=False,                              type=str,help='Specify the run name')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
@@ -609,6 +627,14 @@ def main(args):
         # Populate configuration with default values if certain keys are not present
         for c in configurations:
             config_default["base_folder"] = args.base_folder
+            if args.run_name != False:
+                c["runName"] = args.run_name
+            if args.NConfigs != False:
+                c["NCf"] = args.NConfigs
+            if args.load_config_min_time_estimate != False:
+                c["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
+            if args.load_config_hr_time_estimate != False:
+                c["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
             if args.no_flow:
                 c["NFlows"] = 0
                 c["flowObservables"] = []
@@ -616,6 +642,7 @@ def main(args):
                 if not key in c:
                     c[key] = config_default[key]
             c["config_start_number"] = args.config_start_number
+            # Remove all configuration below config_start_number
         s.submitJob(configurations,args.system,args.partition)
     elif args.subparser == 'setup':
         """
@@ -686,6 +713,8 @@ def main(args):
             s.showIDwithNb()
         if args.clearIDFile:
             s.clearIDFile()
+        if args.list_job_id != False:
+            s.printJobIDInfo(args.list_job_id)
     elif args.subparser == 'utest':
         """
         COMMAND FOR UNIT TESTING

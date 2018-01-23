@@ -87,7 +87,6 @@ namespace ConfigLoader {
             setFieldConfigurations(tempVec);
             Parameters::setNCf(j["NCf"]);
             Parameters::setLoadConfigAndRun(true);
-            printf("ERROR!!\n");
         }
 
         if (!j["config_start_number"].empty()) {
