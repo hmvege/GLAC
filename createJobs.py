@@ -45,7 +45,8 @@ def setFieldConfigs(config,config_folder,config_start_number):
 
     corrected_configs = [] 
     for cfg in config["field_configs"]:
-        cfg_number = (cfg.split("config")[-1]).split(".")[0]
+        # cfg_number = (cfg.split("config")[-1]).split(".")[0]
+        cfg_number = [int(num) for num in re.split('(\d+)',cfg) if num.isdigit()][-1]
         if int(cfg_number) >= config_start_number:
             corrected_configs.append(cfg)
     config["field_configs"] = corrected_configs

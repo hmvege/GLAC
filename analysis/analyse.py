@@ -545,15 +545,15 @@ if __name__ == '__main__':
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data','plaq','topc','energy','topsus'],
+				['beta6_1','data','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_0','data','topsus'],
 		# 		['beta6_1','data','topsus']]
 
 		# args = [['beta6_1','data','topc']]
 
-		args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
+		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
 
 		# args = [['beta6_2','data','plaq','topc','energy','topsus']]
 		# args = [['beta6_2','data','energy']]
