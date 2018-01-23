@@ -55,7 +55,7 @@ def main(folder_name):
 		for pair in equal_files:
 			print pair
 	else:
-		print "No equal files found in folder %s.\nTime used: %f" % (folder_name,(post_time-pre_time)/60.)
+		print "No equal files found in folder %s\nTime used: %f seconds" % (folder_name,(post_time-pre_time))
 
 if __name__ == '__main__':
 	if len(sys.argv) == 1:
