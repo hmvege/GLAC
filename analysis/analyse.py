@@ -7,7 +7,7 @@ import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd, multiproces
 #### Parallel helper functions ####
 def _autocorrelation_parallel_core(input_values):
 	ac = Autocorrelation(input_values[0],use_numpy=input_values[1])
-	return ac(),2*np.sqrt(ac.integrated_autocorrelation_time())
+	return ac(),np.sqrt(2*ac.integrated_autocorrelation_time())
 
 def _bootstrap_parallel_core(input_values):
 	data, N_bs, bs_statistic, F, non_bs_stats, index_lists = input_values
