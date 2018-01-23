@@ -24,7 +24,7 @@ def main(folder_name):
 			for j,fname2 in enumerate(files[i+1:]):
 				# Sanity check
 				if fname1 == fname2:
-					sys.exit("File names matches!")
+					sys.exit("File name duplicate: %s and %s" % (fname1, fname2))
 
 				with open(os.path.join(folder_name,fname2),"r") as file2:
 					# print "Checking %s with %s" % (fname1,fname2)
