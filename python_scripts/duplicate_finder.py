@@ -1,4 +1,4 @@
-import sys, os, re, struct
+import sys, os, re, struct, time
 
 def natural_sort(l):
 	# Natural sorting
@@ -55,19 +55,26 @@ def main(folder_name):
 		for pair in equal_files:
 			print pair
 	else:
-		print "No equal files found in folder %s.\nTime used: %f" % (folder_name,(post_time-pre_time)60.)
+		print "No equal files found in folder %s.\nTime used: %f" % (folder_name,(post_time-pre_time)/60.)
 
 if __name__ == '__main__':
 	if len(sys.argv) == 1:
-		folder_list = [	"../data/beta6_0/flow_observables/plaq",
-						"../data/beta6_0/flow_observables/topc",
-						"../data/beta6_0/flow_observables/energy",
-						"../data/beta6_1/flow_observables/plaq",
-						"../data/beta6_1/flow_observables/topc",
-						"../data/beta6_1/flow_observables/energy"]
-						# "../data/beta6_2/flow_observables/plaq",
-						# "../data/beta6_2/flow_observables/topc",
-						# "../data/beta6_2/flow_observables/energy"]
+		# folder_list = [	"../data/beta6_0/flow_observables/plaq",
+		# 				"../data/beta6_0/flow_observables/topc",
+		# 				"../data/beta6_0/flow_observables/energy",
+		# 				"../data/beta6_1/flow_observables/plaq",
+		# 				"../data/beta6_1/flow_observables/topc",
+		# 				"../data/beta6_1/flow_observables/energy"]
+		# 				# "../data/beta6_2/flow_observables/plaq",
+		# 				# "../data/beta6_2/flow_observables/topc",
+		# 				# "../data/beta6_2/flow_observables/energy"]
+
+		folder_list = [ "output/prodRunBeta6_0/flow_observables/plaq",
+						"output/prodRunBeta6_0/flow_observables/topc",
+						"output/prodRunBeta6_0/flow_observables/energy",
+						"output/prodRunBeta6_1/flow_observables/plaq",
+						"output/prodRunBeta6_1/flow_observables/topc",
+						"output/prodRunBeta6_1/flow_observables/energy",]
 	else:
 		folder_list = sys.argv[1:]
 
