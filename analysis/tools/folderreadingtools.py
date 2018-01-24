@@ -42,6 +42,9 @@ class GetDirectoryTree:
 						flow_obs_dir_list.append(os.path.join(obs_path,obs_file))
 					# Sorts list by natural sorting
 					self.flow_tree[flow_obs] = self.natural_sort(flow_obs_dir_list)
+					
+					# #### TEMP TEMP TEMP ####
+					# self.flow_tree[flow_obs] = self.flow_tree[flow_obs][50:-300]
 		print "Directory tree for batch %s built." % batch_name
 
 		# Creates figures folder

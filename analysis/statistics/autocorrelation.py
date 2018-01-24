@@ -70,7 +70,7 @@ class Autocorrelation:
 		Returns:
 			2*tau_int (float)
 		"""
-		self.tau_int = 0.5 + np.sum(self.R)
+		self.tau_int = 0.5 + np.sum(np.abs(self.R))
 		return self.tau_int
 
 	@timing_function

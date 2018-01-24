@@ -117,6 +117,9 @@ inline SU3 SU3MatrixGenerator::generateRandom()
     H[16] = H[2]*H[6] - H[3]*H[7] - H[8]*H[0] + H[9]*H[1];
     H[17] = H[8]*H[1] + H[9]*H[0] - H[2]*H[7] - H[3]*H[6];
 
+//    std::cout << "BAD! SHOULD NOT USE GENERATE RANDOM!" << std::endl;
+//    exit(1);
+
     return H;
 }
 

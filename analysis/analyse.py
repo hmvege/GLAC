@@ -27,8 +27,8 @@ class FlowAnalyser(object):
 	observable_name = "Missing_Observable_Name"
 	x_label = "Missing x-label"
 	y_label = "Missing y-label"
-	mark_interval = 1
-	error_mark_interval = 1
+	mark_interval = 5
+	error_mark_interval = 5
 	autocorrelations_limits = 1
 
 	def __init__(self,files,observable,batch_name,data=None,dryrun=False,flow=True, parallel = False, numprocs = 4):
@@ -408,7 +408,7 @@ class AnalyseEnergy(FlowAnalyser):
 	y_label = r"$a^2 t^2\langle E \rangle$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
 
 	def correction_function(self, y):
-		return -y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"]*self.a**2 # factor 0.5 left out, see paper by 
+		return -y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"]/64.0 # factor 0.5 left out, see paper by 
 
 class AnalyseTopologicalSusceptibility(FlowAnalyser):
 	"""
@@ -498,9 +498,9 @@ def main(args):
 		if 'topc' in args:
 			topc_analysis.boot(N_bs)
 			topc_analysis.jackknife()
-			topc_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
-			topc_analysis.plot_autocorrelation(0)
-			topc_analysis.plot_autocorrelation(-1)
+			# topc_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
+			# topc_analysis.plot_autocorrelation(0)
+			# topc_analysis.plot_autocorrelation(-1)
 			topc_analysis.plot_mc_history(0)
 			topc_analysis.plot_mc_history(-1)
 			topc_analysis.plot_boot()
@@ -514,9 +514,11 @@ def main(args):
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs)
 			topsus_analysis.boot(N_bs,bs_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = topsus_analysis.return_x_squared)
 			topsus_analysis.jackknife(jk_statistics = topsus_analysis.stat, F = topsus_analysis.chi, non_jk_statistics = topsus_analysis.return_x_squared)
-			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
-			topsus_analysis.plot_autocorrelation(0)
-			topsus_analysis.plot_autocorrelation(-1)
+			# topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			# topsus_analysis.plot_autocorrelation(0)
+			# topsus_analysis.plot_autocorrelation(-1)
+			topsus_analysis.plot_mc_history(0)
+			topsus_analysis.plot_mc_history(-1)
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_jackknife()
@@ -530,8 +532,8 @@ def main(args):
 		energy_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
 		energy_analysis.plot_autocorrelation(0)
 		energy_analysis.plot_autocorrelation(-1)
-		energy_analysis.plot_mc_history(0)
-		energy_analysis.plot_mc_history(-1,correction_function = lambda y : - y*energy_analysis.x[-1]*energy_analysis.x[-1]*energy_analysis.data.meta_data["FlowEpsilon"]*energy_analysis.data.meta_data["FlowEpsilon"]*energy_analysis.a**2)
+		energy_analysis.plot_mc_history(0,correction_function = lambda x : -x/64.0)
+		energy_analysis.plot_mc_history(-1,correction_function = lambda x : -x/64.0)
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
@@ -548,19 +550,24 @@ if __name__ == '__main__':
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data2','plaq','topc','energy','topsus'],
-				['beta6_1','data2','plaq','topc','energy','topsus'],
-				['beta6_2','data2','plaq','topc','energy','topsus']]
+		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data','plaq','topc','energy','topsus'],
+		# 		['beta6_2','data','plaq','topc','energy','topsus']]
+
+
+		# args = [['beta6_0','data2','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data2','plaq','topc','energy','topsus'],
+		# 		['beta6_2','data2','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_0','data2','topsus'],
 		# 		['beta6_1','data2','topsus'],
 		# 		['beta6_2','data2','topsus']]
 
-		# args = [['beta6_1','data','topc']]
+		# args = [['beta6_1','data','energy']]
 
 		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
 
-		# args = [['beta6_2','data','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data','plaq','topc','energy','topsus']]
 		# args = [['beta6_2','data','energy']]
 
 		for a in args:

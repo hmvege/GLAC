@@ -101,7 +101,7 @@ void MasterSampler::printHeader()
                m_headerWidth,m_topcObservable->getObservableName().c_str(),
                m_headerWidth,m_energyObservable->getObservableName().c_str());
     } else {
-        printf("\ni    t       %-*s %-*s %-*s",
+        printf("\ni    t      %-*s %-*s %-*s",
                m_headerWidth,m_plaqObservable->getObservableName().c_str(),
                m_headerWidth,m_topcObservable->getObservableName().c_str(),
                m_headerWidth,m_energyObservable->getObservableName().c_str());
@@ -123,9 +123,9 @@ void MasterSampler::printObservable(int iObs)
         Parallel::Communicator::gatherDoubleResults(&topcObs,1);
         Parallel::Communicator::gatherDoubleResults(&energyObs,1);
         if (Parallel::Communicator::getProcessRank() == 0) {
-            printf("\n%-4d %-2.4f  %-*.15f %-*.15f %-*.15f",
+            printf("\n%-4d %-3.3f  %-*.15f %-*.15f %-*.15f",
                    iObs,
-                   m_a*sqrt(8*Parameters::getFlowEpsilon()*iObs),
+                   double(iObs)*Parameters::getFlowEpsilon(),
                    m_headerWidth,plaqObs/double(Parallel::Communicator::getNumProc()),
                    m_headerWidth,topcObs,
                    m_headerWidth,energyObs);
