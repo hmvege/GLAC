@@ -21,7 +21,9 @@ class Jackknife:
 		self.jk_data = np.zeros(self.N) # Jack knifed data
 		for i in xrange(self.N):
 			self.jk_data[i] = F(jk_statistics(np.concatenate([data[:i-1],data[i:]])))
-		self.jk_var = np.var(self.jk_data)
+		
+		# Estimates variance according to new MHJ book
+		self.jk_var = np.var(self.jk_data)*(self.N - 1)
 		self.jk_std = np.sqrt(self.jk_var)
 		self.jk_avg_biased = np.average(self.jk_data)
 		

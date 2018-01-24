@@ -157,7 +157,7 @@ class JobCreator:
         json_dict["metropolisSeed"] = config_dict["metropolisSeed"]
         json_dict["randomMatrixSeed"] = config_dict["randomMatrixSeed"]
         if self.dryrun:
-            print "Writing json configuration file:\n"
+            print "Writing json configuration file at location %s:\n" % os.path.join(self.base_folder,"input",self.json_file_name)
             print json.dumps(json_dict,indent=4,separators=(', ', ': ')), "\n"
         else:
             with file(os.path.join(self.base_folder,"input",self.json_file_name),"w+") as json_file:

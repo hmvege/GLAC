@@ -59,11 +59,17 @@ void IO::writeFlowObservableToFile(double *observables,
         double a = Parameters::getLatticeSpacing();
         double flowStep = Parameters::getFlowEpsilon();
         std::ofstream file;
+
+        // Converting config number to a more machine friendly layout
+        char cfg_number[6];
+        sprintf(cfg_number,"%05d",configNumber + Parameters::getConfigStartNumber());
+
         std::string fname = Parameters::getOutputFolder()
                           + Parameters::getBatchName() + "/"
                           + "flow_observables/" + observableName + "/"
                           + Parameters::getBatchName() + "_"
-                          + observableName + "_flow_config" + std::to_string(configNumber + Parameters::getConfigStartNumber()) + ".dat";
+                          + observableName + "_flow_config" + std::string(cfg_number) + ".dat";
+
         file.open(Parameters::getFilePath() + fname);
         file << "beta " << Parameters::getBeta() << endl;
         file << "NFlows " << Parameters::getNFlows() << endl;
