@@ -18,14 +18,15 @@ class Jackknife:
 		self.shape = self.N
 
 		# Performs jackknife and sets variables
-		self.jk_data = np.zeros(self.N) # Jack knifed data
+		self.jk_data_raw = np.zeros((self.N,self.N-1)) # Jack knifed data
 		for i in xrange(self.N):
-			self.jk_data[i] = F(jk_statistics(np.concatenate([data[:i-1],data[i:]])))
-		
+			self.jk_data_raw[i] = np.concatenate([data[:i],data[i+1:]])
+
+		self.jk_data = F(jk_statistics(self.jk_data_raw,axis=1))
 		# Estimates variance according to new MHJ book
 		self.jk_var = np.var(self.jk_data)*(self.N - 1)
 		self.jk_std = np.sqrt(self.jk_var)
-		self.jk_avg_biased = np.average(self.jk_data)
+		self.jk_avg = np.average(self.jk_data)
 		
 		# Gets and sets non-bootstrapped values
 		data = F(non_jk_statistics(data))
@@ -34,7 +35,7 @@ class Jackknife:
 		self.std_original = np.std(data)
 
 		# Returns the unbiased estimator/average
-		self.jk_avg = self.avg_original - (self.N - 1) * (np.average(self.jk_data) - self.avg_original)
+		self.jk_avg_unbiased = self.avg_original - (self.N - 1) * (self.jk_avg - self.avg_original)
 
 	def __call__(self):
 		"""
@@ -56,8 +57,8 @@ class Jackknife:
 JACKKNIFE:
 %s
 Non-jackknife: %10.10f %10.10E %10.10E
-Jackknife:     %10.10f %10.10E %10.10E
-		""" % ("="*61,self.avg_original, self.var_original, self.std_original, self.jk_avg, self.jk_var, self.jk_std)
+Jackknife:     %10.10f %10.10E %10.10E %10.10E(unbiased average)
+		""" % ("="*61,self.avg_original, self.var_original, self.std_original, self.jk_avg, self.jk_var, self.jk_std, self.jk_avg_unbiased)
 		return msg
 
 def main():

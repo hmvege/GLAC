@@ -182,7 +182,7 @@ class FlowAnalyser(object):
 			# Populating autocorrelation results
 			for i in xrange(self.NFlows):
 				self.autocorrelations[i] = results[i][0]
-				self.autocorrelation_error_correction[i] = np.sqrt(results[i][1])
+				self.autocorrelation_error_correction[i] = results[i][1]
 		else:
 			for i in xrange(self.NFlows):
 				ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy)
@@ -260,7 +260,7 @@ class FlowAnalyser(object):
 
 		# Sets up the title and filename strings
 		title_string = r"Autocorrelation of %s at flow time $t=%.2f$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,flow_time*self.data.meta_data["FlowEpsilon"],self.beta,self.N_configurations)
-		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_autocorrelation.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")))
+		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_autocorrelation_flow_time_{2:<d}.png".format(self.batch_name,"".join(self.observable_name.lower().split(" ")),flow_time)
 
 		# Plots the autocorrelations
 		fig = plt.figure(dpi=300)
@@ -485,6 +485,7 @@ def main(args):
 		plaq_analysis.jackknife()
 		plaq_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
 		plaq_analysis.plot_autocorrelation(0)
+		plaq_analysis.plot_autocorrelation(-1)
 		plaq_analysis.plot_mc_history(0)
 		plaq_analysis.plot_mc_history(-1)
 		plaq_analysis.plot_boot()
@@ -515,6 +516,7 @@ def main(args):
 			topsus_analysis.jackknife(jk_statistics = topsus_analysis.stat, F = topsus_analysis.chi, non_jk_statistics = topsus_analysis.return_x_squared)
 			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 			topsus_analysis.plot_autocorrelation(0)
+			topsus_analysis.plot_autocorrelation(-1)
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_jackknife()
@@ -527,6 +529,7 @@ def main(args):
 		energy_analysis.jackknife()
 		energy_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
 		energy_analysis.plot_autocorrelation(0)
+		energy_analysis.plot_autocorrelation(-1)
 		energy_analysis.plot_mc_history(0)
 		energy_analysis.plot_mc_history(-1,correction_function = lambda y : - y*energy_analysis.x[-1]*energy_analysis.x[-1]*energy_analysis.data.meta_data["FlowEpsilon"]*energy_analysis.data.meta_data["FlowEpsilon"]*energy_analysis.a**2)
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
@@ -545,12 +548,13 @@ if __name__ == '__main__':
 		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
 		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data','plaq','topc','energy','topsus'],
-				['beta6_1','data','plaq','topc','energy','topsus'],
-				['beta6_2','data','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data2','plaq','topc','energy','topsus'],
+				['beta6_1','data2','plaq','topc','energy','topsus'],
+				['beta6_2','data2','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data','topsus'],
-		# 		['beta6_1','data','topsus']]
+		# args = [['beta6_0','data2','topsus'],
+		# 		['beta6_1','data2','topsus'],
+		# 		['beta6_2','data2','topsus']]
 
 		# args = [['beta6_1','data','topc']]
 
