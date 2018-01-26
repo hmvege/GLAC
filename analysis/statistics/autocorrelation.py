@@ -2,6 +2,14 @@ import numpy as np, matplotlib.pyplot as plt, sys, os, time
 
 __all__ = ["Autocorrelation"]
 
+"""
+Books:
+Quantum Chromo Dynamics on the Lattice, Gattringer
+Papers:
+Schwarz-preconditioned HMC algorithm for two-flavour lattice QCD, M. Luscher 2004
+Monte Carlo errors with less errors, U. Wolff 2006
+"""
+
 def timing_function(func):
 	"""
 	Time function.
@@ -41,18 +49,27 @@ class Autocorrelation:
 		self.time_autocorrelation = time_autocorrelation
 		self.time_used = 0.0
 
-		# Lambda cutoff
-		self.LAMBDA = 100
 
 		# Autocorrelation variables
 		self.N = len(data)
 		self.data = data
 		self.C0 = np.var(data)
+		self.R = np.zeros(self.N/2)
+		self.R_error = np.zeros(self.N/2)
+		self.tau_int = 0
+		self.tau_int_error = 0
+		
+		# Lambda cutoff
+		self.LAMBDA = self.N/4
+		
+		# Gets the autocorrelations
 		if use_numpy:
-			self.R = self._get_numpy_autocorrelation(data)
+			self._get_numpy_autocorrelation(data)
 		else:
-			self.R = self._get_autocorrelation(data)
-		self.autocorrelation_error()
+			self._get_autocorrelation(data)
+
+		# Gets the autocorrelation errors
+		map(self._autocorrelation_error,range(self.N/2))
 
 	def __call__(self):
 		"""
@@ -74,26 +91,54 @@ class Autocorrelation:
 		Returns:
 			2*tau_int (float)
 		"""
-		self.tau_int = 0.5 + np.sum(np.abs(self.R))
+		if self.R[-1] == 0 or self.R[0] == 0:
+			print "Error: autocorrelation has not been performed yet!"
+
+		self._get_optimal_w()
+
+		# Sums the integrated autocorrelation time, eq E.12 Luscher(2004)
+		self.tau_int = 0.5 + np.sum(self.R[1:self.W])
 		return self.tau_int
 
-	def integrated_autocorrelation_time_error(self):
-		None
+	def _get_optimal_w(self):
+		"""
+		Equation E.13 in Luscher(2004)
+		"""
+		for t in xrange(1,self.N/2):
+			if np.abs(self.R[t]) <= np.sqrt(self.R_error[t]):
+				self.W = t
+				# print self.W, t, self.R[t], np.sqrt(self.R_error[t])
+				break
+		else:
+			self.W = float("NaN")
 
-	def autocorrelation_error(self):
+	def integrated_autocorrelation_time_error(self):
+		"""
+		Equation E.14 in Luscher(2004)
+		"""
+		self.tau_int_error = (4*self.W + 2)/float(self.N) * self.tau_int**2
+		return self.tau_int_error
+
+	def _autocorrelation_error(self,t):
 		"""
 		Function for calculating the autocorrelation error.
+		Equation E.11 in Luscher
 		Args:
 			R 		(numpy array): Array of autocorrelations
 		Returns:
 			R_error (numpy array): Array of error related to the autocorrelation
 		"""
-		self.R_error = np.zeros(self.N/2)
-		for h in xrange(self.N/2):
-			for k in xrange(h,self.LAMBDA+25): # CUTOFF?!"
-				print k+h, k-h, k, h
-				self.R_error[h] += (self.R[k+h] + self.R[k-h] - 2*self.R[k]*self.R[h])**2
-		self.R_error /= self.N
+		for k in xrange(1,self.LAMBDA + t):
+			if k+t >= self.N/2:
+				self.R_error[t] += 0.0
+			else:
+				self.R_error[t] += (self.R[k+t] + self.R[np.abs(k-t)] - 2*self.R[k]*self.R[t])**2 # abs since gamma(t) = gamma(-t)
+			# if k-t < 0 or k+t > self.N/2:
+			# 	# print "Error: out of bounds at t = %d, k = %d" % (t,k)
+			# 	# self.R_error[t] = float("NaN")
+			# 	break
+		self.R_error[t] /= float(self.N)
+		return self.R_error[t]
 
 	@timing_function
 	def _get_autocorrelation(self, data):
@@ -105,31 +150,26 @@ class Autocorrelation:
 			C(t)  (numpy array): normalized autocorrelation times 
 		"""
 		avg_data = np.average(data)
-		C = np.zeros(self.N/2)
-		for h in xrange(1,self.N/2):
-			for i in xrange(0, self.N - h):
-				C[h] += (data[i] - avg_data)*(data[i+h] - avg_data)
-			C[h] /= (self.N - h)
+		for t in xrange(0,self.N/2):
+			for i in xrange(0, self.N - t):
+				self.R[t] += (data[i] - avg_data)*(data[i+t] - avg_data)
+			self.R[t] /= (self.N - t)
 
-		C /= self.C0
+		self.R /= self.C0
 
-		return C
 		# return C / self.C0, R_error
 
 	@timing_function
 	def _get_numpy_autocorrelation(self, data):
 		"""
-		Numpy method for finding autocorrelation in a dataset. h is the lag.
+		Numpy method for finding autocorrelation in a dataset. t is tte lag.
 		Args:
 			Data, (numpy array): dataset to find the autocorrelation in
 		Returns:
 			C(t)  (numpy array): normalized autocorrelation times 
 		"""
-		R = np.zeros(self.N/2)
-		for h in range(1, self.N/2):
-			R[h] = np.corrcoef(np.array([data[0:self.N-h],data[h:self.N]]))[0,1]
-
-		return R
+		for t in range(0, self.N/2):
+			self.R[t] = np.corrcoef(np.array([data[0:self.N-t],data[t:self.N]]))[0,1]
 
 	def plot_autocorrelation(self, title, filename, lims = 1,dryrun=False):
 		"""
@@ -137,11 +177,12 @@ class Autocorrelation:
 		"""
 		fig = plt.figure(dpi=200)
 		ax = fig.add_subplot(111)
-		ax.plot(range(self.N/2),self.R,color="r",label="Autocorrelation")
+		# ax.plot(range(self.N/2),self.R,color="r",label="Autocorrelation")
+		ax.errorbar(range(self.N/2),self.R,yerr=self.R_error,color="0",ecolor="r",label="Autocorrelation")
 		ax.set_ylim(-lims,lims)
 		ax.set_xlim(0,self.N/2)
-		ax.set_xlabel(r"Lag $h$")
-		ax.set_ylabel(r"$R = \frac{C_h}{C_0}$")
+		ax.set_xlabel(r"Lag $t$")
+		ax.set_ylabel(r"$R = \frac{C_t}{C_0}$")
 		ax.set_title(title,fontsize=16)
 		start, end = ax.get_ylim()
 		ax.yaxis.set_ticks(np.arange(start, end, 0.2))
@@ -152,7 +193,7 @@ class Autocorrelation:
 
 # class IntegratedAutoCorrelationTime:
 # 	"""
-# 	Finds the integrated autocorrelation time
+# 	Finds the integrated autocorrelation time based on article by Wollf(2006)
 # 	"""
 # 	def __init__(self, ac_objects):
 # 		"""
@@ -162,7 +203,9 @@ class Autocorrelation:
 
 def main():
 	# Data to load and analyse
-	data = np.loadtxt("tests/plaq.dat",skiprows=8)
+	data = np.loadtxt("tests/plaq.dat",skiprows=8) # Completely uncorrelated dataset, so pointless to have as a test-file
+
+	print "="*20, "RUNNING DEFAULT TEST", "="*20
 	
 	# Histogram bins
 	N_bins = 20
@@ -172,14 +215,35 @@ def main():
 	
 	# Autocorrelation
 	ac = Autocorrelation(data,time_autocorrelation = time_ac_functions)
-	ac.plot_autocorrelation(r"Autocorrelation for $\beta = 6.1$", "beta6_1",dryrun=(not store_plots))
+	ac.plot_autocorrelation(r"Autocorrelation for Plaquette $\beta = 6.1, \tau=0.0$", "beta6_1",dryrun=(not store_plots))
+	ac.integrated_autocorrelation_time()
+	ac.integrated_autocorrelation_time_error()
 
 	# Autocorrelation with numpy
 	ac_numpy = Autocorrelation(data,use_numpy=True, time_autocorrelation = time_ac_functions)
-	ac_numpy.plot_autocorrelation(r"Autocorrelation for $\beta = 6.1$ using Numpy", "beta6_1",dryrun=(not store_plots))
-	
+	ac_numpy.plot_autocorrelation(r"Autocorrelation for Plaquette $\beta = 6.1, \tau=0.0$ using Numpy", "beta6_1",dryrun=(not store_plots))
+	ac_autocorr = ac_numpy.integrated_autocorrelation_time()
+	ac_autocorr_err = ac_numpy.integrated_autocorrelation_time_error()
+	print """
+Plaquette
+Average:                        {0:<.8f}
+Std:                            {1:<.8f}
+Std with ac-time correction:    {2:<.8f}
+sqrt(2*tau_int):                {3:<.8f}
+Integrated ac-time:             {4:<.8f}
+Integrated ac-time error:       {5:<.8f}""".format(
+	np.average(data),
+	np.std(data),
+	np.std(data)*np.sqrt(2*ac_autocorr),
+	np.sqrt(2*ac_autocorr),
+	ac_autocorr,
+	ac_autocorr_err)
+
 	# Differences in value
-	print "Time used by default method: {0:<.8f}\nTime used by numpy: {1:<.8f}\nImprovement(default/numpy): {2:<.3f}".format(ac.time_used, ac_numpy.time_used, ac.time_used/ac_numpy.time_used)
+	print """
+Time used by default method:    {0:<.8f}
+Time used by numpy:             {1:<.8f}
+Improvement(default/numpy):     {2:<.3f}""".format(ac.time_used, ac_numpy.time_used, ac.time_used/ac_numpy.time_used)
 	fig = plt.figure(dpi=200)
 	ax = fig.add_subplot(111)
 	ax.semilogy(np.abs(ac.R - ac_numpy.R))

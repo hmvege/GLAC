@@ -7,7 +7,7 @@ import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd, multiproces
 #### Parallel helper functions ####
 def _autocorrelation_parallel_core(input_values):
 	ac = Autocorrelation(input_values[0],use_numpy=input_values[1])
-	return ac(),np.sqrt(2*ac.integrated_autocorrelation_time())
+	return ac.R, ac.R_error, ac.integrated_autocorrelation_time(), ac.integrated_autocorrelation_time_error()
 
 def _bootstrap_parallel_core(input_values):
 	data, N_bs, bs_statistic, F, non_bs_stats, index_lists = input_values
@@ -59,6 +59,9 @@ class FlowAnalyser(object):
 		self.y = self.data.data_y
 		self.x = self.data.data_x
 
+		# Max plotting window variables
+		self.y_max = np.max(self.y)
+
 		self.N_configurations, self.NFlows = self.y.shape
 
 		# Small error checking in retrieving number of flows
@@ -84,6 +87,9 @@ class FlowAnalyser(object):
 		# Autocorrelation data
 		self.autocorrelation_performed = False
 		self.autocorrelations = np.zeros((self.NFlows,self.N_configurations/2))
+		self.autocorrelations_errors = np.zeros((self.NFlows,self.N_configurations/2))
+		self.integrated_autocorrelation_time = np.ones(self.NFlows)
+		self.integrated_autocorrelation_time_error = np.zeros(self.NFlows)
 		self.autocorrelation_error_correction = np.ones(self.NFlows)
 
 		# Gets the lattice spacing
@@ -174,30 +180,44 @@ class FlowAnalyser(object):
 	def autocorrelation(self,use_numpy=True):
 		# Gets autocorrelation
 		if self.parallel:
+			# Array of jobs
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
 								[use_numpy for i in xrange(self.NFlows)])
+
+			# Sets up parallel job
 			pool = multiprocessing.Pool(processes=self.numprocs)								
+
+			# Initiates parallel jobs
 			results = pool.map(_autocorrelation_parallel_core,input_values)
 
 			# Populating autocorrelation results
 			for i in xrange(self.NFlows):
 				self.autocorrelations[i] = results[i][0]
-				self.autocorrelation_error_correction[i] = results[i][1]
+				self.autocorrelations_errors[i] = results[i][1]
+				self.integrated_autocorrelation_time[i] = results[i][2]
+				self.integrated_autocorrelation_time_error[i] = results[i][3]
+				self.autocorrelation_error_correction[i] = np.sqrt(2*self.integrated_autocorrelation_time[i])
 		else:
 			for i in xrange(self.NFlows):
 				ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy)
-				self.autocorrelations[i] = ac()
-				self.autocorrelation_error_correction[i] = np.sqrt(2*ac.integrated_autocorrelation_time())
-
-				# if i > 750: 
-				# 	print 2*(0.5 + np.sum(ac.R)), self.autocorrelation_error_correction[i]
+				self.autocorrelations[i] = ac.R
+				self.autocorrelations_errors[i] = ac.R_error
+				self.integrated_autocorrelation_time[i] = ac.integrated_autocorrelation_time()
+				self.integrated_autocorrelation_time_error[i] = ac.integrated_autocorrelation_time_error()
+				self.autocorrelation_error_correction[i] = np.sqrt(2*self.integrated_autocorrelation_time[i])
 
 				# Small progressbar
 				sys.stdout.write("\rCalculating autocorrelation: %4.1f%% done" % (100*float(i)/float(self.NFlows)))
 				sys.stdout.flush()
+
 			# Finalizes
 			sys.stdout.write("\rCalculating autocorrelation: 100.0%% done")
 			sys.stdout.flush()
+
+		# print "PRINTING IN Autocorrelation @ analyse.py"
+		# print self.integrated_autocorrelation_time
+		# print self.integrated_autocorrelation_time_error
+
 
 		# Sets performed flag to true
 		self.autocorrelation_performed = True
@@ -205,9 +225,14 @@ class FlowAnalyser(object):
 	def __plot_error_core(self,x,y,y_std,title_string,fname):
 		# Plots the jackknifed data
 		plt.figure()
-		plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
+		plt.errorbar(x,y,yerr=y_std,fmt="-o",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
+		# pl.plot(x, y, 'k', color='#CC4F1B')
+		# pl.fill_between(x, y-error, y+error,
+		#     alpha=0.5, edgecolor='#CC4F1B', facecolor='#FF9848')
+
 		plt.xlabel(self.x_label)
 		plt.ylabel(self.y_label)
+		plt.ylim(-self.y_max,self.y_max)
 		plt.grid(True)
 		plt.title(title_string)
 		if not self.dryrun: 
@@ -257,6 +282,8 @@ class FlowAnalyser(object):
 			y = np.abs(self.autocorrelations[flow_time,:])
 		else:
 			y = self.autocorrelations[flow_time,:]
+		
+		y_std = self.autocorrelations_errors[flow_time,:]
 
 		# Sets up the title and filename strings
 		title_string = r"Autocorrelation of %s at flow time $t=%.2f$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,flow_time*self.data.meta_data["FlowEpsilon"],self.beta,self.N_configurations)
@@ -265,7 +292,8 @@ class FlowAnalyser(object):
 		# Plots the autocorrelations
 		fig = plt.figure(dpi=300)
 		ax = fig.add_subplot(111)
-		ax.plot(x,y,color="0",label=self.observable_name)
+		# ax.plot(x,y,color="0",label=self.observable_name)
+		ax.errorbar(x,y,yerr=y_std,color="0",ecolor="r",label=self.observable_name)
 		ax.set_ylim(-self.autocorrelations_limits,self.autocorrelations_limits)
 		ax.set_xlim(0,N_autocorr)
 		ax.set_xlabel(r"Lag $h$")
@@ -498,25 +526,25 @@ def main(args):
 		if 'topc' in args:
 			topc_analysis.boot(N_bs)
 			topc_analysis.jackknife()
-			# topc_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
-			# topc_analysis.plot_autocorrelation(0)
-			# topc_analysis.plot_autocorrelation(-1)
+			topc_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
+			topc_analysis.plot_autocorrelation(0)
+			topc_analysis.plot_autocorrelation(-1)
 			topc_analysis.plot_mc_history(0)
 			topc_analysis.plot_mc_history(-1)
 			topc_analysis.plot_boot()
 			topc_analysis.plot_original()
 			topc_analysis.plot_jackknife()
-			# topc_analysis.plot_histogram(0)
-			# topc_analysis.plot_histogram(-1)
+			topc_analysis.plot_histogram(0)
+			topc_analysis.plot_histogram(-1)
 			observable_strings.append(topc_analysis.observable_name)
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs)
 			topsus_analysis.boot(N_bs,bs_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = topsus_analysis.return_x_squared)
 			topsus_analysis.jackknife(jk_statistics = topsus_analysis.stat, F = topsus_analysis.chi, non_jk_statistics = topsus_analysis.return_x_squared)
-			# topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
-			# topsus_analysis.plot_autocorrelation(0)
-			# topsus_analysis.plot_autocorrelation(-1)
+			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			topsus_analysis.plot_autocorrelation(0)
+			topsus_analysis.plot_autocorrelation(-1)
 			topsus_analysis.plot_mc_history(0)
 			topsus_analysis.plot_mc_history(-1)
 			topsus_analysis.plot_boot()
@@ -542,7 +570,7 @@ def main(args):
 
 	post_time = time.clock()
 	print "="*100
-	print "Analysis of batch %s observables %s in %.2f minutes" % (args[0], ", ".join([i.lower() for i in observable_strings]), (post_time-pre_time)/60.0)
+	print "Analysis of batch %s observables %s in %.2f seconds" % (args[0], ", ".join([i.lower() for i in observable_strings]), (post_time-pre_time))
 	print "="*100
 
 if __name__ == '__main__':
@@ -563,11 +591,11 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','topsus'],
 		# 		['beta6_2','data2','topsus']]
 
-		# args = [['beta6_1','data','energy']]
+		args = [['beta6_1','data','topc']]
 
 		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
 
-		args = [['beta6_0','data','plaq','topc','energy','topsus']]
+		# args = [['beta6_1','data','plaq','topc','energy','topsus']]
 		# args = [['beta6_2','data','energy']]
 
 		for a in args:
