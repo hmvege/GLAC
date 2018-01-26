@@ -28,20 +28,20 @@ hbarc_nano_ev		= hbarc_meters_ev * length_dictionary["nano"]	# nano-meters
 hbarc_fermi_ev		= hbarc_meters_ev * length_dictionary["fermi"]	# fermi-meters
 
 # ENERGY: hbarc in different energy units
-hbarc_meters_mev 	= hbarc_meters_ev / energy_dictionary["mev"]
-hbarc_meters_gev 	= hbarc_meters_ev / energy_dictionary["gev"]
+hbarc_meters_mev 	= hbarc_meters_ev / energy_dictionary["mev"]	# MeV micro
+hbarc_meters_gev 	= hbarc_meters_ev / energy_dictionary["gev"]	# GeV meters
 
-hbarc_micro_mev		= hbarc_meters_mev / length_dictionary["micro"]
-hbarc_micro_gev		= hbarc_meters_gev / length_dictionary["micro"]
+hbarc_micro_mev		= hbarc_meters_mev / length_dictionary["micro"]	# MeV micro
+hbarc_micro_gev		= hbarc_meters_gev / length_dictionary["micro"]	# GeV micro
 
-hbarc_nano_mev		= hbarc_meters_mev / length_dictionary["nano"]
-hbarc_nano_gev		= hbarc_meters_gev / length_dictionary["nano"]
+hbarc_nano_mev		= hbarc_meters_mev / length_dictionary["nano"] 	# MeV nano
+hbarc_nano_gev		= hbarc_meters_gev / length_dictionary["nano"]  # GeV nano
 
-hbarc_fermi_mev		= hbarc_meters_mev / length_dictionary["fermi"]
-hbarc_fermi_gev		= hbarc_meters_gev / length_dictionary["fermi"]	# fermi-meters
+hbarc_fermi_mev		= hbarc_meters_mev / length_dictionary["fermi"] # MeV fermi
+hbarc_fermi_gev		= hbarc_meters_gev / length_dictionary["fermi"]	# GeV fermi
 
-one_fermi_from_mev = 1 / hbarc_fermi_mev # 1 fermi
-one_fermi_from_gev = 1 / hbarc_fermi_gev # 1 fermi
+# one_fermi_from_mev = 1 / hbarc_fermi_mev # 1 fermi
+# one_fermi_from_gev = 1 / hbarc_fermi_gev # 1 fermi
 
 one_mev_from_fermi = hbarc_fermi_mev
 one_gev_from_fermi = hbarc_fermi_gev
@@ -63,6 +63,7 @@ def convert_ev_to_meters(fm):
 
 print "Lattice spacing: %.4f [fermi]" % getLatticeSpacing(6.45)
 print "Energy scale:	%.4f [GeV]" % (getLatticeSpacing(6.45) / hbarc_fermi_gev)
+
 
 
 def main(args):

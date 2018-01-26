@@ -41,6 +41,9 @@ class Autocorrelation:
 		self.time_autocorrelation = time_autocorrelation
 		self.time_used = 0.0
 
+		# Lambda cutoff
+		self.LAMBDA = 100
+
 		# Autocorrelation variables
 		self.N = len(data)
 		self.data = data
@@ -49,6 +52,7 @@ class Autocorrelation:
 			self.R = self._get_numpy_autocorrelation(data)
 		else:
 			self.R = self._get_autocorrelation(data)
+		self.autocorrelation_error()
 
 	def __call__(self):
 		"""
@@ -73,6 +77,24 @@ class Autocorrelation:
 		self.tau_int = 0.5 + np.sum(np.abs(self.R))
 		return self.tau_int
 
+	def integrated_autocorrelation_time_error(self):
+		None
+
+	def autocorrelation_error(self):
+		"""
+		Function for calculating the autocorrelation error.
+		Args:
+			R 		(numpy array): Array of autocorrelations
+		Returns:
+			R_error (numpy array): Array of error related to the autocorrelation
+		"""
+		self.R_error = np.zeros(self.N/2)
+		for h in xrange(self.N/2):
+			for k in xrange(h,self.LAMBDA+25): # CUTOFF?!"
+				print k+h, k-h, k, h
+				self.R_error[h] += (self.R[k+h] + self.R[k-h] - 2*self.R[k]*self.R[h])**2
+		self.R_error /= self.N
+
 	@timing_function
 	def _get_autocorrelation(self, data):
 		"""
@@ -84,11 +106,15 @@ class Autocorrelation:
 		"""
 		avg_data = np.average(data)
 		C = np.zeros(self.N/2)
-		for h in xrange((self.N)/2):
+		for h in xrange(1,self.N/2):
 			for i in xrange(0, self.N - h):
 				C[h] += (data[i] - avg_data)*(data[i+h] - avg_data)
 			C[h] /= (self.N - h)
-		return C / self.C0
+
+		C /= self.C0
+
+		return C
+		# return C / self.C0, R_error
 
 	@timing_function
 	def _get_numpy_autocorrelation(self, data):
@@ -100,8 +126,9 @@ class Autocorrelation:
 			C(t)  (numpy array): normalized autocorrelation times 
 		"""
 		R = np.zeros(self.N/2)
-		for h in range(0, self.N/2):
+		for h in range(1, self.N/2):
 			R[h] = np.corrcoef(np.array([data[0:self.N-h],data[h:self.N]]))[0,1]
+
 		return R
 
 	def plot_autocorrelation(self, title, filename, lims = 1,dryrun=False):
