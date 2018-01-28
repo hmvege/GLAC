@@ -61,7 +61,8 @@ def convert_meters_to_ev():
 def convert_ev_to_meters(fm):
 	return fm
 
-print "Lattice spacing: %.4f [fermi]" % getLatticeSpacing(6.45)
+print getLatticeSpacing(6.45) * length_dictionary["fermi"] * 48
+print "Lattice spacing: %.4f [fermi]" % getLatticeSpacing(6.0)
 print "Energy scale:	%.4f [GeV]" % (getLatticeSpacing(6.45) / hbarc_fermi_gev)
 
 

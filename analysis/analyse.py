@@ -1,4 +1,4 @@
-from tools.folderreadingtools import GetDirectoryTree, GetFolderContents
+from tools.folderreadingtools import GetDirectoryTree, GetFolderContents, write_data_to_file
 from statistics.jackknife import Jackknife
 from statistics.bootstrap import Bootstrap
 from statistics.autocorrelation import Autocorrelation
@@ -519,7 +519,10 @@ def main(args):
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_jackknife()
-		observable_strings.append(plaq_analysis.observable_name)
+		write_data_to_file(	np.asarray(	plaq_analysis.x*plaq_analysis.data.meta_data["FlowEpsilon"],
+										plaq_analysis.bs_y,
+										plaq_analysis.bs_y_std*plaq_analysis.autocorrelation_error_correction),
+							args[0],plaq_analysis.beta,'plaq')
 
 	if 'topc' in args or 'topsus' in args:
 		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), "topc", args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
@@ -536,7 +539,10 @@ def main(args):
 			topc_analysis.plot_jackknife()
 			topc_analysis.plot_histogram(0)
 			topc_analysis.plot_histogram(-1)
-			observable_strings.append(topc_analysis.observable_name)
+			write_data_to_file(	np.asarray(	topc_analysis.x*topc_analysis.data.meta_data["FlowEpsilon"],
+										topc_analysis.bs_y,
+										topc_analysis.bs_y_std*topc_analysis.autocorrelation_error_correction),
+							args[0],topc_analysis.beta,'topc')
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), "topsus", args[0], dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs)
@@ -550,7 +556,10 @@ def main(args):
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_jackknife()
-			observable_strings.append(topsus_analysis.observable_name)
+			write_data_to_file(	np.asarray(	topsus_analysis.x*topsus_analysis.data.meta_data["FlowEpsilon"],
+										topsus_analysis.bs_y,
+										topsus_analysis.bs_y_std*topsus_analysis.autocorrelation_error_correction),
+							args[0],topsus_analysis.beta,'topsus')
 
 	if 'energy' in args:
 		r0 = 0.5
@@ -566,11 +575,14 @@ def main(args):
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
-		observable_strings.append(energy_analysis.observable_name)
+		write_data_to_file(	np.asarray(	energy_analysis.x*energy_analysis.data.meta_data["FlowEpsilon"],
+										energy_analysis.bs_y,
+										energy_analysis.bs_y_std*energy_analysis.autocorrelation_error_correction),
+							args[0],energy_analysis.beta,'energy')
 
 	post_time = time.clock()
 	print "="*100
-	print "Analysis of batch %s observables %s in %.2f seconds" % (args[0], ", ".join([i.lower() for i in observable_strings]), (post_time-pre_time))
+	print "Analysis of batch %s observables %s in %.2f seconds" % (args[0], ", ".join([i.lower() for i in args[1:]]), (post_time-pre_time))
 	print "="*100
 
 if __name__ == '__main__':
@@ -582,16 +594,15 @@ if __name__ == '__main__':
 		# 		['beta6_1','data','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data','plaq','topc','energy','topsus']]
 
-
-		# args = [['beta6_0','data2','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data2','plaq','topc','energy','topsus'],
-		# 		['beta6_2','data2','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data2','plaq','topc','energy','topsus'],
+				['beta6_1','data2','plaq','topc','energy','topsus'],
+				['beta6_2','data2','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_0','data2','topsus'],
 		# 		['beta6_1','data2','topsus'],
 		# 		['beta6_2','data2','topsus']]
 
-		args = [['beta6_1','data','topc']]
+		# args = [['beta6_1','data','topc']]
 
 		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
 

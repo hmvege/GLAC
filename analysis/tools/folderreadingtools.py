@@ -159,5 +159,24 @@ class GetFolderContents:
 			# Small progressbar
 			sys.stdout.write("\rData retrieved: 100.0%% done\n")
 
+def write_data_to_file(data,batch_name,beta,observable,folder="../output/post_analysis_data"):
+	"""
+	Function that write data to file.
+	Args:
+		data 				(numpy array)	: array containing three columns with flow times, averages and then errors in each of them
+		batch_name			(str)			: file name
+		observable 			(str)			: observable name
+		(optional) folder 	(str)			: output folder, default is ../output/analyzed_data
+	Returns:
+		None
+	"""
+	batch_size_folder = "%s_beta%s" % (batch_name,beta)
+	fname = "%s_obs%s_beta%s.txt" % (batch_name,observable,beta)
+	fname_path = os.path.join(folder,batch_size_folder,fname)
+	np.savetxt(fname,data,fmt="%.18f",header="t {0:<s} {0:<s}_error".format(observable))
+	print "Data written to %s" % fname_path
+
+# def join_analyzed_data_files(output)
+
 if __name__ == '__main__':
 	sys.exit("Exiting module.")
