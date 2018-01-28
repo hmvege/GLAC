@@ -159,21 +159,38 @@ class GetFolderContents:
 			# Small progressbar
 			sys.stdout.write("\rData retrieved: 100.0%% done\n")
 
-def write_data_to_file(data,batch_name,beta,observable,folder="../output/post_analysis_data"):
+def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dryrun=False):
 	"""
 	Function that write data to file.
 	Args:
-		data 				(numpy array)	: array containing three columns with flow times, averages and then errors in each of them
-		batch_name			(str)			: file name
-		observable 			(str)			: observable name
+		analysis_object		(FlowAnalyser)	: object of analyser class
 		(optional) folder 	(str)			: output folder, default is ../output/analyzed_data
 	Returns:
 		None
 	"""
-	batch_size_folder = "%s_beta%s" % (batch_name,beta)
-	fname = "%s_obs%s_beta%s.txt" % (batch_name,observable,beta)
-	fname_path = os.path.join(folder,batch_size_folder,fname)
-	np.savetxt(fname,data,fmt="%.18f",header="t {0:<s} {0:<s}_error".format(observable))
+	if not os.path.isdir(folder):
+		if not dryrun:
+			os.mkdir(folder)
+		print "> mkdir %s" % folder
+
+	folder_batch_path = os.path.join(folder,analysis_object.batch_name)
+	if not os.path.isdir(folder_batch_path):
+		if not dryrun:
+			os.mkdir(folder_batch_path)
+		print "> mkdir %s" % folder_batch_path
+
+	# Creates variables from provided object
+	data = 	np.stack((	analysis_object.x*analysis_object.data.meta_data["FlowEpsilon"],
+						analysis_object.bs_y,
+						analysis_object.bs_y_std*analysis_object.autocorrelation_error_correction),
+						axis=1)
+	batch_name = analysis_object.batch_name
+	beta_string = str(analysis_object.beta).replace(",","_")
+	observable = analysis_object.observable_name_compact
+
+	fname = "%s_%s_beta%s.txt" % (batch_name,observable,beta_string)
+	fname_path = os.path.join(folder_batch_path,fname)
+	np.savetxt(fname_path,data,fmt="%.18f",header="t {0:<s} {0:<s}_error".format(observable))
 	print "Data written to %s" % fname_path
 
 # def join_analyzed_data_files(output)
