@@ -31,6 +31,7 @@ class FlowAnalyser(object):
 	mark_interval = 5
 	error_mark_interval = 5
 	autocorrelations_limits = 1
+	dpi = None
 
 	def __init__(self,files,batch_name,data=None,dryrun=False,flow=True, parallel = False, numprocs = 4):
 		# Sets up global constants
@@ -291,7 +292,7 @@ class FlowAnalyser(object):
 		plt.grid(True)
 		plt.title(title_string)
 		if not self.dryrun: 
-			plt.savefig(fname,dpi=300)
+			plt.savefig(fname,dpi=self.dpi)
 		print "Figure created in %s" % fname
 		plt.close()
 
@@ -324,7 +325,7 @@ class FlowAnalyser(object):
 		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_autocorrelation_flow_time_{2:<d}.png".format(self.batch_name,self.observable_name,flow_time)
 
 		# Plots the autocorrelations
-		fig = plt.figure(dpi=300)
+		fig = plt.figure(dpi=self.dpi)
 		ax = fig.add_subplot(111)
 		# ax.plot(x,y,color="0",label=self.observable_name)
 		ax.errorbar(x,y,yerr=y_std,color="0",ecolor="r",label=self.observable_name)
@@ -338,7 +339,7 @@ class FlowAnalyser(object):
 		ax.grid(True)
 		ax.legend()
 		if not self.dryrun: 
-			fig.savefig(fname,dpi=300)
+			fig.savefig(fname,dpi=self.dpi)
 		print "Figure created in %s" % fname
 		plt.close()
 
@@ -353,7 +354,7 @@ class FlowAnalyser(object):
 		fname = "../figures/{0:<s}/flow_{1:<s}_{0:<s}_flowt_{2:<d}_histogram.png".format(self.batch_name,self.observable_name_compact,abs(flow_time))
 
 		# Sets up plot
-		fig = plt.figure(dpi=300)
+		fig = plt.figure(dpi=self.dpi)
 
 		# Adds unanalyzed data
 		ax1 = fig.add_subplot(311)
@@ -399,7 +400,7 @@ class FlowAnalyser(object):
 		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.data.meta_data["FlowEpsilon"])
 		fname = "../figures/{0:<s}/mchistory_{3:<s}_{0:<s}_beta_{1:<s}_flow_time_{2:<d}.png".format(self.batch_name, str(self.beta).replace('.','_'), flow_time, self.observable_name_compact)
 
-		fig = plt.figure(dpi=300)
+		fig = plt.figure(dpi=self.dpi)
 		ax = fig.add_subplot(111)
 		ax.plot(correction_function(self.unanalyzed_y_data[flow_time]),color="0",label=self.observable_name)
 		ax.set_xlabel(r"Monte Carlo time")
@@ -408,7 +409,7 @@ class FlowAnalyser(object):
 		ax.grid(True)
 		ax.legend()
 		if not self.dryrun: 
-			fig.savefig(fname,dpi=300)
+			fig.savefig(fname,dpi=self.dpi)
 		print "Figure created in %s" % fname
 		plt.close()
 
@@ -599,6 +600,8 @@ if __name__ == '__main__':
 		args = [['beta6_0','data2','plaq','topc','energy','topsus'],
 				['beta6_1','data2','plaq','topc','energy','topsus'],
 				['beta6_2','data2','plaq','topc','energy','topsus']]
+
+		# args = [['beta6_2','data2','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_0','data2','topsus'],
 		# 		['beta6_1','data2','topsus'],

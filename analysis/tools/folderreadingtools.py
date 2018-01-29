@@ -159,7 +159,7 @@ class GetFolderContents:
 			# Small progressbar
 			sys.stdout.write("\rData retrieved: 100.0%% done\n")
 
-def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dryrun=False):
+def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dryrun=False,analysis_type="boot"):
 	"""
 	Function that write data to file.
 	Args:
@@ -180,10 +180,20 @@ def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dry
 		print "> mkdir %s" % folder_batch_path
 
 	# Creates variables from provided object
-	data = 	np.stack((	analysis_object.x*analysis_object.data.meta_data["FlowEpsilon"],
-						analysis_object.bs_y,
-						analysis_object.bs_y_std*analysis_object.autocorrelation_error_correction),
-						axis=1)
+	x = analysis_object.x*analysis_object.data.meta_data["FlowEpsilon"]
+	if analysis_type == "boot":
+		y = analysis_object.bs_y
+		y_err = analysis_object.bs_y_std*analysis_object.autocorrelation_error_correction
+	elif analysis_type == "jackknife":
+		y = analysis_object.jk_y
+		y_err = analysis_object.jk_y_std*analysis_object.autocorrelation_error_correction
+	elif analysis_type == "unanalyzed":
+		y = analysis_object.original_y
+		y_err = analysis_object.original_y_std*analysis_object.autocorrelation_error_correction
+	else:
+		raise KeyError("%s is not recognized. Available analyses: %s" % (analysis_type,"boot jackknife unanalyzed"))
+
+	data = 	np.stack((x,y,y_err),axis=1)
 	batch_name = analysis_object.batch_name
 	beta_string = str(analysis_object.beta).replace(",","_")
 	observable = analysis_object.observable_name_compact
