@@ -195,7 +195,7 @@ def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dry
 
 	data = 	np.stack((x,y,y_err),axis=1)
 	batch_name = analysis_object.batch_name
-	beta_string = str(analysis_object.beta).replace(",","_")
+	beta_string = str(analysis_object.beta).replace(".","_")
 	observable = analysis_object.observable_name_compact
 
 	fname = "%s_%s_beta%s.txt" % (batch_name,observable,beta_string)
