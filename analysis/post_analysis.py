@@ -340,8 +340,9 @@ class EnergyPostAnalysis(PostAnalysis):
 
 		# print x_points,y_points,y_points_err
 
+		# ax.axvline(0,linestyle="--",color="0",alpha=0.5)
 		ax.errorbar(x_points[1:],y_points[1:],yerr=y_points_err[1:],fmt="o",color="0",ecolor="0")
-		ax.errorbar(x_points[0],y_points[0],yerr=y_points_err[0],fmt="o",color="w",ecolor="0")
+		ax.errorbar(x_points[0],y_points[0],yerr=y_points_err[0],fmt="o",capthick=4,color="r",ecolor="r")
 		ax.plot(x,y,color="0")#,label=r"$y=%2.4fx + %2.4f$" % (a,b))
 		ax.set_ylabel(r"$\frac{\sqrt{8t_0}}{r_0}$")
 		ax.set_xlabel(r"$(a/r_0)^2$")
@@ -349,10 +350,9 @@ class EnergyPostAnalysis(PostAnalysis):
 		ax.set_xlim(-0.005,0.045)
 		ax.set_ylim(0.92,0.98)
 
-		ax.axvline(0,linestyle="--",color="0")
 
 		start, end = ax.get_ylim()
-		ax.yaxis.set_ticks(np.arange(start, end, 0.02))
+		ax.yaxis.set_ticks(np.arange(start, end, 0.01))
 		ax.grid(True)
 
 		ax.annotate(r"$a=0.05$fm", xy=((0.01/self.r0)**2, end), xytext=((0.01/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
