@@ -139,7 +139,7 @@ class PostAnalysis:
 		fig = plt.figure(dpi=self.dpi)
 		ax = fig.add_subplot(111)
 
-		for value in sorted(plot_values,key=lambda x:x["batch_name"]):
+		for value in plot_values:
 			x = value["x"]
 			y = value["y"]
 			y_err = value["y_err"]
@@ -161,6 +161,7 @@ class PostAnalysis:
 		fname = os.path.join(self.output_folder,"post_analysis_%s.png" % self.analysis_name_compact)
 		plt.savefig(fname)
 		print "Figure saved in %s" % fname
+		plt.close()
 
 class TopSusPostAnalysis(PostAnalysis):
 	analysis_name = "Topological Susceptibility"
@@ -203,10 +204,67 @@ class EnergyPostAnalysis(PostAnalysis):
 			values["color"] = self.colors[batch_name]
 			plot_values.append(values)
 
+		plot_values = sorted(plot_values,key=lambda x:x["batch_name"])
+
 		# x_limits = [0,np.max(plot_values[-1]["x"])]
 		# y_limits = [0,np.max(plot_values[-1]["y"])]
 
 		self._plot_core(plot_values)#,x_limits=x_limits,y_limits=y_limits)
+
+		self.__get_t0(plot_values)
+
+	def __get_t0(self,data_values):
+		self.t0_values = []
+		for values in data_values:
+			t0_batch = {}
+			t0_batch["beta"] = self.get_float(values["batch_name"])
+			t0_batch["t0_index"] = np.argmin( np.abs( values["y"] - 0.3 ) )
+			t0_batch["energy_min"] = values["y"][t0_batch["t0_index"]]
+			t0_batch["t0_err_negative"] = values["x"][np.argmin( np.abs( values["y"] - 0.3 - values["y_err"] ) )]
+			t0_batch["t0_err_positive"] = values["x"][np.argmin( np.abs( values["y"] - 0.3 + values["y_err"] ) )]
+			t0_batch["t0"] = values["x"][t0_batch["t0_index"]]
+
+			# Adds to list of batch-values
+			self.t0_values.append(t0_batch)
+		
+	def plot_continiuum(self):
+		fig = plt.figure(self.dpi)
+		ax = fig.add_subplot(111)
+
+		# Retrieves plotting values
+		x = [getLatticeSpacing(val["beta"]) for val in self.t0_values]
+		y = [val["t0"] for val in self.t0_values]
+		y_err_min = [val["t0_err_negative"] for val in self.t0_values]
+		y_err_max = [val["t0_err_positive"] for val in self.t0_values]
+
+		# Line-fitting
+		p_coeffs, residual, _, _, _= np.polyfit(x,y,1,w=1.0/np.asarray(y_err_min),full=True)
+		x_line_values = np.linspace(0,x[-1],100)
+		y_line_values = np.polyval(np.polyfit(x,y,1),x_line_values)
+		print p_coeffs, residual
+
+		# Adds zeroth values to y, y_err_min, y_err_max
+
+		# Converts to array for easy of use
+		x = (np.asarray(x)/self.r0)**2
+		y = np.asarray(y)
+		y_err_min = np.asarray(y_err_min)
+		y_err_max = np.asarray(y_err_max)
+		y_std = np.asarray([y_err_min,y_err_max])
+
+		exit(1)
+		ax.errorbar(x,y,yerr=y_std,color="0",ecolor="r",label=self.observable_name)
+		ax.set_xlabel(r"(a/r_0)^2")
+		ax.set_ylabel(r"$\frac{\sqrt(8t_0)}{r_0}$")
+		ax.set_title("Continiuum limit reference scale")
+		start, end = ax.get_ylim()
+		ax.yaxis.set_ticks(np.arange(start, end, 0.2))
+		ax.grid(True)
+		
+		fname = os.path.join(self.output_folder,"post_analysis_%s_continiuum.png" % self.analysis_name_compact)
+		fig.savefig(fname,dpi=self.dpi)
+		print "Figure created in %s" % fname
+		plt.close()
 
 
 def main(args):
@@ -229,6 +287,7 @@ def main(args):
 	# Plots energy
 	energy_analysis = EnergyPostAnalysis(data.data_observables["energy"],data.flow_time)
 	energy_analysis.plot()
+	energy_analysis.plot_continiuum()
 
 	# Retrofits the energy for continiuum limit
 	plt.show()
