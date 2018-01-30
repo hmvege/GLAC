@@ -4,6 +4,8 @@ from statistics.bootstrap import Bootstrap
 from statistics.autocorrelation import Autocorrelation
 import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd, multiprocessing, pickle, time
 
+# from tqdm import trange
+
 #### Parallel helper functions ####
 def _autocorrelation_parallel_core(input_values):
 	ac = Autocorrelation(input_values[0],use_numpy=input_values[1])
@@ -260,6 +262,7 @@ class FlowAnalyser(object):
 		else:
 			y = self.unanalyzed_y
 			y_std = self.unanalyzed_y_std*self.autocorrelation_error_correction
+			print y_std 
 
 		# Sets up the title and filename strings
 		if plot_bs:
@@ -572,6 +575,7 @@ def main(args):
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
+		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_autocorrelation(0)
 		energy_analysis.plot_autocorrelation(-1)
 		energy_analysis.plot_mc_history(0,correction_function = lambda x : -x/64.0)
@@ -597,9 +601,9 @@ if __name__ == '__main__':
 		# 		['beta6_1','data','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data2','plaq','topc','energy','topsus'],
-				['beta6_1','data2','plaq','topc','energy','topsus'],
-				['beta6_2','data2','plaq','topc','energy','topsus']]
+		# args = [['beta6_0','data2','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data2','plaq','topc','energy','topsus'],
+		# 		['beta6_2','data2','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_2','data2','plaq','topc','energy','topsus']]
 
@@ -607,7 +611,7 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','topsus'],
 		# 		['beta6_2','data2','topsus']]
 
-		# args = [['beta6_1','data','topc']]
+		args = [['beta6_1','data','energy']]
 
 		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
 

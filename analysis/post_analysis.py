@@ -1,4 +1,6 @@
-import numpy as np, matplotlib.pyplot as plt, sys, os, re
+import numpy as np, matplotlib.pyplot as plt, sys, os, re, scipy.optimize as sciopt
+
+# from scipy.optimize import curve_fit
 
 def getLatticeSpacing(beta):
 	# if beta < 5.7: raise ValueError("Beta should be larger than 5.7!")
@@ -6,6 +8,16 @@ def getLatticeSpacing(beta):
 	bval = (beta - 6)
 	a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
 	return a # fermi
+
+# def linear_curve(x,a,b):
+# 	return a*x + b
+
+class LineFit:
+	"""
+	Line fit method when y contains errors
+	"""
+	def __init__(self, x, y, y_err):
+		None
 
 class DataReader:
 	"""
@@ -161,6 +173,7 @@ class PostAnalysis:
 		fname = os.path.join(self.output_folder,"post_analysis_%s.png" % self.analysis_name_compact)
 		plt.savefig(fname)
 		print "Figure saved in %s" % fname
+		# plt.show()
 		plt.close()
 
 class TopSusPostAnalysis(PostAnalysis):
@@ -204,66 +217,146 @@ class EnergyPostAnalysis(PostAnalysis):
 			values["color"] = self.colors[batch_name]
 			plot_values.append(values)
 
-		plot_values = sorted(plot_values,key=lambda x:x["batch_name"])
+		self.plot_values = sorted(plot_values,key=lambda x:x["batch_name"])
 
 		# x_limits = [0,np.max(plot_values[-1]["x"])]
 		# y_limits = [0,np.max(plot_values[-1]["y"])]
 
-		self._plot_core(plot_values)#,x_limits=x_limits,y_limits=y_limits)
+		self._plot_core(self.plot_values)#,x_limits=x_limits,y_limits=y_limits)
 
-		self.__get_t0(plot_values)
-
-	def __get_t0(self,data_values):
+	def _get_t0(self,data_values):
 		self.t0_values = []
 		for values in data_values:
 			t0_batch = {}
 			t0_batch["beta"] = self.get_float(values["batch_name"])
-			t0_batch["t0_index"] = np.argmin( np.abs( values["y"] - 0.3 ) )
-			t0_batch["energy_min"] = values["y"][t0_batch["t0_index"]]
-			t0_batch["t0_err_negative"] = values["x"][np.argmin( np.abs( values["y"] - 0.3 - values["y_err"] ) )]
-			t0_batch["t0_err_positive"] = values["x"][np.argmin( np.abs( values["y"] - 0.3 + values["y_err"] ) )]
-			t0_batch["t0"] = values["x"][t0_batch["t0_index"]]
+			t0_batch["t0"],t0_batch["t0_err"] = self._linefit_t0(values["x"],values["y"],values["y_err"],t0_batch["beta"])
+			t0_batch["a"] = getLatticeSpacing(t0_batch["beta"])
 
 			# Adds to list of batch-values
 			self.t0_values.append(t0_batch)
-		
+
+	def _linefit_t0(self,x,y,y_err,beta):
+		# Creates a small interval in which we will fit the data
+		continiuum_limit_estimator = 0.3
+		fit_interval = 0.015
+
+		x_line_to_fit = []
+		y_line_to_fit = []
+		y_line_to_fit_errors = []
+		for i, iy in enumerate(y):
+			if (continiuum_limit_estimator - fit_interval) < iy < (continiuum_limit_estimator + fit_interval):
+				y_line_to_fit.append(iy)
+				x_line_to_fit.append(x[i])
+				y_line_to_fit_errors.append(y_err[i])
+
+		if len(y_line_to_fit) == 0:
+			raise ValueError("No values in the vincinity of t^2<E>=0.3 found for beta %2.2f" % beta)
+
+		x_line_to_fit = np.asarray(x_line_to_fit)
+		y_line_to_fit = np.asarray(y_line_to_fit)
+		y_line_to_fit_errors = np.asarray(y_line_to_fit_errors)
+		# print x_line_to_fit,y_line_to_fit,y_line_to_fit_errors
+
+		# Fitting data
+		pol,polcov = np.polyfit(x_line_to_fit,y_line_to_fit,1,rcond=None,full=False,w=1.0/y_line_to_fit_errors,cov=True)
+		# pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_line_to_fit, y_line_to_fit, sigma = y_line_to_fit_errors)
+
+		# Retrieving polynomial values for retrofitting
+		a = pol[0]
+		b = pol[1]
+		a_err, b_err = np.sqrt(np.diag(polcov))
+		# Error propegation of x
+		t0 = (continiuum_limit_estimator - b) / a
+
+		# Gets error of y
+		y_fitted_error = a_err*t0 + b_err
+
+		# Gets error of t0 estimate
+		t0_err = (y_fitted_error - b_err) / a + (b - continiuum_limit_estimator)*a_err / a**2
+		print t0,t0_err
+		return t0,t0_err
+
+	def _linefit_to_continiuum(self):
+		x_datapoints = (np.asarray([val["a"] for val in self.t0_values]) / self.r0)**2
+		b = np.asarray([val["beta"] for val in self.t0_values])
+		t0 = np.asarray([val["t0"] for val in self.t0_values])
+		t0_err = np.asarray([val["t0_err"] for val in self.t0_values])
+
+		# Reversing arrays, since increasing beta is decreasing lattice spacing and sets up y axis values, x is already the a-values
+		x_datapoints = x_datapoints[::-1]
+		y_datapoints = np.sqrt(8*t0[::-1])
+		y_datapoints_error = (8*t0_err[::-1]) / (np.sqrt(8*t0[::-1]))
+
+		# print b[::-1],x_datapoints, y_datapoints, y_datapoints_error
+
+		# Sets up y axis values, x is already the a-values
+		# y = np.sqrt(8*t0) # already fitted with t0/r0^2
+		# y_err = t0_err / (np.sqrt(8*t0) * self.r0**2) # needs r0^2 since fitted with t0/r0^2 --> (dt0/r0^2) / (r0 * sqrt(8*t0) / r0 = dt0 / (r0^2 * sqrt(8*t0)))
+
+		# print "y:",y,"\ny_err:",y_err,"\na:",x_datapoints
+
+		# # Fitting data
+		# pol, polcov = np.polyfit(a_lattice_spacing,y,1,rcond=None,full=False,w=1.0/y_err,cov=True)
+		# print pol, polcov
+
+		pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_datapoints, y_datapoints,sigma=y_datapoints_error)
+
+		# Gets line properties
+		a = pol[0]
+		b = pol[1]
+		a_err, b_err = np.sqrt(np.diag(polcov))
+
+		# Sets up line fitted variables		
+		x = np.linspace(0,x_datapoints[-1]*1.03,100)
+		y = a * x + b
+		y_std = a_err * x + b_err
+		# print a_err,b_err
+
+		return x,y,y_std,x_datapoints,y_datapoints,y_datapoints_error, a, b, a_err, b_err
+
 	def plot_continiuum(self):
+		# Retrieves t0 values
+		self._get_t0(self.plot_values)
+
+		# Fits to continiuum and retrieves values to be plotted
+		x, y, y_std, ar0, t0, t0_err, a, b, a_err, b_err = self._linefit_to_continiuum()
+
+		x_points = np.zeros(len(ar0)+1)
+		y_points = np.zeros(len(ar0)+1)
+		y_points_err = np.zeros(len(ar0)+1)
+
+		x_points[0] = x[0]
+		y_points[0] = y[0]
+		y_points_err[0] = y_std[0]
+		y_points_err[0] = b_err
+
+		x_points[1:] = ar0
+		y_points[1:] = t0
+		y_points_err[1:] = t0_err
+
 		fig = plt.figure(self.dpi)
 		ax = fig.add_subplot(111)
 
-		# Retrieves plotting values
-		x = [getLatticeSpacing(val["beta"]) for val in self.t0_values]
-		y = [val["t0"] for val in self.t0_values]
-		y_err_min = [val["t0_err_negative"] for val in self.t0_values]
-		y_err_max = [val["t0_err_positive"] for val in self.t0_values]
-
-		# Line-fitting
-		p_coeffs, residual, _, _, _= np.polyfit(x,y,1,w=1.0/np.asarray(y_err_min),full=True)
-		x_line_values = np.linspace(0,x[-1],100)
-		y_line_values = np.polyval(np.polyfit(x,y,1),x_line_values)
-		print p_coeffs, residual
-
-		# Adds zeroth values to y, y_err_min, y_err_max
-
-		# Converts to array for easy of use
-		x = (np.asarray(x)/self.r0)**2
-		y = np.asarray(y)
-		y_err_min = np.asarray(y_err_min)
-		y_err_max = np.asarray(y_err_max)
-		y_std = np.asarray([y_err_min,y_err_max])
-
-		exit(1)
-		ax.errorbar(x,y,yerr=y_std,color="0",ecolor="r",label=self.observable_name)
-		ax.set_xlabel(r"(a/r_0)^2")
-		ax.set_ylabel(r"$\frac{\sqrt(8t_0)}{r_0}$")
+		ax.errorbar(x_points[1:],y_points[1:],yerr=y_points_err[1:],fmt="o",color="0",ecolor="0")
+		ax.errorbar(x_points[0],y_points[0],yerr=y_points_err[0],fmt="o",color="w",ecolor="0")
+		ax.plot(x,y,color="0",label=r"$y=%2.4fx + %2.4f$" % (a,b))
+		ax.set_ylabel(r"$\frac{\sqrt{8t_0}}{r_0}$")
+		ax.set_xlabel(r"$(a/r_0)^2$")
 		ax.set_title("Continiuum limit reference scale")
+		ax.set_xlim(-0.005,0.05)
+		ax.set_ylim(0.88,0.98)
+		ax.legend()
+
+		# ax.axvline(0,linestyle=".",color="0")
+
 		start, end = ax.get_ylim()
-		ax.yaxis.set_ticks(np.arange(start, end, 0.2))
+		ax.yaxis.set_ticks(np.arange(start, end, 0.02))
 		ax.grid(True)
-		
+
 		fname = os.path.join(self.output_folder,"post_analysis_%s_continiuum.png" % self.analysis_name_compact)
 		fig.savefig(fname,dpi=self.dpi)
 		print "Figure created in %s" % fname
+		# plt.show()
 		plt.close()
 
 
@@ -287,10 +380,10 @@ def main(args):
 	# Plots energy
 	energy_analysis = EnergyPostAnalysis(data.data_observables["energy"],data.flow_time)
 	energy_analysis.plot()
-	energy_analysis.plot_continiuum()
 
 	# Retrofits the energy for continiuum limit
-	plt.show()
+	energy_analysis.plot_continiuum()
+	
 
 if __name__ == '__main__':
 	if len(sys.argv[1:]) == 1:
