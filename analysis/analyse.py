@@ -64,7 +64,7 @@ class FlowAnalyser(object):
 		self.x = self.data.data_x
 
 		# Max plotting window variables
-		self.y_limits = [-np.max(self.y),np.max(self.y)]
+		self.y_limits = []
 
 		self.N_configurations, self.NFlows = self.y.shape
 
@@ -128,6 +128,7 @@ class FlowAnalyser(object):
 								[index_lists for i in xrange(self.NFlows)])
 			pool = multiprocessing.Pool(processes=self.numprocs)								
 			results = pool.map(_bootstrap_parallel_core,input_values)
+			pool.close()
 
 			# Populating bootstrap data
 			for i in xrange(self.NFlows):
@@ -139,6 +140,7 @@ class FlowAnalyser(object):
 				# Stores last data for plotting in histogram later
 				self.bs_y_data[i] = results[i][4]
 				self.unanalyzed_y_data[i] = results[i][5]
+
 		else:
 			for i in xrange(self.NFlows):
 				bs = Bootstrap(self.y[:,i], N_bs, bootstrap_statistics = bs_statistic, F = F, non_bs_stats = non_bs_stats, index_lists = index_lists)
@@ -164,6 +166,7 @@ class FlowAnalyser(object):
 			# print sys.getsizeof(input_values)/1024.0, "kB"
 			pool = multiprocessing.Pool(processes=self.numprocs)								
 			results = pool.map(_jackknife_parallel_core,input_values)
+			pool.close()
 
 			# Populating jackknife results
 			for i in xrange(self.NFlows):
@@ -193,6 +196,8 @@ class FlowAnalyser(object):
 
 			# Initiates parallel jobs
 			results = pool.map(_autocorrelation_parallel_core,input_values)
+
+			pool.close()
 
 			# Populating autocorrelation results
 			for i in xrange(self.NFlows):
@@ -237,15 +242,15 @@ class FlowAnalyser(object):
 			x = self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
 		
 		# Copies data over to arrays to be plotted
-		y = correction_function(self.jk_y)
+		y = self.jk_y
 		y_std = self.jk_y_std*self.autocorrelation_error_correction
 
 		# Sets up the title and filename strings
 		title_string = r"Jacknife of %s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta)
-		fname = "../figures/{0:<s}/{1:<s}_beta{2:<s}_jackknife{3:<s}.png".format(self.batch_name,self.observable_name_compact,str(self.beta).replace('.','_'),fname_addon)
+		fname = "../figures/{0:<s}/{1:<s}_jackknife_beta{2:<s}{3:<s}.png".format(self.batch_name,self.observable_name_compact,str(self.beta).replace('.','_'),fname_addon)
 
 		# Plots the jackknifed data
-		self.__plot_error_core(x,y,y_std,title_string,fname)
+		self.__plot_error_core(x,correction_function(y),correction_function(y_std),title_string,fname)
 
 	def plot_boot(self,plot_bs=True, x = None, correction_function = lambda x : x, fname_addon = ""):
 		# Checks that the bootstrap has been performed.
@@ -267,13 +272,13 @@ class FlowAnalyser(object):
 		# Sets up the title and filename strings
 		if plot_bs:
 			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta,self.N_bs)
-			fname = "../figures/{0:<s}/{1:<s}_beta{2:<s}_Nbs{3:<s}{4:<s}.png".format(self.batch_name,self.observable_name_compact,str(self.beta).replace('.','_'),self.N_bs,fname_addon)
+			fname = "../figures/{0:<s}/{1:<s}_bootstrap_Nbs{3:<d}_beta{2:<s}{4:<s}.png".format(self.batch_name,self.observable_name_compact,str(self.beta).replace('.','_'),self.N_bs,fname_addon)
 		else:
 			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name, self.data.meta_data["NFlows"],self.beta)
-			fname = "../figures/{0:<s}/{1:<s}_beta{2:<s}{4:<s}.png".format(self.batch_name,self.observable_name_compact,str(self.beta).replace('.','_'),fname_addon)
+			fname = "../figures/{0:<s}/{1:<s}_original_beta{2:<s}{3:<s}.png".format(self.batch_name,self.observable_name_compact,str(self.beta).replace('.','_'),fname_addon)
 
 		# Plots either bootstrapped or regular stuff
-		self.__plot_error_core(x,correction_function(y),y_std,title_string,fname)
+		self.__plot_error_core(x,correction_function(y),correction_function(y_std),title_string,fname)
 
 	def plot_original(self, x = None, correction_function = lambda x : x, fname_addon = ""):
 		"""
@@ -284,10 +289,13 @@ class FlowAnalyser(object):
 	def __plot_error_core(self,x,y,y_std,title_string,fname):
 		# Plots the jackknifed data
 		plt.figure()
-		plt.errorbar(x,y,yerr=y_std,fmt="-o",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
+		plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
 		# pl.plot(x, y, 'k', color='#CC4F1B')
 		# pl.fill_between(x, y-error, y+error,
 		#     alpha=0.5, edgecolor='#CC4F1B', facecolor='#FF9848')
+
+		if len(self.y_limits) == 0:
+			self.y_limits = [-np.max(y),np.max(y)]
 
 		plt.xlabel(self.x_label)
 		plt.ylabel(self.y_label)
@@ -328,10 +336,10 @@ class FlowAnalyser(object):
 		fname = "../figures/{0:<s}/{1:<s}_autocorrelation_flowt{2:<d}_beta{3:<s}.png".format(self.batch_name,self.observable_name_compact,flow_time, str(self.beta).replace('.','_'))
 
 		# Plots the autocorrelations
-		fig = plt.figure(dpi=self.dpi)
+		fig = plt.figure()
 		ax = fig.add_subplot(111)
 		# ax.plot(x,y,color="0",label=self.observable_name)
-		ax.errorbar(x,y,yerr=y_std,color="0",ecolor="r",label=self.observable_name)
+		ax.errorbar(x,y,yerr=y_std,color="0",ecolor="r")#,label=self.observable_name)
 		ax.set_ylim(-self.autocorrelations_limits,self.autocorrelations_limits)
 		ax.set_xlim(0,N_autocorr)
 		ax.set_xlabel(r"Lag $h$")
@@ -340,13 +348,13 @@ class FlowAnalyser(object):
 		start, end = ax.get_ylim()
 		ax.yaxis.set_ticks(np.arange(start, end, 0.2))
 		ax.grid(True)
-		ax.legend()
+		# ax.legend()
 		if not self.dryrun: 
 			fig.savefig(fname,dpi=self.dpi)
 		print "Figure created in %s" % fname
 		plt.close()
 
-	def plot_histogram(self, flow_time, Nbins = 30, x_axis_limit = 500):
+	def plot_histogram(self, flow_time, Nbins = 30):
 		# Setting proper flow-time 
 		if flow_time < 0:
 			flow_time = len(self.unanalyzed_y_data) - abs(flow_time)
@@ -357,25 +365,31 @@ class FlowAnalyser(object):
 		fname = "../figures/{0:<s}/{1:<s}_histogram_flowt{2:<d}_beta{3:<s}.png".format(self.batch_name,self.observable_name_compact,abs(flow_time),str(self.beta).replace('.','_'))
 
 		# Sets up plot
-		fig = plt.figure(dpi=self.dpi)
+		fig = plt.figure()
 
 		# Adds unanalyzed data
 		ax1 = fig.add_subplot(311)
-		x1, y1, _ = ax1.hist(self.unanalyzed_y_data[flow_time],bins=Nbins,label="Unanalyzed")
+		# weights1 = np.ones_like(self.unanalyzed_y_data[flow_time])/float(len(self.unanalyzed_y_data[flow_time]))
+		weights1 = None
+		x1, y1, _ = ax1.hist(self.unanalyzed_y_data[flow_time],bins=Nbins,label="Unanalyzed", weights = weights1)
 		ax1.legend()
 		ax1.grid("on")
 		ax1.set_title(title_string)
 
 		# Adds bootstrapped data
 		ax2 = fig.add_subplot(312)
-		x2, y2, _ = ax2.hist(self.bs_y_data[flow_time],bins=Nbins/2,label="Bootstrap")
+		# weights2 = np.ones_like(self.bs_y_data[flow_time])/float(len(self.bs_y_data[flow_time]))
+		weights2 = None
+		x2, y2, _ = ax2.hist(self.bs_y_data[flow_time],bins=Nbins,label="Bootstrap", weights = weights2)
 		ax2.grid("on")
 		ax2.legend()
 		ax2.set_ylabel("Hits")
 
 		# Adds jackknifed histogram
 		ax3 = fig.add_subplot(313)
-		x3, y3, _ = ax3.hist(self.jk_y_data[flow_time],bins=Nbins/2,label="Jackknife")
+		# weights3 = np.ones_like(self.jk_y_data[flow_time])/float(len(self.jk_y_data[flow_time]))
+		weights3 = None
+		x3, y3, _ = ax3.hist(self.jk_y_data[flow_time],bins=Nbins,label="Jackknife", weights = weights3)
 		ax3.legend()
 		ax3.grid("on")
 		ax3.set_xlabel(R"$Q$")
@@ -403,7 +417,7 @@ class FlowAnalyser(object):
 		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.data.meta_data["FlowEpsilon"])
 		fname = "../figures/{0:<s}/{1:<s}_mchistory_flowt{2:<d}_beta{3:<s}.png".format(self.batch_name,self.observable_name_compact,flow_time,str(self.beta).replace('.','_'))
 
-		fig = plt.figure(dpi=self.dpi)
+		fig = plt.figure()
 		ax = fig.add_subplot(111)
 		ax.plot(correction_function(self.unanalyzed_y_data[flow_time]),color="0",label=self.observable_name)
 		ax.set_xlabel(r"Monte Carlo time")
@@ -518,9 +532,9 @@ def main(args):
 	# Analyses plaquette data if present in arguments
 	if 'plaq' in args:
 		plaq_analysis = AnalysePlaquette(DirectoryList.getFlow("plaq"), args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
-		plaq_analysis.y_limits = [0,1]
 		plaq_analysis.boot(N_bs)
 		plaq_analysis.jackknife()
+		plaq_analysis.y_limits = [0.55,1.05]
 		plaq_analysis.plot_original(fname_addon = "_noErrorCorrection")
 		plaq_analysis.plot_boot(fname_addon = "_noErrorCorrection")
 		plaq_analysis.plot_jackknife(fname_addon = "_noErrorCorrection")
@@ -532,8 +546,8 @@ def main(args):
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_jackknife()
-		plaq_analysis.plot_histogram(0)
-		plaq_analysis.plot_histogram(-1)
+		plaq_analysis.plot_histogram(0,Nbins=None)
+		plaq_analysis.plot_histogram(-1,Nbins=None)
 
 		if plaq_analysis.bootstrap_performed and plaq_analysis.autocorrelation_performed:
 			write_data_to_file(plaq_analysis,dryrun = dryrun)
@@ -542,8 +556,9 @@ def main(args):
 		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
 		if 'topc' in args:
 			topc_analysis.boot(N_bs)
-			topc_analysis.plot_original(fname_addon = "_noErrorCorrection")
 			topc_analysis.jackknife()
+			topc_analysis.y_limits = [-10,10]
+			topc_analysis.plot_original(fname_addon = "_noErrorCorrection")
 			topc_analysis.plot_boot(fname_addon = "_noErrorCorrection")
 			topc_analysis.plot_jackknife(fname_addon = "_noErrorCorrection")
 			topc_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
@@ -563,9 +578,10 @@ def main(args):
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), args[0], dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs)
 			topsus_analysis.boot(N_bs,bs_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = topsus_analysis.return_x_squared)
+			topsus_analysis.jackknife(jk_statistics = topsus_analysis.stat, F = topsus_analysis.chi, non_jk_statistics = topsus_analysis.return_x_squared)
+			topsus_analysis.y_limits = [0.05,0.24]
 			topsus_analysis.plot_original(fname_addon = "_noErrorCorrection")
 			topsus_analysis.plot_boot(fname_addon = "_noErrorCorrection")
-			topsus_analysis.jackknife(jk_statistics = topsus_analysis.stat, F = topsus_analysis.chi, non_jk_statistics = topsus_analysis.return_x_squared)
 			topsus_analysis.plot_jackknife(fname_addon = "_noErrorCorrection")
 			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 			topsus_analysis.plot_autocorrelation(0)
@@ -587,6 +603,7 @@ def main(args):
 		energy_analysis.boot(N_bs)
 		energy_analysis.jackknife()
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
+		energy_analysis.y_limits = [ 0 , np.max(energy_analysis.correction_function(energy_analysis.unanalyzed_y))]
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function, fname_addon = "_noErrorCorrection")
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function, fname_addon = "_noErrorCorrection")
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function, fname_addon = "_noErrorCorrection")
@@ -598,8 +615,8 @@ def main(args):
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
-		energy_analysis.plot_histogram(0)
-		energy_analysis.plot_histogram(-1)
+		energy_analysis.plot_histogram(0,Nbins=10)
+		energy_analysis.plot_histogram(-1,Nbins=10)
 
 		if energy_analysis.bootstrap_performed and energy_analysis.autocorrelation_performed:
 			write_data_to_file(energy_analysis,dryrun = dryrun)
@@ -628,7 +645,9 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','topsus'],
 		# 		['beta6_2','data2','topsus']]
 
-		# args = [['beta6_1','data','energy']]
+		# args = [['beta6_1','data2','energy']]
+
+		# args = [['beta6_0','data','topc','topsus','energy']]
 
 		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
 
