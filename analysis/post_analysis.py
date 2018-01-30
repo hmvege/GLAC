@@ -237,16 +237,16 @@ class EnergyPostAnalysis(PostAnalysis):
 
 	def _linefit_t0(self,x,y,y_err,beta):
 		# Creates a small interval in which we will fit the data
-		continiuum_limit_estimator = 0.3
+		y0 = 0.3
 		fit_interval = 0.015
 
 		x_line_to_fit = []
 		y_line_to_fit = []
 		y_line_to_fit_errors = []
 		for i, iy in enumerate(y):
-			if (continiuum_limit_estimator - fit_interval) < iy < (continiuum_limit_estimator + fit_interval):
-				y_line_to_fit.append(iy)
+			if (y0 - fit_interval) < iy < (y0 + fit_interval):
 				x_line_to_fit.append(x[i])
+				y_line_to_fit.append(iy)
 				y_line_to_fit_errors.append(y_err[i])
 
 		if len(y_line_to_fit) == 0:
@@ -259,47 +259,50 @@ class EnergyPostAnalysis(PostAnalysis):
 
 		# Fitting data
 		pol,polcov = np.polyfit(x_line_to_fit,y_line_to_fit,1,rcond=None,full=False,w=1.0/y_line_to_fit_errors,cov=True)
+		# print pol,"\n",polcov
 		# pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_line_to_fit, y_line_to_fit, sigma = y_line_to_fit_errors)
+		# print pol,"\n",polcov
 
 		# Retrieving polynomial values for retrofitting
 		a = pol[0]
 		b = pol[1]
 		a_err, b_err = np.sqrt(np.diag(polcov))
-		# Error propegation of x
-		t0 = (continiuum_limit_estimator - b) / a
 
-		# Gets error of y
-		y_fitted_error = a_err*t0 + b_err
+		# t0 value
+		t0 = self.r0**2 * (y0 - b) / a
 
 		# Gets error of t0 estimate
-		t0_err = (y_fitted_error - b_err) / a + (b - continiuum_limit_estimator)*a_err / a**2
-		print t0,t0_err
+		t0_err = np.sqrt((self.r0**2*(b - y0)/a**2)**2 * a_err**2 + self.r0**4/a**2 * b_err**2 + 2*self.r0**4*(b - y0)/a**4 * polcov[1,0])
+
+		# print "beta %g:" % beta, t0_err/self.r0**2
+		# print "beta %g:" % beta, t0/self.r0**2, y0
+
+		# plt.errorbar(x_line_to_fit,y_line_to_fit,yerr=y_line_to_fit_errors)
+		# plt.errorbar(t0/self.r0**2,y0,yerr=t0_err/self.r0**2,color="r",ecolor="r")
+		# plt.show()
+		# exit(1)
+
 		return t0,t0_err
 
 	def _linefit_to_continiuum(self):
-		x_datapoints = (np.asarray([val["a"] for val in self.t0_values]) / self.r0)**2
+		x_datapoints = np.asarray([val["a"] for val in self.t0_values])
 		b = np.asarray([val["beta"] for val in self.t0_values])
 		t0 = np.asarray([val["t0"] for val in self.t0_values])
 		t0_err = np.asarray([val["t0_err"] for val in self.t0_values])
 
 		# Reversing arrays, since increasing beta is decreasing lattice spacing and sets up y axis values, x is already the a-values
-		x_datapoints = x_datapoints[::-1]
-		y_datapoints = np.sqrt(8*t0[::-1])
-		y_datapoints_error = (8*t0_err[::-1]) / (np.sqrt(8*t0[::-1]))
+		x_datapoints = (x_datapoints[::-1] / self.r0)**2
+		y_datapoints = np.sqrt(8*t0[::-1]) / self.r0
+		y_datapoints_error = (8*t0_err[::-1]) / (np.sqrt(8*t0[::-1])) / self.r0
 
-		# print b[::-1],x_datapoints, y_datapoints, y_datapoints_error
-
-		# Sets up y axis values, x is already the a-values
-		# y = np.sqrt(8*t0) # already fitted with t0/r0^2
-		# y_err = t0_err / (np.sqrt(8*t0) * self.r0**2) # needs r0^2 since fitted with t0/r0^2 --> (dt0/r0^2) / (r0 * sqrt(8*t0) / r0 = dt0 / (r0^2 * sqrt(8*t0)))
-
-		# print "y:",y,"\ny_err:",y_err,"\na:",x_datapoints
-
-		# # Fitting data
-		# pol, polcov = np.polyfit(a_lattice_spacing,y,1,rcond=None,full=False,w=1.0/y_err,cov=True)
-		# print pol, polcov
+		# Fitting data
+		# pol, polcov = np.polyfit(x_datapoints,y_datapoints,1,rcond=None,full=False,w=1.0/y_datapoints_error,cov=True)
+		# print pol,"\n",polcov
 
 		pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_datapoints, y_datapoints,sigma=y_datapoints_error)
+		# print pol,"\n",polcov
+
+		# exit(1)
 
 		# Gets line properties
 		a = pol[0]
@@ -310,7 +313,6 @@ class EnergyPostAnalysis(PostAnalysis):
 		x = np.linspace(0,x_datapoints[-1]*1.03,100)
 		y = a * x + b
 		y_std = a_err * x + b_err
-		# print a_err,b_err
 
 		return x,y,y_std,x_datapoints,y_datapoints,y_datapoints_error, a, b, a_err, b_err
 
@@ -328,7 +330,6 @@ class EnergyPostAnalysis(PostAnalysis):
 		x_points[0] = x[0]
 		y_points[0] = y[0]
 		y_points_err[0] = y_std[0]
-		y_points_err[0] = b_err
 
 		x_points[1:] = ar0
 		y_points[1:] = t0
@@ -337,26 +338,34 @@ class EnergyPostAnalysis(PostAnalysis):
 		fig = plt.figure(self.dpi)
 		ax = fig.add_subplot(111)
 
+		# print x_points,y_points,y_points_err
+
 		ax.errorbar(x_points[1:],y_points[1:],yerr=y_points_err[1:],fmt="o",color="0",ecolor="0")
 		ax.errorbar(x_points[0],y_points[0],yerr=y_points_err[0],fmt="o",color="w",ecolor="0")
-		ax.plot(x,y,color="0",label=r"$y=%2.4fx + %2.4f$" % (a,b))
+		ax.plot(x,y,color="0")#,label=r"$y=%2.4fx + %2.4f$" % (a,b))
 		ax.set_ylabel(r"$\frac{\sqrt{8t_0}}{r_0}$")
 		ax.set_xlabel(r"$(a/r_0)^2$")
-		ax.set_title("Continiuum limit reference scale")
-		ax.set_xlim(-0.005,0.05)
-		ax.set_ylim(0.88,0.98)
-		ax.legend()
+		# ax.set_title(r"Continiuum limit reference scale: $t_{0,cont}=%2.4f\pm%g$" % ((self.r0*y_points[0])**2/8,(self.r0*y_points_err[0])**2/8))
+		ax.set_xlim(-0.005,0.045)
+		ax.set_ylim(0.92,0.98)
 
-		# ax.axvline(0,linestyle=".",color="0")
+		ax.axvline(0,linestyle="--",color="0")
 
 		start, end = ax.get_ylim()
 		ax.yaxis.set_ticks(np.arange(start, end, 0.02))
 		ax.grid(True)
 
+		ax.annotate(r"$a=0.05$fm", xy=((0.01/self.r0)**2, end), xytext=((0.01/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
+		ax.annotate(r"$a=0.07$fm", xy=((0.07/self.r0)**2, end), xytext=((0.07/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
+		ax.annotate(r"$a=0.07$fm", xy=((0.1/self.r0)**2, end), xytext=((0.1/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
+
+		# ax.legend(loc="lower left")
+
 		fname = os.path.join(self.output_folder,"post_analysis_%s_continiuum.png" % self.analysis_name_compact)
 		fig.savefig(fname,dpi=self.dpi)
+
 		print "Figure created in %s" % fname
-		# plt.show()
+		plt.show()
 		plt.close()
 
 
