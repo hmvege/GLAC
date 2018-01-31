@@ -49,7 +49,6 @@ class Autocorrelation:
 		self.time_autocorrelation = time_autocorrelation
 		self.time_used = 0.0
 
-
 		# Autocorrelation variables
 		self.N = len(data)
 		self.data = data

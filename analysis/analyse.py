@@ -103,7 +103,14 @@ class FlowAnalyser(object):
 
 	@staticmethod
 	def getLatticeSpacing(beta):
-		# if beta < 5.7: raise ValueError("Beta should be larger than 5.7!")
+		"""
+		Static method for calculating the lattice spacing a from the beta-value. Based on paper by M. Guagnelli et al(1998)
+		Args:
+			beta (float)		: beta value
+		Returns:
+			a (float)			: lattice spacing
+		"""
+		if beta < 5.7: raise ValueError("Beta should be larger than 5.7!")
 		r = 0.5
 		bval = (beta - 6)
 		a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
@@ -120,14 +127,21 @@ class FlowAnalyser(object):
 		index_lists = np.random.randint(self.N_configurations, size=(self.N_bs, self.N_configurations))
 
 		if self.parallel:
+			# Sets up jobs for parallel processing
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
 								[N_bs for i in xrange(self.NFlows)],
 								[bs_statistic for i in xrange(self.NFlows)],
 								[F for i in xrange(self.NFlows)],
 								[non_bs_stats for i in xrange(self.NFlows)],
 								[index_lists for i in xrange(self.NFlows)])
+
+			# Initializes multiprocessing
 			pool = multiprocessing.Pool(processes=self.numprocs)								
+
+			# Runs parallel processes. Can this be done more efficiently?
 			results = pool.map(_bootstrap_parallel_core,input_values)
+
+			# Garbage collection for multiprocessing instance
 			pool.close()
 
 			# Populating bootstrap data
@@ -142,6 +156,7 @@ class FlowAnalyser(object):
 				self.unanalyzed_y_data[i] = results[i][5]
 
 		else:
+			# Non-parallel method for calculating jackknife
 			for i in xrange(self.NFlows):
 				bs = Bootstrap(self.y[:,i], N_bs, bootstrap_statistics = bs_statistic, F = F, non_bs_stats = non_bs_stats, index_lists = index_lists)
 				self.bs_y[i] = bs.bs_avg
@@ -158,14 +173,22 @@ class FlowAnalyser(object):
 
 	def jackknife(self, jk_statistics = np.average, F = _default_return_function, non_jk_statistics = _default_return_function):
 		if self.parallel:
-			# Parallel method
+			# Sets up jobs for parallel processing
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
 								[F for i in xrange(self.NFlows)],
 								[jk_statistics for i in xrange(self.NFlows)],
 								[non_jk_statistics for i in xrange(self.NFlows)])
+
+			# Prints job size
 			# print sys.getsizeof(input_values)/1024.0, "kB"
+
+			# Initializes multiprocessing
 			pool = multiprocessing.Pool(processes=self.numprocs)								
+
+			# Runs parallel processes. Can this be done more efficiently?
 			results = pool.map(_jackknife_parallel_core,input_values)
+
+			# Closes multiprocessing instance for garbage collection
 			pool.close()
 
 			# Populating jackknife results
@@ -174,7 +197,8 @@ class FlowAnalyser(object):
 				self.jk_y_std[i] = results[i][1]
 				self.jk_y_data[i] = results[i][2]
 		else:
-			# Default method, scalar
+			print "Not running parallel for %s!" % self.observable_name
+			# Non-parallel method for calculating jackknife
 			for i in xrange(self.NFlows):
 				jk = Jackknife(self.y[:,i],F = F, jk_statistics = jk_statistics, non_jk_statistics = non_jk_statistics)
 				self.jk_y[i] = jk.jk_avg
@@ -187,7 +211,7 @@ class FlowAnalyser(object):
 	def autocorrelation(self,use_numpy=True):
 		# Gets autocorrelation
 		if self.parallel:
-			# Array of jobs
+			# Sets up jobs for parallel processing
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
 								[use_numpy for i in xrange(self.NFlows)])
 
@@ -197,6 +221,7 @@ class FlowAnalyser(object):
 			# Initiates parallel jobs
 			results = pool.map(_autocorrelation_parallel_core,input_values)
 
+			# Closes multiprocessing instance for garbage collection
 			pool.close()
 
 			# Populating autocorrelation results
@@ -207,6 +232,8 @@ class FlowAnalyser(object):
 				self.integrated_autocorrelation_time_error[i] = results[i][3]
 				self.autocorrelation_error_correction[i] = np.sqrt(2*self.integrated_autocorrelation_time[i])
 		else:
+			print "Not running parallel for %s!" % self.observable_name
+			# Non-parallel method for calculating autocorrelation
 			for i in xrange(self.NFlows):
 				ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy)
 				self.autocorrelations[i] = ac.R
@@ -321,6 +348,9 @@ class FlowAnalyser(object):
 		if flow_time == -1:
 			flow_time = self.NFlows - 1
 
+		# Ensures flow time is within bounds.
+		assert flow_time < self.NFlows, "Flow time %d is out of bounds." % flow_time
+
 		# Finds the maximum value at each MC time and sets up the y array
 		x = range(N_autocorr)
 		y = np.zeros(N_autocorr)
@@ -357,12 +387,23 @@ class FlowAnalyser(object):
 		plt.close(fig)
 
 	def plot_histogram(self, flow_time, x_label, Nbins = 30, x_limits="auto"):
+		"""
+		Function for creating histograms of the original, bootstrapped and jackknifed datasets together.
+		Args:
+			flow_time			(int): flow time to plot.
+			x_label				(str): x-axis label for plot.
+			[optional] Nbins	(int): number of histogram bins.
+			[optional] x_limits	(str): type of x-axis limits. Default: 'auto'. Choices: 'equal','auto','analysis'
+		"""
 		# Setting proper flow-time 
 		if flow_time < 0:
 			flow_time = len(self.unanalyzed_y_data) - abs(flow_time)
 			assert len(self.unanalyzed_y_data) == len(self.bs_y_data) == len(self.jk_y_data), "Flow lengths of data sets is not equal!"
 		
-		# Sets up plotting variables
+		# Ensures flow time is within bounds.
+		assert flow_time < len(self.unanalyzed_y_data), "Flow time %d is out of bounds." % flow_time
+		
+		# Sets up title and file name strings
 		title_string = r"Spread of %s, $\beta=%.2f$, flow time $t=%.2f$" % (self.observable_name, float(self.data.meta_data["beta"]),flow_time*self.data.meta_data["FlowEpsilon"])
 		fname = "../figures/{0:<s}/{1:<s}_histogram_flowt{2:<d}_beta{3:<s}.png".format(self.batch_name,self.observable_name_compact,abs(flow_time),str(self.beta).replace('.','_'))
 
@@ -404,13 +445,16 @@ class FlowAnalyser(object):
 			# Sets the x-axes to be equal
 			xlim_positive = np.max([np.max(_y) for _y in [np.abs(y1),np.abs(y2),np.abs(y3)]])
 			xlim_negative = -xlim_positive
+			
+			# Sets the axes limits
 			ax1.set_xlim(xlim_negative,xlim_positive)
-		elif x_limits == "anaylsis":
+		elif x_limits == "analysis":
 			# Sets only the analysises axes equal
 			xlim_positive = np.max([np.max(_y) for _y in [np.abs(y2),np.abs(y3)]])
 			xlim_negative = -xlim_positive
+
 		else:
-			raise KeyError("%s not recognized.\nOptions: 'equal','auto'." % x_limits)
+			raise KeyError("%s not recognized.\nOptions: 'equal','auto','analysis'." % x_limits)
 
 		# Sets the axes limits
 		ax2.set_xlim(xlim_negative,xlim_positive)
@@ -420,6 +464,8 @@ class FlowAnalyser(object):
 		if not self.dryrun:
 			plt.savefig(fname)
 		print "Figure created in %s" % fname
+
+		# Closes figure for garbage collection
 		plt.close(fig)
 
 	def plot_mc_history(self,flow_time,correction_function = lambda x : x):
@@ -430,9 +476,14 @@ class FlowAnalyser(object):
 		if flow_time == -1:
 			flow_time = self.NFlows - 1
 
+		# Ensures flow time is within bounds.
+		assert flow_time < len(self.unanalyzed_y_data), "Flow time %d is out of bounds." % flow_time
+
+		# Sets up title and file name strings
 		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.data.meta_data["FlowEpsilon"])
 		fname = "../figures/{0:<s}/{1:<s}_mchistory_flowt{2:<d}_beta{3:<s}.png".format(self.batch_name,self.observable_name_compact,flow_time,str(self.beta).replace('.','_'))
 
+		# Sets up plot
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
 		ax.plot(correction_function(self.unanalyzed_y_data[flow_time]),color="0",label=self.observable_name)
@@ -457,7 +508,7 @@ class AnalysePlaquette(FlowAnalyser):
 
 class AnalyseTopologicalCharge(FlowAnalyser):
 	"""
-	Topological charge analysis class. NOT TESTED
+	Topological charge analysis class.
 	"""
 	observable_name = "Topological Charge"
 	observable_name_compact = "topc"
@@ -466,7 +517,7 @@ class AnalyseTopologicalCharge(FlowAnalyser):
 
 class AnalyseEnergy(FlowAnalyser):
 	"""
-	Energy/action density analysis class. NOT TESTED
+	Energy/action density analysis class.
 	"""
 	observable_name = "Energy"
 	observable_name_compact = "energy"
@@ -478,7 +529,7 @@ class AnalyseEnergy(FlowAnalyser):
 
 class AnalyseTopologicalSusceptibility(FlowAnalyser):
 	"""
-	Topological susceptibility analysis class. NOT TESTED / NOT COMPLETED
+	Topological susceptibility analysis class.
 	"""
 	observable_name = "Topological Susceptibility"
 	observable_name_compact = "topsus"
@@ -504,6 +555,7 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 		else:
 			raise ValueError("Unrecognized beta value: %g" % meta_data["beta"])
 
+		# Sets up constants used in the chi function for topological susceptibility
 		self.V = lattice_size
 		self.hbarc = 0.19732697 #eV micro m
 		self.const = self.hbarc/self.a/self.V**(1./4)
@@ -562,8 +614,8 @@ def main(args):
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_jackknife()
-		plaq_analysis.plot_histogram(0,r"$P_{\mu\nu}$")
-		plaq_analysis.plot_histogram(-1,r"$P_{\mu\nu}$")
+		plaq_analysis.plot_histogram(0,r"$P_{\mu\nu}$",x_limits='analysis')
+		plaq_analysis.plot_histogram(-1,r"$P_{\mu\nu}$",x_limits='analysis')
 
 		if plaq_analysis.bootstrap_performed and plaq_analysis.autocorrelation_performed:
 			write_data_to_file(plaq_analysis,dryrun = dryrun)
@@ -585,8 +637,8 @@ def main(args):
 			topc_analysis.plot_boot()
 			topc_analysis.plot_original()
 			topc_analysis.plot_jackknife()
-			topc_analysis.plot_histogram(0,r"$Q$[GeV]")
-			topc_analysis.plot_histogram(-1,r"$Q$[GeV]")
+			topc_analysis.plot_histogram(0,r"$Q$[GeV]",x_limits='analysis')
+			topc_analysis.plot_histogram(-1,r"$Q$[GeV]",x_limits='analysis')
 
 			if topc_analysis.bootstrap_performed and topc_analysis.autocorrelation_performed:
 				write_data_to_file(topc_analysis,dryrun = dryrun)
@@ -607,8 +659,8 @@ def main(args):
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_jackknife()
-			topsus_analysis.plot_histogram(0,r"$\chi^{1/4}$[GeV]")
-			topsus_analysis.plot_histogram(-1,r"$\chi^{1/4}$[GeV]")
+			topsus_analysis.plot_histogram(0,r"$\chi^{1/4}$[GeV]",x_limits='analysis')
+			topsus_analysis.plot_histogram(-1,r"$\chi^{1/4}$[GeV]",x_limits='analysis')
 
 			if topsus_analysis.bootstrap_performed and topsus_analysis.autocorrelation_performed:
 				write_data_to_file(topsus_analysis,dryrun = dryrun)
@@ -631,8 +683,8 @@ def main(args):
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
-		energy_analysis.plot_histogram(0,r"$E$[GeV]")
-		energy_analysis.plot_histogram(-1,r"$E$[GeV]")
+		energy_analysis.plot_histogram(0,r"$E$[GeV]",x_limits='analysis')
+		energy_analysis.plot_histogram(-1,r"$E$[GeV]",x_limits='analysis')
 
 		if energy_analysis.bootstrap_performed and energy_analysis.autocorrelation_performed:
 			write_data_to_file(energy_analysis,dryrun = dryrun)
@@ -651,9 +703,9 @@ if __name__ == '__main__':
 		# 		['beta6_1','data','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data2','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data2','plaq','topc','energy','topsus'],
-		# 		['beta6_2','data2','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data2','plaq','topc','energy','topsus'],
+				['beta6_1','data2','plaq','topc','energy','topsus'],
+				['beta6_2','data2','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_2','data2','plaq','topc','energy','topsus']]
 
@@ -661,7 +713,7 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','topsus'],
 		# 		['beta6_2','data2','topsus']]
 
-		args = [['beta6_1','data2','energy']]
+		# args = [['beta6_1','data2','topsus']]
 
 		# args = [['beta6_0','data','topc','topsus','energy']]
 
