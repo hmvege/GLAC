@@ -174,7 +174,7 @@ class PostAnalysis:
 		plt.savefig(fname)
 		print "Figure saved in %s" % fname
 		# plt.show()
-		plt.close()
+		plt.close(fig)
 
 class TopSusPostAnalysis(PostAnalysis):
 	analysis_name = "Topological Susceptibility"

@@ -288,8 +288,10 @@ class FlowAnalyser(object):
 
 	def __plot_error_core(self,x,y,y_std,title_string,fname):
 		# Plots the jackknifed data
-		plt.figure()
-		plt.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
+		fig = plt.figure()
+		ax = fig.add_subplot(111)
+
+		ax.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
 		# pl.plot(x, y, 'k', color='#CC4F1B')
 		# pl.fill_between(x, y-error, y+error,
 		#     alpha=0.5, edgecolor='#CC4F1B', facecolor='#FF9848')
@@ -297,15 +299,15 @@ class FlowAnalyser(object):
 		if len(self.y_limits) == 0:
 			self.y_limits = [-np.max(y),np.max(y)]
 
-		plt.xlabel(self.x_label)
-		plt.ylabel(self.y_label)
-		plt.ylim(self.y_limits)
-		plt.grid(True)
-		plt.title(title_string)
+		ax.set_xlabel(self.x_label)
+		ax.set_ylabel(self.y_label)
+		ax.set_ylim(self.y_limits)
+		ax.grid(True)
+		ax.set_title(title_string)
 		if not self.dryrun: 
-			plt.savefig(fname,dpi=self.dpi)
+			fig.savefig(fname,dpi=self.dpi)
 		print "Figure created in %s" % fname
-		plt.close()
+		plt.close(fig)
 
 	def plot_autocorrelation(self,flow_time,plot_abs_value=False):
 		# Checks that autocorrelations has been performed.
@@ -352,9 +354,9 @@ class FlowAnalyser(object):
 		if not self.dryrun: 
 			fig.savefig(fname,dpi=self.dpi)
 		print "Figure created in %s" % fname
-		plt.close()
+		plt.close(fig)
 
-	def plot_histogram(self, flow_time, Nbins = 30):
+	def plot_histogram(self, flow_time, x_label, Nbins = 30, x_limits="auto"):
 		# Setting proper flow-time 
 		if flow_time < 0:
 			flow_time = len(self.unanalyzed_y_data) - abs(flow_time)
@@ -392,19 +394,33 @@ class FlowAnalyser(object):
 		x3, y3, _ = ax3.hist(self.jk_y_data[flow_time],bins=Nbins,label="Jackknife", weights = weights3)
 		ax3.legend()
 		ax3.grid("on")
-		ax3.set_xlabel(R"$Q$")
+		ax3.set_xlabel(r"%s" % x_label)
 
-		# Sets the x-axes to be equal
-		xlim_max = np.max([np.max(_y) for _y in [np.abs(y1),np.abs(y2),np.abs(y3)]])
-		ax1.set_xlim(-xlim_max,xlim_max)
-		ax2.set_xlim(-xlim_max,xlim_max)
-		ax3.set_xlim(-xlim_max,xlim_max)
+		if x_limits == "auto":
+			# Lets matplotlib decide on axes
+			xlim_positive = None
+			xlim_negative = None
+		elif x_limits == "equal":
+			# Sets the x-axes to be equal
+			xlim_positive = np.max([np.max(_y) for _y in [np.abs(y1),np.abs(y2),np.abs(y3)]])
+			xlim_negative = -xlim_positive
+			ax1.set_xlim(xlim_negative,xlim_positive)
+		elif x_limits == "anaylsis":
+			# Sets only the analysises axes equal
+			xlim_positive = np.max([np.max(_y) for _y in [np.abs(y2),np.abs(y3)]])
+			xlim_negative = -xlim_positive
+		else:
+			raise KeyError("%s not recognized.\nOptions: 'equal','auto'." % x_limits)
+
+		# Sets the axes limits
+		ax2.set_xlim(xlim_negative,xlim_positive)
+		ax3.set_xlim(xlim_negative,xlim_positive)
 
 		# Saves figure
 		if not self.dryrun:
 			plt.savefig(fname)
 		print "Figure created in %s" % fname
-		plt.close()
+		plt.close(fig)
 
 	def plot_mc_history(self,flow_time,correction_function = lambda x : x):
 		"""
@@ -428,7 +444,7 @@ class FlowAnalyser(object):
 		if not self.dryrun: 
 			fig.savefig(fname,dpi=self.dpi)
 		print "Figure created in %s" % fname
-		plt.close()
+		plt.close(fig)
 
 class AnalysePlaquette(FlowAnalyser):
 	"""
@@ -436,7 +452,7 @@ class AnalysePlaquette(FlowAnalyser):
 	"""
 	observable_name = "Plaquette"
 	observable_name_compact = "plaq"
-	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$P_{\mu\nu}$"
 
 class AnalyseTopologicalCharge(FlowAnalyser):
@@ -445,8 +461,8 @@ class AnalyseTopologicalCharge(FlowAnalyser):
 	"""
 	observable_name = "Topological Charge"
 	observable_name_compact = "topc"
-	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$" # Implied multiplication by a
+	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$[GeV]"
 
 class AnalyseEnergy(FlowAnalyser):
 	"""
@@ -454,8 +470,8 @@ class AnalyseEnergy(FlowAnalyser):
 	"""
 	observable_name = "Energy"
 	observable_name_compact = "energy"
-	x_label = r"$a^2t/r_0^2$" # Dimensionsless
-	y_label = r"$a^2 t^2\langle E \rangle$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
+	x_label = r"$t/r_0^2$" # Dimensionsless, Implied multiplication by a^2
+	y_label = r"$t^2\langle E \rangle$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
 
 	def correction_function(self, y):
 		return -y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"]/64.0 # factor 0.5 left out, see paper by 
@@ -466,7 +482,7 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 	"""
 	observable_name = "Topological Susceptibility"
 	observable_name_compact = "topsus"
-	x_label = r"$a\sqrt{8t_{flow}}[fm]$"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\chi_t^{1/4}[GeV]$"
 
 	def __init__(self,*args,**kwargs):
@@ -546,8 +562,8 @@ def main(args):
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_jackknife()
-		plaq_analysis.plot_histogram(0,Nbins=None)
-		plaq_analysis.plot_histogram(-1,Nbins=None)
+		plaq_analysis.plot_histogram(0,r"$P_{\mu\nu}$")
+		plaq_analysis.plot_histogram(-1,r"$P_{\mu\nu}$")
 
 		if plaq_analysis.bootstrap_performed and plaq_analysis.autocorrelation_performed:
 			write_data_to_file(plaq_analysis,dryrun = dryrun)
@@ -569,8 +585,8 @@ def main(args):
 			topc_analysis.plot_boot()
 			topc_analysis.plot_original()
 			topc_analysis.plot_jackknife()
-			topc_analysis.plot_histogram(0)
-			topc_analysis.plot_histogram(-1)
+			topc_analysis.plot_histogram(0,r"$Q$[GeV]")
+			topc_analysis.plot_histogram(-1,r"$Q$[GeV]")
 
 			if topc_analysis.bootstrap_performed and topc_analysis.autocorrelation_performed:
 				write_data_to_file(topc_analysis,dryrun = dryrun)
@@ -591,8 +607,8 @@ def main(args):
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_jackknife()
-			topsus_analysis.plot_histogram(0)
-			topsus_analysis.plot_histogram(-1)
+			topsus_analysis.plot_histogram(0,r"$\chi^{1/4}$[GeV]")
+			topsus_analysis.plot_histogram(-1,r"$\chi^{1/4}$[GeV]")
 
 			if topsus_analysis.bootstrap_performed and topsus_analysis.autocorrelation_performed:
 				write_data_to_file(topsus_analysis,dryrun = dryrun)
@@ -615,8 +631,8 @@ def main(args):
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
-		energy_analysis.plot_histogram(0,Nbins=10)
-		energy_analysis.plot_histogram(-1,Nbins=10)
+		energy_analysis.plot_histogram(0,r"$E$[GeV]")
+		energy_analysis.plot_histogram(-1,r"$E$[GeV]")
 
 		if energy_analysis.bootstrap_performed and energy_analysis.autocorrelation_performed:
 			write_data_to_file(energy_analysis,dryrun = dryrun)
@@ -635,9 +651,9 @@ if __name__ == '__main__':
 		# 		['beta6_1','data','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data2','plaq','topc','energy','topsus'],
-				['beta6_1','data2','plaq','topc','energy','topsus'],
-				['beta6_2','data2','plaq','topc','energy','topsus']]
+		# args = [['beta6_0','data2','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data2','plaq','topc','energy','topsus'],
+		# 		['beta6_2','data2','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_2','data2','plaq','topc','energy','topsus']]
 
@@ -645,7 +661,7 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','topsus'],
 		# 		['beta6_2','data2','topsus']]
 
-		# args = [['beta6_1','data2','energy']]
+		args = [['beta6_1','data2','energy']]
 
 		# args = [['beta6_0','data','topc','topsus','energy']]
 
