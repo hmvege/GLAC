@@ -603,7 +603,7 @@ def main(args):
 
                 # Requiring an new estimate of the run time if we are flowing
                 configurations[0] = setFieldConfigs(configurations[0],args.load_configurations,args.config_start_number)
-                if args.load_config_min_time_estimate == None and args.load_config_hr_time_estimate == None:
+                if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
                     sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
                 else:
                     configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate

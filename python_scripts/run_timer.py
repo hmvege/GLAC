@@ -21,7 +21,7 @@ class TimeEstimator:
 							str(self.beta_values[2]) : 200,
 							str(self.beta_values[3]) : 800}
 
-		# CONFIGURATION GENERATION TIMES [min]
+		#### CONFIGURATION GENERATION TIMES [min]
 		beta60_cfg = 0.71
 		beta61_cfg = 1.48
 		beta62_cfg = 2.18
@@ -32,39 +32,39 @@ class TimeEstimator:
 
 		# Estimates time for 6.45
 		b645_cfg_estimates = [(cfg_times[str(beta)]/float(b_corr_updates[str(beta)]))*b_corr_updates[str("6.45")]*b645_size_scaling[str(beta)] for beta in self.beta_values[:3]]
-		b645_cfg_estimate = np.mean(b645_cfg_estimates)
-		self.b645_cfg_estimate_std = np.std(b645_cfg_estimates)
-		cfg_times[str(self.beta_values[3])] = b645_cfg_estimate
+		self.b645_cfg_estimate_std = np.std(b645_cfg_estimates) / b_corr_updates[str("6.45")]
+		cfg_times[str(self.beta_values[3])] = np.mean(b645_cfg_estimates)
 
 		self.cfg_times_per_config = {str(key):cfg_times[str(key)]/float(b_corr_updates[str(key)]) for key in self.beta_values}
 		# print {key:val*60 for (key,val) in zip(cfg_times_per_config.keys(),cfg_times_per_config.values())}, "seconds"
 
-		# CONFIGURATION FLOW TIMES [min]
+		#### CONFIGURATION FLOW TIMES [min]
 		beta60_flow = 2.3
 		beta61_flow = 4.1
 		beta62_flow = 8.4
 
-		self.flow_times = {	str(self.beta_values[0]) : beta60_flow,
-							str(self.beta_values[1]) : beta61_flow,
-							str(self.beta_values[2]) : beta62_flow}
+		# Time per flow per config
+		self.flow_times = {	str(self.beta_values[0]) : beta60_flow / 1000,
+							str(self.beta_values[1]) : beta61_flow / 1000,
+							str(self.beta_values[2]) : beta62_flow / 1000}
 
 		# Estimates time for 6.45
 		b645_flow_estimates = [self.flow_times[str(beta)]*b645_size_scaling[str(beta)] for beta in self.beta_values[:3]]
-		b645_flow_estimate = np.mean(b645_flow_estimates)
+
 		self.b645_flow_estimate_std = np.std(b645_flow_estimates)
-		self.flow_times[str(self.beta_values[3])] = b645_flow_estimate
+		self.flow_times[str(self.beta_values[3])] = np.mean(b645_flow_estimates)
 
 	def get_time(self,beta,N_configs,N_corr,N_flows):
 		config_time_est = self.cfg_times_per_config[str(beta)]
 		total_config_time_est = config_time_est*N_configs*N_corr
 		flow_time_est = self.flow_times[str(beta)]
-		total_flow_time_est = flow_time_est*N_flows
+		total_flow_time_est = flow_time_est*N_configs*N_flows
 
 		error_cfg = ""
 		error_flow = ""
 		if beta == 6.45:
-			error_cfg = "+/- %-.4f hours" % (self.b645_cfg_estimate_std/60.)
-			error_flow = "+/- %-.4f hours" % (self.b645_flow_estimate_std/60.)
+			error_cfg = "+/- %-.6f hours" % (self.b645_cfg_estimate_std/60.*N_configs*N_corr)
+			error_flow = "+/- %-.6f hours" % (self.b645_flow_estimate_std/60.*N_configs*N_flows)
 
 		print """
 Time estimate for run:
@@ -79,15 +79,14 @@ Time per flow:      %10.4f minutes
 Total flow-time:    %10.4f minutes / %-.1f hours %s
 %s""" % (beta,N_configs,N_corr,N_flows,100*"=",
 			config_time_est,
-			total_config_time_est,total_config_time_est/60,error_flow,
+			total_config_time_est,total_config_time_est/60,error_cfg,
 			flow_time_est,
 			total_flow_time_est,total_flow_time_est/60,error_flow,
 			100*"=")
 
 if __name__ == '__main__':
-	description_string = """
-Small program intended for estimating times
-"""
+	description_string = """Small program intended for estimating times"""
+
 	parser = argparse.ArgumentParser(prog='Run time estimator', description=description_string)
 
 	######## Program basics #########
@@ -107,7 +106,7 @@ Small program intended for estimating times
 
 	# Parses arguments
 	if len(sys.argv) == 1:
-		args = parser.parse_args(["6.45","-NCfgs","306"])
+		args = parser.parse_args(["6.45","-NCfgs","10"])
 	else:
 		args = parser.parse_args()
 

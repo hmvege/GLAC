@@ -13,13 +13,6 @@ def getLatticeSpacing(beta):
 # def linear_curve(x,a,b):
 # 	return a*x + b
 
-class LineFit:
-	"""
-	Line fit method when y contains errors
-	"""
-	def __init__(self, x, y, y_err):
-		None
-
 class DataReader:
 	"""
 	Small class for reading post analysis data
@@ -159,6 +152,85 @@ class DataReader:
 		else:
 			return os.listdir(folder)
 
+class BootstrapLineFitter:
+	"""
+	Line fit method using bootstrap
+	"""
+	def __init__(self, bs_data_dict, function_correction = lambda x : x):
+		self.observable = bs_data_dict["observable"]
+		self.beta = bs_data_dict["beta"]
+		self.data = bs_data_dict["data"]
+		self.NFlows, self.NBoot = self.data.shape
+		for iBoot in xrange(self.data.shape[1]):
+			self.data[:,iBoot] = function_correction(self.data[:,iBoot])
+
+	def fit_line(self, x, fit_target, fit_interval, error_function = lambda x : x, fit_method = "curve_fit"):
+		"""
+		Function for creating a line fit using bootstrapped data.
+		Args:
+			x 				(numpy float array): x-axis values to fit along
+			fit_target					(float): y-axis value to fit against
+			fit_interval				(float): y-axis interval in which we will linefit for
+			(optional)error_function (function): function for modifying y-values
+		Returns:
+			y_0		(float): y value fitted at fit_target
+			y_error (float): error of y_0
+		"""
+
+		# Sets the fitting method for the each bootstrap value
+		fit_methods_list = ["curve_fit","polynomial"]
+		if fit_method not in fit_methods_list:
+			raise KeyError("%s not a possible fit method. Use %s" % (fit_method,", ".join(fit_methods_list)))
+
+		# def _linefit_t0(self,x,y,y_err,beta): # fit_target, fit_interval, error_function, bs_fit="False"/"True", err_func = None
+		# Creates a small interval in which we will fit the data
+		# y0 = 0.3
+		# fit_interval = 0.015
+
+		# y_fit_interval_list = []
+		# for iBoot in xrange(self.NBoot):
+		# 	y_fit_interval = []
+		# 	for iInterval, iY
+
+		# Gathers relevant line interval to lists
+		x_line_to_fit = []
+		y_line_to_fit = []
+		y_line_to_fit_errors = []
+		for i, iy in enumerate(y):
+			# Only accepts if data is within fitting interval
+			if (y0 - fit_interval) < iy < (y0 + fit_interval):
+				x_line_to_fit.append(x[i])
+				y_line_to_fit.append(iy)
+				y_line_to_fit_errors.append(y_err[i])
+
+		if len(y_line_to_fit) == 0:
+			raise ValueError("No values in the vincinity of t^2<E>=0.3 found for beta %2.2f" % beta)
+
+		# Converts data to arrays
+		x_line_to_fit = np.asarray(x_line_to_fit)
+		y_line_to_fit = np.asarray(y_line_to_fit)
+		y_line_to_fit_errors = np.asarray(y_line_to_fit_errors)
+
+		# Fitting data
+		pol,polcov = np.polyfit(x_line_to_fit,y_line_to_fit,1,rcond=None,full=False,w=1.0/y_line_to_fit_errors,cov=True)
+		# print pol,"\n",polcov
+		# pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_line_to_fit, y_line_to_fit, sigma = y_line_to_fit_errors)
+		# print pol,"\n",polcov
+
+		# Retrieving polynomial values for retrofitting
+		a = pol[0]
+		b = pol[1]
+		a_err, b_err = np.sqrt(np.diag(polcov))
+
+		# t0 value
+		t0 = self.r0**2 * (y0 - b) / a
+
+		# Gets error of t0 estimate
+		t0_err = np.sqrt((self.r0**2*(b - y0)/a**2)**2 * a_err**2 + self.r0**4/a**2 * b_err**2 + 2*self.r0**4*(b - y0)/a**4 * polcov[1,0])
+
+		return t0,t0_err
+
+
 class PostAnalysis:
 	"""
 	Post analysis base class
@@ -228,7 +300,7 @@ class PostAnalysis:
 		fname = os.path.join(self.output_folder,"post_analysis_%s.png" % self.analysis_name_compact)
 		plt.savefig(fname)
 		print "Figure saved in %s" % fname
-		plt.show()
+		# plt.show()
 		plt.close(fig)
 
 class TopSusPostAnalysis(PostAnalysis):
@@ -250,7 +322,10 @@ class TopSusPostAnalysis(PostAnalysis):
 			values["color"] = self.colors[batch_name]
 			plot_values.append(values)
 
-		self._plot_core(plot_values)
+		# Sorts the plot values and stores them globally
+		self.plot_values = sorted(plot_values,key=lambda x:x["batch_name"])
+
+		self._plot_core(self.plot_values)
 
 class EnergyPostAnalysis(PostAnalysis):
 	analysis_name = "Energy"
@@ -284,60 +359,56 @@ class EnergyPostAnalysis(PostAnalysis):
 		for values in data_values:
 			t0_batch = {}
 			t0_batch["beta"] = self.get_float(values["batch_name"])
-			t0_batch["t0"],t0_batch["t0_err"] = self._linefit_t0(values["x"],values["y"],values["y_err"],t0_batch["beta"])
+			lfit = BootstrapLineFitter(self.bs_data[values["batch_name"]], function_correction = lambda x : -x*self.flow_time**2/64.0)
+			t0_batch["t0"],t0_batch["t0_err"] = lfit.fit_line(values["x"],0.3,0.015,t0_batch["beta"])
+			# t0_batch["t0"],t0_batch["t0_err"] = self._linefit_t0(values["x"],values["y"],values["y_err"],t0_batch["beta"])
 			t0_batch["a"] = getLatticeSpacing(t0_batch["beta"])
 
 			# Adds to list of batch-values
 			self.t0_values.append(t0_batch)
 
-	def _linefit_t0(self,x,y,y_err,beta):
-		# Creates a small interval in which we will fit the data
-		y0 = 0.3
-		fit_interval = 0.015
+	# def _linefit_t0(self,x,y,y_err,beta): # fit_target, fit_interval, error_function, bs_fit="False"/"True", err_func = None
+	# 	# Creates a small interval in which we will fit the data
+	# 	y0 = 0.3
+	# 	fit_interval = 0.015
 
-		x_line_to_fit = []
-		y_line_to_fit = []
-		y_line_to_fit_errors = []
-		for i, iy in enumerate(y):
-			if (y0 - fit_interval) < iy < (y0 + fit_interval):
-				x_line_to_fit.append(x[i])
-				y_line_to_fit.append(iy)
-				y_line_to_fit_errors.append(y_err[i])
+	# 	# Gathers relevant line interval to lists
+	# 	x_line_to_fit = []
+	# 	y_line_to_fit = []
+	# 	y_line_to_fit_errors = []
+	# 	for i, iy in enumerate(y):
+	# 		# Only accepts if data is within fitting interval
+	# 		if (y0 - fit_interval) < iy < (y0 + fit_interval):
+	# 			x_line_to_fit.append(x[i])
+	# 			y_line_to_fit.append(iy)
+	# 			y_line_to_fit_errors.append(y_err[i])
 
-		if len(y_line_to_fit) == 0:
-			raise ValueError("No values in the vincinity of t^2<E>=0.3 found for beta %2.2f" % beta)
+	# 	if len(y_line_to_fit) == 0:
+	# 		raise ValueError("No values in the vincinity of t^2<E>=0.3 found for beta %2.2f" % beta)
 
-		x_line_to_fit = np.asarray(x_line_to_fit)
-		y_line_to_fit = np.asarray(y_line_to_fit)
-		y_line_to_fit_errors = np.asarray(y_line_to_fit_errors)
-		# print x_line_to_fit,y_line_to_fit,y_line_to_fit_errors
+	# 	# Converts data to arrays
+	# 	x_line_to_fit = np.asarray(x_line_to_fit)
+	# 	y_line_to_fit = np.asarray(y_line_to_fit)
+	# 	y_line_to_fit_errors = np.asarray(y_line_to_fit_errors)
 
-		# Fitting data
-		pol,polcov = np.polyfit(x_line_to_fit,y_line_to_fit,1,rcond=None,full=False,w=1.0/y_line_to_fit_errors,cov=True)
-		# print pol,"\n",polcov
-		# pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_line_to_fit, y_line_to_fit, sigma = y_line_to_fit_errors)
-		# print pol,"\n",polcov
+	# 	# Fitting data
+	# 	pol,polcov = np.polyfit(x_line_to_fit,y_line_to_fit,1,rcond=None,full=False,w=1.0/y_line_to_fit_errors,cov=True)
+	# 	# print pol,"\n",polcov
+	# 	# pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_line_to_fit, y_line_to_fit, sigma = y_line_to_fit_errors)
+	# 	# print pol,"\n",polcov
 
-		# Retrieving polynomial values for retrofitting
-		a = pol[0]
-		b = pol[1]
-		a_err, b_err = np.sqrt(np.diag(polcov))
+	# 	# Retrieving polynomial values for retrofitting
+	# 	a = pol[0]
+	# 	b = pol[1]
+	# 	a_err, b_err = np.sqrt(np.diag(polcov))
 
-		# t0 value
-		t0 = self.r0**2 * (y0 - b) / a
+	# 	# t0 value
+	# 	t0 = self.r0**2 * (y0 - b) / a
 
-		# Gets error of t0 estimate
-		t0_err = np.sqrt((self.r0**2*(b - y0)/a**2)**2 * a_err**2 + self.r0**4/a**2 * b_err**2 + 2*self.r0**4*(b - y0)/a**4 * polcov[1,0])
+	# 	# Gets error of t0 estimate
+	# 	t0_err = np.sqrt((self.r0**2*(b - y0)/a**2)**2 * a_err**2 + self.r0**4/a**2 * b_err**2 + 2*self.r0**4*(b - y0)/a**4 * polcov[1,0])
 
-		# print "beta %g:" % beta, t0_err/self.r0**2
-		# print "beta %g:" % beta, t0/self.r0**2, y0
-
-		# plt.errorbar(x_line_to_fit,y_line_to_fit,yerr=y_line_to_fit_errors)
-		# plt.errorbar(t0/self.r0**2,y0,yerr=t0_err/self.r0**2,color="r",ecolor="r")
-		# plt.show()
-		# exit(1)
-
-		return t0,t0_err
+	# 	return t0,t0_err
 
 	def _linefit_to_continiuum(self):
 		x_datapoints = np.asarray([val["a"] for val in self.t0_values])
@@ -351,13 +422,10 @@ class EnergyPostAnalysis(PostAnalysis):
 		y_datapoints_error = (8*t0_err[::-1]) / (np.sqrt(8*t0[::-1])) / self.r0
 
 		# Fitting data
-		# pol, polcov = np.polyfit(x_datapoints,y_datapoints,1,rcond=None,full=False,w=1.0/y_datapoints_error,cov=True)
-		# print pol,"\n",polcov
-
 		pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_datapoints, y_datapoints,sigma=y_datapoints_error)
 		# print pol,"\n",polcov
-
-		# exit(1)
+		# pol, polcov = np.polyfit(x_datapoints,y_datapoints,1,rcond=None,full=False,w=1.0/y_datapoints_error,cov=True)
+		# print pol,"\n",polcov
 
 		# Gets line properties
 		a = pol[0]
@@ -378,22 +446,24 @@ class EnergyPostAnalysis(PostAnalysis):
 		# Fits to continiuum and retrieves values to be plotted
 		x, y, y_std, ar0, t0, t0_err, a, b, a_err, b_err = self._linefit_to_continiuum()
 
+		# Creates empty arrays for populating with data points from beta values and continiuum limit
 		x_points = np.zeros(len(ar0)+1)
 		y_points = np.zeros(len(ar0)+1)
 		y_points_err = np.zeros(len(ar0)+1)
 
+		# Populates arrays with first fitted element
 		x_points[0] = x[0]
 		y_points[0] = y[0]
 		y_points_err[0] = y_std[0]
 
+		# Populates arrays with beta data points
 		x_points[1:] = ar0
 		y_points[1:] = t0
 		y_points_err[1:] = t0_err
 
+		# Creates figure and plot window
 		fig = plt.figure(self.dpi)
 		ax = fig.add_subplot(111)
-
-		# print x_points,y_points,y_points_err
 
 		# ax.axvline(0,linestyle="--",color="0",alpha=0.5)
 		ax.errorbar(x_points[1:],y_points[1:],yerr=y_points_err[1:],fmt="o",color="0",ecolor="0")
@@ -404,25 +474,26 @@ class EnergyPostAnalysis(PostAnalysis):
 		# ax.set_title(r"Continiuum limit reference scale: $t_{0,cont}=%2.4f\pm%g$" % ((self.r0*y_points[0])**2/8,(self.r0*y_points_err[0])**2/8))
 		ax.set_xlim(-0.005,0.045)
 		ax.set_ylim(0.92,0.98)
-
-
-		start, end = ax.get_ylim()
-		ax.yaxis.set_ticks(np.arange(start, end, 0.01))
 		ax.grid(True)
 
+		# Fixes axis tick intervals
+		start, end = ax.get_ylim()
+		ax.yaxis.set_ticks(np.arange(start, end, 0.01))
+
+		# Puts on some arrows at relevant points
 		ax.annotate(r"$a=0.05$fm", xy=((0.01/self.r0)**2, end), xytext=((0.01/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
 		ax.annotate(r"$a=0.07$fm", xy=((0.07/self.r0)**2, end), xytext=((0.07/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
 		ax.annotate(r"$a=0.1$fm", xy=((0.1/self.r0)**2, end), xytext=((0.1/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
 
 		# ax.legend(loc="lower left")
 
+		# Saves figure
 		fname = os.path.join(self.output_folder,"post_analysis_%s_continiuum.png" % self.analysis_name_compact)
 		fig.savefig(fname,dpi=self.dpi)
 
 		print "Figure created in %s" % fname
-		plt.show()
+		# plt.show()
 		plt.close(fig)
-
 
 def main(args):
 	"""
@@ -432,17 +503,17 @@ def main(args):
 	data = DataReader(args[0])
 	print "Retrieving data from folder: %s" % args[0]
 
-	# Rewrites all of the data to a single file for sharing with giovanni
-	data.write_batch_to_single_file()
+	# # Rewrites all of the data to a single file for sharing with giovanni
+	# data.write_batch_to_single_file()
 
-	# Plots topsus
-	topsus_analysis = TopSusPostAnalysis(data.data_observables["topsus"],data.flow_time,bs_data=data.bs_data)
-	topsus_analysis.plot()
+	# # Plots topsus
+	# topsus_analysis = TopSusPostAnalysis(data.data_observables["topsus"],data.flow_time,bs_data=data.bs_data)
+	# topsus_analysis.plot()
 
 	# Retrofits the topsus for continiuum limit
 
 	# Plots energy
-	energy_analysis = EnergyPostAnalysis(data.data_observables["energy"],data.flow_time)
+	energy_analysis = EnergyPostAnalysis(data.data_observables["energy"],data.flow_time,bs_data=data.bs_data)
 	energy_analysis.plot()
 
 	# Retrofits the energy for continiuum limit
