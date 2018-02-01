@@ -1,5 +1,6 @@
 import numpy as np, matplotlib.pyplot as plt, sys, os, re, scipy.optimize as sciopt
 
+# import tqdm
 # from scipy.optimize import curve_fit
 
 def getLatticeSpacing(beta):
@@ -30,7 +31,11 @@ class DataReader:
 		batch_folders = self._get_folder_content(post_analysis_folder)
 
 		self.data_batches = {}
+		self.jk_data = {}
+		self.bs_data = {}
+
 		for batch in batch_folders:
+		# for batch in tqdm.tqdm(batch_folders,leave=True):
 			batch_folder = os.path.join(post_analysis_folder,batch)
 			batch_files = [os.path.join(batch_folder,i) for i in self._get_folder_content(batch_folder)]
 
@@ -38,21 +43,58 @@ class DataReader:
 			observable_data = []
 
 			for bfile in batch_files:
-				# Retrieves meta data from header
-				meta_data = ""
-				with open(bfile) as f:
-					header_content = f.readline().split(" ")[1:]
-					meta_data = [h.split("\n")[0] for h in header_content]
+				# Checks if we have a jackknife data file
+				if "jk" in os.path.basename(bfile):
+					# print "Loading jackknifed data from %s" % bfile
+					meta_data = self._get_meta_data(bfile)
+					
+					# Creates new dictionary for retrieveing meta-data and data in
+					self.jk_data[batch] = {}
+
+					# Populates the new dictionary with meta data
+					for i in range(0,len(meta_data),2):
+						self.jk_data[batch][meta_data[i]] = meta_data[i+1]
+
+					# Loads data
+					self.jk_data[batch]["data"] = np.loadtxt(bfile,skiprows=1)
+					continue 
+
+				# Checks if we have a bootstrap data file
+				if "bs" in os.path.basename(bfile):
+					# print "Loading bootstrapped data from %s" % bfile
+					meta_data = self._get_meta_data(bfile)
+					
+					# Creates new dictionary for retrieveing meta-data and data in
+					self.bs_data[batch] = {}
+
+					# Populates the new dictionary with meta data
+					for i in range(0,len(meta_data),2):
+						self.bs_data[batch][meta_data[i]] = meta_data[i+1]
+
+					# Loads data
+					self.bs_data[batch]["data"] = np.loadtxt(bfile,skiprows=1)
+					continue 
 
 				# Retrieves observable from meta_data
-				observable = meta_data[1] 
+				observable = self._get_meta_data(bfile)[1]
 
+				# Appends meta-data and data
 				observable_data.append({"observable": observable, "data": np.loadtxt(bfile)})
 
 			# Loads data and stores it in a dictionary for all the data
 			self.data_batches[batch] = observable_data
 
+		# Reorganizes data to more ease-of-use type of data set
 		self._reorganize_data()
+
+	@staticmethod
+	def _get_meta_data(file):
+		# Retrieves meta data from header or file
+		meta_data = ""
+		with open(file) as f:
+			header_content = f.readline().split(" ")[1:]
+			meta_data = [h.split("\n")[0] for h in header_content]
+		return meta_data
 
 	def _reorganize_data(self):
 		# Reorganizes the data into beta-values and observables sorting
@@ -126,12 +168,22 @@ class PostAnalysis:
 	x_label = r""
 	y_label = r""
 	dpi=None
-	size_labels = {	"beta6_0":r"$24^3 \times 48$","beta6_1":r"$28^3 \times 56$",
-				"beta6_2":r"$32^3 \times 64$","beta6_45":r"$48^3 \times 96$"}
+	size_labels = {	"beta6_0":r"$24^3 \times 48$",
+					"beta6_1":r"$28^3 \times 56$",
+					"beta6_2":r"$32^3 \times 64$",
+					"beta6_45":r"$48^3 \times 96$"}
 
-	def __init__(self,data,flow_time,output_folder="../figures/post_analysis"):
+	def __init__(self,data,flow_time,output_folder="../figures/post_analysis", bs_data=None, jk_data=None):
 		self.data = data
 		self.flow_time = flow_time
+
+		# Checks if we have bootstrapped data as an argument and then stores it
+		if bs_data != None:
+			self.bs_data = bs_data
+
+		# Checks if we have jackknifed data as an argument and then stores it
+		if jk_data != None:
+			self.jk_data = jk_data
 
 		# Creates output folder for post analysis figures
 		self.output_folder = output_folder
@@ -384,7 +436,7 @@ def main(args):
 	data.write_batch_to_single_file()
 
 	# Plots topsus
-	topsus_analysis = TopSusPostAnalysis(data.data_observables["topsus"],data.flow_time)
+	topsus_analysis = TopSusPostAnalysis(data.data_observables["topsus"],data.flow_time,bs_data=data.bs_data)
 	topsus_analysis.plot()
 
 	# Retrofits the topsus for continiuum limit

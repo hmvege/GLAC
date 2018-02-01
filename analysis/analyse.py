@@ -120,7 +120,7 @@ class FlowAnalyser(object):
 		a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
 		return a
 
-	def boot(self,N_bs,bs_statistic = np.mean, F = _default_return, non_bs_stats = _default_return):
+	def boot(self,N_bs,bs_statistic = np.mean, F = _default_return, non_bs_stats = _default_return, write_bs_data_to_file = False):
 		# Stores number of bootstraps
 		self.N_bs = N_bs
 		
@@ -155,7 +155,7 @@ class FlowAnalyser(object):
 				self.unanalyzed_y[i] = results[i][2]
 				self.unanalyzed_y_std[i] = results[i][3]
 
-				# Stores last data for plotting in histogram later
+				# Stores last data for plotting in histogram later and post analysis
 				self.bs_y_data[i] = results[i][4]
 				self.unanalyzed_y_data[i] = results[i][5]
 
@@ -173,10 +173,16 @@ class FlowAnalyser(object):
 				self.bs_y_data[i] = bs.bs_data
 				self.unanalyzed_y_data[i] = bs.data_original
 
+		# Writing bootstrapped data to file if prompted
+		if write_bs_data_to_file:
+			fpath = os.path.join("..","output","post_analysis_data",self.batch_name,"%s_bs_data.txt" % self.batch_name)
+			np.savetxt(fpath,self.bs_y_data,fmt="%.16f",header="beta %2.2f observable %s" % (self.beta,self.observable_name_compact))
+			print "Written bootstrapped data for %s to file %s" % (self.observable_name, fpath)
+
 		# Sets performed flag to true
 		self.bootstrap_performed = True
 
-	def jackknife(self, jk_statistics = np.average, F = _default_return, non_jk_statistics = _default_return):
+	def jackknife(self, jk_statistics = np.average, F = _default_return, non_jk_statistics = _default_return, write_jk_data_to_file = False):
 		if self.parallel:
 			# Sets up jobs for parallel processing
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
@@ -209,6 +215,12 @@ class FlowAnalyser(object):
 				self.jk_y[i] = jk.jk_avg
 				self.jk_y_std[i] = jk.jk_std
 				self.jk_y_data[i] = jk.jk_data
+
+		# Writing jackknifed data to file if prompted
+		if write_jk_data_to_file:
+			fpath = os.path.join("..","output","post_analysis_data",self.batch_name,"%s_jk_data.txt" % self.batch_name)
+			np.savetxt(fpath,self.jk_y_data,fmt="%.16f",header="beta %2.2f observable %s" % (self.beta,self.observable_name_compact))
+			print "Written jackknifed data for %s to file %s" % (self.observable_name, fpath)
 
 		# Sets performed flag to true
 		self.jackknife_performed = True
@@ -651,7 +663,7 @@ def main(args):
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), args[0], dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs)
-			topsus_analysis.boot(N_bs,bs_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = topsus_analysis.return_x_squared)
+			topsus_analysis.boot(N_bs,bs_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = topsus_analysis.return_x_squared,write_bs_data_to_file=True)
 			topsus_analysis.jackknife(jk_statistics = topsus_analysis.stat, F = topsus_analysis.chi, non_jk_statistics = topsus_analysis.return_x_squared)
 			topsus_analysis.y_limits = [0.05,0.24]
 			topsus_analysis.plot_original(fname_addon = "_noErrorCorrection")
@@ -674,7 +686,7 @@ def main(args):
 	if 'energy' in args:
 		r0 = 0.5
 		energy_analysis = AnalyseEnergy(DirectoryList.getFlow("energy"), args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
-		energy_analysis.boot(N_bs)
+		energy_analysis.boot(N_bs,write_bs_data_to_file=True)
 		energy_analysis.jackknife()
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
 		energy_analysis.y_limits = [ 0 , np.max(energy_analysis.correction_function(energy_analysis.unanalyzed_y))]

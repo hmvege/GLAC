@@ -6,7 +6,7 @@
     "beta"                      : 6.0,
     "NCf"                       : 1000,
     "NCor"                      : 200,
-    "NTherm"                    : 2000,
+    "NTherm"                    : 10000,
     "NFlows"                    : 1000,
     "NUpdates"                  : 10,
     "storeCfgs"                 : True,

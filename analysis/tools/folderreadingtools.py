@@ -220,7 +220,7 @@ def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dry
 
 	fname = "%s_%s_beta%s.txt" % (batch_name,observable,beta_string)
 	fname_path = os.path.join(folder_batch_path,fname)
-	np.savetxt(fname_path,data,fmt="%.18f",header="t {0:<s} {0:<s}_error".format(observable))
+	np.savetxt(fname_path,data,fmt="%.16f",header="t {0:<s} {0:<s}_error".format(observable))
 	print "Data written to %s" % fname_path
 
 # def join_analyzed_data_files(output)
