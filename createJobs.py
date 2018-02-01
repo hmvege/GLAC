@@ -552,8 +552,8 @@ def main(args):
     load_parser.add_argument('-lcfgr','--load_config_and_run',  default=False,                              type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfg argument.')
     load_parser.add_argument('-NCfg','--NConfigs',              default=False,                              type=int, help='N configurations to generate based on loaded configuration.')
     load_parser.add_argument('-chroma','--chroma_config',       default=config_default["chroma_config"],    action='store_true',help='If flagged, loads the configuration as a chroma configuration.')
-    load_parser.add_argument('-lhr','--load_config_hr_time_estimate',default=False,                         type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
-    load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=False,                       type=int,help='Approximate cpu time in minutes that will be used.')
+    load_parser.add_argument('-lhr','--load_config_hr_time_estimate',default=None,                          type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
+    load_parser.add_argument('-lmin','--load_config_min_time_estimate',default=None,                        type=int,help='Approximate cpu time in minutes that will be used.')
     load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],      type=str,help='Sets the base folder. Default is os.path.getcwd().')
     load_parser.add_argument('-nf','--no_flow',                 default=False,                              action='store_true',help='If toggled, will not perform any flows.')
     load_parser.add_argument('-cfgnum','--config_start_number', default=config_default["config_start_number"],type=int,help='Starts naming the configuration from this number.')
@@ -600,15 +600,17 @@ def main(args):
                         sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
                     # Sets the number of configurations to run for to be zero just in case
                     c["NCf"] = 0
+
                 # Requiring an new estimate of the run time if we are flowing
                 configurations[0] = setFieldConfigs(configurations[0],args.load_configurations,args.config_start_number)
-                if not args.load_config_min_time_estimate and not args.load_config_hr_time_estimate:
+                if args.load_config_min_time_estimate == None and args.load_config_hr_time_estimate == None:
                     sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
                 else:
-                    configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
                     configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
+                    configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
             else:
                 raise TypeError("Can only assign one configuration file to a single set of field configurations.")
+
         # For loading and running configurations
         if args.load_config_and_run:
             if not args.NConfigs:
@@ -620,10 +622,11 @@ def main(args):
             configurations[0]["NCf"] = args.NConfigs
             configurations[0]["NTherm"] = 0
             configurations[0]["NFlows"] = 0
-            if args.load_config_min_time_estimate:
+            if args.load_config_min_time_estimate != None:
                 configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
-            if args.load_config_hr_time_estimate:
+            if args.load_config_hr_time_estimate != None:
                 configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
+  
         # Populate configuration with default values if certain keys are not present
         for c in configurations:
             config_default["base_folder"] = args.base_folder

@@ -1,4 +1,4 @@
-import sys, os, re, shutil
+import sys, os, re, shutil, argparse
 
 def folder_looper(folder, dryrun, verbose = True):
 	print "Renaming files in folder: %s" % folder
@@ -75,13 +75,32 @@ def main(folder,dryrun = False, verbose = False):
 	folder_looper(folder,dryrun,verbose)
 
 if __name__ == '__main__':
-	dryrun = False
-	verbose = True
-	if len(sys.argv) == 1:
-		# folder_list = ["../output/ubuntu_test_run"]
-		folder_list = ["../output/test_run_new_counting/"]
-	else:
-		folder_list = sys.argv[1:]
+	# dryrun = False
+	# verbose = True
+	# if len(sys.argv) == 1:
+	# 	# folder_list = ["../output/ubuntu_test_run"]
+	# 	folder_list = ["../output/test_run_new_counting/"]
+	# else:
+	# 	folder_list = sys.argv[1:]
 
-	for folder in folder_list:
-		main(folder,dryrun=dryrun,verbose=verbose)
+	# for folder in folder_list:
+	# 	main(folder,dryrun=dryrun,verbose=verbose)
+
+	description_string = """Small program for renaming configuration numbers from natural numbering to machine numbering."""
+
+	parser = argparse.ArgumentParser(prog='Config number renamer', description=description_string)
+
+	######## Program basics #########
+	parser.add_argument('--version', 			default=False, action='version', version='%(prog)s 1.0')
+	parser.add_argument('--dryrun', 			default=False, action='store_true', help='Dryrun to no perform any critical actions.')
+	parser.add_argument('-v', '--verbose', 		default=False, action='store_true', help='More verbose output.')
+	
+	######## Program options ########
+	parser.add_argument('folders', 				type=str, nargs='+', help='Folders to rename')
+
+	args = parser.parse_args()
+
+	for folder in args.folders:
+		main(folder, dryrun=args.dryrun, verbose=args.verbose)
+
+

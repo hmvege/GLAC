@@ -52,7 +52,7 @@ def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=Fa
 			file_path = os.path.join(OLD_CURRENT_PATH,FOLDER,file_name)
 			file_base, temp = file_name.split("config")
 			cfg_number, extension = temp.split(".")
-			new_file_name = file_base + "config" + str(i+starting_integer) + "." + extension
+			new_file_name = file_base + "config" + "{0:0>5d}".format(i+starting_integer) + "." + extension
 
 			# Sets up the new file path
 			new_file_path = os.path.join(CURRENT_PATH,NEW_FOLDER,new_file_name)

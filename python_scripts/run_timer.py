@@ -58,7 +58,7 @@ class TimeEstimator:
 		config_time_est = self.cfg_times_per_config[str(beta)]
 		total_config_time_est = config_time_est*N_configs*N_corr
 		flow_time_est = self.flow_times[str(beta)]
-		total_flow_time_est = flow_time_est*N_configs
+		total_flow_time_est = flow_time_est*N_flows
 
 		error_cfg = ""
 		error_flow = ""
