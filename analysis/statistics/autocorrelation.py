@@ -36,7 +36,7 @@ class Autocorrelation:
 	"""
 	Class for performing an autocorrelation analysis.
 	"""
-	def __init__(self, data, use_numpy = False, time_autocorrelation = False):
+	def __init__(self, data, use_numpy = False, F = lambda x : x, time_autocorrelation = False):
 		"""
 		Args:
 			data 							(numpy array): 	dataset to get autocorrelation for
@@ -51,21 +51,21 @@ class Autocorrelation:
 
 		# Autocorrelation variables
 		self.N = len(data)
-		self.data = data
+		self.data = F(data)
 		self.C0 = np.var(data)
 		self.R = np.zeros(self.N/2)
 		self.R_error = np.zeros(self.N/2)
 		self.tau_int = 0
 		self.tau_int_error = 0
-		
+
 		# Lambda cutoff
-		self.LAMBDA = self.N/4
-		
+		self.LAMBDA = 100 # As in paper
+
 		# Gets the autocorrelations
 		if use_numpy:
-			self._get_numpy_autocorrelation(data)
+			self._get_numpy_autocorrelation(self.data)
 		else:
-			self._get_autocorrelation(data)
+			self._get_autocorrelation(self.data)
 
 		# Gets the autocorrelation errors
 		map(self._autocorrelation_error,range(self.N/2))

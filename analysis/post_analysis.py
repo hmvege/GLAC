@@ -85,7 +85,7 @@ class DataReader:
 		for batch_name in self.data_batches.keys():
 			# Temporary data output for gathering data from arrays into a simple list
 			_data_output = []
-			header_output = ["t"]
+			header_output = ["t","sqrt8t"]
 			for obs_data in self.data_batches[batch_name]:
 				# print obs_data["data"]
 				_data_output.append(obs_data["data"][:,1:])
@@ -98,6 +98,7 @@ class DataReader:
 			for i in xrange(len(self.flow_time)):
 				# Gathers the observables into a single list
 				data_list = [self.flow_time[i]]
+				data_list.append(PostAnalysis.get_float(batch_name)*np.sqrt(8*self.flow_time[i]))
 				for obs_data in _data_output: # Iterates over all the observables 
 					for obs_data_val in obs_data[i]: # Iterates over value and error
 						data_list.append(obs_data_val) # Appends all observables in the order of the header output
@@ -125,6 +126,8 @@ class PostAnalysis:
 	x_label = r""
 	y_label = r""
 	dpi=None
+	size_labels = {	"beta6_0":r"$24^3 \times 48$","beta6_1":r"$28^3 \times 56$",
+				"beta6_2":r"$32^3 \times 64$","beta6_45":r"$48^3 \times 96$"}
 
 	def __init__(self,data,flow_time,output_folder="../figures/post_analysis"):
 		self.data = data
@@ -168,12 +171,12 @@ class PostAnalysis:
 		if y_limits != False:
 			ax.set_ylim(y_limits)
 
-		ax.legend()
+		ax.legend(loc="lower right")
 
 		fname = os.path.join(self.output_folder,"post_analysis_%s.png" % self.analysis_name_compact)
 		plt.savefig(fname)
 		print "Figure saved in %s" % fname
-		# plt.show()
+		plt.show()
 		plt.close(fig)
 
 class TopSusPostAnalysis(PostAnalysis):
@@ -191,7 +194,7 @@ class TopSusPostAnalysis(PostAnalysis):
 			values["x"] = getLatticeSpacing(self.get_float(batch_name))*np.sqrt(8*self.flow_time)
 			values["y"] = self.data[batch_name][:,0]
 			values["y_err"] = self.data[batch_name][:,1]
-			values["label"] = r"$\beta=%2.2f$" % self.get_float(batch_name)
+			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[batch_name],self.get_float(batch_name))
 			values["color"] = self.colors[batch_name]
 			plot_values.append(values)
 
@@ -202,7 +205,7 @@ class EnergyPostAnalysis(PostAnalysis):
 	analysis_name_compact = "energy"
 	y_label = r"$t^2\langle E\rangle$"
 	x_label = r"$\frac{t}{r_0^2}$"
-	formula = r"$t^2\langle E\rangle = t^2\frac{1}{64V}F_{\mu\nu}^a{F^{\mu\nu}}^a$"
+	formula = r"$\langle E\rangle = -\frac{1}{64V}F_{\mu\nu}^a{F^{\mu\nu}}^a$"
 	r0 = 0.5
 
 	def plot(self):
@@ -213,7 +216,7 @@ class EnergyPostAnalysis(PostAnalysis):
 			values["x"] = self.flow_time/self.r0**2*getLatticeSpacing(self.get_float(batch_name))**2
 			values["y"] = -self.data[batch_name][:,0]*self.flow_time**2/64.0
 			values["y_err"] = self.data[batch_name][:,1]*self.flow_time**2/64.0
-			values["label"] = r"$\beta=%2.2f$" % self.get_float(batch_name)
+			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[batch_name],self.get_float(batch_name))
 			values["color"] = self.colors[batch_name]
 			plot_values.append(values)
 
@@ -357,7 +360,7 @@ class EnergyPostAnalysis(PostAnalysis):
 
 		ax.annotate(r"$a=0.05$fm", xy=((0.01/self.r0)**2, end), xytext=((0.01/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
 		ax.annotate(r"$a=0.07$fm", xy=((0.07/self.r0)**2, end), xytext=((0.07/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
-		ax.annotate(r"$a=0.07$fm", xy=((0.1/self.r0)**2, end), xytext=((0.1/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
+		ax.annotate(r"$a=0.1$fm", xy=((0.1/self.r0)**2, end), xytext=((0.1/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
 
 		# ax.legend(loc="lower left")
 
@@ -366,7 +369,7 @@ class EnergyPostAnalysis(PostAnalysis):
 
 		print "Figure created in %s" % fname
 		plt.show()
-		plt.close()
+		plt.close(fig)
 
 
 def main(args):

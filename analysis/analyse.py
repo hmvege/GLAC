@@ -8,7 +8,7 @@ import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd, multiproces
 
 #### Parallel helper functions ####
 def _autocorrelation_parallel_core(input_values):
-	ac = Autocorrelation(input_values[0],use_numpy=input_values[1])
+	ac = Autocorrelation(input_values[0],use_numpy=input_values[1],F=input_values[2])
 	return ac.R, ac.R_error, ac.integrated_autocorrelation_time(), ac.integrated_autocorrelation_time_error()
 
 def _bootstrap_parallel_core(input_values):
@@ -21,9 +21,13 @@ def _jackknife_parallel_core(input_values):
 	jk = Jackknife(data, F = F, jk_statistics = jk_statistics, non_jk_statistics = non_jk_statistics)
 	return jk.jk_avg, jk.jk_std, jk.jk_data
 
-def _default_return_function(x):
+def _default_return(x):
 	# For use instead of lambda x : x in parallel
 	return x
+
+def _default_return_squared(x):
+	# For use instead of lambda x**2 : x**2 in parallel
+	return x*x
 
 class FlowAnalyser(object):
 	observable_name = "Missing_Observable_Name"
@@ -116,7 +120,7 @@ class FlowAnalyser(object):
 		a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
 		return a
 
-	def boot(self,N_bs,bs_statistic = np.mean, F = _default_return_function, non_bs_stats = _default_return_function):
+	def boot(self,N_bs,bs_statistic = np.mean, F = _default_return, non_bs_stats = _default_return):
 		# Stores number of bootstraps
 		self.N_bs = N_bs
 		
@@ -156,6 +160,7 @@ class FlowAnalyser(object):
 				self.unanalyzed_y_data[i] = results[i][5]
 
 		else:
+			print "Not running parallel bootstrap for %s!" % self.observable_name
 			# Non-parallel method for calculating jackknife
 			for i in xrange(self.NFlows):
 				bs = Bootstrap(self.y[:,i], N_bs, bootstrap_statistics = bs_statistic, F = F, non_bs_stats = non_bs_stats, index_lists = index_lists)
@@ -171,7 +176,7 @@ class FlowAnalyser(object):
 		# Sets performed flag to true
 		self.bootstrap_performed = True
 
-	def jackknife(self, jk_statistics = np.average, F = _default_return_function, non_jk_statistics = _default_return_function):
+	def jackknife(self, jk_statistics = np.average, F = _default_return, non_jk_statistics = _default_return):
 		if self.parallel:
 			# Sets up jobs for parallel processing
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
@@ -197,7 +202,7 @@ class FlowAnalyser(object):
 				self.jk_y_std[i] = results[i][1]
 				self.jk_y_data[i] = results[i][2]
 		else:
-			print "Not running parallel for %s!" % self.observable_name
+			print "Not running parallel jackknife for %s!" % self.observable_name
 			# Non-parallel method for calculating jackknife
 			for i in xrange(self.NFlows):
 				jk = Jackknife(self.y[:,i],F = F, jk_statistics = jk_statistics, non_jk_statistics = non_jk_statistics)
@@ -208,15 +213,16 @@ class FlowAnalyser(object):
 		# Sets performed flag to true
 		self.jackknife_performed = True
 
-	def autocorrelation(self,use_numpy=True):
+	def autocorrelation(self,use_numpy=True, F = _default_return):
 		# Gets autocorrelation
 		if self.parallel:
 			# Sets up jobs for parallel processing
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
-								[use_numpy for i in xrange(self.NFlows)])
+								[use_numpy for i in xrange(self.NFlows)],
+								[F for i in xrange(self.NFlows)])
 
 			# Sets up parallel job
-			pool = multiprocessing.Pool(processes=self.numprocs)								
+			pool = multiprocessing.Pool(processes=self.numprocs)
 
 			# Initiates parallel jobs
 			results = pool.map(_autocorrelation_parallel_core,input_values)
@@ -232,10 +238,10 @@ class FlowAnalyser(object):
 				self.integrated_autocorrelation_time_error[i] = results[i][3]
 				self.autocorrelation_error_correction[i] = np.sqrt(2*self.integrated_autocorrelation_time[i])
 		else:
-			print "Not running parallel for %s!" % self.observable_name
+			print "Not running parallel autocorrelation for %s!" % self.observable_name
 			# Non-parallel method for calculating autocorrelation
 			for i in xrange(self.NFlows):
-				ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy)
+				ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy,F=F)
 				self.autocorrelations[i] = ac.R
 				self.autocorrelations_errors[i] = ac.R_error
 				self.integrated_autocorrelation_time[i] = ac.integrated_autocorrelation_time()
@@ -651,7 +657,7 @@ def main(args):
 			topsus_analysis.plot_original(fname_addon = "_noErrorCorrection")
 			topsus_analysis.plot_boot(fname_addon = "_noErrorCorrection")
 			topsus_analysis.plot_jackknife(fname_addon = "_noErrorCorrection")
-			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation, F = _default_return_squared) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 			topsus_analysis.plot_autocorrelation(0)
 			topsus_analysis.plot_autocorrelation(-1)
 			topsus_analysis.plot_mc_history(0)

@@ -104,30 +104,41 @@ class GetFolderContents:
 	"""
 	Retrieves folder contents and acts as a container for data and meta-data.
 	"""
-	def __init__(self,folder,flow=False):
-		if folder == None:
+	def __init__(self,files,flow=False,store_per_top=False):
+		if files == None:
 			print "    No observables found in folder: %s" % folder
 		else:
+			# Bools to ensure certain actions are only done once
 			read_meta_data = True
 			retrieved_flow_time = False
 			retrieved_indexing = False
+
+			# Number of rows to skip after meta-data has been read
 			N_rows_to_skip = 0
-			self.meta_data = {} # Assumes meta data is the same for all files in folder
+
+			# Long-term storage variables
+			self.meta_data = {}
 			self.data_y = []
 			self.data_x = False
+
+			# If we are not 
 			if flow:
 				self.data_flow_time = False	
-			# Ensures we handle the data as a folder
-			if type(folder) != list:
-				folder = [folder]
 
-			N_files = len(folder)
+			# Ensures we handle the data as a folder
+			if type(files) != list:
+				files = [files]
+
+			# Number of files is the length of files in the the folder
+			N_files = len(files)
 
 			# Goes through files in folder and reads the contents into a file
-			for i,file in enumerate(folder):
-				# Gets the metadata
+			for i,file in enumerate(files):
 				# print "    Reading file: %s" % file
+
+				# Gets the metadata
 				with open(file) as f:
+					# Reads in meta data as long as the first element on the line is a string
 					while read_meta_data:
 						line = f.readline().split(" ")
 						if line[0].isalpha():
@@ -138,13 +149,18 @@ class GetFolderContents:
 
 				# Loads the data and places it in a list
 				if flow:
+					# Uses numpy to load flow data
 					x, _x, y = np.loadtxt(file,skiprows=N_rows_to_skip,unpack=True)
+
+					# Only retrieves flow once
 					if not retrieved_flow_time:
-						self.data_flow_time = _x
+						self.data_flow_time = _x # This is the a*sqrt(8*t), kinda useless
 						retrieved_flow_time = True
 				else:
+					# Uses numpy to load non-flown data
 					x, y = np.loadtxt(file,skiprows=N_rows_to_skip,unpack=True)
 				
+				# Only retrieves indexes/flow-time*1000 once
 				if not retrieved_indexing:
 					self.data_x = x
 					retrieved_indexing = True
@@ -154,10 +170,14 @@ class GetFolderContents:
 				sys.stdout.write("\rData retrieved: %4.1f%% done" % (100*float(i)/float(N_files)))
 				sys.stdout.flush()
 
+			# Converts data to a numpy array
 			self.data_y = np.asarray(self.data_y)
 
 			# Small progressbar
 			sys.stdout.write("\rData retrieved: 100.0%% done\n")
+
+	def _store_data_as_pertop(self):
+		None
 
 def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dryrun=False,analysis_type="boot"):
 	"""
