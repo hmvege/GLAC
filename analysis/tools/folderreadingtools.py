@@ -80,16 +80,22 @@ class GetDirectoryTree:
 		else:
 			raise Warning("Observable \"%s\" was not found in possible observables: %s" % (obs,", ".join(self.flow_tree.keys())))
 
+	def getFoundObservables(self):
+		"""
+		Returns list over all found observables.
+		"""
+		return self.observables_list
+
 	def __str__(self):
 		"""
 		Prints the folder structre
 		"""
 		return_string = "Folder structure:"
 		return_string += "\n{0:<s}".format(self.batch_folder)
-		return_string += "\n{0:<s}/{1:<s}".format(self.batch_folder,"observables")
+		return_string += "\n  {0:<s}/{1:<s}".format(self.batch_folder,"observables")
 		if self.observables_folders:
 			for obs,file_name in zip(self.observables_list,os.listdir(self.observables_folder)):
-				return_string += "\n  {0:<s}".format(os.path.join(self.observables_folder,file_name))
+				return_string += "\n    {0:<s}".format(os.path.join(self.observables_folder,file_name))
 		flow_path = os.path.join(self.batch_folder,"flow_observables")
 		if os.path.isdir(flow_path):
 			return_string += "\n  {0:<s}".format(flow_path)
@@ -104,7 +110,7 @@ class GetFolderContents:
 	"""
 	Retrieves folder contents and acts as a container for data and meta-data.
 	"""
-	def __init__(self,files,flow=False,store_per_top=False):
+	def __init__(self,files,flow=False):
 		if files == None:
 			print "    No observables found in folder: %s" % folder
 		else:
@@ -127,13 +133,15 @@ class GetFolderContents:
 
 			# Ensures we handle the data as a folder
 			if type(files) != list:
-				files = [files]
+				self.files = [files]
+			else:
+				self.files = files
 
 			# Number of files is the length of files in the the folder
-			N_files = len(files)
+			N_files = len(self.files)
 
 			# Goes through files in folder and reads the contents into a file
-			for i,file in enumerate(files):
+			for i,file in enumerate(self.files):
 				# print "    Reading file: %s" % file
 
 				# Gets the metadata
@@ -176,8 +184,13 @@ class GetFolderContents:
 			# Small progressbar
 			sys.stdout.write("\rData retrieved: 100.0%% done\n")
 
-	def _store_data_as_pertop(self):
-		None
+	def create_perflow_data(self,dryrun=False):
+		print self.files
+
+	def create_settings_file(self,dryrun=False):
+		print self.meta_data
+		for key in self.meta_data:
+			print key, self.meta_data[key]
 
 def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dryrun=False,analysis_type="boot"):
 	"""

@@ -25,8 +25,6 @@ def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=Fa
 	CURRENT_PATH = os.getcwd()
 	if NEW_BATCH_FOLDER: NEW_BATCH_FOLDER = os.path.normpath(NEW_BATCH_FOLDER)
 
-	print CURRENT_PATH, OLD_CURRENT_PATH
-
 	for FOLDER in RENAME_FOLDERS:
 		RENAME_FOLDER_PATH = os.path.join(OLD_CURRENT_PATH,FOLDER)
 
@@ -39,7 +37,7 @@ def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=Fa
 
 		# Check if a new batch folder is provided, will move observable to this
 		if NEW_BATCH_FOLDER != False:
-			NEW_FOLDER = os.path.join(NEW_BATCH_FOLDER, FOLDER.split("/")[-1])
+			NEW_FOLDER = NEW_BATCH_FOLDER
 		else:
 			NEW_FOLDER = FOLDER
 

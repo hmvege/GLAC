@@ -26,7 +26,7 @@ class Jackknife:
 		# Estimates variance according to new MHJ book
 		self.jk_var = np.var(self.jk_data)*(self.N - 1)
 		self.jk_std = np.sqrt(self.jk_var)
-		self.jk_avg = np.average(self.jk_data)
+		self.jk_avg_biased = np.average(self.jk_data)
 		
 		# Gets and sets non-bootstrapped values
 		data = F(non_jk_statistics(data))
@@ -35,7 +35,7 @@ class Jackknife:
 		self.std_original = np.std(data)
 
 		# Returns the unbiased estimator/average
-		self.jk_avg_unbiased = self.N*self.avg_original - (self.N - 1) * self.jk_avg
+		self.jk_avg = self.N*self.avg_original - (self.N - 1) * self.jk_avg
 
 	def __call__(self):
 		"""

@@ -152,83 +152,104 @@ class DataReader:
 		else:
 			return os.listdir(folder)
 
-class BootstrapLineFitter:
+# class BootstrapLineFitter:
+# 	"""
+# 	Line fit method using bootstrap MAKE INTO FUNCTION INSTEAD - NO POINT IN HAVING CLASS WITH INIT AND FUNC!!!
+# 	"""
+# 	def __init__(self, bs_data_dict, function_correction = lambda x : x):
+# 		self.observable = bs_data_dict["observable"]
+# 		self.beta = bs_data_dict["beta"]
+# 		self.data = bs_data_dict["data"]
+# 		self.NFlows, self.NBoot = self.data.shape
+# 		for iBoot in xrange(self.data.shape[1]):
+# 			self.data[:,iBoot] = function_correction(self.data[:,iBoot])
+
+def fit_line(x, bs_data_dict, fit_target, fit_interval, data_function_correction = lambda x : x, fit_function_modifier = lambda x : x, fit_method = "curve_fit", plot_fit_window = False):
 	"""
-	Line fit method using bootstrap
+	Function for creating a line fit using bootstrapped data.
+	Args:
+		x 					(numpy float array): x-axis values to fit along
+		bs_data_dict  		 	   (dictionary): dictionary containing bootstrapped array "data", "observable" and "beta"
+		fit_target						(float): y-axis value to fit against
+		fit_interval					(float): y-axis interval in which we will linefit for
+		[data_function_correction]	 (function): function for correcting data before analysis is performed
+		[fit_function_modifier] 	 (function): function for modifying y-values
+		[fit_method]					  (str): type of data fit to be performed. Default is scipy.optimize.curve_fit
+		[plot_fit_window]				 (bool): plots the fit window to easier visualize
+	Returns:
+		fit_value 						(float): y value fitted at fit_target
+		fit_value_error 				(float): error of y_0
 	"""
-	def __init__(self, bs_data_dict, function_correction = lambda x : x):
-		self.observable = bs_data_dict["observable"]
-		self.beta = bs_data_dict["beta"]
-		self.data = bs_data_dict["data"]
-		self.NFlows, self.NBoot = self.data.shape
-		for iBoot in xrange(self.data.shape[1]):
-			self.data[:,iBoot] = function_correction(self.data[:,iBoot])
+	# Retrieves data
+	observable = bs_data_dict["observable"]
+	beta = bs_data_dict["beta"]
+	data = bs_data_dict["data"]
+	NFlows, NBoot = data.shape
 
-	def fit_line(self, x, fit_target, fit_interval, error_function = lambda x : x, fit_method = "curve_fit"):
-		"""
-		Function for creating a line fit using bootstrapped data.
-		Args:
-			x 				(numpy float array): x-axis values to fit along
-			fit_target					(float): y-axis value to fit against
-			fit_interval				(float): y-axis interval in which we will linefit for
-			(optional)error_function (function): function for modifying y-values
-		Returns:
-			y_0		(float): y value fitted at fit_target
-			y_error (float): error of y_0
-		"""
+	# Applies the funciton correction to all bootstrap samples
+	for iBoot in xrange(NBoot):
+		data[:,iBoot] = data_function_correction(data[:,iBoot])
 
-		# Sets the fitting method for the each bootstrap value
-		fit_methods_list = ["curve_fit","polynomial"]
-		if fit_method not in fit_methods_list:
-			raise KeyError("%s not a possible fit method. Use %s" % (fit_method,", ".join(fit_methods_list)))
+	# Sets the fitting method for the each bootstrap value
+	fit_methods_list = ["curve_fit","polynomial"]
+	if fit_method not in fit_methods_list:
+		raise KeyError("%s not a possible fit method. Use %s" % (fit_method,", ".join(fit_methods_list)))
 
-		# def _linefit_t0(self,x,y,y_err,beta): # fit_target, fit_interval, error_function, bs_fit="False"/"True", err_func = None
-		# Creates a small interval in which we will fit the data
-		# y0 = 0.3
-		# fit_interval = 0.015
+	# Takes data mean for finding fit interval
+	data_mean = np.mean(bs_data_dict["data"],axis=1)
+	data_std = np.std(bs_data_dict["data"],axis=1)
 
-		# y_fit_interval_list = []
-		# for iBoot in xrange(self.NBoot):
-		# 	y_fit_interval = []
-		# 	for iInterval, iY
+	# Finds fit interval indices
+	start_index = np.argmin( np.abs(data_mean - (fit_target - fit_interval)) )
+	end_index = np.argmin( np.abs(data_mean - (fit_target + fit_interval)) )
+	N_fit_line_length = end_index - start_index
 
-		# Gathers relevant line interval to lists
-		x_line_to_fit = []
-		y_line_to_fit = []
-		y_line_to_fit_errors = []
-		for i, iy in enumerate(y):
-			# Only accepts if data is within fitting interval
-			if (y0 - fit_interval) < iy < (y0 + fit_interval):
-				x_line_to_fit.append(x[i])
-				y_line_to_fit.append(iy)
-				y_line_to_fit_errors.append(y_err[i])
+	# Plots the fit window if prompted to do so
+	if plot_fit_window:
+		fig = plt.figure()
+		ax = fig.add_subplot(111)
+		ax.plot(x,data_mean,label=observable)
+		ax.fill_between(x, data_mean - data_std, data_mean + data_std,alpha=0.5)
+		ax.scatter(x[start_index],data_mean[start_index],label="Fit line start")
+		ax.scatter(x[end_index],data_mean[end_index],label="Fit line end")
+		ax.axhline(fit_target)
+		ax.grid(True)
+		ax.legend()
+		ax.set_title("Fit window for %s" % observable)
+		plt.show()
+		plt.close(fig)
 
-		if len(y_line_to_fit) == 0:
-			raise ValueError("No values in the vincinity of t^2<E>=0.3 found for beta %2.2f" % beta)
+	######################################################################################################
+	#ALGORITHM:
+	#1 [x]: Estimate interval indices from regular mean(should be provided, or can be calculated from bs mean)
+	#2 [x]: Use interval indices to make bootstrap fits and get t0 as before
+	#3 [x]: Calculate mean and error from t0_bs
+	######################################################################################################
 
-		# Converts data to arrays
-		x_line_to_fit = np.asarray(x_line_to_fit)
-		y_line_to_fit = np.asarray(y_line_to_fit)
-		y_line_to_fit_errors = np.asarray(y_line_to_fit_errors)
+	# Array to store fitted values in
+	fitted_values = np.zeros(NBoot)
 
+	for iBoot in xrange(NBoot):
 		# Fitting data
-		pol,polcov = np.polyfit(x_line_to_fit,y_line_to_fit,1,rcond=None,full=False,w=1.0/y_line_to_fit_errors,cov=True)
-		# print pol,"\n",polcov
-		# pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_line_to_fit, y_line_to_fit, sigma = y_line_to_fit_errors)
-		# print pol,"\n",polcov
+		if fit_method == "curve_fit":
+			pol,polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x[start_index:end_index],data[start_index:end_index,iBoot])
+		elif fit_method == "polynomial":
+			pol,polcov = np.polyfit(x[start_index:end_index],data[start_index:end_index,iBoot],1,rcond=None,full=False,cov=True)
+		else:
+			raise KeyError("No fit method called %s found." % fit_method)
 
 		# Retrieving polynomial values for retrofitting
 		a = pol[0]
 		b = pol[1]
-		a_err, b_err = np.sqrt(np.diag(polcov))
 
-		# t0 value
-		t0 = self.r0**2 * (y0 - b) / a
+		# Adds bootstrap fit to fitted values
+		fitted_values[iBoot] = fit_function_modifier((fit_target - b) / a)
 
-		# Gets error of t0 estimate
-		t0_err = np.sqrt((self.r0**2*(b - y0)/a**2)**2 * a_err**2 + self.r0**4/a**2 * b_err**2 + 2*self.r0**4*(b - y0)/a**4 * polcov[1,0])
+	# Takes mean and standard deviation of fitted values
+	fit_value = np.mean(fitted_values)
+	fit_value_error = np.std(fitted_values)
 
-		return t0,t0_err
+	return fit_value, fit_value_error
 
 
 class PostAnalysis:
@@ -359,9 +380,13 @@ class EnergyPostAnalysis(PostAnalysis):
 		for values in data_values:
 			t0_batch = {}
 			t0_batch["beta"] = self.get_float(values["batch_name"])
-			lfit = BootstrapLineFitter(self.bs_data[values["batch_name"]], function_correction = lambda x : -x*self.flow_time**2/64.0)
-			t0_batch["t0"],t0_batch["t0_err"] = lfit.fit_line(values["x"],0.3,0.015,t0_batch["beta"])
+			t0_batch["t0"],t0_batch["t0_err"] = fit_line(	values["x"],self.bs_data[values["batch_name"]],0.3,0.015, 
+															data_function_correction = lambda x : -x*self.flow_time**2/64.0,
+															fit_function_modifier = lambda x : x*self.r0**2,
+															plot_fit_window = True)
+			# print "BETA %f:" % t0_batch["beta"], t0_batch["t0"],t0_batch["t0_err"]
 			# t0_batch["t0"],t0_batch["t0_err"] = self._linefit_t0(values["x"],values["y"],values["y_err"],t0_batch["beta"])
+			# print "BETA %f:" % t0_batch["beta"], t0_batch["t0"],t0_batch["t0_err"]
 			t0_batch["a"] = getLatticeSpacing(t0_batch["beta"])
 
 			# Adds to list of batch-values
@@ -492,7 +517,7 @@ class EnergyPostAnalysis(PostAnalysis):
 		fig.savefig(fname,dpi=self.dpi)
 
 		print "Figure created in %s" % fname
-		# plt.show()
+		plt.show()
 		plt.close(fig)
 
 def main(args):
@@ -518,7 +543,6 @@ def main(args):
 
 	# Retrofits the energy for continiuum limit
 	energy_analysis.plot_continiuum()
-	
 
 if __name__ == '__main__':
 	if len(sys.argv[1:]) == 1:
