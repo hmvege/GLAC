@@ -402,25 +402,18 @@ class FlowAnalyser(object):
 		print "Figure created in %s" % fname
 		plt.close(fig)
 
-	def plot_integrated_correlation_time(self, flow_time):
+	def plot_integrated_correlation_time(self):
 		"""
-		Plots the integrated correlation time at a given flow time.
-		Args:
-			flow_time			(int): flow time to plot.
+		Plots the integrated correlation through the flowing.
 		"""
-		# Converts flow_time if it is minus 1
-		if flow_time == -1:
-			flow_time = self.NFlows - 1
-
 		# Sets up values to be plotted
 		y = self.integrated_autocorrelation_time
 		y_std = self.integrated_autocorrelation_time_error
-		x = range(self.N_configurations)
-		print len(x), y.shape, y_std.shape
+		x = self.x*self.data.meta_data["FlowEpsilon"]
 
 		# Gives title and file name
-		title_string = r"Integrated autocorrelation time of %s at flow time $t=%.2f$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,flow_time*self.data.meta_data["FlowEpsilon"],self.beta,self.N_configurations)
-		fname = "../figures/{0:<s}/{1:<s}_integrated_ac_time_flowt{2:<d}_beta{3:<s}.png".format(self.batch_name,self.observable_name_compact,flow_time, str(self.beta).replace('.','_'))
+		title_string = r"Integrated autocorrelation time of %s for $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,self.beta,self.N_configurations)
+		fname = "../figures/{0:<s}/{1:<s}_integrated_ac_time_beta{2:<s}.png".format(self.batch_name,self.observable_name_compact, str(self.beta).replace('.','_'))
 
 		# Sets up the plot
 		fig = plt.figure()
@@ -432,13 +425,9 @@ class FlowAnalyser(object):
 
 		# ax.plot(x,y,color="0",label=self.observable_name)
 		# ax.errorbar(x,y,yerr=y_std,color="0",ecolor="r")#,label=self.observable_name)
-		ax.set_ylim(-self.autocorrelations_limits,self.autocorrelations_limits)
-		ax.set_xlim(0,N_autocorr)
-		ax.set_xlabel(r"MC time")
+		ax.set_xlabel(r"$t_{flow}$")
 		ax.set_ylabel(r"$\tau_{int}$")
-		ax.set_title(title)
-		start, end = ax.get_ylim()
-		ax.yaxis.set_ticks(np.arange(start, end, 0.2))
+		ax.set_title(title_string)
 		ax.grid(True)
 		if not self.dryrun: 
 			fig.savefig(fname,dpi=self.dpi)
@@ -675,8 +664,8 @@ def main(args):
 		plaq_analysis.plot_jackknife()
 		plaq_analysis.plot_histogram(0,r"$P_{\mu\nu}$",x_limits='analysis')
 		plaq_analysis.plot_histogram(-1,r"$P_{\mu\nu}$",x_limits='analysis')
-		plaq_analysis.plot_integrated_correlation_time(0)
-		plaq_analysis.plot_integrated_correlation_time(-1)
+		plaq_analysis.plot_integrated_correlation_time()
+		plaq_analysis.plot_integrated_correlation_time()
 
 		if plaq_analysis.bootstrap_performed and plaq_analysis.autocorrelation_performed:
 			write_data_to_file(plaq_analysis,dryrun = dryrun)
@@ -700,8 +689,8 @@ def main(args):
 			topc_analysis.plot_jackknife()
 			topc_analysis.plot_histogram(0,r"$Q$[GeV]",x_limits='analysis')
 			topc_analysis.plot_histogram(-1,r"$Q$[GeV]",x_limits='analysis')
-			topc_analysis.plot_integrated_correlation_time(0)
-			topc_analysis.plot_integrated_correlation_time(-1)
+			topc_analysis.plot_integrated_correlation_time()
+			topc_analysis.plot_integrated_correlation_time()
 
 			if topc_analysis.bootstrap_performed and topc_analysis.autocorrelation_performed:
 				write_data_to_file(topc_analysis,dryrun = dryrun)
@@ -724,8 +713,8 @@ def main(args):
 			topsus_analysis.plot_jackknife()
 			topsus_analysis.plot_histogram(0,r"$\chi^{1/4}$[GeV]",x_limits='analysis')
 			topsus_analysis.plot_histogram(-1,r"$\chi^{1/4}$[GeV]",x_limits='analysis')
-			topsus_analysis.plot_integrated_correlation_time(0)
-			topsus_analysis.plot_integrated_correlation_time(-1)
+			topsus_analysis.plot_integrated_correlation_time()
+			topsus_analysis.plot_integrated_correlation_time()
 
 			if topsus_analysis.bootstrap_performed and topsus_analysis.autocorrelation_performed:
 				write_data_to_file(topsus_analysis,dryrun = dryrun)
@@ -750,8 +739,8 @@ def main(args):
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_histogram(0,r"$E$[GeV]",x_limits='analysis')
 		energy_analysis.plot_histogram(-1,r"$E$[GeV]",x_limits='analysis')
-		energy_analysis.plot_integrated_correlation_time(0)
-		energy_analysis.plot_integrated_correlation_time(-1)
+		energy_analysis.plot_integrated_correlation_time()
+		energy_analysis.plot_integrated_correlation_time()
 
 		if energy_analysis.bootstrap_performed and energy_analysis.autocorrelation_performed:
 			write_data_to_file(energy_analysis,dryrun = dryrun)
