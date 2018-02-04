@@ -6,7 +6,7 @@ def natural_sort(l):
     alphanum_key = lambda key: [convert(c) for c in re.split('(\d+)',key)]
     return sorted(l,key=alphanum_key)
 
-def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=False,OLD_CURRENT_PATH=os.getcwd()):
+def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=False,OLD_CURRENT_PATH=os.getcwd(),NEW_BATCH_NAME=False):
 	# Checks all folders given are actual folders.	
 	for folder in folders:
 		if not os.path.isdir(folder):
@@ -49,6 +49,26 @@ def main(folders,starting_integer,dryrun=False,NEW_BATCH_FOLDER=False,verbose=Fa
 		for i,file_name in enumerate(RENAME_FOLDER_FILES):
 			file_path = os.path.join(OLD_CURRENT_PATH,FOLDER,file_name)
 			file_base, temp = file_name.split("config")
+
+			# If a new batch name is provided, will replace old batch name
+			if NEW_BATCH_NAME != False:
+				# Finds the observable we are looking at
+				observables = ["plaq","topc","energy"]
+				for obs in observables:
+					if obs in file_base:
+						# Picks out the batch name
+						batch_name, end = file_base.split("_%s" % obs)
+
+						# Renames the file with a new batch name, and stiches the file base together
+						file_base = NEW_BATCH_NAME + "_" + obs + end
+
+						# Breaks when found the matching observable
+						break
+				else:
+					# If observable is not found, will exit program
+					raise KeyError("Observable in file %s not found among the standard observables: %s" % (file_name,", ".join(observables)))
+
+			# Replaces the config number with a new starting integer and ensures it is on 00000 format
 			cfg_number, extension = temp.split(".")
 			new_file_name = file_base + "config" + "{0:0>5d}".format(i+starting_integer) + "." + extension
 
@@ -93,11 +113,18 @@ Assumes name scheme of [batch_name]beta[beta_value]_[observable_type]_[optional:
 	
 	######## Program options ########
 	parser.add_argument('folders', 			type=str, nargs='+', help='Folders to rename')
-	parser.add_argument('--move_to_folder',	type=str, default=False,help='Moves observables to the a new folder.')
-	parser.add_argument('--old_base_path',		type=str, default=os.getcwd(),help='Base folder')
 	parser.add_argument('starting_integer',	type=int, help='Config integer to start new config counting from')
+	parser.add_argument('--move_to_folder',	type=str, default=False,help='Moves observables to the a new folder.')
+	parser.add_argument('--old_base_path',	type=str, default=os.getcwd(),help='Base folder')
+	parser.add_argument('--new_batch_name',	type=str, default=False, help='Renaming files to this batch')
 
 	args = parser.parse_args()
 	# args = parser.parse_args(["--dryrun","../output/prodRunBeta6_1_15obs/flow_observables/energy","../output/prodRunBeta6_1_15obs/flow_observables/plaq","../output/prodRunBeta6_1_15obs/flow_observables/topc","485","--move_to_folder","../output/prodRunBeta6_1/flow_observables","-v"])
 
-	main(args.folders,args.starting_integer,dryrun=args.dryrun,NEW_BATCH_FOLDER=args.move_to_folder,verbose=args.verbose,OLD_CURRENT_PATH=args.old_base_path)
+	main(	args.folders,
+			args.starting_integer,
+			dryrun=args.dryrun,
+			NEW_BATCH_FOLDER=args.move_to_folder,
+			verbose=args.verbose,
+			OLD_CURRENT_PATH=args.old_base_path,
+			NEW_BATCH_NAME=args.new_batch_name)

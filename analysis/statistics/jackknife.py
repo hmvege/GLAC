@@ -35,7 +35,7 @@ class Jackknife:
 		self.std_original = np.std(data)
 
 		# Returns the unbiased estimator/average
-		self.jk_avg = self.N*self.avg_original - (self.N - 1) * self.jk_avg
+		self.jk_avg = self.N*self.avg_original - (self.N - 1) * self.jk_avg_biased
 
 	def __call__(self):
 		"""

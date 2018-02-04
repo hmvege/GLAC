@@ -39,7 +39,7 @@ class FlowAnalyser(object):
 	autocorrelations_limits = 1
 	dpi = None
 
-	def __init__(self,files,batch_name,data=None,dryrun=False,flow=True, parallel = False, numprocs = 4):
+	def __init__(self,file_tree,batch_name,data=None,dryrun=False,flow=True, parallel = False, numprocs = 4):
 		# Sets up global constants
 		self.batch_name = batch_name
 		self.N_bs = None
@@ -57,7 +57,7 @@ class FlowAnalyser(object):
 
 		# Enables possibility of providing data
 		if data == None:
-			self.data = GetFolderContents(files,flow=self.flow)
+			self.data = GetFolderContents(file_tree,self.observable_name_compact,flow=self.flow)
 		else:
 			self.data = data
 
@@ -336,10 +336,8 @@ class FlowAnalyser(object):
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
 
+		# Plots the error bar
 		ax.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
-		# pl.plot(x, y, 'k', color='#CC4F1B')
-		# pl.fill_between(x, y-error, y+error,
-		#     alpha=0.5, edgecolor='#CC4F1B', facecolor='#FF9848')
 
 		if len(self.y_limits) == 0:
 			self.y_limits = [-np.max(y),np.max(y)]
@@ -399,6 +397,49 @@ class FlowAnalyser(object):
 		ax.yaxis.set_ticks(np.arange(start, end, 0.2))
 		ax.grid(True)
 		# ax.legend()
+		if not self.dryrun: 
+			fig.savefig(fname,dpi=self.dpi)
+		print "Figure created in %s" % fname
+		plt.close(fig)
+
+	def plot_integrated_correlation_time(self, flow_time):
+		"""
+		Plots the integrated correlation time at a given flow time.
+		Args:
+			flow_time			(int): flow time to plot.
+		"""
+		# Converts flow_time if it is minus 1
+		if flow_time == -1:
+			flow_time = self.NFlows - 1
+
+		# Sets up values to be plotted
+		y = self.integrated_autocorrelation_time
+		y_std = self.integrated_autocorrelation_time_error
+		x = range(self.N_configurations)
+		print len(x), y.shape, y_std.shape
+
+		# Gives title and file name
+		title_string = r"Integrated autocorrelation time of %s at flow time $t=%.2f$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,flow_time*self.data.meta_data["FlowEpsilon"],self.beta,self.N_configurations)
+		fname = "../figures/{0:<s}/{1:<s}_integrated_ac_time_flowt{2:<d}_beta{3:<s}.png".format(self.batch_name,self.observable_name_compact,flow_time, str(self.beta).replace('.','_'))
+
+		# Sets up the plot
+		fig = plt.figure()
+		ax = fig.add_subplot(111)
+
+		# Plot with error
+		ax.plot(x,y,color="0")
+		ax.fill_between(x, y - y_std, y + y_std,alpha=0.5, edgecolor='', facecolor='#6699ff')
+
+		# ax.plot(x,y,color="0",label=self.observable_name)
+		# ax.errorbar(x,y,yerr=y_std,color="0",ecolor="r")#,label=self.observable_name)
+		ax.set_ylim(-self.autocorrelations_limits,self.autocorrelations_limits)
+		ax.set_xlim(0,N_autocorr)
+		ax.set_xlabel(r"MC time")
+		ax.set_ylabel(r"$\tau_{int}$")
+		ax.set_title(title)
+		start, end = ax.get_ylim()
+		ax.yaxis.set_ticks(np.arange(start, end, 0.2))
+		ax.grid(True)
 		if not self.dryrun: 
 			fig.savefig(fname,dpi=self.dpi)
 		print "Figure created in %s" % fname
@@ -617,7 +658,7 @@ def main(args):
 
 	# Analyses plaquette data if present in arguments
 	if 'plaq' in args:
-		plaq_analysis = AnalysePlaquette(DirectoryList.getFlow("plaq"), args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
+		plaq_analysis = AnalysePlaquette(DirectoryList, args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
 		plaq_analysis.boot(N_bs)
 		plaq_analysis.jackknife()
 		plaq_analysis.y_limits = [0.55,1.05]
@@ -634,12 +675,14 @@ def main(args):
 		plaq_analysis.plot_jackknife()
 		plaq_analysis.plot_histogram(0,r"$P_{\mu\nu}$",x_limits='analysis')
 		plaq_analysis.plot_histogram(-1,r"$P_{\mu\nu}$",x_limits='analysis')
+		plaq_analysis.plot_integrated_correlation_time(0)
+		plaq_analysis.plot_integrated_correlation_time(-1)
 
 		if plaq_analysis.bootstrap_performed and plaq_analysis.autocorrelation_performed:
 			write_data_to_file(plaq_analysis,dryrun = dryrun)
 
 	if 'topc' in args or 'topsus' in args:
-		topc_analysis = AnalyseTopologicalCharge(DirectoryList.getFlow("topc"), args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
+		topc_analysis = AnalyseTopologicalCharge(DirectoryList, args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
 		if 'topc' in args:
 			topc_analysis.boot(N_bs)
 			topc_analysis.jackknife()
@@ -657,12 +700,14 @@ def main(args):
 			topc_analysis.plot_jackknife()
 			topc_analysis.plot_histogram(0,r"$Q$[GeV]",x_limits='analysis')
 			topc_analysis.plot_histogram(-1,r"$Q$[GeV]",x_limits='analysis')
+			topc_analysis.plot_integrated_correlation_time(0)
+			topc_analysis.plot_integrated_correlation_time(-1)
 
 			if topc_analysis.bootstrap_performed and topc_analysis.autocorrelation_performed:
 				write_data_to_file(topc_analysis,dryrun = dryrun)
 
 		if 'topsus' in args:
-			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList.getFlow("topc"), args[0], dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs)
+			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList, args[0], dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs)
 			topsus_analysis.boot(N_bs,bs_statistic = topsus_analysis.stat, F = topsus_analysis.chi, non_bs_stats = topsus_analysis.return_x_squared,write_bs_data_to_file=True)
 			topsus_analysis.jackknife(jk_statistics = topsus_analysis.stat, F = topsus_analysis.chi, non_jk_statistics = topsus_analysis.return_x_squared)
 			topsus_analysis.y_limits = [0.05,0.24]
@@ -679,13 +724,15 @@ def main(args):
 			topsus_analysis.plot_jackknife()
 			topsus_analysis.plot_histogram(0,r"$\chi^{1/4}$[GeV]",x_limits='analysis')
 			topsus_analysis.plot_histogram(-1,r"$\chi^{1/4}$[GeV]",x_limits='analysis')
+			topsus_analysis.plot_integrated_correlation_time(0)
+			topsus_analysis.plot_integrated_correlation_time(-1)
 
 			if topsus_analysis.bootstrap_performed and topsus_analysis.autocorrelation_performed:
 				write_data_to_file(topsus_analysis,dryrun = dryrun)
 
 	if 'energy' in args:
 		r0 = 0.5
-		energy_analysis = AnalyseEnergy(DirectoryList.getFlow("energy"), args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
+		energy_analysis = AnalyseEnergy(DirectoryList, args[0], dryrun = dryrun, parallel=parallel, numprocs=numprocs)
 		energy_analysis.boot(N_bs,write_bs_data_to_file=True)
 		energy_analysis.jackknife()
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
@@ -703,6 +750,8 @@ def main(args):
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_histogram(0,r"$E$[GeV]",x_limits='analysis')
 		energy_analysis.plot_histogram(-1,r"$E$[GeV]",x_limits='analysis')
+		energy_analysis.plot_integrated_correlation_time(0)
+		energy_analysis.plot_integrated_correlation_time(-1)
 
 		if energy_analysis.bootstrap_performed and energy_analysis.autocorrelation_performed:
 			write_data_to_file(energy_analysis,dryrun = dryrun)
@@ -721,11 +770,11 @@ if __name__ == '__main__':
 		# 		['beta6_1','data','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data2','plaq','topc','energy','topsus'],
-				['beta6_1','data2','plaq','topc','energy','topsus'],
-				['beta6_2','data2','plaq','topc','energy','topsus']]
+		# args = [['beta6_0','data2','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data2','plaq','topc','energy','topsus'],
+		# 		['beta6_2','data2','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_2','data2','plaq','topc','energy','topsus']]
+		args = [['beta6_2','data2','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_0','data2','topsus'],
 		# 		['beta6_1','data2','topsus'],
