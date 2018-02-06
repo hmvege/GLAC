@@ -6,7 +6,7 @@ class Jackknife:
 	"""
 	Class for performing a statistical jack knife.
 	"""
-	def __init__(self, data, F = lambda x: x, jk_statistics = np.average, non_jk_statistics = lambda x : x):
+	def __init__(self, data, jk_statistics = np.mean, non_jk_statistics = lambda x : x):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
@@ -15,27 +15,47 @@ class Jackknife:
 		"""
 		# Sets some global class variables
 		self.N = len(data)
-		self.shape = self.N
 
 		# Performs jackknife and sets variables
 		self.jk_data_raw = np.zeros((self.N,self.N-1)) # Jack knifed data
 		for i in xrange(self.N):
 			self.jk_data_raw[i] = np.concatenate([data[:i],data[i+1:]])
+		self.jk_data = jk_statistics(self.jk_data_raw,axis=1)
 
-		self.jk_data = F(jk_statistics(self.jk_data_raw,axis=1))
-		# Estimates variance according to new MHJ book
-		self.jk_var = np.var(self.jk_data)*(self.N - 1)
-		self.jk_std = np.sqrt(self.jk_var)
+		# Performing statistics on jackknife samples
+		self.jk_var = np.var(self.jk_data)*(self.N - 1) # Estimates variance according to new MHJ book
+		self.jk_std = np.sqrt(self.jk_var) # Ensures that the errors are run through the function F
 		self.jk_avg_biased = np.average(self.jk_data)
-		
+
 		# Gets and sets non-bootstrapped values
-		data = F(non_jk_statistics(data))
+		data = non_jk_statistics(data)
 		self.avg_original = np.average(data)
-		self.var_original = np.var(data)
+		self.var_original = np.var(data) # Ensures that the errors are run through the function F
 		self.std_original = np.std(data)
 
 		# Returns the unbiased estimator/average
-		self.jk_avg = self.N*self.avg_original - (self.N - 1) * self.jk_avg_biased
+		self.jk_avg 			= self.N*self.avg_original - (self.N - 1) * self.jk_avg_biased
+		self.jk_avg_unbiased 	= self.jk_avg
+
+		# self.jk_data = F(jk_statistics(self.jk_data_raw,axis=1))
+		# # Estimates variance according to new MHJ book
+		# self.jk_var = np.var(self.jk_data)*(self.N - 1)
+		# self.jk_std = np.sqrt(self.jk_var) # Ensures that the errors are run through the function F
+		# self.jk_avg_biased = np.average(self.jk_data)
+		# self.jk_avg = self.jk_avg_biased
+
+		# # Gets and sets non-bootstrapped values
+		# data = F(non_jk_statistics(data))
+		# self.avg_original = np.average(data)
+		# self.var_original = np.var(data) # Ensures that the errors are run through the function F
+		# self.std_original = np.std(data)
+
+		# Returns the unbiased estimator/average
+		# self.jk_avg 			= F(self.N*self.avg_original - (self.N - 1) * self.jk_avg_biased)
+		# self.jk_avg_biased 		= F(self.jk_avg_biased)
+		# self.jk_avg_unbiased 	= self.jk_avg
+		# self.avg_original 		= F(self.avg_original)
+
 
 	def __call__(self):
 		"""
@@ -47,7 +67,7 @@ class Jackknife:
 		"""
 		Length given as number of bootstraps.
 		"""
-		return self.shape[0]
+		return self.N
 
 	def __str__(self):
 		"""
@@ -57,7 +77,7 @@ class Jackknife:
 JACKKNIFE:
 %s
 Non-jackknife: %20.16f %10.5E %10.5E
-Jackknife:     %20.16f %10.5E %10.5E %17.16f (unbiased average)
+Jackknife:     %20.16f %10.5E %10.5E %20.16f (unbiased average)
 		""" % ("="*61,self.avg_original, self.var_original, self.std_original, self.jk_avg, self.jk_var, self.jk_std, self.jk_avg_unbiased)
 		return msg
 

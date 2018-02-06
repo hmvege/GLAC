@@ -36,12 +36,13 @@ class Autocorrelation:
 	"""
 	Class for performing an autocorrelation analysis.
 	"""
-	def __init__(self, data, use_numpy = False, F = lambda x : x, time_autocorrelation = False):
+	def __init__(self, data, use_numpy = False, data_statistic = lambda x : x, time_autocorrelation = False):
 		"""
 		Args:
-			data 							(numpy array): 	dataset to get autocorrelation for
-			[optional] use_numpy			(bool): 		uses numpy to perform the autocorrelation
-			[optional] time_autocorrealtion	(bool): 		times the autocorrelation function
+			data 					 (numpy array): dataset to get autocorrelation for
+			[optional] use_numpy			(bool): uses numpy to perform the autocorrelation
+			[optional] data_statistics	(function):	statistics that should be performed on the data before one proceed with the autocorrelation
+			[optional] time_autocorrealtion	(bool): times the autocorrelation function
 		Returns:
 			Object containing the autocorrelation values
 		"""
@@ -51,7 +52,7 @@ class Autocorrelation:
 
 		# Autocorrelation variables
 		self.N = len(data)
-		self.data = F(data)
+		self.data = data_statistic(data)
 		self.C0 = np.var(data)
 		self.R = np.zeros(self.N/2)
 		self.R_error = np.zeros(self.N/2)

@@ -53,11 +53,13 @@ class GetDirectoryTree:
 			self.figures_path = os.path.join("..","..","figures",batch_name)
 		else:
 			self.figures_path = os.path.join("..","figures",batch_name)
-		if not os.path.isdir(self.figures_path):
-			if self.dryrun:
-				print '> mkdir %s' % self.figures_path
-			else:
-				os.mkdir(self.figures_path)
+		
+		check_folder(self.figures_path,self.dryrun)
+		# if not os.path.isdir(self.figures_path):
+		# 	if self.dryrun:
+		# 		print '> mkdir %s' % self.figures_path
+		# 	else:
+		# 		os.mkdir(self.figures_path)
 
 	@staticmethod
 	def natural_sort(l):
@@ -197,22 +199,14 @@ class GetFolderContents:
 			# # Small progressbar
 			# sys.stdout.write("\rData retrieved: 100.0%% done\n")
 
-	@staticmethod
-	def _check_folder(folder,dryrun):
-		if not os.path.isdir(folder):
-			if not dryrun:
-				os.mkdir(folder)
-			else:
-				print "> mkdir %s" % folder
-
 	def create_perflow_data(self,dryrun=False,verbose=False):
 		# Creating per flow folder
 		per_flow_folder = os.path.join(self.file_tree.batch_folder,"perflow")
-		self._check_folder(per_flow_folder,dryrun)
+		check_folder(per_flow_folder,dryrun)
 
 		# Creates observable per flow folder
 		per_flow_observable_folder = os.path.join(per_flow_folder,self.observable)
-		self._check_folder(per_flow_observable_folder,dryrun)
+		check_folder(per_flow_observable_folder,dryrun)
 
 		# Retrieving number of configs and number of flows
 		NConfigs,NFlows = self.data_y.shape
@@ -258,6 +252,15 @@ class GetFolderContents:
 			print "\nSetting file:", info_string, "\n"
 		
 		print "Setting file %s created." % setting_file_path
+
+def check_folder(folder_name, dryrun, verbose = False):
+	# Checks that figures folder exist, and if not will create it
+	if not os.path.isdir(folder_name):
+		if not dryrun:
+			os.mkdir(folder_name)
+		if dryrun or verbose:
+			print "> mkdir %s" % figures_folder
+
 
 def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dryrun=False,analysis_type="boot"):
 	"""
