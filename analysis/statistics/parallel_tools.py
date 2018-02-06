@@ -1,10 +1,11 @@
+from autocorrelation import Autocorrelation
+from jackknife import Jackknife
+from bootstrap import Bootstrap
+import numpy as np
+
 """
 Functions that can be pickled by the multiprocessing module
 """
-from statistics.autocorrelation import Autocorrelation
-from statistics.jackknife import Jackknife
-from statistics.bootstrap import Bootstrap
-
 
 def _autocorrelation_parallel_core(input_values):
 	ac = Autocorrelation(input_values[0], use_numpy = input_values[1], data_statistic = input_values[2])

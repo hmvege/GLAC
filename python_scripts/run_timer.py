@@ -54,17 +54,28 @@ class TimeEstimator:
 		self.b645_flow_estimate_std = np.std(b645_flow_estimates)
 		self.flow_times[str(self.beta_values[3])] = np.mean(b645_flow_estimates)
 
-	def get_time(self,beta,N_configs,N_corr,N_flows):
+	def get_time(self,beta,N_configs,N_corr,N_flows,numprocs=512):
 		config_time_est = self.cfg_times_per_config[str(beta)]
 		total_config_time_est = config_time_est*N_configs*N_corr
 		flow_time_est = self.flow_times[str(beta)]
 		total_flow_time_est = flow_time_est*N_configs*N_flows
 
+		total_time = total_flow_time_est + total_config_time_est
+
+		# Test runs done with 512 cores, scaling around 0.55
+		cpu_scaling = (0.55 ** ((numprocs-512) / 512))
+		print cpu_scaling
+		cpu_time = total_time*cpu_scaling/60.0*numprocs
+
 		error_cfg = ""
 		error_flow = ""
+		total_error = ""
 		if beta == 6.45:
-			error_cfg = "+/- %-.6f hours" % (self.b645_cfg_estimate_std/60.*N_configs*N_corr)
-			error_flow = "+/- %-.6f hours" % (self.b645_flow_estimate_std/60.*N_configs*N_flows)
+			num_error_cfg = self.b645_cfg_estimate_std/60.*N_configs*N_corr
+			num_error_flow = self.b645_flow_estimate_std/60.*N_configs*N_flows
+			error_cfg = "+/- %-.6f hours" % (num_error_cfg)
+			error_flow = "+/- %-.6f hours" % (num_error_flow)
+			total_error = "+/- %-.6f hours" % (np.sqrt(num_error_cfg**2 + num_error_flow**2))
 
 		print """
 Time estimate for run:
@@ -72,16 +83,21 @@ beta                %.2f
 N_configs           %d
 N_corr              %d
 N_flows             %d
+CPUs                %d
 %s
-Time per config:    %10.4f minutes
-Total config time:  %10.4f minutes / %-.1f hours %s
-Time per flow:      %10.4f minutes
-Total flow-time:    %10.4f minutes / %-.1f hours %s
-%s""" % (beta,N_configs,N_corr,N_flows,100*"=",
-			config_time_est,
-			total_config_time_est,total_config_time_est/60,error_cfg,
-			flow_time_est,
-			total_flow_time_est,total_flow_time_est/60,error_flow,
+Time per config:    %10.3f minutes
+Total config time:  %10.2f minutes / %-.1f hours %s
+Time per flow:      %10.3f minutes
+Total flow-time:    %10.2f minutes / %-.1f hours %s
+Total time:         %10.2f minutes / %-.1f hours %s
+CPU hours:          %10.2f hours
+%s""" % (beta,N_configs,N_corr,N_flows,numprocs,100*"=",
+			config_time_est*cpu_scaling,
+			total_config_time_est*cpu_scaling,total_config_time_est*cpu_scaling/60,error_cfg,
+			flow_time_est*cpu_scaling,
+			total_flow_time_est*cpu_scaling,total_flow_time_est*cpu_scaling/60,error_flow,
+			total_time*cpu_scaling, (total_time*cpu_scaling)/60, total_error,
+			cpu_time,
 			100*"=")
 
 if __name__ == '__main__':
@@ -97,12 +113,13 @@ if __name__ == '__main__':
 	parser.add_argument('-NCfgs','--NConfigs',		type=int, default=None,help='Number of configurations')
 	parser.add_argument('-NF','--Nflows',			type=int, default=None,help='Number of flows')
 	parser.add_argument('-NCorr','--NCorrelations',	type=int, default=None,help='Number of correlation updates')
+	parser.add_argument('-numprocs',				type=int, default=None,help='Number of processors')
 
 	# Default values
-	defaults = {"6.0": {"NCorr":200,"NFlows":1000,"NCfgs":1000},
-				"6.1": {"NCorr":200,"NFlows":1000,"NCfgs":500},
-				"6.2": {"NCorr":200,"NFlows":1000,"NCfgs":500},
-				"6.45": {"NCorr":800,"NFlows":1000,"NCfgs":250}}
+	defaults = {"6.0": {"NCorr":200,"NFlows":1000,"NCfgs":1000,"numprocs":512},
+				"6.1": {"NCorr":200,"NFlows":1000,"NCfgs":500,"numprocs":512},
+				"6.2": {"NCorr":200,"NFlows":1000,"NCfgs":500,"numprocs":512},
+				"6.45": {"NCorr":800,"NFlows":1000,"NCfgs":250,"numprocs":512}}
 
 	# Parses arguments
 	if len(sys.argv) == 1:
@@ -131,5 +148,10 @@ if __name__ == '__main__':
 	else:
 		NCorr = defaults[str(args.beta)]["NCorr"]
 
+	if args.numprocs != None:
+		numprocs = args.numprocs
+	else:
+		numprocs = defaults[str(args.beta)]["numprocs"]
+
 	t = TimeEstimator()
-	t.get_time(args.beta,NCfgs,N_corr=NCorr,N_flows=NFlows)
+	t.get_time(args.beta,NCfgs,N_corr=NCorr,N_flows=NFlows,numprocs=numprocs)

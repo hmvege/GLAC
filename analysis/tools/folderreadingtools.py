@@ -259,7 +259,7 @@ def check_folder(folder_name, dryrun, verbose = False):
 		if not dryrun:
 			os.mkdir(folder_name)
 		if dryrun or verbose:
-			print "> mkdir %s" % figures_folder
+			print "> mkdir %s" % folder_name
 
 
 def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dryrun=False,analysis_type="boot"):
