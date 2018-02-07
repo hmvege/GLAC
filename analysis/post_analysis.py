@@ -1,4 +1,6 @@
-import numpy as np, matplotlib.pyplot as plt, sys, os, re, scipy.optimize as sciopt
+import numpy as np, matplotlib.pyplot as plt, sys, os, re, scipy.optimize as sciopt, copy
+from tools.folderreadingtools import check_folder
+
 
 # import tqdm
 # from scipy.optimize import curve_fit
@@ -10,72 +12,95 @@ def getLatticeSpacing(beta):
 	a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
 	return a # fermi
 
-# def linear_curve(x,a,b):
-# 	return a*x + b
-
 class DataReader:
 	"""
 	Small class for reading post analysis data
 	"""
-	def __init__(self,post_analysis_folder):
+	def __init__(self,post_analysis_folder,verbose=False):
 		self.post_analysis_folder = post_analysis_folder
+		self.verbose = verbose
 
 		# Retrieves batch folders
 		batch_folders = self._get_folder_content(post_analysis_folder)
 
+		# Dictionary variable to hold all the data sorted by batches
 		self.data_batches = {}
-		self.jk_data = {}
-		self.bs_data = {}
 
+		# Analysis types
+		self.analysis_types = ["jackknife","bootstrap","unanalyzed"]
+
+		# Variable to store if we have retrieved flow time or not
+		retrieved_flow_time = False
+
+		# Loops over batch folders
 		for batch in batch_folders:
-		# for batch in tqdm.tqdm(batch_folders,leave=True):
+			# Stores the batch folder path
 			batch_folder = os.path.join(post_analysis_folder,batch)
+
+			# Stores retrieves files in batch folder
 			batch_files = [os.path.join(batch_folder,i) for i in self._get_folder_content(batch_folder)]
 
-			# Observable data list
-			observable_data = []
+			# Dictionary to store observable data in
+			observable_data = {}
 
-			for bfile in batch_files:
-				# Checks if we have a jackknife data file
-				if "jk" in os.path.basename(bfile):
-					# print "Loading jackknifed data from %s" % bfile
-					meta_data = self._get_meta_data(bfile)
-					
-					# Creates new dictionary for retrieveing meta-data and data in
-					self.jk_data[batch] = {}
+			# Loops over the observables in the batch folder and retrieves them
+			for observable_file in batch_files:
+				# Retrieves metadata
+				# Make it so one can retrieve the key as meta_data[i] and then value as meta_data[i+1]
+				meta_data = self._get_meta_data(observable_file)
 
-					# Populates the new dictionary with meta data
-					for i in range(0,len(meta_data),2):
-						self.jk_data[batch][meta_data[i]] = meta_data[i+1]
+				# Temporary methods for getting observable name and beta value, as this will be put into the meta data
+				file_name = os.path.split(os.path.splitext(observable_file)[0])[-1]
+				obs, beta = file_name.split("beta")[1:]
+				beta = float(beta.replace("_","."))
+				obs = [i for i in obs.split("_") if not i.isdigit() and len(i) != 0][0]
 
-					# Loads data
-					self.jk_data[batch]["data"] = np.loadtxt(bfile,skiprows=1)
-					continue 
+				# Dictionary to store all observable data in
+				obs_data = {}
 
-				# Checks if we have a bootstrap data file
-				if "bs" in os.path.basename(bfile):
-					# print "Loading bootstrapped data from %s" % bfile
-					meta_data = self._get_meta_data(bfile)
-					
-					# Creates new dictionary for retrieveing meta-data and data in
-					self.bs_data[batch] = {}
+				# Loads data into temporary holder
+				retrieved_data = np.loadtxt(observable_file)
 
-					# Populates the new dictionary with meta data
-					for i in range(0,len(meta_data),2):
-						self.bs_data[batch][meta_data[i]] = meta_data[i+1]
+				# Puts data into temporary holding facilities
+				t 			= retrieved_data[:,0]
+				y 			= retrieved_data[:,1]
+				y_error 	= retrieved_data[:,2]
+				bs_y 		= retrieved_data[:,3]
+				bs_y_error 	= retrieved_data[:,4]
+				jk_y 		= retrieved_data[:,5]
+				jk_y_error 	= retrieved_data[:,6]
 
-					# Loads data
-					self.bs_data[batch]["data"] = np.loadtxt(bfile,skiprows=1)
-					continue 
+				# Frees memory
+				del retrieved_data
 
-				# Retrieves observable from meta_data
-				observable = self._get_meta_data(bfile)[1]
+				# Stores data into dictionaries
+				unanalyzed_data = {"y": y, "y_error": y_error}
+				bs_data = {"y": bs_y, "y_error": bs_y_error}
+				jk_data = {"y": jk_y, "y_error": jk_y_error}
 
-				# Appends meta-data and data
-				observable_data.append({"observable": observable, "data": np.loadtxt(bfile)})
+				# Stores observable data
+				obs_data["batch"]		= batch
+				obs_data["beta"] 		= copy.deepcopy(beta)
+				obs_data["unanalyzed"] 	= copy.deepcopy(unanalyzed_data)
+				obs_data["bootstrap"] 	= copy.deepcopy(bs_data)
+				obs_data["jackknife"] 	= copy.deepcopy(jk_data)
 
-			# Loads data and stores it in a dictionary for all the data
-			self.data_batches[batch] = observable_data
+				# Stores the observable data
+				observable_data[obs] = copy.deepcopy(obs_data)
+
+				# Stores flow time in a seperate variable
+				if not retrieved_flow_time:
+					self.flow_time = copy.deepcopy(t)
+					retrieved_flow_time = True
+
+				# Frees memory
+				del obs_data
+
+				if self.verbose:
+					print "Data retrieved from %s" % observable_file
+
+			# Stores batch data
+			self.data_batches[batch] = copy.deepcopy(observable_data)
 
 		# Reorganizes data to more ease-of-use type of data set
 		self._reorganize_data()
@@ -93,76 +118,75 @@ class DataReader:
 		# Reorganizes the data into beta-values and observables sorting
 		self.data_observables = {}
 
-		flow_time_retrieved = False
-
-		# Sets up new dictionaries
-		for batch_key in self.data_batches.keys():
-			# print batch_key
-			for obs_data in self.data_batches[batch_key]:
-				self.data_observables[obs_data["observable"]] = {}
+		# Sets up new dictionaries by looping over batch names
+		for batch_key in self.data_batches:
+			# Loops over observable names
+			for observable_name in self.data_batches[batch_key]:
+				# Creates new sub-dictionary ordered by the observable name
+				self.data_observables[observable_name] = {}
 
 		# Places data into dictionaries
-		for batch_key in self.data_batches.keys():
-			for obs_data in self.data_batches[batch_key]:
-				# Retrieves flow-time once
-				if not flow_time_retrieved:
-					self.flow_time = obs_data["data"][:,0]
-					flow_time_retrieved = True
+		for batch_key in self.data_batches:
+			# Loops over the batch observable
+			for observable_name in self.data_batches[batch_key]:
+				# Retrieves the beta value, as that is a more logical way of storing the data
+				beta = self.data_batches[batch_key][observable_name]["beta"]
 
-				self.data_observables[obs_data["observable"]][batch_key] = obs_data["data"][:,1:]
+				# Stores the batch data in a sub-dictionary
+				self.data_observables[observable_name][beta] = self.data_batches[batch_key][observable_name]
 
 	def write_batch_to_single_file(self):
+		"""
+		Writes all unanalyzed data to a single file
+		"""
+		print "="*100,"\nWriting data to a universal output format"
+
+		# Creates universal output folder
 		file_folder = os.path.join(self.post_analysis_folder + "_universal_output")
-		if not os.path.isdir(file_folder):
-			os.mkdir(file_folder)
-			print "> mkdir %s" % file_folder
+		check_folder(file_folder,False,True)
 
-		for batch_name in self.data_batches.keys():
-			# Temporary data output for gathering data from arrays into a simple list
-			_data_output = []
-			header_output = ["t","sqrt8t"]
-			for obs_data in self.data_batches[batch_name]:
-				# print obs_data["data"]
-				_data_output.append(obs_data["data"][:,1:])
-				# print obs_data
-				header_output.append(obs_data["observable"])
-				header_output.append(obs_data["observable"]+"_err")
+		# Variable for checking if we have retrieved the flow time or not
+		retrieved_flow_time = False
 
-			# Repopulating an array to write to file using numpy
-			data_output = []
-			for i in xrange(len(self.flow_time)):
-				# Gathers the observables into a single list
-				data_list = [self.flow_time[i]]
-				data_list.append(PostAnalysis.get_float(batch_name)*np.sqrt(8*self.flow_time[i]))
-				for obs_data in _data_output: # Iterates over all the observables 
-					for obs_data_val in obs_data[i]: # Iterates over value and error
-						data_list.append(obs_data_val) # Appends all observables in the order of the header output
+		# Loops over the different possible analyses
+		for analysis_type in self.analysis_types:
+			# Loops over the batches
+			for batch_name in self.data_batches:
+				# Temporary data output for gathering data from arrays into a simple list
+				data_output = []
 
-				data_output.append(data_list)			
+				# Header for the resulting array
+				header_output = ["t","sqrt8t"]
 
-			# Writing array to file
-			file_path = os.path.join(file_folder,batch_name) + ".txt"
-			np.savetxt(file_path,np.asarray(data_output),fmt="%.18f",header=" ".join(header_output))
-			print "Batch '%s' data written to file." % batch_name
+				# Retrieves t
+				data_output.append(self.flow_time)
+
+				# Retrieves sqrt(8t)
+				data_output.append(np.sqrt(8*self.flow_time))
+
+				for observable_name in self.data_batches[batch_name]:
+					# Retrieves the unanalyzed observable data
+					data_output.append(self.data_batches[batch_name][observable_name][analysis_type]["y"])
+					data_output.append(self.data_batches[batch_name][observable_name][analysis_type]["y_error"])
+
+					# Adds observable name and error to header
+					header_output.append(observable_name)
+					header_output.append(observable_name+"_err")
+
+				# Writing array to file
+				file_path = os.path.join(file_folder,batch_name + "_" + analysis_type) + ".txt"
+				np.savetxt(file_path,np.asarray(data_output),fmt="%.18f",header=" ".join(header_output))
+				print "Batch '%s' data written to file %s." % (batch_name,os.path.splitext(os.path.split(file_path)[-1])[0])
+
+		# A single delimiter marking the end of universal output writing
+		print "="*100
 
 	@staticmethod
 	def _get_folder_content(folder):
 		if not os.path.isdir(folder):
 			raise IOError("No folder by the name %s found." % folder)
 		else:
-			return os.listdir(folder)
-
-# class BootstrapLineFitter:
-# 	"""
-# 	Line fit method using bootstrap MAKE INTO FUNCTION INSTEAD - NO POINT IN HAVING CLASS WITH INIT AND FUNC!!!
-# 	"""
-# 	def __init__(self, bs_data_dict, function_correction = lambda x : x):
-# 		self.observable = bs_data_dict["observable"]
-# 		self.beta = bs_data_dict["beta"]
-# 		self.data = bs_data_dict["data"]
-# 		self.NFlows, self.NBoot = self.data.shape
-# 		for iBoot in xrange(self.data.shape[1]):
-# 			self.data[:,iBoot] = function_correction(self.data[:,iBoot])
+			return [ f for f in os.listdir(folder) if not f.startswith(".") ]
 
 def fit_line(x, bs_data_dict, fit_target, fit_interval, data_function_correction = lambda x : x, fit_function_modifier = lambda x : x, fit_method = "curve_fit", plot_fit_window = False):
 	"""
@@ -181,6 +205,7 @@ def fit_line(x, bs_data_dict, fit_target, fit_interval, data_function_correction
 		fit_value_error 				(float): error of y_0
 	"""
 	# Retrieves data
+	print "@175 ",bs_data_dict
 	observable = bs_data_dict["observable"]
 	beta = bs_data_dict["beta"]
 	data = bs_data_dict["data"]
@@ -219,13 +244,6 @@ def fit_line(x, bs_data_dict, fit_target, fit_interval, data_function_correction
 		plt.show()
 		plt.close(fig)
 
-	######################################################################################################
-	#ALGORITHM:
-	#1 [x]: Estimate interval indices from regular mean(should be provided, or can be calculated from bs mean)
-	#2 [x]: Use interval indices to make bootstrap fits and get t0 as before
-	#3 [x]: Calculate mean and error from t0_bs
-	######################################################################################################
-
 	# Array to store fitted values in
 	fitted_values = np.zeros(NBoot)
 
@@ -261,22 +279,17 @@ class PostAnalysis:
 	x_label = r""
 	y_label = r""
 	dpi=None
-	size_labels = {	"beta6_0":r"$24^3 \times 48$",
-					"beta6_1":r"$28^3 \times 56$",
-					"beta6_2":r"$32^3 \times 64$",
-					"beta6_45":r"$48^3 \times 96$"}
+	size_labels = {	6.0  : r"$24^3 \times 48$",
+					6.1  : r"$28^3 \times 56$",
+					6.2  : r"$32^3 \times 64$",
+					6.45 : r"$48^3 \times 96$"}
 
-	def __init__(self,data,flow_time,output_folder="../figures/post_analysis", bs_data=None, jk_data=None):
-		self.data = data
-		self.flow_time = flow_time
-
-		# Checks if we have bootstrapped data as an argument and then stores it
-		if bs_data != None:
-			self.bs_data = bs_data
-
-		# Checks if we have jackknifed data as an argument and then stores it
-		if jk_data != None:
-			self.jk_data = jk_data
+	def __init__(self,data,flow_time,output_folder="../figures/post_analysis"):
+		# Retrieves relevant data values
+		self.flow_time 			= flow_time
+		self.unanalyzed_data 	= {beta:data[beta]["unanalyzed"] for beta in sorted(data.keys())} # Data should now be sorted by beta values
+		self.bootstrap_data 	= {beta:data[beta]["bootstrap"] for beta in sorted(data.keys())}
+		self.jackknife_data 	= {beta:data[beta]["jackknife"] for beta in sorted(data.keys())}
 
 		# Creates output folder for post analysis figures
 		self.output_folder = output_folder
@@ -286,20 +299,19 @@ class PostAnalysis:
 
 		# Creates colors to use
 		self.colors = {}
-		for color, batch_name in zip(["#5cbde0","#6fb718","#bc232e","#8519b7"],sorted(self.data.keys())): # blue, green, red purple
-			self.colors[batch_name] = color
+		for color, beta in zip(["#5cbde0","#6fb718","#bc232e","#8519b7"],sorted(data.keys())): # blue, green, red purple
+			self.colors[beta] = color
 
 	@staticmethod
 	def get_float(x):
 		return float(".".join([i for i in re.findall('(\d+)',x)]))
 
-	def _plot_core(self,plot_values,x_limits=False,y_limits=False):
-		print "Plotting %s for betas %s together" % (self.analysis_name_compact," ".join(self.data.keys()))
-
+	def _plot_core(self, x_limits = False, y_limits = False, fname_appendix = ""):
+		print "Plotting %s for betas %s together" % (self.analysis_name_compact,", ".join([str(b) for b in self.unanalyzed_data.keys()]))
 		fig = plt.figure(dpi=self.dpi)
 		ax = fig.add_subplot(111)
 
-		for value in plot_values:
+		for value in self.plot_values:
 			x = value["x"]
 			y = value["y"]
 			y_err = value["y_err"]
@@ -318,7 +330,7 @@ class PostAnalysis:
 
 		ax.legend(loc="lower right")
 
-		fname = os.path.join(self.output_folder,"post_analysis_%s.png" % self.analysis_name_compact)
+		fname = os.path.join(self.output_folder,"post_analysis_%s%s.png" % (self.analysis_name_compact,fname_appendix))
 		plt.savefig(fname)
 		print "Figure saved in %s" % fname
 		# plt.show()
@@ -331,22 +343,31 @@ class TopSusPostAnalysis(PostAnalysis):
 	y_label = r"$\chi_t^{1/4}[GeV]$"
 	formula = r"$\chi_t^{1/4}=\frac{\hbar c}{aV^{1/4}}\langle Q^2 \rangle^{1/4}$"
 
-	def plot(self):
-		plot_values = []
-		for batch_name in sorted(self.data.keys()):
+	def plot(self,analysis_type="bootstrap"):
+		self.plot_values = []
+
+		# Retrieving data deepending on analysis type we are choosing
+		if analysis_type == "bootstrap":
+			data = self.bootstrap_data
+		elif analysis_type == "jackknife":
+			data = self.jackknife_data
+		elif analysis_type == "unanalyzed":
+			data = self.unanalyzed_data
+		else:
+			raise KeyError("Analysis %s not recognized" % analysis_type)
+
+		# Sorts data into a format specific for the plotting method
+		for beta in sorted(data.keys()):
 			values = {}
-			values["batch_name"] = batch_name
-			values["x"] = getLatticeSpacing(self.get_float(batch_name))*np.sqrt(8*self.flow_time)
-			values["y"] = self.data[batch_name][:,0]
-			values["y_err"] = self.data[batch_name][:,1]
-			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[batch_name],self.get_float(batch_name))
-			values["color"] = self.colors[batch_name]
-			plot_values.append(values)
+			values["beta"] = beta
+			values["x"] = np.sqrt(8*self.flow_time)
+			values["y"] = data[beta]["y"]
+			values["y_err"] = data[beta]["y_error"]
+			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[beta],beta)
+			values["color"] = self.colors[beta]
+			self.plot_values.append(values)
 
-		# Sorts the plot values and stores them globally
-		self.plot_values = sorted(plot_values,key=lambda x:x["batch_name"])
-
-		self._plot_core(self.plot_values)
+		self._plot_core(fname_appendix = "_" + analysis_type)
 
 class EnergyPostAnalysis(PostAnalysis):
 	analysis_name = "Energy"
@@ -356,113 +377,32 @@ class EnergyPostAnalysis(PostAnalysis):
 	formula = r"$\langle E\rangle = -\frac{1}{64V}F_{\mu\nu}^a{F^{\mu\nu}}^a$"
 	r0 = 0.5
 
-	def plot(self):
-		plot_values = []
-		for batch_name in sorted(self.data.keys()):
+	def plot(self, analysis_type = "bootstrap"):
+		# Populating the plot values
+		self.plot_values = []
+
+		# Retrieving data deepending on analysis type we are choosing
+		if analysis_type == "bootstrap":
+			data = self.bootstrap_data
+		elif analysis_type == "jackknife":
+			data = self.jackknife_data
+		elif analysis_type == "unanalyzed":
+			data = self.unanalyzed_data
+		else:
+			raise KeyError("Analysis %s not recognized" % analysis_type)
+
+		# Sorts data into a format specific for the plotting method
+		for beta in sorted(data.keys()):
 			values = {}
-			values["batch_name"] = batch_name
-			values["x"] = self.flow_time/self.r0**2*getLatticeSpacing(self.get_float(batch_name))**2
-			values["y"] = -self.data[batch_name][:,0]*self.flow_time**2/64.0
-			values["y_err"] = self.data[batch_name][:,1]*self.flow_time**2/64.0
-			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[batch_name],self.get_float(batch_name))
-			values["color"] = self.colors[batch_name]
-			plot_values.append(values)
+			values["beta"] = beta
+			values["x"] = self.flow_time/self.r0**2*getLatticeSpacing(beta)**2
+			values["y"] = -data[beta]["y"]*self.flow_time**2/64.0
+			values["y_err"] = data[beta]["y_error"]*self.flow_time**2/64.0
+			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[beta],beta)
+			values["color"] = self.colors[beta]
+			self.plot_values.append(values)
 
-		self.plot_values = sorted(plot_values,key=lambda x:x["batch_name"])
-
-		# x_limits = [0,np.max(plot_values[-1]["x"])]
-		# y_limits = [0,np.max(plot_values[-1]["y"])]
-
-		self._plot_core(self.plot_values)#,x_limits=x_limits,y_limits=y_limits)
-
-	def _get_t0(self,data_values):
-		self.t0_values = []
-		for values in data_values:
-			t0_batch = {}
-			t0_batch["beta"] = self.get_float(values["batch_name"])
-			t0_batch["t0"],t0_batch["t0_err"] = fit_line(	values["x"],self.bs_data[values["batch_name"]],0.3,0.015, 
-															data_function_correction = lambda x : -x*self.flow_time**2/64.0,
-															fit_function_modifier = lambda x : x*self.r0**2,
-															plot_fit_window = True)
-			# print "BETA %f:" % t0_batch["beta"], t0_batch["t0"],t0_batch["t0_err"]
-			# t0_batch["t0"],t0_batch["t0_err"] = self._linefit_t0(values["x"],values["y"],values["y_err"],t0_batch["beta"])
-			# print "BETA %f:" % t0_batch["beta"], t0_batch["t0"],t0_batch["t0_err"]
-			t0_batch["a"] = getLatticeSpacing(t0_batch["beta"])
-
-			# Adds to list of batch-values
-			self.t0_values.append(t0_batch)
-
-	# def _linefit_t0(self,x,y,y_err,beta): # fit_target, fit_interval, error_function, bs_fit="False"/"True", err_func = None
-	# 	# Creates a small interval in which we will fit the data
-	# 	y0 = 0.3
-	# 	fit_interval = 0.015
-
-	# 	# Gathers relevant line interval to lists
-	# 	x_line_to_fit = []
-	# 	y_line_to_fit = []
-	# 	y_line_to_fit_errors = []
-	# 	for i, iy in enumerate(y):
-	# 		# Only accepts if data is within fitting interval
-	# 		if (y0 - fit_interval) < iy < (y0 + fit_interval):
-	# 			x_line_to_fit.append(x[i])
-	# 			y_line_to_fit.append(iy)
-	# 			y_line_to_fit_errors.append(y_err[i])
-
-	# 	if len(y_line_to_fit) == 0:
-	# 		raise ValueError("No values in the vincinity of t^2<E>=0.3 found for beta %2.2f" % beta)
-
-	# 	# Converts data to arrays
-	# 	x_line_to_fit = np.asarray(x_line_to_fit)
-	# 	y_line_to_fit = np.asarray(y_line_to_fit)
-	# 	y_line_to_fit_errors = np.asarray(y_line_to_fit_errors)
-
-	# 	# Fitting data
-	# 	pol,polcov = np.polyfit(x_line_to_fit,y_line_to_fit,1,rcond=None,full=False,w=1.0/y_line_to_fit_errors,cov=True)
-	# 	# print pol,"\n",polcov
-	# 	# pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_line_to_fit, y_line_to_fit, sigma = y_line_to_fit_errors)
-	# 	# print pol,"\n",polcov
-
-	# 	# Retrieving polynomial values for retrofitting
-	# 	a = pol[0]
-	# 	b = pol[1]
-	# 	a_err, b_err = np.sqrt(np.diag(polcov))
-
-	# 	# t0 value
-	# 	t0 = self.r0**2 * (y0 - b) / a
-
-	# 	# Gets error of t0 estimate
-	# 	t0_err = np.sqrt((self.r0**2*(b - y0)/a**2)**2 * a_err**2 + self.r0**4/a**2 * b_err**2 + 2*self.r0**4*(b - y0)/a**4 * polcov[1,0])
-
-	# 	return t0,t0_err
-
-	def _linefit_to_continiuum(self):
-		x_datapoints = np.asarray([val["a"] for val in self.t0_values])
-		b = np.asarray([val["beta"] for val in self.t0_values])
-		t0 = np.asarray([val["t0"] for val in self.t0_values])
-		t0_err = np.asarray([val["t0_err"] for val in self.t0_values])
-
-		# Reversing arrays, since increasing beta is decreasing lattice spacing and sets up y axis values, x is already the a-values
-		x_datapoints = (x_datapoints[::-1] / self.r0)**2
-		y_datapoints = np.sqrt(8*t0[::-1]) / self.r0
-		y_datapoints_error = (8*t0_err[::-1]) / (np.sqrt(8*t0[::-1])) / self.r0
-
-		# Fitting data
-		pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_datapoints, y_datapoints,sigma=y_datapoints_error)
-		# print pol,"\n",polcov
-		# pol, polcov = np.polyfit(x_datapoints,y_datapoints,1,rcond=None,full=False,w=1.0/y_datapoints_error,cov=True)
-		# print pol,"\n",polcov
-
-		# Gets line properties
-		a = pol[0]
-		b = pol[1]
-		a_err, b_err = np.sqrt(np.diag(polcov))
-
-		# Sets up line fitted variables		
-		x = np.linspace(0,x_datapoints[-1]*1.03,100)
-		y = a * x + b
-		y_std = a_err * x + b_err
-
-		return x,y,y_std,x_datapoints,y_datapoints,y_datapoints_error, a, b, a_err, b_err
+		self._plot_core(fname_appendix = "_" + analysis_type)#,x_limits=x_limits,y_limits=y_limits)
 
 	def plot_continiuum(self):
 		# Retrieves t0 values
@@ -520,6 +460,54 @@ class EnergyPostAnalysis(PostAnalysis):
 		plt.show()
 		plt.close(fig)
 
+	def _get_t0(self,data_values):
+		self.t0_values = []
+
+		# Populates values to be plotted and 
+		for values in data_values:
+			t0_batch = {}
+			t0_batch["beta"] = self.get_float(values["batch_name"])
+			t0_batch["t0"],t0_batch["t0_err"] = fit_line(	values["x"],self.bootstrap_data[vals["batch_name"]],0.3,0.015, 
+															data_function_correction = lambda x : -x*self.flow_time**2/64.0,
+															fit_function_modifier = lambda x : x*self.r0**2,
+															plot_fit_window = True)
+			# print "BETA %f:" % t0_batch["beta"], t0_batch["t0"],t0_batch["t0_err"]
+			# t0_batch["t0"],t0_batch["t0_err"] = self._linefit_t0(values["x"],values["y"],values["y_err"],t0_batch["beta"])
+			# print "BETA %f:" % t0_batch["beta"], t0_batch["t0"],t0_batch["t0_err"]
+			t0_batch["a"] = getLatticeSpacing(t0_batch["beta"])
+
+			# Adds to list of batch-values
+			self.t0_values.append(t0_batch)
+
+	def _linefit_to_continiuum(self):
+		x_datapoints = np.asarray([val["a"] for val in self.t0_values])
+		b = np.asarray([val["beta"] for val in self.t0_values])
+		t0 = np.asarray([val["t0"] for val in self.t0_values])
+		t0_err = np.asarray([val["t0_err"] for val in self.t0_values])
+
+		# Reversing arrays, since increasing beta is decreasing lattice spacing and sets up y axis values, x is already the a-values
+		x_datapoints = (x_datapoints[::-1] / self.r0)**2
+		y_datapoints = np.sqrt(8*t0[::-1]) / self.r0
+		y_datapoints_error = (8*t0_err[::-1]) / (np.sqrt(8*t0[::-1])) / self.r0
+
+		# Fitting data
+		pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_datapoints, y_datapoints,sigma=y_datapoints_error)
+		# print pol,"\n",polcov
+		# pol, polcov = np.polyfit(x_datapoints,y_datapoints,1,rcond=None,full=False,w=1.0/y_datapoints_error,cov=True)
+		# print pol,"\n",polcov
+
+		# Gets line properties
+		a = pol[0]
+		b = pol[1]
+		a_err, b_err = np.sqrt(np.diag(polcov))
+
+		# Sets up line fitted variables		
+		x = np.linspace(0,x_datapoints[-1]*1.03,100)
+		y = a * x + b
+		y_std = a_err * x + b_err
+
+		return x,y,y_std,x_datapoints,y_datapoints,y_datapoints_error, a, b, a_err, b_err
+
 def main(args):
 	"""
 	Args should be post-analysis folder
@@ -528,8 +516,8 @@ def main(args):
 	data = DataReader(args[0])
 	print "Retrieving data from folder: %s" % args[0]
 
-	# # Rewrites all of the data to a single file for sharing with giovanni
-	# data.write_batch_to_single_file()
+	# Rewrites all of the data to a single file for sharing with giovanni
+	data.write_batch_to_single_file()
 
 	# # Plots topsus
 	# topsus_analysis = TopSusPostAnalysis(data.data_observables["topsus"],data.flow_time,bs_data=data.bs_data)
@@ -538,7 +526,7 @@ def main(args):
 	# Retrofits the topsus for continiuum limit
 
 	# Plots energy
-	energy_analysis = EnergyPostAnalysis(data.data_observables["energy"],data.flow_time,bs_data=data.bs_data)
+	energy_analysis = EnergyPostAnalysis(data.data_observables["energy"],data.flow_time)
 	energy_analysis.plot()
 
 	# Retrofits the energy for continiuum limit

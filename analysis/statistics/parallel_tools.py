@@ -36,3 +36,37 @@ def _return_squared(x):
 def _return_mean_squared(x,axis=None):
 	# For use instead of lambda x**2 : np.mean(x**2) in parallel
 	return np.mean(x**2,axis=axis)
+
+# const = hbarc / a(beta) / (V(beta)**(0.25))
+
+def _chi_beta6_0(Q_squared):
+	const = 0.001152302372957481
+	return const*Q_squared**(0.25)
+
+def _chi_beta6_0_error(Q_squared, Q_squared_std):
+	const = 0.001152302372957481
+	return 0.25*const*Q_squared_std / Q_squared**(0.75)
+
+def _chi_beta6_1(q_squared):
+	const = 0.0009714961458189535
+	return const*Q_squared**(0.25)
+
+def _chi_beta6_1_error(Q_squared, Q_squared_std):
+	const = 0.001152302372957481
+	return 0.25*const*Q_squared_std / Q_squared**(0.75)
+
+def _chi_beta6_2(q_squared):
+	const = 0.0008363484965013975
+	return const*Q_squared**(0.25)
+
+def _chi_beta6_2_error(Q_squared, Q_squared_std):
+	const = 0.001152302372957481
+	return 0.25*const*Q_squared_std / Q_squared**(0.75)
+
+def _chi_beta6_45(q_squared):
+	const = 0.0005359545920732469
+	return const*Q_squared**(0.25)
+
+def _chi_beta6_45_error(Q_squared, Q_squared_std):
+	const = 0.001152302372957481
+	return 0.25*const*Q_squared_std / Q_squared**(0.75)

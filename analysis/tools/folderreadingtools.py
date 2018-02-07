@@ -1,20 +1,20 @@
 import sys, os, numpy as np, re
 
 class GetDirectoryTree:
-	def __init__(self,batch_name,output_folder="output",dryrun=False):
+	def __init__(self,batch_name,batch_folder,dryrun=False):
 		self.flow_tree = {}
 		self.obs_tree = {}
 		self.CURRENT_FOLDER = os.getcwd()
-		self.output_folder = output_folder
+		self.batch_folder = batch_folder
 		self.observables_list = ["plaq","topc","energy"]
 		self.batch_name = batch_name
 		self.dryrun = dryrun
 
 		# Checks that the output folder actually exist
-		if not os.path.isdir(os.path.join("..",self.output_folder)):
-			raise EnvironmentError("No folder name output at location %s" % os.path.join("..",self.output_folder))
+		if not os.path.isdir(os.path.join("..",self.batch_folder)):
+			raise EnvironmentError("No folder name output at location %s" % os.path.join("..",self.batch_folder))
 		# Retrieves folders and subfolders
-		self.batch_folder = os.path.join("..",self.output_folder,batch_name)
+		self.batch_folder = os.path.join("..",self.batch_folder,batch_name)
 
 		# Gets the regular configuration observables
 		self.observables_folders = False
@@ -48,7 +48,7 @@ class GetDirectoryTree:
 					self.flow_tree[flow_obs] = self.natural_sort(flow_obs_dir_list)
 
 		# Creates figures folder
-		if output_folder.split(os.sep)[0] == "..":
+		if batch_folder.split(os.sep)[0] == "..":
 			# Fix for cases where we are running inside 
 			self.figures_path = os.path.join("..","..","figures",batch_name)
 		else:
@@ -262,7 +262,7 @@ def check_folder(folder_name, dryrun, verbose = False):
 			print "> mkdir %s" % folder_name
 
 
-def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dryrun=False,analysis_type="boot"):
+def write_data_to_file(analysis_object, post_analysis_folder = "../output/post_analysis_data", dryrun = False):
 	"""
 	Function that write data to file.
 	Args:
@@ -271,40 +271,69 @@ def write_data_to_file(analysis_object,folder="../output/post_analysis_data",dry
 	Returns:
 		None
 	"""
-	if not os.path.isdir(folder):
-		if not dryrun:
-			os.mkdir(folder)
-		print "> mkdir %s" % folder
-
-	folder_batch_path = os.path.join(folder,analysis_object.batch_name)
-	if not os.path.isdir(folder_batch_path):
-		if not dryrun:
-			os.mkdir(folder_batch_path)
-		print "> mkdir %s" % folder_batch_path
-
-	# Creates variables from provided object
-	x = analysis_object.x*analysis_object.data.meta_data["FlowEpsilon"]
-	if analysis_type == "boot":
-		y = analysis_object.bs_y
-		y_err = analysis_object.bs_y_std*analysis_object.autocorrelation_error_correction
-	elif analysis_type == "jackknife":
-		y = analysis_object.jk_y
-		y_err = analysis_object.jk_y_std*analysis_object.autocorrelation_error_correction
-	elif analysis_type == "unanalyzed":
-		y = analysis_object.original_y
-		y_err = analysis_object.original_y_std*analysis_object.autocorrelation_error_correction
-	else:
-		raise KeyError("%s is not recognized. Available analyses: %s" % (analysis_type,"boot jackknife unanalyzed"))
-
-	data = 	np.stack((x,y,y_err),axis=1)
-	batch_name = analysis_object.batch_name
+	# Retrieves beta value and makes it into a string
 	beta_string = str(analysis_object.beta).replace(".","_")
+	
+	# Ensures that the post analysis data folder exists
+	check_folder(post_analysis_folder,dryrun,verbose=True)
+
+	# Sets up batch folder
+	batch_folder_path = os.path.join(post_analysis_folder,analysis_object.batch_folder)
+	check_folder(batch_folder_path,dryrun,verbose=True)
+
+	# Sets up beta value folder
+	beta_folder_path = os.path.join(batch_folder_path,"beta" + beta_string)
+	check_folder(beta_folder_path,dryrun,verbose=True)
+
+	# Retrieves analyzed data
+	x = analysis_object.x*analysis_object.data.meta_data["FlowEpsilon"]
+	y_org = analysis_object.unanalyzed_y
+	y_err_org = analysis_object.unanalyzed_y_std*analysis_object.autocorrelation_error_correction
+	y_bs = analysis_object.bs_y
+	y_err_bs = analysis_object.bs_y_std*analysis_object.autocorrelation_error_correction
+	y_jk = analysis_object.jk_y
+	y_err_jk = analysis_object.jk_y_std*analysis_object.autocorrelation_error_correction
+
+	# Stacks data to be written to file together
+	data = 	np.stack((x, y_org, y_err_org, y_bs, y_err_bs, y_jk, y_err_jk),axis=1)
+	
+	# Retrieves compact analysis name 
 	observable = analysis_object.observable_name_compact
 
-	fname = "%s_%s_beta%s.txt" % (batch_name,observable,beta_string)
-	fname_path = os.path.join(folder_batch_path,fname)
-	np.savetxt(fname_path,data,fmt="%.16f",header="t {0:<s} {0:<s}_error".format(observable))
+	# Sets up file name and file path
+	fname = "%s.txt" % observable
+	fname_path = os.path.join(beta_folder_path,fname)
+
+	# Saves data to file
+	if not dryrun:
+		np.savetxt(fname_path,data,fmt="%.16f",header="\nobservable %s beta %s\nt orginal original_error bs bs_error jk jk_error" % (observable,beta_string))
 	print "Data written to %s" % fname_path
+
+def write_raw_analysis_to_file(raw_data, analysis_type, observable, post_analysis_folder = "../output/post_analysis_data", dryrun = False):
+	"""
+	Function that writes raw analysis data to file, either bootstrapped or jackknifed data.
+	Args:
+		raw_data (numpy float array, NFlows x NBoot)
+		analysis_type (str)
+		observable (str)
+		(optional) post_analysis_folder (str)
+		(optional) dryrun (bool)
+	"""
+	# Ensures that the post analysis data folder exists
+	check_folder(post_analysis_folder,dryrun,verbose=True)
+
+	# Sets up sub folder for the analysis type
+	analysis_folder_path = os.path.join(post_analysis_folder,analysis_type)
+	check_folder(analysis_folder_path,dryrun,verbose=True)
+
+	# Sets up sub sub folder for the observable
+	observable_folder_path = os.path.join(post_analysis_folder,observable)
+	check_folder(observable_folder_path,dryrun,verbose=True)
+
+	file_name = analysis_type + observable + ".bin"
+	file_name_path = os.path.join(observable_folder_path,file_name)
+	np.save(file_name_path,raw_data)
+	print "Analysis %s for observable %s stored as binary data at %s" % (analysis_type,observable,file_name_path)
 
 # def join_analyzed_data_files(output)
 

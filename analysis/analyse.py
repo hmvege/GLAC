@@ -22,6 +22,7 @@ class FlowAnalyser(object):
 	def __init__(self, file_tree, batch_name, data=None, dryrun=False, flow=True, parallel = False, numprocs = 4, verbose = False, figures_folder = False):
 		# Sets up global constants
 		self.batch_name = batch_name
+		self.batch_folder = file_tree.batch_folder
 		self.N_bs = None
 		self.dryrun = dryrun
 		self.flow = flow
@@ -36,8 +37,12 @@ class FlowAnalyser(object):
 		# Checks that a figures folder exists
 		check_folder(self.figures_folder,self.dryrun,verbose=self.verbose)
 
+		# Check that a data run folder exist, so one data anlysis performed on different data sets do not mix
+		self.data_batch_folder = os.path.join(self.figures_folder,"data_batch_" + file_tree.output_folder)
+		check_folder(self.data_batch_folder,self.dryrun,verbose=self.verbose)
+
 		# Checks that a batch folder exists
-		self.batch_folder = os.path.join(self.figures_folder,self.batch_name)
+		self.batch_folder = os.path.join(self.data_batch_folder,self.batch_name)
 		check_folder(self.batch_folder,self.dryrun,verbose=self.verbose)
 
 		# Checks that observable output folder exist, and if not will create it
@@ -131,7 +136,7 @@ class FlowAnalyser(object):
 		a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
 		return a
 
-	def boot(self,N_bs,bs_statistic = np.mean, F = ptools._default_return, F_error = ptools._default_error_return, non_bs_stats = ptools._default_return, write_bs_data_to_file = False):
+	def boot(self,N_bs,bs_statistic = np.mean, F = ptools._default_return, F_error = ptools._default_error_return, non_bs_stats = ptools._default_return,store_raw_bs_values=True):
 		# Stores number of bootstraps
 		self.N_bs = N_bs
 		
@@ -195,16 +200,14 @@ class FlowAnalyser(object):
 		self.bs_y_data = F(self.bs_y_data)
 		self.unanalyzed_y_data = F(self.unanalyzed_y_data)
 
-		# Writing bootstrapped data to file if prompted
-		if write_bs_data_to_file:
-			fpath = os.path.join("..","output","post_analysis_data",self.batch_name,"%s_bs_data.txt" % self.batch_name)
-			np.savetxt(fpath,self.bs_y_data,fmt="%.16f",header="beta %2.2f observable %s" % (self.beta,self.observable_name_compact))
-			print "Written bootstrapped data for %s to file %s" % (self.observable_name, fpath)
+		if store_raw_bs_values:
+			# Store as binary
+			write_raw_analysis_to_file(self.bs_y_data, "bootstrap", self.observable_name_compact, dryrun = self.dryrun)
 
 		# Sets performed flag to true
 		self.bootstrap_performed = True
 
-	def jackknife(self, jk_statistics = np.average, F = ptools._default_return, F_error = ptools._default_error_return, non_jk_statistics = ptools._default_return, write_jk_data_to_file = False):
+	def jackknife(self, jk_statistics = np.average, F = ptools._default_return, F_error = ptools._default_error_return, non_jk_statistics = ptools._default_return,store_raw_jk_values=True):
 		if self.parallel:
 			# Sets up jobs for parallel processing
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
@@ -244,11 +247,9 @@ class FlowAnalyser(object):
 		self.jk_y = F(self.jk_y)
 		self.jk_y_data = F(self.jk_y_data)
 
-		# Writing jackknifed data to file if prompted
-		if write_jk_data_to_file:
-			fpath = os.path.join("..","output","post_analysis_data",self.batch_name,"%s_jk_data.txt" % self.batch_name)
-			np.savetxt(fpath,self.jk_y_data,fmt="%.16f",header="beta %2.2f observable %s" % (self.beta,self.observable_name_compact))
-			print "Written jackknifed data for %s to file %s" % (self.observable_name, fpath)
+		if store_raw_jk_values:
+			# Store as binary
+			write_raw_analysis_to_file(self.jk_y_data, "jackknife", self.observable_name_compact, dryrun = self.dryrun)
 
 		# Sets performed flag to true
 		self.jackknife_performed = True
@@ -407,7 +408,7 @@ class FlowAnalyser(object):
 
 		# Sets up the title and filename strings
 		title_string = r"Autocorrelation of %s at flow time $t=%.2f$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,flow_time*self.data.meta_data["FlowEpsilon"],self.beta,self.N_configurations)
-		fname = os.path.join(self.observable_output_folder,"{0:<s}_autocorrelation_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,flow_time, str(self.beta).replace('.','_')),self.fname_addon)
+		fname = os.path.join(self.observable_output_folder,"{0:<s}_autocorrelation_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,flow_time, str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Plots the autocorrelations
 		fig = plt.figure()
@@ -439,7 +440,7 @@ class FlowAnalyser(object):
 
 		# Gives title and file name
 		title_string = r"Integrated autocorrelation time of %s for $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,self.beta,self.N_configurations)
-		fname = os.path.join("{0:<s}_integrated_ac_time_beta{1:<s}{2:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_')),self.fname_addon)
+		fname = os.path.join("{0:<s}_integrated_ac_time_beta{1:<s}{2:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Sets up the plot
 		fig = plt.figure()
@@ -479,7 +480,7 @@ class FlowAnalyser(object):
 		
 		# Sets up title and file name strings
 		title_string = r"Spread of %s, $\beta=%.2f$, flow time $t=%.2f$" % (self.observable_name, float(self.data.meta_data["beta"]),flow_time*self.data.meta_data["FlowEpsilon"])
-		fname = os.path.join(self.observable_output_folder,"{0:<s}_histogram_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,abs(flow_time),str(self.beta).replace('.','_')),self.fname_addon)
+		fname = os.path.join(self.observable_output_folder,"{0:<s}_histogram_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,abs(flow_time),str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Sets up plot
 		fig = plt.figure()
@@ -554,7 +555,7 @@ class FlowAnalyser(object):
 
 		# Sets up title and file name strings
 		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.data.meta_data["FlowEpsilon"])
-		fname = os.path.join(self.observable_output_folder,"{0:<s}_mchistory_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,flow_time,str(self.beta).replace('.','_')),self.fname_addon)
+		fname = os.path.join(self.observable_output_folder,"{0:<s}_mchistory_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,flow_time,str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Sets up plot
 		fig = plt.figure()
@@ -675,18 +676,26 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 		super(AnalyseTopologicalSusceptibility,self).__init__(*args,**kwargs)
 		self.set_size()
 
-	def set_size(self):
+	def set_size(self): # HARDCODE DIFFERENT SIZES HERE!
 		self.a = self.getLatticeSpacing(self.data.meta_data["beta"])
 		
 		# Ugly, hardcoded lattice size setting
 		if self.data.meta_data["beta"] == 6.0:
 			lattice_size = 24**3*48
+			self.chi = ptools._chi_beta6_0
+			self.chi_std = ptools._chi_beta6_0_error
 		elif self.data.meta_data["beta"] == 6.1:
 			lattice_size = 28**3*56
+			self.chi = ptools._chi_beta6_1
+			self.chi_std = ptools._chi_beta6_1_error
 		elif self.data.meta_data["beta"] == 6.2:
 			lattice_size = 32**3*64
+			self.chi = ptools._chi_beta6_2
+			self.chi_std = ptools._chi_beta6_2_error
 		elif self.data.meta_data["beta"] == 6.45:
 			lattice_size = 48**3*96
+			self.chi = ptools._chi_beta6_45
+			self.chi_std = ptools._chi_beta6_45_error
 		else:
 			raise ValueError("Unrecognized beta value: %g" % meta_data["beta"])
 
@@ -695,24 +704,24 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 		self.hbarc = 0.19732697 #eV micro m
 		self.const = self.hbarc/self.a/self.V**(1./4)
 
-	def autocorrelation(self,*args,**kwargs):
-		_temp_parallel = self.parallel
-		self.parallel = False
-		super(AnalyseTopologicalSusceptibility,self).autocorrelation(*args,**kwargs)
-		self.parallel = _temp_parallel
+	# def autocorrelation(self,*args,**kwargs):
+	# 	_temp_parallel = self.parallel
+	# 	self.parallel = False
+	# 	super(AnalyseTopologicalSusceptibility,self).autocorrelation(*args,**kwargs)
+	# 	self.parallel = _temp_parallel
 
-	def chi(self, Q_squared):
-		# Q should be averaged
-		return self.const*Q_squared**(1./4)
+	# def chi(self, Q_squared):
+	# 	# Q should be averaged
+	# 	return self.const*Q_squared**(1./4)
 
-	def chi_std(self, Q_squared, Q_squared_std):
-		# Q should be averaged 
-		return self.const*(0.25)*Q_squared_std / Q_squared**(0.75)
+	# def chi_std(self, Q_squared, Q_squared_std):
+	# 	# Q should be averaged 
+	# 	return self.const*(0.25)*Q_squared_std / Q_squared**(0.75)
 
 def main(args):
 	batch_name = args[0]
 	batch_folder = args[1]
-	DirectoryList = GetDirectoryTree(batch_name,output_folder=batch_folder)
+	DirectoryList = GetDirectoryTree(batch_name,batch_folder)
 	N_bs = 500
 	dryrun = False
 	verbose = True
@@ -808,8 +817,8 @@ def main(args):
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList, batch_name, dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs, verbose=verbose)
-			topsus_analysis.boot(N_bs,bs_statistic = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std, non_bs_stats = ptools._return_squared, write_bs_data_to_file=True)
-			topsus_analysis.jackknife(jk_statistics = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std, non_jk_statistics = ptools._return_squared)
+			topsus_analysis.boot(N_bs,bs_statistic = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std, non_bs_stats = ptools._return_squared,store_raw_bs_values=True)
+			topsus_analysis.jackknife(jk_statistics = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std, non_jk_statistics = ptools._return_squared,store_raw_jk_values=True)
 			topsus_analysis.y_limits  = [0.05,0.5]
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_boot()
@@ -831,13 +840,13 @@ def main(args):
 			topsus_analysis.plot_integrated_correlation_time()
 
 			if topsus_analysis.bootstrap_performed and topsus_analysis.autocorrelation_performed:
-				write_data_to_file(topsus_analysis,dryrun = dryrun)
+				write_data_to_file(topsus_analysis, dryrun = dryrun)
 
 	if 'energy' in args:
 		r0 = 0.5
 		energy_analysis = AnalyseEnergy(DirectoryList, batch_name, dryrun = dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
-		energy_analysis.boot(N_bs,write_bs_data_to_file=True)
-		energy_analysis.jackknife()
+		energy_analysis.boot(N_bs,store_raw_bs_values=True)
+		energy_analysis.jackknife(store_raw_jk_values=True)
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
 		energy_analysis.y_limits = [ 0 , np.max(energy_analysis.correction_function(energy_analysis.unanalyzed_y))]
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
@@ -857,7 +866,7 @@ def main(args):
 		energy_analysis.plot_integrated_correlation_time()
 
 		if energy_analysis.bootstrap_performed and energy_analysis.autocorrelation_performed:
-			write_data_to_file(energy_analysis,dryrun = dryrun)
+			write_data_to_file(energy_analysis, dryrun = dryrun)
 
 	post_time = time.clock()
 	print "="*100
@@ -873,9 +882,9 @@ if __name__ == '__main__':
 		# 		['beta6_1','data','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data2','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data2','plaq','topc','energy','topsus'],
-		# 		['beta6_2','data2','plaq','topc','energy','topsus']]
+		args = [['beta6_0','data2','plaq','topc','energy','topsus'],
+				['beta6_1','data2','plaq','topc','energy','topsus'],
+				['beta6_2','data2','plaq','topc','energy','topsus']]
 
 		# args = [['beta6_0','data3','plaq','topc','energy','topsus'],
 		# 		['beta6_1','data3','plaq','topc','energy','topsus'],
@@ -886,9 +895,9 @@ if __name__ == '__main__':
 		# args = [['beta6_2','data3','topcq4']]
 		# args = [['beta6_2','data3','qtqzero']]
 
-		args = [['beta6_1','data','topsus'],
-				['beta6_1','data2','topsus'],
-				['beta6_1','data3','topsus']]
+		# args = [['beta6_1','data','topsus'],
+		# 		['beta6_1','data2','topsus'],
+		# 		['beta6_1','data3','topsus']]
 
 		# args = [['beta6_1','data2','topsus']]
 
