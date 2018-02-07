@@ -5,20 +5,20 @@ class GetDirectoryTree:
 		self.flow_tree = {}
 		self.obs_tree = {}
 		self.CURRENT_FOLDER = os.getcwd()
-		self.batch_folder = batch_folder
+		self.data_batch_folder = batch_folder
 		self.observables_list = ["plaq","topc","energy"]
 		self.batch_name = batch_name
 		self.dryrun = dryrun
 
 		# Checks that the output folder actually exist
-		if not os.path.isdir(os.path.join("..",self.batch_folder)):
-			raise EnvironmentError("No folder name output at location %s" % os.path.join("..",self.batch_folder))
+		if not os.path.isdir(os.path.join("..",self.data_batch_folder)):
+			raise EnvironmentError("No folder name output at location %s" % os.path.join("..",self.data_batch_folder))
 		# Retrieves folders and subfolders
-		self.batch_folder = os.path.join("..",self.batch_folder,batch_name)
+		self.batch_name_folder = os.path.join("..",self.data_batch_folder,batch_name)
 
 		# Gets the regular configuration observables
 		self.observables_folders = False
-		obs_path = os.path.join(self.batch_folder,"observables")
+		obs_path = os.path.join(self.batch_name_folder,"observables")
 		if os.path.isdir(obs_path) and len(os.listdir(obs_path)) != 0:
 			self.observables_folder = obs_path
 			for obs,file_name in zip(self.observables_list,os.listdir(self.observables_folder)):
@@ -28,9 +28,9 @@ class GetDirectoryTree:
 
 		# Gets paths to flow observable
 		# Checks that there exists a flow observable folder
-		if os.path.isdir(os.path.join(self.batch_folder,"flow_observables")):
+		if os.path.isdir(os.path.join(self.batch_name_folder,"flow_observables")):
 			# Creates the flow observables path
-			flow_path = os.path.join(self.batch_folder,"flow_observables")
+			flow_path = os.path.join(self.batch_name_folder,"flow_observables")
 
 			# Goes through the flow observables
 			for flow_obs in self.observables_list:
@@ -48,18 +48,14 @@ class GetDirectoryTree:
 					self.flow_tree[flow_obs] = self.natural_sort(flow_obs_dir_list)
 
 		# Creates figures folder
-		if batch_folder.split(os.sep)[0] == "..":
-			# Fix for cases where we are running inside 
+		if os.path.split(self.CURRENT_FOLDER)[-1] == "tools":
 			self.figures_path = os.path.join("..","..","figures",batch_name)
-		else:
+		elif os.path.split(self.CURRENT_FOLDER)[-1] == "analysis":
 			self.figures_path = os.path.join("..","figures",batch_name)
+		else:
+			raise OSError("Current folder path not recognized: %s" % self.CURRENT_FOLDER)
 		
-		check_folder(self.figures_path,self.dryrun)
-		# if not os.path.isdir(self.figures_path):
-		# 	if self.dryrun:
-		# 		print '> mkdir %s' % self.figures_path
-		# 	else:
-		# 		os.mkdir(self.figures_path)
+		check_folder(self.figures_path,self.dryrun,verbose=True)
 
 	@staticmethod
 	def natural_sort(l):
@@ -97,12 +93,12 @@ class GetDirectoryTree:
 		Prints the folder structre
 		"""
 		return_string = "Folder structure:"
-		return_string += "\n{0:<s}".format(self.batch_folder)
-		return_string += "\n  {0:<s}/{1:<s}".format(self.batch_folder,"observables")
+		return_string += "\n{0:<s}".format(self.batch_name_folder)
+		return_string += "\n  {0:<s}/{1:<s}".format(self.data_batch_folder,"observables")
 		if self.observables_folders:
 			for obs,file_name in zip(self.observables_list,os.listdir(self.observables_folder)):
 				return_string += "\n    {0:<s}".format(os.path.join(self.observables_folder,file_name))
-		flow_path = os.path.join(self.batch_folder,"flow_observables")
+		flow_path = os.path.join(self.batch_name_folder,"flow_observables")
 		if os.path.isdir(flow_path):
 			return_string += "\n  {0:<s}".format(flow_path)
 			for flow_obs in (self.observables_list):
@@ -278,7 +274,7 @@ def write_data_to_file(analysis_object, post_analysis_folder = "../output/post_a
 	check_folder(post_analysis_folder,dryrun,verbose=True)
 
 	# Sets up batch folder
-	batch_folder_path = os.path.join(post_analysis_folder,analysis_object.batch_folder)
+	batch_folder_path = os.path.join(post_analysis_folder,analysis_object.batch_data_folder)
 	check_folder(batch_folder_path,dryrun,verbose=True)
 
 	# Sets up beta value folder
@@ -306,10 +302,10 @@ def write_data_to_file(analysis_object, post_analysis_folder = "../output/post_a
 
 	# Saves data to file
 	if not dryrun:
-		np.savetxt(fname_path,data,fmt="%.16f",header="\nobservable %s beta %s\nt orginal original_error bs bs_error jk jk_error" % (observable,beta_string))
+		np.savetxt(fname_path,data,fmt="%.16f",header="observable %s beta %s\nt orginal original_error bs bs_error jk jk_error" % (observable,beta_string))
 	print "Data written to %s" % fname_path
 
-def write_raw_analysis_to_file(raw_data, analysis_type, observable, post_analysis_folder = "../output/post_analysis_data", dryrun = False):
+def write_raw_analysis_to_file(raw_data, analysis_type, observable, data_batch_folder, beta, post_analysis_folder = "../output/post_analysis_data", dryrun = False):
 	"""
 	Function that writes raw analysis data to file, either bootstrapped or jackknifed data.
 	Args:
@@ -322,20 +318,25 @@ def write_raw_analysis_to_file(raw_data, analysis_type, observable, post_analysi
 	# Ensures that the post analysis data folder exists
 	check_folder(post_analysis_folder,dryrun,verbose=True)
 
-	# Sets up sub folder for the analysis type
-	analysis_folder_path = os.path.join(post_analysis_folder,analysis_type)
+	# Sets up data batch folder
+	data_batch_folder_path = os.path.join(post_analysis_folder,data_batch_folder)
+	check_folder(data_batch_folder_path,dryrun,verbose=True)
+
+	# Sets up beta folder
+	beta_folder_path = os.path.join(data_batch_folder_path,"beta" + str(beta).replace(".","_"))
+	check_folder(beta_folder_path,dryrun,verbose=True)
+
+	# Sets type type of analysis folder
+	analysis_folder_path = os.path.join(beta_folder_path,analysis_type)
 	check_folder(analysis_folder_path,dryrun,verbose=True)
 
-	# Sets up sub sub folder for the observable
-	observable_folder_path = os.path.join(post_analysis_folder,observable)
-	check_folder(observable_folder_path,dryrun,verbose=True)
+	# Creates file name
+	file_name = observable
+	file_name_path = os.path.join(analysis_folder_path,file_name)
 
-	file_name = analysis_type + observable + ".bin"
-	file_name_path = os.path.join(observable_folder_path,file_name)
+	# Stores data as binary output
 	np.save(file_name_path,raw_data)
-	print "Analysis %s for observable %s stored as binary data at %s" % (analysis_type,observable,file_name_path)
-
-# def join_analyzed_data_files(output)
+	print "Analysis %s for observable %s for beta %.2f stored as binary data at %s.npy" % (analysis_type,observable,beta,file_name_path)
 
 if __name__ == '__main__':
 	sys.exit("Exiting module.")

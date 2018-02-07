@@ -1,7 +1,6 @@
 import numpy as np, matplotlib.pyplot as plt, sys, os, re, scipy.optimize as sciopt, copy
 from tools.folderreadingtools import check_folder
 
-
 # import tqdm
 # from scipy.optimize import curve_fit
 
@@ -12,7 +11,7 @@ def getLatticeSpacing(beta):
 	a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
 	return a # fermi
 
-class DataReader:
+class PostAnalysisDataReader:
 	"""
 	Small class for reading post analysis data
 	"""
@@ -20,90 +19,137 @@ class DataReader:
 		self.post_analysis_folder = post_analysis_folder
 		self.verbose = verbose
 
-		# Retrieves batch folders
-		batch_folders = self._get_folder_content(post_analysis_folder)
-
 		# Dictionary variable to hold all the data sorted by batches
 		self.data_batches = {}
 
-		# Analysis types
-		self.analysis_types = ["jackknife","bootstrap","unanalyzed"]
+		# Dictionaries to hold the raw bootstrapped/jackknifed data and autocorrelation data
+		self.bs_data_raw = {}
+		self.jk_data_raw = {}
+		self.ac_corrections = {}
+
+		# Different types of analysis
+		self.analysis_types = ["unanalyzed","jackknife","bootstrap"]
+
+		# Binary folder types available
+		self.binary_folder_types = ["jackknife","bootstrap","autocorrelation"]
 
 		# Variable to store if we have retrieved flow time or not
-		retrieved_flow_time = False
+		self.retrieved_flow_time = False
 
-		# Loops over batch folders
-		for batch in batch_folders:
-			# Stores the batch folder path
-			batch_folder = os.path.join(post_analysis_folder,batch)
+		# Data batch name
+		self.data_batch_name = os.path.split(self.post_analysis_folder)[-1]
 
-			# Stores retrieves files in batch folder
-			batch_files = [os.path.join(batch_folder,i) for i in self._get_folder_content(batch_folder)]
+		# Iterates over the different beta value folders
+		for beta_folder in self._get_folder_content(self.post_analysis_folder):
+			# Construct beta folder path
+			beta_folder_path = os.path.join(self.post_analysis_folder,beta_folder)
+
+			# # Stores the batch folder path
+			# batch_folder = os.path.join(self.post_analysis_folder,beta_batch)
+
+			# # Stores retrieves files in batch folder
+			# batch_files = [os.path.join(batch_folder,i) for i in self._get_folder_content(batch_folder)]
+
+			# Retrieves beta from folder name
+			beta = float(beta_folder.strip("beta").replace("_","."))
 
 			# Dictionary to store observable data in
 			observable_data = {}
 
-			# Loops over the observables in the batch folder and retrieves them
-			for observable_file in batch_files:
-				# Retrieves metadata
-				# Make it so one can retrieve the key as meta_data[i] and then value as meta_data[i+1]
-				meta_data = self._get_meta_data(observable_file)
+			# Loops over files and folders inside the beta folder
+			for folder in self._get_folder_content(beta_folder_path):
+				# Construct folder path
+				folder_path = os.path.join(beta_folder_path,folder)
 
-				# Temporary methods for getting observable name and beta value, as this will be put into the meta data
-				file_name = os.path.split(os.path.splitext(observable_file)[0])[-1]
-				obs, beta = file_name.split("beta")[1:]
-				beta = float(beta.replace("_","."))
-				obs = [i for i in obs.split("_") if not i.isdigit() and len(i) != 0][0]
-
-				# Dictionary to store all observable data in
-				obs_data = {}
-
-				# Loads data into temporary holder
-				retrieved_data = np.loadtxt(observable_file)
-
-				# Puts data into temporary holding facilities
-				t 			= retrieved_data[:,0]
-				y 			= retrieved_data[:,1]
-				y_error 	= retrieved_data[:,2]
-				bs_y 		= retrieved_data[:,3]
-				bs_y_error 	= retrieved_data[:,4]
-				jk_y 		= retrieved_data[:,5]
-				jk_y_error 	= retrieved_data[:,6]
-
-				# Frees memory
-				del retrieved_data
-
-				# Stores data into dictionaries
-				unanalyzed_data = {"y": y, "y_error": y_error}
-				bs_data = {"y": bs_y, "y_error": bs_y_error}
-				jk_data = {"y": jk_y, "y_error": jk_y_error}
-
-				# Stores observable data
-				obs_data["batch"]		= batch
-				obs_data["beta"] 		= copy.deepcopy(beta)
-				obs_data["unanalyzed"] 	= copy.deepcopy(unanalyzed_data)
-				obs_data["bootstrap"] 	= copy.deepcopy(bs_data)
-				obs_data["jackknife"] 	= copy.deepcopy(jk_data)
-
-				# Stores the observable data
-				observable_data[obs] = copy.deepcopy(obs_data)
-
-				# Stores flow time in a seperate variable
-				if not retrieved_flow_time:
-					self.flow_time = copy.deepcopy(t)
-					retrieved_flow_time = True
-
-				# Frees memory
-				del obs_data
-
-				if self.verbose:
-					print "Data retrieved from %s" % observable_file
+				# Retrieves data deepending on type
+				if folder == "bootstrap":
+					# Gets binary bs data
+					self.bs_data_raw[beta] = self._get_bin_dict(folder_path)
+				elif folder == "jackknife":
+					# Gets binary jk data
+					self.jk_data_raw[beta] = self._get_bin_dict(folder_path)
+				elif folder == "autocorrelation":
+					# Gets binary ac data
+					self.ac_corrections[beta] = self._get_bin_dict(folder_path)
+				else:
+					# Gets observable name
+					observable_name = os.path.splitext(folder)[0]
+					
+					# Retrieves the observable data
+					observable_data[observable_name] = self._get_beta_observable_dict(folder_path,beta)
 
 			# Stores batch data
-			self.data_batches[batch] = copy.deepcopy(observable_data)
+			self.data_batches[beta] = copy.deepcopy(observable_data)
 
+			# Frees memory
+			del observable_data
+		
 		# Reorganizes data to more ease-of-use type of data set
 		self._reorganize_data()
+
+	def _get_beta_observable_dict(self,observable_file,beta):
+		# Retrieves metadata
+		# Make it so one can retrieve the key as meta_data[i] and then value as meta_data[i+1]
+		meta_data = self._get_meta_data(observable_file)
+
+		# Temporary methods for getting observable name and beta value, as this will be put into the meta data
+		obs = os.path.split(os.path.splitext(observable_file)[0])[-1]
+
+		# Dictionary to store all observable data in
+		obs_data = {}
+
+		# Loads data into temporary holder
+		retrieved_data = np.loadtxt(observable_file)
+
+		# Puts data into temporary holding facilities
+		t 			= retrieved_data[:,0]
+		y 			= retrieved_data[:,1]
+		y_error 	= retrieved_data[:,2]
+		bs_y 		= retrieved_data[:,3]
+		bs_y_error 	= retrieved_data[:,4]
+		jk_y 		= retrieved_data[:,5]
+		jk_y_error 	= retrieved_data[:,6]
+
+
+		# Stores data into dictionaries
+		unanalyzed_data = {"y": y, "y_error": y_error}
+		bs_data = {"y": bs_y, "y_error": bs_y_error}
+		jk_data = {"y": jk_y, "y_error": jk_y_error}
+
+		# Stores observable data
+		obs_data["beta"] 		= copy.deepcopy(beta)
+		obs_data["unanalyzed"] 	= copy.deepcopy(unanalyzed_data)
+		obs_data["bootstrap"] 	= copy.deepcopy(bs_data)
+		obs_data["jackknife"] 	= copy.deepcopy(jk_data)
+
+		# Stores flow time in a seperate variable
+		if not self.retrieved_flow_time:
+			self.flow_time = copy.deepcopy(t)
+			self.retrieved_flow_time = True
+
+		if self.verbose:
+			print "Data retrieved from %s" % observable_file
+
+		# Frees memory
+		del retrieved_data
+
+		return obs_data
+
+	def _get_bin_dict(self,folder):
+		"""
+		Gets binary data files
+		"""
+		observable_dict = {}
+
+		# Retrieves the different bootstrapped observables
+		for observable_file in self._get_folder_content(folder):
+			# Gets observable name
+			observable_name = os.path.splitext(observable_file)[0]
+
+			# Populates dictionary
+			observable_dict[observable_name] = np.load(os.path.join(folder,observable_file))
+
+		return observable_dict
 
 	@staticmethod
 	def _get_meta_data(file):
@@ -119,30 +165,27 @@ class DataReader:
 		self.data_observables = {}
 
 		# Sets up new dictionaries by looping over batch names
-		for batch_key in self.data_batches:
+		for beta in self.data_batches:
 			# Loops over observable names
-			for observable_name in self.data_batches[batch_key]:
+			for observable_name in self.data_batches[beta]:
 				# Creates new sub-dictionary ordered by the observable name
 				self.data_observables[observable_name] = {}
 
 		# Places data into dictionaries
-		for batch_key in self.data_batches:
+		for beta in self.data_batches:
 			# Loops over the batch observable
-			for observable_name in self.data_batches[batch_key]:
-				# Retrieves the beta value, as that is a more logical way of storing the data
-				beta = self.data_batches[batch_key][observable_name]["beta"]
-
+			for observable_name in self.data_batches[beta]:
 				# Stores the batch data in a sub-dictionary
-				self.data_observables[observable_name][beta] = self.data_batches[batch_key][observable_name]
+				self.data_observables[observable_name][beta] = self.data_batches[beta][observable_name]
+
 
 	def write_batch_to_single_file(self):
 		"""
 		Writes all unanalyzed data to a single file
 		"""
-		print "="*100,"\nWriting data to a universal output format"
-
 		# Creates universal output folder
-		file_folder = os.path.join(self.post_analysis_folder + "_universal_output")
+		file_folder = os.path.join(self.post_analysis_folder,"..","..","universal_output") # Should be in output
+		print "="*100,"\nWriting data to a universal output format in %s" % file_folder
 		check_folder(file_folder,False,True)
 
 		# Variable for checking if we have retrieved the flow time or not
@@ -151,7 +194,7 @@ class DataReader:
 		# Loops over the different possible analyses
 		for analysis_type in self.analysis_types:
 			# Loops over the batches
-			for batch_name in self.data_batches:
+			for beta in self.data_batches:
 				# Temporary data output for gathering data from arrays into a simple list
 				data_output = []
 
@@ -164,19 +207,19 @@ class DataReader:
 				# Retrieves sqrt(8t)
 				data_output.append(np.sqrt(8*self.flow_time))
 
-				for observable_name in self.data_batches[batch_name]:
+				for observable_name in self.data_batches[beta]:
 					# Retrieves the unanalyzed observable data
-					data_output.append(self.data_batches[batch_name][observable_name][analysis_type]["y"])
-					data_output.append(self.data_batches[batch_name][observable_name][analysis_type]["y_error"])
+					data_output.append(self.data_batches[beta][observable_name][analysis_type]["y"])
+					data_output.append(self.data_batches[beta][observable_name][analysis_type]["y_error"])
 
 					# Adds observable name and error to header
 					header_output.append(observable_name)
 					header_output.append(observable_name+"_err")
 
 				# Writing array to file
-				file_path = os.path.join(file_folder,batch_name + "_" + analysis_type) + ".txt"
+				file_path = os.path.join(file_folder,str(beta).replace(".","_") + "_" + analysis_type) + ".txt"
 				np.savetxt(file_path,np.asarray(data_output),fmt="%.18f",header=" ".join(header_output))
-				print "Batch '%s' data written to file %s." % (batch_name,os.path.splitext(os.path.split(file_path)[-1])[0])
+				print "Batch '%s' data written to file %s." % (beta,os.path.splitext(os.path.split(file_path)[-1])[0])
 
 		# A single delimiter marking the end of universal output writing
 		print "="*100
@@ -205,12 +248,14 @@ def fit_line(x, bs_data_dict, fit_target, fit_interval, data_function_correction
 		fit_value_error 				(float): error of y_0
 	"""
 	# Retrieves data
-	print "@175 ",bs_data_dict
+	print "@175 ",bs_data_dict.keys()
 	observable = bs_data_dict["observable"]
 	beta = bs_data_dict["beta"]
 	data = bs_data_dict["data"]
 	NFlows, NBoot = data.shape
 
+
+	exit(1)
 	# Applies the funciton correction to all bootstrap samples
 	for iBoot in xrange(NBoot):
 		data[:,iBoot] = data_function_correction(data[:,iBoot])
@@ -284,22 +329,28 @@ class PostAnalysis:
 					6.2  : r"$32^3 \times 64$",
 					6.45 : r"$48^3 \times 96$"}
 
-	def __init__(self,data,flow_time,output_folder="../figures/post_analysis"):
+	# def __init__(self,data,flow_time,data_batch_name,base_output_folder="../figures/post_analysis"):
+	def __init__(self,data,observable,base_output_folder="../figures/post_analysis"):
 		# Retrieves relevant data values
-		self.flow_time 			= flow_time
-		self.unanalyzed_data 	= {beta:data[beta]["unanalyzed"] for beta in sorted(data.keys())} # Data should now be sorted by beta values
-		self.bootstrap_data 	= {beta:data[beta]["bootstrap"] for beta in sorted(data.keys())}
-		self.jackknife_data 	= {beta:data[beta]["jackknife"] for beta in sorted(data.keys())}
+		self.flow_time 			= data.flow_time
+		self.unanalyzed_data 	= {beta:data.data_observables[observable][beta]["unanalyzed"] for beta in sorted(data.data_observables[observable].keys())} # Data should now be sorted by beta values
+		self.bootstrap_data 	= {beta:data.data_observables[observable][beta]["bootstrap"] for beta in sorted(data.data_observables[observable].keys())}
+		self.jackknife_data 	= {beta:data.data_observables[observable][beta]["jackknife"] for beta in sorted(data.data_observables[observable].keys())}
+		self.bs_raw 			= data.bs_data_raw
+		self.jk_raw 			= data.jk_data_raw
+		self.ac_corrections		= data.ac_corrections
 
-		# Creates output folder for post analysis figures
-		self.output_folder = output_folder
-		if not os.path.isdir(self.output_folder):
-			os.mkdir(self.output_folder)
-			print "> mkdir %s" % self.output_folder
+		# Creates base output folder for post analysis figures
+		self.base_output_folder_path = base_output_folder
+		check_folder(self.base_output_folder_path,dryrun=False,verbose=True)
+
+		# Creates output folder
+		self.output_folder_path = os.path.join(self.base_output_folder_path,data.data_batch_name)
+		check_folder(self.output_folder_path,dryrun=False,verbose=True)
 
 		# Creates colors to use
 		self.colors = {}
-		for color, beta in zip(["#5cbde0","#6fb718","#bc232e","#8519b7"],sorted(data.keys())): # blue, green, red purple
+		for color, beta in zip(["#5cbde0","#6fb718","#bc232e","#8519b7"],sorted(data.data_observables[observable].keys())): # blue, green, red purple
 			self.colors[beta] = color
 
 	@staticmethod
@@ -307,7 +358,7 @@ class PostAnalysis:
 		return float(".".join([i for i in re.findall('(\d+)',x)]))
 
 	def _plot_core(self, x_limits = False, y_limits = False, fname_appendix = ""):
-		print "Plotting %s for betas %s together" % (self.analysis_name_compact,", ".join([str(b) for b in self.unanalyzed_data.keys()]))
+		print "Plotting %s for betas %s together" % (self.observable_name_compact,", ".join([str(b) for b in sorted(self.unanalyzed_data.keys())]))
 		fig = plt.figure(dpi=self.dpi)
 		ax = fig.add_subplot(111)
 
@@ -319,7 +370,7 @@ class PostAnalysis:
 			ax.fill_between(x, y-y_err, y+y_err,alpha=0.5, edgecolor='', facecolor=value["color"])
 
 		ax.grid(True)
-		ax.set_title(r"%s %s" % (self.analysis_name, self.formula))
+		ax.set_title(r"%s %s" % (self.observable_name, self.formula))
 		ax.set_xlabel(self.x_label)
 		ax.set_ylabel(self.y_label)
 
@@ -330,18 +381,21 @@ class PostAnalysis:
 
 		ax.legend(loc="lower right")
 
-		fname = os.path.join(self.output_folder,"post_analysis_%s%s.png" % (self.analysis_name_compact,fname_appendix))
+		fname = os.path.join(self.output_folder_path,"post_analysis_%s%s.png" % (self.observable_name_compact,fname_appendix))
 		plt.savefig(fname)
 		print "Figure saved in %s" % fname
 		# plt.show()
 		plt.close(fig)
 
 class TopSusPostAnalysis(PostAnalysis):
-	analysis_name = "Topological Susceptibility"
-	analysis_name_compact = "topsus"
+	observable_name = "Topological Susceptibility"
+	observable_name_compact = "topsus"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\chi_t^{1/4}[GeV]$"
 	formula = r"$\chi_t^{1/4}=\frac{\hbar c}{aV^{1/4}}\langle Q^2 \rangle^{1/4}$"
+
+	def __init__(self,*args,**kwargs):
+		super(TopSusPostAnalysis,self).__init__(*args,**kwargs)
 
 	def plot(self,analysis_type="bootstrap"):
 		self.plot_values = []
@@ -370,11 +424,11 @@ class TopSusPostAnalysis(PostAnalysis):
 		self._plot_core(fname_appendix = "_" + analysis_type)
 
 class EnergyPostAnalysis(PostAnalysis):
-	analysis_name = "Energy"
-	analysis_name_compact = "energy"
+	observable_name = "Energy"
+	observable_name_compact = "energy"
 	y_label = r"$t^2\langle E\rangle$"
 	x_label = r"$\frac{t}{r_0^2}$"
-	formula = r"$\langle E\rangle = -\frac{1}{64V}F_{\mu\nu}^a{F^{\mu\nu}}^a$"
+	formula = r"$\langle E\rangle = -\frac{1}{64V}F_{\mu\nu}^a{F^a}^{\mu\nu}$"
 	r0 = 0.5
 
 	def plot(self, analysis_type = "bootstrap"):
@@ -453,7 +507,7 @@ class EnergyPostAnalysis(PostAnalysis):
 		# ax.legend(loc="lower left")
 
 		# Saves figure
-		fname = os.path.join(self.output_folder,"post_analysis_%s_continiuum.png" % self.analysis_name_compact)
+		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum.png" % self.observable_name_compact)
 		fig.savefig(fname,dpi=self.dpi)
 
 		print "Figure created in %s" % fname
@@ -463,11 +517,14 @@ class EnergyPostAnalysis(PostAnalysis):
 	def _get_t0(self,data_values):
 		self.t0_values = []
 
+		# print "KEYS SHOULD BE BETA VALUES: ", self.bs_raw.keys()
+		# exit(1)
+
 		# Populates values to be plotted and 
 		for values in data_values:
 			t0_batch = {}
-			t0_batch["beta"] = self.get_float(values["batch_name"])
-			t0_batch["t0"],t0_batch["t0_err"] = fit_line(	values["x"],self.bootstrap_data[vals["batch_name"]],0.3,0.015, 
+			t0_batch["beta"] = values["beta"]
+			t0_batch["t0"],t0_batch["t0_err"] = fit_line(	values["x"],self.bs_raw[values["beta"]][self.observable_name_compact],0.3,0.015, 
 															data_function_correction = lambda x : -x*self.flow_time**2/64.0,
 															fit_function_modifier = lambda x : x*self.r0**2,
 															plot_fit_window = True)
@@ -513,20 +570,22 @@ def main(args):
 	Args should be post-analysis folder
 	"""
 	# Loads data from post analysis folder
-	data = DataReader(args[0])
+	data = PostAnalysisDataReader(args[0])
 	print "Retrieving data from folder: %s" % args[0]
 
 	# Rewrites all of the data to a single file for sharing with giovanni
 	data.write_batch_to_single_file()
 
 	# # Plots topsus
-	# topsus_analysis = TopSusPostAnalysis(data.data_observables["topsus"],data.flow_time,bs_data=data.bs_data)
+	# topsus_analysis = TopSusPostAnalysis(data.data_observables["topsus"],data.data_batch_name,data.flow_time)
+	# topsus_analysis = TopSusPostAnalysis(data,"topsus")
 	# topsus_analysis.plot()
 
 	# Retrofits the topsus for continiuum limit
 
 	# Plots energy
-	energy_analysis = EnergyPostAnalysis(data.data_observables["energy"],data.flow_time)
+	# energy_analysis = EnergyPostAnalysis(data.data_observables["energy"],data.flow_time,data.data_batch_name)
+	energy_analysis = EnergyPostAnalysis(data,"energy")
 	energy_analysis.plot()
 
 	# Retrofits the energy for continiuum limit
@@ -536,5 +595,6 @@ if __name__ == '__main__':
 	if len(sys.argv[1:]) == 1:
 		args = sys.argv[1:]
 	else:
-		args = ["../output/post_analysis_data"]
+		args = ["../output/post_analysis_data/data2"]
+		# args = ["../output/post_analysis_data_old"]
 	main(args)

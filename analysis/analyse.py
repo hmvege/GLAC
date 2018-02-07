@@ -1,4 +1,4 @@
-from tools.folderreadingtools import GetDirectoryTree, GetFolderContents, write_data_to_file, check_folder
+from tools.folderreadingtools import GetDirectoryTree, GetFolderContents, write_data_to_file, check_folder, write_raw_analysis_to_file
 import statistics.parallel_tools as ptools
 from statistics.jackknife import Jackknife
 from statistics.bootstrap import Bootstrap
@@ -22,7 +22,7 @@ class FlowAnalyser(object):
 	def __init__(self, file_tree, batch_name, data=None, dryrun=False, flow=True, parallel = False, numprocs = 4, verbose = False, figures_folder = False):
 		# Sets up global constants
 		self.batch_name = batch_name
-		self.batch_folder = file_tree.batch_folder
+		self.batch_data_folder = file_tree.data_batch_folder
 		self.N_bs = None
 		self.dryrun = dryrun
 		self.flow = flow
@@ -38,16 +38,16 @@ class FlowAnalyser(object):
 		check_folder(self.figures_folder,self.dryrun,verbose=self.verbose)
 
 		# Check that a data run folder exist, so one data anlysis performed on different data sets do not mix
-		self.data_batch_folder = os.path.join(self.figures_folder,"data_batch_" + file_tree.output_folder)
-		check_folder(self.data_batch_folder,self.dryrun,verbose=self.verbose)
+		self.data_batch_folder_path = os.path.join(self.figures_folder,os.path.split(self.batch_data_folder)[-1])
+		check_folder(self.data_batch_folder_path,self.dryrun,verbose=self.verbose)
 
 		# Checks that a batch folder exists
-		self.batch_folder = os.path.join(self.data_batch_folder,self.batch_name)
-		check_folder(self.batch_folder,self.dryrun,verbose=self.verbose)
+		self.batch_name_folder_path = os.path.join(self.data_batch_folder_path,self.batch_name)
+		check_folder(self.batch_name_folder_path,self.dryrun,verbose=self.verbose)
 
 		# Checks that observable output folder exist, and if not will create it
-		self.observable_output_folder = os.path.join(self.batch_folder,self.observable_name_compact)
-		check_folder(self.observable_output_folder,self.dryrun,verbose=self.verbose)
+		self.observable_output_folder_path = os.path.join(self.batch_name_folder_path,self.observable_name_compact)
+		check_folder(self.observable_output_folder_path,self.dryrun,verbose=self.verbose)
 
 		# Prints observable and batch
 		print "="*100
@@ -202,7 +202,7 @@ class FlowAnalyser(object):
 
 		if store_raw_bs_values:
 			# Store as binary
-			write_raw_analysis_to_file(self.bs_y_data, "bootstrap", self.observable_name_compact, dryrun = self.dryrun)
+			write_raw_analysis_to_file(self.bs_y_data, "bootstrap", self.observable_name_compact, self.batch_data_folder, self.beta, dryrun = self.dryrun)
 
 		# Sets performed flag to true
 		self.bootstrap_performed = True
@@ -249,12 +249,12 @@ class FlowAnalyser(object):
 
 		if store_raw_jk_values:
 			# Store as binary
-			write_raw_analysis_to_file(self.jk_y_data, "jackknife", self.observable_name_compact, dryrun = self.dryrun)
+			write_raw_analysis_to_file(self.jk_y_data, "jackknife", self.observable_name_compact, self.batch_data_folder, self.beta, dryrun = self.dryrun)
 
 		# Sets performed flag to true
 		self.jackknife_performed = True
 
-	def autocorrelation(self,use_numpy=True, F = ptools._default_return, F_error = ptools._default_error_return, auto_corr_statistics = ptools._default_return):
+	def autocorrelation(self,use_numpy=True, F = ptools._default_return, F_error = ptools._default_error_return, auto_corr_statistics = ptools._default_return, store_raw_ac_error_correction = True):
 		# Gets autocorrelation
 		if self.parallel:
 			# Sets up jobs for parallel processing
@@ -284,7 +284,7 @@ class FlowAnalyser(object):
 
 			# Non-parallel method for calculating autocorrelation
 			for i in xrange(self.NFlows):
-				ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy,data_statistic=ptools._default_return)
+				ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy,data_statistic=auto_corr_statistics)
 				self.autocorrelations[i] = ac.R
 				self.autocorrelations_errors[i] = ac.R_error
 				self.integrated_autocorrelation_time[i] = ac.integrated_autocorrelation_time()
@@ -299,6 +299,10 @@ class FlowAnalyser(object):
 			# Finalizes
 			sys.stdout.write("\rCalculating autocorrelation: 100.0%% done")
 			sys.stdout.flush()
+
+		# Stores the ac error correction
+		if store_raw_ac_error_correction:
+			write_raw_analysis_to_file(self.autocorrelation_error_correction,"autocorrelation",self.observable_name_compact,self.batch_data_folder,self.beta,dryrun=self.dryrun)
 
 		# Sets performed flag to true
 		self.autocorrelation_performed = True
@@ -319,10 +323,10 @@ class FlowAnalyser(object):
 
 		# Sets up the title and filename strings
 		title_string = r"Jacknife of %s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta)
-		fname = os.path.join(self.observable_output_folder,"{0:<s}_jackknife_beta{1:<s}{2:<s}.png".format(self.observable_name_compact,str(self.beta).replace('.','_'),self.fname_addon))
+		fname_path = os.path.join(self.observable_output_folder_path,"{0:<s}_jackknife_beta{1:<s}{2:<s}.png".format(self.observable_name_compact,str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Plots the jackknifed data
-		self.__plot_error_core(x,correction_function(y),correction_function(y_std),title_string,fname)
+		self.__plot_error_core(x,correction_function(y),correction_function(y_std),title_string,fname_path)
 
 	def plot_boot(self,plot_bs=True, x = None, correction_function = lambda x : x):
 		# Checks that the bootstrap has been performed.
@@ -345,13 +349,13 @@ class FlowAnalyser(object):
 		# Sets up the title and filename strings
 		if plot_bs:
 			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta,self.N_bs)
-			fname = os.path.join(self.observable_output_folder,"{0:<s}_bootstrap_Nbs{2:<d}_beta{1:<s}{3:<s}.png".format(self.observable_name_compact,str(self.beta).replace('.','_'),self.N_bs,self.fname_addon))
+			fname_path = os.path.join(self.observable_output_folder_path,"{0:<s}_bootstrap_Nbs{2:<d}_beta{1:<s}{3:<s}.png".format(self.observable_name_compact,str(self.beta).replace('.','_'),self.N_bs,self.fname_addon))
 		else:
 			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name, self.data.meta_data["NFlows"],self.beta)
-			fname = os.path.join(self.observable_output_folder,"{0:<s}_original_beta{1:<s}{2:<s}.png".format(self.observable_name_compact,str(self.beta).replace('.','_'),self.fname_addon))
+			fname_path = os.path.join(self.observable_output_folder_path,"{0:<s}_original_beta{1:<s}{2:<s}.png".format(self.observable_name_compact,str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Plots either bootstrapped or regular stuff
-		self.__plot_error_core(x,correction_function(y),correction_function(y_std),title_string,fname)
+		self.__plot_error_core(x,correction_function(y),correction_function(y_std),title_string,fname_path)
 
 	def plot_original(self, x = None, correction_function = lambda x : x):
 		"""
@@ -408,7 +412,7 @@ class FlowAnalyser(object):
 
 		# Sets up the title and filename strings
 		title_string = r"Autocorrelation of %s at flow time $t=%.2f$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,flow_time*self.data.meta_data["FlowEpsilon"],self.beta,self.N_configurations)
-		fname = os.path.join(self.observable_output_folder,"{0:<s}_autocorrelation_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,flow_time, str(self.beta).replace('.','_'),self.fname_addon))
+		fname_path = os.path.join(self.observable_output_folder_path,"{0:<s}_autocorrelation_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,flow_time, str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Plots the autocorrelations
 		fig = plt.figure()
@@ -425,8 +429,8 @@ class FlowAnalyser(object):
 		ax.grid(True)
 		# ax.legend()
 		if not self.dryrun: 
-			fig.savefig(fname,dpi=self.dpi)
-		print "Figure created in %s" % fname
+			fig.savefig(fname_path,dpi=self.dpi)
+		print "Figure created in %s" % fname_path
 		plt.close(fig)
 
 	def plot_integrated_correlation_time(self):
@@ -440,7 +444,7 @@ class FlowAnalyser(object):
 
 		# Gives title and file name
 		title_string = r"Integrated autocorrelation time of %s for $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,self.beta,self.N_configurations)
-		fname = os.path.join("{0:<s}_integrated_ac_time_beta{1:<s}{2:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_'),self.fname_addon))
+		fname_path = os.path.join(self.observable_output_folder_path,"{0:<s}_integrated_ac_time_beta{1:<s}{2:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Sets up the plot
 		fig = plt.figure()
@@ -457,8 +461,8 @@ class FlowAnalyser(object):
 		ax.set_title(title_string)
 		ax.grid(True)
 		if not self.dryrun: 
-			fig.savefig(fname,dpi=self.dpi)
-		print "Figure created in %s" % fname
+			fig.savefig(fname_path,dpi=self.dpi)
+		print "Figure created in %s" % fname_path
 		plt.close(fig)
 
 	def plot_histogram(self, flow_time, x_label, Nbins = 30, x_limits="auto"):
@@ -480,7 +484,7 @@ class FlowAnalyser(object):
 		
 		# Sets up title and file name strings
 		title_string = r"Spread of %s, $\beta=%.2f$, flow time $t=%.2f$" % (self.observable_name, float(self.data.meta_data["beta"]),flow_time*self.data.meta_data["FlowEpsilon"])
-		fname = os.path.join(self.observable_output_folder,"{0:<s}_histogram_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,abs(flow_time),str(self.beta).replace('.','_'),self.fname_addon))
+		fname_path = os.path.join(self.observable_output_folder_path,"{0:<s}_histogram_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,abs(flow_time),str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Sets up plot
 		fig = plt.figure()
@@ -536,8 +540,8 @@ class FlowAnalyser(object):
 
 		# Saves figure
 		if not self.dryrun:
-			plt.savefig(fname)
-		print "Figure created in %s" % fname
+			plt.savefig(fname_path)
+		print "Figure created in %s" % fname_path
 
 		# Closes figure for garbage collection
 		plt.close(fig)
@@ -555,7 +559,7 @@ class FlowAnalyser(object):
 
 		# Sets up title and file name strings
 		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_{flow} = %.2f$" % (self.observable_name,self.beta,flow_time*self.data.meta_data["FlowEpsilon"])
-		fname = os.path.join(self.observable_output_folder,"{0:<s}_mchistory_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,flow_time,str(self.beta).replace('.','_'),self.fname_addon))
+		fname_path = os.path.join(self.observable_output_folder_path,"{0:<s}_mchistory_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact,flow_time,str(self.beta).replace('.','_'),self.fname_addon))
 
 		# Sets up plot
 		fig = plt.figure()
@@ -567,8 +571,8 @@ class FlowAnalyser(object):
 		ax.grid(True)
 		ax.legend()
 		if not self.dryrun: 
-			fig.savefig(fname,dpi=self.dpi)
-		print "Figure created in %s" % fname
+			fig.savefig(fname_path,dpi=self.dpi)
+		print "Figure created in %s" % fname_path
 		plt.close(fig)
 
 class AnalysePlaquette(FlowAnalyser):
@@ -626,7 +630,7 @@ class AnalyseQtQZero(FlowAnalyser):
 
 	def __init__(self,*args,**kwargs):
 		super(AnalyseQtQZero,self).__init__(*args,**kwargs)
-		self.observable_output_folder_old = self.observable_output_folder
+		self.observable_output_folder_path_old = self.observable_output_folder_path
 		
 	def setQ0(self, q_flow_time_zero, unit_test = False):
 		"""
@@ -645,8 +649,8 @@ class AnalyseQtQZero(FlowAnalyser):
 		self.y = (self.y.T*self.y[:,self.q_flow_time_zero]).T
 
 		# Creates a new folder to store t0 results in
-		self.observable_output_folder = os.path.join(self.observable_output_folder_old,"t0_%d" % self.q_flow_time_zero)
-		check_folder(self.observable_output_folder,self.dryrun,self.verbose)
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old,"t0_%d" % self.q_flow_time_zero)
+		check_folder(self.observable_output_folder_path,self.dryrun,self.verbose)
 
 		if unit_test:
 			# Hard-coded matrix-vector multiplication
@@ -677,6 +681,7 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 		self.set_size()
 
 	def set_size(self): # HARDCODE DIFFERENT SIZES HERE!
+		# Retrieves lattice spacing
 		self.a = self.getLatticeSpacing(self.data.meta_data["beta"])
 		
 		# Ugly, hardcoded lattice size setting
@@ -825,7 +830,7 @@ def main(args):
 			topsus_analysis.plot_jackknife()
 			# topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 
-			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=topsus_analysis.chi) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 
 			topsus_analysis.plot_autocorrelation(0)
 			topsus_analysis.plot_autocorrelation(-1)
@@ -899,9 +904,9 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','topsus'],
 		# 		['beta6_1','data3','topsus']]
 
-		args = [['beta6_0','data2','topsus'],
-				['beta6_1','data2','topsus'],
-				['beta6_2','data2','topsus']]
+		args = [['beta6_0','data2','topsus','energy'],
+				['beta6_1','data2','topsus','energy'],
+				['beta6_2','data2','topsus','energy']]
 
 		# args = [['beta6_1','data2','topsus']]
 
