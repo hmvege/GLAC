@@ -168,9 +168,15 @@ def fit_line(x, y, y_error, observable, beta, fit_target, fit_interval, axis = "
 	b = pol[1]
 	a_err, b_err = np.sqrt(np.diag(polcov))
 
-	# Gets the fit values
-	fit_value = fit_function_modifier((fit_target - b) / a)
-	fit_value_error = fit_function_modifier(fit_value * np.sqrt( (b_err / (fit_target - b))**2 + (a_err / a)**2 ))
+
+	if axis == "y":
+		# Gets the fit values
+		fit_value = fit_function_modifier((fit_target - b) / a)
+		fit_value_error = fit_function_modifier(fit_value * np.sqrt( (b_err / (fit_target - b))**2 + (a_err / a)**2 ))
+	else:
+		# Adds bootstrap fit to fitted values if we are fitting for x axis
+		fit_value = fit_function_modifier(fit_target*a + b)
+		fit_value_error = fit_function_modifier(fit_value*a_err + b_err)
 
 	return fit_value, fit_value_error
 

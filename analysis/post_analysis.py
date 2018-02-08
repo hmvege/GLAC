@@ -119,13 +119,13 @@ class PostAnalysis:
 		plt.close(fig)
 
 	def _get_beta_values_to_fit(self,fit_target, fit_interval, axis,
-								fit_type = "bootstrap_line",
+								fit_type = "bootstrap_fit",
 								fit_function_modifier = lambda x : x,
 								plot_fit_window = False):
 		"""
 		Retrieves a line fitted value at a target t0.
 		Available fit_types:
-			- bootstrap_line (default)
+			- bootstrap_fit (default)
 			- linefit_data
 			- nearest
 		"""
@@ -140,20 +140,21 @@ class PostAnalysis:
 			bfit["beta"] = values["beta"]
 
 			# Retrieves fit value as well as its error
-			if fit_type == "bootstrap_line":
+			if fit_type == "bootstrap_fit":
 				bfit["t0"], bfit["t0_err"] = fit_line_form_bootstrap(	values["x"],values["bs"],self.observable_name_compact,
 																		values["beta"],fit_target,fit_interval, axis=axis,
 																		fit_function_modifier = fit_function_modifier,
 																		plot_fit_window = plot_fit_window)
-			elif fit_type == "linefit_data":
+			elif fit_type == "data_line_fit":
 				bfit["t0"],bfit["t0_err"] = fit_line(	values["x"],values["y"],values["y_err"],
+														self.observable_name_compact,values["beta"],
 														fit_target,fit_interval, axis=axis,
 														fit_function_modifier = fit_function_modifier,
 														plot_fit_window = plot_fit_window)
-			elif fit_type == "nearest":
-				raise NotImplementedError("'nearest' not implemented as a fit type yet.")
+			elif fit_type == "nearest_val_fit":
+				raise NotImplementedError("'nearest_val_fit' not implemented as a fit type yet.")
 			else:
-				raise KeyError("No fit_type named %s." % fit_type)
+				raise KeyError("No fit_type named %s. Options: 'bootstrap_fit', 'data_line_fit' or 'nearest_val_fit'" % fit_type)
 
 			# Adds lattice spacing to fit
 			bfit["a"] = getLatticeSpacing(bfit["beta"])
@@ -262,7 +263,7 @@ class TopSusPostAnalysis(PostAnalysis):
 		self._get_beta_values_to_fit(fit_target, fit_interval, axis = "x", fit_type = fit_type, plot_fit_window = False)
 
 		# Builts plot variables
-		a_lattice_spacings = np.asarray([val["a"] for val in self.beta_fit])[::-1] / self.r0**2
+		a_lattice_spacings = np.asarray([val["a"] for val in self.beta_fit])[::-1]
 		t_fit_points = np.asarray([val["t0"] for val in self.beta_fit])[::-1]
 		t_fit_points_errors = np.asarray([val["t0_err"] for val in self.beta_fit])[::-1]
 
@@ -290,18 +291,19 @@ class TopSusPostAnalysis(PostAnalysis):
 
 		# ax.axvline(0,linestyle="--",color="0",alpha=0.5)
 		ax.errorbar(x_points[1:],y_points[1:],yerr=y_points_err[1:],fmt="o",color="0",ecolor="0")
-		ax.errorbar(x_points[0],y_points[0],yerr=y_points_err[0],fmt="o",capthick=4,color="r",ecolor="r")
-		ax.plot(x_line,y_line,color="0",label=r"$y=(%.3f\pm%.3f)x + %.4f\pm%.4f$" % (a,a_err,b,b_err))
-		ax.fill_between(x_line, y_line-y_line_std, y_line+y_line_std,alpha=0.5, edgecolor='', facecolor="0")
+		ax.errorbar(x_points[0],y_points[0],yerr=y_points_err[0],fmt="o",capthick=4,color="r",ecolor="r",label=r"$\chi^{1/4}=%.2f\pm%.2f$" % (y_points[0],y_points_err[0]))
+		ax.plot(x_line,y_line,color="0")#,label=r"$y=(%.3f\pm%.3f)x + %.4f\pm%.4f$" % (a,a_err,b,b_err))
+		ax.fill_between(x_line, y_line-y_line_std, y_line+y_line_std,alpha=0.2, edgecolor='', facecolor="0")
 		ax.set_ylabel(self.y_label_continiuum)
 		ax.set_xlabel(self.x_label_continiuum)
 
-		# ax.set_title(r"Continiuum limit reference scale: $t_{0,cont}=%2.4f\pm%g$" % ((self.r0*y_points[0])**2/8,(self.r0*y_points_err[0])**2/8))
+		ax.set_title(r"Continiuum limit at: $\sqrt{8t_{flow}} = %.2f[fm]$" % (fit_target))
+
 		ax.legend()
 		ax.grid(True)
 
 		# Saves figure
-		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum.png" % self.observable_name_compact)
+		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum_%s.png" % (self.observable_name_compact,fit_type.strip("_")))
 		fig.savefig(fname,dpi=self.dpi)
 
 		print "Continiuum plot of %s created in %s" % (self.observable_name.lower(),fname)
@@ -379,7 +381,7 @@ class EnergyPostAnalysis(PostAnalysis):
 		ax.errorbar(x_points[1:],y_points[1:],yerr=y_points_err[1:],fmt="o",color="0",ecolor="0")
 		ax.errorbar(x_points[0],y_points[0],yerr=y_points_err[0],fmt="o",capthick=4,color="r",ecolor="r")
 		ax.plot(x_line,y_line,color="0",label=r"$y=(%.3f\pm%.3f)x + %.4f\pm%.4f$" % (a,a_err,b,b_err))
-		ax.fill_between(x_line, y_line-y_line_std, y_line+y_line_std,alpha=0.5, edgecolor='', facecolor="0")
+		ax.fill_between(x_line, y_line-y_line_std, y_line+y_line_std,alpha=0.2, edgecolor='', facecolor="0")
 		ax.set_ylabel(self.y_label_continiuum)
 		ax.set_xlabel(self.x_label_continiuum)
 
@@ -402,7 +404,7 @@ class EnergyPostAnalysis(PostAnalysis):
 		# ax.legend(loc="lower left")
 
 		# Saves figure
-		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum.png" % self.observable_name_compact)
+		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum_%s.png" % (self.observable_name_compact,fit_type.strip("_")))
 		fig.savefig(fname,dpi=self.dpi)
 
 		print "Continiuum plot of %s created in %s" % (self.observable_name.lower(),fname)
@@ -447,7 +449,7 @@ def main(args):
 	print "Retrieving data from folder: %s" % args[0]
 
 	# Rewrites all of the data to a single file for sharing with giovanni
-	data.write_batch_to_single_file()
+	# data.write_batch_to_single_file()
 
 	# Plots topsus
 	topsus_analysis = TopSusPostAnalysis(data,"topsus")
@@ -455,7 +457,7 @@ def main(args):
 	topsus_analysis.plot()
 
 	# Retrofits the topsus for continuum limit
-	topsus_analysis.plot_continiuum(0.55,0.015,"bootstrap_line")
+	topsus_analysis.plot_continiuum(0.58,0.015,"data_line_fit")
 
 	# Plots energy
 	energy_analysis = EnergyPostAnalysis(data,"energy")
@@ -463,7 +465,7 @@ def main(args):
 	energy_analysis.plot()
 
 	# Retrofits the energy for continiuum limit
-	energy_analysis.plot_continiuum(0.3, 0.015,"bootstrap_line")
+	energy_analysis.plot_continiuum(0.3, 0.015,"bootstrap_fit")
 
 if __name__ == '__main__':
 	if len(sys.argv[1:]) == 1:
