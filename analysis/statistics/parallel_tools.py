@@ -70,3 +70,6 @@ def _chi_beta6_45(Q_squared):
 def _chi_beta6_45_error(Q_squared, Q_squared_std):
 	const = 0.0723048176484
 	return 0.25*const*Q_squared_std / Q_squared**(0.75)
+
+if __name__ == '__main__':
+	exit("Exit: %s to be imported as module in other programs." % __file__.split("/")[-1])
