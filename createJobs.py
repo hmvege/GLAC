@@ -646,72 +646,67 @@ def main(args):
     # Initiates JobCreator class for running jobs ect
     s = JobCreator(dryrun,verbose)
 
-    # Loads one or multiple configuration
+    # Loads one configuration
     if args.subparser == 'load':
         """
         COMMAND FOR LOADING SCRIPT JOBS AND GENERATING CONFIGS OR FLOWING
         """
-        configurations = [ast.literal_eval(open(load_argument,"r").read()) for load_argument in args.file]
+        configuration = ast.literal_eval(open(args.file,"r").read())
 
         # If we are to load and flow configurations
         if args.load_configurations:
             if args.load_config_and_run:
                 # Error catching in case user is using load_config_and_run together with load_configurations.
                 sys.exit("ERROR: can not load and run configurations(-lcfgr) together with load configurations(-lcfg).")
-            if len(configurations) == 1:
-                # Requiring flow to be specified if we are loading configurations to flow
-                for c in configurations:
-                    if c["NFlows"] == 0 or args.no_flow:
-                        sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
+            
+            # Requiring flow to be specified if we are loading configurations to flow
+            if configuration["NFlows"] == 0 or args.no_flow:
+                sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
 
-                    # Sets the number of configurations to run for to be zero just in case
-                    c["NCf"] = 0
+            # Sets the number of configurations to run for to be zero just in case
+            configuration["NCf"] = 0
 
-                # Requiring an new estimate of the run time if we are flowing
-                configurations[0] = setFieldConfigs(configurations[0],args.load_configurations,args.config_start_number)
-                if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
-                    sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
-                else:
-                    configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
-                    configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
+            # Requiring an new estimate of the run time if we are flowing
+            configuration = setFieldConfigs(configuration,args.load_configurations,args.config_start_number)
+            if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
+                sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
             else:
-                raise TypeError("Can only assign one configuration file to a single set of field configurations.")
+                configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
+                configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
 
         # For loading and running configurations
         if args.load_config_and_run:
             if not args.NConfigs:
                 # Error catching, as we require to know how many addition configurations we wish to create from loaded configuration.
                 sys.exit("ERROR: we require to know how many addition configurations we wish to create from loaded configuration(specified by -lcfgr).")
-            if len(configurations) != 1:
-                exit("ERROR: can only load and run configuration from one configuration setup(.py configuration file).")
-            configurations[0]["load_config_and_run"] = args.load_config_and_run
-            configurations[0]["NCf"] = args.NConfigs
-            configurations[0]["NTherm"] = 0
-            configurations[0]["NFlows"] = 0
+            configuration["load_config_and_run"] = args.load_config_and_run
+            configuration["NCf"] = args.NConfigs
+            configuration["NTherm"] = 0
+            configuration["NFlows"] = 0
             if args.load_config_min_time_estimate != None:
-                configurations[0]["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
+                configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
             if args.load_config_hr_time_estimate != None:
-                configurations[0]["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
+                configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
   
         # Populate configuration with default values if certain keys are not present
-        for c in configurations:
-            config_default["base_folder"] = args.base_folder
-            if args.run_name != False:
-                c["runName"] = args.run_name
-            if args.NConfigs != False:
-                c["NCf"] = args.NConfigs
-            if args.load_config_min_time_estimate != False:
-                c["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
-            if args.load_config_hr_time_estimate != False:
-                c["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
-            if args.no_flow:
-                c["NFlows"] = 0
-                c["flowObservables"] = []
-            for key in config_default.keys():
-                if not key in c:
-                    c[key] = config_default[key]
-            c["config_start_number"] = args.config_start_number
-            # Remove all configuration below config_start_number
+        config_default["base_folder"] = args.base_folder
+        if args.run_name != False:
+            configuration["runName"] = args.run_name
+        if args.NConfigs != False:
+            configuration["NCf"] = args.NConfigs
+        if args.load_config_min_time_estimate != False:
+            configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
+        if args.load_config_hr_time_estimate != False:
+            configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
+        if args.no_flow:
+            configuration["NFlows"] = 0
+            configuration["flowObservables"] = []
+        for key in config_default.keys():
+            if not key in configuration:
+                configuration[key] = config_default[key]
+        configuration["config_start_number"] = args.config_start_number
+
+        # Submitting job
         s.submitJob(configurations,args.system,args.partition)
 
     elif args.subparser == 'setup':
@@ -774,7 +769,7 @@ def main(args):
                 sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
 
         # Submitting job
-        s.submitJob([config_default],system,partition,excluded_nodes)
+        s.submitJob(config_default,system,partition,excluded_nodes)
 
     elif args.subparser == 'sbatch':
         """
@@ -810,7 +805,7 @@ def main(args):
             config_default["N"] = args.NSpatial
             config_default["NT"] = args.NTemporal
         # Submitting job
-        s.submitJob([config_default],system,partition,excluded_nodes)
+        s.submitJob(config_default,system,partition,excluded_nodes)
 
     elif args.subparser == 'perfTest':
         """
@@ -829,7 +824,7 @@ def main(args):
         config_default["TaylorPolDegree"] = args.TaylorPolDegree
 
         # Submitting job
-        s.submitJob([config_default],system,partition,excluded_nodes)
+        s.submitJob(config_default,system,partition,excluded_nodes)
 
     else:
         """
