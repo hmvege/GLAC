@@ -535,7 +535,7 @@ def main(args):
     # print "LINE 445, main(): ", config_default["inputFolder"]
     
     ######## Prints program version if prompted ########
-    parser.add_argument('--version',        action='version', version='%(prog)s 1.0.1')
+    parser.add_argument('--version',        action='version', version='%(prog)s 1.0.2')
     parser.add_argument('--dryrun',         default=False, action='store_true', help='Dryrun to no perform any critical actions.')
     parser.add_argument('-v','--verbose',   default=False, action='store_true', help='A more verbose output when generating.')
 

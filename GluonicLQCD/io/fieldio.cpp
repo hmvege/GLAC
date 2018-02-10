@@ -41,15 +41,14 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
     char cfg_number[6];
     sprintf(cfg_number,"%05d",configNumber + Parameters::getConfigStartNumber());
 
-    std::string filename = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/"
-                                            + Parameters::getBatchName()
-                                            + "_beta" + std::to_string(Parameters::getBeta())
-                                            + "_spatial" + std::to_string(Parameters::getNSpatial())
-                                            + "_temporal" + std::to_string(Parameters::getNTemporal())
-                                            + "_threads" + std::to_string(Parallel::Communicator::getNumProc())
-                                            + "_config" + std::string(cfg_number) + ".bin";
+    std::string filename = Parameters::getBatchName() + "_beta" + std::to_string(Parameters::getBeta())
+                                                      + "_spatial" + std::to_string(Parameters::getNSpatial())
+                                                      + "_temporal" + std::to_string(Parameters::getNTemporal())
+                                                      + "_threads" + std::to_string(Parallel::Communicator::getNumProc())
+                                                      + "_config" + std::string(cfg_number) + ".bin";
+    std::string filenamePath = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/" + filename;
 
-    MPI_File_open(MPI_COMM_SELF, filename.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned int t = 0; t < m_N[3]; t++) {
@@ -68,6 +67,10 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
         }
     }
     MPI_File_close(&file);
+
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        printf("    %s written.", filename.c_str());
+    }
 }
 
 void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lattice)

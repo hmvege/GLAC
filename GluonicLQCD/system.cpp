@@ -21,6 +21,7 @@ System::System()
     if (Parallel::ParallelParameters::active) {
         // Retrieving communication related variables
         m_processRank                       = Parallel::Communicator::getProcessRank();
+
         // Retrieving program parameters
         m_latticeSize                       = Parameters::getLatticeSize();
         m_NCf                               = Parameters::getNCf();
@@ -30,8 +31,10 @@ System::System()
         m_NFlows                            = Parameters::getNFlows();
         m_storeThermalizationObservables    = Parameters::getStoreThermalizationObservables();
         m_writeConfigsToFile                = Parameters::getStoreConfigurations();
+
         // Sets pointers to use
         m_SU3Generator                      = new SU3MatrixGenerator;
+
         // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
         m_generator                         = std::mt19937_64(Parameters::getMetropolisSeed());
         m_uniform_distribution              = std::uniform_real_distribution<double>(0,1);
@@ -101,14 +104,17 @@ void System::subLatticeSetup()
     Parallel::Communicator::initializeSubLattice();
     m_N = Parameters::getN();
     m_subLatticeSize = Parameters::getSubLatticeSize();
+
     // Creates/allocates (sub) lattice
     m_lattice = new Lattice<SU3>[4];
     for (int mu = 0; mu < 4; mu++) {
         m_lattice[mu].allocate(m_N);
     }
+
     // Sets pointers
     setAction();
     setObservable(Parameters::getObservablesList(),false);
+
     // Passes the index handler and dimensionality to the action and correlator classes.
     if (m_NFlows != 0) {
         setObservable(Parameters::getFlowObservablesList(),true);
@@ -204,6 +210,7 @@ void System::thermalize()
     if (m_storeThermalizationObservables) {
         // Storing the number of shifts that are needed in the observable storage container. Will be used for main for loop shifting.
         m_NThermSteps = 1 + m_NTherm;
+
         // Calculating correlator before any updates have began.
         m_correlator->calculate(m_lattice,0); // Averaging is done if specified for observable in statistics after run is done.
         if (m_processRank == 0) {
@@ -308,6 +315,7 @@ void System::runMetropolis()
      */
     // Variables for checking performance of the thermalization update.
     m_updateStorerTherm = 0;
+
     // System thermalization
     if (!m_systemIsThermalized) {
         thermalize();
@@ -317,7 +325,7 @@ void System::runMetropolis()
     if (m_processRank == 0) {
         printf("\ni    ");
         m_correlator->printHeader();
-        printf(" Avg.Update-time  Accept/reject");
+        printf(" Avg.Update-time  Accept/reject Config-filename");
     }
 
     // Setting the System acceptance counter to 0 in order not to count the thermalization
@@ -359,11 +367,15 @@ void System::runMetropolis()
             printf("\n%-4d ",iConfig);
             m_correlator->printObservable(iConfig + m_NThermSteps);
             printf(" %-12.8f",m_updateStorer/double((iConfig+1)*m_NCor));
+
             // Adding the acceptance ratio
             if (iConfig % 10 == 0) {
-                printf("     %-12.8f", m_acceptanceScore/double((iConfig+1)*m_NCor));
+                printf("     %-10.8f", m_acceptanceScore/double((iConfig+1)*m_NCor));
+            } else {
+                printf("               ");
             }
         }
+
         // Writing field config to file
         if (m_writeConfigsToFile)
         {
@@ -392,13 +404,16 @@ void System::flowConfiguration(int iConfig)
     /*
      * Flows configuration, performs flow statistics and writes it to a file.
      */
+
     // After each configuration has been flowed, the values must be resetted.
     m_flowCorrelator->reset();
+
     // Calculates the flow observables at zeroth flow time
     m_flowCorrelator->calculate(m_flowLattice,0);
     if (Parameters::getVerbose()) {
         m_flowCorrelator->printObservable(0);
     }
+
     // Runs the flow
     for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
@@ -408,6 +423,7 @@ void System::flowConfiguration(int iConfig)
             m_flowCorrelator->printObservable(iFlow + 1);
         }
     }
+
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);
 }
@@ -418,11 +434,13 @@ void System::loadConfigurationAndRunMetropolis()
      * Method for loading and running Metropolis updates from a specific configuration.
      */
     m_systemIsThermalized = true;
+
     // Loads the configuration we are flowing from(should only be one).
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
     if (configurationNames.size() != 1) {
         Parallel::Communicator::MPIExit("Should only be one configuration loaded(there are currently " + std::to_string(configurationNames.size()) + "configurations.");
     }
+
     // Loads configuration, either in chroma format(reversed doubles) or regular format.
     if (!Parameters::getLoadChromaConfigurations()) {
         load(configurationNames[0]);
@@ -466,6 +484,7 @@ void System::flowConfigurations()
     /*
      * Method for flowing several configurations given as a vector of strings.
      */
+
     // Loads the vector of configurations to flow.
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
     for (unsigned int i = 0; i < configurationNames.size(); i++) {
@@ -475,10 +494,12 @@ void System::flowConfigurations()
         } else {
             loadChroma(configurationNames[i]);
         }
+
         // Prints a new header for each flow.
         if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose()) {
             m_flowCorrelator->printHeader();
         }
+
         // Flows the configuration loaded
         flowConfiguration(i);
     }
@@ -490,6 +511,5 @@ double System::getAcceptanceRate()
     /*
      * Returns the acceptance ratio of the main run of the System algorithm.
      */
-//    return double(m_acceptanceCounter)/double(m_NCf*m_NCor*m_NUpdates*m_latticeSize*4); // Times 4 from the Lorentz indices
     return m_acceptanceScore/double(m_NCf*m_NCor*Parallel::Communicator::getNumProc());
 }

@@ -290,14 +290,11 @@ void Parallel::Communicator::checkSubLatticeDimensionsValidity()
      */
     for (int i = 0; i < 4; i++) {
         if (m_N[i] <= 2) {
-            if (m_processRank == 0) {
-                std::string errMsg = "";
-                errMsg += "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
-                for (int j = 0; j < 4; j++) errMsg += std::to_string(m_N[j]) + " ";
-                errMsg += " --> exiting.";
-                MPIExit(errMsg);
-            }
-
+            std::string errMsg = "";
+            errMsg += "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
+            for (int j = 0; j < 4; j++) errMsg += std::to_string(m_N[j]) + " ";
+            errMsg += " --> exiting.";
+            MPIExit(errMsg);
         }
     }
 }
@@ -307,6 +304,7 @@ void Parallel::Communicator::initializeSubLattice()
     int restProc = m_numprocs;
     int processorsPerDimension[4];
     double subLatticeSize = 1;
+
     // Only finds the sub lattice size iteratively if no preset value has been defined.
     if (!Parameters::getSubLatticePreset()) {
         // Sets up sub lattice dimensionality without any splitting
@@ -314,6 +312,7 @@ void Parallel::Communicator::initializeSubLattice()
             m_N[i] = Parameters::getNSpatial();
         }
         m_N[3] = Parameters::getNTemporal();
+
         // Iteratively finds and sets the sub-lattice dimensions
         while (restProc >= 2) {
             for (int i = 0; i < 4; i++) { // Counts from x to t
@@ -322,25 +321,31 @@ void Parallel::Communicator::initializeSubLattice()
                 if (restProc < 2) break;
             }
         }
+
         // Sets the sub lattice dimensions in case they have not been set in the loading of the configuration.
         Parallel::Index::setN(m_N);
         Parameters::setN(m_N);
         setN(m_N);
     }
+
     // Gets the total size of the sub-lattice(without faces)
     for (int i = 0; i < 4; i++) {
         subLatticeSize *= m_N[i];
     }
     Parameters::setSubLatticeSize(subLatticeSize);
+
     // Ensures correct sub lattice dimensions
     checkSubLatticeValidity();
+
     // If has a size of 2, we exit as that may produce poor results.
     checkSubLatticeDimensionsValidity();
+
     // Sets up number of processors per dimension
     for (int i = 0; i < 3; i++) {
         processorsPerDimension[i] = Parameters::getNSpatial() / m_N[i];
     }
     processorsPerDimension[3] = Parameters::getNTemporal() / m_N[3];
+
     // Initializes the neighbour lists
     Parallel::Neighbours::initialize(m_processRank, m_numprocs, processorsPerDimension);
     Parameters::setProcessorsPerDimension(processorsPerDimension);
