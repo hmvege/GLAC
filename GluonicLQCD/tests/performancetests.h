@@ -28,7 +28,7 @@ private:
 public:
     PerformanceTests();
 
-    void run(int NExponentiationTests, int NRandomTests, int NDerivativeTests);
+    void run();
 };
 
 #endif // PERFORMANCETESTS_H

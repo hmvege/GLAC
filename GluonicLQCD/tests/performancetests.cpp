@@ -33,17 +33,18 @@ PerformanceTests::PerformanceTests()
 
 }
 
-void PerformanceTests::run(int NExponentiationTests, int NRandomTests, int NDerivativeTests)
+void PerformanceTests::run()
 {
     /*
      * Main function for running performance tests.
      */
+    m_NTaylorDegree = Parameters::getTaylorPolDegree();
     if (Parallel::Communicator::getProcessRank() == 0) {
-        testExponentiationTime(NExponentiationTests);
+        testExponentiationTime(Parameters::getNExpTests());
         testExponentiationAccuracy();
-        testRandomGenerators(NRandomTests);
+        testRandomGenerators(Parameters::getNRandTests());
     }
-    testDerivativeTimeAndAccuracy(NDerivativeTests);
+    testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
 }
 
 void PerformanceTests::testExponentiationTime(int NTests)
@@ -170,7 +171,7 @@ void PerformanceTests::testRandomGenerators(int NTests)
     /*
      * Performance tester for the random SU3 matrix generators, RST and random.
      */
-    printf("\nRunning performance tests for random SU3 matrix generation timing with %d samples.", NTests);
+    printf("\n\nRunning performance tests for random SU3 matrix generation timing with %d samples.", NTests);
 
     SU3 RSTRand, FullRand, resultMatrix;
 
@@ -198,7 +199,9 @@ void PerformanceTests::testRandomGenerators(int NTests)
 
 void PerformanceTests::testDerivativeTimeAndAccuracy(int NTests)
 {
-    Parallel::Communicator::MPIPrint("\nRunning timing of SU3 derivation methods");
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        printf("\n\nRunning timing of SU3 derivation methods with %d full lattice derivation tests.",NTests);
+    }
 
     // Timers
     double luscherTimer = 0, morningstarTimer = 0;
@@ -264,6 +267,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(int NTests)
         printf("\nComparison of the first element of the matrix in the Lattice to each method:");
         printf("\nLuscher:     %.17e",LuscherLattice[0][0][6]);
         printf("\nMorningstar: %.17e",MorningstarLattice[0][0][6]);
+        printf("\nAbsolute difference: %.16e",fabs(LuscherLattice[0][0][6] - MorningstarLattice[0][0][6]));
         printf("\n");
     }
 

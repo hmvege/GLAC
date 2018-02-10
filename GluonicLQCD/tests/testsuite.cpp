@@ -263,12 +263,12 @@ TestSuite::TestSuite()
 TestSuite::~TestSuite() {
 }
 
-void TestSuite::runFullTestSuite(bool verbose)
+void TestSuite::runFullTestSuite()
 {
     /*
      * Function that runs all available tests.
      */
-    m_verbose = verbose;
+    m_verbose = Parameters::getUnitTestingVerbose();
     if (m_processRank == 0) {
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;

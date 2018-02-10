@@ -134,7 +134,7 @@ public:
     TestSuite();
     ~TestSuite();
 
-    void runFullTestSuite(bool verbose);
+    void runFullTestSuite();
     bool runComplexTests();
     bool runLatticeTests();
     bool runSU2Tests();

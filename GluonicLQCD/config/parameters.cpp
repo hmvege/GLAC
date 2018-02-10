@@ -59,6 +59,8 @@ std::string Parameters::m_latticeFileNameToCheck = "";
 bool Parameters::m_performanceTesting = false;
 int Parameters::m_NExpTests = 0;
 int Parameters::m_NRandTests = 0;
+int Parameters::m_NDerivativeTests = 0;
+int Parameters::m_NTaylorPolDegree = 8;
 
 // Data generation related variables
 double Parameters::m_SU3Eps = 0.24;

@@ -110,6 +110,8 @@ namespace ConfigLoader {
         Parameters::setPerformanceTesting(j["performanceTesting"]);
         Parameters::setNExpTests(j["NExpTests"]);
         Parameters::setNRandTests(j["NRandTests"]);
+        Parameters::setNDerivaitveTests(j["NDerivativeTests"]);
+        Parameters::setTaylorPolDegree(j["TaylorPolDegree"]);
 
         // Checking if we have provideda gauge field to test
         std::string test_gauge_field = j["uTestFieldGaugeInvarince"];

@@ -166,6 +166,8 @@ class JobCreator:
         json_dict["performanceTesting"] = config_dict["performanceTesting"]
         json_dict["NExpTests"] = config_dict["NExpTests"]
         json_dict["NRandTests"] = config_dict["NRandTests"]
+        json_dict["NDerivativeTests"] = config_dict["NDerivativeTests"]
+        json_dict["TaylorPolDegree"] = config_dict["TaylorPolDegree"]
 
         # Data generation related variables
         json_dict["SU3Eps"] = config_dict["SU3Eps"]
@@ -513,6 +515,8 @@ def main(args):
                         "performanceTesting"        : False,
                         "NExpTests"                 : int(1e6),
                         "NRandTests"                : int(1e6),
+                        "NDerivativeTests"          : int(1e2),
+                        "TaylorPolDegree"           : 8,
                         "SU3Eps"                    : 0.24,
                         "flowEpsilon"               : 0.01,
                         "metropolisSeed"            : 0,
@@ -622,6 +626,8 @@ def main(args):
     performance_test_parser.add_argument('system',              default=False,                                      type=str, choices=['smaug','abel','laconia','local'],help='Specify system we are running on.')
     performance_test_parser.add_argument('-NExpTests',          default=config_default["NExpTests"],                type=int,help='Number of exponentiation tests we will run.')
     performance_test_parser.add_argument('-NRandTests',         default=config_default["NRandTests"],               type=int,help='Number of random tests we will run.')
+    performance_test_parser.add_argument('-NDerivativeTests',   default=config_default["NDerivativeTests"],         type=int,help='Number of full lattice derivative tests we will run.')
+    performance_test_parser.add_argument('-TaylorPolDegree',    default=config_default["TaylorPolDegree"],          type=int,help='Degree of the Taylor polynomial for exponentiation(default is 8).')
 
     args = parser.parse_args()
     # args = parser.parse_args(['python', 'makeJobs.py', 'load', 'config_folder/size_scaling_configs/config_16cube32.py', 'config_folder/size_scaling_configs/config_24cube48.py', 'config_folder/size_scaling_configs/config_28cube56.py', 'config_folder/size_scaling_configs/config_32cube64.py', '-s', 'abel'])
@@ -813,12 +819,14 @@ def main(args):
         config_default["runName"] = "defaultPerformanceRun"
         config_default["performanceTesting"] = True
         config_default["cpu_approx_runtime_hr"] = 0
-        config_default["cpu_approx_runtime_min"] = 40
+        config_default["cpu_approx_runtime_min"] = 20
         partition = "normal"
         excluded_nodes = ""
         system = args.system
         config_default["NExpTests"] = args.NExpTests
         config_default["NRandTests"] = args.NRandTests
+        config_default["NDerivativeTests"] = args.NDerivativeTests
+        config_default["TaylorPolDegree"] = args.TaylorPolDegree
 
         # Submitting job
         s.submitJob([config_default],system,partition,excluded_nodes)

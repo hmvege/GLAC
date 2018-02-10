@@ -6,9 +6,6 @@
 #include "complex.h"
 #include "config/parameters.h"
 
-// For testing
-#include "tests/unittests.h"
-
 using std::cout;
 using std::endl;
 

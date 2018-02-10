@@ -13,31 +13,41 @@ private:
     static int m_NSpatial;
     static int m_NTemporal;
     static unsigned int m_latticeSize;
+
     // Sub lattice / parallel related variables
     static std::vector<unsigned int> m_N;
     static unsigned int m_subLatticeSize;
     static int m_processorsPerDimension[4];
     static bool m_subLatticeSizePreset;
+
     // Beta value constant
     static double m_beta;
+
     // Lattice spacing
     static double m_a;
     static const double r0;
+
     // Program information output
     static bool m_verbose;
+
     // Variable holding if we are to calculate and store the thermalization variables
     static bool m_storeThermalizationObservables;
+
     // Variable storing gauge configurations
     static bool m_storeConfigurations;
+
     // Variable storing if we are to start hot or cold
     static bool m_hotStart;
+
     // Variable storing what kind if initial hot start we are to use
     static bool m_RSTHotStart;
+
     // IO parameters
     static std::string m_pwd;
     static std::string m_batchName;
     static std::string m_inputFolder;
     static std::string m_outputFolder;
+
     // Run specific variables
     static int m_NCf;
     static int m_NCor;
@@ -46,28 +56,36 @@ private:
     static int m_NFlows;
     static int m_configSamplePoints;
     static int m_flowSamplePoints;
+
     // Unit testing
     static bool m_unitTesting;
     static bool m_unitTestingVerbose;
     static bool m_testLatticeGaugeInvariance;
     static std::string m_latticeFileNameToCheck;
+
     // Performance testing
     static bool m_performanceTesting;
     static int m_NExpTests;
     static int m_NRandTests;
+    static int m_NDerivativeTests;
+    static int m_NTaylorPolDegree;
+
     // Data generation related variables
     static double m_SU3Eps;
     static double m_flowEpsilon;
     static double m_metropolisSeed;
     static double m_randomMatrixSeed;
+
     // Name of samplers
     static std::string m_expFuncName;
     static std::vector<std::string> m_observablesList;
     static std::vector<std::string> m_flowObservablesList;
+
     // Field configurations
     static bool m_loadFieldConfigurations;
     static bool m_loadChromaConfigurations;
     static std::vector<std::string> m_fieldConfigurationFileNames;
+
     // Variable for storing if we are to load and run from a given configuration
     static bool m_loadConfigAndRun;
     static int m_configStartNumber;
@@ -115,6 +133,8 @@ public:
     static void setPerformanceTesting(bool performanceTesting) { m_performanceTesting = performanceTesting; }
     static void setNExpTests(int NExpTests) { m_NExpTests = NExpTests; }
     static void setNRandTests(int NRandTests) { m_NRandTests = NRandTests; }
+    static void setNDerivaitveTests(int NDerivativeTests) { m_NDerivativeTests = NDerivativeTests; }
+    static void setTaylorPolDegree(int NTaylorPolDegree) { m_NTaylorPolDegree = NTaylorPolDegree; }
 
     // Data generation related setters
     static void setFlowEpsilon(double flowEpsilon) { m_flowEpsilon = flowEpsilon; }
@@ -183,6 +203,8 @@ public:
     static bool getPerformanceTesting() { return m_performanceTesting; }
     static int getNExpTests() { return m_NExpTests; }
     static int getNRandTests() { return m_NRandTests; }
+    static int getNDerivativeTests() { return m_NDerivativeTests; }
+    static int getTaylorPolDegree() { return m_NTaylorPolDegree; }
 
     // Data generation related getters
     static double getFlowEpsilon() { return m_flowEpsilon; }

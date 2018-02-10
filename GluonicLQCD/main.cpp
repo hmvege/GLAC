@@ -15,9 +15,10 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 {
     Parallel::Communicator::init(&numberOfArguments, &cmdLineArguments);
     ConfigLoader::load(std::string(cmdLineArguments[1]));
-    // Unit tester
-    if (Parameters::getUnitTesting()) runUnitTests();
-    if (Parameters::getPerformanceTesting()) runPerformanceTests();
+
+    // Unit and performance tests
+    runUnitTests(Parameters::getUnitTesting());
+    runPerformanceTests(Parameters::getPerformanceTesting());
 
     // Program timers
     steady_clock::time_point programStart;
@@ -30,27 +31,11 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     // Finalizing and printing time taken
     duration<double> programTime = duration_cast<duration<double>>(steady_clock::now() - programStart);
+
     if (Parallel::Communicator::getProcessRank() == 0) {
         printf("\nProgram complete. Time used: %f hours (%f seconds)", double(programTime.count())/3600.0, programTime.count());
     }
 
     MPI_Finalize();
     return 0;
-}
-
-void runUnitTests()
-{
-//    runBoolTest(1e9);
-    TestSuite unitTester;
-    unitTester.runFullTestSuite(Parameters::getUnitTestingVerbose());
-//    SU3BaseTests();
-//    runMatrixPerformanceTest(std::time(nullptr),1e7,true,false);
-    Parallel::Communicator::MPIExit("Unit tests complete.");
-}
-
-void runPerformanceTests()
-{
-    PerformanceTests performenceTester;
-    performenceTester.run(Parameters::getNExpTests(), Parameters::getNRandTests(),100);
-    Parallel::Communicator::MPIExit("\nPerformance tester complete.");
 }
