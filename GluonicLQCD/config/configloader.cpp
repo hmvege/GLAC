@@ -36,7 +36,7 @@ namespace ConfigLoader {
         std::ifstream i(jsonFileName.c_str());
         json j;
         i >> j;
-//        if (Parallel::Communicator::getProcessRank() == 0) std::cout << std::setw(4) << j << std::endl;
+
         // Lattice related run variables
         Parameters::setNSpatial(j["NSpatial"]);
         Parameters::setNTemporal(j["NTemporal"]);
@@ -47,18 +47,22 @@ namespace ConfigLoader {
         Parameters::setNTherm(j["NTherm"]);
         Parameters::setNFlows(j["NFlows"]);
         Parameters::setNUpdates(j["NUpdates"]);
+
         // Data storage related variables
         Parameters::setOutputFolder(j["outputFolder"]);
         Parameters::setInputFolder(j["inputFolder"]);
         Parameters::setStoreConfigurations(bool(j["storeConfigurations"]));
         Parameters::setStoreThermalizationObservables(bool(j["storeThermalizationObservables"]));
+
         // Human readable output related variables
         Parameters::setVerbose(bool(j["verbose"]));
+
         // Setup related variables
         Parameters::setFilePath(j["pwd"]);
         Parameters::setBatchName(j["batchName"]);
         Parameters::setHotStart(bool(j["hotStart"]));
         Parameters::setRSTHotStart(bool(j["RSTHotStart"]));
+
         // Sub dimension setting
         if (!j["subDims"].empty()) {
             std::vector<unsigned int> tempN = {j["subDims"][0],j["subDims"][1],j["subDims"][2],j["subDims"][3]};
@@ -67,18 +71,23 @@ namespace ConfigLoader {
             Parallel::Communicator::setN(tempN);
             Parallel::Index::setN(tempN);
         }
+
         // Exp.func setting (for flow)
         Parameters::setExpFuncName(j["expFunc"]);
+
         // Observables setting
         setObservable(j["observables"], false);
+
         // Flow observables setting
         setObservable(j["flowObservables"], true);
+
         // Loads field configurations if they are present
         if (j["load_field_configs"]) {
             setFieldConfigurations(j["field_configs"]);
             Parameters::setLoadFieldConfigurations(bool(j["load_field_configs"]));
             Parameters::setLoadChromaConfigurations(bool(j["chroma_config"]));
         }
+
         // Sets a field configuration to load, and then run the metropolis algorithm from the loaded configuration that is assumed to be thermalized
         std::string config_to_load = j["load_config_and_run"];
         if (config_to_load.length() != 0) { // If this is not empty, I will load and run a configuration
@@ -92,9 +101,16 @@ namespace ConfigLoader {
         if (!j["config_start_number"].empty()) {
             Parameters::setConfigStartNumber(j["config_start_number"]);
         }
-        // Testing related variables
+
+        // Unit testing related variables
         Parameters::setUnitTesting(j["unitTesting"]);
         Parameters::setUnitTestingVerbose(j["unitTestingVerbose"]);
+
+        // Performance testing related variables
+        Parameters::setPerformanceTesting(j["performanceTesting"]);
+        Parameters::setNExpTests(j["NExpTests"]);
+        Parameters::setNRandTests(j["NRandTests"]);
+
         // Checking if we have provideda gauge field to test
         std::string test_gauge_field = j["uTestFieldGaugeInvarince"];
         if (test_gauge_field.length() != 0) {

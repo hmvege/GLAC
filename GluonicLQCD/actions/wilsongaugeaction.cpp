@@ -89,6 +89,7 @@ Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, int m
     m_tempStaple1 = subtractImag(m_tempStaple1,m_tempDiag);
     m_tempStaple1 *= 0.5;
     return m_tempStaple1;
+
 //    Omega = m_staple.inv();
 //    Omega -= m_staple;
 //    tempDiag = (Omega.mat[1] + Omega.mat[9] + Omega.mat[17])/3.0;

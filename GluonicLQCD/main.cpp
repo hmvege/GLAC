@@ -2,15 +2,14 @@
 #include "system.h"
 #include "config/parameters.h"
 #include "config/configloader.h"
-
-#include "tests/unittests.h"
-#include "tests/testsuite.h"
+#include "tests/test.h"
 
 using std::chrono::steady_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 
 void runUnitTests();
+void runPerformanceTests();
 
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
@@ -18,6 +17,7 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     ConfigLoader::load(std::string(cmdLineArguments[1]));
     // Unit tester
     if (Parameters::getUnitTesting()) runUnitTests();
+    if (Parameters::getPerformanceTesting()) runPerformanceTests();
 
     // Program timers
     steady_clock::time_point programStart;
@@ -46,4 +46,11 @@ void runUnitTests()
 //    SU3BaseTests();
 //    runMatrixPerformanceTest(std::time(nullptr),1e7,true,false);
     Parallel::Communicator::MPIExit("Unit tests complete.");
+}
+
+void runPerformanceTests()
+{
+    PerformanceTests performenceTester;
+    performenceTester.run(Parameters::getNExpTests(), Parameters::getNRandTests(),100);
+    Parallel::Communicator::MPIExit("\nPerformance tester complete.");
 }

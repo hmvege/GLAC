@@ -97,7 +97,10 @@ class PostAnalysis:
 			y_err = value["y_err"]
 			ax.plot(x,y,"-",label=value["label"],color=value["color"])
 			ax.fill_between(x, y-y_err, y+y_err,alpha=0.5, edgecolor='', facecolor=value["color"])
-		
+
+		# print self.flow_time[1:]**2*self._energy_continiuum(self.flow_time[1:])[0]
+		# ax.plot(self.flow_time[1:]/self.r0**2,self.flow_time[1:]**2*self._energy_continiuum(self.flow_time[1:])[0],color="b")
+
 		# Basic plotting commands
 		ax.grid(True)
 		ax.set_title(r"%s %s" % (self.observable_name, self.formula))
@@ -303,7 +306,7 @@ class TopSusPostAnalysis(PostAnalysis):
 		ax.grid(True)
 
 		# Saves figure
-		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum_%s.png" % (self.observable_name_compact,fit_type.strip("_")))
+		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum%s_%s.png" % (self.observable_name_compact,str(fit_target).replace(".",""),fit_type.strip("_")))
 		fig.savefig(fname,dpi=self.dpi)
 
 		print "Continiuum plot of %s created in %s" % (self.observable_name.lower(),fname)
@@ -316,12 +319,33 @@ class EnergyPostAnalysis(PostAnalysis):
 
 	# Regular plot variables
 	y_label = r"$t^2\langle E\rangle$"
-	x_label = r"$\frac{t}{r_0^2}$"
+	x_label = r"$t/r_0^2$"
 	formula = r"$\langle E\rangle = -\frac{1}{64V}F_{\mu\nu}^a{F^a}^{\mu\nu}$"
 
 	# Continiuum plot variables
 	x_label_continiuum = r"$(a/r_0)^2$"
 	y_label_continiuum = r"$\frac{\sqrt{8t_0}}{r_0}$"
+
+	def _energy_continiuum(self,t):
+		"""
+		Second order approximation of the energy.
+		"""
+		coupling = self._coupling_alpha(t)
+		k1 = 1.0978
+		mean_E = 3.0/(4.0*np.pi*t**2) * coupling * (1 + k1 * coupling)
+		mean_E_error = 3.0/(4.0*np.pi*t**2)*coupling**3
+		return mean_E, mean_E_error
+
+	@staticmethod
+	def _coupling_alpha(t):
+		"""
+		Running coupling constant.
+		"""
+		q = 1.0/np.sqrt(8*t)
+		beta0 = 11.0
+		LAMBDA = 0.34 # [GeV]
+		alpha = 4*np.pi / (beta0 * np.log(q/LAMBDA**2))
+		return alpha
 
 	def _function_correction(self,x):
 		"""
@@ -378,6 +402,7 @@ class EnergyPostAnalysis(PostAnalysis):
 		ax = fig.add_subplot(111)
 
 		# ax.axvline(0,linestyle="--",color="0",alpha=0.5)
+
 		ax.errorbar(x_points[1:],y_points[1:],yerr=y_points_err[1:],fmt="o",color="0",ecolor="0")
 		ax.errorbar(x_points[0],y_points[0],yerr=y_points_err[0],fmt="o",capthick=4,color="r",ecolor="r")
 		ax.plot(x_line,y_line,color="0",label=r"$y=(%.3f\pm%.3f)x + %.4f\pm%.4f$" % (a,a_err,b,b_err))
@@ -404,7 +429,7 @@ class EnergyPostAnalysis(PostAnalysis):
 		# ax.legend(loc="lower left")
 
 		# Saves figure
-		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum_%s.png" % (self.observable_name_compact,fit_type.strip("_")))
+		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum%s_%s.png" % (self.observable_name_compact,str(fit_target).replace(".",""),fit_type.strip("_")))
 		fig.savefig(fname,dpi=self.dpi)
 
 		print "Continiuum plot of %s created in %s" % (self.observable_name.lower(),fname)
@@ -457,7 +482,9 @@ def main(args):
 	topsus_analysis.plot()
 
 	# Retrofits the topsus for continuum limit
-	topsus_analysis.plot_continiuum(0.58,0.015,"data_line_fit")
+	continium_targets = [0.3,0.4,0.5,0.58]
+	for cont_target in continium_targets:
+		topsus_analysis.plot_continiuum(cont_target,0.015,"data_line_fit")
 
 	# Plots energy
 	energy_analysis = EnergyPostAnalysis(data,"energy")
@@ -467,10 +494,12 @@ def main(args):
 	# Retrofits the energy for continiuum limit
 	energy_analysis.plot_continiuum(0.3, 0.015,"bootstrap_fit")
 
+	# Plot running coupling
+
 if __name__ == '__main__':
 	if len(sys.argv[1:]) == 1:
 		args = sys.argv[1:]
 	else:
-		args = ["../output/post_analysis_data/data2"]
-		# args = ["../output/post_analysis_data_old"]
+		# args = ["../output/post_analysis_data/data2"]
+		args = ["../output/post_analysis_data/data4"]
 	main(args)

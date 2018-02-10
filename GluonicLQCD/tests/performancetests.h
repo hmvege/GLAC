@@ -13,10 +13,22 @@ private:
     std::mt19937_64 m_generator;
     std::uniform_real_distribution<double> m_uniform_distribution;
 
+    // Degree of the Taylor polynomial to use in exponentiation
+    int m_NTaylorDegree = 8;
+
+    // Tests for the SU3 exponentiation
+    void testExponentiationTime(int NTests);
+    void testExponentiationAccuracy();
+
+    // Tests of the RNGs
+    void testRandomGenerators(int NTests);
+
+    // Tests for the SU3 derivative
+    void testDerivativeTimeAndAccuracy(int NTests);
 public:
     PerformanceTests();
 
-    void testExponentiation(int NTests);
+    void run(int NExponentiationTests, int NRandomTests, int NDerivativeTests);
 };
 
 #endif // PERFORMANCETESTS_H

@@ -26,7 +26,6 @@ SOURCES += main.cpp \
     parallelization/index.cpp \
     parallelization/communicator.cpp \
     tests/testsuite.cpp \
-    tests/unittests.cpp \
     tests/performancetests.cpp \
     io/observablesio.cpp \
     io/fieldio.cpp \
@@ -35,7 +34,9 @@ SOURCES += main.cpp \
     config/configloader.cpp \
     config/sysprint.cpp \
     observables/mastersampler.cpp \
-    parallelization/parallelparameters.cpp
+    parallelization/parallelparameters.cpp \
+    math/exponentiation/taylorexp.cpp \
+    actions/luscheraction.cpp
 
 HEADERS += \
     system.h \
@@ -62,7 +63,6 @@ HEADERS += \
     parallelization/index.h \
     parallelization/communicator.h \
     tests/testsuite.h \
-    tests/unittests.h \
     tests/performancetests.h \
     io/observablesio.h \
     io/fieldio.h \
@@ -77,7 +77,10 @@ HEADERS += \
     math/lattice.h \
     observables/mastersampler.h \
     observables/observables.h \
-    parallelization/parallelparameters.h
+    parallelization/parallelparameters.h \
+    tests/test.h \
+    math/exponentiation/taylorexp.h \
+    actions/luscheraction.h
 
 #QMAKE_PRE_LINK = hpclink #??
 
