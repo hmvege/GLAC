@@ -74,6 +74,7 @@ class TimeEstimator:
 		cpu_time = total_time*cpu_scaling/60.0*numprocs
 
 		error_cfg = ""
+		error_therm = ""
 		error_flow = ""
 		total_error = ""
 		if beta == 6.45:
@@ -134,10 +135,9 @@ if __name__ == '__main__':
 				"6.45": {"NCorr":800,"NFlows":1000,"NCfgs":250,"NTherm":20000,"numprocs":512}}
 
 	# Parses arguments
-	if len(sys.argv) == 1:
-		args = parser.parse_args(["6.45","-NCfgs","250"])
-	else:
-		args = parser.parse_args()
+	# if len(sys.argv) == 1:
+	# 	args = parser.parse_args(["6.45","-NCfgs","250"])
+	args = parser.parse_args()
 
 	if str(args.beta) not in defaults.keys():
 		raise KeyError("Error: valid beta values: %s" % ", ".join(sorted(defaults.keys())))
