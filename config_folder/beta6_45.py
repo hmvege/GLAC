@@ -23,7 +23,7 @@
     "metropolisSeed"            : 0,
     "randomMatrixSeed"          : 0,
     "threads"                   : 512,
-    "cpu_approx_runtime_hr"     : 300,
+    "cpu_approx_runtime_hr"     : 350, # FLOW TIME: 159.4 hours +/- 12.830791 hours 
     "cpu_approx_runtime_min"    : 0,
     "cpu_memory"                : 3800,
     "account_name"              : "nn2977k"}

@@ -1,5 +1,5 @@
 {   "bin_fn"                    : "build/GluonicLQCD",
-    "runName"                   : "B61_Thermalization",
+    "runName"                   : "B61_ThermalizationCold",
     "N"                         : 28,
     "NT"                        : 56,
     "subDims"                   : [7, 7, 7, 7],

@@ -187,83 +187,82 @@ class JobCreator:
             shutil.copy(os.path.join(self.base_folder,"input",self.json_file_name), # src
                 "%s.bak" % os.path.join(self.base_folder,"input",self.runName,self.json_file_name)) # dest
 
-    def submitJob(self, job_configurations, system, partition,excluded_nodes=False):
+    def submitJob(self, job_config, system, partition,excluded_nodes=False):
         if excluded_nodes:
             sbatch_exclusions = "#SBATCH --exclude=%s" % excluded_nodes
         else:
             sbatch_exclusions = ""
 
-        for job_config in job_configurations:
-            # Checks if flow is sampling more observables than the regular config sampler, then sets it equal
-            if (job_config["NFlows"] != 0):
-                job_config["observables"] = job_config["flowObservables"]
+        # Checks if flow is sampling more observables than the regular config sampler, then sets it equal
+        if (job_config["NFlows"] != 0):
+            job_config["observables"] = job_config["flowObservables"]
 
-            # Retrieving config contents
-            self.base_folder        = job_config["base_folder"]
-            binary_filename         = job_config["bin_fn"]
-            self.runName            = job_config["runName"]
-            self.load_field_configs = job_config["load_field_configs"]
-            threads                 = job_config["threads"]
-            beta                    = job_config["beta"]
-            NSpatial                = job_config["N"]
-            NTemporal               = job_config["NT"]
-            NTherm                  = job_config["NTherm"]
-            NCor                    = job_config["NCor"] 
-            NCf                     = job_config["NCf"]
-            self.NFlows             = job_config["NFlows"]
-            NUpdates                = job_config["NUpdates"]
-            SU3Eps                  = job_config["SU3Eps"]
-            self.flow_observables   = job_config["flowObservables"]
-            self.inputFolder        = job_config["inputFolder"]
-            self.outputFolder       = job_config["outputFolder"]
-            observables             = job_config["observables"]
-            flowEpsilon             = job_config["flowEpsilon"]
-            storeCfgs               = job_config["storeCfgs"]
-            storeThermCfgs          = job_config["storeThermCfgs"]
-            hotStart                = job_config["hotStart"]
-            RSTHotStart             = job_config["RSTHotStart"]
-            subDims                 = job_config["subDims"]
-            verboseRun              = job_config["verboseRun"]
-            self.uTest              = job_config["uTest"]
-            uTestVerbose            = job_config["uTestVerbose"]
-            cpu_approx_runtime_hr   = job_config["cpu_approx_runtime_hr"]
-            cpu_approx_runtime_min  = job_config["cpu_approx_runtime_min"]
+        # Retrieving config contents
+        self.base_folder        = job_config["base_folder"]
+        binary_filename         = job_config["bin_fn"]
+        self.runName            = job_config["runName"]
+        self.load_field_configs = job_config["load_field_configs"]
+        threads                 = job_config["threads"]
+        beta                    = job_config["beta"]
+        NSpatial                = job_config["N"]
+        NTemporal               = job_config["NT"]
+        NTherm                  = job_config["NTherm"]
+        NCor                    = job_config["NCor"] 
+        NCf                     = job_config["NCf"]
+        self.NFlows             = job_config["NFlows"]
+        NUpdates                = job_config["NUpdates"]
+        SU3Eps                  = job_config["SU3Eps"]
+        self.flow_observables   = job_config["flowObservables"]
+        self.inputFolder        = job_config["inputFolder"]
+        self.outputFolder       = job_config["outputFolder"]
+        observables             = job_config["observables"]
+        flowEpsilon             = job_config["flowEpsilon"]
+        storeCfgs               = job_config["storeCfgs"]
+        storeThermCfgs          = job_config["storeThermCfgs"]
+        hotStart                = job_config["hotStart"]
+        RSTHotStart             = job_config["RSTHotStart"]
+        subDims                 = job_config["subDims"]
+        verboseRun              = job_config["verboseRun"]
+        self.uTest              = job_config["uTest"]
+        uTestVerbose            = job_config["uTestVerbose"]
+        cpu_approx_runtime_hr   = job_config["cpu_approx_runtime_hr"]
+        cpu_approx_runtime_min  = job_config["cpu_approx_runtime_min"]
 
-            # Checks that binary file exists in expected location
-            if not os.path.isfile(os.path.join(self.CURRENT_PATH,binary_filename)):
-                exit("Error: binary file path not in expected location %s/%s" % (self.CURRENT_PATH,binary_filename))
+        # Checks that binary file exists in expected location
+        if not os.path.isfile(os.path.join(self.CURRENT_PATH,binary_filename)):
+            exit("Error: binary file path not in expected location %s/%s" % (self.CURRENT_PATH,binary_filename))
 
-            # Ensures that we have a viable number of sub dimensions
-            if len(subDims) != 0:
-                checkSubDimViability(subDims)
+        # Ensures that we have a viable number of sub dimensions
+        if len(subDims) != 0:
+            checkSubDimViability(subDims)
 
-            # Creates relevant folders
-            self._create_folders()
+        # Creates relevant folders
+        self._create_folders()
 
-            # Creates json config file
-            self._create_json(job_config)
+        # Creates json config file
+        self._create_json(job_config)
 
-            # If we are on local computer(e.g. laptop), will create configuration file and quit
-            if system == "local":
-                sys.exit("Configuration file %s for local production created."  % os.path.join(self.base_folder,"input",self.json_file_name))
+        # If we are on local computer(e.g. laptop), will create configuration file and quit
+        if system == "local":
+            sys.exit("Configuration file %s for local production created."  % os.path.join(self.base_folder,"input",self.json_file_name))
 
-            # Setting job name before creating content file.
-            job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta,NSpatial,NTemporal,threads)
+        # Setting job name before creating content file.
+        job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta,NSpatial,NTemporal,threads)
 
-            # Setting approximated run time
-            estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr,cpu_approx_runtime_min)
+        # Setting approximated run time
+        estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr,cpu_approx_runtime_min)
 
-            # Setting run-command
-            if not system == 'laconia':
-                run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.base_folder,"input",self.json_file_name))
-            else :
-                run_command = "mpirun -np {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.base_folder,"input",self.json_file_name))
+        # Setting run-command
+        if not system == 'laconia':
+            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.base_folder,"input",self.json_file_name))
+        else :
+            run_command = "mpirun -np {0:<d} {1:<s} {2:<s}".format(threads,os.path.join(self.CURRENT_PATH,binary_filename),os.path.join(self.base_folder,"input",self.json_file_name))
 
-            # Choosing system
-            if system == "smaug":
-                # Smaug batch file.
-            # #SBATCH --exclude=smaug-b2 excludes an unstable node
-                content ='''#!/bin/bash
+        # Choosing system
+        if system == "smaug":
+            # Smaug batch file.
+        # #SBATCH --exclude=smaug-b2 excludes an unstable node
+            content ='''#!/bin/bash
 #SBATCH --job-name={0:<s}
 #SBATCH --partition={1:<s}
 #SBATCH --ntasks={2:<d}
@@ -272,20 +271,20 @@ class JobCreator:
 {5:<s}
 '''.format(job_name, partition, threads, estimated_time, sbatch_exclusions, run_command)
 
-            elif system == "abel":
-                # Abel specific commands
-                cpu_memory = job_config["cpu_memory"]
-                account_name = job_config["account_name"]
-                tasks_per_node = 16 # Maximum number of threads per node
-                
-                nodes = 1
-                if threads > tasks_per_node:
-                    nodes = threads / tasks_per_node
-                if threads % tasks_per_node != 0:
-                    raise ValueError("Tasks(number of threads) have to be divisible by 16.")
+        elif system == "abel":
+            # Abel specific commands
+            cpu_memory = job_config["cpu_memory"]
+            account_name = job_config["account_name"]
+            tasks_per_node = 16 # Maximum number of threads per node
+            
+            nodes = 1
+            if threads > tasks_per_node:
+                nodes = threads / tasks_per_node
+            if threads % tasks_per_node != 0:
+                raise ValueError("Tasks(number of threads) have to be divisible by 16.")
 
 #SBATCH --ntasks-per-node={7:<1d} # Not needed, possibly
-                content ='''#!/bin/bash
+            content ='''#!/bin/bash
 #SBATCH --job-name={0:<s}
 #SBATCH --account={1:<s}
 #SBATCH --time={2:<s}
@@ -307,13 +306,13 @@ set -o errexit              # exit on errors
 {8:<s}
 
 '''.format(job_name, account_name, estimated_time, cpu_memory, partition, threads, nodes, sbatch_exclusions, run_command)
-            elif system == "laconia":
-                account_name = "ptg"
-                threads = 28
-                nodes = 19
-                cpu_memory = job_config["cpu_memory"]
-                # sys.exit("Error: not implemented setup for system: %s" % system) # Also, has to load module load Qt/5.6.2
-                content = '''
+        elif system == "laconia":
+            account_name = "ptg"
+            threads = 28
+            nodes = 19
+            cpu_memory = job_config["cpu_memory"]
+            # sys.exit("Error: not implemented setup for system: %s" % system) # Also, has to load module load Qt/5.6.2
+            content = '''
 #! /bin/bash -login
 #PBS -A {1:<s}
 #PBS -l walltime={2:<s},nodes={5:<1d}:ppn={4:<d},mem={3:<4d}GB
@@ -324,78 +323,80 @@ module load GNU/4.9
 module load OpenMPI/1.10.0
 {6:<s}
 '''.format(job_name, account_name, estimated_time, cpu_memory, threads, nodes, run_command)
-            elif system == "local":
-                sys.exit("Error: this is a local production run. Should never see this error message.")
-            else:
-                sys.exit("Error: system %s not recognized." % system)
+        elif system == "local":
+            sys.exit("Error: this is a local production run. Should never see this error message.")
+        else:
+            sys.exit("Error: system %s not recognized." % system)
 
-            if not system == "laconia":
-                job = 'jobfile.slurm'
-            else:
-                job = 'jobfile.qsub'
+        if not system == "laconia":
+            job = 'jobfile.slurm'
+        else:
+            job = 'jobfile.qsub'
 
-            # Writes slurm file to be submitted
-            if not self.dryrun:
-                outfile = open(job, 'w')
-                outfile.write(content)
-                outfile.close()
-            if self.dryrun or self.verbose:
-                print "Writing %s to slurm batch file: \n\n" % job, content, "\n"
+        # Writes slurm file to be submitted
+        if not self.dryrun:
+            outfile = open(job, 'w')
+            outfile.write(content)
+            outfile.close()
+        if self.dryrun or self.verbose:
+            print "Writing %s to slurm batch file: \n\n" % job, content, "\n"
 
-            # Sets up command based on system we have.
-            if not system == "laconia":
-                cmd = ['sbatch', os.path.join(self.CURRENT_PATH,job)]
-            else:
-                cmd = ['qsub', os.path.join(self.CURRENT_PATH,job)]
+        # Sets up command based on system we have.
+        if not system == "laconia":
+            cmd = ['sbatch', os.path.join(self.CURRENT_PATH,job)]
+        else:
+            cmd = ['qsub', os.path.join(self.CURRENT_PATH,job)]
 
-            # Submits job
-            if self.dryrun or self.verbose:
-                print "> %s %s" % tuple(cmd)
-            if not self.dryrun:
-                proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-                tmp = proc.stdout.read()
-                # tmp = "123 456" # Used for bug-hunting
-                try:
-                    if not system == "laconia":
-                        ID = int(tmp.split()[-1]) # ID of job
-                    else:
-                        tmp2 = tmp.split()[-1]
-                        tmp2 = tmp2.split(".")[0]
-                        ID = int(tmp2) # ID of laconia job
-                except IndexError:
-                    print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
+        # Submits job
+        if self.dryrun or self.verbose:
+            print "> %s %s" % tuple(cmd)
+            ID = 123456
+        if not self.dryrun:
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+            tmp = proc.stdout.read()
+            # tmp = "123 456" # Used for bug-hunting
+            try:
+                if not system == "laconia":
+                    ID = int(tmp.split()[-1]) # ID of job
+                else:
+                    tmp2 = tmp.split()[-1]
+                    tmp2 = tmp2.split(".")[0]
+                    ID = int(tmp2) # ID of laconia job
+            except IndexError:
+                print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
 
-            # Stores job in job dictionary
-            job_dict =  self._createDictionary( Partition = [0,9,partition],
-                                                RunName = [1,40,self.runName],
-                                                Beta = [2,5,beta],
-                                                N = [3,4,NSpatial],
-                                                NT = [4,4,NTemporal],
-                                                NCf = [5,4,NCf],
-                                                NTherm = [6,6,NTherm],
-                                                NCor = [7,4,NCor],
-                                                NUpdates = [8,9,NUpdates],
-                                                NFlows = [9,7,self.NFlows],
-                                                SU3Eps = [10,6,SU3Eps],
-                                                Threads = [11,8,threads],
-                                                StoreCfgs = [12,10,bool(storeCfgs)],
-                                                StoreThermCfgs = [13,len("StoreThermCfgs")+1,bool(storeThermCfgs)],
-                                                HotStart = [14,len("HotStart")+1,bool(hotStart)],
-                                                SubDims = [15,len("SubDims")+1,' '.join(map(str,subDims))],
-                                                CPU_hr = [16,7,cpu_approx_runtime_hr],
-                                                CPU_min = [17,7,cpu_approx_runtime_min])
+        # Stores job in job dictionary
+        job_dict =  self._createDictionary( Partition = [0,9,partition],
+                                            RunName = [1,40,self.runName],
+                                            Beta = [2,5,beta],
+                                            N = [3,4,NSpatial],
+                                            NT = [4,4,NTemporal],
+                                            NCf = [5,4,NCf],
+                                            NTherm = [6,6,NTherm],
+                                            NCor = [7,4,NCor],
+                                            NUpdates = [8,9,NUpdates],
+                                            NFlows = [9,7,self.NFlows],
+                                            SU3Eps = [10,6,SU3Eps],
+                                            Threads = [11,8,threads],
+                                            StoreCfgs = [12,10,bool(storeCfgs)],
+                                            StoreThermCfgs = [13,len("StoreThermCfgs")+1,bool(storeThermCfgs)],
+                                            HotStart = [14,len("HotStart")+1,bool(hotStart)],
+                                            SubDims = [15,len("SubDims")+1,' '.join(map(str,subDims))],
+                                            CPU_hr = [16,7,cpu_approx_runtime_hr],
+                                            CPU_min = [17,7,cpu_approx_runtime_min])
 
-            if not dryrun:
-                self.jobs[ID] = job_dict
+        if not self.dryrun:
+            self.jobs[ID] = job_dict
 
-            # Changes name of job script
-            if not self.dryrun:
-                os.system('mv %s job_%d.sh' % (job, ID))
-            if self.dryrun or self.verbose:
-                print '> mv %s job_%d.sh' % (job, ID)
+        # Changes name of job script
+        if not self.dryrun:
+            os.system('mv %s job_%d.sh' % (job, ID))
+        if self.dryrun or self.verbose:
+            print '> mv %s job_%d.sh' % (job, ID)
 
-        # Updates ID file
-        self.updateIDFile()
+        # Updates ID file only if it is not a dryrun
+        if not self.dryrun:
+            self.updateIDFile()
 
     def updateIDFile(self):
         """
@@ -599,7 +600,7 @@ def main(args):
 
     ######## Job load parser ########
     load_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
-    load_parser.add_argument('file',                            default=False,                                      type=str, nargs='+', help='Loads config file')
+    load_parser.add_argument('file',                            default=False,                                      type=str, help='Loads config file')
     load_parser.add_argument('-s','--system',                   default=False,                                      type=str, required=True,choices=['smaug','abel','laconia'],help='Cluster name')
     load_parser.add_argument('-p','--partition',                default="normal",                                   type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
     load_parser.add_argument('-lcfg','--load_configurations',   default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
@@ -670,9 +671,6 @@ def main(args):
             configuration = setFieldConfigs(configuration,args.load_configurations,args.config_start_number)
             if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
                 sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
-            else:
-                configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
-                configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
 
         # For loading and running configurations
         if args.load_config_and_run:
@@ -683,20 +681,16 @@ def main(args):
             configuration["NCf"] = args.NConfigs
             configuration["NTherm"] = 0
             configuration["NFlows"] = 0
-            if args.load_config_min_time_estimate != None:
-                configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
-            if args.load_config_hr_time_estimate != None:
-                configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
-  
+
         # Populate configuration with default values if certain keys are not present
         config_default["base_folder"] = args.base_folder
         if args.run_name != False:
             configuration["runName"] = args.run_name
         if args.NConfigs != False:
             configuration["NCf"] = args.NConfigs
-        if args.load_config_min_time_estimate != False:
+        if args.load_config_min_time_estimate != None:
             configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
-        if args.load_config_hr_time_estimate != False:
+        if args.load_config_hr_time_estimate != None:
             configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
         if args.no_flow:
             configuration["NFlows"] = 0
@@ -707,7 +701,7 @@ def main(args):
         configuration["config_start_number"] = args.config_start_number
 
         # Submitting job
-        s.submitJob(configurations,args.system,args.partition)
+        s.submitJob(configuration,args.system,args.partition)
 
     elif args.subparser == 'setup':
         """

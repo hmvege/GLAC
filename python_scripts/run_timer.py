@@ -10,6 +10,11 @@ class TimeEstimator:
 	lattice_size_b62 = 32**3*64.
 	lattice_size_b645 = 48**3*96.
 
+	NUp10_8x16_time_per_update = 0.082336 / 10 # [seconds / size]
+	NUp30_8x16_time_per_update = 0.134728 / 30 # [seconds / size]
+
+	NUScaling = NUp30_8x16_time_per_update / NUp10_8x16_time_per_update
+
 	def __init__(self):
 		b645_size_scaling = {	str(self.beta_values[0]) : self.lattice_size_b645 / self.lattice_size_b60,
 								str(self.beta_values[1]) : self.lattice_size_b645 / self.lattice_size_b61,
@@ -35,6 +40,7 @@ class TimeEstimator:
 		self.b645_cfg_estimate_std = np.std(b645_cfg_estimates) / b_corr_updates[str("6.45")]
 		cfg_times[str(self.beta_values[3])] = np.mean(b645_cfg_estimates)
 
+		# Normalizes by N updates
 		self.cfg_times_per_config = {str(key):cfg_times[str(key)]/float(b_corr_updates[str(key)]) for key in self.beta_values}
 		# print {key:val*60 for (key,val) in zip(cfg_times_per_config.keys(),cfg_times_per_config.values())}, "seconds"
 
@@ -54,10 +60,12 @@ class TimeEstimator:
 		self.b645_flow_estimate_std = np.std(b645_flow_estimates)
 		self.flow_times[str(self.beta_values[3])] = np.mean(b645_flow_estimates)
 
-	def get_time(self,beta,N_configs,N_corr,N_therms,N_flows,numprocs=512):
-		# Estimates configuration times
-		config_time_est = self.cfg_times_per_config[str(beta)]
-		total_config_time_est = config_time_est*N_configs*N_corr
+	def get_time(self,beta,N_configs,N_corr,N_therms,N_flows,numprocs=512,N_updates=10,verbose=False):
+		NUpdatesScaling = 1 + self.NUScaling *(N_updates-10)/20
+
+		config_time_est = self.cfg_times_per_config[str(beta)] * NUpdatesScaling
+
+		total_config_time_est = config_time_est * N_configs * N_corr 
 
 		# Estimates thermalization
 		thermalization_time_est = config_time_est * N_therms
@@ -66,12 +74,19 @@ class TimeEstimator:
 		flow_time_est = self.flow_times[str(beta)]
 		total_flow_time_est = flow_time_est*N_configs*N_flows
 
+		# Total time for program run
 		total_time = total_flow_time_est + total_config_time_est + thermalization_time_est
 
 		# Test runs done with 512 cores, scaling around 0.55
 		cpu_scaling = (0.55 ** ((numprocs-512) / 512))
-		print cpu_scaling
+
 		cpu_time = total_time*cpu_scaling/60.0*numprocs
+
+		if verbose:
+			print """
+N updates scaling factor:   %d
+
+""" % (NUpdatesScaling)
 
 		error_cfg = ""
 		error_therm = ""
@@ -86,12 +101,12 @@ class TimeEstimator:
 			error_flow = "+/- %-.6f hours" % (num_error_flow)
 			total_error = "+/- %-.6f hours" % (np.sqrt(num_error_cfg**2 + num_error_flow**2))
 
-		print """
-Time estimate for run:
+		print """Time estimate for run:
 beta                %.2f
 N_configs           %d
 N_corr              %d
 N_therms            %d
+N_updates           %d
 N_flows             %d
 CPUs                %d
 %s
@@ -102,7 +117,7 @@ Time per flow:      %10.3f minutes
 Total flow-time:    %10.2f minutes / %-.1f hours %s
 Total time:         %10.2f minutes / %-.1f hours %s
 CPU hours:          %10.2f hours
-%s""" % (beta,N_configs,N_corr,N_therms,N_flows,numprocs,100*"=",
+%s""" % (beta,N_configs,N_corr,N_therms,N_updates,N_flows,numprocs,100*"=",
 			config_time_est*cpu_scaling,
 			total_config_time_est*cpu_scaling,total_config_time_est*cpu_scaling/60,error_cfg,
 			thermalization_time_est*cpu_scaling,thermalization_time_est*cpu_scaling/60,error_therm,
@@ -126,19 +141,20 @@ if __name__ == '__main__':
 	parser.add_argument('-NF','--Nflows',				type=int, default=None,help='Number of flows')
 	parser.add_argument('-NCorr','--NCorrelations',		type=int, default=None,help='Number of correlation updates')
 	parser.add_argument('-NTherm','--NThermalizations',	type=int, default=None,help='Number of thermalization updates')
+	parser.add_argument('-NUp','--NUpdates',			type=int, default=None,help='Number of updates per link')
 	parser.add_argument('-numprocs',					type=int, default=None,help='Number of processors')
 
 	# Default values
-	defaults = {"6.0": {"NCorr":200,"NFlows":1000,"NCfgs":1000,"NTherm":20000,"numprocs":512},
-				"6.1": {"NCorr":200,"NFlows":1000,"NCfgs":500,"NTherm":20000,"numprocs":512},
-				"6.2": {"NCorr":200,"NFlows":1000,"NCfgs":500,"NTherm":20000,"numprocs":512},
-				"6.45": {"NCorr":800,"NFlows":1000,"NCfgs":250,"NTherm":20000,"numprocs":512}}
+	defaults = {"6.0": {"NCorr":200,"NFlows":1000,"NCfgs":1000,"NTherm":20000,"NUpdates":10,"numprocs":512},
+				"6.1": {"NCorr":200,"NFlows":1000,"NCfgs":500,"NTherm":20000,"NUpdates":10,"numprocs":512},
+				"6.2": {"NCorr":200,"NFlows":1000,"NCfgs":500,"NTherm":20000,"NUpdates":10,"numprocs":512},
+				"6.45": {"NCorr":800,"NFlows":1000,"NCfgs":250,"NTherm":20000,"NUpdates":10,"numprocs":512}}
 
 	# Parses arguments
 	# if len(sys.argv) == 1:
 	# 	args = parser.parse_args(["6.45","-NCfgs","250"])
 	args = parser.parse_args()
-
+	# args = parser.parse_args(['6.0', '-NCorr', '600', '-NCfgs', '1000', '-NF', '1000', '-NTherm', '20000', '-NUp', '30'])
 	if str(args.beta) not in defaults.keys():
 		raise KeyError("Error: valid beta values: %s" % ", ".join(sorted(defaults.keys())))
 
@@ -166,10 +182,15 @@ if __name__ == '__main__':
 	else:
 		NTherm = defaults[str(args.beta)]["NTherm"]		
 
+	if args.NUpdates != None:
+		NUpdates = args.NUpdates
+	else:
+		NUpdates = defaults[str(args.beta)]["NUpdates"]
+
 	if args.numprocs != None:
 		numprocs = args.numprocs
 	else:
 		numprocs = defaults[str(args.beta)]["numprocs"]
 
 	t = TimeEstimator()
-	t.get_time(args.beta,NCfgs,N_corr=NCorr,N_therms= NTherm,N_flows=NFlows,numprocs=numprocs)
+	t.get_time(args.beta,NCfgs,N_corr=NCorr,N_therms= NTherm,N_flows=NFlows,numprocs=numprocs,N_updates=NUpdates)

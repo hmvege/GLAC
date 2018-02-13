@@ -191,16 +191,6 @@ class Autocorrelation:
 		if dryrun:
 			fig.savefig("tests/autocorrelation_%s.png" % filename)
 
-# class IntegratedAutoCorrelationTime:
-# 	"""
-# 	Finds the integrated autocorrelation time based on article by Wollf(2006)
-# 	"""
-# 	def __init__(self, ac_objects):
-# 		"""
-# 		Takes an list/array of autocorrelation objects, should be of size NFlows * NConfigurations/2
-# 		"""
-# 		None
-
 def main():
 	# Data to load and analyse
 	data = np.loadtxt("tests/plaq.dat",skiprows=8) # Completely uncorrelated dataset, so pointless to have as a test-file
