@@ -403,6 +403,53 @@ inline T sum(Lattice<T> L)
     return latticeSum;
 }
 
+//template <>
+inline std::vector<double> sumXYZ(Lattice<double> L)
+{
+    /*
+     * For summing the topological charge xyz into the time axis.
+     */
+
+    // Creates empty vector for time axis points
+    std::vector<double> latticeXYZSum(L.m_dim[3],0);
+
+    // Sums the xyz directions into the time axis
+    for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+        for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+            for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                for (unsigned int it = 0; it < L.m_dim[3]; it++)
+                latticeXYZSum[it] += L[Parallel::Index::getIndex(ix,iy,iz,0)];
+            }
+        }
+    }
+
+    return latticeXYZSum;
+}
+
+inline Lattice<double> realTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
+{
+    /*
+     * Function for multiplying lattice and taking the real trace without summing the matrix
+     */
+    int site = 0;
+    Lattice<double>latticeSum;
+    latticeSum.allocate(L1.m_dim);
+
+    for (unsigned int ix = 0; ix < L1.m_dim[0]; ix++) {
+        for (unsigned int iy = 0; iy < L1.m_dim[1]; iy++) {
+            for (unsigned int iz = 0; iz < L1.m_dim[2]; iz++) {
+                for (unsigned int it = 0; it < L1.m_dim[3]; it++) {
+                    site = Parallel::Index::getIndex(ix,iy,iz,it);
+                    latticeSum[site] += traceRealMultiplication(L1[site],L2[site]);
+                }
+            }
+        }
+    }
+
+    return latticeSum;
+}
+
+
 template <class SU3>
 inline double sumRealTrace(Lattice<SU3> L)
 {

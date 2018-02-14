@@ -11,6 +11,12 @@ def _autocorrelation_parallel_core(input_values):
 	ac = Autocorrelation(input_values[0], use_numpy = input_values[1], data_statistic = input_values[2])
 	return ac.R, ac.R_error, ac.integrated_autocorrelation_time(), ac.integrated_autocorrelation_time_error()
 
+
+def _autocorrelation_full_parallel_core(input_values):
+	ac = Autocorrelation(input_values[0], use_numpy = input_values[1], data_statistic = input_values[2])
+	return ac.R, ac.R_error, ac.integrated_autocorrelation_time(), ac.integrated_autocorrelation_time_error()
+
+
 def _bootstrap_parallel_core(input_values):
 	data, N_bs, bs_statistic, non_bs_stats, index_lists = input_values
 	bs = Bootstrap(data, N_bs, bootstrap_statistics = bs_statistic, non_bs_stats = non_bs_stats, index_lists = index_lists)

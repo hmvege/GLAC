@@ -254,7 +254,10 @@ class FlowAnalyser(object):
 		# Sets performed flag to true
 		self.jackknife_performed = True
 
-	def autocorrelation(self,use_numpy=True, F = ptools._default_return, F_error = ptools._default_error_return, auto_corr_statistics = ptools._default_return, store_raw_ac_error_correction = True):
+	def autocorrelation(self,use_numpy=True, F = ptools._default_return, F_error = ptools._default_error_return, auto_corr_statistics = ptools._default_return, store_raw_ac_error_correction = True, full = False):
+		if full:
+			raise NotImplementedError("Autocorrelation as shown by Wolffi not implemented.")
+
 		# Gets autocorrelation
 		if self.parallel:
 			# Sets up jobs for parallel processing
@@ -284,7 +287,8 @@ class FlowAnalyser(object):
 
 			# Non-parallel method for calculating autocorrelation
 			for i in xrange(self.NFlows):
-				ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy,data_statistic=auto_corr_statistics)
+				if not full:
+					ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy,data_statistic=auto_corr_statistics)
 				self.autocorrelations[i] = ac.R
 				self.autocorrelations_errors[i] = ac.R_error
 				self.integrated_autocorrelation_time[i] = ac.integrated_autocorrelation_time()
@@ -609,7 +613,7 @@ class AnalyseQQuartic(FlowAnalyser):
 	"""
 	Quartic topological charge analysis class.
 	"""
-	observable_name = "Quartic topological charge"
+	observable_name = r"Topological charge at $\langleQ^4\rangle$"
 	observable_name_compact = "topq4"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$Q^4[GeV^2]$"
@@ -830,7 +834,7 @@ def main(args):
 			topsus_analysis.plot_jackknife()
 			# topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 
-			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared,full=True) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 
 			topsus_analysis.plot_autocorrelation(0)
 			topsus_analysis.plot_autocorrelation(-1)
@@ -891,9 +895,13 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data2','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data4','plaq','topc','energy','topsus'],
-				['beta6_1','data4','plaq','topc','energy','topsus'],
-				['beta6_2','data4','plaq','topc','energy','topsus']]
+		# args = [['beta6_0','data4','plaq','topc','energy','topsus'],
+		# 		['beta6_1','data4','plaq','topc','energy','topsus'],
+		# 		['beta6_2','data4','plaq','topc','energy','topsus']]
+
+		args = [['beta6_0','data4','plaq','topc','energy','topsus','qtqzero','topcq4'],
+				['beta6_1','data4','plaq','topc','energy','topsus','qtqzero','topcq4'],
+				['beta6_2','data4','plaq','topc','energy','topsus','qtqzero','topcq4']]
 
 		# args = [['beta6_2','data2','plaq','topc','energy','topsus']]
 

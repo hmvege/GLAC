@@ -8,5 +8,6 @@
 #include "plaquette.h"
 #include "topologicalcharge.h"
 #include "mastersampler.h"
+#include "mastersamplertopcxyz.h"
 
 #endif // OBSERVABLES_H

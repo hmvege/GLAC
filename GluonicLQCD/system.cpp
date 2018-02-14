@@ -62,26 +62,32 @@ void System::setObservable(std::vector<std::string> obsList, bool flow)
     bool plaq = false;
     bool topc = false;
     bool energy = false;
+    bool topct = false;
     for (unsigned int i = 0; i < obsList.size(); i++) {
         if (obsList[i] == "plaq") plaq = true;
         if (obsList[i] == "topc") topc = true;
         if (obsList[i] == "energy") energy = true;
-        // ADD USER OBS?
+        if (obsList[i] == "topct") topct = true;
     }
-    if (plaq && !topc && !energy) {
-        // Initialize plaquette sampler
+    if (topc || energy && !topct) {
+        // Initializes the full mechinery except for the QxyzQt sampler
+        if (flow) {
+            m_flowCorrelator = new MasterSampler(flow);
+        } else {
+            m_correlator = new MasterSampler(flow);
+        }
+    } else if (plaq && !topc && !energy && !topct) {
+        // Initialize plaquette sampler when no other samplers are specified
         if (flow) {
             m_flowCorrelator = new Plaquette(flow);
         } else {
             m_correlator = new Plaquette(flow);
         }
-    }
-    else {
-        // All other cases, might as well initialize the full machinery
+    } else {
         if (flow) {
-            m_flowCorrelator = new MasterSampler(flow);
+            m_flowCorrelator = new MasterSamplerTopcXYZ(flow);
         } else {
-            m_correlator = new MasterSampler(flow);
+            m_correlator = new MasterSamplerTopcXYZ(flow);
         }
     }
 }

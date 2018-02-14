@@ -68,7 +68,7 @@ class JobCreator:
         self.CURRENT_PATH = os.getcwd()
         # Checking the .ids.json file for previous jobs and storing them in job-list.
         self.idFilesName = '.ids.json'
-        if os.path.isfile(self.idFilesName) and not self.dryrun:
+        if os.path.isfile(self.idFilesName):
             self.jobs = json.load(open(self.idFilesName,"r"))
         else:
             self.jobs = {}
@@ -367,7 +367,7 @@ module load OpenMPI/1.10.0
 
         # Stores job in job dictionary
         job_dict =  self._createDictionary( Partition = [0,9,partition],
-                                            RunName = [1,40,self.runName],
+                                            RunName = [1,35,self.runName],
                                             Beta = [2,5,beta],
                                             N = [3,4,NSpatial],
                                             NT = [4,4,NTemporal],
@@ -425,9 +425,9 @@ module load OpenMPI/1.10.0
         """
         for i in self.jobs:
             if not self.dryrun:
-                os.system("scancel %d" % i)
+                os.system("scancel %d" % int(i))
             if self.dryrun or self.verbose:
-                print "> scancel %d" % i                
+                print "> scancel %d" % int(i)
 
     def showIDwithNb(self):
         """
@@ -437,15 +437,43 @@ module load OpenMPI/1.10.0
             print "No jobs running"
         else:
             # Takes the jobs out of their dictionary, and zips values and keys together for creating a header
-            sorted_jobs = sorted(zip(self.jobs.values()[0].keys(),self.jobs.values()[0].values()),key=lambda i : i[-1][0])
+
+            # Sorts jobs by their ID. Newest are printed at the bottom
+            sorted_job_keys = sorted(self.jobs,key=lambda i : int(i))
+
+            # header_job = self.jobs[sorted_job_keys[-1]]
+            # print self.jobs[sorted_job_keys[-1]]
+
+            # Will order list based on the last header element, e.g. the most updated one
+            last_job = self.jobs[sorted_job_keys[-1]]
+            last_job_sorted = sorted(zip(last_job.keys(),last_job.values()),key=lambda i : i[-1][0])
+
+            # Creates the header
             print "{0:<{w}}".format("ID",w=10),
-            for i in sorted_jobs:
-                print "{0:<{w}}".format(i[0],w=i[-1][1]),
-            for jobID in self.jobs:
+
+            # Sorts based on the number give nto the header element
+            for elem in last_job_sorted:
+                # Retrieves the name of the header column
+                name = elem[0]
+
+                # Retrieves the width of the header column
+                width = elem[1][1]
+                
+                # Prints the column name
+                print "{0:<{w}}".format(name,w=width),
+
+            # Prints the jobs
+            for jobID in sorted_job_keys:
+                # Prints job ID
                 print "\n{0:<{w}}".format(jobID,w=10),
+
                 # Takes the jobs out of their dictionary, and zips values and keys together for printing their values
-                for item in sorted(zip(self.jobs[jobID].keys(),self.jobs[jobID].values()),key=lambda i : i[-1][0]):
-                    print "{0:<{w}}".format(item[-1][-1],w=item[-1][1]),
+                for i,item in enumerate(sorted(zip(self.jobs[jobID].keys(),self.jobs[jobID].values()),key=lambda i : i[-1][0])):
+                    # Width based on the last job committed
+                    width = last_job_sorted[i][1][1]                   
+
+                    # Prints the item for the job id
+                    print "{0:<{w}}".format(item[1][-1],w=width),
 
     def printJobIDInfo(self,jobID):
         """
@@ -471,7 +499,7 @@ module load OpenMPI/1.10.0
         Clears the ID file.
         """
         self.jobs = {}
-        if not not dryrun:
+        if not self.dryrun:
             self.updateIDFile()
         if self.dryrun or self.verbose:
             print "Clearing ID file."

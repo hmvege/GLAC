@@ -3,11 +3,7 @@
 #include "parallelization/communicator.h"
 #include <cmath>
 #include <fstream>
-#include <iostream>
 #include <iomanip>
-
-using std::cout;
-using std::endl;
 
 void IO::writeObservablesToFile(double acceptanceRate,
                                 double averagedObservable,
@@ -56,7 +52,6 @@ void IO::writeFlowObservableToFile(double *observables,
      */
     if (Parallel::Communicator::getProcessRank() == 0) {
         auto oldPrecision = cout.precision(15);
-        double a = Parameters::getLatticeSpacing();
         double flowStep = Parameters::getFlowEpsilon();
         std::ofstream file;
 
@@ -76,10 +71,17 @@ void IO::writeFlowObservableToFile(double *observables,
         file << "FlowEpsilon " << Parameters::getFlowEpsilon() << endl;
         file << std::fixed << std::setprecision(15);
         for (int i = 0; i < Parameters::getNFlows() + 1; i++) {
-            file << i << " " << a*sqrt(8*flowStep*i) << " " << observables[i] << endl;
+            file << i*flowStep << " " << observables[i] << endl;
         }
         file.close();
 //        if (Parameters::getVerbose()) printf("\n    %s written.",fname.c_str());
         std::setprecision(oldPrecision);
     }
 }
+
+//void IO::writeMatrixToFile(double **observable, std::string observableName, int configNumber)
+//{
+//    /*
+//     * Function for writing
+//     */
+//}
