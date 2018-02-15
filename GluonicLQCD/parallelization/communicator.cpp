@@ -14,6 +14,7 @@ std::vector<unsigned int> Parallel::Communicator::m_N = {0,0,0,0};
 // Variables used externally
 int Parallel::Communicator::m_processRank = 0;
 int Parallel::Communicator::m_numprocs = 0;
+int Parallel::Communicator::m_processorsPerDimension[4] = {0,0,0,0};
 
 using Parallel::Neighbours;
 
@@ -196,12 +197,42 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
 void Parallel::Communicator::reduceToDimension(double * obsResults, double * obs, int dimensionToReduce)
 {
     /*
-     * Reduces flow results in matrixresults to a single dimension
+     * Reduces flow results in matrixresults to a the temporal dimension
      */
+//    for (int rank = 0; rank < m_numprocs; rank++) {
+//        MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+//        if (rank == m_processRank) {
+//            cout << "\nPROC: " << m_processRank << " DIM: " << dimensionToReduce << endl;
+//            for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
+//                for (unsigned int it = 0; it < m_N[dimensionToReduce]; it++){
+//                    printf("%10.4f  ", obs[iFlow * m_N[dimensionToReduce] + it]);
+//                }
+//                cout <<endl;
+
+//            }
+//        }
+//        MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+//    }
+
     for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
-        MPI_Allreduce(&obs[iFlow * m_N[dimensionToReduce]],&obsResults[iFlow * Neighbours::getProcessorDimensionPosition(dimensionToReduce) * m_N[dimensionToReduce]],m_N[dimensionToReduce],MPI_DOUBLE,MPI_SUM,ParallelParameters::ACTIVE_COMM);
+        MPI_Allgather   (&obs[iFlow * m_N[dimensionToReduce]],m_N[dimensionToReduce],MPI_DOUBLE, // Sends
+                        &obsResults[iFlow * Parameters::getNTemporal() + Neighbours::getProcessorDimensionPosition(dimensionToReduce) * m_N[dimensionToReduce]],m_N[dimensionToReduce],MPI_DOUBLE, // Receives
+                        ParallelParameters::ACTIVE_COMM); // Active processors only
     }
 
+
+//    MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+//    if (m_processRank==0) {
+//        cout << endl;
+//        for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
+//            for (int it = 0; it < Parameters::getNTemporal(); it++){
+//                printf("%10.4f  ", obsResults[iFlow * Parameters::getNTemporal() + it]);
+//            }
+//            cout <<endl;
+//        }
+//    }
+
+//    MPIExit("Exiting at reduceToDimension in communicator.cpp @ line 212");
 }
 
 void Parallel::Communicator::checkSubLatticeValidity()
@@ -313,7 +344,6 @@ void Parallel::Communicator::checkSubLatticeDimensionsValidity()
 void Parallel::Communicator::initializeSubLattice()
 {
     int restProc = m_numprocs;
-    int processorsPerDimension[4];
     double subLatticeSize = 1;
 
     // Only finds the sub lattice size iteratively if no preset value has been defined.
@@ -353,13 +383,13 @@ void Parallel::Communicator::initializeSubLattice()
 
     // Sets up number of processors per dimension
     for (int i = 0; i < 3; i++) {
-        processorsPerDimension[i] = Parameters::getNSpatial() / m_N[i];
+        m_processorsPerDimension[i] = Parameters::getNSpatial() / m_N[i];
     }
-    processorsPerDimension[3] = Parameters::getNTemporal() / m_N[3];
+    m_processorsPerDimension[3] = Parameters::getNTemporal() / m_N[3];
 
     // Initializes the neighbour lists
-    Parallel::Neighbours::initialize(m_processRank, m_numprocs, processorsPerDimension);
-    Parameters::setProcessorsPerDimension(processorsPerDimension);
+    Parallel::Neighbours::initialize(m_processRank, m_numprocs, m_processorsPerDimension);
+    Parameters::setProcessorsPerDimension(m_processorsPerDimension);
 }
 
 void Parallel::Communicator::setBarrier()

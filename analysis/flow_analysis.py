@@ -17,7 +17,7 @@ class FlowAnalyser(object):
 	autocorrelations_limits = 1
 	figures_folder = "../figures"
 	fname_addon = ""
-	dpi = None
+	dpi = 350
 
 	def __init__(self, file_tree, batch_name, data=None, dryrun=False, flow=True, parallel = False, numprocs = 4, verbose = False, figures_folder = False):
 		# Sets up global constants
@@ -52,7 +52,7 @@ class FlowAnalyser(object):
 		# Prints observable and batch
 		print "="*100
 		print "Batch:       %s" % self.batch_name
-		print "Observables: %s" % self.observable_name
+		print "Observables: %s" % self.observable_name_compact
 		print "="*100
 
 		# Enables possibility of providing data
@@ -613,10 +613,10 @@ class AnalyseQQuartic(FlowAnalyser):
 	"""
 	Quartic topological charge analysis class.
 	"""
-	observable_name = r"Topological charge at $\langleQ^4\rangle$"
+	observable_name = r"Topological charge at $Q^4$"
 	observable_name_compact = "topq4"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$Q^4[GeV^2]$"
+	y_label = r"$\langleQ^4\rangle[GeV^2]$"
 
 	def __init__(self,*args,**kwargs):
 		super(AnalyseQQuartic,self).__init__(*args,**kwargs)
@@ -626,10 +626,10 @@ class AnalyseQtQZero(FlowAnalyser):
 	"""
 	Topological charge QtQ0 analysis class.
 	"""
-	observable_name = "Topological Charge evolved at flow time t_0"
+	observable_name = r"Topological Charge evolved at flow time $t_0$"
 	observable_name_compact = "qtqzero"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$Q_{t}Q_{t_0}[GeV]$"
+	y_label = r"$\langleQ_{t}Q_{t_0}\rangle[GeV]$"
 	observable_output_folder_old = ""
 
 	def __init__(self,*args,**kwargs):
@@ -641,7 +641,7 @@ class AnalyseQtQZero(FlowAnalyser):
 		Sets the flow time we are to analyse for.
 		"""
 		self.q_flow_time_zero = q_flow_time_zero
-		self.observable_name = r"Topological Charge evolved at $t=%.2f$" % (q_flow_time_zero*self.data.meta_data["FlowEpsilon"])
+		self.observable_name = "Topological Charge evolved at t=%.2f" % (q_flow_time_zero*self.data.meta_data["FlowEpsilon"])
 
 		if unit_test:
 			# Performs a deep copy of self.y values(otherwise we will overwrite what we have)

@@ -86,8 +86,12 @@ void MasterSamplerTopcXYZ::writeFlowObservablesToFile(int configNumber)
     m_energyObservable->gatherResults();
     m_energyObservable->writeFlowObservableToFile(configNumber);
 
+    Parallel::Communicator::MPIPrint("NO ERRORS BEFORE REDUCING!");
+
     // Flattens topct to t direction and gathers topct results into a single array
     Parallel::Communicator::reduceToDimension(m_tempTopctArray,m_topctObservable->getObservableArray(),3);
+
+    Parallel::Communicator::MPIPrint("NO ERRORS AFTER REDUCING!");
 
     // Gathers and writes the Euclidean time array
     IO::writeMatrixToFile(m_tempTopctArray,m_topctObservable->getObservableName(),configNumber,Parameters::getNTemporal());
@@ -306,6 +310,8 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
         m_energy += sumRealTraceMultiplication(m_clov1,m_clov1);
         m_energy += sumRealTraceMultiplication(m_clov2,m_clov2);
     }
+
+    Parallel::Communicator::MPIPrint("NO ERRORS AFTER 1 FLOW!");
 
     ///////////////////////////
     //////// PLAQUETTE ////////

@@ -418,7 +418,7 @@ inline std::vector<double> sumXYZ(Lattice<double> L)
         for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
             for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
                 for (unsigned int it = 0; it < L.m_dim[3]; it++)
-                latticeXYZSum[it] += L[Parallel::Index::getIndex(ix,iy,iz,0)];
+                latticeXYZSum[it] += L[Parallel::Index::getIndex(ix,iy,iz,it)];
             }
         }
     }

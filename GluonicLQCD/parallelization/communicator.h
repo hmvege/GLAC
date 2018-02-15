@@ -11,6 +11,7 @@ private:
     // Parallel variables
     static int m_processRank;
     static int m_numprocs;
+    static int m_processorsPerDimension[4];
 
     // Fetching variables
     static bool muDir;
