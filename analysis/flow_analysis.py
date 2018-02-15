@@ -592,7 +592,7 @@ class AnalyseTopologicalCharge(FlowAnalyser):
 	"""
 	Topological charge analysis class.
 	"""
-	observable_name = "Topological Charge"
+	observable_name = "Topological charge"
 	observable_name_compact = "topc"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$" # Implied multiplication by a
 	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$[GeV]"
@@ -626,7 +626,7 @@ class AnalyseQtQZero(FlowAnalyser):
 	"""
 	Topological charge QtQ0 analysis class.
 	"""
-	observable_name = r"Topological Charge evolved at flow time $t_0$"
+	observable_name = r"Topological charge evolved at flow time $t_0$"
 	observable_name_compact = "qtqzero"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\langleQ_{t}Q_{t_0}\rangle[GeV]$"
@@ -641,7 +641,7 @@ class AnalyseQtQZero(FlowAnalyser):
 		Sets the flow time we are to analyse for.
 		"""
 		self.q_flow_time_zero = q_flow_time_zero
-		self.observable_name = "Topological Charge evolved at t=%.2f" % (q_flow_time_zero*self.data.meta_data["FlowEpsilon"])
+		self.observable_name = "Topological charge evolved at t=%.2f" % (q_flow_time_zero*self.data.meta_data["FlowEpsilon"])
 
 		if unit_test:
 			# Performs a deep copy of self.y values(otherwise we will overwrite what we have)
