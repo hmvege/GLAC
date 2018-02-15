@@ -50,6 +50,9 @@ public:
     static void setBarrier();
     static void gatherDoubleResults(double * data, int N);
 
+    // MPI method for reducing to a single dimension
+    static void reduceToDimension(double * obsResults, double * obs, int dimensionToReduce);
+
 //    // MPI Groups
 //    static MPI_Group ACTIVE_GROUP,WORLD_GROUP;
 //    static MPI_Comm ACTIVE_COMM;

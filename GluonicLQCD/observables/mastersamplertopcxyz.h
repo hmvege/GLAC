@@ -14,13 +14,15 @@ private:
     Lattice<SU3> m_clov1, m_clov2, m_U2Temp, m_U3Temp, m_temp;
 
     // Container for the topc xyz observable
-    std::vector<std::vector<double>> m_topcxyz;
-    std::vector<double> m_tempTopcXYZ;
+//    std::vector<std::vector<double>> m_topcxyz;
+    std::vector<double> m_tempTopcT;
+    double * m_tempTopctArray;
 
     // Creates a object that store the observable
     ObservableStorer * m_plaqObservable = nullptr;
     ObservableStorer * m_topcObservable = nullptr;
     ObservableStorer * m_energyObservable = nullptr;
+    ObservableStorer * m_topctObservable = nullptr;
 public:
     MasterSamplerTopcXYZ(bool flow);
     ~MasterSamplerTopcXYZ();
@@ -28,7 +30,7 @@ public:
     void storeFlow(bool storeFlowObservable);
 
     void writeObservableToFile(double acceptanceRatio);
-    void writeFlowObservablesToFile(int iFlow);
+    void writeFlowObservablesToFile(int configNumber);
     void reset();
     void runStatistics();
     void printHeader();

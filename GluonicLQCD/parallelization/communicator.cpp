@@ -193,6 +193,17 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
     }
 }
 
+void Parallel::Communicator::reduceToDimension(double * obsResults, double * obs, int dimensionToReduce)
+{
+    /*
+     * Reduces flow results in matrixresults to a single dimension
+     */
+    for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
+        MPI_Allreduce(&obs[iFlow * m_N[dimensionToReduce]],&obsResults[iFlow * Neighbours::getProcessorDimensionPosition(dimensionToReduce) * m_N[dimensionToReduce]],m_N[dimensionToReduce],MPI_DOUBLE,MPI_SUM,ParallelParameters::ACTIVE_COMM);
+    }
+
+}
+
 void Parallel::Communicator::checkSubLatticeValidity()
 {
     /*

@@ -14,6 +14,7 @@ namespace IO {
         void writeFlowObservableToFile(double *observables,
                                        std::string observableName,
                                        int configNumber);
+        void writeMatrixToFile(double *observables, std::string observableName, int configNumber, int N);
 }
 
 #endif // OBSERVABLESIO_H

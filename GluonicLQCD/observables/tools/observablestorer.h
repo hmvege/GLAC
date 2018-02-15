@@ -17,7 +17,7 @@ private:
     double m_varianceObservable = 0;
     double m_averagedObservableSquared = 0;
     double m_stdObservable = 0;
-    double * m_observables; // SLOW COMPARED TO STACK? --> OVERLOAD THIS!!!
+    double * m_observables;
     double * m_observablesSquared;
 public:
     ObservableStorer(int NSize);
@@ -29,15 +29,19 @@ public:
     // Runs statistics, perhaps create its own class? But that increases overhead, so maybe not
     void gatherResults();
     void runStatistics();
+
     // Printers
     void printStatistics();
 
     // File writers
     void writeObservableToFile(double acceptanceRatio);
     void writeFlowObservableToFile(int configNumber);
+
     // Getters
+    double *getObservableArray() { return m_observables; }
     double getObservable(int iObs) { return m_observables[iObs]; }
     std::string getObservableName() { return m_observableName; }
+
     // Setters
     void setObservableName(std::string observableName) { m_observableName = observableName; }
     void setNormalizeObservableByProcessor(bool norm) { m_normalizeObservableByProcessor = norm; }

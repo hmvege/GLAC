@@ -69,7 +69,7 @@ void System::setObservable(std::vector<std::string> obsList, bool flow)
         if (obsList[i] == "energy") energy = true;
         if (obsList[i] == "topct") topct = true;
     }
-    if (topc || energy && !topct) {
+    if ((topc || energy) && !topct) {
         // Initializes the full mechinery except for the QxyzQt sampler
         if (flow) {
             m_flowCorrelator = new MasterSampler(flow);

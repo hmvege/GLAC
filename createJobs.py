@@ -1,5 +1,7 @@
 import os, subprocess, time, sys, argparse, json, ast, shutil, re
 
+AVAILABLE_OBSERVABLES = ["plaq","topc","energy","topct"]
+
 def getArgMaxIndex(N):
     # For getting the maximum index of an list.
     val = N[0]
@@ -87,7 +89,7 @@ class JobCreator:
             self._checkFolderPath(os.path.join(self.outputFolder,self.runName))
             if self.NFlows != 0:
                 self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'flow_observables'))
-                for fobs in ["plaq","topc","energy"]:
+                for fobs in AVAILABLE_OBSERVABLES:
                     self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'flow_observables',fobs))
             if not self.load_field_configs:
                 self._checkFolderPath(os.path.join(self.outputFolder,self.runName,'field_configurations'))
@@ -528,8 +530,8 @@ def main(args):
                         "hotStart"                  : False,
                         "RSTHotStart"               : False,
                         "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
-                        "observables"               : ["plaq"], # Optional: topc, energy
-                        "flowObservables"           : ["plaq","topc","energy"], # Optional: topc, energy
+                        "observables"               : ["plaq"], # Optional: plaq, topc, energy, topct
+                        "flowObservables"           : ["plaq","topc","energy"], # Optional:plaq,  topc, energy, topct
                         "load_field_configs"        : False,
                         "load_config_and_run"       : "",
                         "config_start_number"       : 0,
@@ -605,8 +607,8 @@ def main(args):
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],                 type=int,choices=[0,1],help='Hot start or cold start')
     job_parser.add_argument('-rsths', '--RSTHotStart',          default=config_default["RSTHotStart"],              type=int,choices=[0,1],help='RST hot start is closer to unity')
     job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],                  type=str,help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
-    job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],              type=str,choices=['plaq','topc','energy'],nargs='+',help='Observables to sample for in flow.')
-    job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],          type=str,choices=['plaq','topc','energy'],nargs='+',help='Observables to sample for in flow.')
+    job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],              type=str,choices=AVAILABLE_OBSERVABLES,nargs='+',help='Observables to sample for in flow.')
+    job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],          type=str,choices=AVAILABLE_OBSERVABLES,nargs='+',help='Observables to sample for in flow.')
     # Data generation related variables
     job_parser.add_argument('-SU3Eps', '--SU3Epsilon',          default=config_default["SU3Eps"],                   type=float,help='SU3 epsilon random increment value.')
     job_parser.add_argument('-fEps', '--flowEpsilon',           default=config_default["flowEpsilon"],              type=float,help='Flow epsilon derivative small change value.')

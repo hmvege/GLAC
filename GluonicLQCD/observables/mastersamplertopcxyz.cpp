@@ -3,7 +3,7 @@
 #include <cmath>
 #include "parallelization/communicator.h"
 #include "config/parameters.h"
-#include "io/fieldio.h"
+#include "io/observablesio.h"
 
 MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
 {
@@ -22,13 +22,14 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
     m_U3Temp.allocate(m_N);
     m_temp.allocate(m_N);
 
-    // Allocates observable for the topological charge at every time for every flow time.
-    m_topcxyz.resize(Parameters::getNFlows());
-    m_tempTopcXYZ.resize(m_N[3]);
+    // Allocates temporary vector for retrieves results from the lattice method
+    m_tempTopcT.resize(m_N[3]);
+
+    // Allocates temporary array for gathering results into a single time array
+    m_tempTopctArray = new double[Parameters::getNTemporal() * Parameters::getNFlows()];
     for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
-        m_topcxyz.resize(m_N[3]);
-        for (unsigned int it= 0; it < m_N[3]; it++) {
-            m_topcxyz[iFlow][it] = 0;
+        for (int it = 0; it < Parameters::getNTemporal(); it++) {
+            m_tempTopctArray[iFlow*Parameters::getNTemporal() + it] = 0;
         }
     }
 }
@@ -38,6 +39,8 @@ MasterSamplerTopcXYZ::~MasterSamplerTopcXYZ()
     delete m_plaqObservable;
     delete m_topcObservable;
     delete m_energyObservable;
+    delete m_topctObservable;
+    delete [] m_tempTopctArray;
 }
 
 void MasterSamplerTopcXYZ::storeFlow(bool storeFlowObservable)
@@ -48,42 +51,58 @@ void MasterSamplerTopcXYZ::storeFlow(bool storeFlowObservable)
         m_plaqObservable = new ObservableStorer(Parameters::getNFlows() + 1);
         m_topcObservable = new ObservableStorer(Parameters::getNFlows() + 1);
         m_energyObservable = new ObservableStorer(Parameters::getNFlows() + 1);
+        m_topctObservable = new ObservableStorer((Parameters::getNFlows() + 1) * m_N[3]);
     } else {
         if (Parameters::getStoreThermalizationObservables()) {
             m_plaqObservable = new ObservableStorer(Parameters::getNCf() + Parameters::getNTherm() + 1);
             m_topcObservable = new ObservableStorer(Parameters::getNCf() + Parameters::getNTherm() + 1);
             m_energyObservable = new ObservableStorer(Parameters::getNCf() + Parameters::getNTherm() + 1);
+            m_topctObservable = new ObservableStorer((Parameters::getNCf() + Parameters::getNTherm() + 1) * m_N[3]);
         } else {
             m_plaqObservable = new ObservableStorer(Parameters::getNCf());
             m_topcObservable = new ObservableStorer(Parameters::getNCf());
             m_energyObservable = new ObservableStorer(Parameters::getNCf());
+            m_topctObservable = new ObservableStorer(Parameters::getNCf() * m_N[3]);
         }
     }
     m_plaqObservable->setNormalizeObservableByProcessor(true);
     m_plaqObservable->setObservableName("plaq");
     m_topcObservable->setObservableName("topc");
     m_energyObservable->setObservableName("energy");
+    m_topctObservable->setObservableName("topct");
 }
 
-void MasterSamplerTopcXYZ::writeFlowObservablesToFile(int iFlow)
+void MasterSamplerTopcXYZ::writeFlowObservablesToFile(int configNumber)
 {
     // Gathers and writes plaquette results to file
     m_plaqObservable->gatherResults();
-    m_plaqObservable->writeFlowObservableToFile(iFlow);
+    m_plaqObservable->writeFlowObservableToFile(configNumber);
+
     // Gathers and writes topological charge results to file
     m_topcObservable->gatherResults();
-    m_topcObservable->writeFlowObservableToFile(iFlow);
+    m_topcObservable->writeFlowObservableToFile(configNumber);
+
     // Gathers and writes energy results to file
     m_energyObservable->gatherResults();
-    m_energyObservable->writeFlowObservableToFile(iFlow);
+    m_energyObservable->writeFlowObservableToFile(configNumber);
+
+    // Flattens topct to t direction and gathers topct results into a single array
+    Parallel::Communicator::reduceToDimension(m_tempTopctArray,m_topctObservable->getObservableArray(),3);
+
+    // Gathers and writes the Euclidean time array
+    IO::writeMatrixToFile(m_tempTopctArray,m_topctObservable->getObservableName(),configNumber,Parameters::getNTemporal());
 }
 
 void MasterSamplerTopcXYZ::writeObservableToFile(double acceptanceRatio)
 {
+    // Writes plaquette results to file
     m_plaqObservable->writeObservableToFile(acceptanceRatio);
+
+    // Writes topological charge results to file
     m_topcObservable->writeObservableToFile(acceptanceRatio);
+
+    // Writes energy results to file
     m_energyObservable->writeObservableToFile(acceptanceRatio);
-    write out array here
 }
 
 void MasterSamplerTopcXYZ::reset()
@@ -94,7 +113,10 @@ void MasterSamplerTopcXYZ::reset()
     m_plaqObservable->reset();
     m_topcObservable->reset();
     m_energyObservable->reset();
-
+    m_topctObservable->reset();
+    for (int i = 0; i < Parameters::getNTemporal() * Parameters::getNFlows(); i++) {
+        m_tempTopctArray[i] = 0;
+    }
 }
 
 void MasterSamplerTopcXYZ::runStatistics()
@@ -269,15 +291,15 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
         m_clov2 = subtractImag(m_clov2,m_tempDiag);
 
         // Sums take the real trace multiplication and sums into a temporary holder
-        m_tempTopcXYZ = sumXYZ(realTraceMultiplication(m_clov1,m_clov2));
+        m_tempTopcT = sumXYZ(realTraceMultiplication(m_clov1,m_clov2));
 
         // Loops over time dimension
         for (unsigned int it = 0; it < m_N[3]; it++) {
             // Sums the topological charge values at the xyz axis into a observable holder
-            m_topcxyz[iObs][it] -= m_tempTopcXYZ[it];
+            (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempTopcT[it];
 
             // Sums the topological charge, negative sign already taken care of
-            m_topCharge += m_topcxyz[iObs][it];
+            m_topCharge += (*m_topctObservable)[iObs*m_N[3] + it];
         }
 
         // Picks up the action density
@@ -307,7 +329,7 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
     ///// TOP. CHARGE XYZ /////
     ///////////////////////////
     for (unsigned int it = 0; it < m_N[3]; it++) {
-        m_topcxyz[iObs][it] = m_topcMultiplicationFactor;
+        (*m_topctObservable)[iObs*m_N[3] + it] *= m_topcMultiplicationFactor;
     }
 
     ///////////////////////////
