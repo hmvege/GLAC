@@ -84,7 +84,7 @@ void IO::writeFlowObservableToFile(double *observables,
 
         // Closes file, prints file written if verbose and reverts the precision
         file.close();
-        if (Parameters::getVerbose()) printf("%s written.",fname.c_str());
+        if (Parameters::getVerbose()) printf("\n%s written.",fname.c_str());
         std::setprecision(oldPrecision);
     }
 }
@@ -123,7 +123,7 @@ void IO::writeMatrixToFile(double * observables, std::string observableName, int
         // Sets temporary high precision
         file << std::fixed << std::setprecision(15);
 
-        Parallel::Communicator::MPIPrint("NO ERRORS SO FAR!! @ OBSERVABLESIO.CPP, 126");
+//        Parallel::Communicator::MPIPrint("NO ERRORS SO FAR!! @ OBSERVABLESIO.CPP, 126");
 
         // Writing out the matrix columns along each line
         for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
@@ -136,7 +136,7 @@ void IO::writeMatrixToFile(double * observables, std::string observableName, int
 
         // Closes file, prints file written if verbose and reverts the precision
         file.close();
-        if (Parameters::getVerbose()) printf("%s written.",fname.c_str());
+        if (Parameters::getVerbose()) printf("\n%s written.",fname.c_str());
         std::setprecision(oldPrecision);
     }
 }

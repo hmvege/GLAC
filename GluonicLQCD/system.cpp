@@ -99,7 +99,12 @@ System::~System()
      * Class destructor
      */
     delete [] m_lattice;
-    if (m_NFlows != 0) delete [] m_flowLattice;
+    delete m_correlator;
+    if (m_NFlows != 0) {
+        delete [] m_flowLattice;
+        delete m_flowCorrelator;
+    }
+
 }
 
 void System::subLatticeSetup()
@@ -389,6 +394,9 @@ void System::runMetropolis()
         }
 
     }
+
+//    Parallel::Communicator::MPIPrint("\nNat okay after metropolis loop\n");
+
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceScore,&m_acceptanceScore,1,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
     if (m_processRank == 0) {

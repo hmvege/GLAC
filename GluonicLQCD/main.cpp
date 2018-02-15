@@ -29,13 +29,14 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     pureGauge.latticeSetup();
     pureGauge.run();
 
+//    Parallel::Communicator::MPIPrint("OK AFTER PURE GAUGE RUN?");
+
     // Finalizing and printing time taken
     duration<double> programTime = duration_cast<duration<double>>(steady_clock::now() - programStart);
 
-    if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\nProgram complete. Time used: %f hours (%f seconds)", double(programTime.count())/3600.0, programTime.count());
-    }
+    char msg[150];
+    sprintf(msg,"\nProgram complete. Time used: %f hours (%f seconds)", double(programTime.count())/3600.0, programTime.count());
+    Parallel::Communicator::MPIExit(std::string(msg));
 
-    MPI_Finalize();
     return 0;
 }

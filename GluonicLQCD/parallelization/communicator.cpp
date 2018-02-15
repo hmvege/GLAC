@@ -199,40 +199,11 @@ void Parallel::Communicator::reduceToDimension(double * obsResults, double * obs
     /*
      * Reduces flow results in matrixresults to a the temporal dimension
      */
-//    for (int rank = 0; rank < m_numprocs; rank++) {
-//        MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
-//        if (rank == m_processRank) {
-//            cout << "\nPROC: " << m_processRank << " DIM: " << dimensionToReduce << endl;
-//            for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
-//                for (unsigned int it = 0; it < m_N[dimensionToReduce]; it++){
-//                    printf("%10.4f  ", obs[iFlow * m_N[dimensionToReduce] + it]);
-//                }
-//                cout <<endl;
-
-//            }
-//        }
-//        MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
-//    }
-
     for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
         MPI_Allgather   (&obs[iFlow * m_N[dimensionToReduce]],m_N[dimensionToReduce],MPI_DOUBLE, // Sends
                         &obsResults[iFlow * Parameters::getNTemporal() + Neighbours::getProcessorDimensionPosition(dimensionToReduce) * m_N[dimensionToReduce]],m_N[dimensionToReduce],MPI_DOUBLE, // Receives
                         ParallelParameters::ACTIVE_COMM); // Active processors only
     }
-
-
-//    MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
-//    if (m_processRank==0) {
-//        cout << endl;
-//        for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
-//            for (int it = 0; it < Parameters::getNTemporal(); it++){
-//                printf("%10.4f  ", obsResults[iFlow * Parameters::getNTemporal() + it]);
-//            }
-//            cout <<endl;
-//        }
-//    }
-
-//    MPIExit("Exiting at reduceToDimension in communicator.cpp @ line 212");
 }
 
 void Parallel::Communicator::checkSubLatticeValidity()
