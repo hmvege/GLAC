@@ -616,7 +616,7 @@ class AnalyseQQuartic(FlowAnalyser):
 	observable_name = r"Topological charge at $Q^4$"
 	observable_name_compact = "topq4"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\langleQ^4\rangle[GeV^2]$"
+	y_label = r"$\langle Q^4 \rangle [GeV^2]$"
 
 	def __init__(self,*args,**kwargs):
 		super(AnalyseQQuartic,self).__init__(*args,**kwargs)
@@ -808,8 +808,8 @@ def main(args):
 			topcq4_analysis.plot_original()
 			topcq4_analysis.plot_boot()
 			topcq4_analysis.plot_jackknife()
-			topcq4_analysis.plot_histogram(0,self.y_label)
-			topcq4_analysis.plot_histogram(-1,self.y_label)
+			topcq4_analysis.plot_histogram(0,topcq4_analysis.y_label)
+			topcq4_analysis.plot_histogram(-1,topcq4_analysis.y_label)
 			topcq4_analysis.plot_integrated_correlation_time()
 			topcq4_analysis.plot_integrated_correlation_time()
 
@@ -899,9 +899,9 @@ if __name__ == '__main__':
 		# 		['beta6_1','data4','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data4','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data4','plaq','topc','energy','topsus','qtqzero','topcq4'],
-				['beta6_1','data4','plaq','topc','energy','topsus','qtqzero','topcq4'],
-				['beta6_2','data4','plaq','topc','energy','topsus','qtqzero','topcq4']]
+		args = [['beta6_0','data2','plaq','topc','energy','topsus','qtqzero','topcq4'],
+				['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4'],
+				['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4']]
 
 		# args = [['beta6_2','data2','plaq','topc','energy','topsus']]
 
