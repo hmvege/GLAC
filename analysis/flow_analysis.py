@@ -629,7 +629,7 @@ class AnalyseQtQZero(FlowAnalyser):
 	observable_name = r"Topological charge evolved at flow time $t_0$"
 	observable_name_compact = "qtqzero"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\langleQ_{t}Q_{t_0}\rangle[GeV]$"
+	y_label = r"$\langle Q_{t}Q_{t_0} \rangle [GeV]$"
 	observable_output_folder_old = ""
 
 	def __init__(self,*args,**kwargs):
