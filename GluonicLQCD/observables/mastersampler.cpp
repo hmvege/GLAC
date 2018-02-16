@@ -8,7 +8,7 @@
 MasterSampler::MasterSampler(bool flow) : Correlator()
 {
     // Sets up observable storage containers
-    storeFlow(flow);
+    initializeObservableStorer(flow);
 
     // Sets up multiplication factors
     m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
@@ -30,7 +30,7 @@ MasterSampler::~MasterSampler()
     delete m_energyObservable;
 }
 
-void MasterSampler::storeFlow(bool storeFlowObservable)
+void MasterSampler::initializeObservableStorer(bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
     if (m_storeFlowObservable) {

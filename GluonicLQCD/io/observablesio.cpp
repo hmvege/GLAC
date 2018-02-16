@@ -123,8 +123,6 @@ void IO::writeMatrixToFile(double * observables, std::string observableName, int
         // Sets temporary high precision
         file << std::fixed << std::setprecision(15);
 
-//        Parallel::Communicator::MPIPrint("NO ERRORS SO FAR!! @ OBSERVABLESIO.CPP, 126");
-
         // Writing out the matrix columns along each line
         for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
             file << iFlow*flowStep;

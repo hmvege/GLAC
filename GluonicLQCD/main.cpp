@@ -34,9 +34,11 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     // Finalizing and printing time taken
     duration<double> programTime = duration_cast<duration<double>>(steady_clock::now() - programStart);
 
-    char msg[150];
-    sprintf(msg,"\nProgram complete. Time used: %f hours (%f seconds)", double(programTime.count())/3600.0, programTime.count());
-    Parallel::Communicator::MPIExit(std::string(msg));
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        printf("\nProgram complete. Time used: %f hours (%f seconds)", double(programTime.count())/3600.0, programTime.count());
+    }
+    Parallel::Communicator::freeMPIGroups();
+    MPI_Finalize();
 
     return 0;
 }

@@ -839,8 +839,8 @@ def main(args):
         config_default["performanceTesting"] = True
         config_default["cpu_approx_runtime_hr"] = 0
         config_default["cpu_approx_runtime_min"] = 20
-        config_default["N"] = 24
-        config_default["NT"] = 48
+        config_default["N"] = 16
+        config_default["NT"] = 32
         config_default["subDims"] = createSquare(config_default["threads"],config_default["N"],config_default["NT"])
         partition = "normal"
         excluded_nodes = ""

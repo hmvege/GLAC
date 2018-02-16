@@ -8,7 +8,7 @@
 MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
 {
     // Sets up observable storage containers
-    storeFlow(flow);
+    initializeObservableStorer(flow);
 
     // Sets up multiplication factors
     m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
@@ -36,6 +36,9 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
 
 MasterSamplerTopcXYZ::~MasterSamplerTopcXYZ()
 {
+//    Parallel::Communicator::MPIPrint("WTF");
+//    Parallel::Communicator::setBarrier();
+
     delete m_plaqObservable;
     delete m_topcObservable;
     delete m_energyObservable;
@@ -43,7 +46,7 @@ MasterSamplerTopcXYZ::~MasterSamplerTopcXYZ()
     delete [] m_tempTopctArray;
 }
 
-void MasterSamplerTopcXYZ::storeFlow(bool storeFlowObservable)
+void MasterSamplerTopcXYZ::initializeObservableStorer(bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
     if (m_storeFlowObservable) {
@@ -87,7 +90,7 @@ void MasterSamplerTopcXYZ::writeFlowObservablesToFile(int configNumber)
     m_energyObservable->writeFlowObservableToFile(configNumber);
 
     // Flattens topct to t direction and gathers topct results into a single array
-    Parallel::Communicator::reduceToDimension(m_tempTopctArray,m_topctObservable->getObservableArray(),3);
+    Parallel::Communicator::reduceToTemporalDimension(m_tempTopctArray,m_topctObservable->getObservableArray());
 
     // Gathers and writes the Euclidean time array
     IO::writeMatrixToFile(m_tempTopctArray,m_topctObservable->getObservableName(),configNumber,Parameters::getNTemporal());

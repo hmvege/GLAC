@@ -194,15 +194,30 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
     }
 }
 
-void Parallel::Communicator::reduceToDimension(double * obsResults, double * obs, int dimensionToReduce)
+void Parallel::Communicator::reduceToTemporalDimension(double * obsResults, double * obs)
 {
     /*
      * Reduces flow results in matrixresults to a the temporal dimension
      */
+    // Sets up the temporary buffer
+    double temp[Parameters::getNTemporal()];
+    for (int i = 0; i < Parameters::getNTemporal(); i++) {
+        temp[i] = 0;
+    }
+
     for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
-        MPI_Allgather   (&obs[iFlow * m_N[dimensionToReduce]],m_N[dimensionToReduce],MPI_DOUBLE, // Sends
-                        &obsResults[iFlow * Parameters::getNTemporal() + Neighbours::getProcessorDimensionPosition(dimensionToReduce) * m_N[dimensionToReduce]],m_N[dimensionToReduce],MPI_DOUBLE, // Receives
-                        ParallelParameters::ACTIVE_COMM); // Active processors only
+        // Places obs values into temporary buffer
+        for (unsigned int it = 0; it < m_N[3]; it++) {
+            temp[it + m_N[3]*Neighbours::getProcessorDimensionPosition(3)] = obs[iFlow * m_N[3] + it];
+        }
+
+        // Reduces reduces results from temporary buffer to target obsResults
+        MPI_Allreduce(temp, &obsResults[iFlow * Parameters::getNTemporal()], Parameters::getNTemporal(), MPI_DOUBLE, MPI_SUM, ParallelParameters::ACTIVE_COMM);
+
+        // Resets temporary buffer
+        for (int it = 0; it < Parameters::getNTemporal(); it++) {
+            temp[it] = 0;
+        }
     }
 }
 
@@ -227,13 +242,11 @@ void Parallel::Communicator::checkSubLatticeValidity()
         latticeSizeError = true;
     }
     if (latticeSizeError) {
-        if (m_processRank == 0) {
-            std::string errMsg = "";
-            errMsg += ": dimensions:  ";
-            for (int j = 0; j < 4; j++) errMsg += std::to_string(m_N[j]) + " ";
-            errMsg += " --> exiting.";
-            MPIExit(errMsg);
-        }
+        std::string errMsg = "";
+        errMsg += ": dimensions:  ";
+        for (int j = 0; j < 4; j++) errMsg += std::to_string(m_N[j]) + " ";
+        errMsg += " --> exiting.";
+        MPIExit(errMsg);
     }
 }
 
@@ -368,12 +381,17 @@ void Parallel::Communicator::setBarrier()
     MPI_Barrier(MPI_COMM_WORLD);
 }
 
-void Parallel::Communicator::MPIExit(std::string message)
+void Parallel::Communicator::freeMPIGroups()
 {
-    if (m_processRank == 0) printf("\n%s", message.c_str());
     MPI_Group_free(&Parallel::ParallelParameters::WORLD_GROUP);
     MPI_Group_free(&Parallel::ParallelParameters::ACTIVE_GROUP);
     MPI_Comm_free(&Parallel::ParallelParameters::ACTIVE_COMM);
+}
+
+void Parallel::Communicator::MPIExit(std::string message)
+{
+    if (m_processRank == 0) printf("\n%s", message.c_str());
+    freeMPIGroups();
     setBarrier();
     MPI_Finalize();
     exit(0);

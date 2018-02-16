@@ -50,16 +50,10 @@ public:
     static void MPIPrint(std::string message);
     static void setBarrier();
     static void gatherDoubleResults(double * data, int N);
+    static void freeMPIGroups();
 
     // MPI method for reducing to a single dimension
-    static void reduceToDimension(double * obsResults, double * obs, int dimensionToReduce);
-
-//    // MPI Groups
-//    static MPI_Group ACTIVE_GROUP,WORLD_GROUP;
-//    static MPI_Comm ACTIVE_COMM;
-
-//    // Variable for storing if processor is active(will always seek maximum possible of cores divisible to 2^n
-//    static bool m_active;
+    static void reduceToTemporalDimension(double * obsResults, double * obs);
 
     // Validity checkers
     static void checkProcessorValidity();

@@ -53,7 +53,7 @@ public:
     // Setters
     virtual void reset();
     virtual void setObservable(int iObs, double obs);
-    virtual void storeFlow(bool storeFlowObservable);
+    virtual void initializeObservableStorer(bool storeFlowObservable);
 };
 
 

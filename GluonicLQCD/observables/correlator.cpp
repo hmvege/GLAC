@@ -4,7 +4,7 @@
 
 Correlator::Correlator(bool storeFlowObservable)
 {
-    storeFlow(storeFlowObservable);
+    initializeObservableStorer(storeFlowObservable);
     // Initiates the lattice dimensions
     m_a = Parameters::getLatticeSpacing();
     m_N = Parameters::getN();
@@ -72,7 +72,7 @@ void Correlator::writeObservableToFile(double acceptanceRatio)
     m_observable->writeObservableToFile(acceptanceRatio);
 }
 
-void Correlator::storeFlow(bool storeFlowObservable)
+void Correlator::initializeObservableStorer(bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
     if (m_storeFlowObservable) {

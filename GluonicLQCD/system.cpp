@@ -103,6 +103,7 @@ System::~System()
     if (m_NFlows != 0) {
         delete [] m_flowLattice;
         delete m_flowCorrelator;
+//        delete m_flow;
     }
 
 }
