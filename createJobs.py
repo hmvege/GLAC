@@ -578,7 +578,7 @@ def main(args):
     sbatch_group = sbatch_parser.add_mutually_exclusive_group(required=True)
     sbatch_group.add_argument('--scancel',                      default=False,      type=int,help='Cancel a job of given ID.')
     sbatch_group.add_argument('--scancel_all',                  default=False,      action='store_true',help='Cancel all jobs')
-    sbatch_group.add_argument('--list_jobs',                    default=False,      action='store_true',help='List all jobs currently running.')
+    sbatch_group.add_argument('-ls','--list_jobs',              default=False,      action='store_true',help='List all jobs currently running.')
     sbatch_group.add_argument('--clearIDFile',                  default=False,      action='store_true',help='Clears the job ID file.')
     sbatch_group.add_argument('-id', '--list_job_id',           default=False,      type=int,help='Shows details about job with given ID.')
 

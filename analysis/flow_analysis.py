@@ -641,19 +641,21 @@ class AnalyseQtQZero(FlowAnalyser):
 		Sets the flow time we are to analyse for.
 		"""
 		self.q_flow_time_zero = q_flow_time_zero
+		self.flow_time_zero_index = np.argmin(np.abs( self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"]) - q_flow_time_zero))
+
 		self.observable_name = "Topological charge evolved at t=%.2f" % (q_flow_time_zero*self.data.meta_data["FlowEpsilon"])
 
 		if unit_test:
 			# Performs a deep copy of self.y values(otherwise we will overwrite what we have)
 			y_temp1 = copy.deepcopy(self.y)
 			y_temp2 = np.zeros(y_temp1.shape)
-			y_q0 = copy.deepcopy(self.y[:,self.q_flow_time_zero])
+			y_q0 = copy.deepcopy(self.y[:,self.flow_time_zero_index])
 
 		# Numpy method for matrix-vector multiplication
-		self.y = (self.y.T*self.y[:,self.q_flow_time_zero]).T
+		self.y = (self.y.T*self.y[:,self.flow_time_zero_index]).T
 
 		# Creates a new folder to store t0 results in
-		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old,"t0_%d" % self.q_flow_time_zero)
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old,"t0_%d" % str(self.flow_time_zero_index).strip("."))
 		check_folder(self.observable_output_folder_path,self.dryrun,self.verbose)
 
 		if unit_test:
@@ -814,7 +816,7 @@ def main(args):
 			topcq4_analysis.plot_integrated_correlation_time()
 
 		if 'qtqzero' in args:
-			qzero_flow_times = [0,10,100,500,800]
+			qzero_flow_times = [0.1,0.2,0.3,0.4,0.5,0.6]
 			qtqzero_analysis = AnalyseQtQZero(DirectoryList, batch_name, data = topc_analysis.data, dryrun = dryrun, parallel = parallel, numprocs = numprocs, verbose=verbose)
 			for qzero_flow_time in qzero_flow_times:
 				qtqzero_analysis.setQ0(qzero_flow_time)
