@@ -33,6 +33,8 @@ void ObservableStorer::gatherResults()
     // Temporary buffer for summing the observables
     double tempBuffer[m_NObs];
 
+//    Parallel::Communicator::MPIPrint("I am obs " + m_observableName + " and have N " + std::to_string(m_NObs) + " observables");
+
     // Performing an average over the Monte Carlo obtained values
     MPI_Allreduce(m_observables, tempBuffer, m_NObs, MPI_DOUBLE, MPI_SUM, Parallel::ParallelParameters::ACTIVE_COMM);
 

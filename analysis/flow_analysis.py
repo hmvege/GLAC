@@ -739,6 +739,7 @@ def main(args):
 	parallel = True
 	numprocs = 8
 	use_numpy_in_autocorrelation = True
+	full_autocorrelation = False
 	# print DirectoryList
 
 	# Analysis timers
@@ -836,7 +837,7 @@ def main(args):
 			topsus_analysis.plot_jackknife()
 			# topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 
-			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared,full=True) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared,full=full_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 
 			topsus_analysis.plot_autocorrelation(0)
 			topsus_analysis.plot_autocorrelation(-1)

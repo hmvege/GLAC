@@ -205,7 +205,7 @@ void Parallel::Communicator::reduceToTemporalDimension(double * obsResults, doub
         temp[i] = 0;
     }
 
-    for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
+    for (int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
         // Places obs values into temporary buffer
         for (unsigned int it = 0; it < m_N[3]; it++) {
             temp[it + m_N[3]*Neighbours::getProcessorDimensionPosition(3)] = obs[iFlow * m_N[3] + it];
