@@ -616,11 +616,25 @@ class AnalyseQQuartic(FlowAnalyser):
 	observable_name = r"Topological charge at $Q^4$"
 	observable_name_compact = "topq4"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\langle Q^4 \rangle [GeV^2]$"
+	y_label = r"$\langle Q^4 \rangle [fm^{-2}]$"
 
 	def __init__(self,*args,**kwargs):
 		super(AnalyseQQuartic,self).__init__(*args,**kwargs)
 		self.y **= 4
+
+class AnalyseQQ(FlowAnalyser):
+	"""
+	Quartic topological charge analysis class.
+	"""
+	observable_name = r"Topological charge at $Q^2$"
+	observable_name_compact = "topq4"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\langle Q^2 \rangle [fm^{-1}]$"
+
+	def __init__(self,*args,**kwargs):
+		super(AnalyseQQ,self).__init__(*args,**kwargs)
+		self.y **= 4
+
 
 class AnalyseQtQZero(FlowAnalyser):
 	"""
@@ -816,6 +830,26 @@ def main(args):
 			topcq4_analysis.plot_integrated_correlation_time()
 			topcq4_analysis.plot_integrated_correlation_time()
 
+		if 'topcqq' in args:
+			topcqq_analysis = AnalyseQQ(DirectoryList, batch_name, data = topc_analysis.data, dryrun = dryrun, parallel = parallel, numprocs = numprocs, verbose=verbose)
+			topcqq_analysis.boot(N_bs)
+			topcqq_analysis.jackknife()
+			topcqq_analysis.plot_original()
+			topcqq_analysis.plot_jackknife()
+			topcqq_analysis.plot_boot()
+			topcqq_analysis.autocorrelation()
+			topcqq_analysis.plot_autocorrelation(-1)
+			topcqq_analysis.plot_autocorrelation(0)
+			topcqq_analysis.plot_mc_history(0)
+			topcqq_analysis.plot_mc_history(-1)
+			topcqq_analysis.plot_original()
+			topcqq_analysis.plot_boot()
+			topcqq_analysis.plot_jackknife()
+			topcqq_analysis.plot_histogram(0,topcqq_analysis.y_label)
+			topcqq_analysis.plot_histogram(-1,topcqq_analysis.y_label)
+			topcqq_analysis.plot_integrated_correlation_time()
+			topcqq_analysis.plot_integrated_correlation_time()			
+
 		if 'qtqzero' in args:
 			qzero_flow_times = [0.1,0.2,0.3,0.4,0.5,0.6]
 			qtqzero_analysis = AnalyseQtQZero(DirectoryList, batch_name, data = topc_analysis.data, dryrun = dryrun, parallel = parallel, numprocs = numprocs, verbose=verbose)
@@ -902,9 +936,9 @@ if __name__ == '__main__':
 		# 		['beta6_1','data4','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data4','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data2','plaq','topc','energy','topsus','qtqzero','topcq4'],
-				['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4'],
-				['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4']]
+		args = [['beta6_0','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
+				['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
+				['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
 
 		# args = [['beta6_2','data2','plaq','topc','energy','topsus']]
 
