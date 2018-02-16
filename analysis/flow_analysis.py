@@ -655,7 +655,7 @@ class AnalyseQtQZero(FlowAnalyser):
 		self.y = (self.y.T*self.y[:,self.flow_time_zero_index]).T
 
 		# Creates a new folder to store t0 results in
-		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old,"t0_%d" % str(self.flow_time_zero_index).strip("."))
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old,"t0_%s" % str(self.flow_time_zero_index).strip("."))
 		check_folder(self.observable_output_folder_path,self.dryrun,self.verbose)
 
 		if unit_test:
