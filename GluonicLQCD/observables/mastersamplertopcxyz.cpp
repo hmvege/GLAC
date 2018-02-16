@@ -204,11 +204,6 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
     m_plaquette = 0;
     mu = 0;
 
-//    /////// TEMP ///////
-//    double m_tempTopc = 0;
-//    double temp = 0;
-//    ////////////////////
-
     for (int nu = 1; nu < 4; nu++)
     {
         // First clover. Definition from R Wohler 1985, more symmetric than other methods.
@@ -300,11 +295,6 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
         m_tempDiag = imagTrace(m_clov2)/3.0;
         m_clov2 = subtractImag(m_clov2,m_tempDiag);
 
-
-        ///// TEMPTEMPTEMP /////
-//        m_tempTopc -= sumRealTraceMultiplication(m_clov1,m_clov2);
-        ////////////////////////
-
         // Sums take the real trace multiplication and sums into a temporary holder
         m_tempTopcT = sumXYZ(realTraceMultiplication(m_clov1,m_clov2));
 
@@ -314,20 +304,8 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
             (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempTopcT[it];
 
             // Sums the topological charge, negative sign already taken care of
-//            m_topCharge += (*m_topctObservable)[iObs*m_N[3] + it];
             m_topCharge -= m_tempTopcT[it];
         }
-
-
-//        ///// TEMPTEMPTEMP /////
-//        temp = 0;
-//        for (unsigned int it = 0; it < m_N[3]; it++) {
-//            // Sums the topological charge values at the xyz axis into a observable holder
-//            temp += (*m_topctObservable)[iObs*m_N[3] + it];
-//        }
-//        Parallel::Communicator::MPIPrint("TOPC: " + std::to_string(m_topCharge) + " TOPC_T: " + std::to_string(temp) + " ORIGINAL: " + std::to_string(m_tempTopc));
-//        Parallel::Communicator::MPIExit("");
-//        ////////////////////////
 
         // Picks up the action density
         m_energy += sumRealTraceMultiplication(m_clov1,m_clov1);
@@ -358,18 +336,6 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
     for (unsigned int it = 0; it < m_N[3]; it++) {
         (*m_topctObservable)[iObs*m_N[3] + it] *= m_topcMultiplicationFactor;
     }
-
-//    ///// TEMPTEMPTEMP /////
-//    m_tempTopc *= m_topcMultiplicationFactor;
-
-//    temp = 0;
-//    for (unsigned int it = 0; it < m_N[3]; it++) {
-//        // Sums the topological charge values at the xyz axis into a observable holder
-//        temp += (*m_topctObservable)[iObs*m_N[3] + it];
-//    }
-//    Parallel::Communicator::MPIPrint("TOPC: " + std::to_string(m_topCharge) + " TOPC_T: " + std::to_string(temp) + " ORIGINAL: " + std::to_string(m_tempTopc));
-//    Parallel::Communicator::MPIExit("");
-//    ////////////////////////
 
     ///////////////////////////
     /// LATTICE ENERGY DENS. //
