@@ -1,4 +1,4 @@
-import sys, os, numpy as np, re
+import sys, os, numpy as np, re, pandas as pd, time
 
 class GetDirectoryTree:
 	def __init__(self,batch_name,batch_folder,dryrun=False):
@@ -122,6 +122,8 @@ class GetFolderContents:
 		# Stores the observable name
 		self.observable = observable
 
+		# t1 = time.clock()
+
 		if files == None:
 			print "    No observables of type %s found in folder: %s" % (observable,folder)
 		else:
@@ -168,22 +170,31 @@ class GetFolderContents:
 
 				# Loads the data and places it in a list
 				if flow:
-					# Uses numpy to load flow data
-					x, _x, y = np.loadtxt(file,skiprows=N_rows_to_skip,unpack=True)
+					# Uses numpy to load flow data (slow!)
+					# x, _x, y = np.loadtxt(file,skiprows=N_rows_to_skip,unpack=True)
+					
+					# Uses pandas to read data (quick!)
+					data = pd.read_csv(file,skiprows=N_rows_to_skip,sep=" ",names=["t","sqrt8t",self.observable],header=None)
 
 					# Only retrieves flow once
 					if not retrieved_flow_time:
-						self.data_flow_time = _x # This is the a*sqrt(8*t), kinda useless
+						# self.data_flow_time = _x # This is the a*sqrt(8*t), kinda useless
+						self.data_flow_time = data["sqrt8t"].values # Pandas
 						retrieved_flow_time = True
 				else:
-					# Uses numpy to load non-flown data
-					x, y = np.loadtxt(file,skiprows=N_rows_to_skip,unpack=True)
+					# Uses numpy to load non-flown data (slow!)
+					# x, y = np.loadtxt(file,skiprows=N_rows_to_skip,unpack=True)
+					
+					# Uses pandas to load non-flown data (quick!)
+					data = pd.read_csv(file,skiprows=N_rows_to_skip,sep=" ",names=["t","sqrt8t",self.observable],header=None)
 				
 				# Only retrieves indexes/flow-time*1000 once
 				if not retrieved_indexing:
-					self.data_x = x
+					# self.data_x = x # Numpy
+					self.data_x = data["t"].values # Pandas
 					retrieved_indexing = True
-				self.data_y.append(y)
+				# self.data_y.append(y)
+				self.data_y.append(data[self.observable].values)
 
 				# # Small progressbar
 				# sys.stdout.write("\rData retrieved: %4.1f%% done" % (100*float(i)/float(N_files)))
@@ -194,6 +205,9 @@ class GetFolderContents:
 
 			# # Small progressbar
 			# sys.stdout.write("\rData retrieved: 100.0%% done\n")
+
+		# time_used = time.clock()-t1	
+		# print "Data reading: time used with function: %.10f secs/ %.10f minutes" % (time_used, time_used/60.)	
 
 	def create_perflow_data(self,dryrun=False,verbose=False):
 		# Creating per flow folder

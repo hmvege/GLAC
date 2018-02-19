@@ -1,26 +1,48 @@
-import numpy as np, matplotlib.pyplot as plt, sys, os
+import numpy as np, matplotlib.pyplot as plt, sys, os, time
 
 __all__ = ["Jackknife"]
+
+def timing_function(func):
+	"""
+	Time function.
+	"""
+	def wrapper(*args):
+		if args[0].time_jk:
+			t1 = time.clock()
+		
+		val = func(*args)
+
+		if args[0].time_jk:
+			t2 = time.clock()
+
+			time_used = t2-t1
+			args[0].time_used = time_used
+			
+			print "Autocorrelation: time used with function %s: %.10f secs/ %.10f minutes" % (func.__name__, time_used, time_used/60.)
+		
+		return val
+
+	return wrapper
 
 class Jackknife:
 	"""
 	Class for performing a statistical jack knife.
 	"""
-	def __init__(self, data, jk_statistics = np.mean, non_jk_statistics = lambda x : x):
+	def __init__(self, data, jk_statistics = np.mean, non_jk_statistics = lambda x : x, time_jk = False):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
 		Returns:
 			Object containing jack-knifed values
 		"""
+		# Timer variable
+		self.time_jk = time_jk
+
 		# Sets some global class variables
 		self.N = len(data)
 
 		# Performs jackknife and sets variables
-		self.jk_data_raw = np.zeros((self.N,self.N-1)) # Jack knifed data
-		for i in xrange(self.N):
-			self.jk_data_raw[i] = np.concatenate([data[:i],data[i+1:]])
-		self.jk_data = jk_statistics(self.jk_data_raw,axis=1)
+		self._perform_jk(data,jk_statistics)
 
 		# Performing statistics on jackknife samples
 		self.jk_var = np.var(self.jk_data)*(self.N - 1) # Estimates variance according to new MHJ book
@@ -37,25 +59,17 @@ class Jackknife:
 		self.jk_avg 			= self.N*self.avg_original - (self.N - 1) * self.jk_avg_biased
 		self.jk_avg_unbiased 	= self.jk_avg
 
-		# self.jk_data = F(jk_statistics(self.jk_data_raw,axis=1))
-		# # Estimates variance according to new MHJ book
-		# self.jk_var = np.var(self.jk_data)*(self.N - 1)
-		# self.jk_std = np.sqrt(self.jk_var) # Ensures that the errors are run through the function F
-		# self.jk_avg_biased = np.average(self.jk_data)
-		# self.jk_avg = self.jk_avg_biased
-
-		# # Gets and sets non-bootstrapped values
-		# data = F(non_jk_statistics(data))
-		# self.avg_original = np.average(data)
-		# self.var_original = np.var(data) # Ensures that the errors are run through the function F
-		# self.std_original = np.std(data)
-
-		# Returns the unbiased estimator/average
-		# self.jk_avg 			= F(self.N*self.avg_original - (self.N - 1) * self.jk_avg_biased)
-		# self.jk_avg_biased 		= F(self.jk_avg_biased)
-		# self.jk_avg_unbiased 	= self.jk_avg
-		# self.avg_original 		= F(self.avg_original)
-
+	@timing_function
+	def _perform_jk(self,data,jk_statistics):
+		"""
+		Function for performing the jackknife.
+		"""
+		self.jk_data_raw = np.zeros((self.N,self.N-1)) # Jack knifed data
+		for i in xrange(self.N):
+			# self.jk_data_raw[i] = np.concatenate([data[:i],data[i+1:]])
+			self.jk_data_raw[i][0:i] = data[:i]
+			self.jk_data_raw[i][i:] = data[i+1:]
+		self.jk_data = jk_statistics(self.jk_data_raw,axis=1)
 
 	def __call__(self):
 		"""
@@ -83,18 +97,13 @@ Jackknife:     %20.16f %10.5E %10.5E %20.16f (unbiased average)
 
 def main():
 	# Data to load and analyse
-	data = np.loadtxt("tests/plaq.dat",skiprows=8)
-	
-	# Histogram bins
-	N_bins = 20
-	
+	data = np.loadtxt("tests/plaq_beta6_2_t10.dat",skiprows=8)
+
 	# Jackknifing
-	jk = Jackknife(data)
+	jk = Jackknife(data,time_jk=True)
 	jk_data = jk()
 
 	print jk
-
-	plt.show()
 
 if __name__ == '__main__':
 	main()
