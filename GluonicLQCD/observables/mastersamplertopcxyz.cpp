@@ -94,8 +94,6 @@ void MasterSamplerTopcXYZ::writeFlowObservablesToFile(int configNumber)
 
     // Gathers and writes the Euclidean time array
     IO::writeMatrixToFile(m_tempTopctArray,m_topctObservable->getObservableName(),configNumber,Parameters::getNTemporal());
-
-    Parallel::Communicator::MPIExit(" @ 98 in mastersamplertopcxyz");
 }
 
 void MasterSamplerTopcXYZ::writeObservableToFile(double acceptanceRatio)
