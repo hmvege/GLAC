@@ -6,7 +6,7 @@ class Bootstrap:
 	"""
 	Class for creating a bootstrap sample.
 	"""
-	def __init__(self, data, N_BS, bootstrap_statistics = np.mean, non_bs_stats = lambda x: x, index_lists=[], seed=None):
+	def __init__(self, data, N_BS, index_lists=[], seed=None):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
@@ -24,25 +24,15 @@ class Bootstrap:
 		if len(index_lists) == 0: # Allows user to send in a predefined list if needed
 			index_lists = np.random.randint(N, size=(N_BS, N))
 		self.bs_data_raw = data[index_lists]
+		self.bs_data = np.mean(self.bs_data_raw,axis=1)
 
-		# self.bs_data = bootstrap_statistics(self.bs_data_raw,axis=1)
-		# self.bs_avg = F(np.average(self.bs_data))
-		# self.bs_var = np.var(self.bs_data)
-		# self.bs_std = np.std(self.bs_data)
-
-		# # Gets and sets non-bootstrapped values
-		# self.data_original = non_bs_stats(data)
-		# self.avg_original = F(np.average(self.data_original))
-		# self.var_original = np.var(self.data_original)
-		# self.std_original = np.std(self.data_original)
-
-		self.bs_data = bootstrap_statistics(self.bs_data_raw,axis=1)
+		# Performing basic bootstrap statistics
 		self.bs_avg = np.average(self.bs_data)
 		self.bs_var = np.var(self.bs_data)
 		self.bs_std = np.std(self.bs_data)
 
-		# Gets and sets non-bootstrapped values
-		self.data_original = non_bs_stats(data)
+		# Performing basic statistics on original data
+		self.data_original = data
 		self.avg_original = np.average(self.data_original)
 		self.var_original = np.var(self.data_original)
 		self.std_original = np.std(self.data_original)

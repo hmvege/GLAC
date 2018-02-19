@@ -33,7 +33,7 @@ def timing_function(func):
 	return wrapper
 
 class _AutocorrelationCore(object):
-	def __init__(self, data, function_derivative = lambda x : x, method = "corrcoef", time_autocorrelation = False):
+	def __init__(self, data, function_derivative = lambda x : x, method = "correlate", time_autocorrelation = False):
 		"""
 		Args:
 			data 					 (numpy array): dataset to get autocorrelation for
@@ -130,7 +130,8 @@ class _AutocorrelationCore(object):
 		y = y-y.mean()
 		self.G = np.correlate(x, y, mode = "full")[-n:]
 		self.G /= np.arange(n, 0, -1)
-		self.R = self.G/self.G[0]
+		self.G = self.G[:self.N/2]
+		self.R = (self.G/self.G[0])
 
 	def integrated_autocorrelation_time(self, plot_cutoff = False):
 		raise NotImplemented("integrated_autocorrelation_time() not implemented for base class")
@@ -359,11 +360,12 @@ def testRegularAC(data,N_bins,store_plots,time_ac_functions):
 
 	# Autocorrelation with numpy corrcoef
 	ac_numpy1 = Autocorrelation(data,method="corrcoef", time_autocorrelation = time_ac_functions)
-	ac_numpy1.plot_autocorrelation(r"Autocorrelation for Plaquette $\beta = 6.2, \tau=10.0$ using Numpy", "beta6_2",dryrun=(not store_plots))
+	ac_numpy1.plot_autocorrelation(r"Autocorrelation for Plaquette $\beta = 6.2, \tau=10.0$ using np\.corrcoef", "beta6_2",dryrun=(not store_plots))
 	ac_autocorr = ac_numpy1.integrated_autocorrelation_time()
 	ac_autocorr_err = ac_numpy1.integrated_autocorrelation_time_error()
 
 	ac_numpy2 = Autocorrelation(data,method="correlate", time_autocorrelation = time_ac_functions)
+	ac_numpy2.plot_autocorrelation(r"Autocorrelation for Plaquette $\beta = 6.2, \tau=10.0$ using np\.correlate", "beta6_2",dryrun=(not store_plots))
 	ac_autocorr2 = ac_numpy2.integrated_autocorrelation_time()
 	ac_autocorr_err2 = ac_numpy2.integrated_autocorrelation_time_error()
 	print """
@@ -386,7 +388,7 @@ Integrated ac-time error:       {5:<.8f}""".format(
 Time used by default method:    	{0:<.8f}
 Time used by numpy corrcoef:    	{1:<.8f}
 Time used by numpy correlate:   	{2:<.8f}
-Improvement(default/corrcoeff): 	{3:<.3f}
+Improvement(default/corrcoef): 		{3:<.3f}
 Improvement(default/correlate): 	{4:<.3f}
 Improvement(corrcoef/correlate):	{5:<.3f}""".format(ac.time_used, ac_numpy1.time_used, ac_numpy2.time_used, ac.time_used/ac_numpy1.time_used, ac.time_used/ac_numpy2.time_used,ac_numpy1.time_used/ac_numpy2.time_used)
 
@@ -402,7 +404,7 @@ Improvement(corrcoef/correlate):	{5:<.3f}""".format(ac.time_used, ac_numpy1.time
 def testFullAC(data,N_bins,store_plots,time_ac_functions):
 	print "="*20, "RUNNING FULL AC TEST", "="*20
 
-	def chi_beta6_2_error(Q_squared):
+	def chi_beta6_2_derivative(Q_squared):
 		const = 0.0763234462734
 		return 0.25*const / Q_squared**(0.75)
 
@@ -412,7 +414,7 @@ def testFullAC(data,N_bins,store_plots,time_ac_functions):
 	print ac1.integrated_autocorrelation_time_error()
 	print ac1.W
 
-	ac = PropagatedAutocorrelation(data,function_derivative=chi_beta6_2_error,method="corrcoef",time_autocorrelation=time_ac_functions)
+	ac = PropagatedAutocorrelation(data,function_derivative=chi_beta6_2_derivative,method="corrcoef",time_autocorrelation=time_ac_functions)
 	ac.plot_autocorrelation(r"Autocorrelation for Topological Suscpetibility $\beta = 6.2$","beta6_2_topc",dryrun=(not store_plots))
 	print ac.integrated_autocorrelation_time()
 	print ac.integrated_autocorrelation_time_error()

@@ -28,7 +28,7 @@ class Jackknife:
 	"""
 	Class for performing a statistical jack knife.
 	"""
-	def __init__(self, data, jk_statistics = np.mean, non_jk_statistics = lambda x : x, time_jk = False):
+	def __init__(self, data, time_jk = False):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
@@ -42,7 +42,7 @@ class Jackknife:
 		self.N = len(data)
 
 		# Performs jackknife and sets variables
-		self._perform_jk(data,jk_statistics)
+		self._perform_jk(data)
 
 		# Performing statistics on jackknife samples
 		self.jk_var = np.var(self.jk_data)*(self.N - 1) # Estimates variance according to new MHJ book
@@ -50,7 +50,6 @@ class Jackknife:
 		self.jk_avg_biased = np.average(self.jk_data)
 
 		# Gets and sets non-bootstrapped values
-		data = non_jk_statistics(data)
 		self.avg_original = np.average(data)
 		self.var_original = np.var(data) # Ensures that the errors are run through the function F
 		self.std_original = np.std(data)
@@ -60,7 +59,7 @@ class Jackknife:
 		self.jk_avg_unbiased 	= self.jk_avg
 
 	@timing_function
-	def _perform_jk(self,data,jk_statistics):
+	def _perform_jk(self,data):
 		"""
 		Function for performing the jackknife.
 		"""
@@ -69,7 +68,7 @@ class Jackknife:
 			# self.jk_data_raw[i] = np.concatenate([data[:i],data[i+1:]])
 			self.jk_data_raw[i][0:i] = data[:i]
 			self.jk_data_raw[i][i:] = data[i+1:]
-		self.jk_data = jk_statistics(self.jk_data_raw,axis=1)
+		self.jk_data = np.average(self.jk_data_raw,axis=1)
 
 	def __call__(self):
 		"""

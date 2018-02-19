@@ -17,6 +17,7 @@ class FlowAnalyser(object):
 	autocorrelations_limits = 1
 	figures_folder = "../figures"
 	fname_addon = ""
+	function_derivative = None
 	dpi = 350
 
 	def __init__(self, file_tree, batch_name, data=None, dryrun=False, flow=True, parallel = False, numprocs = 4, verbose = False, figures_folder = False, create_perflow_data = False):
@@ -140,7 +141,7 @@ class FlowAnalyser(object):
 		a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
 		return a
 
-	def boot(self,N_bs,bs_statistic = np.mean, F = ptools._default_return, F_error = ptools._default_error_return, non_bs_stats = ptools._default_return,store_raw_bs_values=True):
+	def boot(self, N_bs, F = ptools._default_return, F_error = ptools._default_error_return, store_raw_bs_values = True):
 		# Stores number of bootstraps
 		self.N_bs = N_bs
 		
@@ -154,8 +155,6 @@ class FlowAnalyser(object):
 			# Sets up jobs for parallel processing
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
 								[N_bs for i in xrange(self.NFlows)],
-								[bs_statistic for i in xrange(self.NFlows)],
-								[non_bs_stats for i in xrange(self.NFlows)],
 								[index_lists for i in xrange(self.NFlows)])
 
 			# Initializes multiprocessing
@@ -184,7 +183,7 @@ class FlowAnalyser(object):
 
 			# Non-parallel method for calculating jackknife
 			for i in xrange(self.NFlows):
-				bs = Bootstrap(self.y[:,i], N_bs, bootstrap_statistics = bs_statistic, non_bs_stats = non_bs_stats, index_lists = index_lists)
+				bs = Bootstrap(self.y[:,i], N_bs, index_lists = index_lists)
 				self.bs_y[i] = bs.bs_avg
 				self.bs_y_std[i] = bs.bs_std
 				self.unanalyzed_y[i] = bs.avg_original
@@ -211,15 +210,14 @@ class FlowAnalyser(object):
 		# Sets performed flag to true
 		self.bootstrap_performed = True
 
-	def jackknife(self, jk_statistics = np.average, F = ptools._default_return, F_error = ptools._default_error_return, non_jk_statistics = ptools._default_return,store_raw_jk_values=True):
+	def jackknife(self, F = ptools._default_return, F_error = ptools._default_error_return, store_raw_jk_values=True):
 		if self.parallel:
 			# Sets up jobs for parallel processing
-			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
-								[jk_statistics for i in xrange(self.NFlows)],
-								[non_jk_statistics for i in xrange(self.NFlows)])
+			input_values = [self.y[:,i] for i in xrange(self.NFlows)]
 
 			# Prints job size
-			# print sys.getsizeof(input_values)/1024.0, "kB"
+			# if self.verbose:
+			# 	print sys.getsizeof(input_values)/1024.0, "kB"
 
 			# Initializes multiprocessing
 			pool = multiprocessing.Pool(processes=self.numprocs)								
@@ -258,22 +256,28 @@ class FlowAnalyser(object):
 		# Sets performed flag to true
 		self.jackknife_performed = True
 
-	def autocorrelation(self,use_numpy=True, F = ptools._default_return, F_error = ptools._default_error_return, auto_corr_statistics = ptools._default_return, store_raw_ac_error_correction = True, full = False):
-		if full:
-			raise NotImplementedError("Autocorrelation as shown by Wolffi not implemented.")
-
+	def autocorrelation(self, store_raw_ac_error_correction = True):
+		"""
+		Function for running the autocorrelation routine.
+		"""
 		# Gets autocorrelation
 		if self.parallel:
-			# Sets up jobs for parallel processing
-			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
-								[use_numpy for i in xrange(self.NFlows)],
-								[auto_corr_statistics for i in xrange(self.NFlows)])
-
 			# Sets up parallel job
 			pool = multiprocessing.Pool(processes=self.numprocs)
+			
+			if self.function_derivative != None:
+				# Sets up jobs for parallel processing
+				input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
+									[self.function_derivative for i in xrange(self.NFlows)])
 
-			# Initiates parallel jobs
-			results = pool.map(ptools._autocorrelation_parallel_core,input_values)
+				# Initiates parallel jobs
+				results = pool.map(ptools._autocorrelation_propagated_parallel_core,input_values)
+			else:
+				# Sets up jobs for parallel processing
+				input_values = zip([self.y[:,i] for i in xrange(self.NFlows)])
+				
+				# Initiates parallel jobs
+				results = pool.map(ptools._autocorrelation_parallel_core,input_values)
 
 			# Closes multiprocessing instance for garbage collection
 			pool.close()
@@ -291,8 +295,10 @@ class FlowAnalyser(object):
 
 			# Non-parallel method for calculating autocorrelation
 			for i in xrange(self.NFlows):
-				if not full:
-					ac = Autocorrelation(self.y[:,i],use_numpy=use_numpy,data_statistic=auto_corr_statistics)
+				if self.function_derivative != None:
+					ac = PropagatedAutocorrelation(self.y[:,i])
+				else:
+					ac = Autocorrelation(self.y[:,i])
 				self.autocorrelations[i] = ac.R
 				self.autocorrelations_errors[i] = ac.R_error
 				self.integrated_autocorrelation_time[i] = ac.integrated_autocorrelation_time()
@@ -572,7 +578,8 @@ class FlowAnalyser(object):
 		# Sets up plot
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
-		ax.set_ylim(self.y_limits)
+		# print self.y_limits
+		# ax.set_ylim(self.y_limits)
 		ax.plot(correction_function(self.unanalyzed_y_data[flow_time]),color="0",label=self.observable_name)
 		ax.set_xlabel(r"Monte Carlo time")
 		ax.set_ylabel(r"")
@@ -611,8 +618,12 @@ class AnalyseEnergy(FlowAnalyser):
 	x_label = r"$t/r_0^2$" # Dimensionsless, Implied multiplication by a^2
 	y_label = r"$t^2\langle E \rangle$" # Energy is dimension 4, while t^2 is dimension invsere 4, or length/time which is inverse energy, see Peskin and Schroeder
 
+	def __init__(self,*args,**kwargs):
+		super(AnalyseEnergy,self).__init__(*args,**kwargs)
+		self.y *= -self.y/64.0
+
 	def correction_function(self, y):
-		return -y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"]/64.0 # factor 0.5 left out, see paper by 
+		return y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"] # factor 0.5 left out, see paper by 
 
 class AnalyseQQuartic(FlowAnalyser):
 	"""
@@ -715,18 +726,22 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 			lattice_size = 24**3*48
 			self.chi = ptools._chi_beta6_0
 			self.chi_std = ptools._chi_beta6_0_error
+			self.chi_derivative = ptools._chi_beta6_0_derivative
 		elif self.data.meta_data["beta"] == 6.1:
 			lattice_size = 28**3*56
 			self.chi = ptools._chi_beta6_1
 			self.chi_std = ptools._chi_beta6_1_error
+			self.chi_derivative = ptools._chi_beta6_1_derivative
 		elif self.data.meta_data["beta"] == 6.2:
 			lattice_size = 32**3*64
 			self.chi = ptools._chi_beta6_2
 			self.chi_std = ptools._chi_beta6_2_error
+			self.chi_derivative = ptools._chi_beta6_2_derivative
 		elif self.data.meta_data["beta"] == 6.45:
 			lattice_size = 48**3*96
 			self.chi = ptools._chi_beta6_45
 			self.chi_std = ptools._chi_beta6_45_error
+			self.chi_derivative = ptools._chi_beta6_45_derivative
 		else:
 			raise ValueError("Unrecognized beta value: %g" % meta_data["beta"])
 
@@ -734,20 +749,6 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 		self.V = lattice_size
 		self.hbarc = 0.19732697 #eV micro m
 		self.const = self.hbarc/self.a/self.V**(1./4)
-
-	# def autocorrelation(self,*args,**kwargs):
-	# 	_temp_parallel = self.parallel
-	# 	self.parallel = False
-	# 	super(AnalyseTopologicalSusceptibility,self).autocorrelation(*args,**kwargs)
-	# 	self.parallel = _temp_parallel
-
-	# def chi(self, Q_squared):
-	# 	# Q should be averaged
-	# 	return self.const*Q_squared**(1./4)
-
-	# def chi_std(self, Q_squared, Q_squared_std):
-	# 	# Q should be averaged 
-	# 	return self.const*(0.25)*Q_squared_std / Q_squared**(0.75)
 
 def main(args):
 	batch_name = args[0]
@@ -758,8 +759,6 @@ def main(args):
 	verbose = True
 	parallel = True
 	numprocs = 8
-	use_numpy_in_autocorrelation = True
-	full_autocorrelation = False
 	create_perflow_data = False
 	# print DirectoryList
 
@@ -772,11 +771,11 @@ def main(args):
 		plaq_analysis = AnalysePlaquette(DirectoryList, batch_name, dryrun = dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data = create_perflow_data)
 		plaq_analysis.boot(N_bs)
 		plaq_analysis.jackknife()
-		plaq_analysis.y_limits = [0.55,1.05]
+		# plaq_analysis.y_limits = [0.55,1.05]
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_jackknife()
-		plaq_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
+		plaq_analysis.autocorrelation()
 		plaq_analysis.plot_autocorrelation(0)
 		plaq_analysis.plot_autocorrelation(-1)
 		plaq_analysis.plot_mc_history(0)
@@ -795,24 +794,27 @@ def main(args):
 	if 'topc' in args or 'topsus' in args or 'topcq4' in args or 'qtqzero' in args:
 		topc_analysis = AnalyseTopologicalCharge(DirectoryList, batch_name, dryrun = dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data = create_perflow_data)
 		if 'topc' in args:
+
 			topc_analysis.boot(N_bs)
 			topc_analysis.jackknife()
-			topc_analysis.y_limits = [-10,10]
+			# topc_analysis.y_limits = [-10,10]
 			topc_analysis.plot_original()
 			topc_analysis.plot_boot()
 			topc_analysis.plot_jackknife()
-			topc_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
+			topc_analysis.autocorrelation()
 			topc_analysis.plot_autocorrelation(0)
 			topc_analysis.plot_autocorrelation(-1)
+
 			topc_analysis.plot_mc_history(0)
 			topc_analysis.plot_mc_history(-1)
-			topc_analysis.plot_boot()
-			topc_analysis.plot_original()
-			topc_analysis.plot_jackknife()
-			topc_analysis.plot_histogram(0,r"$Q$[GeV]",x_limits='auto')
-			topc_analysis.plot_histogram(-1,r"$Q$[GeV]",x_limits='auto')
-			topc_analysis.plot_integrated_correlation_time()
-			topc_analysis.plot_integrated_correlation_time()
+
+			# topc_analysis.plot_boot()
+			# topc_analysis.plot_original()
+			# topc_analysis.plot_jackknife()
+			# topc_analysis.plot_histogram(0,r"$Q$[GeV]",x_limits='auto')
+			# topc_analysis.plot_histogram(-1,r"$Q$[GeV]",x_limits='auto')
+			# topc_analysis.plot_integrated_correlation_time()
+			# topc_analysis.plot_integrated_correlation_time()
 
 			if topc_analysis.bootstrap_performed and topc_analysis.autocorrelation_performed:
 				write_data_to_file(topc_analysis,dryrun = dryrun)
@@ -870,16 +872,13 @@ def main(args):
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList, batch_name, dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs, verbose=verbose)
-			topsus_analysis.boot(N_bs,bs_statistic = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std,store_raw_bs_values=True)
-			topsus_analysis.jackknife(jk_statistics = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std,store_raw_jk_values=True)
-			topsus_analysis.y_limits  = [0.05,0.5]
+			topsus_analysis.boot(N_bs,F = topsus_analysis.chi, F_error = topsus_analysis.chi_std, store_raw_bs_values = True)
+			topsus_analysis.jackknife(F = topsus_analysis.chi, F_error = topsus_analysis.chi_std, store_raw_jk_values = True)
+			# topsus_analysis.y_limits  = [0.05,0.5]
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_jackknife()
-			# topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
-
-			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,full=full_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
-
+			topsus_analysis.autocorrelation()
 			topsus_analysis.plot_autocorrelation(0)
 			topsus_analysis.plot_autocorrelation(-1)
 			topsus_analysis.plot_mc_history(0)
@@ -901,15 +900,15 @@ def main(args):
 		energy_analysis.boot(N_bs,store_raw_bs_values=True)
 		energy_analysis.jackknife(store_raw_jk_values=True)
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
-		energy_analysis.y_limits = [ 0 , np.max(energy_analysis.correction_function(energy_analysis.unanalyzed_y))]
+		# energy_analysis.y_limits = [ 0 , np.max(energy_analysis.correction_function(energy_analysis.unanalyzed_y))]
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
-		energy_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation)
+		energy_analysis.autocorrelation()
 		energy_analysis.plot_autocorrelation(0)
 		energy_analysis.plot_autocorrelation(-1)
-		energy_analysis.plot_mc_history(0,correction_function = lambda x : -x/64.0)
-		energy_analysis.plot_mc_history(-1,correction_function = lambda x : -x/64.0)
+		energy_analysis.plot_mc_history(0)
+		energy_analysis.plot_mc_history(-1)
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
@@ -947,7 +946,7 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
 		# 		['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
 
-		args = [['beta6_2','data4','topc']]
+		args = [['beta6_0','data4','topc']]
 
 		# args = [['beta6_2','data3','topcq4']]
 		# args = [['beta6_2','data3','qtqzero']]
