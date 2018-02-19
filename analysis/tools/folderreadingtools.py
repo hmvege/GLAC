@@ -197,12 +197,12 @@ class GetFolderContents:
 
 	def create_perflow_data(self,dryrun=False,verbose=False):
 		# Creating per flow folder
-		per_flow_folder = os.path.join(self.file_tree.batch_folder,"perflow")
-		check_folder(per_flow_folder,dryrun)
+		per_flow_folder = os.path.join("..",self.file_tree.data_batch_folder,"perflow")
+		check_folder(per_flow_folder,dryrun,verbose=verbose)
 
 		# Creates observable per flow folder
 		per_flow_observable_folder = os.path.join(per_flow_folder,self.observable)
-		check_folder(per_flow_observable_folder,dryrun)
+		check_folder(per_flow_observable_folder,dryrun,verbose=verbose)
 
 		# Retrieving number of configs and number of flows
 		NConfigs,NFlows = self.data_y.shape
@@ -252,10 +252,10 @@ class GetFolderContents:
 def check_folder(folder_name, dryrun, verbose = False):
 	# Checks that figures folder exist, and if not will create it
 	if not os.path.isdir(folder_name):
-		if not dryrun:
-			os.mkdir(folder_name)
 		if dryrun or verbose:
 			print "> mkdir %s" % folder_name
+		if not dryrun:
+			os.mkdir(folder_name)
 
 
 def write_data_to_file(analysis_object, post_analysis_folder = "../output/post_analysis_data", dryrun = False):

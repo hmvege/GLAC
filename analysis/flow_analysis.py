@@ -19,7 +19,7 @@ class FlowAnalyser(object):
 	fname_addon = ""
 	dpi = 350
 
-	def __init__(self, file_tree, batch_name, data=None, dryrun=False, flow=True, parallel = False, numprocs = 4, verbose = False, figures_folder = False):
+	def __init__(self, file_tree, batch_name, data=None, dryrun=False, flow=True, parallel = False, numprocs = 4, verbose = False, figures_folder = False, create_perflow_data = False):
 		# Sets up global constants
 		self.batch_name = batch_name
 		self.batch_data_folder = file_tree.data_batch_folder
@@ -60,6 +60,10 @@ class FlowAnalyser(object):
 			self.data = GetFolderContents(file_tree,self.observable_name_compact,flow=self.flow)
 		else:
 			self.data = copy.deepcopy(data)
+
+		# Creates perflow data if prompted
+		if create_perflow_data:
+			self.data.create_perflow_data(verbose=self.verbose)
 
 		if self.verbose:
 			print "Size of data: %.4g kB" % (sys.getsizeof(self.data.data_y)/1024.0)
@@ -375,8 +379,8 @@ class FlowAnalyser(object):
 		# Plots the error bar
 		ax.errorbar(x,y,yerr=y_std,fmt=".",color="0",ecolor="r",label=self.observable_name,markevery=self.mark_interval,errorevery=self.error_mark_interval)
 
-		if len(self.y_limits) == 0:
-			self.y_limits = [-np.max(y),np.max(y)]
+		# if self.y_limits[0] == None and self.y_limits[1] == None:
+		# 	self.y_limits = [-np.max(y),np.max(y)]
 
 		ax.set_xlabel(self.x_label)
 		ax.set_ylabel(self.y_label)
@@ -568,6 +572,7 @@ class FlowAnalyser(object):
 		# Sets up plot
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
+		ax.set_ylim(self.y_limits)
 		ax.plot(correction_function(self.unanalyzed_y_data[flow_time]),color="0",label=self.observable_name)
 		ax.set_xlabel(r"Monte Carlo time")
 		ax.set_ylabel(r"")
@@ -633,7 +638,7 @@ class AnalyseQQ(FlowAnalyser):
 
 	def __init__(self,*args,**kwargs):
 		super(AnalyseQQ,self).__init__(*args,**kwargs)
-		self.y **= 4
+		self.y **= 2
 
 
 class AnalyseQtQZero(FlowAnalyser):
@@ -698,6 +703,7 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 
 	def __init__(self,*args,**kwargs):
 		super(AnalyseTopologicalSusceptibility,self).__init__(*args,**kwargs)
+		self.y **= 2
 		self.set_size()
 
 	def set_size(self): # HARDCODE DIFFERENT SIZES HERE!
@@ -754,6 +760,7 @@ def main(args):
 	numprocs = 8
 	use_numpy_in_autocorrelation = True
 	full_autocorrelation = False
+	create_perflow_data = False
 	# print DirectoryList
 
 	# Analysis timers
@@ -762,7 +769,7 @@ def main(args):
 
 	# Analyses plaquette data if present in arguments
 	if 'plaq' in args:
-		plaq_analysis = AnalysePlaquette(DirectoryList, batch_name, dryrun = dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
+		plaq_analysis = AnalysePlaquette(DirectoryList, batch_name, dryrun = dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data = create_perflow_data)
 		plaq_analysis.boot(N_bs)
 		plaq_analysis.jackknife()
 		plaq_analysis.y_limits = [0.55,1.05]
@@ -786,7 +793,7 @@ def main(args):
 			write_data_to_file(plaq_analysis,dryrun = dryrun)
 
 	if 'topc' in args or 'topsus' in args or 'topcq4' in args or 'qtqzero' in args:
-		topc_analysis = AnalyseTopologicalCharge(DirectoryList, batch_name, dryrun = dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
+		topc_analysis = AnalyseTopologicalCharge(DirectoryList, batch_name, dryrun = dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data = create_perflow_data)
 		if 'topc' in args:
 			topc_analysis.boot(N_bs)
 			topc_analysis.jackknife()
@@ -863,15 +870,15 @@ def main(args):
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList, batch_name, dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs, verbose=verbose)
-			topsus_analysis.boot(N_bs,bs_statistic = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std, non_bs_stats = ptools._return_squared,store_raw_bs_values=True)
-			topsus_analysis.jackknife(jk_statistics = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std, non_jk_statistics = ptools._return_squared,store_raw_jk_values=True)
+			topsus_analysis.boot(N_bs,bs_statistic = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std,store_raw_bs_values=True)
+			topsus_analysis.jackknife(jk_statistics = ptools._return_mean_squared, F = topsus_analysis.chi, F_error = topsus_analysis.chi_std,store_raw_jk_values=True)
 			topsus_analysis.y_limits  = [0.05,0.5]
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_jackknife()
 			# topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 
-			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,auto_corr_statistics=ptools._return_squared,full=full_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
+			topsus_analysis.autocorrelation(use_numpy=use_numpy_in_autocorrelation,full=full_autocorrelation) # Dosen't make sense to do the autocorrelation of the topoligical susceptibility since it is based on a data mean
 
 			topsus_analysis.plot_autocorrelation(0)
 			topsus_analysis.plot_autocorrelation(-1)
@@ -890,7 +897,7 @@ def main(args):
 
 	if 'energy' in args:
 		r0 = 0.5
-		energy_analysis = AnalyseEnergy(DirectoryList, batch_name, dryrun = dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
+		energy_analysis = AnalyseEnergy(DirectoryList, batch_name, dryrun = dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data = create_perflow_data)
 		energy_analysis.boot(N_bs,store_raw_bs_values=True)
 		energy_analysis.jackknife(store_raw_jk_values=True)
 		x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
@@ -936,11 +943,11 @@ if __name__ == '__main__':
 		# 		['beta6_1','data4','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data4','plaq','topc','energy','topsus']]
 
-		args = [['beta6_0','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
-				['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
-				['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
+		# args = [['beta6_0','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
+		# 		['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
+		# 		['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
 
-		# args = [['beta6_2','data2','plaq','topc','energy','topsus']]
+		args = [['beta6_2','data4','topc']]
 
 		# args = [['beta6_2','data3','topcq4']]
 		# args = [['beta6_2','data3','qtqzero']]

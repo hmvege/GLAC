@@ -643,6 +643,7 @@ def main(args):
     load_parser.add_argument('-nf','--no_flow',                 default=False,                                      action='store_true',help='If toggled, will not perform any flows.')
     load_parser.add_argument('-cfgnum','--config_start_number', default=config_default["config_start_number"],      type=int,help='Starts naming the configuration from this number.')
     load_parser.add_argument('-rn',  '--run_name',              default=False,                                      type=str,help='Specify the run name')
+    load_parser.add_argument('-ex','--exclude',                 default=False,                                      type=str,nargs='+',help='Nodes to exclude.')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
@@ -651,6 +652,7 @@ def main(args):
     unit_test_parser.add_argument('-cgi','--check_gauge_invariance', default=False,                                 type=str, help='Loads and checks the gauge field invariance of a field.')
     unit_test_parser.add_argument('-N',   '--NSpatial',         default=False,                                      type=int,help='spatial lattice dimension')
     unit_test_parser.add_argument('-NT',  '--NTemporal',        default=False,                                      type=int,help='temporal lattice dimension')
+    unit_test_parser.add_argument('-ex','--exclude',            default=False,                                      type=str,nargs='+',help='Nodes to exclude.')
 
     ######## Performance test parser ########
     performance_test_parser = subparser.add_parser('perfTest', help='Runs performance tests on the certain components of the GluonicLQCD program. Will exit when complete.')
@@ -659,6 +661,7 @@ def main(args):
     performance_test_parser.add_argument('-NRandTests',         default=config_default["NRandTests"],               type=int,help='Number of random tests we will run.')
     performance_test_parser.add_argument('-NDerivativeTests',   default=config_default["NDerivativeTests"],         type=int,help='Number of full lattice derivative tests we will run.')
     performance_test_parser.add_argument('-TaylorPolDegree',    default=config_default["TaylorPolDegree"],          type=int,help='Degree of the Taylor polynomial for exponentiation(default is 8).')
+    performance_test_parser.add_argument('-ex','--exclude',     default=False,                                      type=str,nargs='+',help='Nodes to exclude.')
 
     args = parser.parse_args()
     # args = parser.parse_args(['python', 'makeJobs.py', 'load', 'config_folder/size_scaling_configs/config_16cube32.py', 'config_folder/size_scaling_configs/config_24cube48.py', 'config_folder/size_scaling_configs/config_28cube56.py', 'config_folder/size_scaling_configs/config_32cube64.py', '-s', 'abel'])
@@ -712,6 +715,12 @@ def main(args):
             configuration["NTherm"] = 0
             configuration["NFlows"] = 0
 
+        # Excludes certain nodes if arguments have been provided
+        if args.exclude:
+            excluded_nodes = ','.join(args.exclude)
+        else:
+            excluded_nodes = ""
+
         # Populate configuration with default values if certain keys are not present
         config_default["base_folder"] = args.base_folder
         if args.run_name != False:
@@ -728,10 +737,12 @@ def main(args):
         for key in config_default.keys():
             if not key in configuration:
                 configuration[key] = config_default[key]
+
+
         configuration["config_start_number"] = args.config_start_number
 
         # Submitting job
-        s.submitJob(configuration,args.system,args.partition)
+        s.submitJob(configuration,args.system,args.partition,excluded_nodes)
 
     elif args.subparser == 'setup':
         """
@@ -739,7 +750,6 @@ def main(args):
         """
         if not args.system: raise ValueError("System value %g: something is wrong in parser." % args.system)
 
-        excluded_nodes = ""
         system = args.system
         partition = args.partition
         config_default["runName"]                   = args.run_name
@@ -779,8 +789,13 @@ def main(args):
             config_default["subDims"] = args.subDims
         if args.square:
             config_default["subDims"] = createSquare(config_default["threads"],config_default["N"],config_default["NT"])
+
+        # Excludes certain nodes if arguments have been provided
         if args.exclude:
             excluded_nodes = ','.join(args.exclude)
+        else:
+            excluded_nodes = ""
+
         if args.load_config_and_run != False:
             config_default["load_config_and_run"] = args.load_config_and_run
         config_default["config_start_number"] = args.config_start_number
@@ -819,7 +834,6 @@ def main(args):
         config_default["cpu_approx_runtime_hr"] = 0
         config_default["cpu_approx_runtime_min"] = 20
         partition = "normal"
-        excluded_nodes = ""
         system = args.system
         config_default["uTestVerbose"] = args.verbose
         if args.check_gauge_invariance:
@@ -828,6 +842,13 @@ def main(args):
                 sys.exit("ERROR: need to specifiy dimensions of loaded lattice.")
             config_default["N"] = args.NSpatial
             config_default["NT"] = args.NTemporal
+        
+        # Checks if we are to exclude any of the nodes
+        if args.exclude:
+            excluded_nodes = ','.join(args.exclude)
+        else:
+            excluded_nodes = ""
+        
         # Submitting job
         s.submitJob(config_default,system,partition,excluded_nodes)
 
@@ -843,12 +864,17 @@ def main(args):
         config_default["NT"] = 32
         config_default["subDims"] = createSquare(config_default["threads"],config_default["N"],config_default["NT"])
         partition = "normal"
-        excluded_nodes = ""
         system = args.system
         config_default["NExpTests"] = args.NExpTests
         config_default["NRandTests"] = args.NRandTests
         config_default["NDerivativeTests"] = args.NDerivativeTests
         config_default["TaylorPolDegree"] = args.TaylorPolDegree
+
+        # Checks if we are to exclude any of the nodes
+        if args.exclude:
+            excluded_nodes = ','.join(args.exclude)
+        else:
+            excluded_nodes = ""
 
         # Submitting job
         s.submitJob(config_default,system,partition,excluded_nodes)
