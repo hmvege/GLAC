@@ -22,6 +22,7 @@ Flow::Flow(Action *S)
 
 Flow::~Flow()
 {
+    delete m_SU3ExpFunc;
     delete [] m_tempLattice;
 }
 

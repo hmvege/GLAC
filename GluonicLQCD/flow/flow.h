@@ -14,7 +14,8 @@ private:
     std::vector<unsigned int> m_N;
     unsigned int m_subLatticeSize;
     // Temporary lattice to use when flowing
-    Lattice<SU3> * m_tempLattice, m_tempExpLattice;
+    Lattice<SU3> * m_tempLattice;
+    Lattice<SU3> m_tempExpLattice;
     // Updates the lattice with the exponantiated lattice values
     inline Lattice<SU3> matrixExp(const Lattice<SU3> &lattice);
     inline Lattice<SU3> matrixExp(Lattice<SU3> &&lattice);
