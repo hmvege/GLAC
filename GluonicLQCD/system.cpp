@@ -97,6 +97,8 @@ System::~System()
     /*
      * Class destructor
      */
+    delete m_S;
+    delete m_SU3Generator;
     delete [] m_lattice;
     delete m_correlator;
     if (m_NFlows != 0) {

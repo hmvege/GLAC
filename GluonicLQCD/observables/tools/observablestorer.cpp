@@ -33,8 +33,40 @@ void ObservableStorer::gatherResults()
     // Temporary buffer for summing the observables
     double tempBuffer[m_NObs];
 
+    for (int iObs = 0; iObs < m_NObs; iObs++) {
+        tempBuffer[iObs] = 0;
+    }
+
+//    // MEM CHECK!
+//    Parallel::Communicator::setBarrier();
+//    for (int rank = 0; rank < Parallel::Communicator::getNumProc(); rank++) {
+//        if (Parallel::Communicator::getProcessRank() == rank) {
+//            printf("BEFORE SHARING - RANK %d array: ",rank);
+//            for (int it = 0; it < m_NObs; it++) {
+//                printf("%4.4f ",m_observables[it]);
+//            }
+//            cout << endl;
+//        }
+//    }
+//    Parallel::Communicator::setBarrier();
+
     // Performing an average over the Monte Carlo obtained values
-    MPI_Allreduce(m_observables, tempBuffer, m_NObs, MPI_DOUBLE, MPI_SUM, Parallel::ParallelParameters::ACTIVE_COMM);
+//    MPI_Allreduce(m_observables, tempBuffer, m_NObs, MPI_DOUBLE, MPI_SUM, Parallel::ParallelParameters::ACTIVE_COMM);
+    MPI_Reduce(m_observables, tempBuffer, m_NObs, MPI_DOUBLE, MPI_SUM, 0, Parallel::ParallelParameters::ACTIVE_COMM);
+
+//    // MEM CHECK!
+//    Parallel::Communicator::setBarrier();
+//    for (int rank = 0; rank < Parallel::Communicator::getNumProc(); rank++) {
+//        if (Parallel::Communicator::getProcessRank() == rank) {
+//            printf("AFTER SHARING - RANK %d array: ",rank);
+//            for (int it = 0; it < m_NObs; it++) {
+//                printf("%4.4f ",tempBuffer[it]);
+//            }
+//            cout << endl;
+//        }
+//    }
+//    Parallel::Communicator::setBarrier();
+//    exit(1);
 
     // Retrieving observable from temporary buffer
     for (int iBuffer = 0; iBuffer < m_NObs; iBuffer++) {

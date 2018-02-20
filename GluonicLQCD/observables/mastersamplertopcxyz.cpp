@@ -26,12 +26,14 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
     m_tempTopcT.resize(m_N[3]);
 
     // Allocates temporary array for gathering results into a single time array
-    m_tempTopctArray = new double[Parameters::getNTemporal() * Parameters::getNFlows()];
-    for (int iFlow = 0; iFlow < Parameters::getNFlows(); iFlow++) {
+    m_tempTopctArray = new double[Parameters::getNTemporal() * (Parameters::getNFlows() + 1)];
+    for (int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
         for (int it = 0; it < Parameters::getNTemporal(); it++) {
             m_tempTopctArray[iFlow*Parameters::getNTemporal() + it] = 0;
         }
     }
+
+//    cout << Parameters::getNTemporal() * (Parameters::getNFlows() + 1) << endl;
 }
 
 MasterSamplerTopcXYZ::~MasterSamplerTopcXYZ()
@@ -178,14 +180,20 @@ void MasterSamplerTopcXYZ::copyObservable(int iObs, std::vector<double> obs)
     (*m_plaqObservable)[iObs] = obs[0];
     (*m_topcObservable)[iObs] = obs[1];
     (*m_energyObservable)[iObs] = obs[2];
+    for (unsigned int it = 0; it < m_N[3]; it++) {
+        (*m_topctObservable)[iObs*m_N[3] + it] = obs[3 + it];
+    }
 }
 
 std::vector<double> MasterSamplerTopcXYZ::getObservablesVector(int iObs)
 {
-    std::vector<double> obs(3);
+    std::vector<double> obs(3 + m_N[3]);
     obs[0] = (*m_plaqObservable)[iObs];
     obs[1] = (*m_topcObservable)[iObs];
     obs[2] = (*m_energyObservable)[iObs];
+    for (unsigned int it = 0; it < m_N[3]; it++) {
+        obs[3 + it] = (*m_topctObservable)[iObs*m_N[3] + it];
+    }
     return obs;
 }
 
