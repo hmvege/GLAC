@@ -620,7 +620,7 @@ class AnalyseEnergy(FlowAnalyser):
 
 	def __init__(self,*args,**kwargs):
 		super(AnalyseEnergy,self).__init__(*args,**kwargs)
-		self.y *= -self.y/64.0
+		self.y *= -1.0/64.0
 
 	def correction_function(self, y):
 		return y*self.x*self.x*self.data.meta_data["FlowEpsilon"]*self.data.meta_data["FlowEpsilon"] # factor 0.5 left out, see paper by 

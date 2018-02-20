@@ -11,7 +11,6 @@ using std::chrono::steady_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 
-//System::System(Correlator *correlator, Action *S, Flow *F, Correlator *flowCorrelator)
 System::System()
 {
     /*
@@ -103,7 +102,7 @@ System::~System()
     if (m_NFlows != 0) {
         delete [] m_flowLattice;
         delete m_flowCorrelator;
-//        delete m_flow;
+        delete m_flow;
     }
 
 }
@@ -395,8 +394,6 @@ void System::runMetropolis()
         }
 
     }
-
-//    Parallel::Communicator::MPIPrint("\nNat okay after metropolis loop\n");
 
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceScore,&m_acceptanceScore,1,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);

@@ -17,7 +17,7 @@ public:
     unsigned int m_latticeSize;
 
     // Default contructors
-    Lattice() {}
+    Lattice() { }
     Lattice(std::vector<unsigned int>latticeDimensions) {
         allocate(latticeDimensions);
     }

@@ -36,9 +36,6 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
 
 MasterSamplerTopcXYZ::~MasterSamplerTopcXYZ()
 {
-//    Parallel::Communicator::MPIPrint("WTF");
-//    Parallel::Communicator::setBarrier();
-
     delete m_plaqObservable;
     delete m_topcObservable;
     delete m_energyObservable;
