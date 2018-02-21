@@ -48,4 +48,5 @@ workspace
 *.pyc
 
 # Files to include regardless of rule
-!analysis/statistics/tests/plaq.dat
+!analysis/statistics/tests/plaq_beta6_2_t10.dat
+!analysis/statistics/tests/topc_beta6_2_t10.dat

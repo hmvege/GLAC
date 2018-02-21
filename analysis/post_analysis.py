@@ -14,7 +14,7 @@ class PostAnalysis:
 	observable_name_compact = "obs"
 	x_label = r""
 	y_label = r""
-	dpi=None
+	dpi=350
 	size_labels = {	6.0  : r"$24^3 \times 48$",
 					6.1  : r"$28^3 \times 56$",
 					6.2  : r"$32^3 \times 64$",
@@ -461,7 +461,6 @@ class EnergyPostAnalysis(PostAnalysis):
 		fig.savefig(fname,dpi=self.dpi)
 
 		print "Continiuum plot of %s created in %s" % (self.observable_name.lower(),fname)
-		# plt.show()
 		plt.close(fig)
 
 	def coupling_fit(self):
@@ -479,23 +478,23 @@ def main(args):
 	# Rewrites all of the data to a single file for sharing with giovanni
 	# data.write_batch_to_single_file()
 
-	# # Plots topsus
-	# topsus_analysis = TopSusPostAnalysis(data,"topsus")
-	# topsus_analysis.set_analysis_data_type("bootstrap")
-	# topsus_analysis.plot()
+	# Plots topsus
+	topsus_analysis = TopSusPostAnalysis(data,"topsus")
+	topsus_analysis.set_analysis_data_type("bootstrap")
+	topsus_analysis.plot()
 
-	# # Retrofits the topsus for continuum limit
-	# continium_targets = [0.3,0.4,0.5,0.58]
-	# for cont_target in continium_targets:
-	# 	topsus_analysis.plot_continiuum(cont_target,0.015,"data_line_fit")
+	# Retrofits the topsus for continuum limit
+	continium_targets = [0.3,0.4,0.5,0.58]
+	for cont_target in continium_targets:
+		topsus_analysis.plot_continiuum(cont_target,0.015,"data_line_fit")
 
 	# Plots energy
 	energy_analysis = EnergyPostAnalysis(data,"energy")
 	energy_analysis.set_analysis_data_type("bootstrap")
-	# energy_analysis.plot()
+	energy_analysis.plot()
 
-	# # Retrofits the energy for continiuum limit
-	# energy_analysis.plot_continiuum(0.3, 0.015,"bootstrap_fit")
+	# Retrofits the energy for continiuum limit
+	energy_analysis.plot_continiuum(0.3, 0.015,"bootstrap_fit")
 
 	# Plot running coupling
 	energy_analysis.coupling_fit()
