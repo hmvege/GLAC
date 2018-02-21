@@ -15,7 +15,7 @@
     "hotStart"                  : False,
     "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
     "observables"               : ["plaq"], # Optional: topologicalCharge, energyDensity
-    "flowObservables"           : ["plaq","topc","energy"], # Optional: topologicalCharge, energyDensity
+    "flowObservables"           : ["plaq","topc","energy","topct"], # Optional: topologicalCharge, energyDensity
     "uTest"                     : False,
     "uTestVerbose"              : False,
     "SU3Eps"                    : 0.24,
@@ -23,7 +23,7 @@
     "metropolisSeed"            : 0,
     "randomMatrixSeed"          : 0,
     "threads"                   : 512,
-    "cpu_approx_runtime_hr"     : 60, # FLOW TIME: 38.3 hours
+    "cpu_approx_runtime_hr"     : 65, # FLOW TIME: 38.3 hours
     "cpu_approx_runtime_min"    : 0,
     "cpu_memory"                : 3800,
     "account_name"              : "nn2977k"}
