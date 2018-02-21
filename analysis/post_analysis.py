@@ -351,7 +351,7 @@ class EnergyPostAnalysis(PostAnalysis):
 		"""
 		Function that corrects the energy data
 		"""
-		return -x*self.flow_time**2/64.0
+		return x*self.flow_time**2
 
 	def _initiate_plot_values(self,data):
 		# Sorts data into a format specific for the plotting method
@@ -368,7 +368,36 @@ class EnergyPostAnalysis(PostAnalysis):
 
 			self.plot_values.append(values)
 
-	def plot_continiuum(self,fit_target,fit_interval,fit_type):
+	def _linefit_to_continiuum(self,x_points,y_points,y_points_error,fit_type="curve_fit"):
+		"""
+		Fits a a set of values to continiuum.
+		Args:
+			x_points (numpy float array) : x points to data fit
+			y_points (numpy float array) : y points to data fit
+			y_points_error (numpy float array) : error of y points to data fit
+			[optional] fit_type (str) : type of fit to perform. Options: 'curve_fit' (default), 'polyfit'
+		"""
+		# Fitting data
+		if fit_type == "curve_fit":
+			pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_points, y_points,sigma=y_points_error)
+		elif fit_type == "polyfit":
+			pol, polcov = np.polyfit(x_points,y_points,1,rcond=None,full=False,w=1.0/y_points_error,cov=True)
+		else:
+			raise KeyError("fit_type '%s' not recognized." % fit_type)
+
+		# Gets line properties
+		a = pol[0]
+		b = pol[1]
+		a_err, b_err = np.sqrt(np.diag(polcov))
+
+		# Sets up line fitted variables		
+		x = np.linspace(0,x_points[-1]*1.03,1000)
+		y = a * x + b
+		y_std = a_err * x + b_err
+
+		return x, y, y_std, a, b, a_err, b_err
+
+	def plot_continiuum(self,fit_target,fit_interval,fit_type,plot_arrows = [0.05,0.07,0.1], legend_location = "best"):
 		# Retrieves t0 values used to be used for continium fitting
 		self._get_beta_values_to_fit(fit_target,fit_interval,axis="y",
 									fit_type = fit_type, 
@@ -422,11 +451,10 @@ class EnergyPostAnalysis(PostAnalysis):
 		ax.yaxis.set_ticks(np.arange(start, end, 0.01))
 
 		# Puts on some arrows at relevant points
-		ax.annotate(r"$a=0.05$fm", xy=((0.01/self.r0)**2, end), xytext=((0.01/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
-		ax.annotate(r"$a=0.07$fm", xy=((0.07/self.r0)**2, end), xytext=((0.07/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
-		ax.annotate(r"$a=0.1$fm", xy=((0.1/self.r0)**2, end), xytext=((0.1/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
-
-		# ax.legend(loc="lower left")
+		for arrow in plot_arrows:
+			ax.annotate(r"$a=%.2g$fm" % arrow, xy=((arrow/self.r0)**2, end), xytext=((arrow/self.r0)**2, end+0.005),arrowprops=dict(arrowstyle="->"),ha="center")
+		
+		ax.legend(loc=legend_location) # "lower left"
 
 		# Saves figure
 		fname = os.path.join(self.output_folder_path,"post_analysis_%s_continiuum%s_%s.png" % (self.observable_name_compact,str(fit_target).replace(".",""),fit_type.strip("_")))
@@ -436,34 +464,9 @@ class EnergyPostAnalysis(PostAnalysis):
 		# plt.show()
 		plt.close(fig)
 
-	def _linefit_to_continiuum(self,x_points,y_points,y_points_error,fit_type="curve_fit"):
-		"""
-		Fits a a set of values to continiuum.
-		Args:
-			x_points (numpy float array) : x points to data fit
-			y_points (numpy float array) : y points to data fit
-			y_points_error (numpy float array) : error of y points to data fit
-			[optional] fit_type (str) : type of fit to perform. Options: 'curve_fit' (default), 'polyfit'
-		"""
-		# Fitting data
-		if fit_type == "curve_fit":
-			pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_points, y_points,sigma=y_points_error)
-		elif fit_type == "polyfit":
-			pol, polcov = np.polyfit(x_points,y_points,1,rcond=None,full=False,w=1.0/y_points_error,cov=True)
-		else:
-			raise KeyError("fit_type '%s' not recognized." % fit_type)
-
-		# Gets line properties
-		a = pol[0]
-		b = pol[1]
-		a_err, b_err = np.sqrt(np.diag(polcov))
-
-		# Sets up line fitted variables		
-		x = np.linspace(0,x_points[-1]*1.03,1000)
-		y = a * x + b
-		y_std = a_err * x + b_err
-
-		return x, y, y_std, a, b, a_err, b_err
+	def coupling_fit(self):
+		print "Finding Lambda"
+		pass
 
 def main(args):
 	"""
@@ -476,30 +479,31 @@ def main(args):
 	# Rewrites all of the data to a single file for sharing with giovanni
 	# data.write_batch_to_single_file()
 
-	# Plots topsus
-	topsus_analysis = TopSusPostAnalysis(data,"topsus")
-	topsus_analysis.set_analysis_data_type("bootstrap")
-	topsus_analysis.plot()
+	# # Plots topsus
+	# topsus_analysis = TopSusPostAnalysis(data,"topsus")
+	# topsus_analysis.set_analysis_data_type("bootstrap")
+	# topsus_analysis.plot()
 
-	# Retrofits the topsus for continuum limit
-	continium_targets = [0.3,0.4,0.5,0.58]
-	for cont_target in continium_targets:
-		topsus_analysis.plot_continiuum(cont_target,0.015,"data_line_fit")
+	# # Retrofits the topsus for continuum limit
+	# continium_targets = [0.3,0.4,0.5,0.58]
+	# for cont_target in continium_targets:
+	# 	topsus_analysis.plot_continiuum(cont_target,0.015,"data_line_fit")
 
 	# Plots energy
 	energy_analysis = EnergyPostAnalysis(data,"energy")
 	energy_analysis.set_analysis_data_type("bootstrap")
-	energy_analysis.plot()
+	# energy_analysis.plot()
 
-	# Retrofits the energy for continiuum limit
-	energy_analysis.plot_continiuum(0.3, 0.015,"bootstrap_fit")
+	# # Retrofits the energy for continiuum limit
+	# energy_analysis.plot_continiuum(0.3, 0.015,"bootstrap_fit")
 
 	# Plot running coupling
+	energy_analysis.coupling_fit()
 
 if __name__ == '__main__':
 	if len(sys.argv[1:]) == 1:
 		args = sys.argv[1:]
 	else:
-		# args = ["../output/post_analysis_data/data2"]
-		args = ["../output/post_analysis_data/data4"]
+		args = ["../output/post_analysis_data/data2"]
+		# args = ["../output/post_analysis_data/data4"]
 	main(args)

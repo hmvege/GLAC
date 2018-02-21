@@ -946,7 +946,7 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
 		# 		['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
 
-		args = [['beta6_0','data4','topc']]
+		# args = [['beta6_1','data4','energy']]
 
 		# args = [['beta6_2','data3','topcq4']]
 		# args = [['beta6_2','data3','qtqzero']]
@@ -955,9 +955,9 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','topsus'],
 		# 		['beta6_1','data3','topsus']]
 
-		# args = [['beta6_0','data2','topsus','energy'],
-		# 		['beta6_1','data2','topsus','energy'],
-		# 		['beta6_2','data2','topsus','energy']]
+		args = [['beta6_0','data2','topsus','energy'],
+				['beta6_1','data2','topsus','energy'],
+				['beta6_2','data2','topsus','energy']]
 
 		# args = [['beta6_1','data2','topsus']]
 
