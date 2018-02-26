@@ -165,7 +165,24 @@ class PostAnalysis:
 			# Adds to list of batch-values
 			self.beta_fit.append(bfit)
 
-	def _linefit_to_continiuum(self,x_points,y_points,y_points_error,fit_type="curve_fit"):
+	@staticmethod
+	def _get_line_prop(poly, polycov, x_points, y_points):
+		"""
+		Small static function for curve_fit and polyfit methods.
+		"""
+		# Gets line properties
+		a = poly[0]
+		b = poly[1]
+		a_err, b_err = np.sqrt(np.diag(polycov))
+
+		# Sets up line fitted variables		
+		x = np.linspace(0,x_points[-1]*1.03,1000)
+		y = a * x + b
+		y_std = a_err * x + b_err
+
+		return x, y, y_std, a, b, a_err, b_err
+
+	def _linefit_to_continiuum(self,x_points,y_points,y_points_error,fit_type="least_squares"):
 		"""
 		Fits a a set of values to continiuum.
 		Args:
@@ -175,27 +192,20 @@ class PostAnalysis:
 			[optional] fit_type (str) : type of fit to perform. Options: 'curve_fit' (default), 'polyfit'
 		"""
 		# Fitting data
-		if fit_type == "curve_fit":
+		if fit_type == "least_squares":
 			pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_points, y_points,sigma=y_points_error)
-		elif fit_type == "polyfit":
+			return self._get_line_prop(pol, polcov, x_points, y_points)
+		elif fit_type == "polynomial":
 			pol, polcov = np.polyfit(x_points,y_points,1,rcond=None,full=False,w=1.0/y_points_error,cov=True)
+			return self._get_line_prop(pol,polcov)
+		elif fit_type == "interpolation":
+			return self.interpolate(x_points, y_points, y_points_error)
+			return None
 		else:
 			raise KeyError("fit_type '%s' not recognized." % fit_type)
 
-		# Gets line properties
-		a = pol[0]
-		b = pol[1]
-		a_err, b_err = np.sqrt(np.diag(polcov))
 
-		# Sets up line fitted variables		
-		x = np.linspace(0,x_points[-1]*1.03,1000)
-		y = a * x + b
-		y_std = a_err * x + b_err
-
-		return x, y, y_std, a, b, a_err, b_err
-
-
-	# def _linefit_to_continiuum(self,fit_type="curve_fit"):
+	# def _linefit_to_continiuum(self,fit_type="least_squares"):
 	# 	"""
 	# 	Fits values found in _get_beta_values_to_fit, and fits them to continium.
 	# 	Args:
@@ -212,9 +222,9 @@ class PostAnalysis:
 	# 	y_datapoints_error = (8*t0_err[::-1]) / (np.sqrt(8*t0[::-1])) / self.r0
 
 	# 	# Fitting data
-	# 	if fit_type == "curve_fit":
+	# 	if fit_type == "least_squares":
 	# 		pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_datapoints, y_datapoints,sigma=y_datapoints_error)
-	# 	elif fit_type == "polyfit":
+	# 	elif fit_type == "polynomial":
 	# 		pol, polcov = np.polyfit(x_datapoints,y_datapoints,1,rcond=None,full=False,w=1.0/y_datapoints_error,cov=True)
 	# 	else:
 	# 		raise KeyError("fit_type '%s' not recognized." % fit_type)
@@ -368,7 +378,7 @@ class EnergyPostAnalysis(PostAnalysis):
 
 			self.plot_values.append(values)
 
-	def _linefit_to_continiuum(self,x_points,y_points,y_points_error,fit_type="curve_fit"):
+	def _linefit_to_continiuum(self,x_points,y_points,y_points_error,fit_type="least_squares"):
 		"""
 		Fits a a set of values to continiuum.
 		Args:
@@ -378,9 +388,9 @@ class EnergyPostAnalysis(PostAnalysis):
 			[optional] fit_type (str) : type of fit to perform. Options: 'curve_fit' (default), 'polyfit'
 		"""
 		# Fitting data
-		if fit_type == "curve_fit":
+		if fit_type == "least_squares":
 			pol, polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x_points, y_points,sigma=y_points_error)
-		elif fit_type == "polyfit":
+		elif fit_type == "polynomial":
 			pol, polcov = np.polyfit(x_points,y_points,1,rcond=None,full=False,w=1.0/y_points_error,cov=True)
 		else:
 			raise KeyError("fit_type '%s' not recognized." % fit_type)
@@ -465,6 +475,8 @@ class EnergyPostAnalysis(PostAnalysis):
 
 	def coupling_fit(self):
 		print "Finding Lambda"
+
+
 		pass
 
 def main(args):

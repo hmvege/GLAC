@@ -643,7 +643,7 @@ class AnalyseQQ(FlowAnalyser):
 	Quartic topological charge analysis class.
 	"""
 	observable_name = r"Topological charge at $Q^2$"
-	observable_name_compact = "topq4"
+	observable_name_compact = "topcqq"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\langle Q^2 \rangle [fm^{-1}]$"
 
@@ -665,6 +665,7 @@ class AnalyseQtQZero(FlowAnalyser):
 	def __init__(self,*args,**kwargs):
 		super(AnalyseQtQZero,self).__init__(*args,**kwargs)
 		self.observable_output_folder_path_old = self.observable_output_folder_path
+		self.y_original = copy.deepcopy(self.y)
 		
 	def setQ0(self, q_flow_time_zero, unit_test = False):
 		"""
@@ -677,12 +678,20 @@ class AnalyseQtQZero(FlowAnalyser):
 
 		if unit_test:
 			# Performs a deep copy of self.y values(otherwise we will overwrite what we have)
-			y_temp1 = copy.deepcopy(self.y)
+			y_temp1 = copy.deepcopy(self.y_original)
 			y_temp2 = np.zeros(y_temp1.shape)
-			y_q0 = copy.deepcopy(self.y[:,self.flow_time_zero_index])
+		
+		print self.flow_time_zero_index
 
-		# Numpy method for matrix-vector multiplication
-		self.y = (self.y.T*self.y[:,self.flow_time_zero_index]).T
+		# Manual method for multiplying the matrices
+		y_q0 = copy.deepcopy(self.y_original[:,self.flow_time_zero_index])
+		self.y = copy.deepcopy(self.y_original)
+		
+		for iFlow in xrange(self.y.shape[1]):
+			self.y[:,iFlow] *= y_q0
+
+		# Numpy method for matrix-vector multiplication 
+		# self.y = (self.y.T*self.y[:,self.flow_time_zero_index]).T
 
 		# Creates a new folder to store t0 results in
 		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old,"t0_%s" % str(self.flow_time_zero_index).strip("."))
@@ -946,18 +955,18 @@ if __name__ == '__main__':
 		# 		['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
 		# 		['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
 
-		# args = [['beta6_1','data4','energy']]
+		# args = [['beta6_1','data4','qtqzero']]
 
 		# args = [['beta6_2','data3','topcq4']]
 		# args = [['beta6_2','data3','qtqzero']]
 
-		# args = [['beta6_1','data','topsus'],
-		# 		['beta6_1','data2','topsus'],
-		# 		['beta6_1','data3','topsus']]
+		args = [['beta6_0','data4','plaq'],
+				['beta6_1','data4','plaq'],
+				['beta6_2','data4','plaq']]
 
-		args = [['beta6_0','data2','topsus','energy'],
-				['beta6_1','data2','topsus','energy'],
-				['beta6_2','data2','topsus','energy']]
+		# args = [['beta6_0','data2','topsus','energy'],
+		# 		['beta6_1','data2','topsus','energy'],
+		# 		['beta6_2','data2','topsus','energy']]
 
 		# args = [['beta6_1','data2','topsus']]
 
