@@ -39,7 +39,12 @@ class Jackknife:
 		self.time_jk = time_jk
 
 		# Sets some global class variables
-		self.N = len(data)
+		if len(data.shape) == 2:
+			self.N, self.N_array_points = data.shape
+			self.jk_data_raw = np.zeros((self.N,self.N-1,self.N_array_points)) # Jack knifed data
+		else:
+			self.N = len(data)
+			self.jk_data_raw = np.zeros((self.N,self.N-1)) # Jack knifed data
 
 		# Performs jackknife and sets variables
 		self._perform_jk(data)
@@ -63,7 +68,6 @@ class Jackknife:
 		"""
 		Function for performing the jackknife.
 		"""
-		self.jk_data_raw = np.zeros((self.N,self.N-1)) # Jack knifed data
 		for i in xrange(self.N):
 			# self.jk_data_raw[i] = np.concatenate([data[:i],data[i+1:]])
 			self.jk_data_raw[i][0:i] = data[:i]

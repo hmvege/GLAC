@@ -3,7 +3,15 @@ import statistics.parallel_tools as ptools
 from statistics.jackknife import Jackknife
 from statistics.bootstrap import Bootstrap
 from statistics.autocorrelation import Autocorrelation
-import os, numpy as np, matplotlib.pyplot as plt, sys, pandas as pd, multiprocessing, pickle, time, copy
+import os
+import numpy as np
+import matplotlib.pyplot as plt,
+import sys
+import pandas as pd
+import multiprocessing
+import time
+import copy
+import types
 
 # from tqdm import trange
 
@@ -19,6 +27,11 @@ class FlowAnalyser(object):
 	fname_addon = ""
 	function_derivative = None
 	dpi = 350
+
+	N_array_points = None
+
+	# Variable storing if we have included an extra flow time step(flowed 1000 times from non-flowed configuration)
+	overwrite_meta_data_flows = False
 
 	def __init__(self, file_tree, batch_name, data=None, dryrun=False, flow=True, parallel = False, numprocs = 4, verbose = False, figures_folder = False, create_perflow_data = False):
 		# Sets up global constants
@@ -67,7 +80,7 @@ class FlowAnalyser(object):
 			self.data.create_perflow_data(verbose=self.verbose)
 
 		if self.verbose:
-			print "Size of data: %.4g kB" % (sys.getsizeof(self.data.data_y)/1024.0)
+			print "Data retrieval complete. Size of batch %s observable %s data: %.4g kB" % (self.batch_name, self.observable_name_compact, sys.getsizeof(self.data.data_y)/1024.0)
 
 		# Sets up variables
 		self.y = self.data.data_y
@@ -79,12 +92,12 @@ class FlowAnalyser(object):
 		if len(self.y.shape) == 2:
 			self.N_configurations, self.NFlows = self.y.shape
 		elif len(self.y.shape) == 3:
-			self.N_configurations, self.NFlows, self.NT = self.y.shape
+			self.N_configurations, self.NFlows, self.N_array_points = self.y.shape
 		else:
 			raise ImportError("Data format not recognized: " + self.y.shape)
 
 		# Small error checking in retrieving number of flows
-		if (int(self.data.meta_data["NFlows"]) + 1) != self.NFlows:
+		if (int(self.data.meta_data["NFlows"]) + 1) != self.NFlows and not self.overwrite_meta_data_flows:
 			raise ValueError("Number of flows %d does not match the number provided by metadata %d." % (self.NFlows,int(self.data.meta_data["NFlows"]) + 1))
 
 		# Non-bootstrapped data
@@ -101,7 +114,6 @@ class FlowAnalyser(object):
 		self.jackknife_performed = False
 		self.jk_y = np.zeros(self.NFlows)
 		self.jk_y_std = np.zeros(self.NFlows)
-		self.jk_y_data = np.zeros((self.NFlows,self.N_configurations))
 
 		# Autocorrelation data
 		self.autocorrelation_performed = False
@@ -146,13 +158,24 @@ class FlowAnalyser(object):
 		a = np.exp(-1.6805 - 1.7139*bval + 0.8155*bval**2 - 0.6667*bval**3)*0.5
 		return a
 
-	def boot(self, N_bs, F = ptools._default_return, F_error = ptools._default_error_return, store_raw_bs_values = True):
+	def boot(self, N_bs, F = None, F_error = None, store_raw_bs_values = True):
+		# Sets default parameters
+		if F == None:
+			F = ptools._default_return
+		if F_error == None:
+			F_error = ptools._default_error_return
+
 		# Stores number of bootstraps
 		self.N_bs = N_bs
-		
-		# Sets up raw bootstrap values
-		self.bs_y_data = np.zeros((self.NFlows,self.N_bs))
 
+		# Sets up raw bootstrap and unanalyzed data array
+		if self.N_array_points != None:
+			self.bs_y_data = np.zeros((self.NFlows,self.N_bs,self.N_array_points))
+			self.unanalyzed_y_data = np.zeros((self.NFlows,self.N_configurations,self.N_array_points))
+		else:
+			self.bs_y_data = np.zeros((self.NFlows,self.N_bs))
+			self.unanalyzed_y_data = np.zeros((self.NFlows,self.N_configurations))
+		
 		# Generates random lists to use in resampling
 		index_lists = np.random.randint(self.N_configurations, size=(self.N_bs, self.N_configurations))
 
@@ -215,14 +238,32 @@ class FlowAnalyser(object):
 		# Sets performed flag to true
 		self.bootstrap_performed = True
 
-	def jackknife(self, F = ptools._default_return, F_error = ptools._default_error_return, store_raw_jk_values=True):
+	def jackknife(self, F = None, F_error = None, store_raw_jk_values=True):
+		"""
+		When called, performs either a parallel or non-parallel jackknife, using the Jackknife class.
+		Arguments:
+
+		"""
+
+		# Sets default parameters
+		if F == None:
+			F = ptools._default_return
+		if F_error == None:
+			F_error = ptools._default_error_return
+
+		# Ensures proper functions has been provided
+		assert isinstance(F,types.FunctionType), "proper function F not not provided"
+		assert isinstance(F_error,types.FunctionType), "proper function F not not provided"
+
+		# Sets up raw jackknife
+		if self.N_array_points != None:
+			self.jk_y_data = np.zeros((self.NFlows,self.N_configurations,self.N_array_points))
+		else:
+			self.jk_y_data = np.zeros((self.NFlows,self.N_configurations))
+
 		if self.parallel:
 			# Sets up jobs for parallel processing
 			input_values = [self.y[:,i] for i in xrange(self.NFlows)]
-
-			# Prints job size
-			# if self.verbose:
-			# 	print sys.getsizeof(input_values)/1024.0, "kB"
 
 			# Initializes multiprocessing
 			pool = multiprocessing.Pool(processes=self.numprocs)								
@@ -244,14 +285,14 @@ class FlowAnalyser(object):
 
 			# Non-parallel method for calculating jackknife
 			for i in xrange(self.NFlows):
-				jk = Jackknife(self.y[:,i], jk_statistics = jk_statistics, non_jk_statistics = non_jk_statistics)
+				jk = Jackknife(self.y[:,i])
 				self.jk_y[i] = jk.jk_avg
 				self.jk_y_std[i] = jk.jk_std
 				self.jk_y_data[i] = jk.jk_data
 
 		# Runs data through the F and F_error
-		self.jk_y_std = F_error(self.jk_y,self.jk_y_std)
 		self.jk_y = F(self.jk_y)
+		self.jk_y_std = F_error(self.jk_y,self.jk_y_std)
 		self.jk_y_data = F(self.jk_y_data)
 
 		if store_raw_jk_values:
@@ -703,9 +744,6 @@ class AnalyseQtQZero(FlowAnalyser):
 		if y_label != None:
 			self.y_label = y_label
 
-		# Numpy method for matrix-vector multiplication 
-		# self.y = (self.y.T*self.y[:,self.flow_time_zero_index]).T
-
 		# Creates a new folder to store t0 results in
 		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old,"t0_%s" % str(self.flow_time_zero_index).strip("."))
 		check_folder(self.observable_output_folder_path,self.dryrun,self.verbose)
@@ -729,6 +767,7 @@ class AnalyseTopologicalChargeInEuclideanTime(FlowAnalyser):
 	"""
 	Analysis of the topological charge in Euclidean Time.
 	"""
+	overwrite_meta_data_flows = True
 	observable_name = "Topological Charge in Euclidean Time"
 	observable_name_compact = "topct"
 	x_label = r"$t_{Euclidean}[fm]$"
@@ -760,22 +799,22 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 			lattice_size = 24**3*48
 			self.chi = ptools._chi_beta6_0
 			self.chi_std = ptools._chi_beta6_0_error
-			self.chi_derivative = ptools._chi_beta6_0_derivative
+			self.function_derivative = ptools._chi_beta6_0_derivative
 		elif self.data.meta_data["beta"] == 6.1:
 			lattice_size = 28**3*56
 			self.chi = ptools._chi_beta6_1
 			self.chi_std = ptools._chi_beta6_1_error
-			self.chi_derivative = ptools._chi_beta6_1_derivative
+			self.function_derivative = ptools._chi_beta6_1_derivative
 		elif self.data.meta_data["beta"] == 6.2:
 			lattice_size = 32**3*64
 			self.chi = ptools._chi_beta6_2
 			self.chi_std = ptools._chi_beta6_2_error
-			self.chi_derivative = ptools._chi_beta6_2_derivative
+			self.function_derivative = ptools._chi_beta6_2_derivative
 		elif self.data.meta_data["beta"] == 6.45:
 			lattice_size = 48**3*96
 			self.chi = ptools._chi_beta6_45
 			self.chi_std = ptools._chi_beta6_45_error
-			self.chi_derivative = ptools._chi_beta6_45_derivative
+			self.function_derivative = ptools._chi_beta6_45_derivative
 		else:
 			raise ValueError("Unrecognized beta value: %g" % meta_data["beta"])
 
@@ -957,7 +996,13 @@ def main(args):
 
 	if 'topct' in args:
 		topct_analysis = AnalyseTopologicalChargeInEuclideanTime(DirectoryList, batch_name, dryrun = dryrun, parallel = parallel, numprocs = numprocs, verbose = verbose, create_perflow_data = create_perflow_data)
-		topct_analysis.boot(N_bs, store_raw_bs_values = True)
+		topct_analysis.parallel = False
+		# topct_analysis.boot(N_bs, store_raw_bs_values = True)
+		topct_analysis.jackknife(store_raw_jk_values = True)
+
+		topct_analysis.plot_jackknife(x = range(topct_analysis.N_array_points))
+		# topct_analysis.plot_original(x = range(topct_analysis.N_array_points))
+		# topct_analysis.plot_boot(x = range(topct_analysis.N_array_points))
 
 	post_time = time.clock()
 	print "="*100
@@ -989,6 +1034,7 @@ if __name__ == '__main__':
 
 		# args = [['beta60','data5','topc','plaq','topsus','energy'],
 		# 		['beta61','data5','topc','plaq','topsus','energy']]
+
 		args = [['beta61','data5','topct']]
 
 		# args = [['beta6_0','data2','topsus','energy'],
