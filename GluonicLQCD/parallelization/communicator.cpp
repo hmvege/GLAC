@@ -199,9 +199,6 @@ void Parallel::Communicator::reduceToTemporalDimension(double * obsResults, doub
     /*
      * Reduces flow results in matrix format to a the temporal dimension
      */
-//    Parallel::Communicator::setBarrier();
-//    cout << endl;
-
     // Sets up the temporary buffers
     double tempSend[Parameters::getNTemporal()];
     double tempRecv[Parameters::getNTemporal()];
@@ -215,51 +212,19 @@ void Parallel::Communicator::reduceToTemporalDimension(double * obsResults, doub
         for (unsigned int it = 0; it < m_N[3]; it++) {
             tempSend[it + m_N[3]*Neighbours::getProcessorDimensionPosition(3)] = obs[iFlow * m_N[3] + it];
         }
-        //iFlow*Parameters::getNTemporal() + it
 
-//        // MEM CHECK!
-//        for (int rank = 0; rank < m_numprocs; rank++) {
-//            if (m_processRank == rank) {
-//                printf("BEFORE SHARING - RANK %d array: ",m_processRank);
-//                for (int it = 0; it < Parameters::getNTemporal(); it++) {
-//                    printf("%4.4f ",tempSend[it]);
-//                }
-//                cout << endl;
-//            }
-//        }
-//        Parallel::Communicator::setBarrier();
-
-        // Reduces reduces results from temporary buffer to target obsResults
-
-        //MPI_Allreduce(m_observables, tempBuffer, m_NObs, MPI_DOUBLE, MPI_SUM, Parallel::ParallelParameters::ACTIVE_COMM);
-//        MPI_Allreduce(tempSend, tempRecv, Parameters::getNTemporal(), MPI_DOUBLE, MPI_SUM, ParallelParameters::ACTIVE_COMM);
         MPI_Reduce(tempSend, tempRecv, Parameters::getNTemporal(), MPI_DOUBLE, MPI_SUM, 0, ParallelParameters::ACTIVE_COMM);
 
         for (int it = 0; it < Parameters::getNTemporal(); it++) {
             obsResults[iFlow * Parameters::getNTemporal() + it] = tempRecv[it];
         }
 
-//        // MEM CHECK!
-//        Parallel::Communicator::setBarrier();
-//        for (int rank = 0; rank < m_numprocs; rank++) {
-//            if (m_processRank == rank) {
-//                printf("AFTER SHARING - RANK %d array:  ",m_processRank);
-//                for (int it = 0; it < Parameters::getNTemporal(); it++) {
-//                    printf("%4.4f ",tempRecv[it]);
-//                }
-//                cout << endl;
-//            }
-//        }
-//        Parallel::Communicator::setBarrier();
-
         // Resets temporary buffer
         for (int it = 0; it < Parameters::getNTemporal(); it++) {
             tempSend[it] = 0;
             tempRecv[it] = 0;
         }
-//        Parallel::Communicator::MPIExit("DONETEST");
     }
-//    cout << "Done with reducing to temporal..." << endl;
 }
 
 void Parallel::Communicator::checkSubLatticeValidity()
