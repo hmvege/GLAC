@@ -6,7 +6,7 @@ class GetDirectoryTree:
 		self.obs_tree = {}
 		self.CURRENT_FOLDER = os.getcwd()
 		self.data_batch_folder = batch_folder
-		self.observables_list = ["plaq","topc","energy"]
+		self.observables_list = ["plaq","topc","energy","topct"]
 		self.batch_name = batch_name
 		self.dryrun = dryrun
 
@@ -26,12 +26,12 @@ class GetDirectoryTree:
 				if os.path.isfile(obs_path):
 					self.obs_tree[obs] = obs_path
 
-		# Gets paths to flow observable
-		# Checks that there exists a flow observable folder
-		if os.path.isdir(os.path.join(self.batch_name_folder,"flow_observables")):
-			# Creates the flow observables path
-			flow_path = os.path.join(self.batch_name_folder,"flow_observables")
 
+		## Gets paths to flow observable
+		# Creates the flow observables path
+		flow_path = os.path.join(self.batch_name_folder,"flow_observables")
+		# Checks that there exists a flow observable folder
+		if os.path.isdir(flow_path):
 			# Goes through the flow observables
 			for flow_obs in self.observables_list:
 				# Creates flow observables path
@@ -166,35 +166,50 @@ class GetFolderContents:
 							self.meta_data[str(line[0])] = float(line[-1])
 							N_rows_to_skip += 1
 						else:
+							# Stores number of rows(if we are on old or new data reading)
+							N_rows = len(line)
+
+							# Exits while loop
 							read_meta_data = False
 
 				# Loads the data and places it in a list
-				if flow:
-					# Uses numpy to load flow data (slow!)
-					# x, _x, y = np.loadtxt(file,skiprows=N_rows_to_skip,unpack=True)
-					
+				if N_rows == 3:
 					# Uses pandas to read data (quick!)
 					data = pd.read_csv(file,skiprows=N_rows_to_skip,sep=" ",names=["t","sqrt8t",self.observable],header=None)
 
 					# Only retrieves flow once
-					if not retrieved_flow_time:
+					if flow and not retrieved_flow_time:
 						# self.data_flow_time = _x # This is the a*sqrt(8*t), kinda useless
 						self.data_flow_time = data["sqrt8t"].values # Pandas
 						retrieved_flow_time = True
+
+				elif N_rows == 2:
+					# Uses pandas to read data (quick!)
+					data = pd.read_csv(file,skiprows=N_rows_to_skip,sep=" ",names=["t",self.observable],header=None)
+				elif N_rows in np.array([48,56,64,96]) + 1: # Hardcoded cases for different beta values 
+					# Sets up header names
+					header_names = list("t")
+					header_names[1:] = ["t%d" % i for i in range(N_rows-1)]
+
+					data = pd.read_csv(file,skiprows=N_rows_to_skip,sep=" ",names=header_names,header=None)
+
+					self.data_arrays = np.asarray([data[iname].values for iname in header_names[1:]]).T
 				else:
-					# Uses numpy to load non-flown data (slow!)
-					# x, y = np.loadtxt(file,skiprows=N_rows_to_skip,unpack=True)
-					
-					# Uses pandas to load non-flown data (quick!)
-					data = pd.read_csv(file,skiprows=N_rows_to_skip,sep=" ",names=["t","sqrt8t",self.observable],header=None)
+					raise IOError("Format containing %d rows not recognized" % N_rows)
 				
 				# Only retrieves indexes/flow-time*1000 once
 				if not retrieved_indexing:
 					# self.data_x = x # Numpy
 					self.data_x = data["t"].values # Pandas
 					retrieved_indexing = True
-				# self.data_y.append(y)
-				self.data_y.append(data[self.observable].values)
+
+				# Appends observables
+				if isinstance(self.data_arrays,np.ndarray):
+					# Appends an array if we have data in more than one dimension
+					self.data_y.append(self.data_arrays)
+					del self.data_arrays
+				else:
+					self.data_y.append(data[self.observable].values)
 
 				# # Small progressbar
 				# sys.stdout.write("\rData retrieved: %4.1f%% done" % (100*float(i)/float(N_files)))
@@ -205,6 +220,7 @@ class GetFolderContents:
 
 			# # Small progressbar
 			# sys.stdout.write("\rData retrieved: 100.0%% done\n")
+
 
 		# time_used = time.clock()-t1	
 		# print "Data reading: time used with function: %.10f secs/ %.10f minutes" % (time_used, time_used/60.)	

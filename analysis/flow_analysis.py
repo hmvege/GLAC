@@ -76,7 +76,12 @@ class FlowAnalyser(object):
 		# Max plotting window variables
 		self.y_limits = [None,None]
 
-		self.N_configurations, self.NFlows = self.y.shape
+		if len(self.y.shape) == 2:
+			self.N_configurations, self.NFlows = self.y.shape
+		elif len(self.y.shape) == 3:
+			self.N_configurations, self.NFlows, self.NT = self.y.shape
+		else:
+			raise ImportError("Data format not recognized: " + self.y.shape)
 
 		# Small error checking in retrieving number of flows
 		if (int(self.data.meta_data["NFlows"]) + 1) != self.NFlows:
@@ -454,7 +459,7 @@ class FlowAnalyser(object):
 		# Sets up values to be plotted
 		y = self.integrated_autocorrelation_time
 		y_std = self.integrated_autocorrelation_time_error
-		x = self.x*self.data.meta_data["FlowEpsilon"]
+		x = self.a*np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
 
 		# Gives title and file name
 		title_string = r"Integrated autocorrelation time of %s for $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name,self.beta,self.N_configurations)
@@ -470,7 +475,7 @@ class FlowAnalyser(object):
 
 		# ax.plot(x,y,color="0",label=self.observable_name)
 		# ax.errorbar(x,y,yerr=y_std,color="0",ecolor="r")#,label=self.observable_name)
-		ax.set_xlabel(r"$t_{flow}$")
+		ax.set_xlabel(r"$\sqrt{8t_{flow}}$")
 		ax.set_ylabel(r"$\tau_{int}$")
 		ax.set_title(title_string)
 		ax.grid(True)
@@ -537,14 +542,14 @@ class FlowAnalyser(object):
 		elif x_limits == "equal":
 			# Sets the x-axes to be equal
 			xlim_positive = np.max([np.max(_y) for _y in [np.abs(y1),np.abs(y2),np.abs(y3)]])
-			xlim_negative = -xlim_positive
+			xlim_negative = np.min([np.min(_y) for _y in [np.abs(y1),np.abs(y2),np.abs(y3)]])
 			
 			# Sets the axes limits
 			ax1.set_xlim(xlim_negative,xlim_positive)
 		elif x_limits == "analysis":
 			# Sets only the analysises axes equal
 			xlim_positive = np.max([np.max(_y) for _y in [np.abs(y2),np.abs(y3)]])
-			xlim_negative = -xlim_positive
+			xlim_negative = np.min([np.min(_y) for _y in [np.abs(y2),np.abs(y3)]])
 		else:
 			raise KeyError("%s not recognized.\nOptions: 'equal','auto','analysis'." % x_limits)
 
@@ -666,29 +671,37 @@ class AnalyseQtQZero(FlowAnalyser):
 		super(AnalyseQtQZero,self).__init__(*args,**kwargs)
 		self.observable_output_folder_path_old = self.observable_output_folder_path
 		self.y_original = copy.deepcopy(self.y)
-		
-	def setQ0(self, q_flow_time_zero, unit_test = False):
-		"""
-		Sets the flow time we are to analyse for.
-		"""
-		self.q_flow_time_zero = q_flow_time_zero
-		self.flow_time_zero_index = np.argmin(np.abs( self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"]) - q_flow_time_zero))
 
-		self.observable_name = "Topological charge evolved at t=%.2f" % (q_flow_time_zero*self.data.meta_data["FlowEpsilon"])
+	def setQ0(self, q_flow_time_zero_percent, unit_test = False, y_label = None):
+		"""
+		Sets the flow time we are to analyse for
+		q_flow_time_zero_percent: float between 0.0 and 1.0, in which we choose what percentage point of the data we set as q0.
+		E.g. if it is 0.9, it will be the Q that is closest to 90% of the whole flowed time
+		"""
+		# Finds the q flow time zero value
+		self.q_flow_time_zero = q_flow_time_zero_percent * (self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"]))[-1]
+		
+		# Finds the flow time zero index
+		self.flow_time_zero_index = np.argmin(np.abs( self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"]) - self.q_flow_time_zero))
+		
+		# Sets file name
+		self.observable_name = "Topological charge evolved at t=%.3f" % (self.q_flow_time_zero)
 
 		if unit_test:
 			# Performs a deep copy of self.y values(otherwise we will overwrite what we have)
 			y_temp1 = copy.deepcopy(self.y_original)
 			y_temp2 = np.zeros(y_temp1.shape)
-		
-		print self.flow_time_zero_index
 
 		# Manual method for multiplying the matrices
 		y_q0 = copy.deepcopy(self.y_original[:,self.flow_time_zero_index])
 		self.y = copy.deepcopy(self.y_original)
-		
+
+		# Multiplying QtQ0
 		for iFlow in xrange(self.y.shape[1]):
 			self.y[:,iFlow] *= y_q0
+
+		if y_label != None:
+			self.y_label = y_label
 
 		# Numpy method for matrix-vector multiplication 
 		# self.y = (self.y.T*self.y[:,self.flow_time_zero_index]).T
@@ -711,6 +724,18 @@ class AnalyseQtQZero(FlowAnalyser):
 						exit(1)
 			else:
 				print "GOOD: multiplications match."
+
+class AnalyseTopologicalChargeInEuclideanTime(FlowAnalyser):
+	"""
+	Analysis of the topological charge in Euclidean Time.
+	"""
+	observable_name = "Topological Charge in Euclidean Time"
+	observable_name_compact = "topct"
+	x_label = r"$t_{Euclidean}[fm]$"
+	y_label = r"$\langle Q^2 \rangle_{Euclidean}[GeV]$"
+
+	def __init__(self,*args,**kwargs):
+		super(AnalyseTopologicalChargeInEuclideanTime,self).__init__(*args,**kwargs)
 
 class AnalyseTopologicalSusceptibility(FlowAnalyser):
 	"""
@@ -792,8 +817,8 @@ def main(args):
 		plaq_analysis.plot_original()
 		plaq_analysis.plot_boot()
 		plaq_analysis.plot_jackknife()
-		plaq_analysis.plot_histogram(0,r"$P_{\mu\nu}$",x_limits='auto')
-		plaq_analysis.plot_histogram(-1,r"$P_{\mu\nu}$",x_limits='auto')
+		plaq_analysis.plot_histogram(0,r"$P_{\mu\nu}$",x_limits='equal')
+		plaq_analysis.plot_histogram(-1,r"$P_{\mu\nu}$",x_limits='equal')
 		plaq_analysis.plot_integrated_correlation_time()
 		plaq_analysis.plot_integrated_correlation_time()
 
@@ -817,13 +842,13 @@ def main(args):
 			topc_analysis.plot_mc_history(0)
 			topc_analysis.plot_mc_history(-1)
 
-			# topc_analysis.plot_boot()
-			# topc_analysis.plot_original()
-			# topc_analysis.plot_jackknife()
-			# topc_analysis.plot_histogram(0,r"$Q$[GeV]",x_limits='auto')
-			# topc_analysis.plot_histogram(-1,r"$Q$[GeV]",x_limits='auto')
-			# topc_analysis.plot_integrated_correlation_time()
-			# topc_analysis.plot_integrated_correlation_time()
+			topc_analysis.plot_boot()
+			topc_analysis.plot_original()
+			topc_analysis.plot_jackknife()
+			topc_analysis.plot_histogram(0,r"$Q$[GeV]",x_limits='equal')
+			topc_analysis.plot_histogram(-1,r"$Q$[GeV]",x_limits='equal')
+			topc_analysis.plot_integrated_correlation_time()
+			topc_analysis.plot_integrated_correlation_time()
 
 			if topc_analysis.bootstrap_performed and topc_analysis.autocorrelation_performed:
 				write_data_to_file(topc_analysis,dryrun = dryrun)
@@ -843,8 +868,8 @@ def main(args):
 			topcq4_analysis.plot_original()
 			topcq4_analysis.plot_boot()
 			topcq4_analysis.plot_jackknife()
-			topcq4_analysis.plot_histogram(0,topcq4_analysis.y_label)
-			topcq4_analysis.plot_histogram(-1,topcq4_analysis.y_label)
+			topcq4_analysis.plot_histogram(0,topcq4_analysis.y_label,x_limits='equal')
+			topcq4_analysis.plot_histogram(-1,topcq4_analysis.y_label,x_limits='equal')
 			topcq4_analysis.plot_integrated_correlation_time()
 			topcq4_analysis.plot_integrated_correlation_time()
 
@@ -863,21 +888,22 @@ def main(args):
 			topcqq_analysis.plot_original()
 			topcqq_analysis.plot_boot()
 			topcqq_analysis.plot_jackknife()
-			topcqq_analysis.plot_histogram(0,topcqq_analysis.y_label)
-			topcqq_analysis.plot_histogram(-1,topcqq_analysis.y_label)
+			topcqq_analysis.plot_histogram(0,topcqq_analysis.y_label,x_limits='equal')
+			topcqq_analysis.plot_histogram(-1,topcqq_analysis.y_label,x_limits='equal')
 			topcqq_analysis.plot_integrated_correlation_time()
 			topcqq_analysis.plot_integrated_correlation_time()			
 
 		if 'qtqzero' in args:
-			qzero_flow_times = [0.1,0.2,0.3,0.4,0.5,0.6]
+			qzero_flow_times = [0.1,0.2,0.3,0.5,0.7,0.9,0.99] # Percents of data where we do qtq0
 			qtqzero_analysis = AnalyseQtQZero(DirectoryList, batch_name, data = topc_analysis.data, dryrun = dryrun, parallel = parallel, numprocs = numprocs, verbose=verbose)
 			for qzero_flow_time in qzero_flow_times:
-				qtqzero_analysis.setQ0(qzero_flow_time)
+				qtqzero_analysis.y_limits = [-1,6]
+				qtqzero_analysis.setQ0(qzero_flow_time, y_label = r"$\langle Q_{t}Q_{t_0} \rangle^{1/4} [GeV]$")
 				qtqzero_analysis.boot(N_bs)
 				qtqzero_analysis.jackknife()
-				qtqzero_analysis.plot_original()
-				qtqzero_analysis.plot_jackknife()
-				qtqzero_analysis.plot_boot()
+				qtqzero_analysis.plot_original(correction_function = lambda x : np.power(x,0.25))
+				qtqzero_analysis.plot_jackknife(correction_function = lambda x : np.power(x,0.25))
+				qtqzero_analysis.plot_boot(correction_function = lambda x : np.power(x,0.25))
 
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList, batch_name, dryrun = dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs, verbose=verbose)
@@ -895,8 +921,8 @@ def main(args):
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_jackknife()
-			topsus_analysis.plot_histogram(0,r"$\chi^{1/4}$[GeV]",x_limits='auto')
-			topsus_analysis.plot_histogram(-1,r"$\chi^{1/4}$[GeV]",x_limits='auto')
+			topsus_analysis.plot_histogram(0,r"$\chi^{1/4}$[GeV]",x_limits='equal')
+			topsus_analysis.plot_histogram(-1,r"$\chi^{1/4}$[GeV]",x_limits='equal')
 			topsus_analysis.plot_integrated_correlation_time()
 			topsus_analysis.plot_integrated_correlation_time()
 
@@ -921,13 +947,17 @@ def main(args):
 		energy_analysis.plot_original(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_boot(x = x_values, correction_function = energy_analysis.correction_function)
 		energy_analysis.plot_jackknife(x = x_values, correction_function = energy_analysis.correction_function)
-		energy_analysis.plot_histogram(0,r"$E$[GeV]",x_limits='auto')
-		energy_analysis.plot_histogram(-1,r"$E$[GeV]",x_limits='auto')
+		energy_analysis.plot_histogram(0,r"$E$[GeV]",x_limits='equal')
+		energy_analysis.plot_histogram(-1,r"$E$[GeV]",x_limits='equal')
 		energy_analysis.plot_integrated_correlation_time()
 		energy_analysis.plot_integrated_correlation_time()
 
 		if energy_analysis.bootstrap_performed and energy_analysis.autocorrelation_performed:
 			write_data_to_file(energy_analysis, dryrun = dryrun)
+
+	if 'topct' in args:
+		topct_analysis = AnalyseTopologicalChargeInEuclideanTime(DirectoryList, batch_name, dryrun = dryrun, parallel = parallel, numprocs = numprocs, verbose = verbose, create_perflow_data = create_perflow_data)
+		topct_analysis.boot(N_bs, store_raw_bs_values = True)
 
 	post_time = time.clock()
 	print "="*100
@@ -951,24 +981,20 @@ if __name__ == '__main__':
 		# 		['beta6_1','data4','plaq','topc','energy','topsus'],
 		# 		['beta6_2','data4','plaq','topc','energy','topsus']]
 
-		# args = [['beta6_0','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
-		# 		['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
-		# 		['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
+		# args = [['beta6_0','data4','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
+		# 		['beta6_1','data4','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
+		# 		['beta6_2','data4','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
 
-		# args = [['beta6_1','data4','qtqzero']]
+		# args = [['beta6_1','data4','topsus','topc']]
 
-		# args = [['beta6_2','data3','topcq4']]
-		# args = [['beta6_2','data3','qtqzero']]
-
-		args = [['beta6_0','data4','plaq'],
-				['beta6_1','data4','plaq'],
-				['beta6_2','data4','plaq']]
+		# args = [['beta60','data5','topc','plaq','topsus','energy'],
+		# 		['beta61','data5','topc','plaq','topsus','energy']]
+		args = [['beta61','data5','topct']]
 
 		# args = [['beta6_0','data2','topsus','energy'],
 		# 		['beta6_1','data2','topsus','energy'],
 		# 		['beta6_2','data2','topsus','energy']]
 
-		# args = [['beta6_1','data2','topsus']]
 
 		# args = [['beta6_0','data','topc','topsus','energy']]
 
