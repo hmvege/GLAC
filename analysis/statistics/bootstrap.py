@@ -6,7 +6,7 @@ class Bootstrap:
 	"""
 	Class for creating a bootstrap sample.
 	"""
-	def __init__(self, data, N_BS, index_lists=[], seed=None):
+	def __init__(self, data, N_BS, index_lists=[], seed=None, axis=0):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
@@ -24,18 +24,18 @@ class Bootstrap:
 		if len(index_lists) == 0: # Allows user to send in a predefined list if needed
 			index_lists = np.random.randint(N, size=(N_BS, N))
 		self.bs_data_raw = data[index_lists]
-		self.bs_data = np.mean(self.bs_data_raw,axis=1)
+		self.bs_data = np.mean(self.bs_data_raw, axis=1)
 
 		# Performing basic bootstrap statistics
-		self.bs_avg = np.average(self.bs_data)
-		self.bs_var = np.var(self.bs_data)
-		self.bs_std = np.std(self.bs_data)
+		self.bs_avg = np.average(self.bs_data, axis=axis)
+		self.bs_var = np.var(self.bs_data, axis=axis)
+		self.bs_std = np.std(self.bs_data, axis=axis)
 
 		# Performing basic statistics on original data
 		self.data_original = data
-		self.avg_original = np.average(self.data_original)
-		self.var_original = np.var(self.data_original)
-		self.std_original = np.std(self.data_original)
+		self.avg_original = np.average(self.data_original, axis=axis)
+		self.var_original = np.var(self.data_original, axis=axis)
+		self.std_original = np.std(self.data_original, axis=axis)
 
 		# Sets some global class variables
 		self.shape = self.bs_avg.shape
@@ -47,11 +47,11 @@ class Bootstrap:
 		"""
 		if type(other) != Bootstrap:
 			raise TypeError("%s should be of type Bootstrap." % other)
- 		new_data = np.concatenate((self.bs_avg,other.bs_avg),axis=0)
+ 		new_data = np.concatenate((self.bs_avg, other.bs_avg), axis=0)
 		return new_data
 
 	def __pow__(self, other):
-		return np.power(self.bs_avg,other)
+		return np.power(self.bs_avg, other)
 
 	def __call__(self):
 		"""
@@ -75,16 +75,16 @@ BOOTSTRAP:
 Non-bootstrap: %10.10f %10.10E %10.10E
 Bootstrap:     %10.10f %10.10E %10.10E
 N boostraps:   %d
-		""" % ("="*61,self.avg_original, self.var_original, self.std_original, self.bs_avg, self.bs_var, self.bs_std, self.N_BS)
+		""" % ("="*61, self.avg_original, self.var_original, self.std_original, self.bs_avg, self.bs_var, self.bs_std, self.N_BS)
 		return msg
 
 def main():
 	# Data to load and analyse
-	data = np.loadtxt("tests/plaq.dat",skiprows=8)
-	
+	data = np.loadtxt("tests/plaq_beta6_2_t10.dat", skiprows=8)
+
 	# Histogram bins
 	N_bins = 20
-	
+
 	# Bootstrapping
 	N_bootstraps = int(1e4)
 	bs = Bootstrap(data, N_bootstraps)

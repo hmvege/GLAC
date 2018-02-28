@@ -1,11 +1,11 @@
 from tools.folderreadingtools import GetDirectoryTree, GetFolderContents, write_data_to_file, check_folder, write_raw_analysis_to_file
-import statistics.parallel_tools as ptools
 from statistics.jackknife import Jackknife
 from statistics.bootstrap import Bootstrap
 from statistics.autocorrelation import Autocorrelation
+import statistics.parallel_tools as ptools
 import os
 import numpy as np
-import matplotlib.pyplot as plt,
+import matplotlib.pyplot as plt
 import sys
 import pandas as pd
 import multiprocessing
@@ -90,8 +90,10 @@ class FlowAnalyser(object):
 		self.y_limits = [None,None]
 
 		if len(self.y.shape) == 2:
+			# Default type of observables, one per configuration per flow
 			self.N_configurations, self.NFlows = self.y.shape
 		elif len(self.y.shape) == 3:
+			# N_array_points of observables per configuration per flow
 			self.N_configurations, self.NFlows, self.N_array_points = self.y.shape
 		else:
 			raise ImportError("Data format not recognized: " + self.y.shape)
@@ -373,7 +375,7 @@ class FlowAnalyser(object):
 			raise ValueError("Jackknifing has not been performed yet.")
 
 		# Sets up the x axis array to be plotted
-		if type(x) != np.ndarray:
+		if x == None:
 			# Default x axis points is the flow time
 			x = self.a * np.sqrt(8*self.x*self.data.meta_data["FlowEpsilon"])
 		
@@ -384,6 +386,10 @@ class FlowAnalyser(object):
 		# Sets up the title and filename strings
 		title_string = r"Jacknife of %s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name,self.data.meta_data["NFlows"],self.beta)
 		fname_path = os.path.join(self.observable_output_folder_path,"{0:<s}_jackknife_beta{1:<s}{2:<s}.png".format(self.observable_name_compact,str(self.beta).replace('.','_'),self.fname_addon))
+
+		print self.jk_y.shape
+		print len(self.x)
+		print self.y_std.shape
 
 		# Plots the jackknifed data
 		self.__plot_error_core(x,correction_function(y),correction_function(y_std),title_string,fname_path)
@@ -775,6 +781,8 @@ class AnalyseTopologicalChargeInEuclideanTime(FlowAnalyser):
 
 	def __init__(self,*args,**kwargs):
 		super(AnalyseTopologicalChargeInEuclideanTime,self).__init__(*args,**kwargs)
+		self.y **= 2
+		self.y = (self.y)**(0.25)
 
 class AnalyseTopologicalSusceptibility(FlowAnalyser):
 	"""
@@ -870,7 +878,7 @@ def main(args):
 
 			topc_analysis.boot(N_bs)
 			topc_analysis.jackknife()
-			# topc_analysis.y_limits = [-10,10]
+			topc_analysis.y_limits = [-17,17]
 			topc_analysis.plot_original()
 			topc_analysis.plot_boot()
 			topc_analysis.plot_jackknife()
@@ -1011,43 +1019,18 @@ def main(args):
 
 if __name__ == '__main__':
 	if not sys.argv[1:]:
-		# args = [['prodRunBeta6_0','output','plaq','topc','energy','topsus'],
-		# 		['prodRunBeta6_1','output','plaq','topc','energy','topsus']]
-
-		# args = [['beta6_0','data','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data','plaq','topc','energy','topsus'],
-		# 		['beta6_2','data','plaq','topc','energy','topsus']]
-
-		# args = [['beta6_0','data2','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data2','plaq','topc','energy','topsus'],
-		# 		['beta6_2','data2','plaq','topc','energy','topsus']]
-
-		# args = [['beta6_0','data4','plaq','topc','energy','topsus'],
-		# 		['beta6_1','data4','plaq','topc','energy','topsus'],
-		# 		['beta6_2','data4','plaq','topc','energy','topsus']]
-
 		# args = [['beta6_0','data4','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
 		# 		['beta6_1','data4','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
 		# 		['beta6_2','data4','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
 
 		# args = [['beta6_1','data4','topsus','topc']]
 
-		# args = [['beta60','data5','topc','plaq','topsus','energy'],
-		# 		['beta61','data5','topc','plaq','topsus','energy']]
+		args = [['beta60','data5','topc','plaq','topsus','energy','qtqzero','topcq4','topcqq'],
+				['beta61','data5','topc','plaq','topsus','energy','qtqzero','topcq4','topcqq']]
 
 		args = [['beta61','data5','topct']]
 
-		# args = [['beta6_0','data2','topsus','energy'],
-		# 		['beta6_1','data2','topsus','energy'],
-		# 		['beta6_2','data2','topsus','energy']]
-
-
-		# args = [['beta6_0','data','topc','topsus','energy']]
-
 		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
-
-		# args = [['beta6_1','data','plaq','topc','energy','topsus']]
-		# args = [['beta6_2','data','energy']]
 
 		for a in args:
 			main(a)

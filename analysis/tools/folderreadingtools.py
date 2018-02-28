@@ -122,6 +122,8 @@ class GetFolderContents:
 		# Stores the observable name
 		self.observable = observable
 
+		# Temporary container for storing observables of multiple values, e.g. Q in Euclidean time
+		self.data_arrays = None
 		# t1 = time.clock()
 
 		if files == None:

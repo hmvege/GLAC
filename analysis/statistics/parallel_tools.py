@@ -1,4 +1,4 @@
-from autocorrelation import Autocorrelation
+from autocorrelation import Autocorrelation, PropagatedAutocorrelation
 from jackknife import Jackknife
 from bootstrap import Bootstrap
 import numpy as np

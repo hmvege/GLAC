@@ -1,6 +1,6 @@
 import numpy as np, matplotlib.pyplot as plt, sys, os, time
 
-__all__ = ["Autocorrelation","PropagatedAutocorrelation"]
+__all__ = ["Autocorrelation", "PropagatedAutocorrelation"]
 
 """
 Books:
@@ -23,7 +23,7 @@ def timing_function(func):
 		if args[0].time_autocorrelation:
 			t2 = time.clock()
 
-			time_used = t2-t1
+			time_used = t2 - t1
 			args[0].time_used = time_used
 			
 			print "Autocorrelation: time used with function %s: %.10f secs/ %.10f minutes" % (func.__name__, time_used, time_used/60.)
@@ -33,7 +33,7 @@ def timing_function(func):
 	return wrapper
 
 class _AutocorrelationCore(object):
-	def __init__(self, data, function_derivative = lambda x : x, method = "correlate", time_autocorrelation = False):
+	def __init__(self, data, function_derivative=lambda x: x, method="correlate", time_autocorrelation=False):
 		"""
 		Args:
 			data 					 (numpy array): dataset to get autocorrelation for
@@ -62,11 +62,11 @@ class _AutocorrelationCore(object):
 
 		# Gets the autocorrelations
 		if method == "corrcoef":
-			self._numpy_autocorrelation(self.data,self.data)
+			self._numpy_autocorrelation(self.data, self.data)
 		elif method == "correlate":
-			self._numpy2_autocorrelation(self.data,self.data)
+			self._numpy2_autocorrelation(self.data, self.data)
 		elif method == "manual":
-			self._autocorrelation(self.data,self.data)
+			self._autocorrelation(self.data, self.data)
 		else:
 			raise KeyError("Method of autocorrelation not recognized among: corrcoef, correlate, manual")
 
@@ -95,7 +95,7 @@ class _AutocorrelationCore(object):
 		"""
 		avg_data_x = np.average(data_x)
 		avg_data_y = np.average(data_y)
-		for t in xrange(0,self.N/2):
+		for t in xrange(0, self.N/2):
 			for i in xrange(0, self.N - t):
 				self.R[t] += (data_x[i] - avg_data_x)*(data_y[i+t] - avg_data_y)
 
@@ -128,10 +128,10 @@ class _AutocorrelationCore(object):
 		# variance = x.var()
 		x = x-x.mean()
 		y = y-y.mean()
-		self.G = np.correlate(x, y, mode = "full")[-n:]
+		self.G = np.correlate(x, y, mode="full")[-n:]
 		self.G /= np.arange(n, 0, -1)
 		self.G = self.G[:self.N/2]
-		self.R = (self.G/self.G[0])
+		self.R = self.G/self.G[0]
 
 	def integrated_autocorrelation_time(self, plot_cutoff = False):
 		raise NotImplemented("integrated_autocorrelation_time() not implemented for base class")
