@@ -30,10 +30,10 @@ class Jackknife:
 	"""
 	def __init__(self, data, time_jk=False, axis=None):
 		"""
+		Method for jack-knifing a dataset.
+
 		Args:
-			data 					(numpy array): 	dataset to give
-		Returns:
-			Object containing jack-knifed values
+			data: data containes in a numpy array
 		"""
 		# Timer variable
 		self.time_jk = time_jk

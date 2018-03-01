@@ -338,7 +338,7 @@ class FlowAnalyser(object):
 
 			# Non-parallel method for calculating jackknife
 			for i in xrange(self.NFlows):
-				jk = Jackknife(self.y[:,i])
+				jk = Jackknife(self.y[:,i], axis=self.cfg_axis)
 				self.jk_y[i] = jk.jk_avg
 				self.jk_y_std[i] = jk.jk_std
 				self.jk_y_data[i] = jk.jk_data
