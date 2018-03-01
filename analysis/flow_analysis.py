@@ -372,6 +372,7 @@ class FlowAnalyser(object):
 		available_ac_methods = ["wolff","luscher"]
 		if method not in available_ac_methods:
 			raise KeyError("%s not a receognized method. Choose from: %s." % (method,", ".join(available_ac_methods)))
+
 		print "Running autocorrelation with %s ac-method" % method
 
 		# Gets autocorrelation
@@ -1095,8 +1096,8 @@ def main(args):
 			topsus_analysis.plot_boot()
 			topsus_analysis.plot_jackknife()
 
-			print "Exits @ 1093 in main()"
-			exit(1)
+			# print "Exits @ 1093 in main()"
+			# exit(1)
 
 			topsus_analysis.autocorrelation()
 			topsus_analysis.plot_autocorrelation(0)
@@ -1176,7 +1177,7 @@ if __name__ == '__main__':
 		# args = [['beta60', 'data5', 'qtqzero'],
 		# 		['beta61', 'data5', 'qtqzero']]
 
-		# args = [['beta6_0','data4','topsus']]
+		# args = [['beta6_0','data4','topc']]
 		args = [['beta60','data5','topsus']]
 
 		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
