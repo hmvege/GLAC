@@ -268,6 +268,13 @@ class FlowAnalyser(object):
 				self.bs_y_data[i] = bs.bs_data
 				self.unanalyzed_y_data[i] = bs.data_original
 
+		print "@ bootstrap 271"
+		print self.bs_y_std[-10:]
+
+		print "@ original 274"
+		print self.unanalyzed_y_std[-10:]
+
+
 		# Runs bs and unanalyzed data through the F and F_error
 		self.bs_y = F(self.bs_y)
 		self.bs_y_std = F_error(self.bs_y, self.bs_y_std)
@@ -342,6 +349,9 @@ class FlowAnalyser(object):
 				self.jk_y[i] = jk.jk_avg
 				self.jk_y_std[i] = jk.jk_std
 				self.jk_y_data[i] = jk.jk_data
+
+		print "@ jackknife 351"
+		print self.jk_y_std[-10:]
 
 		# Runs data through the F and F_error
 		self.jk_y = F(self.jk_y)
@@ -1087,11 +1097,11 @@ def main(args):
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList, batch_name, dryrun=dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs, verbose=verbose)
 			topsus_analysis.boot(N_bs, F=topsus_analysis.chi, F_error=topsus_analysis.chi_std, store_raw_bs_values=True)
-			# topsus_analysis.jackknife(F=topsus_analysis.chi, F_error=topsus_analysis.chi_std, store_raw_jk_values=True)
+			topsus_analysis.jackknife(F=topsus_analysis.chi, F_error=topsus_analysis.chi_std, store_raw_jk_values=True)
 			# topsus_analysis.y_limits  = [0.05,0.5]
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_boot()
-			# topsus_analysis.plot_jackknife()
+				topsus_analysis.plot_jackknife()
 
 			print "Exits @ 1093 in main()"
 			exit(1)
