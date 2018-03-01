@@ -268,18 +268,11 @@ class FlowAnalyser(object):
 				self.bs_y_data[i] = bs.bs_data
 				self.unanalyzed_y_data[i] = bs.data_original
 
-		print "@ bootstrap 271"
-		print self.bs_y_std[-10:]
-
-		print "@ original 274"
-		print self.unanalyzed_y_std[-10:]
-
-
 		# Runs bs and unanalyzed data through the F and F_error
-		self.bs_y = F(self.bs_y)
 		self.bs_y_std = F_error(self.bs_y, self.bs_y_std)
-		self.unanalyzed_y = F(self.unanalyzed_y)
+		self.bs_y = F(self.bs_y)
 		self.unanalyzed_y_std = F_error(self.unanalyzed_y, self.unanalyzed_y_std)
+		self.unanalyzed_y = F(self.unanalyzed_y)
 
 		# Runs bs data through function F
 		self.bs_y_data = F(self.bs_y_data)
@@ -350,12 +343,9 @@ class FlowAnalyser(object):
 				self.jk_y_std[i] = jk.jk_std
 				self.jk_y_data[i] = jk.jk_data
 
-		print "@ jackknife 351"
-		print self.jk_y_std[-10:]
-
 		# Runs data through the F and F_error
-		self.jk_y = F(self.jk_y)
 		self.jk_y_std = F_error(self.jk_y, self.jk_y_std)
+		self.jk_y = F(self.jk_y)
 		self.jk_y_data = F(self.jk_y_data)
 
 		if store_raw_jk_values:
@@ -892,30 +882,9 @@ class AnalyseTopologicalChargeInEuclideanTime(FlowAnalyser):
 		super(AnalyseTopologicalChargeInEuclideanTime, self).__init__(*args, **kwargs)
 		self.y = (self.y**2)**(0.25)
 
-		self.cfg_axis = 0
 
-		# Non-bootstrapped data
-		self.unanalyzed_y = np.zeros((self.NFlows, self.N_observables_per_config))
-		self.unanalyzed_y_std = np.zeros((self.NFlows, self.N_observables_per_config))
-		self.unanalyzed_y_data = np.zeros((self.NFlows, self.N_configurations, self.N_observables_per_config))
-
-		# Bootstrap data
-		self.bootstrap_performed = False
-		self.bs_y = np.zeros((self.NFlows, self.N_observables_per_config))
-		self.bs_y_std = np.zeros((self.NFlows, self.N_observables_per_config))
-
-		# Jackknifed data
-		self.jackknife_performed = False
-		self.jk_y = np.zeros((self.NFlows, self.N_observables_per_config))
-		self.jk_y_std = np.zeros((self.NFlows, self.N_observables_per_config))
-
-		# Autocorrelation data
-		self.autocorrelation_performed = False
-		self.autocorrelations = np.zeros((self.NFlows, self.N_configurations/2, self.N_observables_per_config))
-		self.autocorrelations_errors = np.zeros((self.NFlows, self.N_configurations/2, self.N_observables_per_config))
-		self.integrated_autocorrelation_time = np.ones((self.NFlows))
-		self.integrated_autocorrelation_time_error = np.zeros(self.NFlows)
-		self.autocorrelation_error_correction = np.ones((self.NFlows, self.N_observables_per_config))
+		print "MAKE AnalyseTopologicalChargeInEuclideanTime similar to the QtQ0!! --> exiting"
+		exit(1) 
 
 class AnalyseTopologicalSusceptibility(FlowAnalyser):
 	"""
@@ -1101,10 +1070,10 @@ def main(args):
 			# topsus_analysis.y_limits  = [0.05,0.5]
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_boot()
-				topsus_analysis.plot_jackknife()
+			topsus_analysis.plot_jackknife()
 
-			print "Exits @ 1093 in main()"
-			exit(1)
+			# print "exitsz @ 1096"
+			# exit(1)
 
 			topsus_analysis.autocorrelation()
 			topsus_analysis.plot_autocorrelation(0)
@@ -1184,8 +1153,10 @@ if __name__ == '__main__':
 		# args = [['beta60', 'data5', 'qtqzero'],
 		# 		['beta61', 'data5', 'qtqzero']]
 
-		# args = [['beta6_0','data4','topc']]
-		args = [['beta60','data5','topsus']]
+		# args = [['beta6_2','data4','topsus']]
+		args = [['beta61','data5','topsus']]
+
+		# args = [['beta61','data5','topc','plaq','topsus','energy','qtqzero']]
 
 		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
 
