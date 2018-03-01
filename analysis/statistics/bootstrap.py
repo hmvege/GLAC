@@ -6,7 +6,7 @@ class Bootstrap:
 	"""
 	Class for creating a bootstrap sample.
 	"""
-	def __init__(self, data, N_BS, index_lists=[], seed=None, axis=0):
+	def __init__(self, data, N_BS, index_lists=[], seed=None, axis=None):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
@@ -29,13 +29,13 @@ class Bootstrap:
 		# Performing basic bootstrap statistics
 		self.bs_avg = np.average(self.bs_data, axis=axis)
 		self.bs_var = np.var(self.bs_data, axis=axis)
-		self.bs_std = np.std(self.bs_data, axis=axis)
+		self.bs_std = np.sqrt(self.bs_var)
 
 		# Performing basic statistics on original data
 		self.data_original = data
 		self.avg_original = np.average(self.data_original, axis=axis)
 		self.var_original = np.var(self.data_original, axis=axis)
-		self.std_original = np.std(self.data_original, axis=axis)
+		self.std_original = np.sqrt(self.var_original)
 
 		# Sets some global class variables
 		self.shape = self.bs_avg.shape

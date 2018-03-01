@@ -1,4 +1,8 @@
-import sys, os, numpy as np, re, pandas as pd, time
+import sys
+import os
+import numpy as np
+import re
+import pandas as pd
 
 class GetDirectoryTree:
 	def __init__(self,batch_name,batch_folder,dryrun=False):
@@ -68,7 +72,7 @@ class GetDirectoryTree:
 		"""
 		Retrieves flow observable files.
 		"""
-		if obs in self.flow_tree.keys():
+		if obs in self.flow_tree:
 			return self.flow_tree[obs]
 		else:
 			raise Warning("Flow observable \"%s\" was not found in possible observables: %s" % (obs,", ".join(self.flow_tree.keys())))
@@ -77,7 +81,7 @@ class GetDirectoryTree:
 		"""
 		Retrieves observable files.
 		"""
-		if obs in self.obs_tree.keys():
+		if obs in self.obs_tree:
 			return self.obs_tree[obs]
 		else:
 			raise Warning("Observable \"%s\" was not found in possible observables: %s" % (obs,", ".join(self.flow_tree.keys())))
@@ -112,7 +116,7 @@ class GetFolderContents:
 	"""
 	Retrieves folder contents and acts as a container for data and meta-data.
 	"""
-	def __init__(self,file_tree,observable,flow=False):
+	def __init__(self, file_tree, observable, flow=False):
 		# Retrieves file from file tree
 		files = file_tree.getFlow(observable)
 
@@ -124,10 +128,9 @@ class GetFolderContents:
 
 		# Temporary container for storing observables of multiple values, e.g. Q in Euclidean time
 		self.data_arrays = None
-		# t1 = time.clock()
 
 		if files == None:
-			print "    No observables of type %s found in folder: %s" % (observable,folder)
+			print "    No observables of type %s found in folder: %s" % (observable, folder)
 		else:
 			# Bools to ensure certain actions are only done once
 			read_meta_data = True
@@ -157,8 +160,6 @@ class GetFolderContents:
 
 			# Goes through files in folder and reads the contents into a file
 			for i,file in enumerate(self.files):
-				# print "    Reading file: %s" % file
-
 				# Gets the metadata
 				with open(file) as f:
 					# Reads in meta data as long as the first element on the line is a string
@@ -177,23 +178,22 @@ class GetFolderContents:
 				# Loads the data and places it in a list
 				if N_rows == 3:
 					# Uses pandas to read data (quick!)
-					data = pd.read_csv(file,skiprows=N_rows_to_skip,sep=" ",names=["t","sqrt8t",self.observable],header=None)
+					data = pd.read_csv(file, skiprows=N_rows_to_skip, sep=" ", names=["t", "sqrt8t", self.observable], header=None)
 
 					# Only retrieves flow once
 					if flow and not retrieved_flow_time:
 						# self.data_flow_time = _x # This is the a*sqrt(8*t), kinda useless
 						self.data_flow_time = data["sqrt8t"].values # Pandas
 						retrieved_flow_time = True
-
 				elif N_rows == 2:
 					# Uses pandas to read data (quick!)
-					data = pd.read_csv(file,skiprows=N_rows_to_skip,sep=" ",names=["t",self.observable],header=None)
-				elif N_rows in np.array([48,56,64,96]) + 1: # Hardcoded cases for different beta values 
+					data = pd.read_csv(file, skiprows=N_rows_to_skip, sep=" ", names=["t", self.observable], header=None)
+				elif N_rows in np.array([48, 56, 64, 96]) + 1: # Hardcoded cases for different beta values 
 					# Sets up header names
 					header_names = list("t")
 					header_names[1:] = ["t%d" % i for i in range(N_rows-1)]
 
-					data = pd.read_csv(file,skiprows=N_rows_to_skip,sep=" ",names=header_names,header=None)
+					data = pd.read_csv(file, skiprows=N_rows_to_skip, sep=" ", names=header_names, header=None)
 
 					self.data_arrays = np.asarray([data[iname].values for iname in header_names[1:]]).T
 				else:
@@ -206,35 +206,24 @@ class GetFolderContents:
 					retrieved_indexing = True
 
 				# Appends observables
-				if isinstance(self.data_arrays,np.ndarray):
+				if isinstance(self.data_arrays, np.ndarray):
 					# Appends an array if we have data in more than one dimension
 					self.data_y.append(self.data_arrays)
 					del self.data_arrays
 				else:
 					self.data_y.append(data[self.observable].values)
 
-				# # Small progressbar
-				# sys.stdout.write("\rData retrieved: %4.1f%% done" % (100*float(i)/float(N_files)))
-				# sys.stdout.flush()
-
 			# Converts data to a numpy array
 			self.data_y = np.asarray(self.data_y)
 
-			# # Small progressbar
-			# sys.stdout.write("\rData retrieved: 100.0%% done\n")
-
-
-		# time_used = time.clock()-t1	
-		# print "Data reading: time used with function: %.10f secs/ %.10f minutes" % (time_used, time_used/60.)	
-
-	def create_perflow_data(self,dryrun=False,verbose=False):
+	def create_perflow_data(self, dryrun=False, verbose=False):
 		# Creating per flow folder
-		per_flow_folder = os.path.join("..",self.file_tree.data_batch_folder,"perflow")
-		check_folder(per_flow_folder,dryrun,verbose=verbose)
+		per_flow_folder = os.path.join("..", self.file_tree.data_batch_folder, "perflow")
+		check_folder(per_flow_folder, dryrun, verbose=verbose)
 
 		# Creates observable per flow folder
-		per_flow_observable_folder = os.path.join(per_flow_folder,self.observable)
-		check_folder(per_flow_observable_folder,dryrun,verbose=verbose)
+		per_flow_observable_folder = os.path.join(per_flow_folder, self.observable)
+		check_folder(per_flow_observable_folder, dryrun, verbose=verbose)
 
 		# Retrieving number of configs and number of flows
 		NConfigs,NFlows = self.data_y.shape

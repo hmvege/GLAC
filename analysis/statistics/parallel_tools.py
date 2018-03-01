@@ -12,17 +12,20 @@ def _autocorrelation_parallel_core(input_values):
 	return ac.R, ac.R_error, ac.integrated_autocorrelation_time(), ac.integrated_autocorrelation_time_error()
 
 def _autocorrelation_propagated_parallel_core(input_values):
-	ac = PropagatedAutocorrelation(input_values[0],function_derivative=input_values[1])
+	data, funder = input_values
+	if funder == None:
+		funder = lambda x: x
+	ac = PropagatedAutocorrelation(data, function_derivative=funder)
 	return ac.R, ac.R_error, ac.integrated_autocorrelation_time(), ac.integrated_autocorrelation_time_error()
 
 def _bootstrap_parallel_core(input_values):
-	data, N_bs, index_lists = input_values
-	bs = Bootstrap(data, N_bs, index_lists = index_lists)
+	data, N_bs, index_lists, cfg_axis = input_values
+	bs = Bootstrap(data, N_bs, index_lists=index_lists, axis=cfg_axis)
 	return bs.bs_avg, bs.bs_std, bs.avg_original, bs.std_original, bs.bs_data, bs.data_original
 
 def _jackknife_parallel_core(input_values):
-	data = input_values
-	jk = Jackknife(data)
+	data, cfg_axis = input_values
+	jk = Jackknife(data, axis=cfg_axis)
 	return jk.jk_avg, jk.jk_std, jk.jk_data
 
 def _default_return(x):

@@ -28,7 +28,7 @@ class Jackknife:
 	"""
 	Class for performing a statistical jack knife.
 	"""
-	def __init__(self, data, time_jk=False, axis=0):
+	def __init__(self, data, time_jk=False, axis=None):
 		"""
 		Args:
 			data 					(numpy array): 	dataset to give
@@ -57,11 +57,11 @@ class Jackknife:
 		# Gets and sets non-bootstrapped values
 		self.avg_original = np.average(data, axis=axis)
 		self.var_original = np.var(data, axis=axis) # Ensures that the errors are run through the function F
-		self.std_original = np.sqrt(data)
+		self.std_original = np.sqrt(self.var_original)
 
 		# Returns the unbiased estimator/average
-		self.jk_avg 			= self.N*self.avg_original - (self.N - 1) * self.jk_avg_biased
-		self.jk_avg_unbiased 	= self.jk_avg
+		self.jk_avg = self.N*self.avg_original - (self.N - 1) * self.jk_avg_biased
+		self.jk_avg_unbiased = self.jk_avg
 
 	@timing_function
 	def _perform_jk(self,data):
@@ -93,8 +93,8 @@ class Jackknife:
 		msg = """
 JACKKNIFE:
 %s
-Non-jackknife: %20.16f %10.5E %10.5E
-Jackknife:     %20.16f %10.5E %10.5E %20.16f (unbiased average)
+Non-jackknife: %10.10f %10.10E %10.10E
+Jackknife:     %10.10f %10.10E %10.10E %20.16f (unbiased average)
 		""" % ("="*61, self.avg_original, self.var_original, self.std_original, self.jk_avg, self.jk_var, self.jk_std, self.jk_avg_unbiased)
 		return msg
 
