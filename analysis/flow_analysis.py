@@ -38,9 +38,6 @@ class FlowAnalyser(object):
 	# Number of observables per config per flow
 	N_observables_per_config = None
 
-	# Variable storing if we have included an extra flow time step(flowed 1000 times from non-flowed configuration)
-	# overwrite_meta_data_flows = False
-
 	def __init__(self, file_tree, batch_name, data=None, dryrun=False, flow=True, parallel=False,
 				numprocs=4, verbose=False, figures_folder=False, create_perflow_data=False):
 		"""
@@ -1090,14 +1087,14 @@ def main(args):
 		if 'topsus' in args:
 			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList, batch_name, dryrun=dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs, verbose=verbose)
 			topsus_analysis.boot(N_bs, F=topsus_analysis.chi, F_error=topsus_analysis.chi_std, store_raw_bs_values=True)
-			topsus_analysis.jackknife(F=topsus_analysis.chi, F_error=topsus_analysis.chi_std, store_raw_jk_values=True)
+			# topsus_analysis.jackknife(F=topsus_analysis.chi, F_error=topsus_analysis.chi_std, store_raw_jk_values=True)
 			# topsus_analysis.y_limits  = [0.05,0.5]
 			topsus_analysis.plot_original()
 			topsus_analysis.plot_boot()
-			topsus_analysis.plot_jackknife()
+			# topsus_analysis.plot_jackknife()
 
-			# print "Exits @ 1093 in main()"
-			# exit(1)
+			print "Exits @ 1093 in main()"
+			exit(1)
 
 			topsus_analysis.autocorrelation()
 			topsus_analysis.plot_autocorrelation(0)
