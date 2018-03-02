@@ -89,6 +89,6 @@ def main(data_folder, new_data_folder, dryrun):
 if __name__ == '__main__':
 	dryrun = False
 
-	topct_folder = "../data5/beta61/flow_observables/topct"
-	new_topc_folder = "../data5/beta61/flow_observables/topc"
+	topct_folder = "../data5/beta62/flow_observables/topct"
+	new_topc_folder = "../data5/beta62/flow_observables/topc"
 	main(topct_folder, new_topc_folder, dryrun)

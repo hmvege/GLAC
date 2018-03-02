@@ -6,6 +6,9 @@ output/*
 *.txt
 *.dat
 
+# Numpy binary
+*.npy
+
 # Config folder
 # config_folder
 

@@ -4,7 +4,7 @@ import numpy as np
 import re
 import pandas as pd
 
-class GetDirectoryTree:
+class DirectoryTree:
 	def __init__(self,batch_name,batch_folder,dryrun=False):
 		self.flow_tree = {}
 		self.obs_tree = {}
@@ -186,9 +186,12 @@ class GetFolderContents:
 						self.data_flow_time = data["sqrt8t"].values # Pandas
 						retrieved_flow_time = True
 				elif N_rows == 2:
+					# If it is new observables with no sqrt(8*t)
+
 					# Uses pandas to read data (quick!)
 					data = pd.read_csv(file, skiprows=N_rows_to_skip, sep=" ", names=["t", self.observable], header=None)
 				elif N_rows in np.array([48, 56, 64, 96]) + 1: # Hardcoded cases for different beta values 
+					# If we have a topct-like variable, we will read in NT rows as well.
 					# Sets up header names
 					header_names = list("t")
 					header_names[1:] = ["t%d" % i for i in range(N_rows-1)]
@@ -243,12 +246,12 @@ class GetFolderContents:
 
 		print "Per flow data for observable %s created." % self.observable
 
-	def create_settings_file(self,dryrun=False,verbose=False):
+	def create_settings_file(self, dryrun=False, verbose=False):
 		"""
 		Function for storing run info.
 		"""		
 		# Checking that settings file does not already exist
-		setting_file_path = os.path.join(self.file_tree.batch_folder,"run_settings_%s.txt" % self.observable)
+		setting_file_path = os.path.join(self.file_tree.batch_folder, "run_settings_%s.txt" % self.observable)
 
 		# Creating string to be passed to info file
 		info_string = ""
@@ -270,7 +273,127 @@ class GetFolderContents:
 		
 		print "Setting file %s created." % setting_file_path
 
-def check_folder(folder_name, dryrun, verbose = False):
+class DataReader:
+	"""
+	Class for reading all of the data from a batch.
+
+	Modes:
+	- Read all data to a single object and then write it to a single file
+	- Load a single file
+
+	Plan:
+	1. Retrieve file paths.
+	2. Retrieve data.
+	3. Concatenate data to a single matrix
+	4. Write data to a single file in binary
+
+	"""
+
+	beta_to_spatial_size = {6.0: 24, 6.1: 28, 6.2: 32, 6.45: 48}
+
+	def __init__(self, file_tree, verbose=True):
+		# TODO: Add file-tree inside here instead
+
+		assert isinstance(file_tree, DirectoryTree)
+		self.file_tree = file_tree
+
+		print "Retrieving data for batch %s from folder %s" % (self.file_tree.batch_name, self.file_tree.data_batch_folder)
+
+		self.data = {}
+
+		self.verbose = True
+
+		# if input_file != None:
+		# 	self.input_file = input_file
+		# 	self._load_file()
+		# else:
+		# 	self._retrieve_observable_data()
+
+	def retrieve_observable_data(self, create_perflow_data=False):
+		_NFlows = []
+		for obs in self.file_tree.flow_tree:
+
+			# if obs == "topct": 
+			# 	print "TEMPORARY: Skipping topct"
+			# 	continue
+
+			self.data[obs] = {}
+
+			_data_obj = GetFolderContents(self.file_tree, obs, flow=True)
+
+			self.data[obs]["t"] = _data_obj.data_x
+			self.data[obs]["obs"] = _data_obj.data_y
+			self.data[obs]["beta"] = _data_obj.meta_data["beta"]
+			self.data[obs]["FlowEpsilon"] = _data_obj.meta_data["FlowEpsilon"]
+			self.data[obs]["NFlows"] = _data_obj.meta_data["NFlows"]
+			
+			if create_perflow_data:
+				# self.data[observable].create_perflow_data(verbose=self.verbose)
+				_data_obj.create_perflow_data(verbose=self.verbose)
+
+			# Stores all the number of flow values
+			_NFlows.append(self.data[obs]["NFlows"])
+
+			print "Retreived %s. Size: %.2f MB" % (obs, sys.getsizeof(self.data[obs]["obs"])/1024.0/1024.0)
+
+		# Checks that all values have been flowed for an equal amount of time
+		assert len(set(_NFlows)) == 1, "flow times differ for the different observables"
+		self.NFlows = int(_NFlows[0])
+
+	def load_single_file(self, input_file, NCfgs, NFlows=1000, FObs=["plaq","energy","topc"], FlowEpsilon=0.01):
+		raw_data = np.load(input_file)
+
+		NT, beta = input_file.split("/")[-1].split("_")
+		NT = int(NT)
+		beta = float(".".join(beta.split(".")[:-1]))
+
+		for i, obs in enumerate(FObs):
+			self.data[obs]["t"] = raw_data[0]
+			if i != (len(FObs) - 1):
+				# If we are not at the last item
+				self.data[obs]["obs"] = raw_data[NCfgs*i:(NCfgs+1)*i]
+			else:
+				# If we are at the last item, we add all of the rest columns to it
+				self.data[obs]["obs"] = raw_data[NCfgs*i:]
+
+			self.data[obs]["beta"] = beta
+			self.data[obs]["FlowEpsilon"] = FlowEpsilon
+			self.data[obs]["NFlows"] = NFlows
+
+		print "Loaded %s from file %s. Size: %.2f MB" % (", ".join(FObs), input_file, sys.getsizeof(self.data)/1024.0/1024.0)
+
+	def write_single_file(self, observables_to_write=["plaq", "energy", "topc", "topct"]):
+		assert isinstance(observables_to_write,list)
+
+		raw_data = self.data[observables_to_write[0]]["t"][0:self.NFlows]
+		for obs in observables_to_write:
+
+			# Checks if we have an array of observables, e.g. topct
+			if len(self.data[obs]["obs"][:,0:self.NFlows].shape) == 3:
+				# Rolls axis to make it on the correct format
+				_temp_rolled_data = np.rollaxis(self.data[obs]["obs"][:,0:self.NFlows].T, 0, 3)
+
+				# Gets the axis shape in order to then flatten the data
+				_shape = _temp_rolled_data.shape
+				_temp_rolled_data = _temp_rolled_data.reshape(_shape[0],_shape[1]*_shape[2])
+
+				raw_data = np.column_stack((raw_data, _temp_rolled_data))	
+			else:
+				raw_data = np.column_stack((raw_data, self.data[obs]["obs"][:,0:self.NFlows].T))
+
+		beta_value = self.data[observables_to_write[0]]["beta"]
+		spatial_size = self.beta_to_spatial_size[beta_value]
+
+		# Sets up file name. Format {N}_{beta}.npy
+		file_name = "%2d_%1.2f" % (spatial_size, beta_value)
+		file_path = os.path.join(self.file_tree.batch_name_folder, file_name)
+
+		# Saves as binary
+		np.save(file_path,raw_data)
+		
+		print "%s written to a single file at location %s.npy." % (", ".join(observables_to_write), file_path)
+
+def check_folder(folder_name, dryrun, verbose=False):
 	# Checks that figures folder exist, and if not will create it
 	if not os.path.isdir(folder_name):
 		if dryrun or verbose:

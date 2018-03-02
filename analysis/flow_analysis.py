@@ -1,4 +1,4 @@
-from tools.folderreadingtools import GetDirectoryTree, GetFolderContents, write_data_to_file, check_folder, write_raw_analysis_to_file
+from tools.folderreadingtools import DirectoryTree, GetFolderContents, write_data_to_file, check_folder, write_raw_analysis_to_file, DataReader
 from statistics.jackknife import Jackknife
 from statistics.bootstrap import Bootstrap
 from statistics.autocorrelation import Autocorrelation
@@ -510,6 +510,8 @@ class FlowAnalyser(object):
 			fig.savefig(self.__check_ac(fname), dpi=self.dpi)
 		if self.verbose:
 			print "Figure created in %s" % fname
+
+		# plt.show()
 		plt.close(fig)
 
 	def plot_autocorrelation(self, flow_time, plot_abs_value=False):
@@ -788,7 +790,7 @@ class AnalyseQtQZero(FlowAnalyser):
 		E.g. if it is 0.9, it will be the Q that is closest to 90% of the whole flowed time
 		"""
 
-		self.set_size()
+		# self.set_size()
 
 		# Finds the q flow time zero value
 		self.q_flow_time_zero = q_flow_time_zero_percent * (self.a * np.sqrt(8*self.x))[-1]
@@ -834,38 +836,39 @@ class AnalyseQtQZero(FlowAnalyser):
 			else:
 				print "GOOD: multiplications match."
 
-	def set_size(self): # HARDCODE DIFFERENT SIZES HERE!
-		# Retrieves lattice spacing
-		self.a = self.getLatticeSpacing(self.data.meta_data["beta"])
-		
-		# Ugly, hardcoded lattice size setting
-		if self.data.meta_data["beta"] == 6.0:
-			lattice_size = 24**3*48
-			self.chi = ptools._chi_beta6_0
-			self.chi_std = ptools._chi_beta6_0_error
-			self.function_derivative = ptools._chi_beta6_0_derivative
-		elif self.data.meta_data["beta"] == 6.1:
-			lattice_size = 28**3*56
-			self.chi = ptools._chi_beta6_1
-			self.chi_std = ptools._chi_beta6_1_error
-			self.function_derivative = ptools._chi_beta6_1_derivative
-		elif self.data.meta_data["beta"] == 6.2:
-			lattice_size = 32**3*64
-			self.chi = ptools._chi_beta6_2
-			self.chi_std = ptools._chi_beta6_2_error
-			self.function_derivative = ptools._chi_beta6_2_derivative
-		elif self.data.meta_data["beta"] == 6.45:
-			lattice_size = 48**3*96
-			self.chi = ptools._chi_beta6_45
-			self.chi_std = ptools._chi_beta6_45_error
-			self.function_derivative = ptools._chi_beta6_45_derivative
-		else:
-			raise ValueError("Unrecognized beta value: %g" % meta_data["beta"])
 
-		# Sets up constants used in the chi function for topological susceptibility
-		self.V = lattice_size
-		self.hbarc = 0.19732697 #eV micro m
-		self.const = self.hbarc/self.a/self.V**(1./4)
+	# def set_size(self): # HARDCODE DIFFERENT SIZES HERE!
+	# 	# Retrieves lattice spacing
+	# 	self.a = self.getLatticeSpacing(self.data.meta_data["beta"])
+		
+	# 	# Ugly, hardcoded lattice size setting
+	# 	if self.data.meta_data["beta"] == 6.0:
+	# 		lattice_size = 24**3*48
+	# 		self.chi = ptools._chi_beta6_0
+	# 		self.chi_std = ptools._chi_beta6_0_error
+	# 		self.function_derivative = ptools._chi_beta6_0_derivative
+	# 	elif self.data.meta_data["beta"] == 6.1:
+	# 		lattice_size = 28**3*56
+	# 		self.chi = ptools._chi_beta6_1
+	# 		self.chi_std = ptools._chi_beta6_1_error
+	# 		self.function_derivative = ptools._chi_beta6_1_derivative
+	# 	elif self.data.meta_data["beta"] == 6.2:
+	# 		lattice_size = 32**3*64
+	# 		self.chi = ptools._chi_beta6_2
+	# 		self.chi_std = ptools._chi_beta6_2_error
+	# 		self.function_derivative = ptools._chi_beta6_2_derivative
+	# 	elif self.data.meta_data["beta"] == 6.45:
+	# 		lattice_size = 48**3*96
+	# 		self.chi = ptools._chi_beta6_45
+	# 		self.chi_std = ptools._chi_beta6_45_error
+	# 		self.function_derivative = ptools._chi_beta6_45_derivative
+	# 	else:
+	# 		raise ValueError("Unrecognized beta value: %g" % meta_data["beta"])
+
+	# 	# Sets up constants used in the chi function for topological susceptibility
+	# 	self.V = lattice_size
+	# 	self.hbarc = 0.19732697 #eV micro m
+	# 	self.const = self.hbarc/self.a/self.V**(1./4)
 
 
 class AnalyseTopologicalChargeInEuclideanTime(FlowAnalyser):
@@ -936,14 +939,18 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 def main(args):
 	batch_name = args[0]
 	batch_folder = args[1]
-	DirectoryList = GetDirectoryTree(batch_name, batch_folder)
+	directory_tree = DirectoryTree(batch_name, batch_folder)
+	obs_data = DataReader(directory_tree)
+	obs_data.retrieve_observable_data()
+	# obs_data.write_single_file()
+	# obs_data.load_single_file("../data5/beta61/28_6.10.npy",500)
+
 	N_bs = 500
 	dryrun = False
 	verbose = True
 	parallel = True
 	numprocs = 8
 	create_perflow_data = False
-	# print DirectoryList
 
 	# Analysis timers
 	pre_time = time.clock()
@@ -951,7 +958,7 @@ def main(args):
 
 	# Analyses plaquette data if present in arguments
 	if 'plaq' in args:
-		plaq_analysis = AnalysePlaquette(DirectoryList, batch_name, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data=create_perflow_data)
+		plaq_analysis = AnalysePlaquette(directory_tree, batch_name, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data=create_perflow_data)
 		plaq_analysis.boot(N_bs)
 		plaq_analysis.jackknife()
 		# plaq_analysis.y_limits = [0.55,1.05]
@@ -975,7 +982,7 @@ def main(args):
 			write_data_to_file(plaq_analysis, dryrun=dryrun)
 
 	if 'topc' in args or 'topsus' in args or 'topcq4' in args or 'qtqzero' in args:
-		topc_analysis = AnalyseTopologicalCharge(DirectoryList, batch_name, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data=create_perflow_data)
+		topc_analysis = AnalyseTopologicalCharge(directory_tree, batch_name, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data=create_perflow_data)
 		if 'topc' in args:
 
 			if topc_analysis.beta == 6.0:
@@ -1012,7 +1019,7 @@ def main(args):
 				write_data_to_file(topc_analysis, dryrun=dryrun)
 
 		if 'topcq4' in args:
-			topcq4_analysis = AnalyseQQuartic(DirectoryList, batch_name, data=topc_analysis.data, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
+			topcq4_analysis = AnalyseQQuartic(directory_tree, batch_name, data=topc_analysis.data, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
 			topcq4_analysis.boot(N_bs)
 			topcq4_analysis.jackknife()
 			topcq4_analysis.plot_original()
@@ -1032,7 +1039,7 @@ def main(args):
 			topcq4_analysis.plot_integrated_correlation_time()
 
 		if 'topcqq' in args:
-			topcqq_analysis = AnalyseQQ(DirectoryList, batch_name, data=topc_analysis.data, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
+			topcqq_analysis = AnalyseQQ(directory_tree, batch_name, data=topc_analysis.data, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
 			topcqq_analysis.boot(N_bs)
 			topcqq_analysis.jackknife()
 			topcqq_analysis.plot_original()
@@ -1053,18 +1060,24 @@ def main(args):
 
 		if 'qtqzero' in args:
 			qzero_flow_times = [0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 0.99] # Percents of data where we do qtq0
-			qtqzero_analysis = AnalyseQtQZero(DirectoryList, batch_name, data=topc_analysis.data, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
+			qtqzero_analysis = AnalyseQtQZero(directory_tree, batch_name, data=topc_analysis.data, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
 			for qzero_flow_time in qzero_flow_times:
-				qtqzero_analysis.y_limits = [0, 2]
+				# qtqzero_analysis.y_limits = [0, 2]
 				qtqzero_analysis.setQ0(qzero_flow_time, y_label=r"$\langle Q_{t}Q_{t_0} \rangle^{1/4} [GeV]$")
-				qtqzero_analysis.boot(N_bs, F=qtqzero_analysis.chi, F_error=qtqzero_analysis.chi_std)
-				qtqzero_analysis.jackknife(F=qtqzero_analysis.chi, F_error=qtqzero_analysis.chi_std)
-				qtqzero_analysis.plot_original(correction_function=lambda x: np.power(x, 0.25))
-				qtqzero_analysis.plot_jackknife(correction_function=lambda x: np.power(x, 0.25))
-				qtqzero_analysis.plot_boot(correction_function=lambda x: np.power(x, 0.25))
+
+				qtqzero_analysis.boot(N_bs)
+				qtqzero_analysis.jackknife()
+				qtqzero_analysis.plot_original()
+				qtqzero_analysis.plot_jackknife()
+				qtqzero_analysis.plot_boot()
+				# qtqzero_analysis.boot(N_bs, F=qtqzero_analysis.chi, F_error=qtqzero_analysis.chi_std)
+				# qtqzero_analysis.jackknife(F=qtqzero_analysis.chi, F_error=qtqzero_analysis.chi_std)
+				# qtqzero_analysis.plot_original(correction_function=lambda x: np.power(x, 0.25))
+				# qtqzero_analysis.plot_jackknife(correction_function=lambda x: np.power(x, 0.25))
+				# qtqzero_analysis.plot_boot(correction_function=lambda x: np.power(x, 0.25))
 
 		if 'topsus' in args:
-			topsus_analysis = AnalyseTopologicalSusceptibility(DirectoryList, batch_name, dryrun=dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs, verbose=verbose)
+			topsus_analysis = AnalyseTopologicalSusceptibility(directory_tree, batch_name, dryrun=dryrun, data=topc_analysis.data, parallel=parallel, numprocs=numprocs, verbose=verbose)
 			topsus_analysis.boot(N_bs, F=topsus_analysis.chi, F_error=topsus_analysis.chi_std, store_raw_bs_values=True)
 			topsus_analysis.jackknife(F=topsus_analysis.chi, F_error=topsus_analysis.chi_std, store_raw_jk_values=True)
 			# topsus_analysis.y_limits  = [0.05,0.5]
@@ -1093,7 +1106,7 @@ def main(args):
 
 	if 'energy' in args:
 		r0 = 0.5
-		energy_analysis = AnalyseEnergy(DirectoryList, batch_name, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data=create_perflow_data)
+		energy_analysis = AnalyseEnergy(directory_tree, batch_name, dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose, create_perflow_data=create_perflow_data)
 		energy_analysis.boot(N_bs, store_raw_bs_values=True)
 		energy_analysis.jackknife(store_raw_jk_values=True)
 
@@ -1101,8 +1114,8 @@ def main(args):
 		if batch_folder == "data5":
 			x_values = energy_analysis.x / r0**2 * energy_analysis.a**2
 		else:
-			energy_analysis.correction_function_factor = energy_analysis.meta_data["FlowEpsilon"] ** 2
-			x_values = energy_analysis.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
+			energy_analysis.correction_function_factor = energy_analysis.data.meta_data["FlowEpsilon"] ** 2
+			x_values = energy_analysis.data.data.meta_data["FlowEpsilon"] * energy_analysis.x / r0**2 * energy_analysis.a**2
 
 		energy_analysis.plot_original(x=x_values, correction_function=energy_analysis.correction_function)
 		energy_analysis.plot_boot(x=x_values, correction_function=energy_analysis.correction_function)
@@ -1124,7 +1137,7 @@ def main(args):
 			write_data_to_file(energy_analysis, dryrun=dryrun)
 
 	if 'topct' in args:
-		topct_analysis = AnalyseTopologicalChargeInEuclideanTime(DirectoryList,
+		topct_analysis = AnalyseTopologicalChargeInEuclideanTime(directory_tree,
 			batch_name, dryrun=dryrun, parallel=parallel, numprocs=numprocs, 
 			verbose = verbose, create_perflow_data=create_perflow_data)
 		# topct_analysis.boot(N_bs, store_raw_bs_values = True)
@@ -1141,21 +1154,21 @@ def main(args):
 
 if __name__ == '__main__':
 	if not sys.argv[1:]:
-		# args = [['beta6_0','data4','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
-		# 		['beta6_1','data4','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
-		# 		['beta6_2','data4','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
+		# args = [['beta6_0','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
+		# 		['beta6_1','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq'],
+		# 		['beta6_2','data2','plaq','topc','energy','topsus','qtqzero','topcq4','topcqq']]
 
-		# args = [['beta6_1','data4','energy']]
+		# args = [['beta6_1','data4','qtqzero']]
 
-		# args = [['beta60','data5','topc','plaq','topsus','energy','qtqzero','topcq4','topcqq'],
-		# 		['beta61','data5','topc','plaq','topsus','energy','qtqzero','topcq4','topcqq']]
+		# args = [['beta60','data5','topc','plaq','topsus','energy','qtqzero','topcq4'],
+		# 		['beta61','data5','topc','plaq','topsus','energy','qtqzero','topcq4']]
 
 		# args = [['beta60', 'data5', 'qtqzero'],
 		# 		['beta61', 'data5', 'qtqzero']]
 
 		# args = [['beta6_2','data4','topsus']]
-		args = [['beta61','data5','topsus']]
-
+		args = [['beta61','data5','topc']]
+		# args = [['beta61','data5','topc','plaq','topsus','energy','qtqzero','topcq4']]
 		# args = [['beta61','data5','topc','plaq','topsus','energy','qtqzero']]
 
 		# args = [['test_run_new_counting','output','topc','plaq','energy','topsus']]
