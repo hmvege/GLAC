@@ -3,6 +3,7 @@ import os
 import numpy as np
 import re
 import pandas as pd
+import json
 
 class DirectoryTree:
 	def __init__(self,batch_name,batch_folder,dryrun=False):
@@ -288,35 +289,60 @@ class DataReader:
 	4. Write data to a single file in binary
 
 	"""
-
 	beta_to_spatial_size = {6.0: 24, 6.1: 28, 6.2: 32, 6.45: 48}
+	fobs = ["plaq", "energy", "topc", "topct"]
 
-	def __init__(self, file_tree, verbose=True):
-		# TODO: Add file-tree inside here instead
+	def __init__(self, batch_name, batch_folder, load_file=None, NCfgs=None,
+			NFlows=1000, FlowEpsilon=0.01, create_perflow_data=False, 
+			exclude_fobs=[], verbose=True, dryrun=False):
+		"""
+		Class that reads and loads the observable data.
 
-		assert isinstance(file_tree, DirectoryTree)
-		self.file_tree = file_tree
-
-		print "Retrieving data for batch %s from folder %s" % (self.file_tree.batch_name, self.file_tree.data_batch_folder)
+		Args:
+			batch_name: string containing batch name
+			batch_folder: string containing location of batch.
+			load_file: optional .npy file containing all observable data.
+			NCfgs: number of configuration in file we are loading. Required
+				for load_file argument. Default is None.
+			NFlows: number of flows in file we are loading. Default is 1000.
+			FlowEpsilon: flow epsilon in flow of file we are loading. Default
+				is 0.01.
+			create_perflow_data: bool if we are to create a folder containing 
+				per-flow data(as opposite of per-config).
+			exclude_fobs: list containing observables to exclude. 
+				Default is an empty list.
+			verbose: a more verbose run. Default is True
+			dryrun: dryrun option. Default is False
+		"""
+		self.verbose = verbose
+		self.dryrun = dryrun
 
 		self.data = {}
 
-		self.verbose = True
+		self.batch_name = batch_name
+		self.batch_folder = batch_folder
 
-		# if input_file != None:
-		# 	self.input_file = input_file
-		# 	self._load_file()
-		# else:
-		# 	self._retrieve_observable_data()
+		if load_file == None:
+			self.file_tree = DirectoryTree(self.batch_name, self.batch_folder, dryrun=dryrun)
 
-	def retrieve_observable_data(self, create_perflow_data=False):
+			print "Retrieving data for batch %s from folder %s" % (self.batch_name, self.batch_folder)
+
+			self._retrieve_observable_data(create_perflow_data=create_perflow_data, 
+				exclude_fobs=exclude_fobs)
+		else:
+			if NCfgs == None:
+				raise KeyError("missing number of configs.")
+
+			self._load_single_file(load_file, NCfgs, NFlows, exclude_fobs)
+
+	def _retrieve_observable_data(self, create_perflow_data=False, exclude_fobs=[]):
+		assert isinstance(exclude_fobs,list), "exclude_fobs must be of list type."
+
 		_NFlows = []
 		for obs in self.file_tree.flow_tree:
+			if obs in exclude_fobs: continue
 
-			# if obs == "topct": 
-			# 	print "TEMPORARY: Skipping topct"
-			# 	continue
-
+			# Creates a dictionary to hold data associated with an observable
 			self.data[obs] = {}
 
 			_data_obj = GetFolderContents(self.file_tree, obs, flow=True)
@@ -326,6 +352,8 @@ class DataReader:
 			self.data[obs]["beta"] = _data_obj.meta_data["beta"]
 			self.data[obs]["FlowEpsilon"] = _data_obj.meta_data["FlowEpsilon"]
 			self.data[obs]["NFlows"] = _data_obj.meta_data["NFlows"]
+			self.data[obs]["batch_name"] = self.file_tree.batch_name
+			self.data[obs]["batch_data_folder"] = self.file_tree.data_batch_folder
 			
 			if create_perflow_data:
 				# self.data[observable].create_perflow_data(verbose=self.verbose)
@@ -334,35 +362,57 @@ class DataReader:
 			# Stores all the number of flow values
 			_NFlows.append(self.data[obs]["NFlows"])
 
+			del _data_obj
+
 			print "Retreived %s. Size: %.2f MB" % (obs, sys.getsizeof(self.data[obs]["obs"])/1024.0/1024.0)
 
 		# Checks that all values have been flowed for an equal amount of time
 		assert len(set(_NFlows)) == 1, "flow times differ for the different observables"
+
 		self.NFlows = int(_NFlows[0])
 
-	def load_single_file(self, input_file, NCfgs, NFlows=1000, FObs=["plaq","energy","topc"], FlowEpsilon=0.01):
+	def __call__(self,obs):
+		return self.data[obs]
+
+	def _load_single_file(self, input_file, NCfgs, NFlows=1000, exclude_fobs=[], FlowEpsilon=0.01):
+		assert isinstance(exclude_fobs,list), "exclude_fobs must be of list type."
+		
 		raw_data = np.load(input_file)
 
 		NT, beta = input_file.split("/")[-1].split("_")
 		NT = int(NT)
 		beta = float(".".join(beta.split(".")[:-1]))
 
-		for i, obs in enumerate(FObs):
-			self.data[obs]["t"] = raw_data[0]
-			if i != (len(FObs) - 1):
+		for i, obs in enumerate(self.fobs):
+			if obs in exclude_fobs: continue
+
+			self.data[obs] = {}
+
+			# Gets the flow time
+			self.data[obs]["t"] = raw_data[:,0]
+
+			# Gets the observable data
+			if i != (len(self.fobs) - 1):
 				# If we are not at the last item
-				self.data[obs]["obs"] = raw_data[NCfgs*i:(NCfgs+1)*i]
+				start_index = NCfgs*i + 1
+				stop_index =  NCfgs*(i+1) + 1
 			else:
 				# If we are at the last item, we add all of the rest columns to it
-				self.data[obs]["obs"] = raw_data[NCfgs*i:]
+				start_index = NCfgs*i + 1
+				stop_index = raw_data.shape[1]
 
+			self.data[obs]["obs"] = raw_data[:, start_index: stop_index].T
+
+			# Fills in different parameters
 			self.data[obs]["beta"] = beta
 			self.data[obs]["FlowEpsilon"] = FlowEpsilon
 			self.data[obs]["NFlows"] = NFlows
+			self.data[obs]["batch_name"] = self.batch_name
+			self.data[obs]["batch_data_folder"] = self.batch_folder
 
-		print "Loaded %s from file %s. Size: %.2f MB" % (", ".join(FObs), input_file, sys.getsizeof(self.data)/1024.0/1024.0)
+		print "Loaded %s from file %s. Size: %.2f MB" % (", ".join(self.fobs), input_file, raw_data.nbytes/1024.0/1024.0)
 
-	def write_single_file(self, observables_to_write=["plaq", "energy", "topc", "topct"]):
+	def write_single_file(self, observables_to_write=["plaq", "energy", "topc"]):
 		assert isinstance(observables_to_write,list)
 
 		raw_data = self.data[observables_to_write[0]]["t"][0:self.NFlows]
@@ -379,6 +429,10 @@ class DataReader:
 
 				raw_data = np.column_stack((raw_data, _temp_rolled_data))	
 			else:
+				# # Multiplies by 1/64
+				# if obs == "energy":
+				# 	self.data[obs]["obs"][:,0:self.NFlows] /= 64.0
+
 				raw_data = np.column_stack((raw_data, self.data[obs]["obs"][:,0:self.NFlows].T))
 
 		beta_value = self.data[observables_to_write[0]]["beta"]
@@ -392,6 +446,8 @@ class DataReader:
 		np.save(file_path,raw_data)
 		
 		print "%s written to a single file at location %s.npy." % (", ".join(observables_to_write), file_path)
+
+		return file_path + ".npy"
 
 def check_folder(folder_name, dryrun, verbose=False):
 	# Checks that figures folder exist, and if not will create it
@@ -426,7 +482,7 @@ def write_data_to_file(analysis_object, post_analysis_folder = "../output/post_a
 	check_folder(beta_folder_path,dryrun,verbose=True)
 
 	# Retrieves analyzed data
-	x = analysis_object.x*analysis_object.data.meta_data["FlowEpsilon"]
+	x = analysis_object.x*analysis_object.flow_epsilon
 	y_org = analysis_object.unanalyzed_y
 	y_err_org = analysis_object.unanalyzed_y_std*analysis_object.autocorrelation_error_correction
 	y_bs = analysis_object.bs_y
@@ -447,7 +503,7 @@ def write_data_to_file(analysis_object, post_analysis_folder = "../output/post_a
 	# Saves data to file
 	if not dryrun:
 		np.savetxt(fname_path,data,fmt="%.16f",header="observable %s beta %s\nt orginal original_error bs bs_error jk jk_error" % (observable,beta_string))
-	print "Data written to %s" % fname_path
+	print "Data for the post analysis written to %s" % fname_path
 
 def write_raw_analysis_to_file(raw_data, analysis_type, observable, data_batch_folder, beta, post_analysis_folder = "../output/post_analysis_data", dryrun = False):
 	"""
