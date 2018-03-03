@@ -5,7 +5,9 @@ import re
 import pandas as pd
 import json
 
-class DirectoryTree:
+__all__ = ["DataReader", "check_folder", "write_data_to_file", "write_raw_analysis_to_file"]
+
+class _DirectoryTree:
 	def __init__(self,batch_name,batch_folder,dryrun=False):
 		self.flow_tree = {}
 		self.obs_tree = {}
@@ -30,7 +32,6 @@ class DirectoryTree:
 				obs_path = os.path.join(self.observables_folder,file_name)
 				if os.path.isfile(obs_path):
 					self.obs_tree[obs] = obs_path
-
 
 		## Gets paths to flow observable
 		# Creates the flow observables path
@@ -113,7 +114,7 @@ class DirectoryTree:
 					return_string += "\n      {0:<s}".format(os.path.join(obs_path,obs_file))
 		return return_string
 
-class GetFolderContents:
+class _GetFolderContents:
 	"""
 	Retrieves folder contents and acts as a container for data and meta-data.
 	"""
@@ -323,7 +324,7 @@ class DataReader:
 		self.batch_folder = batch_folder
 
 		if load_file == None:
-			self.file_tree = DirectoryTree(self.batch_name, self.batch_folder, dryrun=dryrun)
+			self.file_tree = _DirectoryTree(self.batch_name, self.batch_folder, dryrun=dryrun)
 
 			print "Retrieving data for batch %s from folder %s" % (self.batch_name, self.batch_folder)
 
@@ -345,7 +346,7 @@ class DataReader:
 			# Creates a dictionary to hold data associated with an observable
 			self.data[obs] = {}
 
-			_data_obj = GetFolderContents(self.file_tree, obs, flow=True)
+			_data_obj = _GetFolderContents(self.file_tree, obs, flow=True)
 
 			self.data[obs]["t"] = _data_obj.data_x
 			self.data[obs]["obs"] = _data_obj.data_y
