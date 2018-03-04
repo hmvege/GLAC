@@ -59,6 +59,10 @@ def _chi_beta6_0_derivative(Q_squared):
 	const = 0.074230020266
 	return 0.25*const / Q_squared**(0.75)
 
+def _chi_beta6_0_derivativeQ4(Q4):
+	const = 0.074230020266
+	return (0.25*const)**2 / Q4**(0.5625)
+
 # BETA 6.1
 def _chi_beta6_1(Q_squared):
 	const = 0.0749573791735
@@ -71,6 +75,10 @@ def _chi_beta6_1_error(Q_squared, Q_squared_std):
 def _chi_beta6_1_derivative(Q_squared):
 	const = 0.0749573791735
 	return 0.25*const / Q_squared**(0.75)
+
+def _chi_beta6_1_derivativeQ4(Q4):
+	const = 0.0749573791735
+	return (0.25*const)**2 / Q4**(0.5625)
 
 # BETA 6.2
 def _chi_beta6_2(Q_squared):
@@ -85,6 +93,10 @@ def _chi_beta6_2_derivative(Q_squared):
 	const = 0.0763234462734
 	return 0.25*const / Q_squared**(0.75)
 
+def _chi_beta6_2_derivativeQ4(Q4):
+	const = 0.0763234462734
+	return (0.25*const)**2 / Q4**(0.5625)
+
 # BETA 6.45
 def _chi_beta6_45(Q_squared):
 	const = 0.0723048176484
@@ -97,6 +109,11 @@ def _chi_beta6_45_error(Q_squared, Q_squared_std):
 def _chi_beta6_45_derivative(Q_squared):
 	const = 0.0723048176484
 	return 0.25*const / Q_squared**(0.75)
+
+def _chi_beta6_45_derivativeQ4(Q4):
+	const = 0.0723048176484
+	return (0.25*const)**2 / Q4**(0.5625)
+
 
 if __name__ == '__main__':
 	exit("Exit: %s to be imported as module in other programs." % __file__.split("/")[-1])

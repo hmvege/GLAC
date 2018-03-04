@@ -768,7 +768,7 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 	def __init__(self, *args, **kwargs):
 		super(AnalyseTopologicalSusceptibility, self).__init__(*args, **kwargs)
 		self.y **= 2
-		self.set_size()
+		self.__set_size()
 
 	def chi(self, Q_squared):
 		"""Topological susceptibility funciton."""
@@ -778,7 +778,7 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 		"""Topological susceptibility with error propagation."""
 		return 0.25*self.const*Q_squared_std / Q_squared**(0.75)
 
-	def set_size(self):
+	def __set_size(self):
 		"""
 		Function that sets the lattice size deepending on the beta value.
 
@@ -873,7 +873,7 @@ class AnalyseEnergy(FlowAnalyser):
 
 class AnalyseQQuartic(AnalyseTopologicalSusceptibility):
 	"""
-	Quartic topological charge analysis class.
+	Class for topological susceptibility with quartic topological charge.
 	"""
 	observable_name = r"Topological charge at $Q^4$"
 	observable_name_compact = "topq4"
@@ -883,6 +883,59 @@ class AnalyseQQuartic(AnalyseTopologicalSusceptibility):
 	def __init__(self, *args, **kwargs):
 		super(AnalyseQQuartic, self).__init__(*args, **kwargs)
 		self.y **= 4
+		self.__set_size()
+
+	def __set_size(self):
+		"""
+		Function that sets the lattice size deepending on the beta value for
+		Q^4.
+
+		Raises:
+			ValueError: if beta is not recognized among beta = 6.0, 6.1, 6.2 or
+				6.45.
+		"""
+
+		# Retrieves lattice spacing
+		self.a = self.getLatticeSpacing(self.beta)
+		
+		# Ugly, hardcoded lattice size setting
+		if self.beta == 6.0:
+			lattice_size = 24**3*48
+			self.function_derivative = ptools._chi_beta6_0_derivativeQ4
+		elif self.beta == 6.1:
+			lattice_size = 28**3*56
+			self.function_derivative = ptools._chi_beta6_1_derivativeQ4
+		elif self.beta == 6.2:
+			lattice_size = 32**3*64
+			self.function_derivative = ptools._chi_beta6_2_derivativeQ4
+		elif self.beta == 6.45:
+			lattice_size = 48**3*96
+			self.function_derivative = ptools._chi_beta6_45_derivativeQ4
+		else:
+			raise ValueError("Unrecognized beta value: %g" % self.beta)
+
+		# Sets up constants used in the chi function for topological susceptibility
+		self.V = lattice_size
+		self.hbarc = 0.19732697 #eV micro m
+		self.const = self.hbarc/self.a/self.V**(1./4)
+
+	def chi(self, Q4):
+		"""Topological susceptibility function for Q^4."""
+		return self.const**2 * Q4**(0.0625)
+
+	def chi_std(self, Q4, Q4_std):
+		"""Topological susceptibility with error propagation for Q^4."""
+		return (0.25*self.const)**2 * Q4_std / Q4**(0.5625)
+
+	def jackknife(self, F=None, F_error=None, store_raw_jk_values=True):
+		"""Overriding the jackknife class by adding the chi-function"""
+		super(AnalyseTopologicalSusceptibility, self).jackknife(F=self.chi,
+			F_error=self.chi_std, store_raw_jk_values=store_raw_jk_values)
+
+	def boot(self, N_bs, F=None, F_error=None, store_raw_bs_values=True):
+		"""Overriding the bootstrap class by adding the chi-function"""
+		super(AnalyseTopologicalSusceptibility, self).boot(N_bs, F=self.chi,
+			F_error=self.chi_std, store_raw_bs_values=store_raw_bs_values)
 
 class AnalyseQtQZero(FlowAnalyser):
 	"""
@@ -951,40 +1004,6 @@ class AnalyseQtQZero(FlowAnalyser):
 						exit(1)
 			else:
 				print "GOOD: multiplications match."
-
-
-	# def set_size(self): # HARDCODE DIFFERENT SIZES HERE!
-	# 	# Retrieves lattice spacing
-	# 	self.a = self.getLatticeSpacing(self.beta)
-		
-	# 	# Ugly, hardcoded lattice size setting
-	# 	if self.beta == 6.0:
-	# 		lattice_size = 24**3*48
-	# 		self.chi = ptools._chi_beta6_0
-	# 		self.chi_std = ptools._chi_beta6_0_error
-	# 		self.function_derivative = ptools._chi_beta6_0_derivative
-	# 	elif self.beta == 6.1:
-	# 		lattice_size = 28**3*56
-	# 		self.chi = ptools._chi_beta6_1
-	# 		self.chi_std = ptools._chi_beta6_1_error
-	# 		self.function_derivative = ptools._chi_beta6_1_derivative
-	# 	elif self.beta == 6.2:
-	# 		lattice_size = 32**3*64
-	# 		self.chi = ptools._chi_beta6_2
-	# 		self.chi_std = ptools._chi_beta6_2_error
-	# 		self.function_derivative = ptools._chi_beta6_2_derivative
-	# 	elif self.beta == 6.45:
-	# 		lattice_size = 48**3*96
-	# 		self.chi = ptools._chi_beta6_45
-	# 		self.chi_std = ptools._chi_beta6_45_error
-	# 		self.function_derivative = ptools._chi_beta6_45_derivative
-	# 	else:
-	# 		raise ValueError("Unrecognized beta value: %g" % meta_data["beta"])
-
-	# 	# Sets up constants used in the chi function for topological susceptibility
-	# 	self.V = lattice_size
-	# 	self.hbarc = 0.19732697 #eV micro m
-	# 	self.const = self.hbarc/self.a/self.V**(1./4)
 
 class AnalyseTopologicalChargeInEuclideanTime(FlowAnalyser):
 	"""

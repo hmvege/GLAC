@@ -80,13 +80,21 @@ def analyse_qtq0(params):
 		qtqzero_analysis.plot_boot()
 
 
-def main(args):
-	batch_name = args[0]
-	batch_folder = args[1]
+def main(parameters):
+	databeta60 = {"batch_name": beta_folder_name[0],"batch_folder": data_batch_folder, 
+		"observables": observables, "NCfgs": 1000, "obs_file": "24_6.00",
+		"load_file": load_file, "save_to_binary": save_to_binary}
+
+	batch_name = parameters["batch_name"]
+	batch_folder = parameters["batch_folder"]
+	NCfgs = parameters["NCfgs"]
+	
+	obs_file = os.path.join("..", batch_folder, batch_name, parameters["obs_file"] + "npy")
+	if not os.path.isfile(obs_file):
+		obs_file = None
+
 	obs_data = DataReader(batch_name, batch_folder, load_file=None, exclude_fobs=["topct"], dryrun=dryrun, verbose=verbose)
 
-	obs_file = os.path.join("..",batch_folder,batch_name)
-	os.path.isfile()
 
 	N_bs = 500
 	dryrun = False
@@ -121,6 +129,7 @@ if __name__ == '__main__':
 	#### Available observables
 	all_observables = ["plaq", "energy", "topc", "topsus", "qtqzero", "topc4", "topcq4", "topcqtq0"]
 	basic_observables = ["plaq", "energy", "topc", "topsus"]
+	observables = basic_observables
 
 	#### Try to load binary file(much much faster)
 	load_file = True
@@ -140,13 +149,13 @@ if __name__ == '__main__':
 
 	#### Basic batch setup
 	databeta60 = {"batch_name": beta_folder_name[0],"batch_folder": data_batch_folder, 
-		"observables": basic_observables, "NCfgs": 1000, "obs_file": "24_6.00",
+		"observables": observables, "NCfgs": 1000, "obs_file": "24_6.00",
 		"load_file": load_file, "save_to_binary": save_to_binary}
 	databeta61 = {"batch_name": beta_folder_name[1], "batch_folder": data_batch_folder, 
-		"observables": basic_observables, "NCfgs": 500, "obs_file": "28_6.10",
+		"observables": observables, "NCfgs": 500, "obs_file": "28_6.10",
 		"load_file": load_file, "save_to_binary": save_to_binary}
 	databeta62 = {"batch_name": beta_folder_name[2], "batch_folder": data_batch_folder,
-		"observables": basic_observables, "NCfgs": 500, "obs_file": "32_6.20",
+		"observables": observables, "NCfgs": 500, "obs_file": "32_6.20",
 		"load_file": load_file, "save_to_binary": save_to_binary}
 
 	#### Adding relevant batches to args
