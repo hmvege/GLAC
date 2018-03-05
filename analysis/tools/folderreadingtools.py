@@ -376,7 +376,7 @@ class DataReader:
 			print "Retreived %s. Size: %.2f MB" % (obs, sys.getsizeof(self.data[obs]["obs"])/1024.0/1024.0)
 
 		# Checks that all values have been flowed for an equal amount of time
-		assert len(set(_NFlows)) == 1, "flow times differ for the different observables"
+		assert len(set(_NFlows)) == 1, "flow times differ for the different observables: %s" % (", ".join(_NFlows))
 
 		self.NFlows = int(_NFlows[0])
 

@@ -70,7 +70,7 @@ def analyse_qtq0(params, qzero_flow_time):
 	
 	for qzero_flow_time_index in qzero_flow_time:
 		# qtqzero_analysis.y_limits = [0, 2]
-		qtqzero_analysis.setQ0(qzero_flow_time_index, y_label=r"$\langle Q_{t}Q_{t_0} \rangle^{1/4} [GeV]$")
+		qtqzero_analysis.setQ0(qzero_flow_time_index)
 		qtqzero_analysis.boot(N_bs)
 		qtqzero_analysis.jackknife()
 		qtqzero_analysis.plot_original()
@@ -127,7 +127,7 @@ def analyse(parameters):
 		verbose=_p["verbose"], correct_energy=parameters["correct_energy"])
 
 	# Writes raw observable data to a single binary file
-	if parameters["save_to_binary"] and parameters["load_file"] == None:
+	if parameters["save_to_binary"] and load_file == None:
 		obs_data.write_single_file()
 
 	# Builds parameters list to be passed to analyser
@@ -159,9 +159,10 @@ def analyse(parameters):
 def main():
 	#### Available observables
 	all_observables = ["plaq", "energy", "topc", "topsus", "qtqzero", "topc4", "topct"]
-	basic_observables = ["plaq", "energy", "topc", "topsus"]
-	observables = all_observables[6:7]
+	# basic_observables = ["plaq", "energy", "topc", "topsus"]
+	observables = all_observables[3:5]
 	# observables = basic_observables[3:4]
+	print observables
 
 	#### Base parameters
 	N_bs = 500
@@ -179,15 +180,14 @@ def main():
 	create_perflow_data = False
 
 	#### Save binary file
-	save_to_binary = False
-
-	# TODO: Check if NUpdates is implemented properly
+	save_to_binary = True
 
 	#### Load specific parameters
 	NFlows = 1000
 	flow_epsilon = 0.01
-	# exclude_fobs = ["topct"] # Observables that will not be looked for when loading file
-	exclude_fobs = ["plaq","topc","energy"]
+	# exclude_fobs = []
+	exclude_fobs = ["topct"] # Observables that will not be looked for when loading file
+	# exclude_fobs = ["plaq","topc","energy"]
 
 	# Indexes to look at for topct
 	t_euclidean_indexes = {
@@ -213,7 +213,7 @@ def main():
 
 	#### Different beta values folders:
 	beta_folder_name = ["beta60", "beta61", "beta62"]
-	# beta_folder_name = ["beta_60", "beta_61", "beta_62"]
+	# beta_folder_name = ["beta6_0", "beta6_1", "beta6_2"]
 
 	#### Basic batch setup
 	default_params = {"batch_folder": data_batch_folder,

@@ -954,7 +954,7 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 			# Matrix-matrix comparison
 			for i,j in zip(self.y,y_temp2):
 				for ii,jj in zip(i,j):
-					if np.abs(ii-jj)>1e-16:
+					if np.abs(ii-jj) > 1e-16:
 						print "BAD: multiplications do not match."
 						exit(1)
 			else:
@@ -969,7 +969,7 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 	observable_name_compact = "topct"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\frac{\hbar}{aV^{1/4}} \langle Q Q_{t_{Euclidean}} \rangle^{1/4}[GeV]$"
-	lattice_sizes = {6.0: 24**3, 6.1: 28**3, 6.2: 32**3, 6.45: 48**3}
+	lattice_sizes = {6.0: 24**3*48, 6.1: 28**3*56, 6.2: 32**3*64, 6.45: 48**3*96}
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseTopologicalChargeInEuclideanTime, self).__init__(*args, **kwargs)
@@ -1001,7 +1001,7 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 			self.y[:,:,iEuclidean] *= y_qe0
 
 		# Sums the euclidean time
-		self.y = np.sum(self.y, axis = 2)
+		self.y = np.sum(self.y, axis=2)
 
 		# Takes the absolute value in order to avoid errors when analyzing
 		self.y = np.abs(self.y)
