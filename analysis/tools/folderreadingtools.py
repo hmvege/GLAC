@@ -294,31 +294,35 @@ class DataReader:
 	fobs = ["plaq", "energy", "topc", "topct"]
 
 	def __init__(self, batch_name, batch_folder, load_file=None, NCfgs=None,
-			NFlows=1000, FlowEpsilon=0.01, create_perflow_data=False, 
-			exclude_fobs=[], verbose=True, dryrun=False):
+			NFlows=1000, flow_epsilon=0.01, create_perflow_data=False, 
+			exclude_fobs=[], verbose=True, dryrun=False, correct_energy=False):
 		"""
 		Class that reads and loads the observable data.
 
 		Args:
-			batch_name: string containing batch name
+			batch_name: string containing batch name.
 			batch_folder: string containing location of batch.
 			load_file: optional .npy file containing all observable data.
 			NCfgs: number of configuration in file we are loading. Required
 				for load_file argument. Default is None.
 			NFlows: number of flows in file we are loading. Default is 1000.
-			FlowEpsilon: flow epsilon in flow of file we are loading. Default
+			flow_epsilon: flow epsilon in flow of file we are loading. Default
 				is 0.01.
 			create_perflow_data: bool if we are to create a folder containing 
 				per-flow data(as opposite of per-config).
 			exclude_fobs: list containing observables to exclude. 
 				Default is an empty list.
-			verbose: a more verbose run. Default is True
-			dryrun: dryrun option. Default is False
+			verbose: a more verbose run. Default is True.
+			dryrun: dryrun option. Default is False.
+			correct_energy: Correct energy by dividing by 64.
 		"""
+
 		self.verbose = verbose
 		self.dryrun = dryrun
 
 		self.data = {}
+
+		self.correct_energy = correct_energy
 
 		self.batch_name = batch_name
 		self.batch_folder = batch_folder
@@ -334,7 +338,8 @@ class DataReader:
 			if NCfgs == None:
 				raise KeyError("missing number of configs.")
 
-			self._load_single_file(load_file, NCfgs, NFlows, exclude_fobs)
+			self._load_single_file(load_file, NCfgs, NFlows=NFlows,
+				exclude_fobs=exclude_fobs, flow_epsilon=flow_epsilon)
 
 	def _retrieve_observable_data(self, create_perflow_data=False, exclude_fobs=[]):
 		assert isinstance(exclude_fobs,list), "exclude_fobs must be of list type."
@@ -356,6 +361,9 @@ class DataReader:
 			self.data[obs]["batch_name"] = self.file_tree.batch_name
 			self.data[obs]["batch_data_folder"] = self.file_tree.data_batch_folder
 			
+			if obs == "energy" and self.correct_energy:
+				self.data[obs]["obs"] *= 1.0/64.0
+
 			if create_perflow_data:
 				# self.data[observable].create_perflow_data(verbose=self.verbose)
 				_data_obj.create_perflow_data(verbose=self.verbose)
@@ -375,7 +383,7 @@ class DataReader:
 	def __call__(self,obs):
 		return self.data[obs]
 
-	def _load_single_file(self, input_file, NCfgs, NFlows=1000, exclude_fobs=[], FlowEpsilon=0.01):
+	def _load_single_file(self, input_file, NCfgs, NFlows=1000, exclude_fobs=[], flow_epsilon=0.01):
 		assert isinstance(exclude_fobs,list), "exclude_fobs must be of list type."
 		
 		raw_data = np.load(input_file)
@@ -406,7 +414,7 @@ class DataReader:
 
 			# Fills in different parameters
 			self.data[obs]["beta"] = beta
-			self.data[obs]["FlowEpsilon"] = FlowEpsilon
+			self.data[obs]["FlowEpsilon"] = flow_epsilon
 			self.data[obs]["NFlows"] = NFlows
 			self.data[obs]["batch_name"] = self.batch_name
 			self.data[obs]["batch_data_folder"] = self.batch_folder

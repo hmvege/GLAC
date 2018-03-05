@@ -12,6 +12,9 @@ output/*
 # Config folder
 # config_folder
 
+# Ignoring all zip files
+*.zip
+
 # Config files
 config_folder/beta6_0test_config.py
 config_folder/test_config_file.py

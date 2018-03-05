@@ -12,7 +12,10 @@ import types
 
 # from tqdm import trange
 
-__all__ = ["FlowAnalyser"]
+__all__ = ["FlowAnalyser", "AnalysePlaquette", "AnalyseEnergy",
+	"AnalyseTopologicalCharge", "AnalyseTopologicalSusceptibility", 
+	"AnalyseTopologicalChargeInEuclideanTime", "AnalyseQQuartic",
+	"AnalyseQtQZero"]
 
 class FlowAnalyser(object):
 	observable_name = "Missing_Observable_Name"
@@ -31,11 +34,9 @@ class FlowAnalyser(object):
 	# Resolution in figures created
 	dpi = 350
 
-	# Which axis the configurations are aligned against
-	cfg_axis = None
-
-	# Number of observables per config per flow
-	N_observables_per_config = None
+	# Hline and Vline plots. Internal variables, accesible through children.
+	plot_hline_at = None
+	plot_vline_at = None
 
 	def __init__(self, data, dryrun=False, parallel=False, numprocs=4,
 		verbose=False, figures_folder=False):
@@ -114,15 +115,8 @@ class FlowAnalyser(object):
 		# Max plotting window variables
 		self.y_limits = [None,None]
 
-		if len(self.y.shape) == 2:
-			# Default type of observables, one per configuration per flow
-			self.N_configurations, self.NFlows = self.y.shape
-		elif len(self.y.shape) == 3:
-			print "Retrieving observables per config per flow"
-			# N_observables_per_config of observables per configuration per flow
-			self.N_configurations, self.NFlows, self.N_observables_per_config = self.y.shape
-		else:
-			raise ImportError("Data format not recognized: " + self.y.shape)
+		# Default type of observables, one per configuration per flow
+		self.N_configurations, self.NFlows = self.y.shape[:2]
 
 		# Non-bootstrapped data
 		self.unanalyzed_y = np.zeros(self.NFlows)
@@ -199,21 +193,13 @@ class FlowAnalyser(object):
 		if F_error == None:
 			F_error = ptools._default_error_return
 
-		# Ensures proper functions has been provided
-		assert isinstance(F, types.FunctionType), "proper function F not not provided"
-		assert isinstance(F_error, types.FunctionType), "proper function F not not provided"
-
 		# Stores number of bootstraps
 		self.N_bs = N_bs
 
 		# Sets up raw bootstrap and unanalyzed data array
-		if self.N_observables_per_config != None:
-			self.bs_y_data = np.zeros((self.NFlows, self.N_bs, self.N_observables_per_config))
-			self.unanalyzed_y_data = np.zeros((self.NFlows, self.N_configurations, self.N_observables_per_config))
-		else:
-			self.bs_y_data = np.zeros((self.NFlows, self.N_bs))
-			self.unanalyzed_y_data = np.zeros((self.NFlows, self.N_configurations))
-		
+		self.bs_y_data = np.zeros((self.NFlows, self.N_bs))
+		self.unanalyzed_y_data = np.zeros((self.NFlows, self.N_configurations))
+	
 		# Generates random lists to use in resampling
 		index_lists = np.random.randint(self.N_configurations, size=(self.N_bs, self.N_configurations))
 
@@ -221,9 +207,7 @@ class FlowAnalyser(object):
 			# Sets up jobs for parallel processing
 			input_values = zip(	[self.y[:,i] for i in xrange(self.NFlows)],
 								[N_bs for i in xrange(self.NFlows)],
-								[index_lists for i in xrange(self.NFlows)],
-								[self.cfg_axis for i in xrange(self.NFlows)])
-
+								[index_lists for i in xrange(self.NFlows)])
 			
 			# Initializes multiprocessing
 			pool = multiprocessing.Pool(processes=self.numprocs)								
@@ -250,7 +234,7 @@ class FlowAnalyser(object):
 
 			# Non-parallel method for calculating bootstrap
 			for i in xrange(self.NFlows):
-				bs = Bootstrap(self.y[:,i], N_bs, index_lists=index_lists, axis=self.cfg_axis)
+				bs = Bootstrap(self.y[:,i], N_bs, index_lists=index_lists)
 				self.bs_y[i] = bs.bs_avg
 				self.bs_y_std[i] = bs.bs_std
 				self.unanalyzed_y[i] = bs.avg_original
@@ -295,20 +279,12 @@ class FlowAnalyser(object):
 		if F_error == None:
 			F_error = ptools._default_error_return
 
-		# Ensures proper functions has been provided
-		assert isinstance(F, types.FunctionType), "proper function F not not provided"
-		assert isinstance(F_error, types.FunctionType), "proper function F not not provided"
-
 		# Sets up raw jackknife
-		if self.N_observables_per_config != None:
-			self.jk_y_data = np.zeros((self.NFlows, self.N_configurations, self.N_observables_per_config))
-		else:
-			self.jk_y_data = np.zeros((self.NFlows, self.N_configurations))
+		self.jk_y_data = np.zeros((self.NFlows, self.N_configurations))
 
 		if self.parallel:
 			# Sets up jobs for parallel processing
-			input_values = zip( [self.y[:,i] for i in xrange(self.NFlows)],
-								[self.cfg_axis for i in xrange(self.NFlows)])
+			input_values = [self.y[:,i] for i in xrange(self.NFlows)]
 
 			# Initializes multiprocessing
 			pool = multiprocessing.Pool(processes=self.numprocs)								
@@ -330,7 +306,7 @@ class FlowAnalyser(object):
 
 			# Non-parallel method for calculating jackknife
 			for i in xrange(self.NFlows):
-				jk = Jackknife(self.y[:,i], axis=self.cfg_axis)
+				jk = Jackknife(self.y[:,i])
 				self.jk_y[i] = jk.jk_avg
 				self.jk_y_std[i] = jk.jk_std
 				self.jk_y_data[i] = jk.jk_data
@@ -449,7 +425,7 @@ class FlowAnalyser(object):
 		y_std = self.jk_y_std*self.autocorrelation_error_correction
 
 		# Sets up the title and filename strings
-		title_string = r"Jacknife of %s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name, self.NFlows, self.beta)
+		title_string = r"Jacknife of %s" % self.observable_name
 		fname_path = os.path.join(self.observable_output_folder_path, "{0:<s}_jackknife_beta{1:<s}{2:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_'), self.fname_addon))
 
 		# Plots the jackknifed data
@@ -490,10 +466,10 @@ class FlowAnalyser(object):
 
 		# Sets up the title and filename strings
 		if _plot_bs:
-			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$, $N_{bs}=%d$" % (self.observable_name, self.NFlows, self.beta, self.N_bs)
+			title_string = r"%s $N_{bs}=%d$" % (self.observable_name, self.N_bs)
 			fname_path = os.path.join(self.observable_output_folder_path, "{0:<s}_bootstrap_Nbs{2:<d}_beta{1:<s}{3:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_'), self.N_bs, self.fname_addon))
 		else:
-			title_string = r"%s $N_{flow}=%2d$, $\beta=%.2f$" % (self.observable_name, self.NFlows, self.beta)
+			title_string = r"%s" % self.observable_name
 			fname_path = os.path.join(self.observable_output_folder_path, "{0:<s}_original_beta{1:<s}{2:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_'), self.fname_addon))
 
 		# Plots either bootstrapped or regular stuff
@@ -510,7 +486,7 @@ class FlowAnalyser(object):
 				Default is to leave them unmodified.
 
 		"""
-		self.plot_boot(_plot_bs=False, x=x, correction_function=correction_function)
+		self.plot_boot(x=x, correction_function=correction_function, _plot_bs=False)
 
 	def __plot_error_core(self, x, y, y_std, title_string, fname):
 		"""
@@ -530,6 +506,13 @@ class FlowAnalyser(object):
 		ax.errorbar(x, y, yerr=y_std, fmt=".", color="0", ecolor="r",
 			label=self.observable_name, markevery=self.mark_interval,
 			errorevery=self.error_mark_interval)
+
+		# Plots hline/vline at specified position.
+		# Needed for plotting at e.g. t0. 
+		if self.plot_hline_at != None:
+			ax.axhline(self.plot_hline_at, linestyle="--", color="0", alpha=0.3)
+		if self.plot_vline_at != None:
+			ax.axvline(self.plot_vline_at, linestyle="--", color="0", alpha=0.3)
 
 		ax.set_xlabel(self.x_label)
 		ax.set_ylabel(self.y_label)
@@ -553,7 +536,7 @@ class FlowAnalyser(object):
 
 		Raises:
 			ValueError: if no autocorrelation has been performed yet.
-			AssertionError: if the provided flow_time_indes is out of bounds.
+			AssertionError: if the provided flow_time_index is out of bounds.
 		"""
 
 		# Checks that autocorrelations has been performed.
@@ -576,7 +559,7 @@ class FlowAnalyser(object):
 		y_std = self.autocorrelations_errors[flow_time_index,:]
 
 		# Sets up the title and filename strings
-		title_string = r"Autocorrelation of %s at flow time $t=%.2f$, $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name, flow_time_index*self.flow_epsilon, self.beta, self.N_configurations)
+		title_string = r"Autocorrelation of %s, $t_{flow}=%.2f$" % (self.observable_name, flow_time_index*self.flow_epsilon)
 		fname_path = os.path.join(self.observable_output_folder_path, "{0:<s}_autocorrelation_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact, flow_time_index, str(self.beta).replace('.','_'), self.fname_addon))
 
 		# Plots the autocorrelations
@@ -608,7 +591,7 @@ class FlowAnalyser(object):
 		x = self.a*np.sqrt(8*self.x)
 
 		# Gives title and file name
-		title_string = r"Integrated autocorrelation time of %s for $\beta=%.2f$, $N_{cfg}=%2d$" % (self.observable_name, self.beta, self.N_configurations)
+		title_string = r"$\tau_{int}$ of %s, $N_{cfg}=%2d$" % (self.observable_name, self.N_configurations)
 		fname_path = os.path.join(self.observable_output_folder_path, "{0:<s}_integrated_ac_time_beta{1:<s}{2:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_'), self.fname_addon))
 
 		# Sets up the plot
@@ -654,7 +637,7 @@ class FlowAnalyser(object):
 		assert flow_time_index < len(self.unanalyzed_y_data), "Flow time %d is out of bounds." % flow_time_index
 
 		# Sets up title and file name strings
-		title_string = r"Spread of %s, $\beta=%.2f$, flow time $t=%.2f$" % (self.observable_name, float(self.beta),flow_time_index*self.flow_epsilon)
+		title_string = r"Spread of %s, $t_{flow}=%.2f$" % (self.observable_name, flow_time_index*self.flow_epsilon)
 		fname_path = os.path.join(self.observable_output_folder_path, "{0:<s}_histogram_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact, abs(flow_time_index), str(self.beta).replace('.','_'), self.fname_addon))
 
 		# Sets up plot
@@ -737,7 +720,7 @@ class FlowAnalyser(object):
 		assert flow_time_index < len(self.unanalyzed_y_data), "Flow time %d is out of bounds." % flow_time_index
 
 		# Sets up title and file name strings
-		title_string = r"Monte Carlo history for %s, $\beta=%.2f$, $t_{flow} = %.2f$" % (self.observable_name, self.beta, flow_time_index*self.flow_epsilon)
+		title_string = r"Monte Carlo history at $t_{flow} = %.2f$" % (flow_time_index*self.flow_epsilon)
 		fname_path = os.path.join(self.observable_output_folder_path, "{0:<s}_mchistory_flowt{1:<d}_beta{2:<s}{3:<s}.png".format(self.observable_name_compact, flow_time_index, str(self.beta).replace('.','_'), self.fname_addon))
 
 		# Sets up plot
@@ -756,18 +739,18 @@ class FlowAnalyser(object):
 		print "Figure created in %s" % fname_path
 		plt.close(fig)
 
-class AnalyseTopologicalSusceptibility(FlowAnalyser):
+class _AnalyseTopSusBase(FlowAnalyser):
 	"""
-	Topological susceptibility analysis class.
+	Topological susceptibility analysis base class.
 	"""
 	observable_name = "Topological Susceptibility"
 	observable_name_compact = "topsus"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\chi_t^{1/4}[GeV]$"
+	lattice_sizes = {6.0: 24**3*48, 6.1: 28**3*56, 6.2: 32**3*64, 6.45: 48**3*96}
 
 	def __init__(self, *args, **kwargs):
-		super(AnalyseTopologicalSusceptibility, self).__init__(*args, **kwargs)
-		self.y **= 2
+		super(_AnalyseTopSusBase, self).__init__(*args, **kwargs)
 		self.__set_size()
 
 	def chi(self, Q_squared):
@@ -790,18 +773,17 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 		# Retrieves lattice spacing
 		self.a = self.getLatticeSpacing(self.beta)
 		
-		# Ugly, hardcoded lattice size setting
+		# Sets the lattice size
+		lattice_size = self.lattice_sizes[self.beta]
+
+		# Hardcoded derivative setter
 		if self.beta == 6.0:
-			lattice_size = 24**3*48
 			self.function_derivative = ptools._chi_beta6_0_derivative
 		elif self.beta == 6.1:
-			lattice_size = 28**3*56
 			self.function_derivative = ptools._chi_beta6_1_derivative
 		elif self.beta == 6.2:
-			lattice_size = 32**3*64
 			self.function_derivative = ptools._chi_beta6_2_derivative
 		elif self.beta == 6.45:
-			lattice_size = 48**3*96
 			self.function_derivative = ptools._chi_beta6_45_derivative
 		else:
 			raise ValueError("Unrecognized beta value: %g" % self.beta)
@@ -813,12 +795,12 @@ class AnalyseTopologicalSusceptibility(FlowAnalyser):
 
 	def jackknife(self, F=None, F_error=None, store_raw_jk_values=True):
 		"""Overriding the jackknife class by adding the chi-function"""
-		super(AnalyseTopologicalSusceptibility, self).jackknife(F=self.chi,
+		super(_AnalyseTopSusBase, self).jackknife(F=self.chi,
 			F_error=self.chi_std, store_raw_jk_values=store_raw_jk_values)
 
 	def boot(self, N_bs, F=None, F_error=None, store_raw_bs_values=True):
 		"""Overriding the bootstrap class by adding the chi-function"""
-		super(AnalyseTopologicalSusceptibility, self).boot(N_bs, F=self.chi,
+		super(_AnalyseTopSusBase, self).boot(N_bs, F=self.chi,
 			F_error=self.chi_std, store_raw_bs_values=store_raw_bs_values)
 
 class AnalysePlaquette(FlowAnalyser):
@@ -829,15 +811,6 @@ class AnalysePlaquette(FlowAnalyser):
 	observable_name_compact = "plaq"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$P_{\mu\nu}$"
-
-class AnalyseTopologicalCharge(FlowAnalyser):
-	"""
-	Topological charge analysis class.
-	"""
-	observable_name = "Topological charge"
-	observable_name_compact = "topc"
-	x_label = r"$\sqrt{8t_{flow}}[fm]$" # Implied multiplication by a
-	y_label = r"$Q = \sum_x \frac{1}{32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$[GeV]"
 
 class AnalyseEnergy(FlowAnalyser):
 	"""
@@ -850,101 +823,80 @@ class AnalyseEnergy(FlowAnalyser):
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseEnergy, self).__init__(*args, **kwargs)
-		self.y *= -1.0/64.0
+		self.y *= -1.0
 
 		self.x_vals = self.x / self.r0**2 * self.a**2
+
+		self.plot_hline_at = 0.3
 
 	def correction_function(self, y):
 		# *  self.flow_epsilon * self.flow_epsilon
 		return y * self.x * self.x # factor 0.5 left out, see paper by 
 
-	def plot_original():
-		super(AnalyseEnergy, self).plot_original(x=self.x_vals, correction_function=self.correction_function)
+	def plot_original(self):
+		super(AnalyseEnergy, self).plot_boot(x=self.x_vals, correction_function=self.correction_function, _plot_bs=False)
 
-	def plot_boot():
+	def plot_boot(self):
 		super(AnalyseEnergy, self).plot_boot(x=self.x_vals, correction_function=self.correction_function)
 
-	def plot_jackknife():
+	def plot_jackknife(self):
 		super(AnalyseEnergy, self).plot_jackknife(x=self.x_vals, correction_function=self.correction_function)
 
 	def plot_histogram(self, *args, **kwargs):
 		kwargs["x_label"] = r"$\langle E \rangle$[GeV]"
 		super(AnalyseEnergy, self).plot_histogram(*args, **kwargs)
 
-class AnalyseQQuartic(AnalyseTopologicalSusceptibility):
+class AnalyseTopologicalSusceptibility(_AnalyseTopSusBase):
+	"""
+	Topological susceptibility analysis class.
+	"""
+	observable_name = "Topological Susceptibility"
+	observable_name_compact = "topsus"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi_t^{1/4}[GeV]$"
+
+	def __init__(self, *args, **kwargs):
+		super(AnalyseTopologicalSusceptibility, self).__init__(*args, **kwargs)
+		self.y **= 2
+
+class AnalyseTopologicalCharge(FlowAnalyser):
+	"""
+	Topological charge analysis class.
+	"""
+	observable_name = "Topological charge"
+	observable_name_compact = "topc"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$" # Implied multiplication by a
+	y_label = r"$Q = - \sum_x \frac{1}{64 \cdot 32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$[GeV]"
+
+class AnalyseQQuartic(_AnalyseTopSusBase):
 	"""
 	Class for topological susceptibility with quartic topological charge.
 	"""
 	observable_name = r"Topological charge at $Q^4$"
 	observable_name_compact = "topq4"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\langle Q^4 \rangle [fm^{-2}]$"
+	y_label = r"$\frac{\hbar}{aV^{1/4}} \langle Q^4 \rangle^{1/8} [GeV]$" # 1/8 correct?
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseQQuartic, self).__init__(*args, **kwargs)
 		self.y **= 4
-		self.__set_size()
-
-	def __set_size(self):
-		"""
-		Function that sets the lattice size deepending on the beta value for
-		Q^4.
-
-		Raises:
-			ValueError: if beta is not recognized among beta = 6.0, 6.1, 6.2 or
-				6.45.
-		"""
-
-		# Retrieves lattice spacing
-		self.a = self.getLatticeSpacing(self.beta)
-		
-		# Ugly, hardcoded lattice size setting
-		if self.beta == 6.0:
-			lattice_size = 24**3*48
-			self.function_derivative = ptools._chi_beta6_0_derivativeQ4
-		elif self.beta == 6.1:
-			lattice_size = 28**3*56
-			self.function_derivative = ptools._chi_beta6_1_derivativeQ4
-		elif self.beta == 6.2:
-			lattice_size = 32**3*64
-			self.function_derivative = ptools._chi_beta6_2_derivativeQ4
-		elif self.beta == 6.45:
-			lattice_size = 48**3*96
-			self.function_derivative = ptools._chi_beta6_45_derivativeQ4
-		else:
-			raise ValueError("Unrecognized beta value: %g" % self.beta)
-
-		# Sets up constants used in the chi function for topological susceptibility
-		self.V = lattice_size
-		self.hbarc = 0.19732697 #eV micro m
-		self.const = self.hbarc/self.a/self.V**(1./4)
 
 	def chi(self, Q4):
-		"""Topological susceptibility function for Q^4."""
-		return self.const**2 * Q4**(0.0625)
+		"""Topological susceptibility funciton."""
+		return self.const * Q4**(0.125)
 
 	def chi_std(self, Q4, Q4_std):
-		"""Topological susceptibility with error propagation for Q^4."""
-		return (0.25*self.const)**2 * Q4_std / Q4**(0.5625)
+		"""Topological susceptibility with error propagation."""
+		return 0.25*self.const * Q4_std / Q4**(0.875)
 
-	def jackknife(self, F=None, F_error=None, store_raw_jk_values=True):
-		"""Overriding the jackknife class by adding the chi-function"""
-		super(AnalyseTopologicalSusceptibility, self).jackknife(F=self.chi,
-			F_error=self.chi_std, store_raw_jk_values=store_raw_jk_values)
-
-	def boot(self, N_bs, F=None, F_error=None, store_raw_bs_values=True):
-		"""Overriding the bootstrap class by adding the chi-function"""
-		super(AnalyseTopologicalSusceptibility, self).boot(N_bs, F=self.chi,
-			F_error=self.chi_std, store_raw_bs_values=store_raw_bs_values)
-
-class AnalyseQtQZero(FlowAnalyser):
+class AnalyseQtQZero(_AnalyseTopSusBase):
 	"""
-	Topological charge QtQ0 analysis class.
+	Topological susceptibility QtQ0 analysis class.
 	"""
-	observable_name = r"Topological charge evolved at flow time $t_0$"
+	observable_name = r"$\langle Q_{t} Q_{t_0} \rangle^{1/4}$"
 	observable_name_compact = "qtqzero"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\langle Q_{t}Q_{t_0} \rangle [GeV]$" # $\chi_t^{1/4}[GeV]$
+	y_label = r"$\frac{\hbar}{aV^{1/4}} \langle Q_{t} Q_{t_0} \rangle^{1/4} [GeV]$" # $\chi_t^{1/4}[GeV]$
 	observable_output_folder_old = ""
 
 	def __init__(self, *args, **kwargs):
@@ -963,6 +915,7 @@ class AnalyseQtQZero(FlowAnalyser):
 
 		# Finds the q flow time zero value
 		self.q_flow_time_zero = q_flow_time_zero_percent * (self.a * np.sqrt(8*self.x))[-1]
+		self.plot_vline_at = self.q_flow_time_zero
 		
 		# Finds the flow time zero index
 		self.flow_time_zero_index = np.argmin(np.abs(self.a * np.sqrt(8*self.x) - self.q_flow_time_zero))
@@ -982,6 +935,8 @@ class AnalyseQtQZero(FlowAnalyser):
 		# Multiplying QtQ0
 		for iFlow in xrange(self.y.shape[1]):
 			self.y[:,iFlow] *= y_q0
+
+		self.y = np.abs(self.y)
 
 		if y_label != None:
 			self.y_label = y_label
@@ -1005,27 +960,59 @@ class AnalyseQtQZero(FlowAnalyser):
 			else:
 				print "GOOD: multiplications match."
 
-class AnalyseTopologicalChargeInEuclideanTime(FlowAnalyser):
+class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 	"""
 	Analysis of the topological charge in Euclidean Time.
 	"""
 	# overwrite_meta_data_flows = True
 	observable_name = "Topological Charge in Euclidean Time"
 	observable_name_compact = "topct"
-	x_label = r"$t_{Euclidean}[fm]$"
-	y_label = r"$\langle Q^2 \rangle_{Euclidean}[GeV]$"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\frac{\hbar}{aV^{1/4}} \langle Q Q_{t_{Euclidean}} \rangle^{1/4}[GeV]$"
+	lattice_sizes = {6.0: 24**3, 6.1: 28**3, 6.2: 32**3, 6.45: 48**3}
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseTopologicalChargeInEuclideanTime, self).__init__(*args, **kwargs)
-		self.y = (self.y**2)**(0.25)
+		self.y_original = copy.deepcopy(self.y)
+		self.observable_output_folder_path_old = self.observable_output_folder_path
+		self.NT = self.y_original.shape[-1]
 
+	def setEQ0(self, t_euclidean_index):
+		"""
+		Sets the Euclidean time we are to analyse for. Q_{t_E=}
+		q_flow_time_zero_percent: float between 0.0 and 1.0, in which we choose what percentage point of the data we set as q0.
+		E.g. if it is 0.9, it will be the Q that is closest to 90% of the whole flowed time.
 
-		print "MAKE AnalyseTopologicalChargeInEuclideanTime similar to the QtQ0!! --> exiting"
-		exit(1) 
+		Args:
+			t_euclidean_index: integer of what time point we will look at
+		"""
+		# Finds the euclidean time zero index
+		self.t_euclidean_index = t_euclidean_index
 
+		# Sets file name
+		self.observable_name = r"$Q Q_{t_{euc}}$ evolved at $i_{euc}/N_T=%d/%d$" % (self.t_euclidean_index + 1, self.NT)
+
+		# Manual method for multiplying the matrices
+		y_qe0 = copy.deepcopy(self.y_original[:,:,self.t_euclidean_index])
+		self.y = copy.deepcopy(self.y_original)
+
+		# Multiplying QtQ0
+		for iEuclidean in xrange(self.NT):
+			self.y[:,:,iEuclidean] *= y_qe0
+
+		# Sums the euclidean time
+		self.y = np.sum(self.y, axis = 2)
+
+		# Takes the absolute value in order to avoid errors when analyzing
+		self.y = np.abs(self.y)
+
+		# Creates a new folder to store t0 results in
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "te%d" % (self.t_euclidean_index + 1))
+		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
 
 def main():
 	print "Module FlowAnalyser intended to be inherited, and not used as a standalone analysis tool."
+
 	exit(1)
 
 if __name__ == '__main__':
