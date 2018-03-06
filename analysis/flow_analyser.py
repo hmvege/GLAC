@@ -466,7 +466,7 @@ class FlowAnalyser(object):
 
 		# Sets up the title and filename strings
 		if _plot_bs:
-			title_string = r"%s $N_{bs}=%d$" % (self.observable_name, self.N_bs)
+			title_string = r"%s $N_{bootstraps}=%d$" % (self.observable_name, self.N_bs)
 			fname_path = os.path.join(self.observable_output_folder_path, "{0:<s}_bootstrap_Nbs{2:<d}_beta{1:<s}{3:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_'), self.N_bs, self.fname_addon))
 		else:
 			title_string = r"%s" % self.observable_name
@@ -969,7 +969,6 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 	observable_name_compact = "topct"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\frac{\hbar}{aV^{1/4}} \langle Q Q_{t_{Euclidean}} \rangle^{1/4}[GeV]$"
-	lattice_sizes = {6.0: 24**3*48, 6.1: 28**3*56, 6.2: 32**3*64, 6.45: 48**3*96}
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseTopologicalChargeInEuclideanTime, self).__init__(*args, **kwargs)

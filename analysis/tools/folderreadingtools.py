@@ -323,6 +323,9 @@ class DataReader:
 		self.data = {}
 
 		self.correct_energy = correct_energy
+		
+		assert isinstance(exclude_fobs, list), "exclude_fobs must be of list type."
+		self.exclude_fobs = exclude_fobs
 
 		self.batch_name = batch_name
 		self.batch_folder = batch_folder
@@ -332,21 +335,17 @@ class DataReader:
 
 			print "Retrieving data for batch %s from folder %s" % (self.batch_name, self.batch_folder)
 
-			self._retrieve_observable_data(create_perflow_data=create_perflow_data, 
-				exclude_fobs=exclude_fobs)
+			self._retrieve_observable_data(create_perflow_data=create_perflow_data)
 		else:
 			if NCfgs == None:
 				raise KeyError("missing number of configs.")
 
-			self._load_single_file(load_file, NCfgs, NFlows=NFlows,
-				exclude_fobs=exclude_fobs, flow_epsilon=flow_epsilon)
+			self._load_single_file(load_file, NCfgs, NFlows=NFlows, flow_epsilon=flow_epsilon)
 
-	def _retrieve_observable_data(self, create_perflow_data=False, exclude_fobs=[]):
-		assert isinstance(exclude_fobs,list), "exclude_fobs must be of list type."
-
+	def _retrieve_observable_data(self, create_perflow_data=False):
 		_NFlows = []
 		for obs in self.file_tree.flow_tree:
-			if obs in exclude_fobs: continue
+			if obs in self.exclude_fobs: continue
 
 			# Creates a dictionary to hold data associated with an observable
 			self.data[obs] = {}
@@ -383,17 +382,16 @@ class DataReader:
 	def __call__(self,obs):
 		return self.data[obs]
 
-	def _load_single_file(self, input_file, NCfgs, NFlows=1000, exclude_fobs=[], flow_epsilon=0.01):
-		assert isinstance(exclude_fobs,list), "exclude_fobs must be of list type."
-		
+	def _load_single_file(self, input_file, NCfgs, NFlows=1000, flow_epsilon=0.01):
 		raw_data = np.load(input_file)
 
 		NT, beta = input_file.split("/")[-1].split("_")
 		NT = int(NT)
 		beta = float(".".join(beta.split(".")[:-1]))
 
+		# Loads from the plaq, energy and topc
 		for i, obs in enumerate(self.fobs):
-			if obs in exclude_fobs: continue
+			if obs in self.exclude_fobs: continue
 
 			self.data[obs] = {}
 
@@ -419,9 +417,13 @@ class DataReader:
 			self.data[obs]["batch_name"] = self.batch_name
 			self.data[obs]["batch_data_folder"] = self.batch_folder
 
+			if obs == "topct":
+				# Reshapes and roll axis to proper shape for later use
+				self.data[obs]["obs"] = np.rollaxis(np.reshape(self.data[obs]["obs"],(500,56,1000)),1,3)
+
 		print "Loaded %s from file %s. Size: %.2f MB" % (", ".join(self.fobs), input_file, raw_data.nbytes/1024.0/1024.0)
 
-	def write_single_file(self, observables_to_write=["plaq", "energy", "topc"]):
+	def write_single_file(self, observables_to_write=["plaq", "energy", "topc", "topct"]):
 		assert isinstance(observables_to_write,list)
 
 		raw_data = self.data[observables_to_write[0]]["t"][0:self.NFlows]

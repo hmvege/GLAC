@@ -62,14 +62,13 @@ def analyse_topc4(params):
 	topcq4_analysis = AnalyseQQuartic(obs_data("topc"), dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
 	analyse_default(topcq4_analysis, N_bs)
 
-def analyse_qtq0(params, qzero_flow_time):
+def analyse_qtq0(params, qzero_flow_times):
 	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
 
 	qtqzero_analysis = AnalyseQtQZero(obs_data("topc"), dryrun=dryrun,
 		parallel=parallel, numprocs=numprocs, verbose=verbose)
-	
-	for qzero_flow_time_index in qzero_flow_time:
-		# qtqzero_analysis.y_limits = [0, 2]
+
+	for qzero_flow_time_index in qzero_flow_times:
 		qtqzero_analysis.setQ0(qzero_flow_time_index)
 		qtqzero_analysis.boot(N_bs)
 		qtqzero_analysis.jackknife()
@@ -79,6 +78,7 @@ def analyse_qtq0(params, qzero_flow_time):
 
 def analyse_topct(params, t_euclidean_indexes):
 	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
+
 	topct_analysis = AnalyseTopologicalChargeInEuclideanTime(obs_data("topct"),
 		dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
 	
@@ -113,25 +113,37 @@ def analyse(parameters):
 	elif parameters["load_file"] and os.path.isfile(obs_file):
 		load_file = obs_file
 	else:
+		if os.path.isfile(obs_file):
+			print "A binary file matching this batch alread exists: %s" % obs_file
 		load_file = None
 
-	# Base parameters
-	_p = parameters["base_parameters"]
+	_bp = parameters["base_parameters"]
 
 	# Retrieves data
 	obs_data = DataReader(batch_name, batch_folder, load_file=load_file, 
 		NCfgs=NCfgs, NFlows=parameters["NFlows"],
 		flow_epsilon=parameters["flow_epsilon"], 
 		create_perflow_data=parameters["create_perflow_data"], 
-		exclude_fobs=parameters["exclude_fobs"], dryrun=_p["dryrun"],
-		verbose=_p["verbose"], correct_energy=parameters["correct_energy"])
+		exclude_fobs=parameters["exclude_fobs"], dryrun=_bp["dryrun"],
+		verbose=_bp["verbose"], correct_energy=parameters["correct_energy"])
+
+	# print obs_data("energy")["obs"]
+	# exit(1)
 
 	# Writes raw observable data to a single binary file
 	if parameters["save_to_binary"] and load_file == None:
-		obs_data.write_single_file()
+		_obs = ["plaq", "energy", "topc", "topct"]
+		for _iobs in parameters["exclude_fobs"]:
+			if _iobs in _obs:
+				_obs.remove(_iobs)
+
+		print _obs
+
+		obs_data.write_single_file(observables_to_write = _obs)
 
 	# Builds parameters list to be passed to analyser
-	params = [obs_data, _p["dryrun"], _p["parallel"], _p["numprocs"], _p["verbose"], _p["N_bs"]]
+	params = [obs_data, _bp["dryrun"], _bp["parallel"], _bp["numprocs"], 
+		_bp["verbose"], _bp["N_bs"]]
 
 	# Runs through the different observables and analyses each one
 	if "plaq" in parameters["observables"]:
@@ -148,20 +160,20 @@ def analyse(parameters):
 		analyse_topc4(params)
 	if "topct" in parameters["observables"]:
 		analyse_topct(params, parameters["topct_euclidean_indexes"])
-
+	
 	post_time = time.clock()
 	print "="*100
 	print "Analysis of batch %s observables %s in %.2f seconds" % (batch_name,
 		", ".join([i.lower() for i in parameters["observables"]]), (post_time-pre_time))
 	print "="*100
 
-
+# if __name__ == '__main__':
 def main():
 	#### Available observables
 	all_observables = ["plaq", "energy", "topc", "topsus", "qtqzero", "topc4", "topct"]
-	# basic_observables = ["plaq", "energy", "topc", "topsus"]
-	observables = all_observables[3:5]
-	# observables = basic_observables[3:4]
+	basic_observables = ["plaq", "energy", "topc", "topsus"]
+	observables = all_observables[4:5]
+	# observables = basic_observables
 	print observables
 
 	#### Base parameters
@@ -180,14 +192,31 @@ def main():
 	create_perflow_data = False
 
 	#### Save binary file
-	save_to_binary = True
+	save_to_binary = False
 
 	#### Load specific parameters
 	NFlows = 1000
 	flow_epsilon = 0.01
-	# exclude_fobs = []
 	exclude_fobs = ["topct"] # Observables that will not be looked for when loading file
-	# exclude_fobs = ["plaq","topc","energy"]
+	exclude_fobs = []
+
+	#### Different batches
+	# data_batch_folder = "data2"
+	# data_batch_folder = "data4"
+	data_batch_folder = "data5"
+	# data_batch_folder = "DataGiovanni" 
+
+	#### If we need to multiply
+	if data_batch_folder == "DataGiovanni":
+		correct_energy = False
+		load_file = True
+		save_to_binary = False
+	else:
+		correct_energy = True
+
+	#### Different beta values folders:
+	beta_folder_name = ["beta60", "beta61", "beta62"]
+	# beta_folder_name = ["beta_60", "beta_61", "beta_62"]
 
 	# Indexes to look at for topct
 	t_euclidean_indexes = {
@@ -198,22 +227,6 @@ def main():
 
 	# Percents of data where we do qtq0
 	qzero_flow_times = [0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.0]
-
-	#### Different batches
-	# data_batch_folder = "data2"
-	# data_batch_folder = "data4"
-	data_batch_folder = "data5"
-	# data_batch_folder = "DataGiovanni" 
-
-	#### If we need to multiply by 1/64 or not.
-	if data_batch_folder != "DataGiovanni":
-		correct_energy = True
-	else:
-		correct_energy = False
-
-	#### Different beta values folders:
-	beta_folder_name = ["beta60", "beta61", "beta62"]
-	# beta_folder_name = ["beta6_0", "beta6_1", "beta6_2"]
 
 	#### Basic batch setup
 	default_params = {"batch_folder": data_batch_folder,
@@ -241,13 +254,12 @@ def main():
 	databeta62["obs_file"] = "32_6.20"
 
 	#### Adding relevant batches to args
-	analysis_parameter_list = [databeta60, databeta61, databeta62]
-
+	# analysis_parameter_list = [databeta60, databeta61, databeta62]
 	analysis_parameter_list = [databeta61]
 
 	#### Submitting observable-batches
 	for analysis_parameters in analysis_parameter_list:
 		analyse(analysis_parameters)
-	
+
 if __name__ == '__main__':
 	main()
