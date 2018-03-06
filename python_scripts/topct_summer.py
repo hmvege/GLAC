@@ -60,7 +60,7 @@ def main(data_folder, new_data_folder, dryrun):
 		summed_array = np.zeros(NFlows)
 
 		for i,itemporal in enumerate(header_names[1:]):
-			data_array[:,i] = data[itemporal]
+			data_array[:,i] = data[itemporal][:1000]
 
 		summed_array = np.sum(data_array,axis=1)
 

@@ -94,7 +94,7 @@ def analyse(parameters):
 		parameters: dictionary containing following elements: batch_name, 
 			batch_folder, observables, NCfgs, obs_file, load_file, 
 			save_to_binary, base_parameters, flow_epsilon, NFlows,
-			create_perflow_data, exclude_fobs, correct_energy
+			create_perflow_data, correct_energy
 	"""
 
 	# Analysis timers
@@ -104,42 +104,22 @@ def analyse(parameters):
 	# Retrieves analysis parameters
 	batch_name = parameters["batch_name"]
 	batch_folder = parameters["batch_folder"]
-	NCfgs = parameters["NCfgs"]
-
-	# Checks if binary file exist
-	obs_file = os.path.join("..", batch_folder, batch_name, parameters["obs_file"] + ".npy")
-	if parameters["load_file"] and not os.path.isfile(obs_file):
-		raise IOError("No file by name %s found." % obs_file)
-	elif parameters["load_file"] and os.path.isfile(obs_file):
-		load_file = obs_file
-	else:
-		if os.path.isfile(obs_file):
-			print "A binary file matching this batch alread exists: %s" % obs_file
-		load_file = None
 
 	_bp = parameters["base_parameters"]
 
 	# Retrieves data
-	obs_data = DataReader(batch_name, batch_folder, load_file=load_file, 
-		NCfgs=NCfgs, NFlows=parameters["NFlows"],
-		flow_epsilon=parameters["flow_epsilon"], 
-		create_perflow_data=parameters["create_perflow_data"], 
-		exclude_fobs=parameters["exclude_fobs"], dryrun=_bp["dryrun"],
-		verbose=_bp["verbose"], correct_energy=parameters["correct_energy"])
-
-	# print obs_data("energy")["obs"]
-	# exit(1)
+	obs_data = DataReader(batch_name, batch_folder,
+		load_file=parameters["load_file"],
+		flow_epsilon=parameters["flow_epsilon"], NCfgs=parameters["NCfgs"],
+		create_perflow_data=parameters["create_perflow_data"],
+		dryrun=_bp["dryrun"], verbose=_bp["verbose"],
+		correct_energy=parameters["correct_energy"])
 
 	# Writes raw observable data to a single binary file
 	if parameters["save_to_binary"] and load_file == None:
-		_obs = ["plaq", "energy", "topc", "topct"]
-		for _iobs in parameters["exclude_fobs"]:
-			if _iobs in _obs:
-				_obs.remove(_iobs)
-
-		print _obs
-
-		obs_data.write_single_file(observables_to_write = _obs)
+		print "ooops!", load_file
+		exit(1)
+		obs_data.write_single_file()
 
 	# Builds parameters list to be passed to analyser
 	params = [obs_data, _bp["dryrun"], _bp["parallel"], _bp["numprocs"], 
@@ -167,14 +147,13 @@ def analyse(parameters):
 		", ".join([i.lower() for i in parameters["observables"]]), (post_time-pre_time))
 	print "="*100
 
-# if __name__ == '__main__':
 def main():
 	#### Available observables
 	all_observables = ["plaq", "energy", "topc", "topsus", "qtqzero", "topc4", "topct"]
 	basic_observables = ["plaq", "energy", "topc", "topsus"]
-	observables = all_observables[4:5]
+	observables = all_observables[6:7]
 	# observables = basic_observables
-	print observables
+	print "Running for observables: %s" % ", ".join(observables)
 
 	#### Base parameters
 	N_bs = 500
@@ -186,19 +165,17 @@ def main():
 		"parallel": parallel, "numprocs": numprocs}
 
 	#### Try to load binary file(much much faster)
-	load_file = False
+	load_file = True
 
 	# If we are to create per-flow datasets as opposite to per-cfg datasets
 	create_perflow_data = False
 
 	#### Save binary file
-	save_to_binary = False
+	save_to_binary = True
 
 	#### Load specific parameters
 	NFlows = 1000
 	flow_epsilon = 0.01
-	exclude_fobs = ["topct"] # Observables that will not be looked for when loading file
-	exclude_fobs = []
 
 	#### Different batches
 	# data_batch_folder = "data2"
@@ -234,7 +211,7 @@ def main():
 		"save_to_binary": save_to_binary, "base_parameters": base_parameters,
 		"flow_epsilon": flow_epsilon, "NFlows": NFlows,
 		"create_perflow_data": create_perflow_data,
-		"exclude_fobs": exclude_fobs, "correct_energy": correct_energy,
+		"correct_energy": correct_energy,
 		"topct_euclidean_indexes": t_euclidean_indexes,
 		"qzero_flow_times": qzero_flow_times}
 
@@ -255,7 +232,7 @@ def main():
 
 	#### Adding relevant batches to args
 	# analysis_parameter_list = [databeta60, databeta61, databeta62]
-	analysis_parameter_list = [databeta61]
+	analysis_parameter_list = [databeta62]
 
 	#### Submitting observable-batches
 	for analysis_parameters in analysis_parameter_list:
