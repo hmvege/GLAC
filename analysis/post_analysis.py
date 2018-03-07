@@ -23,7 +23,7 @@ class _PostAnalysis:
 					6.45 : r"$48^3 \times 96$"}
 	r0 = 0.5
 
-	def __init__(self, data, observable, base_output_folder="../figures/post_analysis"):
+	def __init__(self, data, observable, figures_folder="../figures"):
 		# Retrieves relevant data values
 		self.flow_time 			= data.flow_time
 		self.unanalyzed_data 	= {beta: data.data_observables[observable][beta]["unanalyzed"] for beta in sorted(data.data_observables[observable].keys())} # Data should now be sorted by beta values
@@ -40,11 +40,12 @@ class _PostAnalysis:
 		assert sum([True for i in self.bs_raw.keys() if self.bs_raw[i][self.observable_name_compact].shape[-1] == self.NBoots]) == data.N_betas, err_msg
 
 		# Creates base output folder for post analysis figures
-		self.base_output_folder_path = base_output_folder
-		check_folder(self.base_output_folder_path, dryrun=False, verbose=True)
+		self.figures_folder = figures_folder
+		check_folder(self.figures_folder, dryrun=False, verbose=True)
+		check_folder(os.path.join(self.figures_folder, data.data_batch_name), dryrun=False, verbose=True)
 
 		# Creates output folder
-		self.output_folder_path = os.path.join(self.base_output_folder_path, data.data_batch_name)
+		self.output_folder_path = os.path.join(self.figures_folder, data.data_batch_name, "post_analysis")
 		check_folder(self.output_folder_path, dryrun=False, verbose=True)
 
 		# Creates colors to use
@@ -454,7 +455,7 @@ def main(args):
 	print "Retrieving data from folder: %s" % args[0]
 
 	# Plots topsus
-	topsus_analysis = TopSusPostAnalysis(data, "topsus", base_output_folder="../figures/post_analysis")
+	topsus_analysis = TopSusPostAnalysis(data, "topsus", base_figures_folder="../figures/post_analysis")
 	topsus_analysis.set_analysis_data_type("bootstrap")
 	topsus_analysis.plot()
 
@@ -478,6 +479,6 @@ if __name__ == '__main__':
 	if len(sys.argv[1:]) == 1:
 		args = sys.argv[1:]
 	else:
-		args = ["../output/post_analysis_data/data5"]
+		args = ["data5"]
 		# args = ["../output/post_analysis_data/data4"]
 	main(args)

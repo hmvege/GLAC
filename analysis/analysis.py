@@ -1,6 +1,7 @@
 from flow_analyser import *
 from tools.folderreadingtools import DataReader
 from tools.postanalysisdatareader import PostAnalysisDataReader
+from post_analysis import EnergyPostAnalysis, TopSusPostAnalysis
 import statistics.parallel_tools as ptools
 import os
 import numpy as np
@@ -159,15 +160,13 @@ def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
 		energy_fit_target: point of which we will perform a line fit at.
 	"""
 
-	print "\n" + "="*100
-	print "\n Post-analysis"
-	print "\n Retrieving data from: %s" % batch_folder
+	print "="*100 + "\nPost-analysis\nRetrieving data from: %s" % batch_folder
 
 	# Loads data from post analysis folder
 	data = PostAnalysisDataReader(batch_folder)
 
 	# Plots topsus
-	topsus_analysis = TopSusPostAnalysis(data, "topsus", base_output_folder="../figures/post_analysis")
+	topsus_analysis = TopSusPostAnalysis(data, "topsus")
 	topsus_analysis.set_analysis_data_type("bootstrap")
 	topsus_analysis.plot()
 
