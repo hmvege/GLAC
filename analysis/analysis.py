@@ -8,6 +8,7 @@ import sys
 import time
 
 def analyse_default(analysis_object, N_bs):
+	print analysis_object
 	analysis_object.boot(N_bs)
 	analysis_object.jackknife()
 	analysis_object.plot_original()
@@ -60,6 +61,7 @@ def analyse_topc(params):
 def analyse_topc4(params):
 	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
 	topcq4_analysis = AnalyseQQuartic(obs_data("topc"), dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
+
 	analyse_default(topcq4_analysis, N_bs)
 
 def analyse_qtq0(params, qzero_flow_times):
@@ -70,18 +72,14 @@ def analyse_qtq0(params, qzero_flow_times):
 
 	for qzero_flow_time_index in qzero_flow_times:
 		qtqzero_analysis.setQ0(qzero_flow_time_index)
-		qtqzero_analysis.boot(N_bs)
-		qtqzero_analysis.jackknife()
-		qtqzero_analysis.plot_original()
-		qtqzero_analysis.plot_jackknife()
-		qtqzero_analysis.plot_boot()
+		analyse_default(qtqzero_analysis, N_bs)
 
 def analyse_topct(params, t_euclidean_indexes):
 	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
 
 	topct_analysis = AnalyseTopologicalChargeInEuclideanTime(obs_data("topct"),
 		dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
-	
+
 	for ie in t_euclidean_indexes[topct_analysis.beta]:
 		topct_analysis.setEQ0(ie)
 		analyse_default(topct_analysis, N_bs)

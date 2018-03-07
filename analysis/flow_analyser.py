@@ -99,12 +99,6 @@ class FlowAnalyser(object):
 		self.observable_output_folder_path = os.path.join(self.batch_name_folder_path, self.observable_name_compact)
 		check_folder(self.observable_output_folder_path, self.dryrun, verbose=self.verbose)
 
-		# Prints observable and batch
-		print "="*100
-		print "Batch:       %s" % self.batch_name
-		print "Observables: %s" % self.observable_name_compact
-		print "="*100
-
 		# Checks if we already have scaled the x values or not
 		if np.all(np.abs(np.diff(self.x) - self.flow_epsilon) > 1e-14):
 			self.x = self.x * self.flow_epsilon
@@ -740,7 +734,15 @@ class FlowAnalyser(object):
 		plt.close(fig)
 
 	def __str__(self):
+		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
 		return_string = ""
+		return_string += "\n" + "="*100
+		return_string += info_string("Data batch folder", self.batch_data_folder)
+		return_string += info_string("Batch name", self.batch_name)
+		return_string += info_string("Observable", self.observable_name_compact)
+		return_string += info_string("Beta", "%.2f" % self.beta)
+		return_string += "\n" + "="*100
+		return return_string
 
 
 class _AnalyseTopSusBase(FlowAnalyser):
@@ -879,7 +881,8 @@ class AnalyseQQuartic(_AnalyseTopSusBase):
 	observable_name = r"$\chi(\langle Q^4 \rangle)^{1/8}$"
 	observable_name_compact = "topq4"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\chi(\langle Q^4 \rangle)^{1/8} = frac{\hbar}{aV^{1/4}} \langle Q^4 \rangle^{1/8} [GeV]$" # 1/8 correct?
+	# y_label = r"$\chi(\langle Q^4 \rangle)^{1/8} = \frac{\hbar}{aV^{1/4}} \langle Q^4 \rangle^{1/8} [GeV]$" # 1/8 correct?
+	y_label = r"$\chi(\langle Q^4 \rangle)^{1/8} [GeV]$" # 1/8 correct?
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseQQuartic, self).__init__(*args, **kwargs)
@@ -897,10 +900,10 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 	"""
 	Topological susceptibility QtQ0 analysis class.
 	"""
-	observable_name = r"$\langle Q_{t} Q_{t_0} \rangle^{1/4}$"
+	observable_name = r"$\chi(\langle Q_t Q_{t_0} \rangle)^{1/4}$"
 	observable_name_compact = "qtqzero"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\chi^{1/4} = \frac{\hbar}{aV^{1/4}} \langle Q_{t} Q_{t_0} \rangle^{1/4} [GeV]$" # $\chi_t^{1/4}[GeV]$
+	y_label = r"$\chi(\langle Q_{t} Q_{t_0} \rangle)^{1/4} [GeV]$" # $\chi_t^{1/4}[GeV]$
 	observable_output_folder_old = ""
 
 	def __init__(self, *args, **kwargs):
@@ -964,6 +967,19 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 			else:
 				print "GOOD: multiplications match."
 
+	def __str__(self):
+		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
+		return_string = ""
+		return_string += "\n" + "="*100
+		return_string += info_string("Data batch folder", self.batch_data_folder)
+		return_string += info_string("Batch name", self.batch_name)
+		return_string += info_string("Observable", self.observable_name_compact)
+		return_string += info_string("Beta", "%.2f" % self.beta)
+		return_string += info_string("Flow time t0", "%.2f" % self.q_flow_time_zero)
+		return_string += "\n" + "="*100
+		return return_string
+
+
 class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 	"""
 	Analysis of the topological charge in Euclidean Time.
@@ -972,7 +988,7 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 	observable_name = "Topological Charge in Euclidean Time"
 	observable_name_compact = "topct"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\chi^{1/4} = \frac{\hbar}{aV^{1/4}} \langle Q_{t_{flow}} Q_{t_{euclidean}} \rangle^{1/4}[GeV]$"
+	y_label = r"$\chi(\langle Q_t Q_{t_{euclidean}} \rangle)^{1/4} [GeV]$"
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseTopologicalChargeInEuclideanTime, self).__init__(*args, **kwargs)
@@ -993,7 +1009,7 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 		self.t_euclidean_index = t_euclidean_index
 
 		# Sets file name
-		self.observable_name = r"$\chi(\langle Q_{t_{flow}} Q_{t_{euclidean}} \rangle)^{1/4}$ at $i_{euclidean}=%d$" % (self.t_euclidean_index + 1)
+		self.observable_name = r"$\chi(\langle Q_t Q_{t_{euclidean}} \rangle)^{1/4}$ at $i_{euclidean}=%d$" % (self.t_euclidean_index + 1)
 
 		# Manual method for multiplying the matrices
 		y_qe0 = copy.deepcopy(self.y_original[:,:,self.t_euclidean_index])
@@ -1012,6 +1028,18 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 		# Creates a new folder to store t0 results in
 		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "te%d" % (self.t_euclidean_index + 1))
 		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
+
+	def __str__(self):
+		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
+		return_string = ""
+		return_string += "\n" + "="*100
+		return_string += info_string("Data batch folder", self.batch_data_folder)
+		return_string += info_string("Batch name", self.batch_name)
+		return_string += info_string("Observable", self.observable_name_compact)
+		return_string += info_string("Beta", "%.2f" % self.beta)
+		return_string += info_string("Euclidean time", "%d" % self.t_euclidean_index)
+		return_string += "\n" + "="*100
+		return return_string
 
 def main():
 	print "Module FlowAnalyser intended to be inherited, and not used as a standalone analysis tool."
