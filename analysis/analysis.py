@@ -1,5 +1,5 @@
 from flow_analyser import *
-from tools.folderreadingtools import DataReader
+from tools.folderreadingtools import DataReader, PostAnalysisDataReader
 import statistics.parallel_tools as ptools
 import os
 import numpy as np
@@ -116,6 +116,7 @@ def analyse(parameters):
 	# Writes raw observable data to a single binary file
 	if parameters["save_to_binary"] and not parameters["load_file"]:
 		obs_data.write_single_file()
+	print "="*100
 
 	# Builds parameters list to be passed to analyser
 	params = [obs_data, _bp["dryrun"], _bp["parallel"], _bp["numprocs"], 
@@ -143,14 +144,44 @@ def analyse(parameters):
 		", ".join([i.lower() for i in parameters["observables"]]), (post_time-pre_time))
 	print "="*100
 
+def post_analysis(parameters):
+
+	# Loads data from post analysis folder
+	data = PostAnalysisDataReader(args[0])
+	print "Retrieving data from folder: %s" % args[0]
+
+	# Plots topsus
+	topsus_analysis = TopSusPostAnalysis(data, "topsus", base_output_folder="../figures/post_analysis")
+	topsus_analysis.set_analysis_data_type("bootstrap")
+	topsus_analysis.plot()
+
+	# Retrofits the topsus for continuum limit
+	continium_targets = [0.3, 0.4, 0.5, 0.58]
+	for cont_target in continium_targets:
+		topsus_analysis.plot_continiuum(cont_target, 0.015, "data_line_fit")
+
+	# Plots energy
+	energy_analysis = EnergyPostAnalysis(data, "energy")
+	energy_analysis.set_analysis_data_type("bootstrap")
+	energy_analysis.plot()
+
+	# Retrofits the energy for continiuum limit
+	energy_analysis.plot_continiuum(0.3, 0.015, "bootstrap_fit")
+
+	# Plot running coupling
+	energy_analysis.coupling_fit()
+
 def main():
 	#### Available observables
 	all_observables = ["plaq", "energy", "topc", "topsus", "qtqzero", "topc4", "topct"]
 	basic_observables = ["plaq", "energy", "topc", "topsus"]
+	# observables = all_observables
 	# observables = all_observables[6:7]
-	observables = all_observables[6:7] + ["qtqzero", "topc4"]
+	# observables = all_observables[6:7] + ["qtqzero", "topc4"]
 	# observables = basic_observables
-	print "Running for observables: %s" % ", ".join(observables)
+	observables = ["topsus"]
+	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
+	print 100*"=" + "\n"
 
 	#### Base parameters
 	N_bs = 500
@@ -173,6 +204,14 @@ def main():
 	#### Load specific parameters
 	NFlows = 1000
 	flow_epsilon = 0.01
+
+	#### Post analysis parameters
+	run_post_analysis = True
+	line_fit_interval = 0.015
+	# Topsus params
+	topsus_fit_targets = [0.3,0.4,0.5,0.58]
+	# Energy params
+	energy_fit_targets = 0.3
 
 	#### Different batches
 	# data_batch_folder = "data2"
@@ -228,12 +267,14 @@ def main():
 	databeta62["obs_file"] = "32_6.20"
 
 	#### Adding relevant batches to args
-	# analysis_parameter_list = [databeta60, databeta61, databeta62]
-	analysis_parameter_list = [databeta62]
+	analysis_parameter_list = [databeta60, databeta61, databeta62]
+	# analysis_parameter_list = [databeta61]
 
 	#### Submitting observable-batches
 	for analysis_parameters in analysis_parameter_list:
 		analyse(analysis_parameters)
+
+	#### Submitting post-analysis data
 
 if __name__ == '__main__':
 	main()

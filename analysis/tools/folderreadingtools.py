@@ -335,6 +335,8 @@ class DataReader:
 
 		self.batch_name = batch_name
 		self.batch_folder = batch_folder
+		self.__print_load_info()
+
 		self.file_tree = _DirectoryTree(self.batch_name, self.batch_folder, dryrun=dryrun)
 
 		if NCfgs == None:
@@ -390,6 +392,13 @@ class DataReader:
 						create_perflow_data=create_perflow_data)
 				else:
 					print "No data found for %s" % (", ".join(self.fobs))
+
+	def __print_load_info(self):
+		load_job_info = "="*100
+		load_job_info += "\n" + "Data loader"
+		load_job_info += "\n{0:<20s}: {1:<20s}".format("Batch name", self.batch_name)
+		load_job_info += "\n{0:<20s}: {1:<20s}".format("Batch folder", self.batch_folder)
+		print load_job_info
 
 	def __retrieve_observable_data(self, observables_to_retrieve, create_perflow_data=False):
 		_NFlows = []
@@ -489,16 +498,13 @@ class DataReader:
 			# Checks if we have an array of observables, e.g. topct
 			if obs == "topct" and len(observables_to_write) == 1:
 				# Rolls axis to make it on the correct format
-				print "@ 491, ", obs, self.data[obs]["obs"].T.shape
 				_temp_rolled_data = np.rollaxis(self.data[obs]["obs"].T, 0, 3)
-				print "@ 493, _temp_rolled_data for %s" % obs, _temp_rolled_data.shape
 
 				# Gets the axis shape in order to then flatten the data
 				_shape = _temp_rolled_data.shape
 				_temp_rolled_data = _temp_rolled_data.reshape(_shape[0],_shape[1]*_shape[2])
 
 				raw_data = np.column_stack((raw_data, _temp_rolled_data))
-
 			else:
 				raw_data = np.column_stack((raw_data, self.data[obs]["obs"].T))
 
@@ -517,9 +523,6 @@ class DataReader:
 		np.save(file_path, raw_data)
 		
 		print "%s written to a single file at location %s.npy." % (", ".join(observables_to_write), file_path)
-
-		# print "@ 520 ", raw_data.shape
-		# exit(1)
 
 		return file_path + ".npy"
 

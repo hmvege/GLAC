@@ -1037,7 +1037,7 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 		return_string += info_string("Batch name", self.batch_name)
 		return_string += info_string("Observable", self.observable_name_compact)
 		return_string += info_string("Beta", "%.2f" % self.beta)
-		return_string += info_string("Euclidean time", "%d" % self.t_euclidean_index)
+		return_string += info_string("Euclidean time", "%d" % (self.t_euclidean_index + 1))
 		return_string += "\n" + "="*100
 		return return_string
 
