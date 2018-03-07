@@ -79,7 +79,7 @@ class _PostAnalysis:
 		# Initiates plot values
 		self._initiate_plot_values(data)
 
-	def _initiate_plot_values(self,*args,**kwargs):
+	def _initiate_plot_values(self, *args, **kwargs):
 		raise NotImplementedError("_PostAnalysis plot value initiater not implemented(subclasses should contain this).")
 
 	def plot(self, x_limits=False, y_limits=False):
@@ -167,6 +167,7 @@ class _PostAnalysis:
 			# Adds to list of batch-values
 			self.beta_fit.append(bfit)
 
+
 	@staticmethod
 	def _get_line_prop(poly, polycov, x_points, y_points):
 		"""
@@ -236,9 +237,9 @@ class TopSusPostAnalysis(_PostAnalysis):
 			values["color"] = self.colors[beta]
 			self.plot_values.append(values)
 
-	def plot_continiuum(self, fit_target, fit_interval, fit_type, line_fit_type="least_squares"):
+	def plot_continiuum(self, fit_target, fit_interval, fit_type, line_fit_type="least_squares", plot_fit_window=False):
 		# Retrieves t0 values used to be used for continium fitting
-		self._get_beta_values_to_fit(fit_target, fit_interval, axis = "x", fit_type = fit_type, plot_fit_window = False)
+		self._get_beta_values_to_fit(fit_target, fit_interval, axis="x", fit_type=fit_type, plot_fit_window=plot_fit_window)
 
 		# Builts plot variables
 		a_lattice_spacings = np.asarray([val["a"] for val in self.beta_fit])[::-1]
@@ -455,14 +456,14 @@ def main(args):
 	print "Retrieving data from folder: %s" % args[0]
 
 	# Plots topsus
-	topsus_analysis = TopSusPostAnalysis(data, "topsus", base_figures_folder="../figures/post_analysis")
+	topsus_analysis = TopSusPostAnalysis(data, "topsus")
 	topsus_analysis.set_analysis_data_type("bootstrap")
 	topsus_analysis.plot()
 
 	# Retrofits the topsus for continuum limit
 	continium_targets = [0.3, 0.4, 0.5, 0.58]
 	for cont_target in continium_targets:
-		topsus_analysis.plot_continiuum(cont_target, 0.015, "data_line_fit")
+		topsus_analysis.plot_continiuum(cont_target, 0.015, "data_line_fit", plot_fit_window=False)
 
 	# Plots energy
 	energy_analysis = EnergyPostAnalysis(data, "energy")

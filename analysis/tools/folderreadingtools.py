@@ -552,7 +552,7 @@ def write_data_to_file(analysis_object):
 	check_folder(post_analysis_folder, dryrun, verbose=True)
 
 	# Retrieves analyzed data
-	x = analysis_object.x*analysis_object.flow_epsilon
+	x = analysis_object.x
 	y_org = analysis_object.unanalyzed_y
 	y_err_org = analysis_object.unanalyzed_y_std*analysis_object.autocorrelation_error_correction
 	y_bs = analysis_object.bs_y

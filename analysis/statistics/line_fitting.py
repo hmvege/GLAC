@@ -93,7 +93,7 @@ def fit_line_form_bootstrap(x, bs_data, observable, beta, fit_target, fit_interv
 
 	return fit_value, fit_value_error
 
-def fit_line(x, y, y_error, observable, beta, fit_target, fit_interval, axis = "y", fit_function_modifier = lambda x : x, fit_method = "curve_fit", plot_fit_window = False):
+def fit_line(x, y, y_error, observable, beta, fit_target, fit_interval, axis="y", fit_function_modifier=lambda x: x, fit_method="curve_fit", plot_fit_window=False):
 	"""
 	Function for creating a line fit to a fit target and within a fit interval.
 	Args:
@@ -139,27 +139,30 @@ def fit_line(x, y, y_error, observable, beta, fit_target, fit_interval, axis = "
 	if plot_fit_window:
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
-		ax.plot(x,y,label=observable)
-		ax.fill_between(x, y - y_error, y + y_error,alpha=0.5)
-		ax.scatter(x[start_index],y[start_index],label="Fit line start")
-		ax.scatter(x[end_index],y[end_index],label="Fit line end")
-		ax.axhline(fit_target,color="0",alpha=0.5)
+		ax.plot(x, y, label=observable)
+		ax.fill_between(x, y - y_error, y + y_error, alpha=0.5)
+		ax.scatter(x[start_index], y[start_index], label="Fit line start")
+		ax.scatter(x[end_index], y[end_index], label="Fit line end")
+		if axis == "y":
+			ax.axhline(fit_target, color="0", alpha=0.5)
+		else:
+			ax.axvline(fit_target, color="0", alpha=0.5)
 		ax.grid(True)
 		ax.legend()
-		ax.set_title(r"Fit window for %s at $\beta=%.2f$" % (observable,beta))
+		ax.set_title(r"Fit window for %s at $\beta=%.2f$" % (observable, beta))
 		plt.show()
 		plt.close(fig)
 
 	# Fitting data
 	if fit_method == "curve_fit":
-		pol,polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x[start_index:end_index],y[start_index:end_index],sigma=y_error[start_index:end_index])
-
-		# print np.sqrt(np.diag(polcov))
-		# pol,polcov = sciopt.curve_fit(lambda x, a, b : x*a + b, x[start_index:end_index],data[start_index:end_index])
-		# print np.sqrt(np.diag(polcov)),"\nline_fitting.py@135"
+		pol,polcov = sciopt.curve_fit(lambda x, a, b: x*a + b,
+			x[start_index:end_index], y[start_index:end_index],
+			sigma=y_error[start_index:end_index])
 
 	elif fit_method == "polynomial":
-		pol,polcov = np.polyfit(x[start_index:end_index],y[start_index:end_index,iBoot],1,rcond=None,full=False,cov=True,w=1.0/(y_error[start_index:end_index]))
+		pol, polcov = np.polyfit(x[start_index:end_index],
+			y[start_index:end_index,iBoot], 1, rcond=None, full=False, 
+			cov=True, w=1.0/(y_error[start_index:end_index]))
 	else:
 		raise KeyError("No fit method called %s found." % fit_method)
 
@@ -168,11 +171,10 @@ def fit_line(x, y, y_error, observable, beta, fit_target, fit_interval, axis = "
 	b = pol[1]
 	a_err, b_err = np.sqrt(np.diag(polcov))
 
-
 	if axis == "y":
 		# Gets the fit values
-		fit_value = fit_function_modifier((fit_target - b) / a)
-		fit_value_error = fit_function_modifier(fit_value * np.sqrt( (b_err / (fit_target - b))**2 + (a_err / a)**2 ))
+		fit_value = fit_function_modifier((fit_target - b)/a)
+		fit_value_error = fit_function_modifier(fit_value*np.sqrt((b_err/(fit_target - b))**2 + (a_err/a)**2))
 	else:
 		# Adds bootstrap fit to fitted values if we are fitting for x axis
 		fit_value = fit_function_modifier(fit_target*a + b)
