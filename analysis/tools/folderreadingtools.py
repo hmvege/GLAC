@@ -37,6 +37,7 @@ class _DirectoryTree:
 		obs_path = os.path.join(self.batch_name_folder, "observables")
 		if os.path.isdir(obs_path) and len(os.listdir(obs_path)) != 0:
 			self.observables_folder = obs_path
+			self.observables_folders = True
 			for obs,file_name in zip(self.observables_list, os.listdir(self.observables_folder)):
 				obs_path = os.path.join(self.observables_folder, file_name)
 				if os.path.isfile(obs_path):
@@ -44,13 +45,13 @@ class _DirectoryTree:
 
 		## Gets paths to flow observable
 		# Creates the flow observables path
-		flow_path = os.path.join(self.batch_name_folder, "flow_observables")
+		self.flow_path = os.path.join(self.batch_name_folder, "flow_observables")
 		# Checks that there exists a flow observable folder
-		if os.path.isdir(flow_path):
+		if os.path.isdir(self.flow_path):
 			# Goes through the flow observables
 			for flow_obs in self.observables_list:
 				# Creates flow observables path
-				obs_path = os.path.join(flow_path, flow_obs)
+				obs_path = os.path.join(self.flow_path, flow_obs)
 
 				# Checks if the flow observable path exists
 				if os.path.isdir(obs_path):
@@ -109,15 +110,22 @@ class _DirectoryTree:
 		"""
 		return_string = "Folder structure:"
 		return_string += "\n{0:<s}".format(self.batch_name_folder)
-		return_string += "\n  {0:<s}/{1:<s}".format(self.data_batch_folder, "observables")
+
+		# Builds the non-flow observable file paths
 		if self.observables_folders:
+			return_string += "\n  {0:<s}/{1:<s}".format(self.data_batch_folder, "observables")
 			for obs,file_name in zip(self.observables_list, os.listdir(self.observables_folder)):
 				return_string += "\n    {0:<s}".format(os.path.join(self.observables_folder, file_name))
-		flow_path = os.path.join(self.batch_name_folder, "flow_observables")
-		if os.path.isdir(flow_path):
-			return_string += "\n  {0:<s}".format(flow_path)
+		
+		if len(self.observables_binary_files) != 0:
+			for head in self.observables_binary_files:
+				return_string += "\n  {0:<s}".format(self.observables_binary_files[head].split("/")[-1])
+
+		# Builds the flow observable file paths
+		if os.path.isdir(self.flow_path):
+			return_string += "\n  {0:<s}".format(self.flow_path)
 			for flow_obs in self.observables_list:
-				obs_path = os.path.join(flow_path, flow_obs)
+				obs_path = os.path.join(self.flow_path, flow_obs)
 				return_string += "\n    {0:<s}".format(obs_path)
 				for obs_file in os.listdir(obs_path):
 					return_string += "\n      {0:<s}".format(os.path.join(obs_path, obs_file))
@@ -236,7 +244,7 @@ class _FolderData:
 		check_folder(per_flow_observable_folder, dryrun, verbose=verbose)
 
 		# Retrieving number of configs and number of flows
-		NConfigs,NFlows = self.data_y.shape
+		NConfigs, NFlows = self.data_y.shape
 
 		# Re-storing files in a per flow format
 		for iFlow in xrange(NFlows):
@@ -296,10 +304,10 @@ class DataReader:
 
 	"""
 	beta_to_spatial_size = {6.0: 24, 6.1: 28, 6.2: 32, 6.45: 48}
-	fobs = ["plaq", "energy", "topc", "topct"]
+	fobs = ["plaq", "energy", "topc"]
 
 	def __init__(self, batch_name, batch_folder, load_file=None, 
-			flow_epsilon=0.01, NCfgs=None create_perflow_data=False, 
+			flow_epsilon=0.01, NCfgs=None, create_perflow_data=False, 
 			verbose=True, dryrun=False, correct_energy=False):
 		"""
 		Class that reads and loads the observable data.
@@ -342,20 +350,10 @@ class DataReader:
 			print "Retrieving data for batch %s from folder %s" % (self.batch_name, self.batch_folder)
 
 			observables_to_retrieve = self.file_tree.flow_tree
-			self._retrieve_observable_data(observables_to_retrieve,
+			self.__retrieve_observable_data(observables_to_retrieve,
 				create_perflow_data=create_perflow_data)
 		else:
-			# # Checks if binary file exist
-			# obs_file = os.path.join("..", batch_folder, batch_name, parameters["obs_file"])
-			# if parameters["load_file"] and (not os.path.isfile(obs_file + ".npy") or not os.path.isfile(obs_file + "_topct.npy")):
-			# 	raise IOError("No file by name %s found." % obs_file)
-			# elif parameters["load_file"] and os.path.isfile(obs_file):
-			# 	load_file = obs_file
-			# else:
-			# 	if os.path.isfile(obs_file):
-			# 		print "A binary file matching this batch alread exists: %s" % obs_file
-			# 	load_file = None
-
+			# Retrieves binary file paths if they exist
 			topct_fp = None
 			obs_fp = None
 			for bin_file_key in self.file_tree.observables_binary_files:
@@ -364,34 +362,36 @@ class DataReader:
 				else:
 					obs_fp = self.file_tree.observables_binary_files[bin_file_key]
 
+			# Loads the topct data
 			if topct_fp != None:
 				# Loads binary
-				self._load_files(topct_fp, self.fobs[3:],
+				self.__load_files(topct_fp, ["topct"],
 					flow_epsilon=flow_epsilon)
 			else:
-				# Loads in file from non binary
-				print "No binary file found for %s. Loads from .dat files." % (
-					", ".join(self.fobs[3:]))
-				self._retrieve_observable_data(self.fobs[3:],
-					create_perflow_data=create_perflow_data)
+				if os.path.isdir(self.file_tree.flow_path):
+					# Loads in file from non binary
+					print "No binary file found for topct. Loads from .dat files."
+					self.__retrieve_observable_data(["topct"],
+						create_perflow_data=create_perflow_data)
+				else:
+					print "No data found for topct"
 
+			# Loads the other observable data
 			if obs_fp != None:
 				# Loads binary if it exists
-				self._load_files(obs_fp, self.fobs[:3],
+				self.__load_files(obs_fp, self.fobs,
 					flow_epsilon=flow_epsilon)
 			else:
-				# Loads in file from non binary
-				print "No binary file found for %s. Loads from .dat files." % (
-					", ".join(self.fobs[:3]))
-				self._retrieve_observable_data(self.fobs[:3],
-					create_perflow_data=create_perflow_data)
+				if os.path.isdir(self.file_tree.flow_path):
+					# Loads in file from non binary
+					print "No binary file found for %s. Loads from .dat files." % (
+						", ".join(self.fobs))
+					self.__retrieve_observable_data(self.fobs,
+						create_perflow_data=create_perflow_data)
+				else:
+					print "No data found for %s" % (", ".join(self.fobs))
 
-
-			print self.file_tree.observables_binary_files
-			sys.exit("Exiting @ 356")
-			self._load_files(input_file, flow_epsilon=flow_epsilon)
-
-	def _retrieve_observable_data(self, observables_to_retrieve, create_perflow_data=False):
+	def __retrieve_observable_data(self, observables_to_retrieve, create_perflow_data=False):
 		_NFlows = []
 		for obs in observables_to_retrieve:
 
@@ -410,7 +410,6 @@ class DataReader:
 
 			if obs == "energy" and self.correct_energy:
 				self.data[obs]["obs"] *= 1.0/64.0
-
 
 			if create_perflow_data:
 				# self.data[observable].create_perflow_data(verbose=self.verbose)
@@ -432,53 +431,47 @@ class DataReader:
 		return copy.deepcopy(self.data[obs])
 
 	@staticmethod
-	def _get_size_and_beta(input_file):
+	def __get_size_and_beta(input_file):
 		_parts = input_file.split("/")[-1].split("_")
 		N, beta = _parts[:2]
-		N = int(N)
-		beta = float(".".join(beta.split(".")[:-1]))
-		return N, beta
+		beta = float(beta.strip(".npy"))
+		return int(N), float(beta)
 
-	def _load_files(self, input_file, obs_lists, flow_epsilon):
+	def __load_files(self, input_file, obs_list, flow_epsilon):
 		raw_data = np.load(input_file)
-		print raw_data.shape
 
-		N, beta = self._get_size_and_beta(input_file)
+		N, beta = self.__get_size_and_beta(input_file)
+
+		if "topct" in obs_list:
+			# Since there is only one observable, we split into number of configs we have
+			num_splits = self.NCfgs
+		else:
+			# Only splits data into the number of observables we have
+			num_splits = len(obs_list)
+
+		raw_data_splitted = np.array(np.split(raw_data[:,1:], num_splits, axis=1))
 
 		# Loads from the plaq, energy, topc and topct
-		for i, obs in enumerate(obs_lists):
+		for i, obs in enumerate(obs_list):
 			self.data[obs] = {}
 
 			# Gets the flow time
 			self.data[obs]["t"] = raw_data[:,0]
 
-			# Gets the observable data
-			if i != (len(self.fobs) - 1):
-				# If we are not at the last item
-				start_index = NCfgs*i + 1
-				stop_index =  NCfgs*(i+1) + 1
+			if obs == "topct":
+				# Reshapes and roll axis to proper shape for later use
+				self.data[obs]["obs"] = raw_data_splitted
 			else:
-				# If we are at the last item, we add all of the rest columns to it
-				start_index = NCfgs*i + 1
-				stop_index = raw_data.shape[1]
-
-			fortsett å skrive her, dvs fullfør innlesing av variable, mer spesifikt
-			det å sette start/stopp indekser for topct versus de andre observablene
-
-			self.data[obs]["obs"] = raw_data[:, start_index: stop_index].T
+				self.data[obs]["obs"] = raw_data_splitted[i].T
 
 			# Fills in different parameters
 			self.data[obs]["beta"] = beta
 			self.data[obs]["FlowEpsilon"] = flow_epsilon
-			self.data[obs]["NFlows"] = NFlows
+			self.data[obs]["NFlows"] = self.data[obs]["obs"].shape[1]
 			self.data[obs]["batch_name"] = self.batch_name
 			self.data[obs]["batch_data_folder"] = self.batch_folder
 
-			if obs == "topct":
-				# Reshapes and roll axis to proper shape for later use
-				self.data[obs]["obs"] = np.rollaxis(np.reshape(self.data[obs]["obs"],(500,NT,1000)),1,3)
-
-		print "Loaded %s from file %s. Size: %.2f MB" % (", ".join(self.fobs), input_file, raw_data.nbytes/1024.0/1024.0)
+		print "Loaded %s from file %s. Size: %.2f MB" % (", ".join(obs_list), input_file, raw_data.nbytes/1024.0/1024.0)
 
 	def write_single_file(self):
 		observables_to_write = ["plaq", "energy", "topc"]#"topct"]
@@ -490,13 +483,15 @@ class DataReader:
 		"""
 		Internal method for writing observable to file.
 		"""		
-		raw_data = self.data[observables_to_write[0]]["t"][0:self.NFlows]
+		raw_data = self.data[observables_to_write[0]]["t"]
 		
 		for obs in observables_to_write:
 			# Checks if we have an array of observables, e.g. topct
 			if obs == "topct" and len(observables_to_write) == 1:
 				# Rolls axis to make it on the correct format
-				_temp_rolled_data = np.rollaxis(self.data[obs]["obs"][:,0:self.NFlows].T, 0, 3)
+				print "@ 491, ", obs, self.data[obs]["obs"].T.shape
+				_temp_rolled_data = np.rollaxis(self.data[obs]["obs"].T, 0, 3)
+				print "@ 493, _temp_rolled_data for %s" % obs, _temp_rolled_data.shape
 
 				# Gets the axis shape in order to then flatten the data
 				_shape = _temp_rolled_data.shape
@@ -505,7 +500,7 @@ class DataReader:
 				raw_data = np.column_stack((raw_data, _temp_rolled_data))
 
 			else:
-				raw_data = np.column_stack((raw_data, self.data[obs]["obs"][:,0:self.NFlows].T))
+				raw_data = np.column_stack((raw_data, self.data[obs]["obs"].T))
 
 		beta_value = self.data[observables_to_write[0]]["beta"]
 		spatial_size = self.beta_to_spatial_size[beta_value]
@@ -519,12 +514,14 @@ class DataReader:
 		file_path = os.path.join(self.file_tree.batch_name_folder, file_name)
 
 		# Saves as binary
-		np.save(file_path,raw_data)
+		np.save(file_path, raw_data)
 		
 		print "%s written to a single file at location %s.npy." % (", ".join(observables_to_write), file_path)
 
-		return file_path + ".npy"
+		# print "@ 520 ", raw_data.shape
+		# exit(1)
 
+		return file_path + ".npy"
 
 def check_folder(folder_name, dryrun, verbose=False):
 	# Checks that figures folder exist, and if not will create it
@@ -533,7 +530,6 @@ def check_folder(folder_name, dryrun, verbose=False):
 			print "> mkdir %s" % folder_name
 		if not dryrun:
 			os.mkdir(folder_name)
-
 
 def write_data_to_file(analysis_object, post_analysis_folder = "../output/post_analysis_data", dryrun = False):
 	"""

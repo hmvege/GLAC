@@ -116,9 +116,7 @@ def analyse(parameters):
 		correct_energy=parameters["correct_energy"])
 
 	# Writes raw observable data to a single binary file
-	if parameters["save_to_binary"] and load_file == None:
-		print "ooops!", load_file
-		exit(1)
+	if parameters["save_to_binary"] and not parameters["load_file"]:
 		obs_data.write_single_file()
 
 	# Builds parameters list to be passed to analyser
@@ -151,7 +149,8 @@ def main():
 	#### Available observables
 	all_observables = ["plaq", "energy", "topc", "topsus", "qtqzero", "topc4", "topct"]
 	basic_observables = ["plaq", "energy", "topc", "topsus"]
-	observables = all_observables[6:7]
+	# observables = all_observables[6:7]
+	observables = all_observables[6:7] + ["qtqzero", "topc4"]
 	# observables = basic_observables
 	print "Running for observables: %s" % ", ".join(observables)
 

@@ -466,7 +466,7 @@ class FlowAnalyser(object):
 
 		# Sets up the title and filename strings
 		if _plot_bs:
-			title_string = r"%s $N_{bootstraps}=%d$" % (self.observable_name, self.N_bs)
+			title_string = r"%s, $N_{bootstraps}=%d$" % (self.observable_name, self.N_bs)
 			fname_path = os.path.join(self.observable_output_folder_path, "{0:<s}_bootstrap_Nbs{2:<d}_beta{1:<s}{3:<s}.png".format(self.observable_name_compact, str(self.beta).replace('.','_'), self.N_bs, self.fname_addon))
 		else:
 			title_string = r"%s" % self.observable_name
@@ -739,6 +739,10 @@ class FlowAnalyser(object):
 		print "Figure created in %s" % fname_path
 		plt.close(fig)
 
+	def __str__(self):
+		return_string = ""
+
+
 class _AnalyseTopSusBase(FlowAnalyser):
 	"""
 	Topological susceptibility analysis base class.
@@ -872,10 +876,10 @@ class AnalyseQQuartic(_AnalyseTopSusBase):
 	"""
 	Class for topological susceptibility with quartic topological charge.
 	"""
-	observable_name = r"Topological charge at $Q^4$"
+	observable_name = r"$\chi(\langle Q^4 \rangle)^{1/8}$"
 	observable_name_compact = "topq4"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\frac{\hbar}{aV^{1/4}} \langle Q^4 \rangle^{1/8} [GeV]$" # 1/8 correct?
+	y_label = r"$\chi(\langle Q^4 \rangle)^{1/8} = frac{\hbar}{aV^{1/4}} \langle Q^4 \rangle^{1/8} [GeV]$" # 1/8 correct?
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseQQuartic, self).__init__(*args, **kwargs)
@@ -896,7 +900,7 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 	observable_name = r"$\langle Q_{t} Q_{t_0} \rangle^{1/4}$"
 	observable_name_compact = "qtqzero"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\frac{\hbar}{aV^{1/4}} \langle Q_{t} Q_{t_0} \rangle^{1/4} [GeV]$" # $\chi_t^{1/4}[GeV]$
+	y_label = r"$\chi^{1/4} = \frac{\hbar}{aV^{1/4}} \langle Q_{t} Q_{t_0} \rangle^{1/4} [GeV]$" # $\chi_t^{1/4}[GeV]$
 	observable_output_folder_old = ""
 
 	def __init__(self, *args, **kwargs):
@@ -921,7 +925,7 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 		self.flow_time_zero_index = np.argmin(np.abs(self.a * np.sqrt(8*self.x) - self.q_flow_time_zero))
 		
 		# Sets file name
-		self.observable_name = "Topological charge evolved at t=%.3f" % (self.q_flow_time_zero)
+		self.observable_name = r"$\chi(\langle Q_t Q_{t_0} \rangle)^{1/4}$ at $t=%.2f$" % (self.q_flow_time_zero)
 
 		if unit_test:
 			# Performs a deep copy of self.y values(otherwise we will overwrite what we have)
@@ -968,7 +972,7 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 	observable_name = "Topological Charge in Euclidean Time"
 	observable_name_compact = "topct"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\frac{\hbar}{aV^{1/4}} \langle Q Q_{t_{Euclidean}} \rangle^{1/4}[GeV]$"
+	y_label = r"$\chi^{1/4} = \frac{\hbar}{aV^{1/4}} \langle Q_{t_{flow}} Q_{t_{euclidean}} \rangle^{1/4}[GeV]$"
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseTopologicalChargeInEuclideanTime, self).__init__(*args, **kwargs)
@@ -989,7 +993,7 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 		self.t_euclidean_index = t_euclidean_index
 
 		# Sets file name
-		self.observable_name = r"$Q Q_{t_{euc}}$ evolved at $i_{euc}/N_T=%d/%d$" % (self.t_euclidean_index + 1, self.NT)
+		self.observable_name = r"$\chi(\langle Q_{t_{flow}} Q_{t_{euclidean}} \rangle)^{1/4}$ at $i_{euclidean}=%d$" % (self.t_euclidean_index + 1)
 
 		# Manual method for multiplying the matrices
 		y_qe0 = copy.deepcopy(self.y_original[:,:,self.t_euclidean_index])
