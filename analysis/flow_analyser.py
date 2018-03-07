@@ -25,7 +25,8 @@ class FlowAnalyser(object):
 	mark_interval = 5
 	error_mark_interval = 5
 	autocorrelations_limits = 1
-	figures_folder = "../figures"
+	folder_locations = ".."
+	figures_folder = "figures"
 	fname_addon = ""
 
 	# Function derivative to be used in the autocorrelation class
@@ -79,6 +80,9 @@ class FlowAnalyser(object):
 		self.verbose = verbose
 		if figures_folder != False:
 			self.figures_folder = figures_folder
+		else:
+			# Adds current folder location to figures
+			self.figures_folder = os.path.join(self.folder_locations, self.figures_folder)
 
 		# Parallel variables
 		self.parallel = parallel
@@ -98,6 +102,10 @@ class FlowAnalyser(object):
 		# Checks that observable output folder exist, and if not will create it
 		self.observable_output_folder_path = os.path.join(self.batch_name_folder_path, self.observable_name_compact)
 		check_folder(self.observable_output_folder_path, self.dryrun, verbose=self.verbose)
+
+		# Sets up the post analysis folder, but do not create it till its needed
+		self.post_analysis_folder = os.path.join(self.folder_locations, self.batch_data_folder, self.batch_name, "post_analysis_data")
+		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
 
 		# Checks if we already have scaled the x values or not
 		if np.all(np.abs(np.diff(self.x) - self.flow_epsilon) > 1e-14):
@@ -165,7 +173,7 @@ class FlowAnalyser(object):
 	def save_post_analysis_data(self):
 		"""Saves post analysis data to a file."""
 		if self.bootstrap_performed and self.autocorrelation_performed:
-			write_data_to_file(self, dryrun=self.dryrun)
+			write_data_to_file(self)
 
 	def boot(self, N_bs, F=None, F_error=None, store_raw_bs_values=True):
 		"""
@@ -250,7 +258,9 @@ class FlowAnalyser(object):
 
 		if store_raw_bs_values:
 			# Store as binary
-			write_raw_analysis_to_file(self.bs_y_data, "bootstrap", self.observable_name_compact, self.batch_data_folder, self.beta, dryrun=self.dryrun)
+			write_raw_analysis_to_file(self.bs_y_data, "bootstrap", 
+				self.observable_name_compact, self.post_analysis_folder,
+				dryrun=self.dryrun, verbose=self.verbose)
 
 		# Sets performed flag to true
 		self.bootstrap_performed = True
@@ -312,7 +322,9 @@ class FlowAnalyser(object):
 
 		if store_raw_jk_values:
 			# Store as binary
-			write_raw_analysis_to_file(self.jk_y_data, "jackknife", self.observable_name_compact, self.batch_data_folder, self.beta, dryrun=self.dryrun)
+			write_raw_analysis_to_file(self.jk_y_data, "jackknife", 
+				self.observable_name_compact, self.post_analysis_folder, 
+				dryrun=self.dryrun, verbose=self.verbose)
 
 		# Sets performed flag to true
 		self.jackknife_performed = True
@@ -386,7 +398,7 @@ class FlowAnalyser(object):
 		if store_raw_ac_error_correction:
 			write_raw_analysis_to_file(self.autocorrelation_error_correction,
 				"autocorrelation", self.observable_name_compact,
-				self.batch_data_folder, self.beta, dryrun=self.dryrun)
+				self.post_analysis_folder, dryrun=self.dryrun, verbose=self.verbose)
 
 		# Sets performed flag to true
 		self.autocorrelation_performed = True

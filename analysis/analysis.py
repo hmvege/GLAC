@@ -1,5 +1,6 @@
 from flow_analyser import *
-from tools.folderreadingtools import DataReader, PostAnalysisDataReader
+from tools.folderreadingtools import DataReader
+from tools.postanalysisdatareader import PostAnalysisDataReader
 import statistics.parallel_tools as ptools
 import os
 import numpy as np
@@ -144,11 +145,26 @@ def analyse(parameters):
 		", ".join([i.lower() for i in parameters["observables"]]), (post_time-pre_time))
 	print "="*100
 
-def post_analysis(parameters):
+def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
+	line_fit_interval, energy_fit_target):
+	"""
+	Post analysis of the flow observables.
+
+	Args: 
+		batch_folder: string, folder containing all the beta data.
+		batch_beta_names: list of the beta folder names.
+		topsus_fit_target: list of x-axis points to line fit at.
+		line_fit_interval: float, extension of the area around the fit target 
+			that will be used for the line fit.
+		energy_fit_target: point of which we will perform a line fit at.
+	"""
+
+	print "\n" + "="*100
+	print "\n Post-analysis"
+	print "\n Retrieving data from: %s" % batch_folder
 
 	# Loads data from post analysis folder
-	data = PostAnalysisDataReader(args[0])
-	print "Retrieving data from folder: %s" % args[0]
+	data = PostAnalysisDataReader(batch_folder)
 
 	# Plots topsus
 	topsus_analysis = TopSusPostAnalysis(data, "topsus", base_output_folder="../figures/post_analysis")
@@ -179,7 +195,7 @@ def main():
 	# observables = all_observables[6:7]
 	# observables = all_observables[6:7] + ["qtqzero", "topc4"]
 	# observables = basic_observables
-	observables = ["topsus"]
+	observables = ["energy", "topsus"]
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
 	print 100*"=" + "\n"
 
@@ -208,10 +224,8 @@ def main():
 	#### Post analysis parameters
 	run_post_analysis = True
 	line_fit_interval = 0.015
-	# Topsus params
 	topsus_fit_targets = [0.3,0.4,0.5,0.58]
-	# Energy params
-	energy_fit_targets = 0.3
+	energy_fit_target = 0.3
 
 	#### Different batches
 	# data_batch_folder = "data2"
@@ -228,8 +242,8 @@ def main():
 		correct_energy = True
 
 	#### Different beta values folders:
-	beta_folder_name = ["beta60", "beta61", "beta62"]
-	# beta_folder_name = ["beta_60", "beta_61", "beta_62"]
+	beta_folders = ["beta60", "beta61", "beta62"]
+	# beta_folders = ["beta_60", "beta_61", "beta_62"]
 
 	# Indexes to look at for topct
 	t_euclidean_indexes = {
@@ -241,7 +255,7 @@ def main():
 	# Percents of data where we do qtq0
 	qzero_flow_times = [0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.0]
 
-	#### Basic batch setup
+	#### Analysis batch setups
 	default_params = {"batch_folder": data_batch_folder,
 		"observables": observables, "load_file": load_file,
 		"save_to_binary": save_to_binary, "base_parameters": base_parameters,
@@ -252,17 +266,17 @@ def main():
 		"qzero_flow_times": qzero_flow_times}
 
 	databeta60 = copy.deepcopy(default_params)
-	databeta60["batch_name"] = beta_folder_name[0]
+	databeta60["batch_name"] = beta_folders[0]
 	databeta60["NCfgs"] = 1000
 	databeta60["obs_file"] = "24_6.00"
 
 	databeta61 = copy.deepcopy(default_params)
-	databeta61["batch_name"] = beta_folder_name[1]
+	databeta61["batch_name"] = beta_folders[1]
 	databeta61["NCfgs"] = 500
 	databeta61["obs_file"] = "28_6.10"
 
 	databeta62 = copy.deepcopy(default_params)
-	databeta62["batch_name"] = beta_folder_name[2]
+	databeta62["batch_name"] = beta_folders[2]
 	databeta62["NCfgs"] = 500
 	databeta62["obs_file"] = "32_6.20"
 
@@ -270,11 +284,13 @@ def main():
 	analysis_parameter_list = [databeta60, databeta61, databeta62]
 	# analysis_parameter_list = [databeta61]
 
-	#### Submitting observable-batches
-	for analysis_parameters in analysis_parameter_list:
-		analyse(analysis_parameters)
+	# #### Submitting observable-batches
+	# for analysis_parameters in analysis_parameter_list:
+	# 	analyse(analysis_parameters)
 
 	#### Submitting post-analysis data
+	post_analysis(data_batch_folder, beta_folders, topsus_fit_targets,
+		line_fit_interval, energy_fit_target)
 
 if __name__ == '__main__':
 	main()

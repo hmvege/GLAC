@@ -436,7 +436,7 @@ class DataReader:
 
 		self.NFlows = int(_NFlows[0])
 
-	def __call__(self,obs):
+	def __call__(self, obs):
 		return copy.deepcopy(self.data[obs])
 
 	@staticmethod
@@ -502,7 +502,7 @@ class DataReader:
 
 				# Gets the axis shape in order to then flatten the data
 				_shape = _temp_rolled_data.shape
-				_temp_rolled_data = _temp_rolled_data.reshape(_shape[0],_shape[1]*_shape[2])
+				_temp_rolled_data = _temp_rolled_data.reshape(_shape[0], _shape[1]*_shape[2])
 
 				raw_data = np.column_stack((raw_data, _temp_rolled_data))
 			else:
@@ -534,28 +534,22 @@ def check_folder(folder_name, dryrun, verbose=False):
 		if not dryrun:
 			os.mkdir(folder_name)
 
-def write_data_to_file(analysis_object, post_analysis_folder = "../output/post_analysis_data", dryrun = False):
+def write_data_to_file(analysis_object):
 	"""
-	Function that write data to file.
+	Function that write data to file for the post analysis class
+
 	Args:
-		analysis_object		(FlowAnalyser)	: object of analyzer class
-		(optional) folder 	(str)			: output folder, default is ../output/analyzed_data
-	Returns:
-		None
+		analysis_object: object of FlowAnalyser class
+		post_analysis_folder: optional string output folder, default is ../output/analyzed_data
 	"""
+	dryrun = analysis_object.dryrun
+	post_analysis_folder = analysis_object.post_analysis_folder
+
 	# Retrieves beta value and makes it into a string
-	beta_string = str(analysis_object.beta).replace(".","_")
+	beta_string = str(analysis_object.beta).replace(".", "_")
 	
 	# Ensures that the post analysis data folder exists
-	check_folder(post_analysis_folder,dryrun,verbose=True)
-
-	# Sets up batch folder
-	batch_folder_path = os.path.join(post_analysis_folder,analysis_object.batch_data_folder)
-	check_folder(batch_folder_path,dryrun,verbose=True)
-
-	# Sets up beta value folder
-	beta_folder_path = os.path.join(batch_folder_path,"beta" + beta_string)
-	check_folder(beta_folder_path,dryrun,verbose=True)
+	check_folder(post_analysis_folder, dryrun, verbose=True)
 
 	# Retrieves analyzed data
 	x = analysis_object.x*analysis_object.flow_epsilon
@@ -574,45 +568,46 @@ def write_data_to_file(analysis_object, post_analysis_folder = "../output/post_a
 
 	# Sets up file name and file path
 	fname = "%s.txt" % observable
-	fname_path = os.path.join(beta_folder_path,fname)
+	fname_path = os.path.join(post_analysis_folder, fname)
 
 	# Saves data to file
 	if not dryrun:
-		np.savetxt(fname_path,data,fmt="%.16f",header="observable %s beta %s\nt original original_error bs bs_error jk jk_error" % (observable,beta_string))
+		np.savetxt(fname_path, data, fmt="%.16f", header="observable %s beta %s\nt original original_error bs bs_error jk jk_error" % (observable, beta_string))
 	print "Data for the post analysis written to %s" % fname_path
 
-def write_raw_analysis_to_file(raw_data, analysis_type, observable, data_batch_folder, beta, post_analysis_folder = "../output/post_analysis_data", dryrun = False):
+def write_raw_analysis_to_file(raw_data, analysis_type, observable, post_analysis_folder, dryrun=False, verbose=True):
 	"""
-	Function that writes raw analysis data to file, either bootstrapped or jackknifed data.
+	Function that writes raw analysis data to file, either bootstrapped or
+		jackknifed data.
+
 	Args:
-		raw_data (numpy float array, NFlows x NBoot)
-		analysis_type (str)
-		observable (str)
-		(optional) post_analysis_folder (str)
-		(optional) dryrun (bool)
+		raw_data: numpy float array, NFlows x NBoot, contains the data
+			from the analysis.
+		analysis_type: string of the type of analysis we have performed,
+			e.g. bootstrap, jackknife, autocorrelation ect.
+		observable: name of the observable
+		post_analysis_folder: post analysis folder. Should be on the form of
+			{data_batch_folder}/{beta_folder}/post_analysis_data.
+		dryrun: optional dryrun argument, for testing purposes
+		verbose: a more verbose output
 	"""
+
 	# Ensures that the post analysis data folder exists
-	check_folder(post_analysis_folder,dryrun,verbose=True)
+	check_folder(post_analysis_folder, dryrun, verbose=verbose)
 
-	# Sets up data batch folder
-	data_batch_folder_path = os.path.join(post_analysis_folder,data_batch_folder)
-	check_folder(data_batch_folder_path,dryrun,verbose=True)
-
-	# Sets up beta folder
-	beta_folder_path = os.path.join(data_batch_folder_path,"beta" + str(beta).replace(".","_"))
-	check_folder(beta_folder_path,dryrun,verbose=True)
-
-	# Sets type type of analysis folder
-	analysis_folder_path = os.path.join(beta_folder_path,analysis_type)
-	check_folder(analysis_folder_path,dryrun,verbose=True)
+	# Checks that a folder exists for the statistical method output
+	post_obs_folder = os.path.join(post_analysis_folder, analysis_type)
+	check_folder(post_obs_folder, dryrun, verbose=verbose)
 
 	# Creates file name
 	file_name = observable
-	file_name_path = os.path.join(analysis_folder_path,file_name)
+	file_name_path = os.path.join(post_obs_folder, file_name)
 
 	# Stores data as binary output
-	np.save(file_name_path,raw_data)
-	print "Analysis %s for observable %s for beta %.2f stored as binary data at %s.npy" % (analysis_type,observable,beta,file_name_path)
+	if not dryrun:
+		np.save(file_name_path, raw_data)
+	if verbose:
+		print "Analysis %s for observable %s stored as binary data at %s.npy" % (analysis_type, observable, file_name_path)
 
 if __name__ == '__main__':
 	sys.exit("Exiting module.")

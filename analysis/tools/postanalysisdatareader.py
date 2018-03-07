@@ -1,5 +1,9 @@
 from folderreadingtools import check_folder
-import os, numpy as np, copy
+import os
+import numpy as np
+import copy
+
+__all__ = ["PostAnalysisDataReader", "getLatticeSpacing"]
 
 def getLatticeSpacing(beta):
 	# if beta < 5.7: raise ValueError("Beta should be larger than 5.7!")
@@ -12,8 +16,17 @@ class PostAnalysisDataReader:
 	"""
 	Small class for reading post analysis data
 	"""
-	def __init__(self,post_analysis_folder,verbose=False):
-		self.post_analysis_folder = post_analysis_folder
+	def __init__(self, batch_folder, verbose=False, base_folder_location=".."):
+		"""
+		Class for loading the post analysis data.
+
+		Args:
+			batch_folder: string name of the data batch folder.
+			verbose: optional more verbose output. Default is False.
+			base_folder_location: full location of the batch folder. Default is
+				one layer above code, "..".
+		"""
+		self.batch_folder = os.path.join(base_folder_location, batch_folder)
 		self.verbose = verbose
 
 		# Dictionary variable to hold all the data sorted by batches
@@ -25,10 +38,10 @@ class PostAnalysisDataReader:
 		self.ac_corrections = {}
 
 		# Different types of analysis
-		self.analysis_types = ["unanalyzed","jackknife","bootstrap"]
+		self.analysis_types = ["unanalyzed", "jackknife", "bootstrap"]
 
 		# Binary folder types available
-		self.binary_folder_types = ["jackknife","bootstrap","autocorrelation"]
+		self.binary_folder_types = ["jackknife", "bootstrap", "autocorrelation"]
 
 		# Variable to store if we have retrieved flow time or not
 		self.retrieved_flow_time = False
@@ -37,25 +50,55 @@ class PostAnalysisDataReader:
 		self.N_betas = 0
 
 		# Data batch name
-		self.data_batch_name = os.path.split(self.post_analysis_folder)[-1]
+		self.data_batch_name = os.path.split(self.batch_folder)[-1]
 
 		# Iterates over the different beta value folders
-		for beta_folder in self._get_folder_content(self.post_analysis_folder):
+		for beta_folder in self._get_folders(self.batch_folder):
 			# Construct beta folder path
-			beta_folder_path = os.path.join(self.post_analysis_folder,beta_folder)
+			beta_folder_path = os.path.join(self.batch_folder, beta_folder, "post_analysis_data")
 
-			# Retrieves beta from folder name
-			beta = float(beta_folder.strip("beta").replace("_","."))
+			# # Retrieves beta from folder name, a bit ugly hard coding
+			# beta = float(beta_folder.strip("beta").replace("_","."))
 
 			# Dictionary to store observable data in
 			observable_data = {}
 
-			# Loops over files and folders inside the beta folder
-			for folder in self._get_folder_content(beta_folder_path):
-				# Construct folder path
-				folder_path = os.path.join(beta_folder_path,folder)
+			# Sorts into two lists, one with .txt extensions, for retrieving the
+			# beta value. The other for retrieving the analysis types.
+			raw_stat_folders = []
+			observable_files = []
+			for _f in self._get_folders(beta_folder_path):
+				if os.path.isdir(os.path.join(beta_folder_path, _f)):
+					raw_stat_folders.append(_f)
+				else:
+					observable_files.append(_f)
 
-				# Retrieves data deepending on type
+			# Temporary beta list for cross checking
+			_temp_beta_list = []
+
+			# Gets the analyzed data for each observable
+			for obs_file in observable_files:
+				# Gets observable name
+				observable_name = os.path.splitext(obs_file)[0]
+
+				obs_file_path = os.path.join(beta_folder_path, obs_file)
+
+				# Retrieves the observable data
+				observable_data[observable_name] = self._get_beta_observable_dict(obs_file_path)
+
+				_temp_beta_list.append(observable_data[observable_name]["beta"])
+
+			if len(set(_temp_beta_list)) != 1:
+				raise ValueError("Beta values differ for observable data files: %s" % ", ".join(observable_files))
+			else:
+				beta = _temp_beta_list[0]
+
+			# Loops over files and folders inside the beta folder
+			for folder in raw_stat_folders:
+				# Construct folder path
+				folder_path = os.path.join(beta_folder_path, folder)
+
+				# Retrieves data depending on type
 				if folder == "bootstrap":
 					# Gets binary bs data
 					self.bs_data_raw[beta] = self._get_bin_dict(folder_path)
@@ -66,11 +109,7 @@ class PostAnalysisDataReader:
 					# Gets binary ac data
 					self.ac_corrections[beta] = self._get_bin_dict(folder_path)
 				else:
-					# Gets observable name
-					observable_name = os.path.splitext(folder)[0]
-					
-					# Retrieves the observable data
-					observable_data[observable_name] = self._get_beta_observable_dict(folder_path,beta)
+					print "%s not a recognized analysis type" % folder
 
 			# Stores batch data
 			self.data_batches[beta] = copy.deepcopy(observable_data)
@@ -84,8 +123,16 @@ class PostAnalysisDataReader:
 		# Reorganizes data to more ease-of-use type of data set
 		self._reorganize_data()
 
-	def _get_beta_observable_dict(self,observable_file,beta):
-		# Retrieves metadata
+	def _get_beta_observable_dict(self, observable_file):
+		"""
+		Internal function for retrieving observable data.
+
+		Args:
+			observable_file: string file path of a .txt-file containing
+				relevant information
+		"""
+
+		# Retrieves meta data
 		# Make it so one can retrieve the key as meta_data[i] and then value as meta_data[i+1]
 		meta_data = self._get_meta_data(observable_file)
 
@@ -114,7 +161,7 @@ class PostAnalysisDataReader:
 		jk_data = {"y": jk_y, "y_error": jk_y_error}
 
 		# Stores observable data
-		obs_data["beta"] 		= copy.deepcopy(beta)
+		obs_data["beta"] 		= copy.deepcopy(meta_data["beta"])
 		obs_data["unanalyzed"] 	= copy.deepcopy(unanalyzed_data)
 		obs_data["bootstrap"] 	= copy.deepcopy(bs_data)
 		obs_data["jackknife"] 	= copy.deepcopy(jk_data)
@@ -139,7 +186,7 @@ class PostAnalysisDataReader:
 		observable_dict = {}
 
 		# Retrieves the different bootstrapped observables
-		for observable_file in self._get_folder_content(folder):
+		for observable_file in self._get_folders(folder):
 			# Gets observable name
 			observable_name = os.path.splitext(observable_file)[0]
 
@@ -151,10 +198,11 @@ class PostAnalysisDataReader:
 	@staticmethod
 	def _get_meta_data(file):
 		# Retrieves meta data from header or file
-		meta_data = ""
+		meta_data = {}
 		with open(file) as f:
 			header_content = f.readline().split(" ")[1:]
-			meta_data = [h.split("\n")[0] for h in header_content]
+			meta_data[header_content[0]] = header_content[1]
+			meta_data[header_content[2]] = float(header_content[3].replace("_", "."))
 		return meta_data
 
 	def _reorganize_data(self):
@@ -222,7 +270,7 @@ class PostAnalysisDataReader:
 		print "="*100
 
 	@staticmethod
-	def _get_folder_content(folder):
+	def _get_folders(folder):
 		if not os.path.isdir(folder):
 			raise IOError("No folder by the name %s found." % folder)
 		else:
