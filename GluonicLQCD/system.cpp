@@ -472,7 +472,7 @@ void System::load(std::string configurationName)
      */
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
-    if (m_NFlows != 0) {
+    if (m_NFlows != 0 && !Parameters::getLoadConfigAndRun()) {
         IO::FieldIO::loadFieldConfiguration(configurationName,m_flowLattice);
     } else {
         IO::FieldIO::loadFieldConfiguration(configurationName,m_lattice);
@@ -486,7 +486,7 @@ void System::loadChroma(std::string configurationName)
      */
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
-    if (m_NFlows != 0) {
+    if (m_NFlows != 0 && !Parameters::getLoadConfigAndRun()) {
         IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_flowLattice);
     } else {
         IO::FieldIO::loadChromaFieldConfiguration(configurationName,m_lattice);
