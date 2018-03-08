@@ -191,10 +191,10 @@ def main():
 	all_observables = ["plaq", "energy", "topc", "topsus", "qtqzero", "topc4", "topct"]
 	basic_observables = ["plaq", "energy", "topc", "topsus"]
 	# observables = all_observables
-	# observables = all_observables[6:7]
+	observables = all_observables[:6]
 	# observables = all_observables[6:7] + ["qtqzero", "topc4"]
 	# observables = basic_observables
-	observables = ["energy", "topsus"]
+	# observables = ["energy", "topsus"]
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
 	print 100*"=" + "\n"
 
@@ -208,7 +208,7 @@ def main():
 		"parallel": parallel, "numprocs": numprocs}
 
 	#### Try to load binary file(much much faster)
-	load_file = True
+	load_file = False
 
 	# If we are to create per-flow datasets as opposite to per-cfg datasets
 	create_perflow_data = False
@@ -242,7 +242,7 @@ def main():
 
 	#### Different beta values folders:
 	beta_folders = ["beta60", "beta61", "beta62"]
-	# beta_folders = ["beta_60", "beta_61", "beta_62"]
+	# beta_folders = ["beta6_0", "beta6_1", "beta6_2"]
 
 	# Indexes to look at for topct
 	t_euclidean_indexes = {
@@ -283,9 +283,9 @@ def main():
 	analysis_parameter_list = [databeta60, databeta61, databeta62]
 	# analysis_parameter_list = [databeta61]
 
-	# #### Submitting observable-batches
-	# for analysis_parameters in analysis_parameter_list:
-	# 	analyse(analysis_parameters)
+	#### Submitting observable-batches
+	for analysis_parameters in analysis_parameter_list:
+		analyse(analysis_parameters)
 
 	#### Submitting post-analysis data
 	post_analysis(data_batch_folder, beta_folders, topsus_fit_targets,

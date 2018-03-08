@@ -15,6 +15,8 @@ class _DirectoryTree:
 		self.CURRENT_FOLDER = os.getcwd()
 		self.data_batch_folder = batch_folder
 		self.observables_list = ["plaq", "topc", "energy", "topct"]
+		self.found_flow_observables = []
+		self.found_observables = []
 		self.batch_name = batch_name
 		self.dryrun = dryrun
 
@@ -42,10 +44,12 @@ class _DirectoryTree:
 				obs_path = os.path.join(self.observables_folder, file_name)
 				if os.path.isfile(obs_path):
 					self.obs_tree[obs] = obs_path
+					self.found_observables.append(obs)
 
 		## Gets paths to flow observable
 		# Creates the flow observables path
 		self.flow_path = os.path.join(self.batch_name_folder, "flow_observables")
+
 		# Checks that there exists a flow observable folder
 		if os.path.isdir(self.flow_path):
 			# Goes through the flow observables
@@ -62,6 +66,8 @@ class _DirectoryTree:
 
 					# Sorts list by natural sorting
 					self.flow_tree[flow_obs] = self.natural_sort(flow_obs_dir_list)
+
+					self.found_flow_observables.append(flow_obs)
 
 		# Creates figures folder
 		if os.path.split(self.CURRENT_FOLDER)[-1] == "tools":
@@ -98,11 +104,17 @@ class _DirectoryTree:
 		else:
 			raise Warning("Observable \"%s\" was not found in possible observables: %s" % (obs, ", ".join(self.flow_tree.keys())))
 
+	def getFoundFlowObservables(self):
+		"""
+		Returns list over all found observables.
+		"""
+		return self.found_flow_observables
+
 	def getFoundObservables(self):
 		"""
 		Returns list over all found observables.
 		"""
-		return self.observables_list
+		return self.found_observables
 
 	def __str__(self):
 		"""
@@ -208,7 +220,7 @@ class _FolderData:
 				# Only retrieves flow once
 				if not retrieved_sqrt8_flow_time:
 					# self.data_flow_time = _x # This is the a*sqrt(8*t), kinda useless
-					self.data_flow_time = data["sqrt8t"].values[:flow_cutoff] # Pandas
+					self.data_flow_time = data_frame["sqrt8t"].values[:flow_cutoff] # Pandas
 					retrieved_sqrt8_flow_time = True
 			elif N_rows == 2:
 				# If it is new observables with no sqrt(8*t)
@@ -483,10 +495,11 @@ class DataReader:
 		print "Loaded %s from file %s. Size: %.2f MB" % (", ".join(obs_list), input_file, raw_data.nbytes/1024.0/1024.0)
 
 	def write_single_file(self):
-		observables_to_write = ["plaq", "energy", "topc"]#"topct"]
+		# observables_to_write = ["plaq", "energy", "topc"]#"topct"]
 
 		self.__write_file(["plaq", "energy", "topc"])
-		self.__write_file(["topct"])
+		if "topct" in self.file_tree.getFoundFlowObservables():
+			self.__write_file(["topct"])
 
 	def __write_file(self, observables_to_write):
 		"""
