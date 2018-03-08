@@ -60,7 +60,7 @@ class _PostAnalysis:
 		if not hasattr(self,"plot_values"):
 			raise AttributeError("set_analysis_data_type() has not been set yet.")
 
-	def set_analysis_data_type(self,analysis_data_type="bootstrap"):
+	def set_analysis_data_type(self, analysis_data_type="bootstrap"):
 		self.plot_values = []
 
 		# Retrieving data depending on analysis type we are choosing
