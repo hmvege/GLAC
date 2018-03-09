@@ -37,7 +37,8 @@ SOURCES += main.cpp \
     parallelization/parallelparameters.cpp \
     math/exponentiation/taylorexp.cpp \
     actions/luscheraction.cpp \
-    observables/mastersamplertopcxyz.cpp
+    observables/mastersamplertopcxyz.cpp \
+    observables/latticeactionchargedensity.cpp
 
 HEADERS += \
     system.h \
@@ -82,7 +83,8 @@ HEADERS += \
     tests/test.h \
     math/exponentiation/taylorexp.h \
     actions/luscheraction.h \
-    observables/mastersamplertopcxyz.h
+    observables/mastersamplertopcxyz.h \
+    observables/latticeactionchargedensity.h
 
 #QMAKE_PRE_LINK = hpclink #??
 

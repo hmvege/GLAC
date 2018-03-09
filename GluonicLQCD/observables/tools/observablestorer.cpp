@@ -94,7 +94,8 @@ void ObservableStorer::writeObservableToFile(double acceptanceRatio)
     /*
      * Writes a regular observable to file
      */
-    IO::writeObservablesToFile(acceptanceRatio,m_averagedObservable,m_varianceObservable,m_stdObservable,m_observables,m_NObs,m_observableName);
+    IO::writeObservablesToFile(acceptanceRatio, m_averagedObservable, m_varianceObservable,
+                               m_stdObservable, m_observables, m_NObs, m_observableName);
 }
 
 void ObservableStorer::writeFlowObservableToFile(int configNumber)
