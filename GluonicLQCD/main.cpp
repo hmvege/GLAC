@@ -29,8 +29,6 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     pureGauge.latticeSetup();
     pureGauge.run();
 
-//    Parallel::Communicator::MPIPrint("OK AFTER PURE GAUGE RUN?");
-
     // Finalizing and printing time taken
     duration<double> programTime = duration_cast<duration<double>>(steady_clock::now() - programStart);
 

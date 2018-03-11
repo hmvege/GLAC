@@ -62,11 +62,13 @@ void System::setObservable(std::vector<std::string> obsList, bool flow)
     bool topc = false;
     bool energy = false;
     bool topct = false;
+    bool energyTopcFieldDensity = false;
     for (unsigned int i = 0; i < obsList.size(); i++) {
         if (obsList[i] == "plaq") plaq = true;
         if (obsList[i] == "topc") topc = true;
         if (obsList[i] == "energy") energy = true;
         if (obsList[i] == "topct") topct = true;
+        if (obsList[i] == "energyTopcFieldDensity") energyTopcFieldDensity = true;
     }
     if ((topc || energy) && !topct) {
         // Initializes the full mechinery except for the QxyzQt sampler
@@ -81,6 +83,19 @@ void System::setObservable(std::vector<std::string> obsList, bool flow)
             m_flowCorrelator = new Plaquette(flow);
         } else {
             m_correlator = new Plaquette(flow);
+        }
+    } else if (energyTopcFieldDensity && !plaq && !topc && !energy && !topct) {
+        // Initates energyTopcFieldDensity if only that and no other samplers are specified.
+        // Also then sets number of configurations to generate to one,
+        // in order to avoid writing out too many fields.
+        m_NCf = 1;
+        Parameters::setNCf(m_NCf);
+        m_writeConfigsToFile = false;
+        Parameters::setStoreConfigurations(m_writeConfigsToFile);
+        if (flow) {
+            m_flowCorrelator = new LatticeActionChargeDensity(flow);
+        } else {
+            m_correlator = new LatticeActionChargeDensity(flow);
         }
     } else {
         if (flow) {

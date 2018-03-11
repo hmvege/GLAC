@@ -23,6 +23,7 @@ namespace IO {
         ~FieldIO();
         static void init();
         static void writeFieldToFile(Lattice<SU3> *lattice, int configNumber);
+        static void writeDoublesFieldToFile(Lattice<double> lattice, int configNumber, std::string observable);
         static void loadFieldConfiguration(std::string filename, Lattice<SU3> *lattice);
         static void loadChromaFieldConfiguration(std::string filename, Lattice<SU3> *lattice);
     };

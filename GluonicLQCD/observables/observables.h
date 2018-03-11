@@ -9,5 +9,6 @@
 #include "topologicalcharge.h"
 #include "mastersampler.h"
 #include "mastersamplertopcxyz.h"
+#include "latticeactionchargedensity.h"
 
 #endif // OBSERVABLES_H

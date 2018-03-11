@@ -6,14 +6,13 @@
 
 LatticeActionChargeDensity::LatticeActionChargeDensity(bool flow) : Correlator()
 {
-    // TODO: make it so that this class stores a single config of the topc and energy density for every lattice point
-
     // Sets up observable storage containers
     initializeObservableStorer(flow);
 
     // Sets up multiplication factors
     m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
     m_topcMultiplicationFactor = 1.0/(16*16*M_PI*M_PI);
+    m_energyMultiplicationFactor = 1.0/double(Parameters::getLatticeSize());
 
     // Allocates memory to the helper variables
     m_clov1.allocate(m_N);
@@ -21,6 +20,11 @@ LatticeActionChargeDensity::LatticeActionChargeDensity(bool flow) : Correlator()
     m_U2Temp.allocate(m_N);
     m_U3Temp.allocate(m_N);
     m_temp.allocate(m_N);
+    m_tempDiag.allocate(m_N);
+
+    // Allocates memory to storage variables
+    m_topCharge.allocate(m_N);
+    m_energy.allocate(m_N);
 }
 
 LatticeActionChargeDensity::~LatticeActionChargeDensity()
@@ -161,8 +165,8 @@ void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, int iObs)
     ///////////////////////////
     //// SYMMETRIC CLOVER /////
     ///////////////////////////
-    m_topCharge = 0;
-    m_energy = 0;
+    m_topCharge.zeros();
+    m_energy.zeros();
     m_plaquette = 0;
     mu = 0;
 
@@ -270,24 +274,27 @@ void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, int iObs)
     ///////////////////////////
     m_plaquette *= m_plaqMultiplicationFactor;
     (*m_plaqObservable)[iObs] = m_plaquette;
-//    MPI_Allreduce(&m_plaquette,&m_plaquette,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-//    m_plaquette /= double(Parallel::Communicator::getNumProc());
-//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nPlaquette           = %20.16f",m_plaquette);
 
     ///////////////////////////
     //// TOPOLOGICAL CHARGE ///
     ///////////////////////////
     m_topCharge *= m_topcMultiplicationFactor;
-    (*m_topcObservable)[iObs] = m_topCharge;
-//    MPI_Allreduce(&m_topCharge,&m_topCharge,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nTopological charge  = %20.16f",m_topCharge);
+    if (m_storeFlowObservable && (iObs % 200) == 0) { // Samples the flow every 200th flow
+        IO::FieldIO::writeDoublesFieldToFile(m_topCharge, iObs, m_topcObservable->getObservableName() + "flow");
+    }
+    if (!m_storeFlowObservable) {
+        IO::FieldIO::writeDoublesFieldToFile(m_topCharge, iObs, m_topcObservable->getObservableName());
+    }
+    (*m_topcObservable)[iObs] = sum(m_topCharge);
 
     ///////////////////////////
     ///////// ENERGY //////////
     ///////////////////////////
-    m_energy *= m_energyMultiplicationFactor;
-    (*m_energyObservable)[iObs] = m_energy;
-//    MPI_Allreduce(&m_energy,&m_energy,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nEnergy              = %20.16f",m_energy);
-
+    if (m_storeFlowObservable && (iObs % 200) == 0) { // Samples the flow every 200th flow
+        IO::FieldIO::writeDoublesFieldToFile(m_energy, iObs, m_energyObservable->getObservableName() + "flow");
+    }
+    if (!m_storeFlowObservable) {
+        IO::FieldIO::writeDoublesFieldToFile(m_energy, iObs, m_energyObservable->getObservableName());
+    }
+    (*m_energyObservable)[iObs] = m_energyMultiplicationFactor * sum(m_energy);
 }

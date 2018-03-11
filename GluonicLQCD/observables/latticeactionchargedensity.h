@@ -8,7 +8,7 @@ class LatticeActionChargeDensity : public Correlator
 {
 private:
     int mu, rho, sigma;
-    double m_plaqMultiplicationFactor, m_topcMultiplicationFactor;
+    double m_plaqMultiplicationFactor, m_topcMultiplicationFactor, m_energyMultiplicationFactor;
     double m_plaquette;
     Lattice <double> m_tempDiag, m_topCharge, m_energy;
     Lattice<SU3> m_clov1, m_clov2, m_U2Temp, m_U3Temp, m_temp;

@@ -22,6 +22,8 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
     m_U3Temp.allocate(m_N);
     m_temp.allocate(m_N);
 
+//    m_tempDiag.allocate(m_N);
+
     // Allocates temporary vector for retrieves results from the lattice method
     m_tempTopcT.resize(m_N[3]);
 

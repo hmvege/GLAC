@@ -32,6 +32,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
 {
     /*
      * C-method for writing out configuration to file.
+     *
      * Arguments:
      *  configNumber   : (int) configuration number
      */
@@ -73,10 +74,56 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
     }
 }
 
+void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, int configNumber, std::string observable)
+{
+    /*
+     * C-method for writing out single double lattice field to file. No lorentz indices
+     *
+     * Arguments:
+     *  lattice: Lattice<double>, single field of doubles
+     *  configNumber   : (int) configuration number
+     */
+    MPI_File file;
+
+    // Converting config number to a more machine friendly layout
+    char cfg_number[6];
+    sprintf(cfg_number,"%05d",configNumber + Parameters::getConfigStartNumber());
+
+    std::string filename = Parameters::getBatchName() + "_" + observable + "LatticeDoublesField"
+                                                      + "_beta" + std::to_string(Parameters::getBeta())
+                                                      + "_spatial" + std::to_string(Parameters::getNSpatial())
+                                                      + "_temporal" + std::to_string(Parameters::getNTemporal())
+                                                      + "_threads" + std::to_string(Parallel::Communicator::getNumProc())
+                                                      + "_config" + std::string(cfg_number) + ".bin";
+    std::string filenamePath = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/" + filename;
+
+    MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+    MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
+    for (unsigned int t = 0; t < m_N[3]; t++) {
+        nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
+        for (unsigned int z = 0; z < m_N[2]; z++) {
+            nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
+            for (unsigned int y = 0; y < m_N[1]; y++) {
+                ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
+                for (unsigned int x = 0; x < m_N[0]; x++) {
+                    nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
+                    MPI_File_write_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*sizeof(double), &lattice[Parallel::Index::getIndex(x,y,z,t)], 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                }
+            }
+        }
+    }
+    MPI_File_close(&file);
+
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        printf("\n    %s written.", filename.c_str());
+    }
+}
+
 void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lattice)
 {
     /*
      * Method for loading a field configuration and running the plaquettes on them.
+     *
      * Arguments:
      * - filename
      * - lattice

@@ -9,8 +9,9 @@ import shutil
 import re
 
 AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct"]
+AVAILABLE_EXP_FUNCS = ["morningstar", "luscher", "taylor2", "taylor4"]
 
-def getArgMaxIndex(N):
+def get_arg_max_index(N):
     """For getting the maximum index of an list."""
     val = N[0]
     index = 0
@@ -20,7 +21,7 @@ def getArgMaxIndex(N):
             index = i
     return index
 
-def createSquare(numprocs, NSpatial, NTemporal):
+def create_square(numprocs, NSpatial, NTemporal):
     """
     Create a square sub lattice.
 
@@ -39,14 +40,14 @@ def createSquare(numprocs, NSpatial, NTemporal):
         N[i] = NSpatial
         N[3] = NTemporal;
     while restProc >= 2:
-        max_index = getArgMaxIndex(N)
+        max_index = get_arg_max_index(N)
         N[max_index] /= 2
         restProc /= 2
         if (restProc < 2):
             break
     return N[::-1] # Reversing seems to be quicker.
 
-def checkSubDimViability(subDims):
+def check_sub_dim_viability(subDims):
     """
     Checking if the sub dimensions are valid.
 
@@ -68,7 +69,7 @@ def checkSubDimViability(subDims):
         if dim <= 2:
             raise ValueError("%d is not a valid dimension" % dim)
 
-def setFieldConfigs(config, config_folder, config_start_number):
+def set_field_configs(config, config_folder, config_start_number):
     """
     Populates list of sorted field configs from folder config_folder into the 
     config dictionary.
@@ -87,7 +88,6 @@ def setFieldConfigs(config, config_folder, config_start_number):
     config["load_field_configs"] = True
     config["inputFolder"] = os.path.normpath(config_folder)
 
-    # print "LINE 40, setFieldConfigs()", config["inputFolder"]
     if os.path.isdir(config_folder):
         config["field_configs"] = natural_sort([fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")])
     else:
@@ -132,7 +132,7 @@ class JobCreator:
         self.CURRENT_PATH = os.getcwd()
 
         # Checking the .ids.json file for previous jobs and storing them in job-list.
-        self.idFilesName = '.ids.json'
+        self.idFilesName = ".ids.json"
         if os.path.isfile(self.idFilesName):
             self.jobs = json.load(open(self.idFilesName, "r"))
         else:
@@ -153,12 +153,12 @@ class JobCreator:
             self._checkFolderPath(self.outputFolder)
             self._checkFolderPath(os.path.join(self.outputFolder, self.runName))
             if self.NFlows != 0:
-                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, 'flow_observables'))
+                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables"))
                 for fobs in AVAILABLE_OBSERVABLES:
-                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, 'flow_observables', fobs))
+                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables", fobs))
             if not self.load_field_configs:
-                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, 'field_configurations'))
-                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, 'observables'))
+                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "field_configurations"))
+                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "observables"))
         self._checkFolderPath(os.path.join(self.inputFolder))
         self._checkFolderPath(os.path.join("input", self.runName))
 
@@ -176,7 +176,7 @@ class JobCreator:
             if not self.dryrun:
                 os.mkdir(os.path.join(self.base_folder, folder))
             if self.dryrun or self.verbose:
-                print '> mkdir %s' % os.path.join(self.base_folder, folder)
+                print "> mkdir %s" % os.path.join(self.base_folder, folder)
 
     def _clean_file_Path(self, p):
         """
@@ -262,8 +262,9 @@ class JobCreator:
 
         # Prints configuration file content if verbose or dryrun is true
         if self.dryrun or self.verbose:
-            print "Writing json configuration file at location %s:\n" % os.path.join(self.base_folder, "input", self.json_file_name)
-            print json.dumps(json_dict, indent=4, separators=(', ', ': ')), "\n"
+            print "Writing json configuration file at location {}:\n".format(
+                os.path.join(self.base_folder, "input", self.json_file_name))
+            print json.dumps(json_dict, indent=4, separators=(", ", ": ")), "\n"
 
         # Creates configuration file
         if not self.dryrun:
@@ -272,7 +273,7 @@ class JobCreator:
             shutil.copy(os.path.join(self.base_folder, "input", self.json_file_name), # src
                 "%s.bak" % os.path.join(self.base_folder, "input", self.runName, self.json_file_name)) # dest
 
-    def submitJob(self, job_config, system, partition, excluded_nodes=False):
+    def submit_job(self, job_config, system, partition, excluded_nodes=False):
         if excluded_nodes:
             sbatch_exclusions = "#SBATCH --exclude=%s" % excluded_nodes
         else:
@@ -319,7 +320,7 @@ class JobCreator:
 
         # Ensures that we have a viable number of sub dimensions
         if len(subDims) != 0:
-            checkSubDimViability(subDims)
+            check_sub_dim_viability(subDims)
 
         # Creates relevant folders
         self._create_folders()
@@ -329,7 +330,8 @@ class JobCreator:
 
         # If we are on local computer(e.g. laptop), will create configuration file and quit
         if system == "local":
-            sys.exit("Configuration file %s for local production created."  % os.path.join(self.base_folder, "input", self.json_file_name))
+            sys.exit("Configuration file %s for local production created." 
+                % os.path.join(self.base_folder, "input", self.json_file_name))
 
         # Setting job name before creating content file.
         job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta, NSpatial, NTemporal, threads)
@@ -338,23 +340,31 @@ class JobCreator:
         estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr, cpu_approx_runtime_min)
 
         # Setting run-command
-        if not system == 'laconia':
-            run_command = "mpirun -n {0:<d} {1:<s} {2:<s}".format(threads, os.path.join(self.CURRENT_PATH, binary_filename), os.path.join(self.base_folder, "input", self.json_file_name))
+        if not system == "laconia":
+            run_command = "mpirun -n {0:<d}".format(threads)
+            run_command += " "
+            run_command += os.path.join(self.CURRENT_PATH, binary_filename)
+            run_command += " "
+            run_command += os.path.join(self.base_folder, "input", self.json_file_name)
+
         else :
-            run_command = "mpirun -np {0:<d} {1:<s} {2:<s}".format(threads, os.path.join(self.CURRENT_PATH, binary_filename), os.path.join(self.base_folder, "input", self.json_file_name))
+            run_command = "mpirun -np {0:<d}".format(threads)
+            run_command += " "
+            run_command += os.path.join(self.CURRENT_PATH, binary_filename)
+            run_command += " "
+            run_command += os.path.join(self.base_folder, "input", self.json_file_name)
 
         # Choosing system
         if system == "smaug":
             # Smaug batch file.
-        # #SBATCH --exclude=smaug-b2 excludes an unstable node
-            content ='''#!/bin/bash
-#SBATCH --job-name={0:<s}
-#SBATCH --partition={1:<s}
-#SBATCH --ntasks={2:<d}
-#SBATCH --time={3:<s}
-{4:<s}
-{5:<s}
-'''.format(job_name, partition, threads, estimated_time, sbatch_exclusions, run_command)
+            # #SBATCH --exclude=smaug-b2 excludes an unstable node
+            content = "#!/bin/bash"
+            content += "\n#SBATCH --job-name={0:<s}".format(job_name)
+            content += "\n#SBATCH --partition={0:<s}".format(partition)
+            content += "\n#SBATCH --ntasks={0:<d}".format(threads)
+            content += "\n#SBATCH --time={0:<s}".format(estimated_time)
+            content += "\n" + sbatch_exclusions
+            content += "\n" + run_command
 
         elif system == "abel":
             # Abel specific commands
@@ -368,46 +378,39 @@ class JobCreator:
             if threads % tasks_per_node != 0:
                 raise ValueError("Tasks(number of threads) have to be divisible by 16.")
 
-#SBATCH --ntasks-per-node={7:<1d} # Not needed, possibly
-            content ='''#!/bin/bash
-#SBATCH --job-name={0:<s}
-#SBATCH --account={1:<s}
-#SBATCH --time={2:<s}
-#SBATCH --mem-per-cpu={3:<4d}
-#SBATCH --partition={4:<s}
-#SBATCH --ntasks={5:<d}
-#SBATCH --nodes={6:<1d}
-#SBATCH --mail-type=BEGIN,TIME_LIMIT_10,END
-{7:<s}
+            content = "#!/bin/bash"
+            content += "\n#SBATCH --job-name={0:<s}".format(job_name)
+            content += "\n#SBATCH --account={0:<s}".format(account_name)
+            content += "\n#SBATCH --time={0:<s}".format(estimated_time)
+            content += "\n#SBATCH --mem-per-cpu={0:<4d}".format(cpu_memory)
+            content += "\n#SBATCH --partition={0:<s}".format(partition)
+            content += "\n#SBATCH --ntasks={0:<d}".format(threads)
+            content += "\n#SBATCH --nodes={0:<1d}".format(nodes)
+            content += "\n#SBATCH --mail-type=BEGIN,TIME_LIMIT_10,END"
+            content += "\n" + sbatch_exclusions + "\n"
+            content += "\nsource /cluster/bin/jobsetup\n"
+            content += "\nmodule purge                # clear any inherited modules"
+            content += "\nmodule load openmpi.gnu     # loads mpi\n"
+            content += "\nset -o errexit              # exit on errors\n"
+            content += "\n" + run_command
 
-source /cluster/bin/jobsetup
-
-
-module purge                # clear any inherited modules
-module load openmpi.gnu     # loads mpi
-
-set -o errexit              # exit on errors
-
-{8:<s}
-
-'''.format(job_name, account_name, estimated_time, cpu_memory, partition, threads, nodes, sbatch_exclusions, run_command)
         elif system == "laconia":
             account_name = "ptg"
             threads = 28
             nodes = 19
             cpu_memory = job_config["cpu_memory"]
             # sys.exit("Error: not implemented setup for system: %s" % system) # Also, has to load module load Qt/5.6.2
-            content = '''
-#! /bin/bash -login
-#PBS -A {1:<s}
-#PBS -l walltime={2:<s},nodes={5:<1d}:ppn={4:<d},mem={3:<4d}GB
-#PBS -N {0:<s}
-#PBS -M h.m.m.vege@fys.uio.no
-#PBS -m bea
-module load GNU/4.9
-module load OpenMPI/1.10.0
-{6:<s}
-'''.format(job_name, account_name, estimated_time, cpu_memory, threads, nodes, run_command)
+
+            content = "#! /bin/bash -login"
+            content += "\n#PBS -A {0:<s}".format(account_name)
+            content += "\n#PBS -l walltime={0:<s},nodes={1:<1d}:ppn={2:<d},mem={3:<4d}GB".format(estimated_time, nodes, threads, cpu_memory)
+            content += "\n#PBS -N {0:<s}".format(job_name)
+            content += "\n#PBS -M h.m.m.vege@fys.uio.no"
+            content += "\n#PBS -m bea"
+            content += "\nmodule load GNU/4.9"
+            content += "\nmodule load OpenMPI/1.10.0"
+            content += "\n" + run_command
+
         elif system == "local":
             sys.exit("Error: this is a local production run. Should never see this error message.")
         else:
@@ -482,9 +485,9 @@ module load OpenMPI/1.10.0
 
         # Updates ID file only if it is not a dryrun
         if not self.dryrun:
-            self.updateIDFile()
+            self.update_id_file()
 
-    def updateIDFile(self):
+    def update_id_file(self):
         """Rewrites the .ids.txt file with additional job ID."""
 
         if self.dryrun:
@@ -495,7 +498,7 @@ module load OpenMPI/1.10.0
             with open(self.idFilesName, "w+") as f:
                 json.dump(self.jobs, f, indent=4)
 
-    def cancelJob(self, jobID):
+    def cancel_job(self, jobID):
         """Cancels jobID."""
 
         if not self.dryrun:
@@ -503,7 +506,7 @@ module load OpenMPI/1.10.0
         if self.dryrun or self.verbose:
             print "> scancel %d" % jobID
 
-    def cancelAllJobs(self):
+    def cancel_all_jobs(self):
         """Cancels all jobs."""
 
         for i in self.jobs:
@@ -512,7 +515,7 @@ module load OpenMPI/1.10.0
             if self.dryrun or self.verbose:
                 print "> scancel %d" % int(i)
 
-    def showIDwithNb(self):
+    def list_jobs(self):
         """Shows jobs with ID numbers."""
 
         if len(self.jobs) == 0:
@@ -553,7 +556,7 @@ module load OpenMPI/1.10.0
                     # Prints the item for the job id
                     print "{0:<{w}}".format(item[1][-1], w=width),
 
-    def printJobIDInfo(self, jobID):
+    def print_job_id_info(self, jobID):
         """
         Prints info for given job.
 
@@ -577,12 +580,12 @@ module load OpenMPI/1.10.0
             for item in sorted(zip(self.jobs[jobID].keys(), self.jobs[jobID].values()), key=lambda i: i[-1][0]):
                 print "{0:<{w}}".format(item[-1][-1], w=item[-1][1]),
 
-    def clearIDFile(self):
+    def clear_id_file(self):
         """Clears the ID file."""
 
         self.jobs = {}
         if not self.dryrun:
-            self.updateIDFile()
+            self.update_id_file()
         if self.dryrun or self.verbose:
             print "Clearing ID file."
 
@@ -609,16 +612,16 @@ def main(args):
         "verboseRun"                : False,
         "hotStart"                  : False,
         "RSTHotStart"               : False,
-        "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
-        "observables"               : ["plaq"], # Optional: plaq, topc, energy, topct
-        "flowObservables"           : ["plaq","topc","energy"], # Optional:plaq,  topc, energy, topct
+        "expFunc"                   : "morningstar",
+        "observables"               : ["plaq"],
+        "flowObservables"           : ["plaq","topc","energy"],
         "load_field_configs"        : False,
         "load_config_and_run"       : "",
         "config_start_number"       : 0,
         "chroma_config"             : False,
         "base_folder"               : os.getcwd(),
         "inputFolder"               : "input",
-        "outputFolder"              : "output",#os.path.join(os.getcwd(),"output"),
+        "outputFolder"              : "output",
         "field_configs"             : [],
         "uTest"                     : False,
         "uTestVerbose"              : False,
@@ -646,9 +649,9 @@ def main(args):
     parser = argparse.ArgumentParser(prog='GluonicLQCD job creator', description=description_string)
     
     ######## Prints program version if prompted ########
-    parser.add_argument('--version',        action='version', version='%(prog)s 1.0.2')
-    parser.add_argument('--dryrun',         default=False, action='store_true', help='Dryrun to no perform any critical actions.')
-    parser.add_argument('-v','--verbose',   default=False, action='store_true', help='A more verbose output when generating.')
+    parser.add_argument('--version', action='version', version='%(prog)s 1.0.2')
+    parser.add_argument('--dryrun', default=False, action='store_true', help='Dryrun to no perform any critical actions.')
+    parser.add_argument('-v', '--verbose', default=False, action='store_true', help='A more verbose output when generating.')
 
     ######## Sets up subparsers ########
     subparser = parser.add_subparsers(dest='subparser')
@@ -659,7 +662,7 @@ def main(args):
     sbatch_group.add_argument('--scancel',                      default=False,      type=int, help='Cancel a job of given ID.')
     sbatch_group.add_argument('--scancel_all',                  default=False,      action='store_true', help='Cancel all jobs')
     sbatch_group.add_argument('-ls', '--list_jobs',             default=False,      action='store_true', help='List all jobs currently running.')
-    sbatch_group.add_argument('--clearIDFile',                  default=False,      action='store_true', help='Clears the job ID file.')
+    sbatch_group.add_argument('--clear_id_file',                  default=False,      action='store_true', help='Clears the job ID file.')
     sbatch_group.add_argument('-id', '--list_job_id',           default=False,      type=int, help='Shows details about job with given ID.')
 
     ######## Manual job setup ########
@@ -674,7 +677,7 @@ def main(args):
     job_parser.add_argument('-NT', '--NTemporal',               default=config_default["NT"],                       type=int, help='temporal lattice dimension')
     job_parser.add_argument('-sd', '--subDims',                 default=False,                                      type=int, nargs=4, help='List of sub lattice dimension sizes, length 4')
     job_parser.add_argument('-b', '--beta',                     default=config_default["beta"],                     type=float, help='beta value')
-    job_parser.add_argument('-NCfg', '--NConfigs',              default=config_default["NCf"],                      type=int, help='number of configurations to generate')
+    job_parser.add_argument('-NCfgs', '--NConfigs',             default=config_default["NCf"],                      type=int, help='number of configurations to generate')
     job_parser.add_argument('-NCor', '--NCor',                  default=config_default["NCor"],                     type=int, help='number of correlation updates to perform')
     job_parser.add_argument('-NTh', '--NTherm',                 default=config_default["NTherm"],                   type=int, help='number of thermalization steps')
     job_parser.add_argument('-NFlows', '--NFlows',              default=config_default["NFlows"],                   type=int, help='number of flows to perform per configuration')
@@ -689,7 +692,7 @@ def main(args):
     # Setup related variables
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],                 type=int, choices=[0,1], help='Hot start or cold start')
     job_parser.add_argument('-rsths', '--RSTHotStart',          default=config_default["RSTHotStart"],              type=int, choices=[0,1], help='RST hot start is closer to unity')
-    job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],                  type=str, help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
+    job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],                  type=str, choices=AVAILABLE_EXP_FUNCS, help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
     job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],              type=str, choices=AVAILABLE_OBSERVABLES, nargs='+', help='Observables to sample for in flow.')
     job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],          type=str, choices=AVAILABLE_OBSERVABLES, nargs='+', help='Observables to sample for in flow.')
 
@@ -706,7 +709,7 @@ def main(args):
     job_parser.add_argument('-ex', '--exclude',                 default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
     job_parser.add_argument('-lcfg', '--load_configurations',   default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
     job_parser.add_argument('-chroma', '--chroma_config',       default=config_default["chroma_config"],            action='store_true', help='If flagged, loads the configuration as a chroma configuration.')
-    job_parser.add_argument('-lcfgr', '--load_config_and_run',  default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfg argument.')
+    job_parser.add_argument('-lcfgr', '--load_config_and_run',  default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
     job_parser.add_argument('-cfgnum', '--config_start_number', default=config_default["config_start_number"],      type=int, help='Starts naming the configuration from this number.')
 
     ######## Abel specific commands ########
@@ -716,11 +719,11 @@ def main(args):
     ######## Job load parser ########
     load_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
     load_parser.add_argument('file',                            default=False,                                      type=str, help='Loads config file')
-    load_parser.add_argument('-s', '--system',                  default=False,                                      type=str, required=True,choices=['smaug', 'abel', 'laconia'], help='Cluster name')
+    load_parser.add_argument('-s', '--system',                  default=False,                                      type=str, required=True, choices=['smaug', 'abel', 'laconia'], help='Cluster name')
     load_parser.add_argument('-p', '--partition',               default="normal",                                   type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
     load_parser.add_argument('-lcfg', '--load_configurations',  default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
-    load_parser.add_argument('-lcfgr', '--load_config_and_run', default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfg argument.')
-    load_parser.add_argument('-NCfg', '--NConfigs',             default=False,                                      type=int, help='N configurations to generate based on loaded configuration.')
+    load_parser.add_argument('-lcfgr', '--load_config_and_run', default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
+    load_parser.add_argument('-NCfgs', '--NConfigs',            default=False,                                      type=int, help='N configurations to generate based on loaded configuration.')
     load_parser.add_argument('-chroma', '--chroma_config',      default=config_default["chroma_config"],            action='store_true', help='If flagged, loads the configuration as a chroma configuration.')
     load_parser.add_argument('-lhr', '--load_config_hr_time_estimate', default=None,                                type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
     load_parser.add_argument('-lmin', '--load_config_min_time_estimate', default=None,                              type=int, help='Approximate cpu time in minutes that will be used.')
@@ -740,7 +743,7 @@ def main(args):
     unit_test_parser.add_argument('-ex', '--exclude',           default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
 
     ######## Performance test parser ########
-    performance_test_parser = subparser.add_parser('perfTest', help='Runs performance tests on the certain components of the GluonicLQCD program. Will exit when complete.')
+    performance_test_parser = subparser.add_parser('perf_test', help='Runs performance tests on the certain components of the GluonicLQCD program. Will exit when complete.')
     performance_test_parser.add_argument('system',              default=False,                                      type=str, choices=['smaug', 'abel', 'laconia', 'local'], help='Specify system we are running on.')
     performance_test_parser.add_argument('-NExpTests',          default=config_default["NExpTests"],                type=int, help='Number of exponentiation tests we will run.')
     performance_test_parser.add_argument('-NRandTests',         default=config_default["NRandTests"],               type=int, help='Number of random tests we will run.')
@@ -748,17 +751,38 @@ def main(args):
     performance_test_parser.add_argument('-TaylorPolDegree',    default=config_default["TaylorPolDegree"],          type=int, help='Degree of the Taylor polynomial for exponentiation(default is 8).')
     performance_test_parser.add_argument('-ex', '--exclude',    default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
 
-    args = parser.parse_args()
-    # args = parser.parse_args(['python', 'makeJobs.py', 'load', 'config_folder/size_scaling_configs/config_16cube32.py', 'config_folder/size_scaling_configs/config_24cube48.py', 'config_folder/size_scaling_configs/config_28cube56.py', 'config_folder/size_scaling_configs/config_32cube64.py', '-s', 'abel'])
-    # args = parser.parse_args(["--dryrun","setup","smaug","-ex","smaug-a[1-8]","smaug-b[1-8]","-sq"])
-    # args = parser.parse_args(["--dryrun","load","config_folder/config_beta6_0.py","-s","abel","-lcfg","input","--load_config_hr_time_estimate","2"])
-    # args = parser.parse_args(["--dryrun","setup","abel","-rn","test","-subN","4","4","4","4"])
-    # args = parser.parse_args(['--dryrun', 'setup', 'local', '4', '-N', '8', '-NT', '8', '-NCfg', '100', '-NCor', '40', '-NFlows', '100', '-obs', 'plaq', 'topc', 'energy', '-fobs', 'plaq', 'topc', 'energy', '-b', '6.0', '-rn', 'TestRun1', '-sd', '8', '8', '4', '4', '-lcfg', 'input'])
-    # args = parser.parse_args(['setup', 'smaug', '64', '-N', '24', '-NT', '48', '-NTh', '300', '-fobs', 'plaq', 'topc', 'energy', '-NCfg', '20', '-NFlows', '60', '-rn', 'topcPlaqTestSmaug', '-chr', '10', '-v'])
-    # args = parser.parse_args(['sbatch','--list_jobs'])
-    # args = parser.parse_args(['sbatch','--clearIDFile']) 
+    ######## Field densities sampler ########
+    field_density_parser = subparser.add_parser("field_density", help="Will run a single config through the energyTopcFieldDensity observable and produce observables of the entire field from them")
+    
+    # Setup related variable
+    field_density_parser.add_argument('-s', '--system',        default=False,                                      type=str, required=True, choices=['smaug', 'abel', 'laconia', 'local'], help='Cluster name')
+    field_density_parser.add_argument('-nt', '--threads',      default=config_default["threads"],                  type=int, required=True, help='Number of threads to run on')
+    field_density_parser.add_argument('-cfgf', '--config_file', default=False,                                     type=str, help='Loads config file')
+    field_density_parser.add_argument('-p', '--partition',     default="normal",                                   type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
+    field_density_parser.add_argument('-lcfg', '--load_configuration', default=False,                              type=str, required=True, help='Loads a single configuration with .bin extension.')
+    field_density_parser.add_argument('-rn', '--run_name',     default=config_default["runName"],                  type=str, help='Specify the run name')
+    field_density_parser.add_argument('-lhr', '--load_config_hr_time_estimate', default=None,                      type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
+    field_density_parser.add_argument('-lmin', '--load_config_min_time_estimate', default=None,                    type=int, help='Approximate cpu time in minutes that will be used.')
+    field_density_parser.add_argument('-ex', '--exclude',      default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
+    
+    # Lattice related run variables
+    field_density_parser.add_argument('-b', '--beta',          default=False,                                      type=float, help='beta value')
+    field_density_parser.add_argument('-N', '--NSpatial',      default=False,                                      type=int, help='spatial lattice dimension')
+    field_density_parser.add_argument('-NT', '--NTemporal',    default=False,                                      type=int, help='temporal lattice dimension')
+    field_density_parser.add_argument('-sd', '--subDims',      default=config_default["subDims"],                  type=int, nargs=4, help='List of sub lattice dimension sizes, length 4')
+    field_density_parser.add_argument('-NFlows', '--NFlows',   default=config_default["NFlows"],                   type=int, help='number of flows to perform per configuration')
+    field_density_parser.add_argument('-fEps', '--flowEpsilon', default=config_default["flowEpsilon"],             type=float, help='Flow epsilon derivative small change value.')
+    field_density_parser.add_argument('-nf', '--no_flow',      default=False,                                      action='store_true', help='If toggled, will not perform any flows.')
+    field_density_parser.add_argument('-sq', '--square',       default=False,                                      action='store_true', help='Enforce square sub lattices(or as close as possible).')
+    
+    # Data storage related variables
+    field_density_parser.add_argument('-bf', '--base_folder',  default=config_default["base_folder"],              type=str, help='Sets the base folder. Default is os.path.getcwd().')
+    field_density_parser.add_argument('-vr', '--verboseRun',   default=config_default["verboseRun"],               action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
 
-    # Retrieves dryrun bool
+    args = parser.parse_args()
+
+    # args = parser.parse_args(['--dryrun', 'field_density', '-s', 'local', '-nt', '8', '-lcfg', 'output/testRunLocal/field_configurations/testRunLocal_beta6.000000_spatial8_temporal16_threads8_config00000.bin', '-rn', 'lattice_field_density_test'])
+
     dryrun = args.dryrun
     verbose = args.verbose
 
@@ -771,7 +795,6 @@ def main(args):
         COMMAND FOR LOADING SCRIPT JOBS AND GENERATING CONFIGS OR FLOWING
         """
         configuration = ast.literal_eval(open(args.file, "r").read())
-
         # If we are to load and flow configurations
         if args.load_configurations:
             if args.load_config_and_run:
@@ -786,7 +809,7 @@ def main(args):
             configuration["NCf"] = 0
 
             # Requiring an new estimate of the run time if we are flowing
-            configuration = setFieldConfigs(configuration, args.load_configurations, args.config_start_number)
+            configuration = set_field_configs(configuration, args.load_configurations, args.config_start_number)
             if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
                 sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
 
@@ -827,16 +850,12 @@ def main(args):
         configuration["config_start_number"] = args.config_start_number
 
         # Submitting job
-        s.submitJob(configuration, args.system,args.partition, excluded_nodes)
+        s.submit_job(configuration, args.system, args.partition, excluded_nodes)
 
     elif args.subparser == 'setup':
         """
         COMMAND FOR SETTING UP JOBS WITHOUT ANY PREDEFINED SCRIPTS
         """
-        if not args.system: raise ValueError("System value %g: something is wrong in parser." % args.system)
-
-        system = args.system
-        partition = args.partition
         config_default["runName"]                   = args.run_name
         config_default["threads"]                   = args.threads
         config_default["N"]                         = args.NSpatial
@@ -870,10 +889,10 @@ def main(args):
 
         # Non-trivial default values
         if args.subDims:
-            checkSubDimViability(args.subDims)
+            check_sub_dim_viability(args.subDims)
             config_default["subDims"] = args.subDims
         if args.square:
-            config_default["subDims"] = createSquare(config_default["threads"], config_default["N"], config_default["NT"])
+            config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
 
         # Excludes certain nodes if arguments have been provided
         if args.exclude:
@@ -885,7 +904,7 @@ def main(args):
             config_default["load_config_and_run"] = args.load_config_and_run
         config_default["config_start_number"] = args.config_start_number
         if args.load_configurations:
-            config_default = setFieldConfigs(config_default, args.load_configurations, args.config_start_number)
+            config_default = set_field_configs(config_default, args.load_configurations, args.config_start_number)
             config_default["chroma_config"] = args.chroma_config
 
             # Requiring flow to be specified if we are loading configurations to flow
@@ -893,22 +912,27 @@ def main(args):
                 sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
 
         # Submitting job
-        s.submitJob(config_default, system, partition, excluded_nodes)
+        s.submit_job(config_default, args.system, args.partition, excluded_nodes)
 
     elif args.subparser == 'sbatch':
         """
         COMMAND FOR VIEWING JOBS
         """
         if args.scancel:
-            s.cancelJob(args.scancel)
+            s.cancel_job(args.scancel)
+            return
         if args.scancel_all:
-            s.cancelAllJobs()
+            s.cancel_all_jobs()
+            return
         if args.list_jobs:
-            s.showIDwithNb()
-        if args.clearIDFile:
-            s.clearIDFile()
+            s.list_jobs()
+            return
+        if args.clear_id_file:
+            s.clear_id_file()
+            return
         if args.list_job_id != False:
-            s.printJobIDInfo(args.list_job_id)
+            s.print_job_id_info(args.list_job_id)
+            return
 
     elif args.subparser == 'utest':
         """
@@ -935,9 +959,9 @@ def main(args):
             excluded_nodes = ""
 
         # Submitting job
-        s.submitJob(config_default, system, partition, excluded_nodes)
+        s.submit_job(config_default, system, partition, excluded_nodes)
 
-    elif args.subparser == 'perfTest':
+    elif args.subparser == 'perf_test':
         """
         COMMAND FOR RUNNING PERFORMANCE TESTS.
         """
@@ -947,9 +971,8 @@ def main(args):
         config_default["cpu_approx_runtime_min"] = 20
         config_default["N"] = 16
         config_default["NT"] = 32
-        config_default["subDims"] = createSquare(config_default["threads"], config_default["N"], config_default["NT"])
+        config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
         partition = "normal"
-        system = args.system
         config_default["NExpTests"] = args.NExpTests
         config_default["NRandTests"] = args.NRandTests
         config_default["NDerivativeTests"] = args.NDerivativeTests
@@ -962,7 +985,74 @@ def main(args):
             excluded_nodes = ""
 
         # Submitting job
-        s.submitJob(config_default, system, partition, excluded_nodes)
+        s.submit_job(config_default, args.system, partition, excluded_nodes)
+
+    elif args.subparser == "field_density":
+        field_density_parser = subparser.add_parser("field_density", help="Will run a single config through the energyTopcFieldDensity observable and produce observables of the entire field from them")
+
+        if args.config_file != False:
+            configuration = ast.literal_eval(open(args.config_file, "r").read())
+
+            # Ensures we do not have a conflicting job setup
+            if args.NSpatial != configuration["N"]:
+                raise KeyError("Spatial dimension already provided in configuration file %s." % args.config_file)
+            if args.NTemporal != configuration["NT"]:
+                raise KeyError("Temporal dimension already provided in configuration file %s." % args.config_file)
+            if args.beta != configuration["beta"]:
+                raise KeyError("Beta value already provided in configuration file %s." % args.config_file)
+            if args.subDims != configuration["subDims"]:
+                raise KeyError("Sub-dimensions is already provided in configuration file %s." % args.config_file)
+        else:
+            configuration = config_default
+
+            if not args.NSpatial or not args.NTemporal or not args.beta:
+                raise KeyError("please provide dimensions N, NT and beta.")
+
+            configuration["N"] = args.NSpatial
+            configuration["NT"] = args.NTemporal
+            configuration["beta"] = args.beta
+
+            # Non-trivial default values
+            if len(args.subDims):
+                check_sub_dim_viability(args.subDims)
+                config_default["subDims"] = args.subDims
+            if args.square:
+                config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
+
+
+        # Sets the number of configurations to run for to be zero just in case
+        configuration["NCf"] = 0
+
+        # Requiring an new estimate of the run time if we are flowing
+        config_default["load_config_and_run"] = args.load_configuration
+        assert os.path.splitext(config_default["load_config_and_run"])[-1] == ".bin", ".bin file not provided %s" % config_path
+        config_default["config_start_number"] = 0
+
+        configuration["threads"] = args.threads
+        configuration["runName"] = args.run_name
+        if args.no_flow:
+            configuration["NFlows"] = 0
+        else:
+            configuration["NFlows"] = args.NFlows
+
+        configuration["base_folder"] = args.base_folder
+        configuration["flowEpsilon"] = args.flowEpsilon
+        configuration["verboseRun"] = args.verboseRun
+        if args.exclude:
+            excluded_nodes = ','.join(args.exclude)
+        else:
+            excluded_nodes = ""
+
+        configuration["observables"] = ["energyTopcFieldDensity"]
+        configuration["flowObservables"] = ["energyTopcFieldDensity"]
+
+        if args.system != "local":
+            if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
+                sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
+            configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
+            configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
+
+        s.submit_job(configuration, args.system, args.partition, excluded_nodes)
 
     else:
         """

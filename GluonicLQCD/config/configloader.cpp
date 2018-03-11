@@ -48,6 +48,7 @@ namespace ConfigLoader {
         Parameters::setNFlows(j["NFlows"]);
         Parameters::setNUpdates(j["NUpdates"]);
 
+
         // Data storage related variables
         Parameters::setOutputFolder(j["outputFolder"]);
         Parameters::setInputFolder(j["inputFolder"]);
