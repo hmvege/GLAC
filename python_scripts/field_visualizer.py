@@ -1,9 +1,18 @@
 import numpy as np
 import os
+
+# import matplotlib.pyplot as plt
+# from mpl_toolkits.mplot3d import Axes3D
+# import scipy.interpolate as scp
+
 from mayavi import mlab
 
 file_name = ("../output/lattice_field_density_test_run/field_configurations/"
-			 "lattice_field_density_test_run_energyflowLatticeDoublesField_beta6.000000_spatial8_temporal16_threads8_config00000.bin")
+			 "lattice_field_density_test_run_energyflowLatticeDoublesField_beta6.000000_spatial8_temporal16_threads8_config01000.bin")
+
+# file_name = ("../output/lattice_field_density_test_run/field_configurations/"
+# 			 "lattice_field_density_test_run_topcflowLatticeDoublesField_beta6.000000_spatial8_temporal16_threads8_config01000.bin")
+
 
 def global_index(i, j, k, l):
 	return i + N*(j + N*(k + N*l)) # column-major
@@ -39,7 +48,7 @@ for it in xrange(NT):
 	for iz in xrange(N):
 		for iy in xrange(N):
 			for ix in xrange(N):
-				field[ix, iy, iz, it] = file[global_index(ix, iy, iz, it)]
+				field[ix, iy, iz, it] = - file[global_index(ix, iy, iz, it)] / 64.0
 
 print "Populated field."
 
@@ -49,17 +58,59 @@ print field[:,:,:,0].shape
 # figure = mlab.figure('DensityPlot')
 # pts = mlab.points3d(field[:,:,:,0], scale_mode='none', scale_factor=0.07)
 
+
+#### Bad matplotlib method
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+
+# for iz in xrange(N):
+# 	for iy in xrange(N):
+# 		for ix in xrange(N):
+# 			# field[ix, iy, iz, it] = file[global_index(ix, iy, iz, it)]
+# 			# try:
+# 			# print field[ix, iy, iz, 0]
+# 			ax.scatter(ix, iy, iz, c=field[ix, iy, iz, 0], marker="o", s=100, alpha=0.1, cmap="PRGn", edgecolor="0")
+# 			# except:
+# 			# 	print byte
+
+# plt.show()
+
+# print ax.scatter.__doc__
+
+# print scp.interp2d.__doc__
+
+
+
+
 # mlab.axes()
 
 # source = mlab.pipeline.scalar_field(field[:,:,:,0])
-# print source
 # vol = mlab.pipeline.volume(source)
-mlab.figure()
+# mlab.figure()
 # mlab.test_contour3d()
-mlab.contour3d(field[:,:,:,0])
+# mlab.contour3d(field[:,:,:,0])
 # mlab.test_plot3d()# (field[:,:,:,0])
-# mlab.points3d(field[:,:,:,0])
-mlab.show()
+
+animation_figure_fpath = "../figures/act_density"
+
+if not os.path.isdir(animation_figure_fpath):
+	os.mkdir(animation_figure_fpath)
+	print ">mkdir %s" % animation_figure_fpath
+
+# print mlab.savefig.__doc__
+# exit(1)
+
+file_type = "png"
+
+
+for it in xrange(NT):
+	fpath = os.path.join(animation_figure_fpath, "act_dens_t%02d.%s" % (it, file_type))
+	mlab.points3d(field[:,:,:,it])
+	# mlab.savefig(fpath)
+	mlab.show()
+	# mlab.clf()
+	print "file created at %s" % fpath
+
 
 print "Done"
 

@@ -98,6 +98,7 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, int configNum
     std::string filenamePath = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/" + filename;
 
     MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
     for (unsigned int t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);

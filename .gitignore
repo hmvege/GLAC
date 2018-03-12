@@ -45,6 +45,9 @@ job*.sh
 # Jacks data
 jacks_data
 
+# Action density figures
+figures/act_density
+
 # HPC profiler related stuff
 hpctoolkit*
 GluonicLQCD.hpcstruct

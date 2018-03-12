@@ -287,6 +287,9 @@ class JobCreator:
         self.base_folder        = job_config["base_folder"]
         binary_filename         = job_config["bin_fn"]
         self.runName            = job_config["runName"]
+        if len(self.runName) >= 34:
+            sys.exit(("Error: length of the run name exceeds max length allowed by MPI_file_write_at(),"
+                      "33 by %d characters: \n%s") % (len(self.runName) - 33, self.runName))
         self.load_field_configs = job_config["load_field_configs"]
         threads                 = job_config["threads"]
         beta                    = job_config["beta"]
