@@ -7,8 +7,13 @@ import os
 
 from mayavi import mlab
 
-file_name = ("../output/lattice_field_density_test_run/field_configurations/"
-			 "lattice_field_density_test_run_energyflowLatticeDoublesField_beta6.000000_spatial8_temporal16_threads8_config01000.bin")
+N = 4
+NT = 8
+threads = 2
+
+file_name = ("../output/lattice_field_density{0:<d}x{1:<d}/field_configurations/"
+			 "lattice_field_density{0:<d}x{1:<d}_energyflowLatticeDoublesField_"
+			 "beta6.000000_spatial{0:<d}_temporal{1:<d}_threads{2:<d}_config01000.bin").format(N, NT, threads)
 
 # file_name = ("../output/lattice_field_density_test_run/field_configurations/"
 # 			 "lattice_field_density_test_run_topcflowLatticeDoublesField_beta6.000000_spatial8_temporal16_threads8_config01000.bin")
@@ -17,14 +22,12 @@ file_name = ("../output/lattice_field_density_test_run/field_configurations/"
 def global_index(i, j, k, l):
 	return i + N*(j + N*(k + N*l)) # column-major
 
-N = 8
-NT = 16
 lattice_size = N**3 * NT
 field = np.zeros((N, N, N, NT))
 
 file = np.fromfile(file_name)
 
-print "Retrieved file"
+print "Retrieved file %s" % file_name
 # print file.shape
 # print np.sum(file) / lattice_size
 
