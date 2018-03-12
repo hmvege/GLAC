@@ -280,7 +280,7 @@ void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, int iObs)
     ///////////////////////////
     m_topCharge *= m_topcMultiplicationFactor;
     if (m_storeFlowObservable && (iObs % 200) == 0) { // Samples the flow every 200th flow
-        IO::FieldIO::writeDoublesFieldToFile(m_topCharge, iObs, m_topcObservable->getObservableName() + "flow");
+        IO::FieldIO::writeDoublesFieldToFile(m_topCharge, iObs, m_topcObservable->getObservableName());
     }
     if (!m_storeFlowObservable) {
         IO::FieldIO::writeDoublesFieldToFile(m_topCharge, iObs, m_topcObservable->getObservableName());
@@ -291,7 +291,7 @@ void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, int iObs)
     ///////// ENERGY //////////
     ///////////////////////////
     if (m_storeFlowObservable && (iObs % 200) == 0) { // Samples the flow every 200th flow
-        IO::FieldIO::writeDoublesFieldToFile(m_energy, iObs, m_energyObservable->getObservableName() + "flow");
+        IO::FieldIO::writeDoublesFieldToFile(m_energy, iObs, m_energyObservable->getObservableName());
     }
     if (!m_storeFlowObservable) {
         IO::FieldIO::writeDoublesFieldToFile(m_energy, iObs, m_energyObservable->getObservableName());

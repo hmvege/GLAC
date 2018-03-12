@@ -89,13 +89,14 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, int configNum
     char cfg_number[6];
     sprintf(cfg_number, "%05d", configNumber + Parameters::getConfigStartNumber());
 
-    std::string filename = Parameters::getBatchName() + "_" + observable + "LatticeField"
-                                                      + "_b" + std::to_string(Parameters::getBeta())
+    std::string filename = Parameters::getBatchName() + "_b" + std::to_string(Parameters::getBeta())
                                                       + "_N" + std::to_string(Parameters::getNSpatial())
                                                       + "_NT" + std::to_string(Parameters::getNTemporal())
                                                       + "_np" + std::to_string(Parallel::Communicator::getNumProc())
                                                       + "_config" + std::string(cfg_number) + ".bin";
-    std::string filenamePath = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/" + filename;
+
+    std::string filenamePath = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName()
+                                                         + "/scalar_fields/" + observable + "/" + filename;
 
     MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 
@@ -116,7 +117,7 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, int configNum
     MPI_File_close(&file);
 
     if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\n    %s written.", filename.c_str());
+        printf("\n    %s written.", filenamePath.c_str());
     }
 }
 
@@ -231,6 +232,6 @@ inline double IO::FieldIO::reverseDouble(const double inDouble)
    returnDouble[5] = doubleToConvert[2];
    returnDouble[6] = doubleToConvert[1];
    returnDouble[7] = doubleToConvert[0];
-//   delete [] doubleToConvert; MEMORY LEAK HERE?
+//   delete [] doubleToConvert; // MEMORY LEAK HERE?
    return retVal;
 }

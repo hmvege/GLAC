@@ -9,6 +9,7 @@ import shutil
 import re
 
 AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct"]
+AVAILABLE_SCALAR_FIELDS = ["plaq", "topc", "energy"]
 AVAILABLE_EXP_FUNCS = ["morningstar", "luscher", "taylor2", "taylor4"]
 
 def get_arg_max_index(N):
@@ -154,8 +155,12 @@ class JobCreator:
             self._checkFolderPath(os.path.join(self.outputFolder, self.runName))
             if self.NFlows != 0:
                 self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables"))
+                if self.create_fields_folders:
+                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields"))
                 for fobs in AVAILABLE_OBSERVABLES:
                     self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables", fobs))
+                    if self.create_fields_folders and fobs in AVAILABLE_SCALAR_FIELDS:
+                        self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", fobs))
             if not self.load_field_configs:
                 self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "field_configurations"))
                 self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "observables"))
@@ -313,6 +318,7 @@ class JobCreator:
         uTestVerbose            = job_config["uTestVerbose"]
         cpu_approx_runtime_hr   = job_config["cpu_approx_runtime_hr"]
         cpu_approx_runtime_min  = job_config["cpu_approx_runtime_min"]
+        self.create_fields_folders = job_config["scalar_fields_folders"]
 
         # Checks that binary file exists in expected location
         if not os.path.isfile(os.path.join(self.CURRENT_PATH, binary_filename)):
@@ -636,6 +642,7 @@ def main(args):
         "metropolisSeed"            : 0,
         "randomMatrixSeed"          : 0,
         "threads"                   : 64,
+        "scalar_fields_folders"     : False,
         "cpu_approx_runtime_hr"     : 2,
         "cpu_approx_runtime_min"    : 0,
         "cpu_memory"                : 3800,
@@ -772,7 +779,6 @@ def main(args):
     field_density_parser.add_argument('-sd', '--subDims',      default=config_default["subDims"],                  type=int, nargs=4, help='List of sub lattice dimension sizes, length 4')
     field_density_parser.add_argument('-NFlows', '--NFlows',   default=config_default["NFlows"],                   type=int, help='number of flows to perform per configuration')
     field_density_parser.add_argument('-fEps', '--flowEpsilon', default=config_default["flowEpsilon"],             type=float, help='Flow epsilon derivative small change value.')
-    field_density_parser.add_argument('-nf', '--no_flow',      default=False,                                      action='store_true', help='If toggled, will not perform any flows.')
     field_density_parser.add_argument('-sq', '--square',       default=False,                                      action='store_true', help='Enforce square sub lattices(or as close as possible).')
     
     # Data storage related variables
@@ -991,6 +997,7 @@ def main(args):
         field_density_parser = subparser.add_parser("field_density", help="Will run a single config through the energyTopcFieldDensity observable and produce observables of the entire field from them")
 
         if args.config_file != False:
+            # Loads the config file
             configuration = ast.literal_eval(open(args.config_file, "r").read())
 
             # Ensures we do not have a conflicting job setup
@@ -1003,11 +1010,12 @@ def main(args):
             if args.subDims != configuration["subDims"]:
                 raise KeyError("Sub-dimensions is already provided in configuration file %s." % args.config_file)
         else:
+            # Sets default configuration as baseline
             configuration = config_default
 
+            # If no config file is provided, we require N, NT and beta to be provided
             if not args.NSpatial or not args.NTemporal or not args.beta:
                 raise KeyError("please provide dimensions N, NT and beta.")
-
             configuration["N"] = args.NSpatial
             configuration["NT"] = args.NTemporal
             configuration["beta"] = args.beta
@@ -1019,6 +1027,8 @@ def main(args):
             if args.square:
                 config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
 
+        # Creates a folder to place scalar field values in.
+        configuration["scalar_fields_folders"] = True
 
         # Sets the number of configurations to run for to be zero just in case
         configuration["NCf"] = 0
@@ -1028,24 +1038,23 @@ def main(args):
         assert os.path.splitext(config_default["load_config_and_run"])[-1] == ".bin", ".bin file not provided %s" % config_path
         config_default["config_start_number"] = 0
 
+        # Sets some regular variables
         configuration["threads"] = args.threads
         configuration["runName"] = args.run_name
-        if args.no_flow:
-            configuration["NFlows"] = 0
-        else:
-            configuration["NFlows"] = args.NFlows
-
+        configuration["NFlows"] = args.NFlows
         configuration["base_folder"] = args.base_folder
         configuration["flowEpsilon"] = args.flowEpsilon
         configuration["verboseRun"] = args.verboseRun
+        configuration["observables"] = ["energyTopcFieldDensity"]
+        configuration["flowObservables"] = ["energyTopcFieldDensity"]
+
+        # Sets nodes to skip, usefull when clusters contain bad nodes
         if args.exclude:
             excluded_nodes = ','.join(args.exclude)
         else:
             excluded_nodes = ""
 
-        configuration["observables"] = ["energyTopcFieldDensity"]
-        configuration["flowObservables"] = ["energyTopcFieldDensity"]
-
+        # Requires an estimation of the total run time when not running on local computer
         if args.system != "local":
             if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
                 sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")

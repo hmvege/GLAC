@@ -10,10 +10,11 @@ from mayavi import mlab
 N = 4
 NT = 8
 threads = 2
+observable = "energy"
 
-file_name = ("../output/lattice_field_density{0:<d}x{1:<d}/field_configurations/"
-			 "lattice_field_density{0:<d}x{1:<d}_energyflowLatticeDoublesField_"
-			 "beta6.000000_spatial{0:<d}_temporal{1:<d}_threads{2:<d}_config01000.bin").format(N, NT, threads)
+file_name = ("../output/lattice_field_density{0:<d}x{1:<d}/scalar_fields/"
+			 "{3:<s}/lattice_field_density{0:<d}x{1:<d}"
+			 "b6.000000_N{0:<d}_NT{1:<d}_np{2:<d}_config01000.bin").format(N, NT, threads, observable)
 
 # file_name = ("../output/lattice_field_density_test_run/field_configurations/"
 # 			 "lattice_field_density_test_run_topcflowLatticeDoublesField_beta6.000000_spatial8_temporal16_threads8_config01000.bin")
@@ -76,16 +77,7 @@ print field[:,:,:,0].shape
 # 			# except:
 # 			# 	print byte
 
-# plt.show()
 
-# print ax.scatter.__doc__
-
-# print scp.interp2d.__doc__
-
-
-
-
-# mlab.axes()
 
 # source = mlab.pipeline.scalar_field(field[:,:,:,0])
 # vol = mlab.pipeline.volume(source)
@@ -105,7 +97,7 @@ if not os.path.isdir(animation_figure_fpath):
 
 file_type = "png"
 
-
+mlab.figure()
 for it in xrange(NT):
 	fpath = os.path.join(animation_figure_fpath, "act_dens_t%02d.%s" % (it, file_type))
 	mlab.points3d(field[:,:,:,it])
