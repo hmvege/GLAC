@@ -1,20 +1,24 @@
 import numpy as np
 import os
+import itertools
 
 # import matplotlib.pyplot as plt
 # from mpl_toolkits.mplot3d import Axes3D
 # import scipy.interpolate as scp
 
+import traits
+
 from mayavi import mlab
 
-N = 4
-NT = 8
-threads = 2
+N = 8
+NT = 16
+threads = 8
 observable = "energy"
+flowtime = 1000
 
 file_name = ("../output/lattice_field_density{0:<d}x{1:<d}/scalar_fields/"
-			 "{3:<s}/lattice_field_density{0:<d}x{1:<d}"
-			 "b6.000000_N{0:<d}_NT{1:<d}_np{2:<d}_config01000.bin").format(N, NT, threads, observable)
+			 "{3:<s}/lattice_field_density{0:<d}x{1:<d}_"
+			 "b6.000000_N{0:<d}_NT{1:<d}_np{2:<d}_config0{4:<04d}.bin").format(N, NT, threads, observable, flowtime)
 
 # file_name = ("../output/lattice_field_density_test_run/field_configurations/"
 # 			 "lattice_field_density_test_run_topcflowLatticeDoublesField_beta6.000000_spatial8_temporal16_threads8_config01000.bin")
@@ -92,21 +96,73 @@ if not os.path.isdir(animation_figure_fpath):
 	os.mkdir(animation_figure_fpath)
 	print ">mkdir %s" % animation_figure_fpath
 
-# print mlab.savefig.__doc__
-# exit(1)
-
 file_type = "png"
 
-mlab.figure()
-for it in xrange(NT):
-	fpath = os.path.join(animation_figure_fpath, "act_dens_t%02d.%s" % (it, file_type))
-	mlab.points3d(field[:,:,:,it])
-	# mlab.savefig(fpath)
-	mlab.show()
-	# mlab.clf()
-	print "file created at %s" % fpath
+x = np.zeros(np.prod(field[:,:,:,0].shape))
+y = np.zeros(np.prod(field[:,:,:,0].shape))
+z = np.zeros(np.prod(field[:,:,:,0].shape))
+for i, n in enumerate(itertools.product(range(N), repeat=3)):
+	x[i], y[i], z[i] = n
 
+# scalar_array = np.zeros(np.prod(field[:,:,:,0].shape))
+scalar_array = np.zeros((N, N, N))
 
+for ix in xrange(N):
+	for iy in xrange(N):
+		for iz in xrange(N):
+			scalar_array[ix,iy,iz] = field[ix,iy,iz,0]
+
+max_val = np.max(field)
+min_val = np.min(field)
+
+def plot_points3d(F, ftype, figpath):
+	mlab.figure()
+	for it in xrange(NT):
+		fpath = os.path.join(figpath, "act_dens_t%02d.%s" % (it, ftype))
+		mlab.points3d(F[:,:,:,it])
+		# mlab.savefig(fpath)
+		mlab.show()
+		# mlab.clf()
+		print "file created at %s" % fpath
+
+# plot_points3d(field, file_type, animation_figure_fpath)
+
+# x,y,z = np.mgrid[0:N:1,0:N:1,0:N:1]
+
+# mlab.contour3d(scalar_array, vmax=max_val, vmin=min_val, transparent=True, contours=4)
+# # mlab.contour3d(x,y,z, scalar_array, vmax=max_val, vmin=min_val, transparent=True, contours=4)
+
+# Small routine for making program sleep
+import wx
+import time
+def animate_sleep(x):
+	n_steps = int(x / 0.01)
+	for i in range(n_steps):
+		time.sleep(0.01)
+		wx.Yield()
+
+def plot_points3d(F, ftype, figpath):
+	mlab.figure()
+	# source = mlab.pipeline.scalar_field(F[:,:,:,0])
+	# vol = mlab.pipeline.volume(source, vmin=min_val*2, vmax=max_val*0.8)
+
+	for it in xrange(1,NT):
+		mlab.clf()
+		# animate_sleep(1)
+		fpath = os.path.join(figpath, "act_dens_t%02d.%s" % (it, ftype))
+		# vol.mlab_source.set(scalars=F[:,:,:,it])
+
+		source = mlab.pipeline.scalar_field(F[:,:,:,it])
+		vol = mlab.pipeline.volume(source, vmin=min_val*2, vmax=max_val*0.8)
+
+		mlab.savefig(fpath)
+		# mlab.show()
+		print "file created at %s" % fpath
+
+	mlab.close()
+
+plot_points3d(field, file_type, animation_figure_fpath)
+# mlab.show()
 print "Done"
 
 

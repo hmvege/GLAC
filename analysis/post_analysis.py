@@ -443,7 +443,6 @@ class EnergyPostAnalysis(_PostAnalysis):
 	def coupling_fit(self):
 		print "Finding Lambda"
 
-
 		pass
 
 def main(args):
