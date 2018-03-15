@@ -231,12 +231,13 @@ def main():
 	#### Different batches
 	# data_batch_folder = "data2"
 	# data_batch_folder = "data4"
-	data_batch_folder = "data5"
-	# data_batch_folder = "DataGiovanni" 
+	# data_batch_folder = "data5"
+	data_batch_folder = "DataGiovanni" 
 	# data_batch_folder = "smaug_data_beta61"
 
 	#### If we need to multiply
 	if data_batch_folder == "DataGiovanni":
+		observable.remove("topct")
 		correct_energy = False
 		load_file = True
 		save_to_binary = False

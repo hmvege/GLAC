@@ -47,6 +47,8 @@ jacks_data
 
 # Action density figures
 figures/act_density
+scalar_fields_data
+figures/lattice_field_density8x16
 
 # HPC profiler related stuff
 hpctoolkit*

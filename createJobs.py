@@ -267,7 +267,7 @@ class JobCreator:
 
         # Prints configuration file content if verbose or dryrun is true
         if self.dryrun or self.verbose:
-            print "Writing json configuration file at location {}:\n".format(
+            print "Writing json configuration file at location {0:<s}:\n".format(
                 os.path.join(self.base_folder, "input", self.json_file_name))
             print json.dumps(json_dict, indent=4, separators=(", ", ": ")), "\n"
 
@@ -1001,13 +1001,13 @@ def main(args):
             configuration = ast.literal_eval(open(args.config_file, "r").read())
 
             # Ensures we do not have a conflicting job setup
-            if args.NSpatial != configuration["N"]:
+            if args.NSpatial != configuration["N"] and args.NSpatial:
                 raise KeyError("Spatial dimension already provided in configuration file %s." % args.config_file)
-            if args.NTemporal != configuration["NT"]:
+            if args.NTemporal != configuration["NT"] and args.NTemporal:
                 raise KeyError("Temporal dimension already provided in configuration file %s." % args.config_file)
-            if args.beta != configuration["beta"]:
+            if args.beta != configuration["beta"] and args.beta:
                 raise KeyError("Beta value already provided in configuration file %s." % args.config_file)
-            if args.subDims != configuration["subDims"]:
+            if args.subDims != configuration["subDims"] and args.subDims != config_default["subDims"]:
                 raise KeyError("Sub-dimensions is already provided in configuration file %s." % args.config_file)
         else:
             # Sets default configuration as baseline
@@ -1060,6 +1060,10 @@ def main(args):
                 sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
             configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
             configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
+
+        for key in config_default.keys():
+            if not key in configuration:
+                configuration[key] = config_default[key]
 
         s.submit_job(configuration, args.system, args.partition, excluded_nodes)
 
