@@ -189,12 +189,13 @@ def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
 def main():
 	#### Available observables
 	all_observables = ["plaq", "energy", "topc", "topsus", "qtqzero", "topc4", "topct"]
-	basic_observables = ["plaq", "energy", "topc", "topsus"]
+	# basic_observables = ["plaq", "energy", "topc", "topsus"]
 	observables = all_observables
 	# observables = all_observables[6:]
 	# observables = all_observables[6:7] + ["qtqzero", "topc4"]
 	# observables = basic_observables
 	# observables = ["energy", "topsus"]
+	observables = ["topc"]
 
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
 	print 100*"=" + "\n"
@@ -202,7 +203,7 @@ def main():
 	#### Base parameters
 	N_bs = 500
 	dryrun = False
-	verbose = True
+	verbose = False
 	parallel = True
 	numprocs = 8
 	base_parameters = {"N_bs": N_bs, "dryrun": dryrun, "verbose": verbose, 
@@ -212,7 +213,7 @@ def main():
 	load_file = True
 
 	# If we are to create per-flow datasets as opposite to per-cfg datasets
-	create_perflow_data = False
+	create_perflow_data = True
 
 	#### Save binary file
 	save_to_binary = True
@@ -231,8 +232,8 @@ def main():
 	#### Different batches
 	# data_batch_folder = "data2"
 	# data_batch_folder = "data4"
-	# data_batch_folder = "data5"
-	data_batch_folder = "DataGiovanni" 
+	data_batch_folder = "data5"
+	# data_batch_folder = "DataGiovanni" 
 	# data_batch_folder = "smaug_data_beta61"
 
 	#### If we need to multiply
@@ -290,7 +291,6 @@ def main():
 	# smaug_data_beta61_analysis["batch_name"] = beta_folders[0]
 	# smaug_data_beta61_analysis["NCfgs"] = 100
 
-
 	#### Adding relevant batches to args
 	analysis_parameter_list = [databeta60, databeta61, databeta62]
 	# analysis_parameter_list = [databeta61]
@@ -301,8 +301,9 @@ def main():
 		analyse(analysis_parameters)
 
 	#### Submitting post-analysis data
-	post_analysis(data_batch_folder, beta_folders, topsus_fit_targets,
-		line_fit_interval, energy_fit_target)
+	if len(analysis_parameter_list) >= 2:
+		post_analysis(data_batch_folder, beta_folders, topsus_fit_targets,
+			line_fit_interval, energy_fit_target)
 
 if __name__ == '__main__':
 	main()

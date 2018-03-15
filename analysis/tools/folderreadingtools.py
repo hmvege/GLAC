@@ -246,32 +246,32 @@ class _FolderData:
 
 		self.data_y = np.asarray(self.data_y)
 
-	def create_perflow_data(self, dryrun=False, verbose=False):
-		# Creating per flow folder
-		per_flow_folder = os.path.join("..", self.file_tree.data_batch_folder, "perflow")
-		check_folder(per_flow_folder, dryrun, verbose=verbose)
+	# def create_perflow_data(self, dryrun=False, verbose=False):
+	# 	# Creating per flow folder
+	# 	per_flow_folder = os.path.join("..", self.file_tree.data_batch_folder, "perflow")
+	# 	check_folder(per_flow_folder, dryrun, verbose=verbose)
 
-		# Creates observable per flow folder
-		per_flow_observable_folder = os.path.join(per_flow_folder, self.observable)
-		check_folder(per_flow_observable_folder, dryrun, verbose=verbose)
+	# 	# Creates observable per flow folder
+	# 	per_flow_observable_folder = os.path.join(per_flow_folder, self.observable)
+	# 	check_folder(per_flow_observable_folder, dryrun, verbose=verbose)
 
-		# Retrieving number of configs and number of flows
-		NConfigs, NFlows = self.data_y.shape
+	# 	# Retrieving number of configs and number of flows
+	# 	NConfigs, NFlows = self.data_y.shape
 
-		# Re-storing files in a per flow format
-		for iFlow in xrange(NFlows):
-			# Setting up new per-flow file
-			flow_file = os.path.join(per_flow_folder,self.observable,self.file_tree.batch_name + "_flow%05d.dat" % iFlow)
+	# 	# Re-storing files in a per flow format
+	# 	for iFlow in xrange(NFlows):
+	# 		# Setting up new per-flow file
+	# 		flow_file = os.path.join(per_flow_folder, self.observable, self.file_tree.batch_name + "_flow%05d.dat" % iFlow)
 
-			# Saving re-organized data to file
-			if not dryrun:
-				np.savetxt(flow_file,self.data_y[:,iFlow],fmt="%.16f",header="t %f \n%s" % (iFlow*self.meta_data["FlowEpsilon"],self.observable))
+	# 		# Saving re-organized data to file
+	# 		if not dryrun:
+	# 			np.savetxt(flow_file, self.data_y[:,iFlow], fmt="%.16f", header="t %f \n%s" % (iFlow*self.meta_data["FlowEpsilon"], self.observable))
 
-			# Prints message regardless of dryrun and iff
-			if verbose:
-				print "%s created." % flow_file
+	# 		# Prints message regardless of dryrun and iff
+	# 		if verbose:
+	# 			print "%s created." % flow_file
 
-		print "Per flow data for observable %s created." % self.observable
+	# 	print "Per flow data for observable %s created." % self.observable
 
 	def create_settings_file(self, dryrun=False, verbose=False):
 		"""
@@ -404,6 +404,9 @@ class DataReader:
 						create_perflow_data=create_perflow_data)
 				else:
 					print "No data found for %s" % (", ".join(self.fobs))
+
+			if create_perflow_data:
+				self._create_perflow_data()
 
 	def __print_load_info(self):
 		load_job_info = "="*100
@@ -538,6 +541,39 @@ class DataReader:
 		print "%s written to a single file at location %s.npy." % (", ".join(observables_to_write), file_path)
 
 		return file_path + ".npy"
+
+	def _create_perflow_data(self):
+		"""Function for creating per-flow data, as opposed to per-config."""
+
+		for observable in self.data:
+			obs_data = self.data[observable]
+
+			# Creating per flow folder
+			per_flow_folder = os.path.join("..",  obs_data["batch_data_folder"], obs_data["batch_name"], "perflow")
+			check_folder(per_flow_folder, self.dryrun, verbose=self.verbose)
+
+			# Creates observable per flow folder
+			per_flow_observable_folder = os.path.join(per_flow_folder, observable)
+			check_folder(per_flow_observable_folder, self.dryrun, verbose=self.verbose)
+
+			# Retrieving number of configs and number of flows
+			NConfigs = len(obs_data["obs"])
+			NFlows = obs_data["NFlows"]
+
+			# Re-storing files in a per flow format
+			for iFlow in xrange(NFlows):
+				# Setting up new per-flow file
+				flow_file = os.path.join(per_flow_folder, observable, obs_data["batch_name"] + "_flow%05d.dat" % iFlow)
+
+				# Saving re-organized data to file
+				if not self.dryrun:
+					np.savetxt(flow_file, obs_data["obs"][:,iFlow], fmt="%.16f", header="t %f \n%s" % (iFlow*obs_data["FlowEpsilon"], observable))
+
+				# Prints message regardless of dryrun and iff
+				if self.verbose:
+					print "%s created." % flow_file
+
+			print "Per flow data for observable %s created." % observable
 
 def check_folder(folder_name, dryrun, verbose=False):
 	# Checks that figures folder exist, and if not will create it

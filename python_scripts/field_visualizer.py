@@ -172,7 +172,7 @@ class FieldAnimation:
 		data_dict = {}
 
 		# Goes through flow observables in observable folder
-		for flow_obs_file in os.listdir(obs_folder):
+		for flow_obs_file in sorted(os.listdir(obs_folder)):
 			flow_obs_file_path = os.path.join(obs_folder, flow_obs_file)
 			
 			# Gets data array
@@ -266,7 +266,7 @@ class FieldAnimation:
 		elif time_type == "euclidean":
 			# For plotting evolution in euclidean time
 
-			if time_slice not in self.data[observable].keys():
+			if time_slice not in sorted(self.data[observable].keys()):
 				raise IndexError(("Out of bounds for plotting Euclidean time "
 					"evolution at flow time %d with available points as %s" %
 					 (time_slice, ", ".join(self.data[observable][t].keys()))))
@@ -399,8 +399,8 @@ class FieldAnimation:
 		animation_figure_path = self._get_output_animation_folder(output_folder)
 
 		mlab.figure()
-		factor = 1
-		const = 0.5 # Lower limit on spheres
+		factor = 100
+		const = 0.25 # Lower limit on spheres
 		F *= factor
 		for it in xrange(n_time_points):
 			mlab.clf()
@@ -426,22 +426,30 @@ def main():
 	N = 8
 	NT = 16
 	threads = 8
-	observable = "energy"
+	observables = ["energy", "topc"]
 	flowtime = 1000
 	verbose = True
 	dryrun = False
 
-	B60FieldAnimation = FieldAnimation("lattice_field_density8x16", N, NT, verbose=verbose, dryrun=dryrun)
-	# B60FieldAnimation.animate("energy", "euclidean", 0, "iso_surface")
-	# B60FieldAnimation.animate("energy", "euclidean", 400, "iso_surface")
-	# B60FieldAnimation.animate("energy", "euclidean", 0, "volume")
-	# B60FieldAnimation.animate("energy", "euclidean", 400, "volume")
-	B60FieldAnimation.animate("energy", "euclidean", 0, "points3d")
-	B60FieldAnimation.animate("energy", "euclidean", 400, "points3d")
-	
-	# B60FieldAnimation.animate("energy", "flow", 0, "iso_surface")
-	B60FieldAnimation.animate("energy", "flow", 15, "points3d")
-	# B60FieldAnimation.animate("energy", "flow", 15, "volume")
+	# B60FieldAnimation = FieldAnimation("prodRunBeta6_0", 24, 48, verbose=verbose, dryrun=dryrun)
+	# B60FieldAnimation = FieldAnimation("prodRunBeta6_1", 28, 56, verbose=verbose, dryrun=dryrun)
+	B60FieldAnimation = FieldAnimation("prodRunBeta6_2", 32, 64, verbose=verbose, dryrun=dryrun)
+	# B60FieldAnimation = FieldAnimation("lattice_field_density8x16", 8, 16, verbose=verbose, dryrun=dryrun)
+
+	for observable in observables:
+		B60FieldAnimation.animate(observable, "euclidean", 0, "iso_surface")
+		B60FieldAnimation.animate(observable, "euclidean", 50, "iso_surface")
+		B60FieldAnimation.animate(observable, "euclidean", 100, "iso_surface")
+		B60FieldAnimation.animate(observable, "euclidean", 200, "iso_surface")
+		B60FieldAnimation.animate(observable, "euclidean", 400, "iso_surface")
+		B60FieldAnimation.animate(observable, "euclidean", 800, "iso_surface")
+		B60FieldAnimation.animate(observable, "euclidean", 0, "volume")
+		B60FieldAnimation.animate(observable, "euclidean", 200, "volume")
+		# B60FieldAnimation.animate(observable, "euclidean", 0, "points3d")
+		# B60FieldAnimation.animate(observable, "euclidean", 400, "points3d")
+		B60FieldAnimation.animate(observable, "flow", 0, "iso_surface")
+		# B60FieldAnimation.animate(observable, "flow", 0, "points3d")
+		B60FieldAnimation.animate(observable, "flow", 0, "volume")
 
 	exit(1)
 
