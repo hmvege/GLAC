@@ -217,7 +217,7 @@ class Autocorrelation(_AutocorrelationCore):
 		if self.R[-1] == 0 or self.R[0] == 0:
 			print "Error: autocorrelation has not been performed yet!"
 
-		self.tau_int = np.array([0.5 + np.sum(self.R[1:iW]) for iW in xrange(1,self.N/2)])
+		self.tau_int = np.array([0.5 + np.sum(self.R[1:iW]) for iW in xrange(1, self.N/2)])
 
 		self._get_optimal_w()
 
@@ -229,7 +229,7 @@ class Autocorrelation(_AutocorrelationCore):
 		# Plots cutoff if prompted
 		if plot_cutoff:
 			tau = np.zeros(len(self.R)-1)
-			for iW in xrange(1,len(self.R)):
+			for iW in xrange(1, len(self.R)):
 				tau[iW] = (0.5 + np.sum(self.R[1:iW]))
 
 			plt.figure()
@@ -260,12 +260,12 @@ class PropagatedAutocorrelation(_AutocorrelationCore):
 	"""
 	def __init__(self, *args, **kwargs):
 		# Calls parent
-		super(PropagatedAutocorrelation,self).__init__(*args,**kwargs)
+		super(PropagatedAutocorrelation, self).__init__(*args, **kwargs)
 
 		# Gets the autocorrelation errors
 		self._autocorrelation_error();
 
-	def _autocorrelation_error(self,SParam = 1.11):
+	def _autocorrelation_error(self, SParam=1.11):
 		# Eq. 6, 7
 		avg_data = np.mean(self.data)
 
@@ -289,11 +289,11 @@ class PropagatedAutocorrelation(_AutocorrelationCore):
 		self.tau_int = CfW / (2*sigma0)
 
 		if SParam == False:
-			for S in np.linspace(1.0,2.0,20):
+			for S in np.linspace(1.0, 2.0, 20):
 				self.W = self._automatic_windowing_procedure(S)
 
 				plt.figure()
-				plt.plot(range(len(self.tau_int)/2),self.tau_int[:len(self.tau_int)/2])
+				plt.plot(range(len(self.tau_int)/2), self.tau_int[:len(self.tau_int)/2])
 				plt.title(r"$W = %d$, $S_{param} = %.2f$" % (self.W,S))
 				plt.ylim(0,1.25*np.max(self.tau_int[:len(self.tau_int)/4]))
 				plt.xlabel(r"$W$")

@@ -23,26 +23,29 @@ def check_folder(folder_name, dryrun, verbose=False):
 		if not dryrun:
 			os.mkdir(folder_name)
 
-def create_animation(figpath, observable, method, anim_type):
+def create_animation(frame_folder, gif_folder, observable, time_point, method, anim_type):
 	"""
 	Method for created gifs and movies from generated 3D figures.
 
 	Args:
-		figpath: path to figures.
+		frame_folder: path to figures to be stiched together.
+		gif_folder: folder to place gif in.
 		observable: observable we are creating a gif or a movie for.
 		method: type of 3D plot.
 	"""
 	_ANIM_TYPES = ["gif", "mp4"]
 	assert anim_type in _ANIM_TYPES, "%s is not a recognized animation type." % anim_type
 
-	animation_figure_path = os.path.join(figpath, '%s_%s.%s' % (observable, method, anim_type))
+	animation_figure_path = os.path.join(gif_folder, '%s_%s_t%d.%s' % (observable, method, time_point, anim_type))
 	if anim_type == "gif":
-		input_paths = os.path.join(figpath, '%s_t*.png' % method)
+		input_paths = os.path.join(frame_folder, '%s_t*.png' % method)
 		cmd = ['convert', '-delay', '1', '-loop', '0', input_paths, animation_figure_path]
 	else:
-		input_paths = os.path.join(figpath, '%s_t%%02d.png' % method)
+		input_paths = os.path.join(frame_folder, '%s_t%%02d.png' % method)
 		cmd = ['ffmpeg', '-framerate', '4', '-i', input_paths, '-y', '-c:v', 'libx264', '-r', '30', animation_figure_path]
-	subprocess.Popen(cmd, stdout=subprocess.PIPE)
+	proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+	read_out = proc.stdout.read()
+	# print read_out()
 	print "%s animation %s created." % (anim_type, animation_figure_path)
 
 def global_index(i, j, k, l, N):
@@ -128,6 +131,10 @@ class FieldAnimation:
 
 		self._retrieve_field_data()
 
+		# Camera parameters
+		self.cam_retrieved = False
+		self.view = None
+
 		# Creates folder to place animations in
 		temp_output_folder = os.path.join("..", "figures", self.batch_name)
 		check_folder(temp_output_folder, self.dryrun, verbose=self.verbose)
@@ -136,7 +143,10 @@ class FieldAnimation:
 		for key in self.data:
 			obs_folder_paths = os.path.join(self.output_folder, key)
 			check_folder(obs_folder_paths, self.dryrun, verbose=self.verbose)
+			frame_folder = os.path.join(obs_folder_paths, "frames")
+			check_folder(frame_folder, self.dryrun, verbose=self.verbose)
 			self.data[key]["animation_figure_path"] = obs_folder_paths
+			self.data[key]["frame_folder"] = frame_folder
 
 	def _retrieve_field_data(self):
 		"""Function for retrieving fields."""
@@ -148,6 +158,10 @@ class FieldAnimation:
 		# Goes through the observables in the scalar fields folder
 		for obs in os.listdir(scalar_field_folder):
 			obs_folder = os.path.join(scalar_field_folder, obs)
+
+			# Skips non-fodlers such as .DS_Store
+			if not os.path.isdir(obs_folder):
+				continue
 
 			# Ensures we have flow time files in the observable folder
 			if len(os.listdir(obs_folder)) == 0:
@@ -256,16 +270,17 @@ class FieldAnimation:
 
 			# Sets up data to be plotted			
 			for t in flow_times:
-				field_data.append(self.data[observable][t][:,:,:,time_slice])
+				field_data.append(cp.deepcopy(self.data[observable][t][:,:,:,time_slice]))
 			field_data = np.asarray(field_data)
 			field_data = np.rollaxis(field_data, 0, 4)
 
 			n_time_points = len(flow_times)
 
+			# Creates the folder to store the different flowed lattice figures in
 			time_slice_folder_path = os.path.join(time_type_folder_path, "t_eucl" + str(time_slice))
+
 		elif time_type == "euclidean":
 			# For plotting evolution in euclidean time
-
 			if time_slice not in sorted(self.data[observable].keys()):
 				raise IndexError(("Out of bounds for plotting Euclidean time "
 					"evolution at flow time %d with available points as %s" %
@@ -274,7 +289,9 @@ class FieldAnimation:
 			field_data = cp.deepcopy(self.data[observable][time_slice])
 			n_time_points = self.data[observable][time_slice].shape[-1]
 
+			# Creates folder for different times to store the figures in
 			time_slice_folder_path = os.path.join(time_type_folder_path, "t_flow" + str(time_slice))
+
 		else:
 			raise KeyError("Cannot plot in %s." % time_type)
 
@@ -287,19 +304,18 @@ class FieldAnimation:
 		min_val = np.min(field_data)
 
 		if plot_type == "iso_surface":
-			self._plot_iso_surface(field_data, n_time_points, observable, 
+			self._plot_iso_surface(field_data, n_time_points, observable, time_slice,
 				vmin=min_val, vmax=max_val, output_folder=time_slice_folder_path, **kwargs)
 		elif plot_type == "volume":
-			self._plot_scalar_field(field_data, n_time_points, observable, 
+			self._plot_scalar_field(field_data, n_time_points, observable, time_slice,
 				vmin=min_val, vmax=max_val, output_folder=time_slice_folder_path, **kwargs)
 		elif plot_type == "points3d":
-			self._plot_points3d(field_data, n_time_points, observable, 
+			self._plot_points3d(field_data, n_time_points, observable, time_slice,
 				vmin=min_val, vmax=max_val, output_folder=time_slice_folder_path, **kwargs)
 		else:
 			raise KeyError("Plot type %s not recognized" % plot_type)
 
-
-	def _plot_iso_surface(self, F, n_time_points, observable, file_type="png", vmin=None, vmax=None, output_folder=None, cgif=True, cmovie=True):
+	def _plot_iso_surface(self, F, n_time_points, observable, time_point, file_type="png", vmin=None, vmax=None, output_folder=None, cgif=True, cmovie=True):
 		"""
 		Function for plotting iso surfaces.
 
@@ -307,6 +323,7 @@ class FieldAnimation:
 			F: field array of size (N,N,N,NT) to plot.
 			n_time_points: integer of time points NT to animate over.
 			observable: str of observable we are plotting.
+			time_point: int time point we are looking at.
 			file_type: string of file extension type. Default is 'png'.
 			vmin: float lower cutoff value of the field. Default is None.
 			vmax: float upper cutoff value of the field. Default is None.
@@ -317,23 +334,36 @@ class FieldAnimation:
 
 		animation_figure_path = self._get_output_animation_folder(output_folder)
 
+		if observable == "energy":
+			contour_list = np.logspace(np.log(vmin), np.log(vmax), 10).tolist()
+		else:
+			contour_list = np.linspace(vmin, vmax, 20).tolist()
+
 		mlab.figure()
 		for it in xrange(n_time_points):
 			mlab.clf()
 			fpath = os.path.join(animation_figure_path, "iso_surface_t%02d.%s" % (it, file_type))
 			# mlab.points3d(F[:,:,:,it], vmin=vmin, vmax=vmax, scale_factor=100, scale_mode="scalar")
 			source = mlab.pipeline.scalar_field(F[:,:,:,it])
-			mlab.pipeline.iso_surface(source, vmin=vmin, vmax=vmax, contours=4)
+			# mlab.pipeline.iso_surface(source, vmin=vmin, vmax=vmax, contours=10)
+			mlab.pipeline.iso_surface(source, vmin=vmin, vmax=vmax, contours=contour_list, reset_zoom=False)
+
+			if not self.cam_retrieved:
+				self.view = mlab.view()
+				self.cam_retrieved = True
+			else:
+				mlab.view(*self.view)
+
 			mlab.savefig(fpath)
 			print "file created at %s" % fpath
 		mlab.close()
 
 		if cgif:
-			create_animation(animation_figure_path, observable, "iso_surface", "gif")
+			create_animation(animation_figure_path, observable, time_point, "iso_surface", "gif")
 		if cmovie:
-			create_animation(animation_figure_path, observable, "iso_surface", "mp4")
+			create_animation(animation_figure_path, observable, time_point, "iso_surface", "mp4")
 
-	def _plot_scalar_field(self, F, n_time_points, observable, file_type="png", vmin=None, vmax=None, output_folder=None, cgif=True, cmovie=True, live_animation=False):
+	def _plot_scalar_field(self, F, n_time_points, observable, time_point, file_type="png", vmin=None, vmax=None, output_folder=None, cgif=True, cmovie=True, live_animation=False):
 		"""
 		Function for plotting a scalar field.
 
@@ -341,6 +371,7 @@ class FieldAnimation:
 			F: field array of size (N,N,N,NT) to plot.
 			n_time_points: integer of time points NT to animate over.
 			observable: str of observable we are plotting.
+			time_point: int time point we are looking at.
 			file_type: string of file extension type. Default is 'png'.
 			vmin: float lower cutoff value of the field. Default is None.
 			vmax: float upper cutoff value of the field. Default is None.
@@ -376,11 +407,11 @@ class FieldAnimation:
 		mlab.close()
 
 		if cgif:
-			create_animation(animation_figure_path, observable, "volume", "gif")
+			create_animation(animation_figure_path, observable, time_point, "volume", "gif")
 		if cmovie:
-			create_animation(animation_figure_path, observable, "volume", "mp4")
+			create_animation(animation_figure_path, observable, time_point, "volume", "mp4")
 
-	def _plot_points3d(self, F, n_time_points, observable, file_type="png", vmin=None, vmax=None, output_folder=None, cgif=True, cmovie=True):
+	def _plot_points3d(self, F, n_time_points, observable, time_point, file_type="png", vmin=None, vmax=None, output_folder=None, cgif=True, cmovie=True):
 		"""
 		Function for plotting points3d of the field.
 
@@ -388,6 +419,7 @@ class FieldAnimation:
 			F: field array of size (N,N,N,NT) to plot.
 			n_time_points: integer of time points NT to animate over.
 			observable: str of observable we are plotting.
+			time_point: int time point we are looking at.
 			file_type: string of file extension type. Default is 'png'.
 			vmin: float lower cutoff value of the field. Default is None.
 			vmax: float upper cutoff value of the field. Default is None.
@@ -418,79 +450,73 @@ class FieldAnimation:
 		mlab.close()
 
 		if cgif:
-			create_animation(animation_figure_path, observable, "points3d", "gif")
+			create_animation(animation_figure_path, observable, time_point, "points3d", "gif")
 		if cmovie:
-			create_animation(animation_figure_path, observable, "points3d", "mp4")
+			create_animation(animation_figure_path, observable, time_point, "points3d", "mp4")
+
+"""
+TODO:
+mlab.scalarbar()
+mlab.title(tit)
+mlab.xlabel(lab)
+mlab.ylabel(lab)
+mlab.zlabel(lab)
+mlab.figure(figure=None, bgcolor=None, fgcolor=None, engine=None, size=(400, 350))
+
+
+antialiasing:
+f = mlab.gfc()
+f.scene.render_window.aa_frames = 8
+mlab.draw() # trigger redraw
+
+"""
+
+
+"""
+File to be edited, file name: a.bov:
+
+TIME: 00
+DATA_FILE: xaa
+DATA_SIZE: 32 32 32
+DATA_FORMAT: DOUBLE
+VARIABLE: field
+DATA_ENDIAN: LITTLE
+CENTERING: zonal
+BRICK_ORIGIN: 0. 0. 0.
+BRICK_SIZE: 32. 32. 32.
+"""
+
 
 def main():
-	N = 8
-	NT = 16
-	threads = 8
-	observables = ["energy", "topc"]
-	flowtime = 1000
+	N_list = [24, 28, 32]
+	NT_list = [48, 56, 64]
+	observable_list = ["energy", "topc"]
+	data_set_list = ["prodRunBeta6_0", "prodRunBeta6_1", "prodRunBeta6_2"]
+
 	verbose = True
 	dryrun = False
 
-	# B60FieldAnimation = FieldAnimation("prodRunBeta6_0", 24, 48, verbose=verbose, dryrun=dryrun)
-	# B60FieldAnimation = FieldAnimation("prodRunBeta6_1", 28, 56, verbose=verbose, dryrun=dryrun)
-	B60FieldAnimation = FieldAnimation("prodRunBeta6_2", 32, 64, verbose=verbose, dryrun=dryrun)
-	# B60FieldAnimation = FieldAnimation("lattice_field_density8x16", 8, 16, verbose=verbose, dryrun=dryrun)
+	for N, NT, dataset in zip(N_list, NT_list, data_set_list):
+		FieldAnimationObj = FieldAnimation(dataset, N, NT, verbose=verbose, dryrun=dryrun)
+		for observable in observable_list:
+			FieldAnimationObj.animate(observable, "euclidean", 0, "iso_surface")
+			FieldAnimationObj.animate(observable, "euclidean", 50, "iso_surface")
+			FieldAnimationObj.animate(observable, "euclidean", 100, "iso_surface")
+			FieldAnimationObj.animate(observable, "euclidean", 200, "iso_surface")
+			FieldAnimationObj.animate(observable, "euclidean", 400, "iso_surface")
+			FieldAnimationObj.animate(observable, "euclidean", 800, "iso_surface")
+			FieldAnimationObj.animate(observable, "euclidean", 999, "iso_surface")
+			# FieldAnimation.animate(observable, "euclidean", 0, "volume")
+			# FieldAnimation.animate(observable, "euclidean", 200, "volume")
+			# FieldAnimation.animate(observable, "euclidean", 0, "points3d")
+			# FieldAnimation.animate(observable, "euclidean", 400, "points3d")
+			FieldAnimationObj.animate(observable, "flow", 0, "iso_surface")
+			FieldAnimationObj.animate(observable, "flow", 7, "iso_surface")
+			# FieldAnimation.animate(observable, "flow", 0, "points3d")
+			FieldAnimationObj.animate(observable, "flow", 0, "volume")
+			FieldAnimationObj.animate(observable, "flow", 7, "volume")
 
-	for observable in observables:
-		B60FieldAnimation.animate(observable, "euclidean", 0, "iso_surface")
-		B60FieldAnimation.animate(observable, "euclidean", 50, "iso_surface")
-		B60FieldAnimation.animate(observable, "euclidean", 100, "iso_surface")
-		B60FieldAnimation.animate(observable, "euclidean", 200, "iso_surface")
-		B60FieldAnimation.animate(observable, "euclidean", 400, "iso_surface")
-		B60FieldAnimation.animate(observable, "euclidean", 800, "iso_surface")
-		B60FieldAnimation.animate(observable, "euclidean", 0, "volume")
-		B60FieldAnimation.animate(observable, "euclidean", 200, "volume")
-		# B60FieldAnimation.animate(observable, "euclidean", 0, "points3d")
-		# B60FieldAnimation.animate(observable, "euclidean", 400, "points3d")
-		B60FieldAnimation.animate(observable, "flow", 0, "iso_surface")
-		# B60FieldAnimation.animate(observable, "flow", 0, "points3d")
-		B60FieldAnimation.animate(observable, "flow", 0, "volume")
-
-	exit(1)
-
-	file_name = ("../output/lattice_field_density{0:<d}x{1:<d}/scalar_fields/"
-				 "{3:<s}/lattice_field_density{0:<d}x{1:<d}_"
-				 "b6.000000_N{0:<d}_NT{1:<d}_np{2:<d}_config0{4:<04d}.bin").format(N, NT, threads, observable, flowtime)
-
-	lattice_size = N**3 * NT
-	field = np.zeros((N, N, N, NT))
-
-	file = np.fromfile(file_name)
-
-	print "Retrieved file %s" % file_name
-
-	for it in xrange(NT):
-		for iz in xrange(N):
-			for iy in xrange(N):
-				for ix in xrange(N):
-					field[ix, iy, iz, it] = - file[global_index(ix, iy, iz, it, N)] / 64.0
-
-	print "Populated field."
-
-	animation_figure_fpath = "../figures/act_density"
-
-	if not os.path.isdir(animation_figure_fpath):
-		os.mkdir(animation_figure_fpath)
-		print ">mkdir %s" % animation_figure_fpath
-
-	file_type = "png"
-
-	max_val = np.max(field)
-	min_val = np.min(field)
-
-	# plot_points3d(field, file_type, animation_figure_fpath, observable, NT, vmin=min_val*1.5, vmax=max_val*0.9)
-
-	# plot_scalar_field(field, file_type, animation_figure_fpath, observable, anim=False, vmin=min_val*1.5, vmax=max_val*0.9)
-
-	plot_iso_surface(field, file_type, animation_figure_fpath, observable, NT, vmin=min_val, vmax=max_val)
-
-	print "Done"
-
+	print "\n\nDone"
 
 if __name__ == '__main__':
 	main()

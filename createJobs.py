@@ -409,7 +409,7 @@ class JobCreator:
 
             content = "#! /bin/bash -login"
             content += "\n#PBS -A {0:<s}".format(account_name)
-            content += "\n#PBS -l walltime={0:<s},nodes={1:<1d}:ppn={2:<d},mem={3:<4d}GB".format(estimated_time, nodes, threads, cpu_memory)
+            content += "\n#PBS -l walltime={0:<s},nodes={1:<1d}:ppn={2:<d},mem={3:<4d}MB".format(estimated_time, nodes, threads, cpu_memory*nodes)
             content += "\n#PBS -N {0:<s}".format(job_name)
             content += "\n#PBS -M h.m.m.vege@fys.uio.no"
             content += "\n#PBS -m bea"
@@ -731,6 +731,7 @@ def main(args):
     load_parser.add_argument('-lcfg', '--load_configurations',  default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
     load_parser.add_argument('-lcfgr', '--load_config_and_run', default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
     load_parser.add_argument('-NCfgs', '--NConfigs',            default=False,                                      type=int, help='N configurations to generate based on loaded configuration.')
+    load_parser.add_argument('-NFlows', '--NFlows',             default=False,                                      type=int, help='number of flows to perform per configuration')
     load_parser.add_argument('-chroma', '--chroma_config',      default=config_default["chroma_config"],            action='store_true', help='If flagged, loads the configuration as a chroma configuration.')
     load_parser.add_argument('-lhr', '--load_config_hr_time_estimate', default=None,                                type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
     load_parser.add_argument('-lmin', '--load_config_min_time_estimate', default=None,                              type=int, help='Approximate cpu time in minutes that will be used.')
@@ -841,6 +842,8 @@ def main(args):
             configuration["runName"] = args.run_name
         if args.NConfigs != False:
             configuration["NCf"] = args.NConfigs
+        if args.NFlows != False:
+            configuration["NFlows"] = args.NFlows
         if args.load_config_min_time_estimate != None:
             configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
         if args.load_config_hr_time_estimate != None:

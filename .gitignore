@@ -52,6 +52,7 @@ figures/prodRunBeta6_1
 figures/prodRunBeta6_2
 scalar_fields_data
 figures/lattice_field_density8x16
+figures/lattice_field_density4x8
 
 # HPC profiler related stuff
 hpctoolkit*
