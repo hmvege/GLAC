@@ -240,7 +240,7 @@ class FieldAnimation:
 			return self.data[observable]["animation_figure_path"]
 
 
-	def animate(self, observable, time_type, time_slice, plot_type, **kwargs):
+	def animate(self, observable, time_type, time_slice, plot_type, vmin=None, vmax=None):
 		"""
 		Method for animating in flow time or euclidean time.
 
