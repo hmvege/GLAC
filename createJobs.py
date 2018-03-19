@@ -264,6 +264,8 @@ class JobCreator:
         json_dict["flowEpsilon"] = config_dict["flowEpsilon"]
         json_dict["metropolisSeed"] = config_dict["metropolisSeed"]
         json_dict["randomMatrixSeed"] = config_dict["randomMatrixSeed"]
+        json_dict["samplingFrequency"] = config_dict["samplingFrequency"]
+
 
         # Prints configuration file content if verbose or dryrun is true
         if self.dryrun or self.verbose:
@@ -643,6 +645,7 @@ def main(args):
         "randomMatrixSeed"          : 0,
         "threads"                   : 64,
         "scalar_fields_folders"     : False,
+        "samplingFrequency"         : 25,
         "cpu_approx_runtime_hr"     : 2,
         "cpu_approx_runtime_min"    : 0,
         "cpu_memory"                : 3800,
@@ -784,6 +787,7 @@ def main(args):
     
     # Data storage related variables
     field_density_parser.add_argument('-bf', '--base_folder',  default=config_default["base_folder"],              type=str, help='Sets the base folder. Default is os.path.getcwd().')
+    field_density_parser.add_argument('-sf', '--samplingFrequency', default=config_default["samplingFrequency"],   type=int, help='Sets the sampling frequency of the flow. Lattice to be written to file every given number.')
     field_density_parser.add_argument('-vr', '--verboseRun',   default=config_default["verboseRun"],               action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
 
     args = parser.parse_args()
@@ -1050,6 +1054,7 @@ def main(args):
         configuration["verboseRun"] = args.verboseRun
         configuration["observables"] = ["energyTopcFieldDensity"]
         configuration["flowObservables"] = ["energyTopcFieldDensity"]
+        configuration["samplingFrequency"] = args.samplingFrequency
 
         # Sets nodes to skip, usefull when clusters contain bad nodes
         if args.exclude:

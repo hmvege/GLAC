@@ -82,6 +82,10 @@ void SysPrint::printSystemInfo()
         if (Parameters::m_NFlows != 0) {
             cout << "Flow observables:                      " << getListString(Parameters::m_flowObservablesList) << endl;
             cout << "Flow epsilon:                          " << Parameters::m_flowEpsilon << endl;
+            if (Parameters::getFlowObservablesList()[0] == "energyTopcFieldDensity")
+            {
+                cout << "Flow sampling frequency:               " << Parameters::getSamplingFrequency() << endl;
+            }
         }
         if (!Parameters::getLoadFieldConfigurations()) {
             cout << "SU3Eps:                                " << Parameters::m_SU3Eps << endl;

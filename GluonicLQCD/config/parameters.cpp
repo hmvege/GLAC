@@ -82,6 +82,9 @@ std::vector<std::string> Parameters::m_fieldConfigurationFileNames = {};
 bool Parameters::m_loadConfigAndRun = false;
 int Parameters::m_configStartNumber = 0;
 
+// Parameter for storing the sampling frequency of the field
+int Parameters::m_samplingFrequency = 25;
+
 Parameters::Parameters()
 {
 

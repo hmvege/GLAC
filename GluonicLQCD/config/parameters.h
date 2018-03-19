@@ -90,6 +90,9 @@ private:
     static bool m_loadConfigAndRun;
     static int m_configStartNumber;
 
+    // Integer for storing the sampling frequency
+    static int m_samplingFrequency;
+
     static double calculateLatticeSpacing(double beta);
 public:
     Parameters();
@@ -165,6 +168,9 @@ public:
     static void setLoadConfigAndRun(bool loadConfigAndRun) { m_loadConfigAndRun = loadConfigAndRun; }
     static void setConfigStartNumber(int configStartNumber) { m_configStartNumber = configStartNumber; }
 
+    // Setter for the sampling frequency
+    static void setSamplingFrequency(int samplingFrequency) { m_samplingFrequency = samplingFrequency; }
+
     /////////////////
     //// Getters ////
     /////////////////
@@ -235,6 +241,9 @@ public:
     // Getters for storing if we are to load and run from a given configuration
     static bool getLoadConfigAndRun() { return m_loadConfigAndRun; }
     static int getConfigStartNumber() { return m_configStartNumber; }
+
+    // Getter for field density sampling frequency
+    static int getSamplingFrequency() { return m_samplingFrequency; }
 };
 
 #endif // PARAMETERS_H

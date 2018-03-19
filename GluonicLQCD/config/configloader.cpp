@@ -133,5 +133,8 @@ namespace ConfigLoader {
         } else {
             Parameters::setRandomMatrixSeed(std::time(nullptr) + double(Parallel::Communicator::getProcessRank()));
         }
+
+        // Sampling frequency setter
+        Parameters::setSamplingFrequency(j["samplingFrequency"]);
     }
 }

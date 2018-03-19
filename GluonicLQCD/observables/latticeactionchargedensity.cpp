@@ -25,6 +25,9 @@ LatticeActionChargeDensity::LatticeActionChargeDensity(bool flow) : Correlator()
     // Allocates memory to storage variables
     m_topCharge.allocate(m_N);
     m_energy.allocate(m_N);
+
+    // Initialize the sampling frequency
+    m_samplingFrequency = Parameters::getSamplingFrequency();
 }
 
 LatticeActionChargeDensity::~LatticeActionChargeDensity()
@@ -279,7 +282,7 @@ void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, int iObs)
     //// TOPOLOGICAL CHARGE ///
     ///////////////////////////
     m_topCharge *= m_topcMultiplicationFactor;
-    if (m_storeFlowObservable && (iObs % 25) == 0) { // Samples the flow every 200th flow
+    if (m_storeFlowObservable && (iObs % m_samplingFrequency) == 0) {
         IO::FieldIO::writeDoublesFieldToFile(m_topCharge, iObs, m_topcObservable->getObservableName());
     }
     if (!m_storeFlowObservable) {
@@ -290,7 +293,7 @@ void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, int iObs)
     ///////////////////////////
     ///////// ENERGY //////////
     ///////////////////////////
-    if (m_storeFlowObservable && (iObs % 25) == 0) { // Samples the flow every 200th flow
+    if (m_storeFlowObservable && (iObs % m_samplingFrequency) == 0) {
         IO::FieldIO::writeDoublesFieldToFile(m_energy, iObs, m_energyObservable->getObservableName());
     }
     if (!m_storeFlowObservable) {
