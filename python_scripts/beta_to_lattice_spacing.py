@@ -10,10 +10,21 @@ def getLatticeSpacing(beta):
 def main(args):
 	if len(args) != 0:
 		beta = float(args[0])
-		print "beta = %.2f\na    = %.8f fm" % (beta,getLatticeSpacing(beta))
+		print "beta        = %.2f" % beta
+		print "a           = %.8f fm" % getLatticeSpacing(beta)
+		if len(args) == 2:
+			N = float(args[1])
+			print "N           = %d" % N
+			print "Side length = %.2f fm" % (N*getLatticeSpacing(beta))
+			print "Volume      = %.2f fm^3" % (N*getLatticeSpacing(beta))**3
 	else:
 		beta = 6.0
-		print "beta = %.2f\na    = %.8f fm" % (beta,getLatticeSpacing(beta))
+		N = 24
+		print "beta        = %.2f" % beta
+		print "a           = %.8f fm" % getLatticeSpacing(beta)
+		print "N           = %d" % N
+		print "Side length = %.2f fm" % (N*getLatticeSpacing(beta))
+		print "Volume      = %.2f fm^3" % (N*getLatticeSpacing(beta))**3
 
 	X = np.linspace(5.7,6.5,1000)
 	Y = getLatticeSpacing(X)

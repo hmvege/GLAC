@@ -15,7 +15,9 @@ import types
 __all__ = ["FlowAnalyser", "AnalysePlaquette", "AnalyseEnergy",
 	"AnalyseTopologicalCharge", "AnalyseTopologicalSusceptibility", 
 	"AnalyseTopologicalChargeInEuclideanTime", "AnalyseQQuartic",
-	"AnalyseQtQZero"]
+	"AnalyseQtQZero", "AnalyseTopChargeSplitEuclideanTime", 
+	"AnalysisTopSusSplitEuclideanTime", "AnalysisTopChargeSplitMCTime", 
+	"AnalysisTopSusSplitMCTime"]
 
 class FlowAnalyser(object):
 	observable_name = "Missing_Observable_Name"
@@ -60,8 +62,8 @@ class FlowAnalyser(object):
 
 		Returns:
 			Object for analyzing flow.
-
 		"""
+
 		# Retrieves data from data
 		self.batch_name = data["batch_name"]
 		self.batch_data_folder = data["batch_data_folder"]
@@ -422,7 +424,7 @@ class FlowAnalyser(object):
 			raise ValueError("Jackknifing has not been performed yet.")
 
 		# Sets up the x axis array to be plotted
-		if isinstance(x,types.NoneType):			
+		if isinstance(x,types.NoneType):
 			# Default x axis points is the flow time
 			x = self.a * np.sqrt(8*self.x)
 
@@ -458,7 +460,7 @@ class FlowAnalyser(object):
 			raise ValueError("Bootstrap has not been performed yet.")
 
 		# Retrieves relevant data and sets up the arrays to be plotted
-		if type(x) != np.ndarray:
+		if isinstance(x,types.NoneType):
 			# Default x axis points is the flow time
 			x = self.a * np.sqrt(8*self.x)
 
@@ -884,7 +886,8 @@ class AnalyseTopologicalCharge(FlowAnalyser):
 	observable_name = "Topological charge"
 	observable_name_compact = "topc"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$" # Implied multiplication by a
-	y_label = r"$Q = - \sum_x \frac{1}{64 \cdot 32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$[GeV]"
+	# y_label = r"$Q = - \sum_x \frac{1}{64 \cdot 32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$[GeV]"
+	y_label = r"$Q$"
 
 class AnalyseQQuartic(_AnalyseTopSusBase):
 	"""
@@ -921,6 +924,7 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 	def __init__(self, *args, **kwargs):
 		super(AnalyseQtQZero, self).__init__(*args, **kwargs)
 		self.observable_output_folder_path_old = self.observable_output_folder_path
+		self.post_analysis_folder_old = self.post_analysis_folder
 		self.y_original = copy.deepcopy(self.y)
 
 	def setQ0(self, q_flow_time_zero_percent, unit_test=False, y_label=None):
@@ -971,13 +975,25 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 					y_temp2[iCfg,iFlow] = y_temp1[iCfg,iFlow] * y_q0[iCfg]
 
 			# Matrix-matrix comparison
-			for i,j in zip(self.y,y_temp2):
-				for ii,jj in zip(i,j):
-					if np.abs(ii-jj) > 1e-16:
+			for i, j in zip(self.y, y_temp2):
+				for ii, jj in zip(i, j):
+					if np.abs(ii - jj) > 1e-16:
 						print "BAD: multiplications do not match."
 						exit(1)
 			else:
 				print "GOOD: multiplications match."
+
+	def save_post_analysis_data(self):
+		self.post_analysis_folder = self.post_analysis_folder_old
+
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, self.observable_name_compact)
+		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
+
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder, "te%03d" % self.flow_time_zero_index)
+		check_folder(self.post_analysis_folder, self.dryrun, self.verbose)
+
+		self.post_analysis_folder
+		super(AnalyseQtQZero, self).save_post_analysis_data()
 
 	def __str__(self):
 		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
@@ -1006,6 +1022,8 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 		super(AnalyseTopologicalChargeInEuclideanTime, self).__init__(*args, **kwargs)
 		self.y_original = copy.deepcopy(self.y)
 		self.observable_output_folder_path_old = self.observable_output_folder_path
+		self.post_analysis_folder_old = self.post_analysis_folder
+		self.observable_name_compact_old = self.observable_name_compact
 		self.NT = self.y_original.shape[-1]
 
 	def setEQ0(self, t_euclidean_index):
@@ -1021,7 +1039,7 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 		self.t_euclidean_index = t_euclidean_index
 
 		# Sets file name
-		self.observable_name = r"$\chi(\langle Q_t Q_{t_{euclidean}} \rangle)^{1/4}$ at $i_{euclidean}=%d$" % (self.t_euclidean_index + 1)
+		self.observable_name = r"$\chi(\langle Q_t Q_{t_{euclidean}} \rangle)^{1/4}$ at $i_{euclidean}=%d$" % self.t_euclidean_index
 
 		# Manual method for multiplying the matrices
 		y_qe0 = copy.deepcopy(self.y_original[:,:,self.t_euclidean_index])
@@ -1038,8 +1056,20 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 		self.y = np.abs(self.y)
 
 		# Creates a new folder to store t0 results in
-		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "te%d" % (self.t_euclidean_index + 1))
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "te%03d" % self.t_euclidean_index)
 		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
+
+		# Creates post analysis data folder
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, self.observable_name_compact)
+		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
+
+	def save_post_analysis_data(self):
+		"""
+		Function for saving data for post analysis.
+		"""
+		self.observable_name_compact = self.observable_name_compact_old+ "te%03d" % self.t_euclidean_index
+		super(AnalyseTopologicalChargeInEuclideanTime, self).save_post_analysis_data()
+		self.observable_name_compact = self.observable_name_compact_old
 
 	def __str__(self):
 		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
@@ -1049,9 +1079,214 @@ class AnalyseTopologicalChargeInEuclideanTime(_AnalyseTopSusBase):
 		return_string += info_string("Batch name", self.batch_name)
 		return_string += info_string("Observable", self.observable_name_compact)
 		return_string += info_string("Beta", "%.2f" % self.beta)
-		return_string += info_string("Euclidean time", "%d" % (self.t_euclidean_index + 1))
+		return_string += info_string("Euclidean time", "%d" % self.t_euclidean_index)
 		return_string += "\n" + "="*100
 		return return_string
+
+class _EuclideanSplitAnalysis(FlowAnalyser):
+	"""
+	Base class for splitting in either Euclidean and creating separate data
+	sets from that.
+	"""
+	def __init__(self, *args, **kwargs):
+		super(_EuclideanSplitAnalysis, self).__init__(*args, **kwargs)
+		self.y_original = copy.deepcopy(self.y)
+
+	def set_t_interval(self, t_interval):
+		self.y = copy.deepcopy(self.y_original)
+		self.y = np.sum(self.y[:,:,t_interval[0]:t_interval[1]], axis=2)
+
+		self.t_interval = t_interval
+
+		# Creates a new folder to store t0 results in
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "int%03d-%03d" % t_interval)
+		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
+
+		# Creates post analysis data folder
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, self.observable_name_compact)
+		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
+
+	def save_post_analysis_data(self):
+		"""
+		Function for saving data for post analysis.
+		"""
+		self.observable_name_compact = self.observable_name_compact_old+ "int%03d-%03d" % self.t_interval
+		super(_EuclideanSplitAnalysis, self).save_post_analysis_data()
+		self.observable_name_compact = self.observable_name_compact_old
+
+	def __str__(self):
+		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
+		return_string = ""
+		return_string += "\n" + "="*100
+		return_string += info_string("Data batch folder", self.batch_data_folder)
+		return_string += info_string("Batch name", self.batch_name)
+		return_string += info_string("Observable", self.observable_name_compact)
+		return_string += info_string("Beta", "%.2f" % self.beta)
+		return_string += info_string("Time interval", "[%d,%d)" % self.t_interval)
+		return_string += "\n" + "="*100
+		return return_string
+
+
+class AnalyseTopChargeSplitEuclideanTime(_EuclideanSplitAnalysis):
+	"""
+	Analysis where one can split the topological in Euclidean time to obtain 
+	an estimate of the topological charge.
+	"""
+	observable_name = "Topological Charge in Euclidean Time"
+	observable_name_compact = "topcte"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$Q$"
+	def __init__(self, *args, **kwargs):
+		super(AnalyseTopChargeSplitEuclideanTime, self).__init__(*args, **kwargs)
+		self.NT = self.y_original.shape[-1]
+
+		self.post_analysis_folder_old = self.post_analysis_folder
+		self.observable_output_folder_path_old = self.observable_output_folder_path
+		self.observable_name_compact_old = self.observable_name_compact
+
+	def set_t_interval(self, *args):
+		"""
+		Runs first the inherited time setter function, then its own.
+		"""
+		super(AnalyseTopChargeSplitEuclideanTime, self).set_t_interval(*args)
+		self.observable_name = r"Q in Euclidean time $t=[%d,%d)$" % self.t_interval
+
+class AnalysisTopSusSplitEuclideanTime(_EuclideanSplitAnalysis, _AnalyseTopSusBase):
+	"""
+	Analysis where one can split the topological susceptibility in Euclidean
+	time to obtain an estimate of the topological charge.
+	"""
+	observable_name = "Topological Susceptibility in MC Time"
+	observable_name_compact = "topsuste"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi^{1/4} [GeV]$"
+
+	def __init__(self, *args, **kwargs):
+		super(AnalysisTopSusSplitEuclideanTime, self).__init__(*args, **kwargs)
+		self.NT = self.y_original.shape[-1]
+
+		# Squares the values
+		self.y_original **= 2
+		self.y **= 2
+
+		self.post_analysis_folder_old = self.post_analysis_folder
+		self.observable_output_folder_path_old = self.observable_output_folder_path
+		self.observable_name_compact_old = self.observable_name_compact
+
+	def set_t_interval(self, *args):
+		"""Runs first the inherited time setter function, then its own."""
+		super(AnalysisTopSusSplitEuclideanTime, self).set_t_interval(*args)
+		self.observable_name = r"$\chi(\langle Q^2 \rangle)^{1/4}$ in Euclidean time $[%d,%d)$" % self.t_interval
+
+
+class _MCSplitAnalysis(FlowAnalyser):
+	"""
+	Base class for analysing different parts of the Monte Carlo history.
+	"""
+	def __init__(self, *args, **kwargs):
+		super(_MCSplitAnalysis, self).__init__(*args, **kwargs)
+		self.y_original = copy.deepcopy(self.y)
+
+	def set_MC_interval(self, MC_interval):
+		self.y = copy.deepcopy(self.y_original)
+		self.y = self.y[MC_interval[0]:MC_interval[1],:]
+
+		self.N_configurations_old = self.N_configurations
+		self.N_configurations = self.y.shape[0]
+
+		# Sets up variables deependent on the number of configurations again
+		self.unanalyzed_y_data = np.zeros((self.NFlows, self.N_configurations))
+		self.autocorrelations = np.zeros((self.NFlows, self.N_configurations/2))
+		self.autocorrelations_errors = np.zeros((self.NFlows, self.N_configurations/2))
+
+		# Ensures autocorrelation performed to false
+		self.autocorrelation_performed = False
+
+		self.MC_interval = MC_interval
+
+		# Creates a new folder to store t0 results in
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "MCint%03d-%03d" % MC_interval)
+		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
+
+		# Creates post analysis data folder
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, self.observable_name_compact)
+		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
+
+	def save_post_analysis_data(self):
+		"""Function for saving data for post analysis."""
+		self.observable_name_compact = self.observable_name_compact_old+ "MCint%03d-%03d" % self.MC_interval
+		super(_MCSplitAnalysis, self).save_post_analysis_data()
+		self.observable_name_compact = self.observable_name_compact_old
+
+	def __str__(self):
+		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
+		return_string = ""
+		return_string += "\n" + "="*100
+		return_string += info_string("Data batch folder", self.batch_data_folder)
+		return_string += info_string("Batch name", self.batch_name)
+		return_string += info_string("Observable", self.observable_name_compact)
+		return_string += info_string("Beta", "%.2f" % self.beta)
+		return_string += info_string("Time interval", "[%d,%d)" % self.MC_interval)
+		return_string += "\n" + "="*100
+		return return_string
+
+
+class AnalysisTopChargeSplitMCTime(_MCSplitAnalysis):
+	"""
+	Analysis where one can split the topological charge in Monte Carlo time to
+	obtain an estimate of the topological charge.
+	"""
+	observable_name = "Topological Charge in MC Time"
+	observable_name_compact = "topcMC"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$Q$"
+
+	def __init__(self, *args, **kwargs):
+		super(AnalysisTopChargeSplitMCTime, self).__init__(*args, **kwargs)
+		self.NT = self.y_original.shape[-1]
+
+		# self.observable_name_compact = "topcMC"
+		# self.x_label = r"$\sqrt{8t_{flow}}[fm]$"
+		# self.y_label = r"$Q[GeV]$"
+
+		self.post_analysis_folder_old = self.post_analysis_folder
+		self.observable_output_folder_path_old = self.observable_output_folder_path
+		self.observable_name_compact_old = self.observable_name_compact
+
+	def set_MC_interval(self, *args):
+		"""Runs first the inherited time setter function, then its own."""
+		super(AnalysisTopChargeSplitMCTime, self).set_MC_interval(*args)
+		self.observable_name = r"Q in MC interval $[%d,%d)$" % self.MC_interval
+
+class AnalysisTopSusSplitMCTime(_MCSplitAnalysis, _AnalyseTopSusBase):
+	"""
+	Analysis where one can split the topological susceptibility in Monte Carlo
+	time to obtain an estimate of the topological charge.
+	"""
+	observable_name = "Topological Susceptibility in MC Time"
+	observable_name_compact = "topsusMC"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi^{1/4} [GeV]$"
+
+	def __init__(self, *args, **kwargs):
+		super(AnalysisTopSusSplitMCTime, self).__init__(*args, **kwargs)
+		self.NT = self.y_original.shape[-1]
+
+		# Squares the values
+		self.y_original **= 2
+		self.y **= 2
+
+		self.post_analysis_folder_old = self.post_analysis_folder
+		self.observable_output_folder_path_old = self.observable_output_folder_path
+		self.observable_name_compact_old = self.observable_name_compact
+
+	def set_MC_interval(self, *args):
+		"""
+		Runs first the inherited time setter function, then its own.
+		"""
+		super(AnalysisTopSusSplitMCTime, self).set_MC_interval(*args)
+		self.observable_name = r"$\chi(\langle Q^2 \rangle)^{1/4}$ in MC interval $[%d,%d)$" % self.MC_interval
+
 
 def main():
 	print "Module FlowAnalyser intended to be inherited, and not used as a standalone analysis tool."

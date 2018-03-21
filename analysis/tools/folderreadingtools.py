@@ -575,7 +575,7 @@ class DataReader:
 
 			print "Per flow data for observable %s created." % observable
 
-def check_folder(folder_name, dryrun, verbose=False):
+def check_folder(folder_name, dryrun=False, verbose=False):
 	# Checks that figures folder exist, and if not will create it
 	if not os.path.isdir(folder_name):
 		if dryrun or verbose:

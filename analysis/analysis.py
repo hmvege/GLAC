@@ -1,7 +1,7 @@
 from flow_analyser import *
 from tools.folderreadingtools import DataReader
 from tools.postanalysisdatareader import PostAnalysisDataReader
-from post_analysis import EnergyPostAnalysis, TopSusPostAnalysis
+from post_analysis import EnergyPostAnalysis, TopSusPostAnalysis, TopChargePostAnalysis
 import statistics.parallel_tools as ptools
 import os
 import numpy as np
@@ -76,15 +76,143 @@ def analyse_qtq0(params, qzero_flow_times):
 		qtqzero_analysis.setQ0(qzero_flow_time_index)
 		analyse_default(qtqzero_analysis, N_bs)
 
-def analyse_topct(params, t_euclidean_indexes):
+def analyse_topct(params, numsplits):
 	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
 
 	topct_analysis = AnalyseTopologicalChargeInEuclideanTime(obs_data("topct"),
 		dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
 
-	for ie in t_euclidean_indexes[topct_analysis.beta]:
+	indexes = np.linspace(0, topct_analysis.NT, numsplits, dtype=int) - 1
+	indexes[0] += 1
+	for ie in indexes:
 		topct_analysis.setEQ0(ie)
 		analyse_default(topct_analysis, N_bs)
+
+def analyse_topcEuclTime(params, numsplits=None, intervals=None):
+	"""
+	Analysis function for the topological charge in euclidean time. Requires
+	either numsplits or intervals.
+
+	Args:
+		params: list of default parameters containing obs_data, dryrun, 
+			parallel, numprocs, verbose, N_bs.
+		numsplits: number of splits to make in the dataset. Default is None.
+		intervals: intervals to plot in. Default is none.
+	"""
+	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
+
+	analyse_topcte = AnalyseTopChargeSplitEuclideanTime(obs_data("topct"),
+		dryrun=dryrun, parallel=parallel, 
+		numprocs=numprocs, verbose=verbose)
+
+	# Sets up the intervals
+	if (intervals == numsplits == None) or (intervals != None and numsplits != None):
+		raise KeyError("Either provide intervals to plot for or the number of intervals to split into.")
+
+	NT = analyse_topcte.NT
+	if intervals == None:
+		split_interval = NT/numsplits
+		intervals = zip(
+			range(0, NT+1, split_interval), 
+			range(split_interval, NT+1, split_interval)
+		)
+		assert NT % numsplits == 0, "Bad number of splits: NT % numplits = %d " % (NT % numsplits)
+
+	t_interval = iter(intervals)
+
+	for t_int in t_interval:
+		analyse_topcte.set_t_interval(t_int)
+		analyse_default(analyse_topcte, N_bs)
+
+def analyse_topsusEuclTime(params, numsplits=None, intervals=None):
+	"""
+	Analysis function for the topological susceptibility in euclidean time. 
+	Requires either numsplits or intervals.
+
+	Args:
+		params: list of default parameters containing obs_data, dryrun, 
+			parallel, numprocs, verbose, N_bs.
+		numsplits: number of splits to make in the dataset. Default is None.
+		intervals: intervals to plot in. Default is none.
+	"""
+	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
+
+	analyse_topsuste = AnalysisTopSusSplitEuclideanTime(obs_data("topct"),
+		dryrun=dryrun, parallel=parallel, 
+		numprocs=numprocs, verbose=verbose)
+
+	# Sets up the intervals
+	if (intervals == numsplits == None) or (intervals != None and numsplits != None):
+		raise KeyError("Either provide intervals to plot for or the number of intervals to split into.")
+
+	NT = analyse_topsuste.NT
+	if intervals == None:
+		split_interval = NT/numsplits
+		intervals = zip(
+			range(0, NT+1, split_interval), 
+			range(split_interval, NT+1, split_interval)
+		)
+		assert NT % numsplits == 0, "Bad number of splits: NT % numplits = %d " % (NT % numsplits)
+
+	t_interval = iter(intervals)
+
+	for t_int in t_interval:
+		analyse_topsuste.set_t_interval(t_int)
+		analyse_default(analyse_topsuste, N_bs)
+
+
+def analyse_topcMCTime(params, numsplits=None, intervals=None):
+	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
+
+	analyse_topcMC = AnalysisTopChargeSplitMCTime(obs_data("topc"),
+		dryrun=dryrun, parallel=parallel,
+		numprocs=numprocs, verbose=verbose)
+
+	# Sets up the intervals
+	if (intervals == numsplits == None) or (intervals != None and numsplits != None):
+		raise KeyError("Either provide MC intervals to plot for or the number of MC intervals to split into.")
+
+	NCfgs = analyse_topcMC.N_configurations
+	if intervals == None:
+		split_interval = NCfgs/numsplits
+		intervals = zip(
+			range(0, NCfgs+1, split_interval), 
+			range(split_interval, NCfgs+1, split_interval)
+		)
+		assert NCfgs % numsplits == 0, "Bad number of splits: NCfgs % numplits = %d " % (NCfgs % numsplits)
+
+	MC_interval = iter(intervals)
+
+	for MC_int in MC_interval:
+		analyse_topcMC.set_MC_interval(MC_int)
+		analyse_default(analyse_topcMC, N_bs)
+
+def analyse_topsusMCTime(params, numsplits=None, intervals=None):
+	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
+
+	analyse_topcMC = AnalysisTopSusSplitMCTime(obs_data("topc"),
+		dryrun=dryrun, parallel=parallel,
+		numprocs=numprocs, verbose=verbose)
+
+	# Sets up the intervals
+	if (intervals == numsplits == None) or (intervals != None and numsplits != None):
+		raise KeyError("Either provide MC intervals to plot for or the number of MC intervals to split into.")
+
+	NCfgs = analyse_topcMC.N_configurations
+	if intervals == None:
+		split_interval = NCfgs/numsplits
+		intervals = zip(
+			range(0, NCfgs+1, split_interval), 
+			range(split_interval, NCfgs+1, split_interval)
+		)
+		assert NCfgs % numsplits == 0, "Bad number of splits: NCfgs % numplits = %d " % (NCfgs % numsplits)
+
+	MC_interval = iter(intervals)
+
+	for MC_int in MC_interval:
+		analyse_topcMC.set_MC_interval(MC_int)
+		analyse_default(analyse_topcMC, N_bs)
+
 
 def analyse(parameters):
 	"""
@@ -138,7 +266,15 @@ def analyse(parameters):
 	if "topc4" in parameters["observables"]:
 		analyse_topc4(params)
 	if "topct" in parameters["observables"]:
-		analyse_topct(params, parameters["topct_euclidean_indexes"])
+		analyse_topct(params, parameters["num_t_euclidean_indexes"])
+	if "topcEuclSplit" in parameters["observables"]:
+		analyse_topcEuclTime(params, parameters["numsplits_eucl"], parameters["intervals_eucl"])
+	if "topsusEuclSplit" in parameters["observables"]:
+		analyse_topsusEuclTime(params, parameters["numsplits_eucl"], parameters["intervals_eucl"])
+	if "topcMCSplit" in parameters["observables"]:
+		analyse_topcMCTime(params, parameters["MC_time_splits"])
+	if "topsusMCSplit" in parameters["observables"]:
+		analyse_topsusMCTime(params, parameters["MC_time_splits"])
 	
 	post_time = time.clock()
 	print "="*100
@@ -186,16 +322,25 @@ def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
 	# Plot running coupling
 	energy_analysis.coupling_fit()
 
+	topc_analysis = TopChargePostAnalysis(data, "topc")
+	topc_analysis.set_analysis_data_type("bootstrap")
+	topc_analysis.plot()
+
+
 def main():
 	#### Available observables
-	all_observables = ["plaq", "energy", "topc", "topsus", "qtqzero", "topc4", "topct"]
-	# basic_observables = ["plaq", "energy", "topc", "topsus"]
-	observables = all_observables
-	# observables = all_observables[6:]
-	# observables = all_observables[6:7] + ["qtqzero", "topc4"]
+	observables = [
+		"plaq", "energy", "topc", "topsus", "qtqzero", "topc4", 
+		"topct", "topcEuclSplit", "topcMCSplit", "topsusEuclSplit", 
+		"topsusMCSplit"
+	]
+	
+	#### Basic observables
+	# observables = ["plaq", "energy", "topc", "topsus"]
+
 	# observables = basic_observables
 	# observables = ["energy", "topsus"]
-	observables = ["topc"]
+	# observables = ["topcEuclSplit", "topcMCSplit", "topsusEuclSplit", "topsusMCSplit", "topct"]
 
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
 	print 100*"=" + "\n"
@@ -203,7 +348,7 @@ def main():
 	#### Base parameters
 	N_bs = 500
 	dryrun = False
-	verbose = False
+	verbose = True
 	parallel = True
 	numprocs = 8
 	base_parameters = {"N_bs": N_bs, "dryrun": dryrun, "verbose": verbose, 
@@ -213,7 +358,7 @@ def main():
 	load_file = True
 
 	# If we are to create per-flow datasets as opposite to per-cfg datasets
-	create_perflow_data = True
+	create_perflow_data = False
 
 	#### Save binary file
 	save_to_binary = True
@@ -250,27 +395,33 @@ def main():
 	# beta_folders = ["beta6_0", "beta6_1", "beta6_2"]
 	# beta_folders = ["beta61"]
 
-	# Indexes to look at for topct. MAKE THIS AUTOMATIC! ONLY CHOOSE NUMBER OF SPLITS?
-	t_euclidean_indexes = {
-		6.0: [0, 11, 23, 35, 47],
-		6.1: [0, 13, 27, 41, 55],
-		6.2: [0, 15, 31, 47, 63],
-		6.45: [0, 23, 47, 71, 95]}
+	# Indexes to look at for topct.
+	num_t_euclidean_indexes = 5
 
-	# t_euclidean_indexes[6.1] = [0, 7, 15, 23, 31]
+	# Number of different sectors we will analyse in euclidean time
+	numsplits_eucl = 4
+	intervals_eucl = None
+
+	# Number of different sectors we will analyse in monte carlo time
+	MC_time_splits = 4
 
 	# Percents of data where we do qtq0
 	qzero_flow_times = [0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.0]
 
 	#### Analysis batch setups
-	default_params = {"batch_folder": data_batch_folder,
+	default_params = {
+		"batch_folder": data_batch_folder,
 		"observables": observables, "load_file": load_file,
 		"save_to_binary": save_to_binary, "base_parameters": base_parameters,
 		"flow_epsilon": flow_epsilon, "NFlows": NFlows,
 		"create_perflow_data": create_perflow_data,
 		"correct_energy": correct_energy,
-		"topct_euclidean_indexes": t_euclidean_indexes,
-		"qzero_flow_times": qzero_flow_times}
+		"num_t_euclidean_indexes": num_t_euclidean_indexes,
+		"qzero_flow_times": qzero_flow_times,
+		"numsplits_eucl": numsplits_eucl,
+		"intervals_eucl": intervals_eucl,
+		"MC_time_splits": MC_time_splits,
+	}
 
 	databeta60 = copy.deepcopy(default_params)
 	databeta60["batch_name"] = beta_folders[0]

@@ -6,7 +6,7 @@ from tools.postanalysisdatareader import PostAnalysisDataReader, getLatticeSpaci
 # import tqdm
 # from scipy.optimize import curve_fit
 
-__all__ = ["PostAnalysisDataReader", "EnergyPostAnalysis", "TopSusPostAnalysis"]
+__all__ = ["EnergyPostAnalysis", "TopSusPostAnalysis", "TopChargePostAnalysis"]
 
 class _PostAnalysis:
 	"""
@@ -54,9 +54,7 @@ class _PostAnalysis:
 			self.colors[beta] = color
 
 	def _check_plot_values(self):
-		"""
-		Checks if we have set the analysis data type yet.
-		"""
+		"""Checks if we have set the analysis data type yet."""
 		if not hasattr(self,"plot_values"):
 			raise AttributeError("set_analysis_data_type() has not been set yet.")
 
@@ -82,7 +80,7 @@ class _PostAnalysis:
 	def _initiate_plot_values(self, *args, **kwargs):
 		raise NotImplementedError("_PostAnalysis plot value initiater not implemented(subclasses should contain this).")
 
-	def plot(self, x_limits=False, y_limits=False):
+	def plot(self, x_limits=False, y_limits=False, plot_with_formula=False):
 		"""
 		Function for making a basic plot of all the different beta values together.
 		"""
@@ -103,12 +101,17 @@ class _PostAnalysis:
 		# print self.flow_time[1:]**2*self._energy_continiuum(self.flow_time[1:])[0]
 		# ax.plot(self.flow_time[1:]/self.r0**2,self.flow_time[1:]**2*self._energy_continiuum(self.flow_time[1:])[0],color="b")
 
+		# Sets the title string
+		title_string = r"%s" % self.observable_name
+		if plot_with_formula:
+			title_string += r" %s" % self.formula
+
 		# Basic plotting commands
 		ax.grid(True)
-		ax.set_title(r"%s %s" % (self.observable_name, self.formula))
+		ax.set_title(title_string)
 		ax.set_xlabel(self.x_label)
 		ax.set_ylabel(self.y_label)
-		ax.legend(loc="lower right")
+		ax.legend(loc="best", prop={"size":8})
 
 		# Sets axes limits if provided
 		if x_limits != False:
@@ -229,7 +232,7 @@ class TopSusPostAnalysis(_PostAnalysis):
 			values = {}
 			values["beta"] = beta
 			values["a"] = getLatticeSpacing(beta)
-			values["x"] = getLatticeSpacing(beta)*np.sqrt(8*self.flow_time)
+			values["x"] = values["a"]*np.sqrt(8*self.flow_time)
 			values["y"] = data[beta]["y"]
 			values["bs"] = self.bs_raw[beta][self.observable_name_compact]
 			values["y_err"] = data[beta]["y_error"]
@@ -445,6 +448,40 @@ class EnergyPostAnalysis(_PostAnalysis):
 
 		pass
 
+
+class TopChargePostAnalysis(_PostAnalysis):
+	"""
+	Post-analysis of the topological charge. Method for plotting different 
+	values together.
+	"""
+	observable_name = "Topological Charge"
+	observable_name_compact = "topc"
+
+	# Regular plot variables
+	y_label = r"$Q$"
+	x_label = r"$\sqrt{8t}$[fm]"
+	formula = r"$Q = - \sum_x \frac{1}{64 \cdot 32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$[GeV]"
+
+	# Continiuum plot variables
+	x_label_continiuum = r"$(a/r_0)^2$"
+	y_label_continiuum = r"$\frac{\sqrt{8t_0}}{r_0}$"
+
+	def _initiate_plot_values(self, data):
+		# Sorts data into a format specific for the plotting method
+		for beta in sorted(data.keys()):
+			values = {}
+			values["beta"] = beta
+			values["a"] = getLatticeSpacing(beta)
+			values["x"] = values["a"]* np.sqrt(8*self.flow_time)
+			values["y"] = data[beta]["y"]
+			values["bs"] = np.asarray([self.bs_raw[beta][self.observable_name_compact][:,iBoot] for iBoot in xrange(self.NBoots)]).T
+			values["y_err"] = data[beta]["y_error"] # negative since the minus sign will go away during linear error propagation
+			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[beta], beta)
+			values["color"] = self.colors[beta]
+
+			self.plot_values.append(values)
+
+
 def main(args):
 	"""
 	Args should be post-analysis folder
@@ -474,6 +511,16 @@ def main(args):
 
 	# Plot running coupling
 	energy_analysis.coupling_fit()
+
+
+	# PLAN
+	# 1. Specify paths to data based data batch and batch name
+	# 2. Load data in paths
+	# 3. Specify what to plot. E.g. {observable} {analysis type} (optional) {euclidean or mc time}
+	# 4. Plot
+
+
+
 
 if __name__ == '__main__':
 	if len(sys.argv[1:]) == 1:

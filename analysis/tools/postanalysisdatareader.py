@@ -109,7 +109,7 @@ class PostAnalysisDataReader:
 					# Gets binary ac data
 					self.ac_corrections[beta] = self._get_bin_dict(folder_path)
 				else:
-					print "%s not a recognized analysis type" % folder
+					print "%s in batch %s not a recognized analysis type" % (folder, self.batch_folder.split("/")[-1])
 
 			# Stores batch data
 			self.data_batches[beta] = copy.deepcopy(observable_data)
