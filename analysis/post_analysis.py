@@ -1,6 +1,7 @@
 import numpy as np, matplotlib.pyplot as plt, sys, os, scipy.optimize as sciopt
 from tools.folderreadingtools import check_folder
-from statistics.line_fitting import fit_line_form_bootstrap, fit_line
+# from statistics.line_fitting import fit_line_form_bootstrap, fit_line
+from statistics.linefit import LineFit
 from tools.postanalysisdatareader import PostAnalysisDataReader, getLatticeSpacing
 
 # import tqdm
@@ -59,7 +60,7 @@ class _PostAnalysis:
 			raise AttributeError("set_analysis_data_type() has not been set yet.")
 
 	def set_analysis_data_type(self, analysis_data_type="bootstrap"):
-		self.plot_values = []
+		self.plot_values = {}
 
 		# Retrieving data depending on analysis type we are choosing
 		if analysis_data_type == "bootstrap":
@@ -91,15 +92,16 @@ class _PostAnalysis:
 		self._check_plot_values()
 
 		# Retrieves values to plot
-		for value in self.plot_values:
+		for beta in self.plot_values:
+			value = self.plot_values[beta]
 			x = value["x"]
 			y = value["y"]
 			y_err = value["y_err"]
 			ax.plot(x, y, "-", label=value["label"], color=value["color"])
 			ax.fill_between(x, y - y_err, y + y_err, alpha=0.5, edgecolor='', facecolor=value["color"])
 
-		# print self.flow_time[1:]**2*self._energy_continiuum(self.flow_time[1:])[0]
-		# ax.plot(self.flow_time[1:]/self.r0**2,self.flow_time[1:]**2*self._energy_continiuum(self.flow_time[1:])[0],color="b")
+		# print self.flow_time[1:]**2*self._energy_continuum(self.flow_time[1:])[0]
+		# ax.plot(self.flow_time[1:]/self.r0**2,self.flow_time[1:]**2*self._energy_continuum(self.flow_time[1:])[0],color="b")
 
 		# Sets the title string
 		title_string = r"%s" % self.observable_name
@@ -149,7 +151,7 @@ class _PostAnalysis:
 
 			# Retrieves fit value as well as its error
 			if fit_type == "bootstrap_fit":
-				bfit["t0"], bfit["t0_err"] = fit_line_form_bootstrap(	values["x"], values["bs"], self.observable_name_compact,
+				bfit["t0"], bfit["t0_err"] = fit_line_from_bootstrap(	values["x"], values["bs"], self.observable_name_compact,
 																		values["beta"], fit_target, fit_interval, axis=axis,
 																		fit_function_modifier=fit_function_modifier,
 																		plot_fit_window=plot_fit_window)
@@ -170,46 +172,16 @@ class _PostAnalysis:
 			# Adds to list of batch-values
 			self.beta_fit.append(bfit)
 
-
-	@staticmethod
-	def _get_line_prop(poly, polycov, x_points, y_points):
+	def _linefit_to_continuum(self, x_points, y_points, y_points_error):
 		"""
-		Small static function for curve_fit and polyfit methods.
-		"""
-		# Gets line properties
-		a = poly[0]
-		b = poly[1]
-		a_err, b_err = np.sqrt(np.diag(polycov))
-
-		# Sets up line fitted variables		
-		x = np.linspace(0, x_points[-1]*1.03, 1000)
-		y = a*x + b
-		y_std = a_err*x + b_err
-
-		return x, y, y_std, a, b, a_err, b_err
-
-	def _linefit_to_continiuum(self, x_points, y_points, y_points_error, fit_type="least_squares"):
-		"""
-		Fits a a set of values to continiuum.
+		Fits a a set of values to continuum.
 		Args:
 			x_points (numpy float array) : x points to data fit
 			y_points (numpy float array) : y points to data fit
 			y_points_error (numpy float array) : error of y points to data fit
 			[optional] fit_type (str) : type of fit to perform. Options: 'curve_fit' (default), 'polyfit'
 		"""
-		# Fitting data
-		if fit_type == "least_squares":
-			pol, polcov = sciopt.curve_fit(lambda x, a, b: x*a + b, x_points, y_points, sigma=y_points_error)
-			return self._get_line_prop(pol, polcov, x_points, y_points)
-		elif fit_type == "polynomial":
-			pol, polcov = np.polyfit(x_points, y_points, 1, rcond=None, full=False, w=1.0/y_points_error, cov=True)
-			return self._get_line_prop(pol, polcov)
-		elif fit_type == "interpolation":
-			return self.interpolate(x_points, y_points, y_points_error)
-			return None
-		else:
-			raise KeyError("fit_type '%s' not recognized." % fit_type)
-
+		
 class TopSusPostAnalysis(_PostAnalysis):
 	observable_name = "Topological Susceptibility"
 	observable_name_compact = "topsus"
@@ -219,10 +191,10 @@ class TopSusPostAnalysis(_PostAnalysis):
 	y_label = r"$\chi_t^{1/4}[GeV]$"
 	formula = r"$\chi_t^{1/4}=\frac{\hbar c}{aV^{1/4}}\langle Q^2 \rangle^{1/4}$"
 
-	# Continiuum plot variables
-	y_label_continiuum = r"$\chi^{1/4}[GeV]$"
-	# x_label_continiuum = r"$a/{{r_0}^2}$"
-	x_label_continiuum = r"$a[fm]$"
+	# Continuum plot variables
+	y_label_continuum = r"$\chi^{1/4}[GeV]$"
+	# x_label_continuum = r"$a/{{r_0}^2}$"
+	x_label_continuum = r"$a[fm]$"
 
 	def _initiate_plot_values(self, data):
 		"""
@@ -238,57 +210,84 @@ class TopSusPostAnalysis(_PostAnalysis):
 			values["y_err"] = data[beta]["y_error"]
 			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[beta], beta)
 			values["color"] = self.colors[beta]
-			self.plot_values.append(values)
+			self.plot_values[beta] = values
 
-	def plot_continiuum(self, fit_target, fit_interval, fit_type, line_fit_type="least_squares", plot_fit_window=False):
-		# Retrieves t0 values used to be used for continium fitting
-		self._get_beta_values_to_fit(fit_target, fit_interval, axis="x", fit_type=fit_type, plot_fit_window=plot_fit_window)
+	def plot_continuum(self, fit_target):
+		# Gets the beta values
 
-		# Builts plot variables
-		a_lattice_spacings = np.asarray([val["a"] for val in self.beta_fit])[::-1]
-		t_fit_points = np.asarray([val["t0"] for val in self.beta_fit])[::-1]
-		t_fit_points_errors = np.asarray([val["t0_err"] for val in self.beta_fit])[::-1]
+		a, obs, obs_err = [], [], []
+		for beta in sorted(self.plot_values):
+			x = self.plot_values[beta]["x"]
+			y = self.plot_values[beta]["y"]
+			y_err = self.plot_values[beta]["y_err"]
 
-		# Initiates empty arrays for
-		x_points = np.zeros(len(a_lattice_spacings) + 1)
-		y_points = np.zeros(len(a_lattice_spacings) + 1)
-		y_points_err = np.zeros(len(a_lattice_spacings) + 1)
+			fit_index = np.argmin(np.abs(x - fit_target))
 
-		# Populates with fit data
-		x_points[1:] = a_lattice_spacings
-		y_points[1:] = t_fit_points
-		y_points_err[1:] = t_fit_points_errors
+			a.append(self.plot_values[beta]["a"])
+			obs.append(y[fit_index])
+			obs_err.append(y_err[fit_index])
 
-		# Fits to continiuum and retrieves values to be plotted
-		x_line, y_line, y_line_std, a, b, a_err, b_err = self._linefit_to_continiuum(x_points[1:], y_points[1:], y_points_err[1:], fit_type=line_fit_type)
+		# Initiates empty arrays for the continuum limit
+		a = np.asarray(a)[::-1]
+		obs = np.asarray(obs)[::-1]
+		obs_err = np.asarray(obs_err)[::-1]
 
-		# Populates arrays with first fitted element
-		x_points[0] = x_line[0]
-		y_points[0] = y_line[0]
-		y_points_err[0] = y_line_std[0]
+		# Continuum limit arrays
+		N_cont = 1000
+		a_cont = np.linspace(-0.01, a[-1]*1.1, N_cont)
+
+		# Fits to continuum and retrieves values to be plotted
+		continuum_fit = LineFit(a, obs, obs_err)
+
+		y_cont, y_cont_err, fit_params, chi_squared = continuum_fit.fit_weighted(a_cont)
+
+		# continuum_fit.plot(True)
+		
+		# Gets the continium value and its error
+		cont_index = np.argmin(np.abs(a_cont))
+		a0 = [a_cont[cont_index], a_cont[cont_index]]
+		y0 = [y_cont[cont_index], y_cont[cont_index]]
+
+		if y_cont_err[1][cont_index] < y_cont_err[0][cont_index]:
+			y0_err_lower = y0[0] - y_cont_err[1][cont_index]
+			y0_err_upper = y_cont_err[0][cont_index] - y0[0]
+		else:
+			y0_err_lower = y0[0] - y_cont_err[0][cont_index]
+			y0_err_upper = y_cont_err[1][cont_index] - y0[0]
+
+		y0_err = [[y0_err_lower, 0], [y0_err_upper, 0]]
 
 		# Creates figure and plot window
-		fig = plt.figure(self.dpi)
+		fig = plt.figure()
 		ax = fig.add_subplot(111)
 
-		# ax.axvline(0,linestyle="--",color="0",alpha=0.5)
-		ax.errorbar(x_points[1:], y_points[1:], yerr=y_points_err[1:], fmt="o", color="0", ecolor="0")
-		ax.errorbar(x_points[0], y_points[0], yerr=y_points_err[0], fmt="o", capthick=4, color="r", ecolor="r", label=r"$\chi^{1/4}=%.2f\pm%.2f$" % (y_points[0], y_points_err[0]))
-		ax.plot(x_line,y_line,color="0")#,label=r"$y=(%.3f\pm%.3f)x + %.4f\pm%.4f$" % (a,a_err,b,b_err))
-		ax.fill_between(x_line, y_line - y_line_std, y_line + y_line_std, alpha=0.2, edgecolor='', facecolor="0")
-		ax.set_ylabel(self.y_label_continiuum)
-		ax.set_xlabel(self.x_label_continiuum)
+		# Plots linefit with errorband
+		ax.plot(a_cont, y_cont, color="tab:blue", alpha=0.5)
+		ax.fill_between(a_cont, y_cont_err[0], y_cont_err[1],
+			alpha=0.5, edgecolor='', facecolor="tab:blue")
 
-		ax.set_title(r"Continiuum limit at: $\sqrt{8t_{flow}} = %.2f[fm]$" % fit_target)
+		# Plot lattice points
+		ax.errorbar(a, obs, yerr=obs_err, fmt="o",
+			color="tab:orange", ecolor="tab:orange")
 
+		# plots continuum limit
+		ax.errorbar(a0, y0, yerr=y0_err, fmt="o", capsize=None, # 5 is a good value for cap size
+			capthick=1, color="tab:red", ecolor="tab:red",
+			label=r"$\chi^{1/4}=%.3f\pm%.3f$" % (y0[0], (y0_err_lower + y0_err_upper)/2.0))
+
+		ax.set_ylabel(self.y_label_continuum)
+		ax.set_xlabel(self.x_label_continuum)
+		ax.set_title(r"$\sqrt{8t_{flow,0}} = %.2f[fm], \chi^2 = %.2f$" % (fit_target, chi_squared))
+		ax.set_xlim(-0.01, a[-1]*1.1)
 		ax.legend()
 		ax.grid(True)
 
 		# Saves figure
-		fname = os.path.join(self.output_folder_path, "post_analysis_%s_continiuum%s_%s.png" % (self.observable_name_compact, str(fit_target).replace(".",""), fit_type.strip("_")))
+		fname = os.path.join(self.output_folder_path, 
+			"post_analysis_%s_continuum%s.png" % (self.observable_name_compact, str(fit_target).replace(".","")))
 		fig.savefig(fname, dpi=self.dpi)
 
-		print "Continiuum plot of %s created in %s" % (self.observable_name.lower(), fname)
+		print "Continuum plot of %s created in %s" % (self.observable_name.lower(), fname)
 		# plt.show()
 		plt.close(fig)
 
@@ -301,11 +300,56 @@ class EnergyPostAnalysis(_PostAnalysis):
 	x_label = r"$t/r_0^2$"
 	formula = r"$\langle E\rangle = -\frac{1}{64V}F_{\mu\nu}^a{F^a}^{\mu\nu}$"
 
-	# Continiuum plot variables
-	x_label_continiuum = r"$(a/r_0)^2$"
-	y_label_continiuum = r"$\frac{\sqrt{8t_0}}{r_0}$"
+	# Continuum plot variables
+	x_label_continuum = r"$(a/r_0)^2$"
+	y_label_continuum = r"$\frac{\sqrt{8t_0}}{r_0}$"
 
-	def _energy_continiuum(self, t):
+	def _get_fit_interval(self, fit_target, fit_interval, y_mean):
+		"""Function for finding the fit interval."""
+		start_index = np.argmin(np.abs(y_mean - (fit_target - fit_interval)))
+		end_index = np.argmin(np.abs(y_mean - (fit_target + fit_interval)))
+		return start_index, end_index
+
+	def _inverse_beta_fit(self, fit_target, fit_interval):
+		"""
+		Perform an inverse fit on the observable susceptibility and extracts 
+		extracting x0 with x0 error.
+		"""
+		for beta in sorted(self.plot_values):
+			x = self.plot_values[beta]["x"]
+			y = self.plot_values[beta]["y"]
+			y_err = self.plot_values[beta]["y_err"]
+
+			index_low, index_high = self._get_fit_interval(fit_target, fit_interval, x)
+
+			x = x[index_low:index_high]
+			y = y[index_low:index_high]
+			y_err = y_err[index_low:index_high]
+
+			fit = LineFit(x, y, y_err)
+			y_hat, y_hat_err, fit_params, chi_squared = fit.fit_weighted()
+			b0, b0_err, b1, b1_err = fit_params
+
+			self.plot_values[beta]["fit"] = {
+				"y_hat": y_hat,
+				"y_hat_err": y_hat_err,
+				"b0": b0,
+				"b0_err": b0_err,
+				"b1": b1,
+				"b1_err": b1_err,
+				"chi_squared": chi_squared,
+			}
+
+			x0, x0_err = fit.inverse_fit(fit_target, weigthed=True)
+
+			fit.plot(True)
+
+			self.plot_values[beta]["fit"]["inverse"] = {
+					"x0": x0,
+					"x0_err": x0_err, 
+			}
+
+	def _energy_continuum(self, t):
 		"""
 		Second order approximation of the energy.
 		"""
@@ -327,16 +371,13 @@ class EnergyPostAnalysis(_PostAnalysis):
 		return alpha
 
 	def _function_correction(self, x):
-		"""
-		Function that corrects the energy data
-		"""
+		"""Function that corrects the energy data."""
 		return x*self.flow_time**2
 
 	def _initiate_plot_values(self, data):
 		# Sorts data into a format specific for the plotting method
 		for beta in sorted(data.keys()):
 			values = {}
-			values["beta"] = beta
 			values["a"] = getLatticeSpacing(beta)
 			values["x"] = self.flow_time/self.r0**2*getLatticeSpacing(beta)**2
 			values["y"] = self._function_correction(data[beta]["y"])
@@ -345,11 +386,11 @@ class EnergyPostAnalysis(_PostAnalysis):
 			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[beta], beta)
 			values["color"] = self.colors[beta]
 
-			self.plot_values.append(values)
+			self.plot_values[beta] = values
 
-	def _linefit_to_continiuum(self, x_points, y_points, y_points_error, fit_type="least_squares"):
+	def _linefit_to_continuum(self, x_points, y_points, y_points_error, fit_type="least_squares"):
 		"""
-		Fits a a set of values to continiuum.
+		Fits a a set of values to continuum.
 		Args:
 			x_points (numpy float array) : x points to data fit
 			y_points (numpy float array) : y points to data fit
@@ -377,7 +418,7 @@ class EnergyPostAnalysis(_PostAnalysis):
 
 		return x, y, y_std, a, b, a_err, b_err
 
-	def plot_continiuum(self, fit_target, fit_interval, fit_type, plot_arrows=[0.05, 0.07, 0.1], legend_location="best", line_fit_type="least_squares"):
+	def plot_continuum(self, fit_target, fit_interval, fit_type, plot_arrows=[0.05, 0.07, 0.1], legend_location="best", line_fit_type="least_squares"):
 		# Retrieves t0 values used to be used for continium fitting
 		self._get_beta_values_to_fit(fit_target, fit_interval, axis="y",
 									fit_type=fit_type, 
@@ -398,8 +439,8 @@ class EnergyPostAnalysis(_PostAnalysis):
 		y_points[1:] = np.sqrt(8*(t_fit_points)) / self.r0
 		y_points_err[1:] = (8*t_fit_points_errors) / (np.sqrt(8*t_fit_points)) / self.r0
 
-		# Fits to continiuum and retrieves values to be plotted
-		x_line, y_line, y_line_std, a, b, a_err, b_err = self._linefit_to_continiuum(x_points[1:], y_points[1:], y_points_err[1:], fit_type=line_fit_type)
+		# Fits to continuum and retrieves values to be plotted
+		x_line, y_line, y_line_std, a, b, a_err, b_err = self._linefit_to_continuum(x_points[1:], y_points[1:], y_points_err[1:], fit_type=line_fit_type)
 
 		# Populates arrays with first fitted element
 		x_points[0] = x_line[0]
@@ -416,10 +457,10 @@ class EnergyPostAnalysis(_PostAnalysis):
 		ax.errorbar(x_points[0], y_points[0], yerr=y_points_err[0], fmt="o", capthick=4, color="r", ecolor="r")
 		ax.plot(x_line, y_line, color="0", label=r"$y=(%.3f\pm%.3f)x + %.4f\pm%.4f$" % (a, a_err, b, b_err))
 		ax.fill_between(x_line, y_line-y_line_std, y_line + y_line_std, alpha=0.2, edgecolor='', facecolor="0")
-		ax.set_ylabel(self.y_label_continiuum)
-		ax.set_xlabel(self.x_label_continiuum)
+		ax.set_ylabel(self.y_label_continuum)
+		ax.set_xlabel(self.x_label_continuum)
 
-		# ax.set_title(r"Continiuum limit reference scale: $t_{0,cont}=%2.4f\pm%g$" % ((self.r0*y_points[0])**2/8,(self.r0*y_points_err[0])**2/8))
+		# ax.set_title(r"Continuum limit reference scale: $t_{0,cont}=%2.4f\pm%g$" % ((self.r0*y_points[0])**2/8,(self.r0*y_points_err[0])**2/8))
 
 		ax.set_xlim(-0.005, 0.045)
 		ax.set_ylim(0.92, 0.98)
@@ -437,10 +478,10 @@ class EnergyPostAnalysis(_PostAnalysis):
 		ax.legend(loc=legend_location) # "lower left"
 
 		# Saves figure
-		fname = os.path.join(self.output_folder_path, "post_analysis_%s_continiuum%s_%s.png" % (self.observable_name_compact, str(fit_target).replace(".",""), fit_type.strip("_")))
+		fname = os.path.join(self.output_folder_path, "post_analysis_%s_continuum%s_%s.png" % (self.observable_name_compact, str(fit_target).replace(".",""), fit_type.strip("_")))
 		fig.savefig(fname, dpi=self.dpi)
 
-		print "Continiuum plot of %s created in %s" % (self.observable_name.lower(), fname)
+		print "Continuum plot of %s created in %s" % (self.observable_name.lower(), fname)
 		plt.close(fig)
 
 	def coupling_fit(self):
@@ -462,15 +503,14 @@ class TopChargePostAnalysis(_PostAnalysis):
 	x_label = r"$\sqrt{8t}$[fm]"
 	formula = r"$Q = - \sum_x \frac{1}{64 \cdot 32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$[GeV]"
 
-	# Continiuum plot variables
-	x_label_continiuum = r"$(a/r_0)^2$"
-	y_label_continiuum = r"$\frac{\sqrt{8t_0}}{r_0}$"
+	# Continuum plot variables
+	x_label_continuum = r"$(a/r_0)^2$"
+	y_label_continuum = r"$\frac{\sqrt{8t_0}}{r_0}$"
 
 	def _initiate_plot_values(self, data):
 		# Sorts data into a format specific for the plotting method
 		for beta in sorted(data.keys()):
 			values = {}
-			values["beta"] = beta
 			values["a"] = getLatticeSpacing(beta)
 			values["x"] = values["a"]* np.sqrt(8*self.flow_time)
 			values["y"] = data[beta]["y"]
@@ -479,7 +519,7 @@ class TopChargePostAnalysis(_PostAnalysis):
 			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[beta], beta)
 			values["color"] = self.colors[beta]
 
-			self.plot_values.append(values)
+			self.plot_values[beta] = values
 
 
 def main(args):
@@ -499,15 +539,15 @@ def main(args):
 	# Retrofits the topsus for continuum limit
 	continium_targets = [0.3, 0.4, 0.5, 0.58]
 	for cont_target in continium_targets:
-		topsus_analysis.plot_continiuum(cont_target, 0.015, "data_line_fit", plot_fit_window=False)
+		topsus_analysis.plot_continuum(cont_target)
 
 	# Plots energy
 	energy_analysis = EnergyPostAnalysis(data, "energy")
 	energy_analysis.set_analysis_data_type("bootstrap")
 	energy_analysis.plot()
 
-	# Retrofits the energy for continiuum limit
-	energy_analysis.plot_continiuum(0.3, 0.015, "bootstrap_fit")
+	# Retrofits the energy for continuum limit
+	energy_analysis.plot_continuum(0.3, 0.015, "bootstrap_fit")
 
 	# Plot running coupling
 	energy_analysis.coupling_fit()
@@ -527,5 +567,6 @@ if __name__ == '__main__':
 		args = sys.argv[1:]
 	else:
 		args = ["data5"]
+		# args = ["dataGiovanni"]
 		# args = ["../output/post_analysis_data/data4"]
 	main(args)
