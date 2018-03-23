@@ -40,7 +40,11 @@ class _DirectoryTree:
 		if os.path.isdir(obs_path) and len(os.listdir(obs_path)) != 0:
 			self.observables_folder = obs_path
 			self.observables_folders = True
-			for obs,file_name in zip(self.observables_list, os.listdir(self.observables_folder)):
+			for obs, file_name in zip(self.observables_list, os.listdir(self.observables_folder)):
+				# Removes .DS_Store
+				if obs.startswith("."):
+					continue
+
 				obs_path = os.path.join(self.observables_folder, file_name)
 				if os.path.isfile(obs_path):
 					self.obs_tree[obs] = obs_path
@@ -62,6 +66,10 @@ class _DirectoryTree:
 					# Finds and sets the observable file paths
 					flow_obs_dir_list = []
 					for obs_file in os.listdir(obs_path):
+						# Removes .DS_Store
+						if obs_file.startswith("."):
+							continue
+
 						flow_obs_dir_list.append(os.path.join(obs_path, obs_file))
 
 					# Sorts list by natural sorting
@@ -196,7 +204,7 @@ class _FolderData:
 		N_files = len(self.files)
 
 		# Goes through files in folder and reads the contents into a file
-		for i,file in enumerate(self.files):
+		for i, file in enumerate(self.files):
 			# Gets the metadata
 			with open(file) as f:
 				# Reads in meta data as long as the first element on the line is a string
@@ -229,7 +237,7 @@ class _FolderData:
 			else:
 				# If we have a topct-like variable, we will read in NT rows as well.
 				# Sets up header names
-				header_names = ["t"] + ["t%d" % i for i in range(N_rows-1)]
+				header_names = ["t"] + ["t%d" % j for j in range(N_rows-1)]
 				data_frame = pd.read_csv(file, skiprows=N_rows_to_skip, sep=" ", names=header_names, header=None)
 
 			# Only retrieves indexes/flow-time*1000 once
@@ -243,6 +251,7 @@ class _FolderData:
 				self.data_y.append(np.asarray([data_frame[iname].values[:flow_cutoff] for iname in header_names[1:]]).T)
 			else:
 				self.data_y.append(data_frame[self.observable].values[:flow_cutoff])
+
 
 		self.data_y = np.asarray(self.data_y)
 
@@ -418,7 +427,6 @@ class DataReader:
 	def __retrieve_observable_data(self, observables_to_retrieve, create_perflow_data=False):
 		_NFlows = []
 		for obs in observables_to_retrieve:
-
 			# Creates a dictionary to hold data associated with an observable
 			self.data[obs] = {}
 
@@ -601,28 +609,54 @@ def write_data_to_file(analysis_object):
 	check_folder(post_analysis_folder, dryrun, verbose=True)
 
 	# Retrieves analyzed data
-	x = analysis_object.x
-	y_org = analysis_object.unanalyzed_y
-	y_err_org = analysis_object.unanalyzed_y_std*analysis_object.autocorrelation_error_correction
-	y_bs = analysis_object.bs_y
-	y_err_bs = analysis_object.bs_y_std*analysis_object.autocorrelation_error_correction
-	y_jk = analysis_object.jk_y
-	y_err_jk = analysis_object.jk_y_std*analysis_object.autocorrelation_error_correction
+	x = copy.deepcopy(analysis_object.x)
+	y_org = copy.deepcopy(analysis_object.unanalyzed_y)
+	y_err_org = copy.deepcopy(analysis_object.unanalyzed_y_std*analysis_object.autocorrelation_error_correction)
+
+	# if analysis_object.observable_name_compact == "topc":
+	# 	print analysis_object.unanalyzed_y_std
+	# 	print analysis_object.autocorrelation_error_correction
+
+	y_bs = copy.deepcopy(analysis_object.bs_y)
+	y_err_bs = copy.deepcopy(analysis_object.bs_y_std*analysis_object.autocorrelation_error_correction)
+	y_jk = copy.deepcopy(analysis_object.jk_y)
+	y_err_jk = copy.deepcopy(analysis_object.jk_y_std*analysis_object.autocorrelation_error_correction)
+
 
 	# Stacks data to be written to file together
-	data = 	np.stack((x, y_org, y_err_org, y_bs, y_err_bs, y_jk, y_err_jk),axis=1)
-	
+	if not analysis_object.autocorrelation_performed:
+		data = np.stack((x, y_org, y_err_org, y_bs, y_err_bs, 
+			y_jk, y_err_jk), axis=1)
+	else:
+		tau_int = copy.deepcopy(analysis_object.integrated_autocorrelation_time) # tau_int
+		tau_int_err = copy.deepcopy(analysis_object.integrated_autocorrelation_time_error) # tau_int_err
+		sqrt2tau_int = copy.deepcopy(analysis_object.autocorrelation_error_correction) # sqrt(2*tau_int)
+		data = np.stack((x, y_org, y_err_org, y_bs, y_err_bs, 
+			y_jk, y_err_jk, tau_int, tau_int_err, sqrt2tau_int), axis=1)
+
+
 	# Retrieves compact analysis name 
 	observable = analysis_object.observable_name_compact
 
 	# Sets up file name and file path
-	fname = "%s.txt" % observable
+	if not analysis_object.autocorrelation_performed:
+		fname = "%s_no_autocorr.txt" % observable
+		header_string = "observable %s beta %s\nt original original_error bs bs_error jk jk_error" % (observable, beta_string)
+	else:
+		fname = "%s.txt" % observable
+		header_string = "observable %s beta %s\nt original original_error bs bs_error jk jk_error tau_int tau_int_err sqrt2tau_int" % (observable, beta_string)
+
 	fname_path = os.path.join(post_analysis_folder, fname)
 
 	# Saves data to file
 	if not dryrun:
-		np.savetxt(fname_path, data, fmt="%.16f", header="observable %s beta %s\nt original original_error bs bs_error jk jk_error" % (observable, beta_string))
+		np.savetxt(fname_path, data, fmt="%.16f", header=header_string)
+
 	print "Data for the post analysis written to %s" % fname_path
+
+	# if analysis_object.observable_name_compact == "topc":
+	# 	print data
+	# 	exit(1)
 
 def write_raw_analysis_to_file(raw_data, analysis_type, observable, post_analysis_folder, dryrun=False, verbose=True):
 	"""

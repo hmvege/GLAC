@@ -174,7 +174,8 @@ class FlowAnalyser(object):
 
 	def save_post_analysis_data(self):
 		"""Saves post analysis data to a file."""
-		if self.bootstrap_performed and self.autocorrelation_performed:
+
+		if self.bootstrap_performed:
 			write_data_to_file(self)
 
 	def boot(self, N_bs, F=None, F_error=None, store_raw_bs_values=True):
@@ -251,6 +252,7 @@ class FlowAnalyser(object):
 		# Runs bs and unanalyzed data through the F and F_error
 		self.bs_y_std = F_error(self.bs_y, self.bs_y_std)
 		self.bs_y = F(self.bs_y)
+
 		self.unanalyzed_y_std = F_error(self.unanalyzed_y, self.unanalyzed_y_std)
 		self.unanalyzed_y = F(self.unanalyzed_y)
 
@@ -345,7 +347,7 @@ class FlowAnalyser(object):
 			KeyError: if method is not a valid one.
 		"""
 
-		available_ac_methods = ["wolff","luscher"]
+		available_ac_methods = ["wolff", "luscher"]
 		if method not in available_ac_methods:
 			raise KeyError("%s not a receognized method. Choose from: %s." % (method,", ".join(available_ac_methods)))
 
@@ -395,6 +397,12 @@ class FlowAnalyser(object):
 				self.integrated_autocorrelation_time[i] = ac.integrated_autocorrelation_time()
 				self.integrated_autocorrelation_time_error[i] = ac.integrated_autocorrelation_time_error()
 				self.autocorrelation_error_correction[i] = np.sqrt(2*self.integrated_autocorrelation_time[i])
+
+				# if self.observable_name_compact == "energy" and i == 200:
+				# 	print ac.R
+				# 	print ac.R_error
+				# 	print ac.W
+				# 	print ac.tau_int
 
 		# Stores the ac error correction
 		if store_raw_ac_error_correction:

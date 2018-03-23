@@ -35,7 +35,7 @@ class Bootstrap:
 		self.data_original = data
 		self.avg_original = np.average(self.data_original, axis=axis)
 		self.var_original = np.var(self.data_original, axis=axis)
-		self.std_original = np.sqrt(self.var_original)
+		self.std_original = np.std(self.data_original, axis=axis)
 
 		# Sets some global class variables
 		self.shape = self.bs_avg.shape
@@ -86,7 +86,7 @@ def main():
 	N_bins = 20
 
 	# Bootstrapping
-	N_bootstraps = int(1e4)
+	N_bootstraps = int(500)
 	bs = Bootstrap(data, N_bootstraps)
 	bs_data = bs()
 

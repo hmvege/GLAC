@@ -13,6 +13,7 @@ def analyse_default(analysis_object, N_bs):
 	print analysis_object
 	analysis_object.boot(N_bs)
 	analysis_object.jackknife()
+	analysis_object.save_post_analysis_data()
 	analysis_object.plot_original()
 	analysis_object.plot_boot()
 	analysis_object.plot_jackknife()
@@ -283,7 +284,7 @@ def analyse(parameters):
 	print "="*100
 
 def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
-	line_fit_interval, energy_fit_target):
+	line_fit_interval, energy_fit_target, post_analysis_data_type="bootstrap"):
 	"""
 	Post analysis of the flow observables.
 
@@ -303,13 +304,13 @@ def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
 
 	# Plots topsus
 	topsus_analysis = TopSusPostAnalysis(data, "topsus")
-	topsus_analysis.set_analysis_data_type("bootstrap")
+	topsus_analysis.set_analysis_data_type("jackknife")
 	topsus_analysis.plot()
 
 	# Retrofits the topsus for continuum limit
 	continium_targets = [0.3, 0.4, 0.5, 0.58]
 	for cont_target in continium_targets:
-		topsus_analysis.plot_continiuum(cont_target, 0.015, "data_line_fit")
+		topsus_analysis.plot_continuum(cont_target)
 
 	# Plots energy
 	energy_analysis = EnergyPostAnalysis(data, "energy")
@@ -317,7 +318,7 @@ def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
 	energy_analysis.plot()
 
 	# Retrofits the energy for continiuum limit
-	energy_analysis.plot_continiuum(0.3, 0.015, "bootstrap_fit")
+	energy_analysis.plot_continuum(0.3, 0.015, "bootstrap_fit")
 
 	# Plot running coupling
 	energy_analysis.coupling_fit()
@@ -339,7 +340,7 @@ def main():
 	# observables = ["plaq", "energy", "topc", "topsus"]
 
 	# observables = basic_observables
-	# observables = ["energy", "topsus"]
+	observables = ["topc", "topsus"]
 	# observables = ["topcEuclSplit", "topcMCSplit", "topsusEuclSplit", "topsusMCSplit", "topct"]
 
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
@@ -378,12 +379,12 @@ def main():
 	# data_batch_folder = "data2"
 	# data_batch_folder = "data4"
 	data_batch_folder = "data5"
-	# data_batch_folder = "DataGiovanni" 
+	data_batch_folder = "DataGiovanni"
 	# data_batch_folder = "smaug_data_beta61"
 
 	#### If we need to multiply
 	if data_batch_folder == "DataGiovanni":
-		observable.remove("topct")
+		# observables.remove("topct")
 		correct_energy = False
 		load_file = True
 		save_to_binary = False
@@ -391,7 +392,8 @@ def main():
 		correct_energy = True
 
 	#### Different beta values folders:
-	beta_folders = ["beta60", "beta61", "beta62"]
+	# beta_folders = ["beta60", "beta61", "beta62"]
+	beta_folders = ["beta60", "beta61", "beta62", "beta645"]
 	# beta_folders = ["beta6_0", "beta6_1", "beta6_2"]
 	# beta_folders = ["beta61"]
 
@@ -438,18 +440,25 @@ def main():
 	databeta62["NCfgs"] = 500
 	databeta62["obs_file"] = "32_6.20"
 
+	databeta645 = copy.deepcopy(default_params)
+	databeta645["batch_name"] = beta_folders[3]
+	databeta645["NCfgs"] = 250
+	databeta645["obs_file"] = "48_6.45"
+
+
 	# smaug_data_beta61_analysis = copy.deepcopy(default_params)
 	# smaug_data_beta61_analysis["batch_name"] = beta_folders[0]
 	# smaug_data_beta61_analysis["NCfgs"] = 100
 
 	#### Adding relevant batches to args
-	analysis_parameter_list = [databeta60, databeta61, databeta62]
+	analysis_parameter_list = [databeta60, databeta61, databeta62, databeta645]
+	# analysis_parameter_list = [databeta60, databeta61, databeta62]
 	# analysis_parameter_list = [databeta61]
 	# analysis_parameter_list = [smaug_data_beta61_analysis]
 
-	#### Submitting observable-batches
-	for analysis_parameters in analysis_parameter_list:
-		analyse(analysis_parameters)
+	# #### Submitting observable-batches
+	# for analysis_parameters in analysis_parameter_list:
+	# 	analyse(analysis_parameters)
 
 	#### Submitting post-analysis data
 	if len(analysis_parameter_list) >= 2:

@@ -92,7 +92,7 @@ class _PostAnalysis:
 		self._check_plot_values()
 
 		# Retrieves values to plot
-		for beta in self.plot_values:
+		for beta in sorted(self.plot_values):
 			value = self.plot_values[beta]
 			x = value["x"]
 			y = value["y"]
@@ -201,6 +201,7 @@ class TopSusPostAnalysis(_PostAnalysis):
 		Function that sorts data into a format specific for the plotting method
 		"""		
 		for beta in sorted(data.keys()):
+			if beta == 6.45: self.flow_time *= 2
 			values = {}
 			values["beta"] = beta
 			values["a"] = getLatticeSpacing(beta)
@@ -277,14 +278,15 @@ class TopSusPostAnalysis(_PostAnalysis):
 
 		ax.set_ylabel(self.y_label_continuum)
 		ax.set_xlabel(self.x_label_continuum)
-		ax.set_title(r"$\sqrt{8t_{flow,0}} = %.2f[fm], \chi^2 = %.2f$" % (fit_target, chi_squared))
+		ax.set_title(r"$\sqrt{8t_{flow,0}} = %.2f[fm], \chi^2 = %.2g$" % (fit_target, chi_squared))
 		ax.set_xlim(-0.01, a[-1]*1.1)
 		ax.legend()
 		ax.grid(True)
 
 		# Saves figure
 		fname = os.path.join(self.output_folder_path, 
-			"post_analysis_%s_continuum%s.png" % (self.observable_name_compact, str(fit_target).replace(".","")))
+			"post_analysis_%s_continuum%s_%s.png" % (self.observable_name_compact, 
+				str(fit_target).replace(".",""), self.analysis_data_type))
 		fig.savefig(fname, dpi=self.dpi)
 
 		print "Continuum plot of %s created in %s" % (self.observable_name.lower(), fname)

@@ -77,7 +77,7 @@ class LineFit:
 	def _y_hat_err(self, x):
 		"""Unweigthed y(x) error, eq. 8b."""
 		_pt1 = self.b0 + self.b1 * x
-		_pt2 = scipy.stats.t.isf(0.68, self.n - 2) * np.sqrt(self.s_xy_err) 
+		_pt2 = scipy.stats.t.isf(0.32, self.n - 2) * np.sqrt(self.s_xy_err) 
 		_pt2 *= np.sqrt(1.0 / self.n + (x - self.x_mean)**2 / self.xi_xmean_sum)
 		return [_pt1 - _pt2, _pt1 + _pt2]
 
@@ -147,7 +147,7 @@ class LineFit:
 	def _yw_hat_err(self, x):
 		"""Weigthed y(x) errors, eq. 22."""
 		_pt1 = self.b0w + self.b1w * x
-		_pt2 = scipy.stats.t.isf(0.68, self.n - 2) * np.sqrt(self.s_xyw_err) 
+		_pt2 = scipy.stats.t.isf(0.32, self.n - 2) * np.sqrt(self.s_xyw_err) 
 		_pt2 *= np.sqrt(1.0 / np.sum(self.w) + (x - self.xw_mean)**2 / self.xwi_xmean_sum)
 
 		# print [_pt1 - _pt2, _pt1 + _pt2]

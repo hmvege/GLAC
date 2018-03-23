@@ -114,7 +114,7 @@ class _AutocorrelationCore(object):
 			C(t)  (numpy array): normalized autocorrelation times 
 		"""
 		for t in range(0, self.N/2):
-			self.R[t] = np.corrcoef(np.array([data_x[0:self.N-t],data_y[t:self.N]]))[0,1]
+			self.R[t] = np.corrcoef(np.array([data_x[0:self.N - t], data_y[t:self.N]]))[0,1]
 
 		self.G = self.R * self.C0 * 2
 
@@ -311,7 +311,7 @@ class PropagatedAutocorrelation(_AutocorrelationCore):
 		"""
 		return CfW*((2*np.arange(len(CfW)) + 1.0)/float(self.N) + 1.0)
 
-	def _gW(self,tau):
+	def _gW(self, tau):
 		"""
 		Eq. 52, getting optimal W
 		"""
@@ -356,13 +356,24 @@ def testRegularAC(data,N_bins,store_plots,time_ac_functions):
 		const = 0.0763234462734
 		return 0.25*const / Q_squared**(0.75)
 
+	def print_values(observable, method, values, autocorr, autocorr_error):
+		value_string = observable
+		value_string += "\nMethod:                             {0:<s}".format(method)
+		value_string += "\nAverage:                            {0:<.8f}".format(np.average(values))
+		value_string += "\nStd:                                {0:<.8f}".format(np.std(values))
+		value_string += "\nStd with ac-time correction:        {0:<.8f}".format(np.std(data)*np.sqrt(2*autocorr))
+		value_string += "\nsqrt(2*tau_int):                    {0:<.8f}".format(np.sqrt(2*autocorr))
+		value_string += "\nIntegrated ac-time:                 {0:<.8f}".format(autocorr)
+		value_string += "\nIntegrated ac-time error:           {0:<.8f}".format(autocorr_error)
+		print value_string
+
 	print "="*20, "RUNNING DEFAULT TEST", "="*20
 	
 	# Autocorrelation
 	ac = Autocorrelation(data,method="manual",time_autocorrelation = time_ac_functions)
 	ac.plot_autocorrelation(r"Autocorrelation for Plaquette $\beta = 6.2, \tau=10.0$", "beta6_2",dryrun=(not store_plots))
-	ac.integrated_autocorrelation_time()
-	ac.integrated_autocorrelation_time_error()
+	ac_manual = ac.integrated_autocorrelation_time()
+	ac_manual_err = ac.integrated_autocorrelation_time_error()
 
 	# Autocorrelation with numpy corrcoef
 	ac_numpy1 = Autocorrelation(data,method="corrcoef", time_autocorrelation = time_ac_functions)
@@ -374,20 +385,10 @@ def testRegularAC(data,N_bins,store_plots,time_ac_functions):
 	ac_numpy2.plot_autocorrelation(r"Autocorrelation for Plaquette $\beta = 6.2, \tau=10.0$ using np\.correlate", "beta6_2",dryrun=(not store_plots))
 	ac_autocorr2 = ac_numpy2.integrated_autocorrelation_time()
 	ac_autocorr_err2 = ac_numpy2.integrated_autocorrelation_time_error()
-	print """
-Plaquette
-Average:                            {0:<.8f}
-Std:                                {1:<.8f}
-Std with ac-time correction:        {2:<.8f}
-sqrt(2*tau_int):                    {3:<.8f}
-Integrated ac-time:                 {4:<.8f}
-Integrated ac-time error:           {5:<.8f}""".format(
-	np.average(data),
-	np.std(data),
-	np.std(data)*np.sqrt(2*ac_autocorr),
-	np.sqrt(2*ac_autocorr),
-	ac_autocorr,
-	ac_autocorr_err)
+
+	print_values("Plaquette", "manual", data, ac_manual, ac_manual_err)
+	print_values("Plaquette", "corrcoef", data, ac_autocorr, ac_autocorr_err)
+	print_values("Plaquette", "correlate", data, ac_autocorr2, ac_autocorr_err2)
 
 	# Differences in time
 	print """
