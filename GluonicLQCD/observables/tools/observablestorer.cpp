@@ -113,8 +113,8 @@ void ObservableStorer::reset()
      */
     for (int i = 0; i < m_NObs; i++)
     {
-        m_averagedObservable = 0;
-        m_averagedObservableSquared = 0;
+        m_observables[i] = 0;
+        m_observablesSquared[i] = 0;
     }
     m_averagedObservable = 0;
     m_averagedObservableSquared = 0;

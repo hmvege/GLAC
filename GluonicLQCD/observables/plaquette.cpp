@@ -53,10 +53,12 @@ void Plaquette::runStatistics()
 
 void Plaquette::printObservable(int iObs)
 {
-    if (!m_storeFlowObservable) {
-        printf("%-*.8f",m_headerWidth,(*m_observable)[iObs]);
-    } else {
-        printf("\n%-4d %-*.8f",iObs,m_headerWidth,(*m_observable)[iObs]);
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        if (!m_storeFlowObservable) {
+            printf("%-*.8f",m_headerWidth,(*m_observable)[iObs]);
+        } else {
+            printf("\n%-4d %-*.8f",iObs,m_headerWidth,(*m_observable)[iObs]);
+        }
     }
 }
 

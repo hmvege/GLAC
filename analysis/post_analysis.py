@@ -283,6 +283,8 @@ class TopSusPostAnalysis(_PostAnalysis):
 		ax.legend()
 		ax.grid(True)
 
+		# print "Target: %.16f +/- %.16f" % (c[0], y0_err[0])
+
 		# Saves figure
 		fname = os.path.join(self.output_folder_path, 
 			"post_analysis_%s_continuum%s_%s.png" % (self.observable_name_compact, 

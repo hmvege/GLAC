@@ -5,6 +5,9 @@
 #include "config/parameters.h"
 #include "io/observablesio.h"
 
+
+#include "parallelization/neighbours.h"
+
 MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
 {
     // Sets up observable storage containers
@@ -22,8 +25,6 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
     m_U3Temp.allocate(m_N);
     m_temp.allocate(m_N);
 
-//    m_tempDiag.allocate(m_N);
-
     // Allocates temporary vector for retrieves results from the lattice method
     m_tempTopcT.resize(m_N[3]);
 
@@ -34,8 +35,6 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
             m_tempTopctArray[iFlow*Parameters::getNTemporal() + it] = 0;
         }
     }
-
-//    cout << Parameters::getNTemporal() * (Parameters::getNFlows() + 1) << endl;
 }
 
 MasterSamplerTopcXYZ::~MasterSamplerTopcXYZ()
@@ -133,39 +132,58 @@ void MasterSamplerTopcXYZ::runStatistics()
 void MasterSamplerTopcXYZ::printHeader()
 {
     if (!m_storeFlowObservable) {
-        printf("%-*s %-*s %-*s",
+        printf("%-*s %-*s %-*s %-*s",
                m_headerWidth,m_plaqObservable->getObservableName().c_str(),
                m_headerWidth,m_topcObservable->getObservableName().c_str(),
-               m_headerWidth,m_energyObservable->getObservableName().c_str());
+               m_headerWidth,m_energyObservable->getObservableName().c_str(),
+               m_headerWidth,m_topctObservable->getObservableName().c_str());
     } else {
-        printf("\ni    t      %-*s %-*s %-*s",
+        printf("\ni    t      %-*s %-*s %-*s %-*s",
                m_headerWidth,m_plaqObservable->getObservableName().c_str(),
                m_headerWidth,m_topcObservable->getObservableName().c_str(),
-               m_headerWidth,m_energyObservable->getObservableName().c_str());
+               m_headerWidth,m_energyObservable->getObservableName().c_str(),
+               m_headerWidth,m_topctObservable->getObservableName().c_str());
     }
 }
 
 void MasterSamplerTopcXYZ::printObservable(int iObs)
 {
     if (!m_storeFlowObservable) {
-        printf("%-*.8f %-*.8f %-*.8f",
-               m_headerWidth,m_plaqObservable->getObservable(iObs),
-               m_headerWidth,m_topcObservable->getObservable(iObs),
-               m_headerWidth,m_energyObservable->getObservable(iObs));
+        double topctObs = 0;
+        for (unsigned int it = 0; it < m_N[3]; it++) {
+            topctObs += (*m_topctObservable)[iObs*m_N[3] + it];
+        }
+        Parallel::Communicator::gatherDoubleResults(&topctObs,1);
+
+        if (Parallel::Communicator::getProcessRank() == 0) {
+            printf("%-*.8f %-*.8f %-*.8f %-*.8f",
+                   m_headerWidth,m_plaqObservable->getObservable(iObs),
+                   m_headerWidth,m_topcObservable->getObservable(iObs),
+                   m_headerWidth,m_energyObservable->getObservable(iObs),
+                   m_headerWidth,topctObs);
+        }
     } else {
-        double plaqObs = m_plaqObservable->getObservable(iObs); // TEMP TEMP TEMP!
+        double plaqObs = m_plaqObservable->getObservable(iObs);
         double topcObs = m_topcObservable->getObservable(iObs);
         double energyObs = m_energyObservable->getObservable(iObs);
+        double topctObs = 0;
+        for (unsigned int it = 0; it < m_N[3]; it++) {
+            topctObs += (*m_topctObservable)[iObs*m_N[3] + it];
+        }
+
         Parallel::Communicator::gatherDoubleResults(&plaqObs,1);
         Parallel::Communicator::gatherDoubleResults(&topcObs,1);
         Parallel::Communicator::gatherDoubleResults(&energyObs,1);
+        Parallel::Communicator::gatherDoubleResults(&topctObs,1);
+
         if (Parallel::Communicator::getProcessRank() == 0) {
-            printf("\n%-4d %-3.3f  %-*.15f %-*.15f %-*.15f",
+            printf("\n%-4d %-3.3f  %-*.15f %-*.15f %-*.15f %-*.15f",
                    iObs,
                    double(iObs)*Parameters::getFlowEpsilon(),
                    m_headerWidth,plaqObs/double(Parallel::Communicator::getNumProc()),
                    m_headerWidth,topcObs,
-                   m_headerWidth,energyObs);
+                   m_headerWidth,energyObs,
+                   m_headerWidth,topctObs);
         }
     }
 }
@@ -196,6 +214,7 @@ std::vector<double> MasterSamplerTopcXYZ::getObservablesVector(int iObs)
     for (unsigned int it = 0; it < m_N[3]; it++) {
         obs[3 + it] = (*m_topctObservable)[iObs*m_N[3] + it];
     }
+
     return obs;
 }
 
@@ -208,6 +227,10 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
     m_energy = 0;
     m_plaquette = 0;
     mu = 0;
+
+    for (unsigned int it = 0; it < m_N[3]; it++) {
+        m_tempTopcT[it] = 0;
+    }
 
     for (int nu = 1; nu < 4; nu++)
     {
@@ -317,6 +340,7 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
         m_energy += sumRealTraceMultiplication(m_clov2,m_clov2);
     }
 
+
     ///////////////////////////
     //////// PLAQUETTE ////////
     ///////////////////////////
@@ -341,8 +365,4 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
     for (unsigned int it = 0; it < m_N[3]; it++) {
         (*m_topctObservable)[iObs*m_N[3] + it] *= m_topcMultiplicationFactor;
     }
-
-    ///////////////////////////
-    /// LATTICE ENERGY DENS. //
-    ///////////////////////////
 }

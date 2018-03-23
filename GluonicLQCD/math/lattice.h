@@ -411,14 +411,15 @@ inline std::vector<double> sumXYZ(Lattice<double> L)
      */
 
     // Creates empty vector for time axis points
-    std::vector<double> latticeXYZSum(L.m_dim[3],0);
+    std::vector<double> latticeXYZSum(L.m_dim[3], 0);
 
     // Sums the xyz directions into the time axis
-    for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
         for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
-            for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
-                for (unsigned int it = 0; it < L.m_dim[3]; it++)
-                latticeXYZSum[it] += L[Parallel::Index::getIndex(ix,iy,iz,it)];
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    latticeXYZSum[it] += L[Parallel::Index::getIndex(ix,iy,iz,it)];
+                }
             }
         }
     }
@@ -434,6 +435,7 @@ inline Lattice<double> realTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
     int site = 0;
     Lattice<double>latticeSum;
     latticeSum.allocate(L1.m_dim);
+    latticeSum.zeros();
 
     for (unsigned int ix = 0; ix < L1.m_dim[0]; ix++) {
         for (unsigned int iy = 0; iy < L1.m_dim[1]; iy++) {

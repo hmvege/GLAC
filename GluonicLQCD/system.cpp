@@ -387,13 +387,17 @@ void System::runMetropolis()
         if (m_NFlows == 0) {
             m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
         } else {
-            m_correlator->copyObservable(iConfig, m_flowCorrelator->getObservablesVector(0));
+            m_correlator->copyObservable(iConfig + m_NThermSteps, m_flowCorrelator->getObservablesVector(0));
         }
 
         if (m_processRank == 0) {
             // Printing the observables
             printf("\n%-4d ",iConfig);
-            m_correlator->printObservable(iConfig + m_NThermSteps);
+        }
+        m_correlator->printObservable(iConfig + m_NThermSteps);
+
+        if (m_processRank == 0) {
+            // Adds time per cfg to output
             printf(" %-12.8f",m_updateStorer/double((iConfig+1)*m_NCor));
 
             // Adding the acceptance ratio

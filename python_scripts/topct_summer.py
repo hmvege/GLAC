@@ -18,10 +18,20 @@ def main(data_folder, new_data_folder, dryrun):
 	folder_files = sorted(os.listdir(data_folder))
 	new_folder_files = sorted(os.listdir(new_data_folder))
 
+	# Remoes .DS_Store files
+	for i, f in enumerate(folder_files):
+		if f.startswith("."):
+			folder_files.pop(i)
+
+	for i, f in enumerate(new_folder_files):
+		if f.startswith("."):
+			new_folder_files.pop(i)
+
 	# Sets up dictionary for transporting the meta-data
 	meta_data = {}
 
 	for i, files in enumerate(zip(folder_files,new_folder_files)):
+
 		file, new_file = files
 
 		N_rows_to_skip = 0
@@ -87,8 +97,8 @@ def main(data_folder, new_data_folder, dryrun):
 	print "Summing and rewriting complete."
 
 if __name__ == '__main__':
-	dryrun = False
+	dryrun = True
 
-	topct_folder = "../data5/beta62/flow_observables/topct"
-	new_topc_folder = "../data5/beta62/flow_observables/topc"
+	topct_folder = "../data5/beta61/flow_observables/topct"
+	new_topc_folder = "../data5/beta61/flow_observables/topc"
 	main(topct_folder, new_topc_folder, dryrun)

@@ -118,10 +118,12 @@ void LatticeActionChargeDensity::printHeader()
 void LatticeActionChargeDensity::printObservable(int iObs)
 {
     if (!m_storeFlowObservable) {
-        printf("%-*.8f %-*.8f %-*.8f",
-               m_headerWidth,m_plaqObservable->getObservable(iObs),
-               m_headerWidth,m_topcObservable->getObservable(iObs),
-               m_headerWidth,m_energyObservable->getObservable(iObs));
+        if (Parallel::Communicator::getProcessRank() == 0) {
+            printf("%-*.8f %-*.8f %-*.8f",
+                   m_headerWidth,m_plaqObservable->getObservable(iObs),
+                   m_headerWidth,m_topcObservable->getObservable(iObs),
+                   m_headerWidth,m_energyObservable->getObservable(iObs));
+        }
     } else {
         double plaqObs = m_plaqObservable->getObservable(iObs); // TEMP TEMP TEMP!
         double topcObs = m_topcObservable->getObservable(iObs);
