@@ -60,12 +60,16 @@ class TimeEstimator:
 		self.b645_flow_estimate_std = np.std(b645_flow_estimates)
 		self.flow_times[str(self.beta_values[3])] = np.mean(b645_flow_estimates)
 
-	def get_time(self,beta,N_configs,N_corr,N_therms,N_flows,numprocs=512,N_updates=10,verbose=False):
-		NUpdatesScaling = 1 + self.NUScaling *(N_updates-10)/20
+	def get_time(self, beta, N_configs, N_corr, N_therms, N_flows, numprocs=512, N_updates=10, verbose=False):
+		NUpdatesScaling = 1 + self.NUScaling * (N_updates - 10) / 20
+
+		# Test runs done with 512 cores, scaling around 0.55
+		cpu_scaling = (0.55 ** ((numprocs-512) / 512))
 
 		config_time_est = self.cfg_times_per_config[str(beta)] * NUpdatesScaling
 
 		total_config_time_est = config_time_est * N_configs * N_corr 
+		config_cpu_time = total_config_time_est*cpu_scaling/60.0*numprocs
 
 		# Estimates thermalization
 		thermalization_time_est = config_time_est * N_therms
@@ -73,14 +77,13 @@ class TimeEstimator:
 		# Estimates flow times
 		flow_time_est = self.flow_times[str(beta)]
 		total_flow_time_est = flow_time_est*N_configs*N_flows
+		flow_cpu_time = total_flow_time_est*cpu_scaling/60.0*numprocs
 
 		# Total time for program run
 		total_time = total_flow_time_est + total_config_time_est + thermalization_time_est
 
-		# Test runs done with 512 cores, scaling around 0.55
-		cpu_scaling = (0.55 ** ((numprocs-512) / 512))
 
-		cpu_time = total_time*cpu_scaling/60.0*numprocs
+		total_cpu_time = total_time*cpu_scaling/60.0*numprocs
 
 		if verbose:
 			print """
@@ -101,31 +104,27 @@ N updates scaling factor:   %d
 			error_flow = "+/- %-.6f hours" % (num_error_flow)
 			total_error = "+/- %-.6f hours" % (np.sqrt(num_error_cfg**2 + num_error_flow**2))
 
-		print """Time estimate for run:
-beta                %.2f
-N_configs           %d
-N_corr              %d
-N_therms            %d
-N_updates           %d
-N_flows             %d
-CPUs                %d
-%s
-Time per config:    %10.3f minutes
-Total config time:  %10.2f minutes / %-.1f hours %s
-Thermalization time:%10.2f minutes / %-.1f hours %s
-Time per flow:      %10.3f minutes
-Total flow-time:    %10.2f minutes / %-.1f hours %s
-Total time:         %10.2f minutes / %-.1f hours %s
-CPU hours:          %10.2f hours
-%s""" % (beta,N_configs,N_corr,N_therms,N_updates,N_flows,numprocs,100*"=",
-			config_time_est*cpu_scaling,
-			total_config_time_est*cpu_scaling,total_config_time_est*cpu_scaling/60,error_cfg,
-			thermalization_time_est*cpu_scaling,thermalization_time_est*cpu_scaling/60,error_therm,
-			flow_time_est*cpu_scaling,
-			total_flow_time_est*cpu_scaling,total_flow_time_est*cpu_scaling/60,error_flow,
-			total_time*cpu_scaling, (total_time*cpu_scaling)/60, total_error,
-			cpu_time,
-			100*"=")
+		msg = "Time estimate for run:"
+		msg += "\nbeta                %.2f" % beta
+		msg += "\nN_configs           %d" % N_configs
+		msg += "\nN_corr              %d" % N_corr
+		msg += "\nN_therm             %d" % N_therms
+		msg += "\nN_updates           %d" % N_updates
+		msg += "\nN_flows             %d" % N_flows
+		msg += "\nCPUs                %d" % numprocs
+		msg += "\n" + 100*"="
+		msg += "\nTime per config:    %10.3f minutes" % (config_time_est*cpu_scaling)
+		msg += "\nTotal config time:  %10.2f minutes / %-.1f hours %s" % (total_config_time_est*cpu_scaling, total_config_time_est*cpu_scaling/60, error_cfg)
+		msg += "\nConfig CPU hours:   %10.2f hours" % config_cpu_time
+		msg += "\nThermalization time:%10.2f minutes / %-.1f hours %s" % (thermalization_time_est*cpu_scaling, thermalization_time_est*cpu_scaling/60, error_therm)
+		msg += "\nTime per flow:      %10.3f minutes" % (flow_time_est*cpu_scaling)
+		msg += "\nTotal flow-time:    %10.2f minutes / %-.1f hours %s" % (total_flow_time_est*cpu_scaling, total_flow_time_est*cpu_scaling/60, error_flow)
+		msg += "\nFlow CPU hours:     %10.2f hours" % flow_cpu_time
+		msg += "\nTotal time:         %10.2f minutes / %-.1f hours %s" % (total_time*cpu_scaling, (total_time*cpu_scaling)/60, total_error)
+		msg += "\nTotal CPU hours:    %10.2f hours" % total_cpu_time
+		msg += "\n" + 100*"="
+
+		print msg
 
 if __name__ == '__main__':
 	description_string = """Small program intended for estimating times"""
@@ -152,6 +151,7 @@ if __name__ == '__main__':
 
 	# Parses arguments
 	# if len(sys.argv) == 1:
+	# args = parser.parse_args(['6.1', '-NCorr', '600', '-NUp', '30', '-NF', '1000', '-numprocs', '512'])
 	# 	args = parser.parse_args(["6.45","-NCfgs","250"])
 	args = parser.parse_args()
 	# args = parser.parse_args(['6.0', '-NCorr', '600', '-NCfgs', '1000', '-NF', '1000', '-NTherm', '20000', '-NUp', '30'])

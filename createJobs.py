@@ -347,21 +347,6 @@ class JobCreator:
         # Setting approximated run time
         estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr, cpu_approx_runtime_min)
 
-        # Setting run-command
-        if not system == "laconia":
-            run_command = "mpirun -n {0:<d}".format(threads)
-            run_command += " "
-            run_command += os.path.join(self.CURRENT_PATH, binary_filename)
-            run_command += " "
-            run_command += os.path.join(self.base_folder, "input", self.json_file_name)
-
-        else :
-            run_command = "mpirun -np {0:<d}".format(threads)
-            run_command += " "
-            run_command += os.path.join(self.CURRENT_PATH, binary_filename)
-            run_command += " "
-            run_command += os.path.join(self.base_folder, "input", self.json_file_name)
-
         # Choosing system
         if system == "smaug":
             # Smaug batch file.
@@ -372,7 +357,6 @@ class JobCreator:
             content += "\n#SBATCH --ntasks={0:<d}".format(threads)
             content += "\n#SBATCH --time={0:<s}".format(estimated_time)
             content += "\n" + sbatch_exclusions
-            content += "\n" + run_command
 
         elif system == "abel":
             # Abel specific commands
@@ -400,29 +384,53 @@ class JobCreator:
             content += "\nmodule purge                # clear any inherited modules"
             content += "\nmodule load openmpi.gnu     # loads mpi\n"
             content += "\nset -o errexit              # exit on errors\n"
-            content += "\n" + run_command
 
         elif system == "laconia":
             account_name = "ptg"
-            threads = 28
-            nodes = 19
+            tasks_per_node = 28
+            
+            nodes = 1
+            if threads > tasks_per_node:
+                nodes = threads/tasks_per_node
+
+            if threads % (tasks_per_node * nodes) != 0:
+                nodes += 1
+            
+            threads = tasks_per_node * nodes
+
             cpu_memory = job_config["cpu_memory"]
             # sys.exit("Error: not implemented setup for system: %s" % system) # Also, has to load module load Qt/5.6.2
 
             content = "#! /bin/bash -login"
             content += "\n#PBS -A {0:<s}".format(account_name)
-            content += "\n#PBS -l walltime={0:<s},nodes={1:<1d}:ppn={2:<d},mem={3:<4d}MB".format(estimated_time, nodes, threads, cpu_memory*nodes)
+            content += "\n#PBS -l walltime={0:<s},nodes={1:<1d}:ppn={2:<d},mem={3:<4d}MB".format(estimated_time, nodes, tasks_per_node, cpu_memory*threads)
             content += "\n#PBS -N {0:<s}".format(job_name)
             content += "\n#PBS -M h.m.m.vege@fys.uio.no"
             content += "\n#PBS -m bea"
             content += "\nmodule load GNU/4.9"
             content += "\nmodule load OpenMPI/1.10.0"
-            content += "\n" + run_command
 
         elif system == "local":
             sys.exit("Error: this is a local production run. Should never see this error message.")
         else:
             sys.exit("Error: system %s not recognized." % system)
+
+        # Setting run-command
+        if not system == "laconia":
+            run_command = "mpirun -n {0:<d}".format(threads)
+            run_command += " "
+            run_command += os.path.join(self.CURRENT_PATH, binary_filename)
+            run_command += " "
+            run_command += os.path.join(self.base_folder, "input", self.json_file_name)
+
+        else :
+            run_command = "mpirun -np {0:<d}".format(threads)
+            run_command += " "
+            run_command += os.path.join(self.CURRENT_PATH, binary_filename)
+            run_command += " "
+            run_command += os.path.join(self.base_folder, "input", self.json_file_name)
+
+        content += "\n" + run_command
 
         if not system == "laconia":
             job = 'jobfile.slurm'

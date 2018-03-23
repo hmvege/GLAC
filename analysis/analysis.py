@@ -340,7 +340,7 @@ def main():
 	# observables = ["plaq", "energy", "topc", "topsus"]
 
 	# observables = basic_observables
-	observables = ["topc", "topsus"]
+	# observables = ["topc", "topsus"]
 	# observables = ["topcEuclSplit", "topcMCSplit", "topsusEuclSplit", "topsusMCSplit", "topct"]
 
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
@@ -379,7 +379,7 @@ def main():
 	# data_batch_folder = "data2"
 	# data_batch_folder = "data4"
 	data_batch_folder = "data5"
-	data_batch_folder = "DataGiovanni"
+	# data_batch_folder = "DataGiovanni"
 	# data_batch_folder = "smaug_data_beta61"
 
 	#### If we need to multiply
@@ -453,17 +453,17 @@ def main():
 	#### Adding relevant batches to args
 	analysis_parameter_list = [databeta60, databeta61, databeta62, databeta645]
 	# analysis_parameter_list = [databeta60, databeta61, databeta62]
-	# analysis_parameter_list = [databeta61]
+	analysis_parameter_list = [databeta61]
 	# analysis_parameter_list = [smaug_data_beta61_analysis]
 
-	# #### Submitting observable-batches
-	# for analysis_parameters in analysis_parameter_list:
-	# 	analyse(analysis_parameters)
+	#### Submitting observable-batches
+	for analysis_parameters in analysis_parameter_list:
+		analyse(analysis_parameters)
 
-	#### Submitting post-analysis data
-	if len(analysis_parameter_list) >= 2:
-		post_analysis(data_batch_folder, beta_folders, topsus_fit_targets,
-			line_fit_interval, energy_fit_target)
+	# #### Submitting post-analysis data
+	# if len(analysis_parameter_list) >= 2:
+	# 	post_analysis(data_batch_folder, beta_folders, topsus_fit_targets,
+	# 		line_fit_interval, energy_fit_target)
 
 if __name__ == '__main__':
 	main()
