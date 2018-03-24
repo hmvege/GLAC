@@ -97,11 +97,11 @@ void Correlator::copyObservable(int iObs, std::vector<double> obs) {
     /*
      * Used when we already have calculated the observable in the
      */
-    m_observable[iObs] = obs[0];
+    (*m_observable)[iObs] = obs[0];
 }
 
 void Correlator::setObservable(int iObs, double obs) {
-    m_observable[iObs] = obs;
+    (*m_observable)[iObs] = obs;
 }
 
 std::vector<double> Correlator::getObservablesVector(int iObs) {

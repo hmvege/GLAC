@@ -395,7 +395,7 @@ def main():
 	# beta_folders = ["beta60", "beta61", "beta62"]
 	beta_folders = ["beta60", "beta61", "beta62", "beta645"]
 	# beta_folders = ["beta6_0", "beta6_1", "beta6_2"]
-	# beta_folders = ["beta61"]
+	beta_folders = ["beta61"]
 
 	# Indexes to look at for topct.
 	num_t_euclidean_indexes = 5

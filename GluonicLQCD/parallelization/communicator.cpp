@@ -389,10 +389,14 @@ void Parallel::Communicator::setBarrier()
 
 void Parallel::Communicator::freeMPIGroups()
 {
-
     MPI_Group_free(&Parallel::ParallelParameters::WORLD_GROUP);
     MPI_Group_free(&Parallel::ParallelParameters::ACTIVE_GROUP);
-    MPI_Comm_free(&Parallel::ParallelParameters::ACTIVE_COMM);
+
+    // Only freeing those who has an active comm, processors who are
+    // inactive have MPI_COMM_NULL, are not need to be freed.
+    if (Parallel::ParallelParameters::ACTIVE_COMM != MPI_COMM_NULL) {
+        MPI_Comm_free(&Parallel::ParallelParameters::ACTIVE_COMM);
+    }
 }
 
 void Parallel::Communicator::MPIExit(std::string message)

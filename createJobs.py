@@ -407,8 +407,9 @@ class JobCreator:
             content += "\n#PBS -N {0:<s}".format(job_name)
             content += "\n#PBS -M h.m.m.vege@fys.uio.no"
             content += "\n#PBS -m bea"
-            content += "\nmodule load GNU/4.9"
-            content += "\nmodule load OpenMPI/1.10.0"
+            content += "\nmodule load GNU/6.2"
+            content += "\nmodule load OpenMPI/2.0.2"
+            #content += "\nmodule load Qt/5.6.2"
 
         elif system == "local":
             sys.exit("Error: this is a local production run. Should never see this error message.")
