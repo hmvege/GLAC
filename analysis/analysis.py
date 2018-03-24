@@ -330,18 +330,19 @@ def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
 
 def main():
 	#### Available observables
-	observables = [
-		"plaq", "energy", "topc", "topsus", "qtqzero", "topc4", 
-		"topct", "topcEuclSplit", "topcMCSplit", "topsusEuclSplit", 
-		"topsusMCSplit"
-	]
+	# observables = [
+	# 	"plaq", "energy", "topc", "topsus", "qtqzero", "topc4", 
+	# 	"topct", "topcEuclSplit", "topcMCSplit", "topsusEuclSplit", 
+	# 	"topsusMCSplit"
+	# ]
 	
 	#### Basic observables
 	# observables = ["plaq", "energy", "topc", "topsus"]
 
 	# observables = basic_observables
-	observables = ["topc", "topsus"]
+	# observables = ["topc", "topsus"]
 	# observables = ["topcEuclSplit", "topcMCSplit", "topsusEuclSplit", "topsusMCSplit", "topct"]
+	observables = ["topsusEuclSplit", "topsusMCSplit"]
 
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
 	print 100*"=" + "\n"
@@ -356,7 +357,7 @@ def main():
 		"parallel": parallel, "numprocs": numprocs}
 
 	#### Try to load binary file(much much faster)
-	load_file = False
+	load_file = True
 
 	# If we are to create per-flow datasets as opposite to per-cfg datasets
 	create_perflow_data = False
@@ -384,7 +385,8 @@ def main():
 
 	#### If we need to multiply
 	if data_batch_folder == "DataGiovanni":
-		# observables.remove("topct")
+		if "topct" in observables:
+			observables.remove("topct")
 		correct_energy = False
 		load_file = True
 		save_to_binary = False
