@@ -340,7 +340,7 @@ def main():
 	# observables = ["plaq", "energy", "topc", "topsus"]
 
 	# observables = basic_observables
-	# observables = ["topc", "topsus"]
+	observables = ["topc", "topsus"]
 	# observables = ["topcEuclSplit", "topcMCSplit", "topsusEuclSplit", "topsusMCSplit", "topct"]
 
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
@@ -356,7 +356,7 @@ def main():
 		"parallel": parallel, "numprocs": numprocs}
 
 	#### Try to load binary file(much much faster)
-	load_file = True
+	load_file = False
 
 	# If we are to create per-flow datasets as opposite to per-cfg datasets
 	create_perflow_data = False
@@ -395,7 +395,7 @@ def main():
 	# beta_folders = ["beta60", "beta61", "beta62"]
 	beta_folders = ["beta60", "beta61", "beta62", "beta645"]
 	# beta_folders = ["beta6_0", "beta6_1", "beta6_2"]
-	beta_folders = ["beta61"]
+	# beta_folders = ["beta61"]
 
 	# Indexes to look at for topct.
 	num_t_euclidean_indexes = 5
@@ -453,7 +453,8 @@ def main():
 	#### Adding relevant batches to args
 	analysis_parameter_list = [databeta60, databeta61, databeta62, databeta645]
 	# analysis_parameter_list = [databeta60, databeta61, databeta62]
-	analysis_parameter_list = [databeta61]
+	analysis_parameter_list = [databeta62]
+	# analysis_parameter_list = [databeta61, databeta62]
 	# analysis_parameter_list = [smaug_data_beta61_analysis]
 
 	#### Submitting observable-batches

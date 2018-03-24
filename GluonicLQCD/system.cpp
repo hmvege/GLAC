@@ -245,8 +245,8 @@ void System::thermalize()
             printf("\ni    ");
             m_correlator->printHeader();
             printf("\n%-4d ",0);
-            m_correlator->printObservable(0);
         }
+        m_correlator->printObservable(0);
     }
     // Running thermalization
     for (int iTherm = 1; iTherm < m_NTherm + 1; iTherm++)
@@ -272,10 +272,8 @@ void System::thermalize()
         if (m_storeThermalizationObservables) {
             // Calculating the correlator
             m_correlator->calculate(m_lattice,iTherm);
-            if (m_processRank == 0) {
-                printf("\n%-4d ",iTherm);
-                m_correlator->printObservable(iTherm);
-            }
+            if (m_processRank == 0) printf("\n%-4d ",iTherm);
+            m_correlator->printObservable(iTherm);
         }
     }
 
@@ -427,6 +425,7 @@ void System::runMetropolis()
         printf("\nTotal update time for %d updates: %.6f sec.\n", m_NCf*m_NCor, m_updateStorer + m_updateStorerTherm);
         SysPrint::printLine();
     }
+
     m_correlator->runStatistics();
     m_correlator->writeObservableToFile(getAcceptanceRate()); // Runs statistics, writes to file, and prints results (if verbose is on)
     m_correlator->printStatistics();

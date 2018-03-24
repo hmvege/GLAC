@@ -124,8 +124,13 @@ void MasterSamplerTopcXYZ::reset()
 
 void MasterSamplerTopcXYZ::runStatistics()
 {
+    m_plaqObservable->gatherResults();
     m_plaqObservable->runStatistics();
+
+    m_topcObservable->gatherResults();
     m_topcObservable->runStatistics();
+
+    m_energyObservable->gatherResults();
     m_energyObservable->runStatistics();
 }
 
@@ -153,12 +158,19 @@ void MasterSamplerTopcXYZ::printObservable(int iObs)
         for (unsigned int it = 0; it < m_N[3]; it++) {
             topctObs += (*m_topctObservable)[iObs*m_N[3] + it];
         }
+
+        double topcObs = 0;
+        topcObs = m_topcObservable->getObservable(iObs);
+
+        if (Parameters::getNFlows() != 0) {
+            Parallel::Communicator::gatherDoubleResults(&topcObs,1);
+        }
         Parallel::Communicator::gatherDoubleResults(&topctObs,1);
 
         if (Parallel::Communicator::getProcessRank() == 0) {
             printf("%-*.8f %-*.8f %-*.8f %-*.8f",
                    m_headerWidth,m_plaqObservable->getObservable(iObs),
-                   m_headerWidth,m_topcObservable->getObservable(iObs),
+                   m_headerWidth,topcObs,
                    m_headerWidth,m_energyObservable->getObservable(iObs),
                    m_headerWidth,topctObs);
         }
