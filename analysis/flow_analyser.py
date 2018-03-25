@@ -789,22 +789,13 @@ class _AnalyseTopSusBase(FlowAnalyser):
 		"""Topological susceptibility with error propagation."""
 		return 0.25*self.const*Q_squared_std / Q_squared**(0.75)
 
-	def __set_size(self):
+	def __chi_derivative_setter(self):
 		"""
-		Function that sets the lattice size deepending on the beta value.
+		Hardcoded derivative setter for 4 different lattice sizes.
 
 		Raises:
-			ValueError: if beta is not recognized among beta = 6.0, 6.1, 6.2 or
-				6.45.
+			ValueError: if beta is not recognized among beta = 6.0, 6.1, 6.2 or 6.45.
 		"""
-
-		# Retrieves lattice spacing
-		self.a = self.getLatticeSpacing(self.beta)
-		
-		# Sets the lattice size
-		lattice_size = self.lattice_sizes[self.beta]
-
-		# Hardcoded derivative setter
 		if self.beta == 6.0:
 			self.function_derivative = ptools._chi_beta6_0_derivative
 		elif self.beta == 6.1:
@@ -815,6 +806,16 @@ class _AnalyseTopSusBase(FlowAnalyser):
 			self.function_derivative = ptools._chi_beta6_45_derivative
 		else:
 			raise ValueError("Unrecognized beta value: %g" % self.beta)
+
+	def __set_size(self):
+		"""Function that sets the lattice size deepending on the beta value."""
+		# Retrieves lattice spacing
+		self.a = self.getLatticeSpacing(self.beta)
+
+		# Sets the lattice size
+		lattice_size = self.lattice_sizes[self.beta]
+
+		self.__chi_derivative_setter()
 
 		# Sets up constants used in the chi function for topological susceptibility
 		self.V = lattice_size
@@ -1181,10 +1182,27 @@ class AnalysisTopSusSplitEuclideanTime(_EuclideanSplitAnalysis, _AnalyseTopSusBa
 		self.observable_output_folder_path_old = self.observable_output_folder_path
 		self.observable_name_compact_old = self.observable_name_compact
 
+	def __chi_derivative_setter(self):
+		if self.beta == 6.0:
+			self.function_derivative = ptools._chi_beta6_0_derivative_int12
+		elif self.beta == 6.1:
+			self.function_derivative = ptools._chi_beta6_1_derivative_int14
+		elif self.beta == 6.2:
+			self.function_derivative = ptools._chi_beta6_2_derivative_int16
+		elif self.beta == 6.45:
+			self.function_derivative = ptools._chi_beta6_45_derivative_int24
+		else:
+			raise ValueError("Unrecognized beta value: %g" % self.beta)
+
 	def set_t_interval(self, *args):
 		"""Runs first the inherited time setter function, then its own."""
 		super(AnalysisTopSusSplitEuclideanTime, self).set_t_interval(*args)
 		self.observable_name = r"$\chi(\langle Q^2 \rangle)^{1/4}$ in Euclidean time $[%d,%d)$" % self.t_interval
+		self.NT_interval_size = self.t_interval[-1] - self.t_interval[0]
+		self.V *= (self.NT_interval_size / float(self.NT))
+		# self.const /= (self.NT_interval_size / float(self.NT))**(0.25)
+
+		self.const = self.hbarc/self.a/self.V**(1./4)
 
 
 class _MCSplitAnalysis(FlowAnalyser):
@@ -1298,7 +1316,6 @@ class AnalysisTopSusSplitMCTime(_MCSplitAnalysis, _AnalyseTopSusBase):
 
 def main():
 	print "Module FlowAnalyser intended to be inherited, and not used as a standalone analysis tool."
-
 	exit(1)
 
 if __name__ == '__main__':

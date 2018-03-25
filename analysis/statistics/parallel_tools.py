@@ -58,6 +58,11 @@ def _chi_beta6_0_derivative(Q_squared):
 	const = 0.074230020266
 	return 0.25*const / Q_squared**(0.75)
 
+def _chi_beta6_0_derivative_int12(Q_squared):
+	# When we are looking at euclidean intervals of size 16
+	const = 0.074230020266 / (0.25)**(0.25)
+	return 0.25*const / Q_squared**(0.75)
+
 def _chi_beta6_0_derivativeQ4(Q4):
 	const = 0.074230020266
 	return (0.25*const)**2 / Q4**(0.5625)
@@ -73,6 +78,11 @@ def _chi_beta6_1_error(Q_squared, Q_squared_std):
 
 def _chi_beta6_1_derivative(Q_squared):
 	const = 0.0749573791735
+	return 0.25*const / Q_squared**(0.75)
+
+def _chi_beta6_1_derivative_int14(Q_squared):
+	# When we are looking at euclidean intervals of size 14
+	const = 0.0749573791735 / (0.25)**(0.25)
 	return 0.25*const / Q_squared**(0.75)
 
 def _chi_beta6_1_derivativeQ4(Q4):
@@ -92,6 +102,11 @@ def _chi_beta6_2_derivative(Q_squared):
 	const = 0.0763234462734
 	return 0.25*const / Q_squared**(0.75)
 
+def _chi_beta6_2_derivative_int16(Q_squared):
+	# When we are looking at euclidean intervals of size 16
+	const = 0.0763234462734 / (0.25)**(0.25)
+	return 0.25*const / Q_squared**(0.75)
+
 def _chi_beta6_2_derivativeQ4(Q4):
 	const = 0.0763234462734
 	return (0.25*const)**2 / Q4**(0.5625)
@@ -107,6 +122,11 @@ def _chi_beta6_45_error(Q_squared, Q_squared_std):
 
 def _chi_beta6_45_derivative(Q_squared):
 	const = 0.0723048176484
+	return 0.25*const / Q_squared**(0.75)
+
+def _chi_beta6_45_derivative_int24(Q_squared):
+	# When we are looking at euclidean intervals of size 24
+	const = 0.0723048176484 / (0.25)**(0.25)
 	return 0.25*const / Q_squared**(0.75)
 
 def _chi_beta6_45_derivativeQ4(Q4):
