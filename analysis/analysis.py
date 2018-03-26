@@ -9,7 +9,7 @@ import copy
 import sys
 import time
 
-def analyse_default(analysis_object, N_bs):
+def analyse_default(analysis_object, N_bs, NBins=30):
 	print analysis_object
 	analysis_object.boot(N_bs)
 	analysis_object.jackknife()
@@ -21,12 +21,18 @@ def analyse_default(analysis_object, N_bs):
 	analysis_object.plot_autocorrelation(0)
 	analysis_object.plot_autocorrelation(-1)
 	analysis_object.plot_mc_history(0)
+	analysis_object.plot_mc_history(int(analysis_object.N_configurations * 0.25))
+	analysis_object.plot_mc_history(int(analysis_object.N_configurations * 0.50))
+	analysis_object.plot_mc_history(int(analysis_object.N_configurations * 0.75))
 	analysis_object.plot_mc_history(-1)
 	analysis_object.plot_original()
 	analysis_object.plot_boot()
 	analysis_object.plot_jackknife()
-	analysis_object.plot_histogram(0)
-	analysis_object.plot_histogram(-1)
+	analysis_object.plot_histogram(0, NBins=NBins)
+	analysis_object.plot_histogram(int(analysis_object.NFlows * 0.25), NBins=NBins)
+	analysis_object.plot_histogram(int(analysis_object.NFlows * 0.50), NBins=NBins)
+	analysis_object.plot_histogram(int(analysis_object.NFlows * 0.75), NBins=NBins)
+	analysis_object.plot_histogram(-1, NBins=NBins)
 	analysis_object.plot_integrated_correlation_time()
 	analysis_object.plot_integrated_correlation_time()
 	analysis_object.save_post_analysis_data()
@@ -59,7 +65,7 @@ def analyse_topc(params):
 	else:
 		topc_analysis.y_limits = [None, None]
 
-	analyse_default(topc_analysis, N_bs)
+	analyse_default(topc_analysis, N_bs, NBins=100)
 
 def analyse_topc4(params):
 	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
@@ -80,7 +86,19 @@ def analyse_qtq0(params, qzero_flow_times):
 def analyse_topct(params, numsplits):
 	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
 
-	topct_analysis = AnalyseTopologicalChargeInEuclideanTime(obs_data("topct"),
+	topct_analysis = AnalyseTopChargeInEuclTime(obs_data("topct"),
+		dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
+
+	indexes = np.linspace(0, topct_analysis.NT, numsplits, dtype=int) - 1
+	indexes[0] += 1
+	for ie in indexes:
+		topct_analysis.setEQ0(ie)
+		analyse_default(topct_analysis, N_bs)
+
+def analyse_topsust(params, numsplits):
+	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
+
+	topct_analysis = AnalyseTopSusInEuclTime(obs_data("topct"),
 		dryrun=dryrun, parallel=parallel, numprocs=numprocs, verbose=verbose)
 
 	indexes = np.linspace(0, topct_analysis.NT, numsplits, dtype=int) - 1
@@ -266,6 +284,8 @@ def analyse(parameters):
 		analyse_qtq0(params, parameters["qzero_flow_times"])
 	if "topc4" in parameters["observables"]:
 		analyse_topc4(params)
+	if "topsust" in parameters["observables"]:
+		analyse_topsust(params, parameters["num_t_euclidean_indexes"])
 	if "topct" in parameters["observables"]:
 		analyse_topct(params, parameters["num_t_euclidean_indexes"])
 	if "topcEuclSplit" in parameters["observables"]:
@@ -330,19 +350,19 @@ def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
 
 def main():
 	#### Available observables
-	# observables = [
-	# 	"plaq", "energy", "topc", "topsus", "qtqzero", "topc4", 
-	# 	"topct", "topcEuclSplit", "topcMCSplit", "topsusEuclSplit", 
-	# 	"topsusMCSplit"
-	# ]
-	
-	#### Basic observables
-	# observables = ["plaq", "energy", "topc", "topsus"]
+	observables = [
+		"plaq", "energy", "topc", "topsus", "qtqzero", "topc4", 
+		"topct", "topcEuclSplit", "topcMCSplit", "topsusEuclSplit", 
+		"topsusMCSplit", "topsust"
+	]
 
+	# ### Basic observables
+	# observables = ["plaq", "energy", "topc", "topsus"]
 	# observables = basic_observables
 	# observables = ["topc", "topsus"]
 	# observables = ["topcEuclSplit", "topcMCSplit", "topsusEuclSplit", "topsusMCSplit", "topct"]
-	observables = ["topsusEuclSplit", "topsusMCSplit"]
+	# observables = ["topsusEuclSplit", "topsusMCSplit", "topct"]
+	# observables = ["topsust"]
 
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
 	print 100*"=" + "\n"
@@ -454,8 +474,8 @@ def main():
 
 	#### Adding relevant batches to args
 	analysis_parameter_list = [databeta60, databeta61, databeta62, databeta645]
-	# analysis_parameter_list = [databeta60, databeta61, databeta62]
-	analysis_parameter_list = [databeta62]
+	analysis_parameter_list = [databeta60, databeta61, databeta62]
+	# analysis_parameter_list = [databeta62]
 	# analysis_parameter_list = [databeta61, databeta62]
 	# analysis_parameter_list = [smaug_data_beta61_analysis]
 
