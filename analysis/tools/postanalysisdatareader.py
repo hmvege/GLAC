@@ -26,6 +26,7 @@ class PostAnalysisDataReader:
 			base_folder_location: full location of the batch folder. Default is
 				one layer above code, "..".
 		"""
+		self.batch_name = os.path.split(batch_folder)[-1]
 		self.batch_folder = os.path.join(base_folder_location, batch_folder)
 		self.verbose = verbose
 
@@ -33,15 +34,10 @@ class PostAnalysisDataReader:
 		self.data_batches = {}
 
 		# Dictionaries to hold the raw bootstrapped/jackknifed data and autocorrelation data
-		self.bs_data_raw = {}
-		self.jk_data_raw = {}
-		self.ac_corrections = {}
-
-		# Different types of analysis
-		self.analysis_types = ["unanalyzed", "jackknife", "bootstrap"]
+		self.data_raw = {}
 
 		# Binary folder types available
-		self.binary_folder_types = ["jackknife", "bootstrap", "autocorrelation"]
+		self.analysis_types = []
 
 		# Variable to store if we have retrieved flow time or not
 		self.retrieved_flow_time = False
@@ -49,81 +45,154 @@ class PostAnalysisDataReader:
 		# Number of betas variable
 		self.N_betas = 0
 
-		# Data batch name
-		self.data_batch_name = os.path.split(self.batch_folder)[-1]
-
 		# Iterates over the different beta value folders
-		for beta_folder in self._get_folders(self.batch_folder):
+		for beta_folder in self._get_folder_content(self.batch_folder):
+
+			#### TEMP ####
+			if beta_folder == "beta645": continue
+			#### TEMP ####
+
 			# Construct beta folder path
 			beta_folder_path = os.path.join(self.batch_folder, beta_folder, "post_analysis_data")
 
-			# # Retrieves beta from folder name, a bit ugly hard coding
-			# beta = float(beta_folder.strip("beta").replace("_","."))
+			observables_data = {}
+			obs_data_raw = {}
 
-			# Dictionary to store observable data in
-			observable_data = {}
+			_beta_values = []
 
-			# Sorts into two lists, one with .txt extensions, for retrieving the
-			# beta value. The other for retrieving the analysis types.
-			raw_stat_folders = []
-			observable_files = []
-			for _f in self._get_folders(beta_folder_path):
-				if os.path.isdir(os.path.join(beta_folder_path, _f)):
-					raw_stat_folders.append(_f)
+			for obs in self._get_folder_content(beta_folder_path):
+				obs_folder_path = os.path.join(beta_folder_path, obs)
+
+				if self._check_folder_content_type_is_dir(obs_folder_path):
+					# In case we have an observable that contains sub folders 
+					# with the same observable but at different points in 
+					# time or similiar.
+					obs_data = {}
+					sub_obs_raw = {}
+
+					for sub_obs in sorted(self._get_folder_content(obs_folder_path), key=lambda s: int(s.split("-")[-1])):
+						sub_obs_path = os.path.join(obs_folder_path, sub_obs)
+
+						# Retrieves folder file lists
+						binary_data_folders, observable_files = self._get_obs_folder_content_lists(sub_obs, sub_obs_path)
+
+						# Retrieve observable data and beta
+						_beta, sub_obs_data = self._get_observable_data(obs, observable_files)
+						obs_data[sub_obs] = sub_obs_data
+						_beta_values.append(_beta)
+
+						# Retrieves the raw binary data into dict
+						analysis_raw = {}
+						for binary_analysis_folder in binary_data_folders:
+							analysis_type = os.path.basename(binary_analysis_folder)
+							analysis_raw[analysis_type] = self._get_bin(binary_analysis_folder)
+
+							self._add_analysis(analysis_type)
+
+						sub_obs_raw[sub_obs] = analysis_raw
+
+					# Places the retrieved sub folder observables into dictionary
+					obs_data_raw[obs] = sub_obs_raw
+
 				else:
-					observable_files.append(_f)
+					# Retrieves folder file lists
+					binary_data_folders, observable_files = self._get_obs_folder_content_lists(obs, obs_folder_path)
+					
+					# Retrieve observable data and beta
+					_beta, obs_data = self._get_observable_data(obs, observable_files)
+					_beta_values.append(_beta)
 
-			# Temporary beta list for cross checking
-			_temp_beta_list = []
+					# Retrieves the raw binary data
+					analysis_raw = {}
+					for binary_analysis_folder in binary_data_folders:
+						analysis_type = os.path.basename(binary_analysis_folder)
+						analysis_raw[analysis_type] = self._get_bin(binary_analysis_folder)
 
-			# Gets the analyzed data for each observable
-			for obs_file in observable_files:
-				# Gets observable name
-				observable_name = os.path.splitext(obs_file)[0]
+						self._add_analysis(analysis_type)
 
-				obs_file_path = os.path.join(beta_folder_path, obs_file)
+					obs_data_raw[obs] = analysis_raw
 
-				# Retrieves the observable data
-				observable_data[observable_name] = self._get_beta_observable_dict(obs_file_path)
+				observables_data[obs] = obs_data
 
-				_temp_beta_list.append(observable_data[observable_name]["beta"])
-
-			if len(set(_temp_beta_list)) != 1:
-				raise ValueError("Beta values differ for observable data files: %s" % ", ".join(observable_files))
-			else:
-				beta = _temp_beta_list[0]
-
-			# Loops over files and folders inside the beta folder
-			for folder in raw_stat_folders:
-				# Construct folder path
-				folder_path = os.path.join(beta_folder_path, folder)
-
-				# Retrieves data depending on type
-				if folder == "bootstrap":
-					# Gets binary bs data
-					self.bs_data_raw[beta] = self._get_bin_dict(folder_path)
-				elif folder == "jackknife":
-					# Gets binary jk data
-					self.jk_data_raw[beta] = self._get_bin_dict(folder_path)
-				elif folder == "autocorrelation":
-					# Gets binary ac data
-					self.ac_corrections[beta] = self._get_bin_dict(folder_path)
-				else:
-					print "%s in batch %s not a recognized analysis type" % (folder, self.batch_folder.split("/")[-1])
+			assert np.asarray(_beta_values).all(), "betas not equal."
+			beta = _beta_values[0]
 
 			# Stores batch data
-			self.data_batches[beta] = copy.deepcopy(observable_data)
+			self.data_batches[beta] = copy.deepcopy(observables_data)
+
+			# Stores the binary data
+			self.data_raw[beta] = obs_data_raw
 
 			# Add another beta value
 			self.N_betas += 1
 
 			# Frees memory
-			del observable_data
-		
+			del observables_data
+
 		# Reorganizes data to more ease-of-use type of data set
 		self._reorganize_data()
+		self._reorganize_raw_data()
 
-	def _get_beta_observable_dict(self, observable_file):
+	def __call__(self, observable):
+		return self.data_observables[observable]
+
+	def _check_folder_content_type_is_dir(self, folder):
+		"""Returns True if all of the contents are folders."""
+		for f in self._get_folder_content(folder):
+			if not os.path.isdir(os.path.join(folder, f)):
+				return False
+		else:
+			return True
+
+	def _add_analysis(self, atype):
+		if atype not in self.analysis_types:
+			self.analysis_types.append(atype)
+
+	def _get_obs_folder_content_lists(self, obs, obs_folder):
+		"""
+		Internal method for building and returning the observable dicitonary.
+		"""
+		# Sorts into two lists, one with .txt extensions, for retrieving the
+		# beta value. The other for retrieving the analysis types.
+		binary_data_folders = []
+		observable_files = []
+
+		# Function for checking if we have a binary data folder
+		_chk_obs_f = lambda f, fp: os.path.isdir(fp) and not f.startswith(".")
+
+		for _f in self._get_folder_content(obs_folder):
+			# Temporary path to observable sub folder
+			_f_path = os.path.join(obs_folder, _f)
+
+			# If we have a folder containing binary raw data
+			if _chk_obs_f(_f, _f_path):
+				binary_data_folders.append(_f_path)
+			else:
+				observable_files.append(_f_path)
+
+		return binary_data_folders, observable_files
+
+	def _get_observable_data(self, obs, observable_files):
+		# Temporary beta list for cross checking
+		_beta_values = []
+
+		observable_data = {}
+
+		# Gets the analyzed data for each observable
+		for obs_file_path in observable_files:			
+			# Retrieves the observable data
+			if "no_autocorr" in obs_file_path:
+				observable_data["without_autocorr"] = self._get_beta_observable_dict(obs_file_path, autocorr=False)
+				_beta_values.append(observable_data["without_autocorr"]["beta"])
+			else:
+				observable_data["with_autocorr"] = self._get_beta_observable_dict(obs_file_path, autocorr=True)
+				_beta_values.append(observable_data["with_autocorr"]["beta"])
+
+		assert np.asarray(_beta_values).all(), "betas not equal."
+
+		return _beta_values[0], observable_data
+
+	def _get_beta_observable_dict(self, observable_file, autocorr=False):
 		"""
 		Internal function for retrieving observable data.
 
@@ -154,7 +223,6 @@ class PostAnalysisDataReader:
 		jk_y 		= retrieved_data[:,5]
 		jk_y_error 	= retrieved_data[:,6]
 
-
 		# Stores data into dictionaries
 		unanalyzed_data = {"y": y, "y_error": y_error}
 		bs_data = {"y": bs_y, "y_error": bs_y_error}
@@ -165,6 +233,17 @@ class PostAnalysisDataReader:
 		obs_data["unanalyzed"] 	= copy.deepcopy(unanalyzed_data)
 		obs_data["bootstrap"] 	= copy.deepcopy(bs_data)
 		obs_data["jackknife"] 	= copy.deepcopy(jk_data)
+
+		if autocorr:
+			tau_int 	= retrieved_data[:,7]
+			tau_int_err	= retrieved_data[:,8]
+			sqrt2tau_int= retrieved_data[:,9]
+			ac_data = {
+				"tau_int": tau_int, 
+				"tau_int_err": tau_int_err, 
+				"sqrt2tau_int": sqrt2tau_int
+			}
+			obs_data["autocorr"] 	= copy.deepcopy(ac_data)
 
 		# Stores flow time in a seperate variable
 		if not self.retrieved_flow_time:
@@ -179,22 +258,11 @@ class PostAnalysisDataReader:
 
 		return obs_data
 
-	def _get_bin_dict(self,folder):
-		"""
-		Gets binary data files
-		"""
-		observable_dict = {}
-
-		# Retrieves the different bootstrapped observables
-		for observable_file in self._get_folders(folder):
-			# Gets observable name
-			observable_name = os.path.splitext(observable_file)[0]
-
-			# Populates dictionary
-			observable_dict[observable_name] = np.load(os.path.join(folder,observable_file))
-
-		return observable_dict
-
+	def _get_bin(self, folder):
+		"""Gets binary data."""
+		assert len(os.listdir(folder)) == 1, "multiple files in binary folder."
+		return np.load(os.path.join(folder, self._get_folder_content(folder)[0]))
+		
 	@staticmethod
 	def _get_meta_data(file):
 		# Retrieves meta data from header or file
@@ -223,54 +291,61 @@ class PostAnalysisDataReader:
 				# Stores the batch data in a sub-dictionary
 				self.data_observables[observable_name][beta] = self.data_batches[beta][observable_name]
 
+	def _reorganize_raw_data(self):
+		# Reorganizes the data into beta-values and observables sorting
+		self.raw_analysis = {analysis_type: {} for analysis_type in self.analysis_types}
 
-	def write_batch_to_single_file(self):
-		"""
-		Writes all unanalyzed data to a single file
-		"""
-		# Creates universal output folder
-		file_folder = os.path.join(self.post_analysis_folder,"..","..","universal_output") # Should be in output
-		print "="*100,"\nWriting data to a universal output format in %s" % file_folder
-		check_folder(file_folder,False,True)
+		# Sets up new beta value dictionaries
+		for beta in self.data_raw:
+			# self.raw_analysis[beta] = {}
+			
+			# Loops over observable names and sets up dicts
+			for observable_name in self.data_raw[beta]:
+				# self.raw_analysis[beta][observable_name] = {}
 
-		# Variable for checking if we have retrieved the flow time or not
-		retrieved_flow_time = False
+				for sub_elem in self.data_raw[beta][observable_name]:
 
-		# Loops over the different possible analyses
-		for analysis_type in self.analysis_types:
-			# Loops over the batches
-			for beta in self.data_batches:
-				# Temporary data output for gathering data from arrays into a simple list
-				data_output = []
+					if not sub_elem in self.analysis_types:
+						for analysis_type in self.analysis_types:
+							self._check_raw_bin_dict_keys(analysis_type, beta, observable_name, sub_elem)
+						# for sub_obs_name in self.data_raw[beta][observable_name]:
+					else:
+						self._check_raw_bin_dict_keys(sub_elem, beta, observable_name)
 
-				# Header for the resulting array
-				header_output = ["t","sqrt8t"]
+		# Populates dictionaries
+		for beta in self.data_raw:
+			# Loops over observable names
+			for observable_name in self.data_raw[beta]:
+				# Loops over analysis types containined in observable name,
+				# unless it is a split observable
+				for sub_elem in self.data_raw[beta][observable_name]:
+					if not sub_elem in self.analysis_types:
+						for sub_obs_name in self.data_raw[beta][observable_name]:
+							for atype in self.data_raw[beta][observable_name][sub_obs_name]:
+								self.raw_analysis[atype][beta][observable_name][sub_obs_name] = self.data_raw[beta][observable_name][sub_obs_name][atype]
+					else:
+						for atype in self.data_raw[beta][observable_name]:
+							try: 
+								self.raw_analysis[atype][beta][observable_name] = self.data_raw[beta][observable_name][atype]
+							except KeyError:
+								print "KeyError!!", beta, observable_name, atype
+								exit(1)
 
-				# Retrieves t
-				data_output.append(self.flow_time)
 
-				# Retrieves sqrt(8t)
-				data_output.append(np.sqrt(8*self.flow_time))
+	def _check_raw_bin_dict_keys(self, analysis_type, beta, observable_name, sub_obs=None):
+		if beta not in self.raw_analysis[analysis_type]:
+			self.raw_analysis[analysis_type][beta] = {}
 
-				for observable_name in self.data_batches[beta]:
-					# Retrieves the unanalyzed observable data
-					data_output.append(self.data_batches[beta][observable_name][analysis_type]["y"])
-					data_output.append(self.data_batches[beta][observable_name][analysis_type]["y_error"])
+		if observable_name not in self.raw_analysis[analysis_type][beta]:
+			self.raw_analysis[analysis_type][beta][observable_name] = {}
 
-					# Adds observable name and error to header
-					header_output.append(observable_name)
-					header_output.append(observable_name+"_err")
+		if sub_obs != None:
+			if sub_obs not in self.raw_analysis[analysis_type][beta][observable_name]:
+				self.raw_analysis[analysis_type][beta][observable_name][sub_obs] = {}
 
-				# Writing array to file
-				file_path = os.path.join(file_folder,str(beta).replace(".","_") + "_" + analysis_type) + ".txt"
-				np.savetxt(file_path,np.asarray(data_output),fmt="%.18f",header=" ".join(header_output))
-				print "Batch '%s' data written to file %s." % (beta,os.path.splitext(os.path.split(file_path)[-1])[0])
-
-		# A single delimiter marking the end of universal output writing
-		print "="*100
 
 	@staticmethod
-	def _get_folders(folder):
+	def _get_folder_content(folder):
 		if not os.path.isdir(folder):
 			raise IOError("No folder by the name %s found." % folder)
 		else:

@@ -53,6 +53,9 @@ figures/prodRunBeta6_2
 scalar_fields_data
 figures/lattice_field_density8x16
 figures/lattice_field_density4x8
+figures/field_density_freq10_NF400_beta60/
+figures/field_density_freq10_NF400_beta61/
+figures/field_density_freq10_NF400_beta62/
 
 # HPC profiler related stuff
 hpctoolkit*

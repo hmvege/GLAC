@@ -125,9 +125,7 @@ class _DirectoryTree:
 		return self.found_observables
 
 	def __str__(self):
-		"""
-		Prints the folder structure
-		"""
+		"""Prints the folder structure."""
 		return_string = "Folder structure:"
 		return_string += "\n{0:<s}".format(self.batch_name_folder)
 
@@ -254,33 +252,6 @@ class _FolderData:
 
 
 		self.data_y = np.asarray(self.data_y)
-
-	# def create_perflow_data(self, dryrun=False, verbose=False):
-	# 	# Creating per flow folder
-	# 	per_flow_folder = os.path.join("..", self.file_tree.data_batch_folder, "perflow")
-	# 	check_folder(per_flow_folder, dryrun, verbose=verbose)
-
-	# 	# Creates observable per flow folder
-	# 	per_flow_observable_folder = os.path.join(per_flow_folder, self.observable)
-	# 	check_folder(per_flow_observable_folder, dryrun, verbose=verbose)
-
-	# 	# Retrieving number of configs and number of flows
-	# 	NConfigs, NFlows = self.data_y.shape
-
-	# 	# Re-storing files in a per flow format
-	# 	for iFlow in xrange(NFlows):
-	# 		# Setting up new per-flow file
-	# 		flow_file = os.path.join(per_flow_folder, self.observable, self.file_tree.batch_name + "_flow%05d.dat" % iFlow)
-
-	# 		# Saving re-organized data to file
-	# 		if not dryrun:
-	# 			np.savetxt(flow_file, self.data_y[:,iFlow], fmt="%.16f", header="t %f \n%s" % (iFlow*self.meta_data["FlowEpsilon"], self.observable))
-
-	# 		# Prints message regardless of dryrun and iff
-	# 		if verbose:
-	# 			print "%s created." % flow_file
-
-	# 	print "Per flow data for observable %s created." % self.observable
 
 	def create_settings_file(self, dryrun=False, verbose=False):
 		"""

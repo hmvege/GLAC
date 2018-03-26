@@ -284,7 +284,7 @@ class FieldAnimation:
 			if time_slice not in sorted(self.data[observable].keys()):
 				raise IndexError(("Out of bounds for plotting Euclidean time "
 					"evolution at flow time %d with available points as %s" %
-					 (time_slice, ", ".join(self.data[observable][t].keys()))))
+					 (time_slice, ", ".join(sorted(self.data[observable][t].keys())))))
 
 			field_data = cp.deepcopy(self.data[observable][time_slice])
 			n_time_points = self.data[observable][time_slice].shape[-1]

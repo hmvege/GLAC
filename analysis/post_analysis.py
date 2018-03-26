@@ -7,14 +7,22 @@ from tools.postanalysisdatareader import PostAnalysisDataReader, getLatticeSpaci
 # import tqdm
 # from scipy.optimize import curve_fit
 
-__all__ = ["EnergyPostAnalysis", "TopSusPostAnalysis", "TopChargePostAnalysis"]
+__all__ = [
+	"EnergyPostAnalysis", "PlaqPostAnalysis", 
+	# Different topological susceptibility definitions
+	"TopSusPostAnalysis", "QtQ0PostAnalysis", "TopCharge4PostAnalysis",
+	"TopSusTPostAnalysis", "TopSusEuclSplitPostAnalysis",
+	"TopSusMCSplitPostAnalysis",
+	# Different topological charge definitions
+	"TopChargePostAnalysis", "TopChargeTPostAnalysis", 
+	"TopChargeEuclSplitPostAnalysis", "TopChargeMCSplitPostAnalysis",
+]
 
 class _PostAnalysis:
-	"""
-	Post analysis base class
-	"""
+	"""Post analysis base class."""
 	observable_name = "Observable"
 	observable_name_compact = "obs"
+	formula = ""
 	x_label = r""
 	y_label = r""
 	dpi=350
@@ -23,35 +31,58 @@ class _PostAnalysis:
 					6.2  : r"$32^3 \times 64$",
 					6.45 : r"$48^3 \times 96$"}
 	r0 = 0.5
+	# blue, green, red purple
+	beta_colors = ["#5cbde0", "#6fb718", "#bc232e", "#8519b7"]
 
-	def __init__(self, data, observable, figures_folder="../figures"):
-		# Retrieves relevant data values
-		self.flow_time 			= data.flow_time
-		self.unanalyzed_data 	= {beta: data.data_observables[observable][beta]["unanalyzed"] for beta in sorted(data.data_observables[observable].keys())} # Data should now be sorted by beta values
-		self.bootstrap_data 	= {beta: data.data_observables[observable][beta]["bootstrap"] for beta in sorted(data.data_observables[observable].keys())}
-		self.jackknife_data 	= {beta: data.data_observables[observable][beta]["jackknife"] for beta in sorted(data.data_observables[observable].keys())}
-		self.bs_raw 			= data.bs_data_raw
-		self.jk_raw 			= data.jk_data_raw
-		self.ac_corrections		= data.ac_corrections
+	def __init__(self, data, with_autocorr=True, figures_folder="../figures"):
+		if with_autocorr:
+			self.ac = "with_autocorr"
+		else:
+			self.ac = "without_autocorr"
+		self.with_autocorr = with_autocorr
+		observable = self.observable_name_compact
 
-		self.NBoots = self.bs_raw[self.bs_raw.keys()[0]][self.observable_name_compact].shape[-1]
+		# Retrieves relevant data values and sorts them by beta values
+		self.flow_time = data.flow_time
+		self.unanalyzed_data = {}
+		self.bootstrap_data	= {}
+		self.jackknife_data = {}
+		for beta in sorted(data.data_observables[observable].keys()):
+			self.unanalyzed_data[beta] = data.data_observables[observable][beta][self.ac]["unanalyzed"]
+			self.bootstrap_data[beta] = data.data_observables[observable][beta][self.ac]["bootstrap"]
+			self.jackknife_data[beta] = data.data_observables[observable][beta][self.ac]["jackknife"]
+		
+		# Issue lies here#!!!!!!
+		self.bs_raw = data.raw_analysis["bootstrap"]
+		self.jk_raw = data.raw_analysis["jackknife"]
+		self.ac_corrections	= data.raw_analysis["autocorrelation"]
+
+		if not isinstance(self.bs_raw[self.bs_raw.keys()[0]][self.observable_name_compact], np.ndarray):
+			self.NBoots = self.bs_raw.values()[0][self.observable_name_compact].values()[0].shape[-1]
+		else:
+			self.NBoots = self.bs_raw[self.bs_raw.keys()[0]][self.observable_name_compact].shape[-1]
 
 		# Small test to ensure that the number of bootstraps and number of different beta batches match
 		err_msg = "Number of bootstraps do not match number of different beta values"
-		assert sum([True for i in self.bs_raw.keys() if self.bs_raw[i][self.observable_name_compact].shape[-1] == self.NBoots]) == data.N_betas, err_msg
+		chk_bs_len = lambda _a: _a.shape[-1] == self.NBoots
+		assert sum([True for i in self.bs_raw.keys() if chk_bs_len(self.bs_raw[i][self.observable_name_compact])]) == data.N_betas, err_msg
 
 		# Creates base output folder for post analysis figures
 		self.figures_folder = figures_folder
 		check_folder(self.figures_folder, dryrun=False, verbose=True)
-		check_folder(os.path.join(self.figures_folder, data.data_batch_name), dryrun=False, verbose=True)
+		check_folder(os.path.join(self.figures_folder, data.batch_name), dryrun=False, verbose=True)
 
 		# Creates output folder
-		self.output_folder_path = os.path.join(self.figures_folder, data.data_batch_name, "post_analysis")
+		self.post_anlaysis_folder = os.path.join(self.figures_folder, data.batch_name, "post_analysis")
+		check_folder(self.post_anlaysis_folder, dryrun=False, verbose=True)
+
+		# Creates observable output folder
+		self.output_folder_path = os.path.join(self.post_anlaysis_folder, self.observable_name_compact)
 		check_folder(self.output_folder_path, dryrun=False, verbose=True)
 
 		# Creates colors to use
 		self.colors = {}
-		for color, beta in zip(["#5cbde0", "#6fb718", "#bc232e", "#8519b7"], sorted(data.data_observables[observable].keys())): # blue, green, red purple
+		for color, beta in zip(self.beta_colors, sorted(data.data_observables[observable].keys())):
 			self.colors[beta] = color
 
 	def _check_plot_values(self):
@@ -78,8 +109,19 @@ class _PostAnalysis:
 		# Initiates plot values
 		self._initiate_plot_values(data)
 
-	def _initiate_plot_values(self, *args, **kwargs):
-		raise NotImplementedError("_PostAnalysis plot value initiater not implemented(subclasses should contain this).")
+	def _initiate_plot_values(self, data):
+		# Sorts data into a format specific for the plotting method
+		for beta in sorted(data.keys()):
+			if beta == 6.45: self.flow_time *= 2
+			values = {}
+			values["a"] = getLatticeSpacing(beta)
+			values["x"] = values["a"]* np.sqrt(8*self.flow_time)
+			values["y"] = data[beta]["y"]
+			values["bs"] = self.bs_raw[beta][self.observable_name_compact]
+			values["y_err"] = data[beta]["y_error"] # negative since the minus sign will go away during linear error propagation
+			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[beta], beta)
+			values["color"] = self.colors[beta]
+			self.plot_values[beta] = values
 
 	def plot(self, x_limits=False, y_limits=False, plot_with_formula=False):
 		"""
@@ -144,20 +186,20 @@ class _PostAnalysis:
 		self._check_plot_values()
 
 		# Populates values to be plotted and 
-		for values in self.plot_values:
+		for beta in self.plot_values:
 			bfit = {}
 			# Sets beta value for data
-			bfit["beta"] = values["beta"]
+			bfit["beta"] = beta
 
 			# Retrieves fit value as well as its error
 			if fit_type == "bootstrap_fit":
 				bfit["t0"], bfit["t0_err"] = fit_line_from_bootstrap(	values["x"], values["bs"], self.observable_name_compact,
-																		values["beta"], fit_target, fit_interval, axis=axis,
+																		beta, fit_target, fit_interval, axis=axis,
 																		fit_function_modifier=fit_function_modifier,
 																		plot_fit_window=plot_fit_window)
 			elif fit_type == "data_line_fit":
 				bfit["t0"], bfit["t0_err"] = fit_line(	values["x"], values["y"], values["y_err"],
-														self.observable_name_compact, values["beta"],
+														self.observable_name_compact, beta,
 														fit_target, fit_interval, axis=axis,
 														fit_function_modifier=fit_function_modifier,
 														plot_fit_window=plot_fit_window)
@@ -203,7 +245,6 @@ class TopSusPostAnalysis(_PostAnalysis):
 		for beta in sorted(data.keys()):
 			if beta == 6.45: self.flow_time *= 2
 			values = {}
-			values["beta"] = beta
 			values["a"] = getLatticeSpacing(beta)
 			values["x"] = values["a"]*np.sqrt(8*self.flow_time)
 			values["y"] = data[beta]["y"]
@@ -382,6 +423,7 @@ class EnergyPostAnalysis(_PostAnalysis):
 		# Sorts data into a format specific for the plotting method
 		for beta in sorted(data.keys()):
 			values = {}
+			values["beta"] = beta
 			values["a"] = getLatticeSpacing(beta)
 			values["x"] = self.flow_time/self.r0**2*getLatticeSpacing(beta)**2
 			values["y"] = self._function_correction(data[beta]["y"])
@@ -494,36 +536,80 @@ class EnergyPostAnalysis(_PostAnalysis):
 		pass
 
 
+class PlaqPostAnalysis(_PostAnalysis):
+	"""Post-analysis of the topological charge."""
+	observable_name = "Plaquette"
+	observable_name_compact = "plaq"
+	y_label = r"$P$"
+	x_label = r"$\sqrt{8t}$[fm]"
+	formula = r"$P = \frac{1}{16V} \sum_{x,\mu,\nu} \tr\mathcal{Re} P_{\mu\nu}$"
+
+#### Topological charge definitions ####
 class TopChargePostAnalysis(_PostAnalysis):
-	"""
-	Post-analysis of the topological charge. Method for plotting different 
-	values together.
-	"""
+	"""Post-analysis of the topological charge."""
 	observable_name = "Topological Charge"
 	observable_name_compact = "topc"
-
-	# Regular plot variables
 	y_label = r"$Q$"
 	x_label = r"$\sqrt{8t}$[fm]"
-	formula = r"$Q = - \sum_x \frac{1}{64 \cdot 32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$[GeV]"
+	formula = r"$Q = - \sum_x \frac{1}{64 \cdot 32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
 
-	# Continuum plot variables
-	x_label_continuum = r"$(a/r_0)^2$"
-	y_label_continuum = r"$\frac{\sqrt{8t_0}}{r_0}$"
+class TopChargeTPostAnalysis(_PostAnalysis):
+	"""Post-analysis of the topological charge at fixed euclidean time."""
+	observable_name = "Topological Charge in Euclidean Time"
+	observable_name_compact = "topct"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$Q_{t_{euclidean}}$"
 
-	def _initiate_plot_values(self, data):
-		# Sorts data into a format specific for the plotting method
-		for beta in sorted(data.keys()):
-			values = {}
-			values["a"] = getLatticeSpacing(beta)
-			values["x"] = values["a"]* np.sqrt(8*self.flow_time)
-			values["y"] = data[beta]["y"]
-			values["bs"] = np.asarray([self.bs_raw[beta][self.observable_name_compact][:,iBoot] for iBoot in xrange(self.NBoots)]).T
-			values["y_err"] = data[beta]["y_error"] # negative since the minus sign will go away during linear error propagation
-			values["label"] = r"%s $\beta=%2.2f$" % (self.size_labels[beta], beta)
-			values["color"] = self.colors[beta]
+class TopChargeEuclSplitPostAnalysis(_PostAnalysis):
+	"""Post-analysis of the topological charge in euclidean time intervals."""
+	observable_name = "Topological Charge in Euclidean Time"
+	observable_name_compact = "topcte"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$Q$"
 
-			self.plot_values[beta] = values
+class TopChargeMCSplitPostAnalysis(_PostAnalysis):
+	"""Post-analysis of the topological charge in MC time intervals."""
+	observable_name = "Topological Charge in MC Time"
+	observable_name_compact = "topcMC"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$Q$"
+
+#### Topological susceptibility definitions ####
+class QtQ0PostAnalysis(_PostAnalysis):
+	"""Post-analysis of the topsus at a fixed flow time."""
+	observable_name = r"$\chi(\langle Q_t Q_{t_0} \rangle)^{1/4}$"
+	observable_name_compact = "qtqzero"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi(\langle Q_{t} Q_{t_0} \rangle)^{1/4} [GeV]$" # $\chi_t^{1/4}[GeV]$
+
+class TopCharge4PostAnalysis(_PostAnalysis):
+	"""Post-analysis of the topsus with Q^4."""
+	observable_name = r"$\chi(\langle Q^4 \rangle)^{1/8}$"
+	observable_name_compact = "topq4"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi(\langle Q^4 \rangle)^{1/8} [GeV]$" # 1/8 correct?
+	formula = r"$\chi(\langle Q^4 \rangle)^{1/8} = \frac{\hbar}{aV^{1/4}} \langle Q^4 \rangle^{1/8} [GeV]$" # 1/8 correct?
+
+class TopSusTPostAnalysis(_PostAnalysis):
+	"""Post-analysis of the topsus with with one Q at fixed euclidean time."""
+	observable_name = "Topological Susceptibility in Euclidean Time"
+	observable_name_compact = "topsust"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi(\langle Q_t Q_{t_{euclidean}} \rangle)^{1/4} [GeV]$"
+
+class TopSusEuclSplitPostAnalysis(_PostAnalysis):
+	"""Post-analysis of the topsus in euclidean time intervals."""
+	observable_name = "Topological Susceptibility in MC Time"
+	observable_name_compact = "topsuste"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi^{1/4} [GeV]$"
+
+class TopSusMCSplitPostAnalysis(_PostAnalysis):
+	"""Post-analysis of the topsus in MC time intervals."""
+	observable_name = "Topological Susceptibility in MC Time"
+	observable_name_compact = "topsusMC"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi^{1/4} [GeV]$"
 
 
 def main(args):
@@ -536,7 +622,7 @@ def main(args):
 	print "Retrieving data from folder: %s" % args[0]
 
 	# Plots topsus
-	topsus_analysis = TopSusPostAnalysis(data, "topsus")
+	topsus_analysis = TopSusPostAnalysis(data)
 	topsus_analysis.set_analysis_data_type("bootstrap")
 	topsus_analysis.plot()
 
@@ -546,7 +632,7 @@ def main(args):
 		topsus_analysis.plot_continuum(cont_target)
 
 	# Plots energy
-	energy_analysis = EnergyPostAnalysis(data, "energy")
+	energy_analysis = EnergyPostAnalysis(data)
 	energy_analysis.set_analysis_data_type("bootstrap")
 	energy_analysis.plot()
 

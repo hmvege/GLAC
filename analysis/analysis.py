@@ -1,7 +1,7 @@
 from flow_analyser import *
 from tools.folderreadingtools import DataReader
 from tools.postanalysisdatareader import PostAnalysisDataReader
-from post_analysis import EnergyPostAnalysis, TopSusPostAnalysis, TopChargePostAnalysis
+from post_analysis import *
 import statistics.parallel_tools as ptools
 import os
 import numpy as np
@@ -65,7 +65,7 @@ def analyse_topc(params):
 	else:
 		topc_analysis.y_limits = [None, None]
 
-	analyse_default(topc_analysis, N_bs, NBins=100)
+	analyse_default(topc_analysis, N_bs, NBins=150)
 
 def analyse_topc4(params):
 	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
@@ -303,8 +303,9 @@ def analyse(parameters):
 		", ".join([i.lower() for i in parameters["observables"]]), (post_time-pre_time))
 	print "="*100
 
-def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
-	line_fit_interval, energy_fit_target, post_analysis_data_type="bootstrap"):
+def post_analysis(batch_folder, batch_beta_names, observables, topsus_fit_target,
+	line_fit_interval, energy_fit_target, post_analysis_data_type=None,
+	verbose=False):
 	"""
 	Post analysis of the flow observables.
 
@@ -319,34 +320,71 @@ def post_analysis(batch_folder, batch_beta_names, topsus_fit_target,
 
 	print "="*100 + "\nPost-analysis\nRetrieving data from: %s" % batch_folder
 
+	if post_analysis_data_type == None:
+		post_analysis_data_type = ["bootstrap", "jackknife"]
+
 	# Loads data from post analysis folder
 	data = PostAnalysisDataReader(batch_folder)
 
-	# Plots topsus
-	topsus_analysis = TopSusPostAnalysis(data, "topsus")
-	topsus_analysis.set_analysis_data_type("jackknife")
-	topsus_analysis.plot()
+	for analysis_type in post_analysis_data_type:
+		if "topsus" in observables:
+			# Plots topsus
+			topsus_analysis = TopSusPostAnalysis(data)
+			topsus_analysis.set_analysis_data_type(analysis_type)
+			topsus_analysis.plot()
 
-	# Retrofits the topsus for continuum limit
-	continium_targets = [0.3, 0.4, 0.5, 0.58]
-	for cont_target in continium_targets:
-		topsus_analysis.plot_continuum(cont_target)
+			# Retrofits the topsus for continuum limit
+			continium_targets = [0.3, 0.4, 0.5, 0.58]
+			for cont_target in continium_targets:
+				topsus_analysis.plot_continuum(cont_target)
 
-	# Plots energy
-	energy_analysis = EnergyPostAnalysis(data, "energy")
-	energy_analysis.set_analysis_data_type("bootstrap")
-	energy_analysis.plot()
+		if "energy" in observables:
+			# Plots energy
+			energy_analysis = EnergyPostAnalysis(data)
+			energy_analysis.set_analysis_data_type(analysis_type)
+			energy_analysis.plot()
 
-	# Retrofits the energy for continiuum limit
-	energy_analysis.plot_continuum(0.3, 0.015, "bootstrap_fit")
+			# Retrofits the energy for continiuum limit
+			energy_analysis.plot_continuum(0.3, 0.015, "bootstrap_fit")
 
-	# Plot running coupling
-	energy_analysis.coupling_fit()
+			# Plot running coupling
+			energy_analysis.coupling_fit()
 
-	topc_analysis = TopChargePostAnalysis(data, "topc")
-	topc_analysis.set_analysis_data_type("bootstrap")
-	topc_analysis.plot()
+		if "topc" in observables:
+			topc_analysis = TopChargePostAnalysis(data)
+			topc_analysis.set_analysis_data_type(analysis_type)
+			topc_analysis.plot(y_limits=[-5,5])
 
+		if "plaq" in observables:
+			plaq_analysis = PlaqPostAnalysis(data)
+			plaq_analysis.set_analysis_data_type(analysis_type)
+			plaq_analysis.plot()
+
+		if "topc4" in observables:
+			topc4_analysis = TopCharge4PostAnalysis(data)
+			topc4_analysis.set_analysis_data_type(analysis_type)
+			topc4_analysis.plot()
+
+		if "QtQ0PostAnalysis" in observables:
+			qtq0_analysis = QtQ0PostAnalysis(data)
+
+		if "TopSusTPostAnalysis" in observables:
+			topsust_analysis = TopSusTPostAnalysis(data)
+
+		if "TopSusEuclSplitPostAnalysis" in observables:
+			topsuste = TopSusEuclSplitPostAnalysis(data)
+
+		if "TopSusMCSplitPostAnalysis" in observables:
+			topsusmc = TopSusMCSplitPostAnalysis(data)
+
+		if "TopChargeTPostAnalysis" in observables:
+			topct = TopChargeTPostAnalysis(data)		
+
+		if "TopChargeEuclSplitPostAnalysis" in observables:
+			topcte = TopChargeEuclSplitPostAnalysis(data)
+
+		if "TopChargeMCSplitPostAnalysis" in observables:
+			topcmc = TopChargeMCSplitPostAnalysis(data)
 
 def main():
 	#### Available observables
@@ -359,10 +397,11 @@ def main():
 	# ### Basic observables
 	# observables = ["plaq", "energy", "topc", "topsus"]
 	# observables = basic_observables
-	# observables = ["topc", "topsus"]
+	observables = ["topc", "plaq", "topsus", "topc4"]
+
+	# observables = ["topcMCSplit", "topsusMCSplit"]
 	# observables = ["topcEuclSplit", "topcMCSplit", "topsusEuclSplit", "topsusMCSplit", "topct"]
 	# observables = ["topsusEuclSplit", "topsusMCSplit", "topct"]
-	# observables = ["topsust"]
 
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
 	print 100*"=" + "\n"
@@ -483,10 +522,10 @@ def main():
 	for analysis_parameters in analysis_parameter_list:
 		analyse(analysis_parameters)
 
-	# #### Submitting post-analysis data
-	# if len(analysis_parameter_list) >= 2:
-	# 	post_analysis(data_batch_folder, beta_folders, topsus_fit_targets,
-	# 		line_fit_interval, energy_fit_target)
+	#### Submitting post-analysis data
+	if len(analysis_parameter_list) >= 2:
+		post_analysis(data_batch_folder, beta_folders, observables, topsus_fit_targets,
+			line_fit_interval, energy_fit_target)
 
 if __name__ == '__main__':
 	main()

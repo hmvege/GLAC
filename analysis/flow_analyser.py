@@ -109,8 +109,15 @@ class FlowAnalyser(object):
 		check_folder(self.observable_output_folder_path, self.dryrun, verbose=self.verbose)
 
 		# Sets up the post analysis folder, but do not create it till its needed
-		self.post_analysis_folder = os.path.join(self.folder_locations, self.batch_data_folder, self.batch_name, "post_analysis_data")
+		self.post_analysis_folder_base = os.path.join(self.folder_locations, self.batch_data_folder, self.batch_name, "post_analysis_data")
+		check_folder(self.post_analysis_folder_base, self.dryrun, verbose=self.verbose)
+
+		# Checks that {post_analysis_folder}/{observable_name} exists
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_base, self.observable_name_compact)
 		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
+
+		# Makes a backup, for later use
+		self.post_analysis_folder_old = self.post_analysis_folder
 
 		# Checks if we already have scaled the x values or not
 		if np.all(np.abs(np.diff(self.x) - self.flow_epsilon) > 1e-14):
@@ -177,9 +184,14 @@ class FlowAnalyser(object):
 
 	def save_post_analysis_data(self):
 		"""Saves post analysis data to a file."""
-
 		if self.bootstrap_performed:
 			write_data_to_file(self)
+
+	def save_raw_analysis_data(self, data, analysis_type):
+		"""Saves the raw analysis data to post analysis folder as binary."""
+		write_raw_analysis_to_file(data, analysis_type,
+			self.observable_name_compact, self.post_analysis_folder,
+			dryrun=self.dryrun, verbose=self.verbose)
 
 	def boot(self, N_bs, F=None, F_error=None, store_raw_bs_values=True):
 		"""
@@ -264,10 +276,7 @@ class FlowAnalyser(object):
 		self.unanalyzed_y_data = F(self.unanalyzed_y_data)
 
 		if store_raw_bs_values:
-			# Store as binary
-			write_raw_analysis_to_file(self.bs_y_data, "bootstrap", 
-				self.observable_name_compact, self.post_analysis_folder,
-				dryrun=self.dryrun, verbose=self.verbose)
+			self.save_raw_analysis_data(self.bs_y_data, "bootstrap")
 
 		# Sets performed flag to true
 		self.bootstrap_performed = True
@@ -329,10 +338,7 @@ class FlowAnalyser(object):
 		self.jk_y_data = F(self.jk_y_data)
 
 		if store_raw_jk_values:
-			# Store as binary
-			write_raw_analysis_to_file(self.jk_y_data, "jackknife", 
-				self.observable_name_compact, self.post_analysis_folder, 
-				dryrun=self.dryrun, verbose=self.verbose)
+			self.save_raw_analysis_data(self.jk_y_data, "jackknife")
 
 		# Sets performed flag to true
 		self.jackknife_performed = True
@@ -408,9 +414,8 @@ class FlowAnalyser(object):
 
 		# Stores the ac error correction
 		if store_raw_ac_error_correction:
-			write_raw_analysis_to_file(self.autocorrelation_error_correction,
-				"autocorrelation", self.observable_name_compact,
-				self.post_analysis_folder, dryrun=self.dryrun, verbose=self.verbose)
+			self.save_raw_analysis_data(self.autocorrelation_error_correction,
+				"autocorrelation")
 
 		# Sets performed flag to true
 		self.autocorrelation_performed = True
@@ -770,9 +775,7 @@ class FlowAnalyser(object):
 
 
 class _AnalyseTopSusBase(FlowAnalyser):
-	"""
-	Topological susceptibility analysis base class.
-	"""
+	"""Topological susceptibility analysis base class."""
 	observable_name = "Topological Susceptibility"
 	observable_name_compact = "topsus"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
@@ -813,18 +816,14 @@ class _AnalyseTopSusBase(FlowAnalyser):
 			F_error=self.chi_std, store_raw_bs_values=store_raw_bs_values)
 
 class AnalysePlaquette(FlowAnalyser):
-	"""
-	Plaquette analysis class.
-	"""
+	"""Plaquette analysis class."""
 	observable_name = "Plaquette"
 	observable_name_compact = "plaq"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$P_{\mu\nu}$"
 
 class AnalyseEnergy(FlowAnalyser):
-	"""
-	Energy/action density analysis class.
-	"""
+	"""Energy/action density analysis class."""
 	observable_name = "Energy"
 	observable_name_compact = "energy"
 	x_label = r"$t/r_0^2$" # Dimensionsless, Implied multiplication by a^2
@@ -856,9 +855,7 @@ class AnalyseEnergy(FlowAnalyser):
 		super(AnalyseEnergy, self).plot_histogram(*args, **kwargs)
 
 class AnalyseTopologicalSusceptibility(_AnalyseTopSusBase):
-	"""
-	Topological susceptibility analysis class.
-	"""
+	"""Topological susceptibility analysis class."""
 	observable_name = "Topological Susceptibility"
 	observable_name_compact = "topsus"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
@@ -869,9 +866,7 @@ class AnalyseTopologicalSusceptibility(_AnalyseTopSusBase):
 		self.y **= 2
 
 class AnalyseTopologicalCharge(FlowAnalyser):
-	"""
-	Topological charge analysis class.
-	"""
+	"""Topological charge analysis class."""
 	observable_name = "Topological charge"
 	observable_name_compact = "topc"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$" # Implied multiplication by a
@@ -879,9 +874,7 @@ class AnalyseTopologicalCharge(FlowAnalyser):
 	y_label = r"$Q$" # Dimensionsless, a's from discretization cancel out the 1/a^4 in the integration
 
 class AnalyseQQuartic(_AnalyseTopSusBase):
-	"""
-	Class for topological susceptibility with quartic topological charge.
-	"""
+	"""Class for topological susceptibility with quartic topological charge."""
 	observable_name = r"$\chi(\langle Q^4 \rangle)^{1/8}$"
 	observable_name_compact = "topq4"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
@@ -891,6 +884,7 @@ class AnalyseQQuartic(_AnalyseTopSusBase):
 	def __init__(self, *args, **kwargs):
 		super(AnalyseQQuartic, self).__init__(*args, **kwargs)
 		self.y **= 4
+		print "@ 887 in flow_analyser.py || CHECK DERIVATIVE AND STUFF IN", self.__name__ 
 
 	def chi(self, Q4):
 		"""Topological susceptibility funciton."""
@@ -898,7 +892,7 @@ class AnalyseQQuartic(_AnalyseTopSusBase):
 
 	def chi_std(self, Q4, Q4_std):
 		"""Topological susceptibility with error propagation."""
-		return 0.25*self.const * Q4_std / Q4**(0.875)
+		return 0.125*self.const * Q4_std / Q4**(0.875)
 
 class AnalyseQtQZero(_AnalyseTopSusBase):
 	"""
@@ -908,7 +902,6 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 	observable_name_compact = "qtqzero"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\chi(\langle Q_{t} Q_{t_0} \rangle)^{1/4} [GeV]$" # $\chi_t^{1/4}[GeV]$
-	observable_output_folder_old = ""
 
 	def __init__(self, *args, **kwargs):
 		super(AnalyseQtQZero, self).__init__(*args, **kwargs)
@@ -954,8 +947,12 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 			self.y_label = y_label
 
 		# Creates a new folder to store t0 results in
-		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "t0_%04d" % self.flow_time_zero_index)
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "%04d" % self.flow_time_zero_index)
 		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
+
+		# Checks that {post_analysis_folder}/{observable_name}/{time interval} exist
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, "%04d" % self.flow_time_zero_index)
+		check_folder(self.post_analysis_folder, self.dryrun, self.verbose)
 
 		if unit_test:
 			# Hard-coded matrix-vector multiplication
@@ -977,18 +974,6 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 		self.jackknife_performed = False
 		self.autocorrelation_performed = False
 
-	def save_post_analysis_data(self):
-		self.post_analysis_folder = self.post_analysis_folder_old
-
-		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, self.observable_name_compact)
-		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
-
-		self.post_analysis_folder = os.path.join(self.post_analysis_folder, "te%03d" % self.flow_time_zero_index)
-		check_folder(self.post_analysis_folder, self.dryrun, self.verbose)
-
-		self.post_analysis_folder
-		super(AnalyseQtQZero, self).save_post_analysis_data()
-
 	def __str__(self):
 		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
 		return_string = ""
@@ -1002,10 +987,7 @@ class AnalyseQtQZero(_AnalyseTopSusBase):
 		return return_string
 
 class AnalyseTopChargeInEuclTime(FlowAnalyser):
-	"""
-	Analysis of the topological charge in Euclidean Time.
-	"""
-	# overwrite_meta_data_flows = True
+	"""Analysis of the topological charge in Euclidean Time."""
 	observable_name = "Topological Charge in Euclidean Time"
 	observable_name_compact = "topct"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
@@ -1038,25 +1020,17 @@ class AnalyseTopChargeInEuclTime(FlowAnalyser):
 		self.y = copy.deepcopy(self.y_original[:,:,self.t_euclidean_index])
 
 		# Creates a new folder to store t0 results in
-		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "te%03d" % self.t_euclidean_index)
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "%04d" % self.t_euclidean_index)
 		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
 
-		# Creates post analysis data folder
-		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, self.observable_name_compact)
-		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
+		# Checks that {post_analysis_folder}/{observable_name}/{time interval} exist
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, "%04d" % self.t_euclidean_index)
+		check_folder(self.post_analysis_folder, self.dryrun, self.verbose)
 
 		# Resets some of the ac, jk and bs variable
 		self.bootstrap_performed = False
 		self.jackknife_performed = False
 		self.autocorrelation_performed = False
-
-	def save_post_analysis_data(self):
-		"""
-		Function for saving data for post analysis.
-		"""
-		self.observable_name_compact = self.observable_name_compact_old+ "te%03d" % self.t_euclidean_index
-		super(AnalyseTopChargeInEuclTime, self).save_post_analysis_data()
-		self.observable_name_compact = self.observable_name_compact_old
 
 	def __str__(self):
 		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
@@ -1072,10 +1046,7 @@ class AnalyseTopChargeInEuclTime(FlowAnalyser):
 
 
 class AnalyseTopSusInEuclTime(_AnalyseTopSusBase):
-	"""
-	Analysis of the topological susceptibility in Euclidean Time.
-	"""
-	# overwrite_meta_data_flows = True
+	"""Analysis of the topological susceptibility in Euclidean Time."""
 	observable_name = "Topological Susceptibility in Euclidean Time"
 	observable_name_compact = "topsust"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
@@ -1085,7 +1056,6 @@ class AnalyseTopSusInEuclTime(_AnalyseTopSusBase):
 		super(AnalyseTopSusInEuclTime, self).__init__(*args, **kwargs)
 		self.y_original = copy.deepcopy(self.y)
 		self.observable_output_folder_path_old = self.observable_output_folder_path
-		self.post_analysis_folder_old = self.post_analysis_folder
 		self.observable_name_compact_old = self.observable_name_compact
 		self.NT = self.y_original.shape[-1]
 
@@ -1121,23 +1091,17 @@ class AnalyseTopSusInEuclTime(_AnalyseTopSusBase):
 		# self.y = np.abs(self.y) # If not absolute value, will get error!
 
 		# Creates a new folder to store t0 results in
-		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "te%03d" % self.t_euclidean_index)
+		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "%04d" % self.t_euclidean_index)
 		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
 
-		# Creates post analysis data folder
-		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, self.observable_name_compact)
-		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
+		# Checks that {post_analysis_folder}/{observable_name}/{time interval} exist
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, "%04d" % self.t_euclidean_index)
+		check_folder(self.post_analysis_folder, self.dryrun, self.verbose)
 
 		# Resets some of the ac, jk and bs variable
 		self.bootstrap_performed = False
 		self.jackknife_performed = False
 		self.autocorrelation_performed = False
-
-	def save_post_analysis_data(self):
-		"""Function for saving data for post analysis."""
-		self.observable_name_compact = self.observable_name_compact_old+ "te%03d" % self.t_euclidean_index
-		super(AnalyseTopSusInEuclTime, self).save_post_analysis_data()
-		self.observable_name_compact = self.observable_name_compact_old
 
 	def __str__(self):
 		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
@@ -1172,22 +1136,14 @@ class _EuclideanSplitAnalysis(FlowAnalyser):
 		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "int%03d-%03d" % t_interval)
 		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
 
-		# Creates post analysis data folder
-		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, self.observable_name_compact)
-		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
+		# Checks that {post_analysis_folder}/{observable_name}/{time interval} exist
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, "%03d-%03d" % self.t_interval)
+		check_folder(self.post_analysis_folder, self.dryrun, self.verbose)
 
 		# Resets some of the ac, jk and bs variable
 		self.bootstrap_performed = False
 		self.jackknife_performed = False
 		self.autocorrelation_performed = False
-
-	def save_post_analysis_data(self):
-		"""
-		Function for saving data for post analysis.
-		"""
-		self.observable_name_compact = self.observable_name_compact_old+ "int%03d-%03d" % self.t_interval
-		super(_EuclideanSplitAnalysis, self).save_post_analysis_data()
-		self.observable_name_compact = self.observable_name_compact_old
 
 	def __str__(self):
 		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
@@ -1221,9 +1177,7 @@ class AnalyseTopChargeSplitEuclideanTime(_EuclideanSplitAnalysis):
 		self.observable_name_compact_old = self.observable_name_compact
 
 	def set_t_interval(self, *args):
-		"""
-		Runs first the inherited time setter function, then its own.
-		"""
+		"""Runs first the inherited time setter function, then its own."""
 		super(AnalyseTopChargeSplitEuclideanTime, self).set_t_interval(*args)
 		self.y = np.sum(self.y, axis=2)
 		self.observable_name = r"Q in Euclidean time $t=[%d,%d)$" % self.t_interval
@@ -1241,7 +1195,6 @@ class AnalysisTopSusSplitEuclideanTime(_EuclideanSplitAnalysis, _AnalyseTopSusBa
 	def __init__(self, *args, **kwargs):
 		super(AnalysisTopSusSplitEuclideanTime, self).__init__(*args, **kwargs)
 		self.NT = self.y_original.shape[-1]
-		self.post_analysis_folder_old = self.post_analysis_folder
 		self.observable_output_folder_path_old = self.observable_output_folder_path
 		self.observable_name_compact_old = self.observable_name_compact
 
@@ -1258,9 +1211,7 @@ class AnalysisTopSusSplitEuclideanTime(_EuclideanSplitAnalysis, _AnalyseTopSusBa
 		self.y **= 2
 
 class _MCSplitAnalysis(FlowAnalyser):
-	"""
-	Base class for analysing different parts of the Monte Carlo history.
-	"""
+	"""Base class for analysing different parts of the Monte Carlo history."""
 	def __init__(self, *args, **kwargs):
 		super(_MCSplitAnalysis, self).__init__(*args, **kwargs)
 		self.y_original = copy.deepcopy(self.y)
@@ -1286,20 +1237,14 @@ class _MCSplitAnalysis(FlowAnalyser):
 		self.observable_output_folder_path = os.path.join(self.observable_output_folder_path_old, "MCint%03d-%03d" % MC_interval)
 		check_folder(self.observable_output_folder_path, self.dryrun, self.verbose)
 
-		# Creates post analysis data folder
-		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, self.observable_name_compact)
-		check_folder(self.post_analysis_folder, self.dryrun, verbose=self.verbose)
+		# Checks that {post_analysis_folder}/{observable_name}/{time interval} exist
+		self.post_analysis_folder = os.path.join(self.post_analysis_folder_old, "%03d-%03d" % self.MC_interval)
+		check_folder(self.post_analysis_folder, self.dryrun, self.verbose)
 
 		# Resets some of the ac, jk and bs variable
 		self.bootstrap_performed = False
 		self.jackknife_performed = False
 		self.autocorrelation_performed = False
-
-	def save_post_analysis_data(self):
-		"""Function for saving data for post analysis."""
-		self.observable_name_compact = self.observable_name_compact_old+ "MCint%03d-%03d" % self.MC_interval
-		super(_MCSplitAnalysis, self).save_post_analysis_data()
-		self.observable_name_compact = self.observable_name_compact_old
 
 	def __str__(self):
 		info_string = lambda s1, s2: "\n{0:<20s}: {1:<20s}".format(s1, s2)
@@ -1327,8 +1272,6 @@ class AnalysisTopChargeSplitMCTime(_MCSplitAnalysis):
 	def __init__(self, *args, **kwargs):
 		super(AnalysisTopChargeSplitMCTime, self).__init__(*args, **kwargs)
 		self.NT = self.y_original.shape[-1]
-
-		self.post_analysis_folder_old = self.post_analysis_folder
 		self.observable_output_folder_path_old = self.observable_output_folder_path
 		self.observable_name_compact_old = self.observable_name_compact
 
@@ -1354,14 +1297,11 @@ class AnalysisTopSusSplitMCTime(_MCSplitAnalysis, _AnalyseTopSusBase):
 		# Squares the values
 		self.y_original **= 2
 
-		self.post_analysis_folder_old = self.post_analysis_folder
 		self.observable_output_folder_path_old = self.observable_output_folder_path
 		self.observable_name_compact_old = self.observable_name_compact
 
 	def set_MC_interval(self, *args):
-		"""
-		Runs first the inherited time setter function, then its own.
-		"""
+		"""Runs first the inherited time setter function, then its own."""
 		super(AnalysisTopSusSplitMCTime, self).set_MC_interval(*args)
 		self.observable_name = r"$\chi(\langle Q^2 \rangle)^{1/4}$ in MC interval $[%d,%d)$" % self.MC_interval
 
