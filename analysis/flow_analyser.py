@@ -884,7 +884,6 @@ class AnalyseQQuartic(_AnalyseTopSusBase):
 	def __init__(self, *args, **kwargs):
 		super(AnalyseQQuartic, self).__init__(*args, **kwargs)
 		self.y **= 4
-		print "@ 887 in flow_analyser.py || CHECK DERIVATIVE AND STUFF IN", self.__name__ 
 
 	def chi(self, Q4):
 		"""Topological susceptibility funciton."""

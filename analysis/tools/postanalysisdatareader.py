@@ -70,7 +70,7 @@ class PostAnalysisDataReader:
 					obs_data = {}
 					sub_obs_raw = {}
 
-					for sub_obs in sorted(self._get_folder_content(obs_folder_path), key=lambda s: int(s.split("-")[-1])):
+					for sub_obs in self._sort_folder_list(obs_folder_path):
 						sub_obs_path = os.path.join(obs_folder_path, sub_obs)
 
 						# Retrieves folder file lists
@@ -147,6 +147,17 @@ class PostAnalysisDataReader:
 	def _add_analysis(self, atype):
 		if atype not in self.analysis_types:
 			self.analysis_types.append(atype)
+
+	def _sort_folder_list(self, folder_path):
+		"""
+		Sorts the folders deepending on if we have intervals or specific points.
+		"""
+		folders = self._get_folder_content(folder_path)
+		if "-" in folders[0]: # For MC and euclidean intervals
+			sort_key = key=lambda s: int(s.split("-")[-1])
+		else:
+			sort_key = key=lambda s: int(s)
+		return sorted(folders, key=sort_key)
 
 	def _get_obs_folder_content_lists(self, obs, obs_folder):
 		"""
@@ -325,11 +336,7 @@ class PostAnalysisDataReader:
 								self.raw_analysis[atype][beta][observable_name][sub_obs_name] = self.data_raw[beta][observable_name][sub_obs_name][atype]
 					else:
 						for atype in self.data_raw[beta][observable_name]:
-							try: 
-								self.raw_analysis[atype][beta][observable_name] = self.data_raw[beta][observable_name][atype]
-							except KeyError:
-								print "KeyError!!", beta, observable_name, atype
-								exit(1)
+							self.raw_analysis[atype][beta][observable_name] = self.data_raw[beta][observable_name][atype]
 
 
 	def _check_raw_bin_dict_keys(self, analysis_type, beta, observable_name, sub_obs=None):

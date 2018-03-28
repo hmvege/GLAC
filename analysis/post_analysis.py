@@ -3,6 +3,7 @@ from tools.folderreadingtools import check_folder
 # from statistics.line_fitting import fit_line_form_bootstrap, fit_line
 from statistics.linefit import LineFit
 from tools.postanalysisdatareader import PostAnalysisDataReader, getLatticeSpacing
+import itertools
 
 # import tqdm
 # from scipy.optimize import curve_fit
@@ -31,10 +32,12 @@ class _PostAnalysis:
 					6.2  : r"$32^3 \times 64$",
 					6.45 : r"$48^3 \times 96$"}
 	r0 = 0.5
+	sub_obs = False
+	observable_intervals = {}
 	# blue, green, red purple
 	beta_colors = ["#5cbde0", "#6fb718", "#bc232e", "#8519b7"]
 
-	def __init__(self, data, with_autocorr=True, figures_folder="../figures"):
+	def __init__(self, data, with_autocorr=True, figures_folder="../figures", verbose=False):
 		if with_autocorr:
 			self.ac = "with_autocorr"
 		else:
@@ -42,17 +45,30 @@ class _PostAnalysis:
 		self.with_autocorr = with_autocorr
 		observable = self.observable_name_compact
 
+		self.verbose = verbose
+
 		# Retrieves relevant data values and sorts them by beta values
 		self.flow_time = data.flow_time
 		self.unanalyzed_data = {}
 		self.bootstrap_data	= {}
 		self.jackknife_data = {}
+
 		for beta in sorted(data.data_observables[observable].keys()):
-			self.unanalyzed_data[beta] = data.data_observables[observable][beta][self.ac]["unanalyzed"]
-			self.bootstrap_data[beta] = data.data_observables[observable][beta][self.ac]["bootstrap"]
-			self.jackknife_data[beta] = data.data_observables[observable][beta][self.ac]["jackknife"]
-		
-		# Issue lies here#!!!!!!
+			if self.sub_obs:
+				self.observable_intervals[beta] = data.data_observables[observable][beta].keys()
+				if not beta in self.unanalyzed_data:
+					self.unanalyzed_data[beta] = {}
+					self.bootstrap_data[beta] = {}
+					self.jackknife_data[beta] = {}
+				for subobs in data.data_observables[observable][beta]:
+					self.unanalyzed_data[beta][subobs] = data.data_observables[observable][beta][subobs][self.ac]["unanalyzed"]
+					self.bootstrap_data[beta][subobs] = data.data_observables[observable][beta][subobs][self.ac]["bootstrap"]
+					self.jackknife_data[beta][subobs] = data.data_observables[observable][beta][subobs][self.ac]["jackknife"]
+			else:
+				self.unanalyzed_data[beta] = data.data_observables[observable][beta][self.ac]["unanalyzed"]
+				self.bootstrap_data[beta] = data.data_observables[observable][beta][self.ac]["bootstrap"]
+				self.jackknife_data[beta] = data.data_observables[observable][beta][self.ac]["jackknife"]
+
 		self.bs_raw = data.raw_analysis["bootstrap"]
 		self.jk_raw = data.raw_analysis["jackknife"]
 		self.ac_corrections	= data.raw_analysis["autocorrelation"]
@@ -64,21 +80,25 @@ class _PostAnalysis:
 
 		# Small test to ensure that the number of bootstraps and number of different beta batches match
 		err_msg = "Number of bootstraps do not match number of different beta values"
-		chk_bs_len = lambda _a: _a.shape[-1] == self.NBoots
-		assert sum([True for i in self.bs_raw.keys() if chk_bs_len(self.bs_raw[i][self.observable_name_compact])]) == data.N_betas, err_msg
+		if self.sub_obs:
+			chk_bs_len = lambda _a, _i: _a[_i][self.observable_name_compact].values()[0].shape[-1] == self.NBoots
+		else:
+			chk_bs_len = lambda _a, _i: _a[_i][self.observable_name_compact].shape[-1] == self.NBoots
+
+		assert sum([True for i in self.bs_raw.keys() if chk_bs_len(self.bs_raw, i)]) == data.N_betas, err_msg
 
 		# Creates base output folder for post analysis figures
 		self.figures_folder = figures_folder
-		check_folder(self.figures_folder, dryrun=False, verbose=True)
-		check_folder(os.path.join(self.figures_folder, data.batch_name), dryrun=False, verbose=True)
+		check_folder(self.figures_folder, dryrun=False, verbose=self.verbose)
+		check_folder(os.path.join(self.figures_folder, data.batch_name), dryrun=False, verbose=self.verbose)
 
 		# Creates output folder
 		self.post_anlaysis_folder = os.path.join(self.figures_folder, data.batch_name, "post_analysis")
-		check_folder(self.post_anlaysis_folder, dryrun=False, verbose=True)
+		check_folder(self.post_anlaysis_folder, dryrun=False, verbose=self.verbose)
 
 		# Creates observable output folder
 		self.output_folder_path = os.path.join(self.post_anlaysis_folder, self.observable_name_compact)
-		check_folder(self.output_folder_path, dryrun=False, verbose=True)
+		check_folder(self.output_folder_path, dryrun=False, verbose=self.verbose)
 
 		# Creates colors to use
 		self.colors = {}
@@ -90,18 +110,21 @@ class _PostAnalysis:
 		if not hasattr(self,"plot_values"):
 			raise AttributeError("set_analysis_data_type() has not been set yet.")
 
+	def _get_analysis_data(self, analysis_data_type):
+		"""Retrieving data depending on analysis type we are choosing"""
+		if analysis_data_type == "bootstrap":
+			return self.bootstrap_data
+		elif analysis_data_type == "jackknife":
+			return self.jackknife_data
+		elif analysis_data_type == "unanalyzed":
+			return self.unanalyzed_data
+		else:
+			raise KeyError("Analysis %s not recognized" % analysis_data_type)
+
 	def set_analysis_data_type(self, analysis_data_type="bootstrap"):
 		self.plot_values = {}
 
-		# Retrieving data depending on analysis type we are choosing
-		if analysis_data_type == "bootstrap":
-			data = self.bootstrap_data
-		elif analysis_data_type == "jackknife":
-			data = self.jackknife_data
-		elif analysis_data_type == "unanalyzed":
-			data = self.unanalyzed_data
-		else:
-			raise KeyError("Analysis %s not recognized" % analysis_data_type)
+		data = self._get_analysis_data(analysis_data_type)
 
 		# Makes it a global constant so it can be added in plot figure name
 		self.analysis_data_type = analysis_data_type
@@ -126,8 +149,18 @@ class _PostAnalysis:
 	def plot(self, x_limits=False, y_limits=False, plot_with_formula=False):
 		"""
 		Function for making a basic plot of all the different beta values together.
+
+		Args:
+			x_limits: limits of the x-axis. Default is False.
+			y_limits: limits of the y-axis. Default is False.
+			plot_with_formula: bool, default is false, is True will look for 
+				formula for the y-value to plot in title.
 		"""
-		print "Plotting %s for betas %s together" % (self.observable_name_compact, ", ".join([str(b) for b in sorted(self.unanalyzed_data.keys())]))
+		if self.verbose:
+			print "Plotting %s for betas %s together" % (
+				self.observable_name_compact,
+				", ".join([str(b) for b in sorted(self.unanalyzed_data.keys())]))
+
 		fig = plt.figure(dpi=self.dpi)
 		ax = fig.add_subplot(111)
 
@@ -155,7 +188,7 @@ class _PostAnalysis:
 		ax.set_title(title_string)
 		ax.set_xlabel(self.x_label)
 		ax.set_ylabel(self.y_label)
-		ax.legend(loc="best", prop={"size":8})
+		ax.legend(loc="best", prop={"size": 8})
 
 		# Sets axes limits if provided
 		if x_limits != False:
@@ -163,8 +196,10 @@ class _PostAnalysis:
 		if y_limits != False:
 			ax.set_ylim(y_limits)
 
+		plt.tight_layout()
+
 		# Saves and closes figure
-		fname = os.path.join(self.output_folder_path, "post_analysis_%s_%s.png" % (self.observable_name_compact, self.analysis_data_type))
+		fname = self._get_plot_figure_name()
 		plt.savefig(fname)
 		print "Figure saved in %s" % fname
 		# plt.show()
@@ -214,16 +249,174 @@ class _PostAnalysis:
 			# Adds to list of batch-values
 			self.beta_fit.append(bfit)
 
-	def _linefit_to_continuum(self, x_points, y_points, y_points_error):
+	def _get_plot_figure_name(self):
+		"""Retrieves appropriate figure file name."""
+		output_folder = self.output_folder_path
+		fname = "post_analysis_%s_%s.png" % (self.observable_name_compact, self.analysis_data_type)
+		return os.path.join(output_folder, fname)
+
+	def __str__(self):
+		msg = "\n" +"="*100
+		msg += "\nPost analaysis for:        " + self.observable_name_compact
+		msg += "\nIncluding autocorrelation: " + self.ac
+		msg += "\nOutput folder:             " + self.output_folder_path
+		msg += "\n" + "="*100
+		return msg
+
+class _MultiObservablePostAnalysis(_PostAnalysis):
+	"""
+	Class to be inheritedfrom in case we got intervals or sub elements of the 
+	same observable.
+	"""
+	sub_obs = True
+	analysis_data_type = "bootstrap"
+
+	def _initiate_plot_values(self, data, interval_index=None):
+		# Sorts data into a format specific for the plotting method
+		for beta in sorted(data.keys()):
+			values = {}
+			if interval_index == None:
+				# Case where we have sub sections of observables, e.g. in euclidean time
+				for sub_obs in self.observable_intervals[beta]:
+					if beta == 6.45: self.flow_time *= 2
+					sub_values = {}
+					sub_values["a"] = getLatticeSpacing(beta)
+					sub_values["x"] = sub_values["a"]* np.sqrt(8*self.flow_time)
+					sub_values["y"] = data[beta][sub_obs]["y"]
+					sub_values["bs"] = self.bs_raw[beta][self.observable_name_compact][sub_obs]
+					sub_values["y_err"] = data[beta][sub_obs]["y_error"] # negative since the minus sign will go away during linear error propagation
+					sub_values["label"] = r"%s $\beta=%2.2f$ %s" % (self.size_labels[beta], beta, sub_obs)
+					sub_values["color"] = self.colors[beta]
+					values[sub_obs] = sub_values
+			else:
+				sorted_intervals = sorted(data[beta].keys())
+				values["a"] = getLatticeSpacing(beta)
+				values["x"] = values["a"]* np.sqrt(8*self.flow_time)
+				values["y"] = data[beta][sorted_intervals[interval_index]]["y"]
+				values["bs"] = self.bs_raw[beta][self.observable_name_compact][sorted_intervals[interval_index]]
+				values["y_err"] = data[beta][sorted_intervals[interval_index]]["y_error"] # negative since the minus sign will go away during linear error propagation
+				values["label"] = r"%s $\beta=%2.2f$ %s" % (self.size_labels[beta], beta, sorted_intervals[interval_index])
+				values["color"] = self.colors[beta]
+				values["interval"] = sorted_intervals[interval_index]
+			self.plot_values[beta] = values
+
+	def set_analysis_type(self, analysis_data_type):
+		"""Sets a global analysis type."""
+		self.analysis_data_type = analysis_data_type
+
+	def plot_interval(self, interval_index, **kwargs):
+		"""Sets and plots only one interval."""
+		self.interval_index = interval_index
+		self.plot_values = {}
+		data = self._get_analysis_data(self.analysis_data_type)
+		self._initiate_plot_values(data, interval_index=interval_index)
+		# Makes it a global constant so it can be added in plot figure name
+		self.plot(**kwargs)
+
+	def _get_plot_figure_name(self):
+		"""Retrieves appropriate figure file name."""
+		output_folder = os.path.join(self.output_folder_path, "slices")
+		check_folder(output_folder, False, True)
+		fname = "post_analysis_%s_%s_int%d.png" % (self.observable_name_compact, self.analysis_data_type, self.interval_index)
+		return os.path.join(output_folder, fname)
+
+	def get_N_intervals(self):
+		"""Returns possible intervals for us to plot."""
+		if self.verbose:
+			print "Intervals N=%d, possible for %s: " % (len(self.observable_intervals), 
+				self.observable_name_compact),
+			print self.observable_intervals
+		return len(self.observable_intervals), self.observable_intervals
+
+	def plot_series(self, indexes, beta="all", x_limits=False, 
+		y_limits=False, plot_with_formula=False):
 		"""
-		Fits a a set of values to continuum.
+		Method for plotting 4 axes together.
+
 		Args:
-			x_points (numpy float array) : x points to data fit
-			y_points (numpy float array) : y points to data fit
-			y_points_error (numpy float array) : error of y points to data fit
-			[optional] fit_type (str) : type of fit to perform. Options: 'curve_fit' (default), 'polyfit'
+			indexes: list containing integers of which intervals to plot together.
+			beta: beta values to plot. Default is "all". Otherwise, 
+				a list of numbers or a single beta value is provided.
+			x_limits: limits of the x-axis. Default is False.
+			y_limits: limits of the y-axis. Default is False.
+			plot_with_formula: bool, default is false, is True will look for 
+				formula for the y-value to plot in title.
 		"""
-		
+		self.plot_values = {}
+		data = self._get_analysis_data(self.analysis_data_type)
+		self._initiate_plot_values(data)
+
+		old_rc_paramx = plt.rcParams['xtick.labelsize']
+		old_rc_paramy = plt.rcParams['ytick.labelsize']
+		plt.rcParams['xtick.labelsize'] = 6
+		plt.rcParams['ytick.labelsize'] = 6
+
+		# Starts plotting
+		# fig = plt.figure(sharex=True)
+		fig, axes = plt.subplots(2, 2, sharey=True, sharex=True)
+
+		# Ensures beta is a list
+		if not isinstance(beta, list):
+			beta = [beta]
+
+		# Sets the beta values to plot
+		if beta[0] == "all" and len(beta) == 1:
+			bvalues = self.plot_values
+		else:
+			bvalues = beta
+
+		# print axes
+		for ax, i in zip(list(itertools.chain(*axes)), indexes):
+			for ibeta in bvalues:
+				# Retrieves the values deepending on the indexes provided and beta values
+				value = self.plot_values[ibeta][sorted(self.observable_intervals[ibeta])[i]]
+				x = value["x"]
+				y = value["y"]
+				y_err = value["y_err"]
+				ax.plot(x, y, "-", label=value["label"], color=value["color"])
+				ax.fill_between(x, y - y_err, y + y_err, alpha=0.5, edgecolor='', facecolor=value["color"])
+				
+				# Basic plotting commands
+				ax.grid(True)
+				ax.legend(loc="best", prop={"size":5})
+
+				# Sets axes limits if provided
+				if x_limits != False:
+					ax.set_xlim(x_limits)
+				if y_limits != False:
+					ax.set_ylim(y_limits)
+
+		# Set common labels
+		# https://stackoverflow.com/questions/6963035/pyplot-axes-labels-for-subplots
+		fig.text(0.52, 0.035, self.x_label, ha='center', va='center', fontsize=9)
+		fig.text(0.03, 0.5, self.y_label, ha='center', va='center', rotation='vertical', fontsize=11)
+
+		# Sets the title string
+		title_string = r"%s" % self.observable_name
+		if plot_with_formula:
+			title_string += r" %s" % self.formula
+		plt.suptitle(title_string)
+		plt.tight_layout(pad=1.7)
+
+		# Saves and closes figure
+		if beta == "all":
+			folder_name = "beta%s" % beta
+		else:
+			folder_name = "beta%s" % "-".join([str(i) for i in beta])
+		folder_name += "_N%s" % "".join([str(i) for i in indexes])
+		folder_path = os.path.join(self.output_folder_path, folder_name)
+		check_folder(folder_path, False, True)
+
+		fname = os.path.join(folder_path, "post_analysis_%s_%s.png" % (self.observable_name_compact, self.analysis_data_type))
+		plt.savefig(fname, dpi=400)
+		print "Figure saved in %s" % fname
+		# plt.show()
+		plt.close(fig)
+
+		plt.rcParams['xtick.labelsize'] = old_rc_paramx
+		plt.rcParams['ytick.labelsize'] = old_rc_paramy
+
+
 class TopSusPostAnalysis(_PostAnalysis):
 	observable_name = "Topological Susceptibility"
 	observable_name_compact = "topsus"
@@ -335,6 +528,7 @@ class TopSusPostAnalysis(_PostAnalysis):
 		print "Continuum plot of %s created in %s" % (self.observable_name.lower(), fname)
 		# plt.show()
 		plt.close(fig)
+
 
 class EnergyPostAnalysis(_PostAnalysis):
 	observable_name = "Energy"
@@ -535,7 +729,6 @@ class EnergyPostAnalysis(_PostAnalysis):
 
 		pass
 
-
 class PlaqPostAnalysis(_PostAnalysis):
 	"""Post-analysis of the topological charge."""
 	observable_name = "Plaquette"
@@ -553,35 +746,6 @@ class TopChargePostAnalysis(_PostAnalysis):
 	x_label = r"$\sqrt{8t}$[fm]"
 	formula = r"$Q = - \sum_x \frac{1}{64 \cdot 32\pi^2}\epsilon_{\mu\nu\rho\sigma}Tr\{G^{clov}_{\mu\nu}G^{clov}_{\rho\sigma}\}$"
 
-class TopChargeTPostAnalysis(_PostAnalysis):
-	"""Post-analysis of the topological charge at fixed euclidean time."""
-	observable_name = "Topological Charge in Euclidean Time"
-	observable_name_compact = "topct"
-	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$Q_{t_{euclidean}}$"
-
-class TopChargeEuclSplitPostAnalysis(_PostAnalysis):
-	"""Post-analysis of the topological charge in euclidean time intervals."""
-	observable_name = "Topological Charge in Euclidean Time"
-	observable_name_compact = "topcte"
-	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$Q$"
-
-class TopChargeMCSplitPostAnalysis(_PostAnalysis):
-	"""Post-analysis of the topological charge in MC time intervals."""
-	observable_name = "Topological Charge in MC Time"
-	observable_name_compact = "topcMC"
-	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$Q$"
-
-#### Topological susceptibility definitions ####
-class QtQ0PostAnalysis(_PostAnalysis):
-	"""Post-analysis of the topsus at a fixed flow time."""
-	observable_name = r"$\chi(\langle Q_t Q_{t_0} \rangle)^{1/4}$"
-	observable_name_compact = "qtqzero"
-	x_label = r"$\sqrt{8t_{flow}}[fm]$"
-	y_label = r"$\chi(\langle Q_{t} Q_{t_0} \rangle)^{1/4} [GeV]$" # $\chi_t^{1/4}[GeV]$
-
 class TopCharge4PostAnalysis(_PostAnalysis):
 	"""Post-analysis of the topsus with Q^4."""
 	observable_name = r"$\chi(\langle Q^4 \rangle)^{1/8}$"
@@ -590,26 +754,62 @@ class TopCharge4PostAnalysis(_PostAnalysis):
 	y_label = r"$\chi(\langle Q^4 \rangle)^{1/8} [GeV]$" # 1/8 correct?
 	formula = r"$\chi(\langle Q^4 \rangle)^{1/8} = \frac{\hbar}{aV^{1/4}} \langle Q^4 \rangle^{1/8} [GeV]$" # 1/8 correct?
 
-class TopSusTPostAnalysis(_PostAnalysis):
+class TopChargeTPostAnalysis(_MultiObservablePostAnalysis):
+	"""Post-analysis of the topological charge at fixed euclidean time."""
+	observable_name = "Topological Charge in Euclidean Time"
+	observable_name_compact = "topct"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$Q_{t_{euclidean}}$"
+	sub_obs = True
+
+class TopChargeEuclSplitPostAnalysis(_MultiObservablePostAnalysis):
+	"""Post-analysis of the topological charge in euclidean time intervals."""
+	observable_name = "Topological Charge in Euclidean Time"
+	observable_name_compact = "topcte"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$Q$"
+	sub_obs = True
+
+class TopChargeMCSplitPostAnalysis(_MultiObservablePostAnalysis):
+	"""Post-analysis of the topological charge in MC time intervals."""
+	observable_name = "Topological Charge in MC Time"
+	observable_name_compact = "topcMC"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$Q$"
+	sub_obs = True
+
+#### Topological susceptibility definitions ####
+class QtQ0PostAnalysis(_MultiObservablePostAnalysis):
+	"""Post-analysis of the topsus at a fixed flow time."""
+	observable_name = r"$\chi(\langle Q_t Q_{t_0} \rangle)^{1/4}$"
+	observable_name_compact = "qtqzero"
+	x_label = r"$\sqrt{8t_{flow}}[fm]$"
+	y_label = r"$\chi(\langle Q_{t} Q_{t_0} \rangle)^{1/4} [GeV]$" # $\chi_t^{1/4}[GeV]$
+	sub_obs = True
+
+class TopSusTPostAnalysis(_MultiObservablePostAnalysis):
 	"""Post-analysis of the topsus with with one Q at fixed euclidean time."""
 	observable_name = "Topological Susceptibility in Euclidean Time"
 	observable_name_compact = "topsust"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\chi(\langle Q_t Q_{t_{euclidean}} \rangle)^{1/4} [GeV]$"
+	sub_obs = True
 
-class TopSusEuclSplitPostAnalysis(_PostAnalysis):
+class TopSusEuclSplitPostAnalysis(_MultiObservablePostAnalysis):
 	"""Post-analysis of the topsus in euclidean time intervals."""
 	observable_name = "Topological Susceptibility in MC Time"
 	observable_name_compact = "topsuste"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\chi^{1/4} [GeV]$"
+	sub_obs = True
 
-class TopSusMCSplitPostAnalysis(_PostAnalysis):
+class TopSusMCSplitPostAnalysis(_MultiObservablePostAnalysis):
 	"""Post-analysis of the topsus in MC time intervals."""
 	observable_name = "Topological Susceptibility in MC Time"
 	observable_name_compact = "topsusMC"
 	x_label = r"$\sqrt{8t_{flow}}[fm]$"
 	y_label = r"$\chi^{1/4} [GeV]$"
+	sub_obs = True
 
 
 def main(args):
