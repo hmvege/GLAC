@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 # fig = plt.figure()
 
@@ -28,19 +29,23 @@ import numpy as np
 
 # topc = np.loadtxt("beta60_correct_topc_flow_config00000.dat", skiprows=3)
 # topct = np.loadtxt("beta60_correct_topct_flow_config00000.dat", skiprows=3)
-topc = np.loadtxt("beta60_correct_topc_flow_config00010.dat", skiprows=3)
-topct = np.loadtxt("beta60_correct_topct_flow_config00010.dat", skiprows=3)
 
+print "Available files:"
+print [f for f in os.listdir(os.getcwd()) if os.path.splitext(f)[-1] == ".dat"], "\n"
 
-print topc.shape
-print topct[:,1:].shape
+cfg_num = 95
+
+topc = np.loadtxt("beta60_correct_topc_flow_config00%03d.dat" % cfg_num, skiprows=3)
+topct = np.loadtxt("beta60_correct_topct_flow_config00%03d.dat" % cfg_num, skiprows=3)
 
 summed_topc = np.sum(topct[:,1:], axis=1)
 
 eps = 1e-14
-diff_checker = lambda _diff: "good" if _diff < eps else "bad"
+diff_checker = lambda _diff: True if _diff < eps else False
 
 for i_topc, i_topct in zip(topc[:,1], summed_topc):
 	diff = i_topc - i_topct
-
-	print "%20.16f %20.16f %20.16f %s" % (i_topc, i_topct, diff, diff_checker(diff)) 
+	if not diff_checker:
+		print "%20.16f %20.16f %20.16f %s" % (i_topc, i_topct, diff, diff_checker(diff)) 
+else:
+	print "All good: no discrepancies larger than %g" % eps
