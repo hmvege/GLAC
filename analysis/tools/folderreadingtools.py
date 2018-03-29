@@ -9,7 +9,7 @@ import json
 __all__ = ["DataReader", "check_folder", "write_data_to_file", "write_raw_analysis_to_file"]
 
 class _DirectoryTree:
-	def __init__(self, batch_name, batch_folder, dryrun=False):
+	def __init__(self, batch_name, batch_folder, figures_folder, dryrun=False, verbose=True):
 		self.flow_tree = {}
 		self.obs_tree = {}
 		self.CURRENT_FOLDER = os.getcwd()
@@ -19,10 +19,11 @@ class _DirectoryTree:
 		self.found_observables = []
 		self.batch_name = batch_name
 		self.dryrun = dryrun
+		self.verbose = verbose
 
 		# Checks that the output folder actually exist
-		if not os.path.isdir(os.path.join("..", self.data_batch_folder)):
-			raise EnvironmentError("No folder name output at location %s" % os.path.join("..", self.data_batch_folder))
+		if not os.path.isdir(os.path.join(self.data_batch_folder)):
+			raise IOError("No folder name output at location %s" % os.path.join(self.data_batch_folder))
 
 		# Retrieves folders and subfolders
 		self.batch_name_folder = os.path.join("..", self.data_batch_folder,batch_name)
@@ -78,14 +79,8 @@ class _DirectoryTree:
 					self.found_flow_observables.append(flow_obs)
 
 		# Creates figures folder
-		if os.path.split(self.CURRENT_FOLDER)[-1] == "tools":
-			self.figures_path = os.path.join("..", "..", "figures", batch_name)
-		elif os.path.split(self.CURRENT_FOLDER)[-1] == "analysis":
-			self.figures_path = os.path.join("..", "figures", batch_name)
-		else:
-			raise OSError("Current folder path not recognized: %s" % self.CURRENT_FOLDER)
-		
-		check_folder(self.figures_path, self.dryrun, verbose=True)
+		self.figures_path = os.path.join(figures_folder, batch_name)
+		check_folder(self.figures_path, self.dryrun, verbose=self.verbose)
 
 	@staticmethod
 	def natural_sort(l):
@@ -298,7 +293,7 @@ class DataReader:
 	beta_to_spatial_size = {6.0: 24, 6.1: 28, 6.2: 32, 6.45: 48}
 	fobs = ["plaq", "energy", "topc"]
 
-	def __init__(self, batch_name, batch_folder, load_file=None, 
+	def __init__(self, batch_name, batch_folder, figures_folder, load_file=None, 
 			flow_epsilon=0.01, NCfgs=None, create_perflow_data=False, 
 			verbose=True, dryrun=False, correct_energy=False):
 		"""
@@ -307,6 +302,7 @@ class DataReader:
 		Args:
 			batch_name: string containing batch name.
 			batch_folder: string containing location of batch.
+			figures_folder: location of where to place figures from analysis.
 			load_file: bool if we will try to look for a .npy file in 
 				batch_folder/batch_name. Will look for the topct file as well.
 			flow_epsilon: flow epsilon in flow of file we are loading. Default
@@ -329,7 +325,7 @@ class DataReader:
 		self.batch_folder = batch_folder
 		self.__print_load_info()
 
-		self.file_tree = _DirectoryTree(self.batch_name, self.batch_folder, dryrun=dryrun)
+		self.file_tree = _DirectoryTree(self.batch_name, self.batch_folder, self.figures_folder, dryrun=dryrun, verbose=verbose)
 
 		if NCfgs == None:
 			raise ValueError("missing number of observables associated with batch.")
@@ -577,7 +573,7 @@ def write_data_to_file(analysis_object):
 	beta_string = str(analysis_object.beta).replace(".", "_")
 	
 	# Ensures that the post analysis data folder exists
-	check_folder(post_analysis_folder, dryrun, verbose=True)
+	check_folder(post_analysis_folder, dryrun, verbose=self.verbose)
 
 	# Retrieves analyzed data
 	x = copy.deepcopy(analysis_object.x)
@@ -629,7 +625,7 @@ def write_data_to_file(analysis_object):
 	# 	print data
 	# 	exit(1)
 
-def write_raw_analysis_to_file(raw_data, analysis_type, observable, post_analysis_folder, dryrun=False, verbose=True):
+def write_raw_analysis_to_file(raw_data, analysis_type, observable, post_analysis_folder, dryrun=False, verbose=self.verbose):
 	"""
 	Function that writes raw analysis data to file, either bootstrapped or
 		jackknifed data.

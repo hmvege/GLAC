@@ -1,7 +1,7 @@
-from flow_analyser import *
+from pre_analysis.flow_analyser import *
 from tools.folderreadingtools import DataReader
 from tools.postanalysisdatareader import PostAnalysisDataReader
-from post_analysis import *
+from post_analysis.post_analysis import *
 import statistics.parallel_tools as ptools
 import os
 import numpy as np
@@ -21,9 +21,9 @@ def analyse_default(analysis_object, N_bs, NBins=30):
 	analysis_object.plot_autocorrelation(0)
 	analysis_object.plot_autocorrelation(-1)
 	analysis_object.plot_mc_history(0)
-	analysis_object.plot_mc_history(int(analysis_object.N_configurations * 0.25))
-	analysis_object.plot_mc_history(int(analysis_object.N_configurations * 0.50))
-	analysis_object.plot_mc_history(int(analysis_object.N_configurations * 0.75))
+	analysis_object.plot_mc_history(int(analysis_object.NFlows * 0.25))
+	analysis_object.plot_mc_history(int(analysis_object.NFlows * 0.50))
+	analysis_object.plot_mc_history(int(analysis_object.NFlows * 0.75))
 	analysis_object.plot_mc_history(-1)
 	analysis_object.plot_original()
 	analysis_object.plot_boot()
@@ -82,6 +82,17 @@ def analyse_qtq0(params, qzero_flow_times):
 	for qzero_flow_time_index in qzero_flow_times:
 		qtqzero_analysis.setQ0(qzero_flow_time_index)
 		analyse_default(qtqzero_analysis, N_bs)
+
+def analyse_qtq0e(params, flow_time_indexes, euclidean_time_percents):
+	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
+
+	qtqzero_analysis = AnalyseQtQ0Euclidean(obs_data("topct"), dryrun=dryrun,
+		parallel=parallel, numprocs=numprocs, verbose=verbose)
+
+	for flow_time_index in flow_time_indexes:
+		for euclidean_percent in euclidean_time_percents:
+			qtqzero_analysis.set_flow_time(flow_time_index, euclidean_percent)
+			analyse_default(qtqzero_analysis, N_bs)
 
 def analyse_topct(params, numsplits):
 	obs_data, dryrun, parallel, numprocs, verbose, N_bs = params
@@ -282,6 +293,8 @@ def analyse(parameters):
 		analyse_topsus(params)
 	if "qtqzero" in parameters["observables"]:
 		analyse_qtq0(params, parameters["qzero_flow_times"])
+	if "qtq0e" in parameters["observables"]:
+		analyse_qtq0e(params, parameters["flow_time_indexes"], parameters["euclidean_time_percents"])
 	if "topc4" in parameters["observables"]:
 		analyse_topc4(params)
 	if "topsust" in parameters["observables"]:
@@ -440,7 +453,7 @@ def main():
 	observables = [
 		"plaq", "energy", "topc", "topsus", "qtqzero", "topc4", 
 		"topct", "topcte", "topcMC", "topsuste", 
-		"topsusMC", "topsust"
+		"topsusMC", "topsust", "qtq0e"
 	]
 
 	# ### Basic observables
@@ -452,7 +465,7 @@ def main():
 	# observables = ["topcte", "topcMC", "topsuste", "topsusMC", "topct"]
 	# observables = ["topsuste", "topsusMC", "topct"]
 	# observables = ["topsusMC"]
-	# observables = ["topct"]
+	observables = ["qtq0e"]
 
 	print 100*"=" + "\nObservables to be analysed: %s" % ", ".join(observables)
 	print 100*"=" + "\n"
@@ -522,6 +535,10 @@ def main():
 	# Percents of data where we do qtq0
 	qzero_flow_times = [0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.0]
 
+	# Flow time indexes to plot qtq0 in euclidean time at
+	flow_time_indexes = [0, 50, 200, 400, 700, 999]
+	euclidean_time_percents = [0, 0.25, 0.50, 0.75, 1.00]
+
 	#### Analysis batch setups
 	default_params = {
 		"batch_folder": data_batch_folder,
@@ -532,6 +549,8 @@ def main():
 		"correct_energy": correct_energy,
 		"num_t_euclidean_indexes": num_t_euclidean_indexes,
 		"qzero_flow_times": qzero_flow_times,
+		"flow_time_indexes": flow_time_indexes,
+		"euclidean_time_percents": euclidean_time_percents,
 		"numsplits_eucl": numsplits_eucl,
 		"intervals_eucl": intervals_eucl,
 		"MC_time_splits": MC_time_splits,
@@ -569,14 +588,14 @@ def main():
 	# analysis_parameter_list = [databeta61, databeta62]
 	# analysis_parameter_list = [smaug_data_beta61_analysis]
 
-	# #### Submitting observable-batches
-	# for analysis_parameters in analysis_parameter_list:
-	# 	analyse(analysis_parameters)
+	#### Submitting observable-batches
+	for analysis_parameters in analysis_parameter_list:
+		analyse(analysis_parameters)
 
-	#### Submitting post-analysis data
-	if len(analysis_parameter_list) >= 2:
-		post_analysis(data_batch_folder, beta_folders, observables, topsus_fit_targets,
-			line_fit_interval, energy_fit_target, verbose=verbose)
+	# #### Submitting post-analysis data
+	# if len(analysis_parameter_list) >= 2:
+	# 	post_analysis(data_batch_folder, beta_folders, observables, topsus_fit_targets,
+	# 		line_fit_interval, energy_fit_target, verbose=verbose)
 
 if __name__ == '__main__':
 	main()
