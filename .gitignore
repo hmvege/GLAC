@@ -45,6 +45,9 @@ job*.sh
 # Jacks data
 jacks_data
 
+# Data
+data5
+
 # Lattice density figures
 figures/act_density
 figures/prodRunBeta6_0

@@ -266,19 +266,22 @@ class JobCreator:
         json_dict["randomMatrixSeed"] = config_dict["randomMatrixSeed"]
         json_dict["samplingFrequency"] = config_dict["samplingFrequency"]
 
+        # Source
+        json_fpath = os.path.join(self.base_folder, "input", self.json_file_name)
+
+        # Dest
+        json_cfgpath = os.path.join(self.base_folder, "input", self.runName, self.json_file_name)
 
         # Prints configuration file content if verbose or dryrun is true
         if self.dryrun or self.verbose:
-            print "Writing json configuration file at location {0:<s}:\n".format(
-                os.path.join(self.base_folder, "input", self.json_file_name))
+            print "Writing json configuration file at location {0:<s}:\n".format(json_fpath)
             print json.dumps(json_dict, indent=4, separators=(", ", ": ")), "\n"
 
         # Creates configuration file
         if not self.dryrun:
-            with file(os.path.join(self.base_folder, "input", self.json_file_name), "w+") as json_file:
+            with file(json_fpath, "w+") as json_file:
                 json.dump(json_dict, json_file, indent=4)
-            shutil.copy(os.path.join(self.base_folder, "input", self.json_file_name), # src
-                "%s.bak" % os.path.join(self.base_folder, "input", self.runName, self.json_file_name)) # dest
+            shutil.copy(json_fpath, "%s.bak" % json_cfgpath)
 
     def submit_job(self, job_config, system, partition, excluded_nodes=False):
         if excluded_nodes:
