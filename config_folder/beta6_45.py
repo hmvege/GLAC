@@ -2,7 +2,7 @@
     "runName"                   : "prodRunBeta6_45",
     "N"                         : 48,
     "NT"                        : 96,
-    "subDims"                   : [12, 12, 12, 6],
+    "subDims"                   : [12, 12, 12, 12],
     "beta"                      : 6.45,
     "NCf"                       : 250,
     "NCor"                      : 1600,
