@@ -17,14 +17,14 @@ private:
     int m_NTaylorDegree = 8;
 
     // Tests for the SU3 exponentiation
-    void testExponentiationTime(int NTests);
+    void testExponentiationTime(unsigned long int NTests);
     void testExponentiationAccuracy();
 
     // Tests of the RNGs
-    void testRandomGenerators(int NTests);
+    void testRandomGenerators(unsigned long int NTests);
 
     // Tests for the SU3 derivative
-    void testDerivativeTimeAndAccuracy(int NTests);
+    void testDerivativeTimeAndAccuracy(unsigned long int NTests);
 public:
     PerformanceTests();
 

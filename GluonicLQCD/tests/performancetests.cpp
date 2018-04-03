@@ -47,9 +47,9 @@ void PerformanceTests::run()
     testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
 }
 
-void PerformanceTests::testExponentiationTime(int NTests)
+void PerformanceTests::testExponentiationTime(unsigned long int NTests)
 {
-    printf("\nRunning performance tests for exponentiation timing with %d samples.", NTests);
+    printf("\nRunning performance tests for exponentiation timing with %lu samples.", NTests);
 
     // Timers
     double luscherTimer = 0, morningstarTimer = 0, taylor2Timer = 0, taylor4Timer = 0,taylorTimer = 0;
@@ -69,35 +69,35 @@ void PerformanceTests::testExponentiationTime(int NTests)
 
     // Luscher
     preUpdate = steady_clock::now();
-    for (int i = 0; i < NTests; i++) {
+    for (unsigned long int i = 0; i < NTests; i++) {
         resultMatrix = expLuscher.exp(sampleMatrix);
     }
     luscherTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Morningstar
     preUpdate = steady_clock::now();
-    for (int i = 0; i < NTests; i++) {
+    for (unsigned long int i = 0; i < NTests; i++) {
         resultMatrix = expMorningstar.exp(sampleMatrix);
     }
     morningstarTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Taylor 2
     preUpdate = steady_clock::now();
-    for (int i = 0; i < NTests; i++) {
+    for (unsigned long int i = 0; i < NTests; i++) {
         resultMatrix = expTaylor2.exp(sampleMatrix);
     }
     taylor2Timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Taylor 4
     preUpdate = steady_clock::now();
-    for (int i = 0; i < NTests; i++) {
+    for (unsigned long int i = 0; i < NTests; i++) {
         resultMatrix = expTaylor4.exp(sampleMatrix);
     }
     taylor4Timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Taylor 16 (numerical precision limit)
     preUpdate = steady_clock::now();
-    for (int i = 0; i < NTests; i++) {
+    for (unsigned long int i = 0; i < NTests; i++) {
         resultMatrix = expTaylor.exp(sampleMatrix);
     }
     taylorTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
@@ -166,12 +166,12 @@ void PerformanceTests::testExponentiationAccuracy()
     printf("\nTaylor%2d:      %.16f", m_NTaylorDegree, TaylorNResult);
 }
 
-void PerformanceTests::testRandomGenerators(int NTests)
+void PerformanceTests::testRandomGenerators(unsigned long int NTests)
 {
     /*
      * Performance tester for the random SU3 matrix generators, RST and random.
      */
-    printf("\n\nRunning performance tests for random SU3 matrix generation timing with %d samples.", NTests);
+    printf("\n\nRunning performance tests for random SU3 matrix generation timing with %lu samples.", NTests);
 
     SU3 RSTRand, FullRand, resultMatrix;
 
@@ -181,14 +181,14 @@ void PerformanceTests::testRandomGenerators(int NTests)
 
     // RST random
     preUpdate = steady_clock::now();
-    for (int i = 0; i < NTests; i++) {
+    for (unsigned long int i = 0; i < NTests; i++) {
         resultMatrix = RSTRand = m_SU3Generator->generateRandom();
     }
     RSTTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Full random
     preUpdate = steady_clock::now();
-    for (int i = 0; i < NTests; i++) {
+    for (unsigned long int i = 0; i < NTests; i++) {
         resultMatrix = FullRand = m_SU3Generator->generateRST();
     }
     FullRandomTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
@@ -197,10 +197,10 @@ void PerformanceTests::testRandomGenerators(int NTests)
     printf("\nFull random generation time:  %8.2f seconds (%8.2E seconds per test)",FullRandomTimer,FullRandomTimer/double(NTests));
 }
 
-void PerformanceTests::testDerivativeTimeAndAccuracy(int NTests)
+void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned long int NTests)
 {
     if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\n\nRunning timing of SU3 derivation methods with %d full lattice derivation tests.",NTests);
+        printf("\n\nRunning timing of SU3 derivation methods with %lu full lattice derivation tests.",NTests);
     }
 
     // Timers
@@ -210,7 +210,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(int NTests)
     // Sets up a full set of sub-lattices
     std::vector<unsigned long int> NLatticeDims = Parameters::getN();
     Parallel::Communicator::initializeSubLattice();
-    unsigned int subLatticeSize = Parameters::getSubLatticeSize();
+    unsigned long int subLatticeSize = Parameters::getSubLatticeSize();
 
     // Initiates the different types of action we will test
     LuscherAction LusAct;
@@ -228,7 +228,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(int NTests)
 
     // Populates lattices
     for (int mu = 0; mu < 4; mu++) {
-        for (unsigned int iSite = 0; iSite < subLatticeSize; iSite++) {
+        for (unsigned long int iSite = 0; iSite < subLatticeSize; iSite++) {
             testLattice[mu][iSite] = m_SU3Generator->generateRST();
         }
         LuscherLattice[mu].zeros();
@@ -237,7 +237,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(int NTests)
 
     // Runs times
     preUpdate = steady_clock::now();
-    for (int i = 0; i < NTests; i++) {
+    for (unsigned long int i = 0; i < NTests; i++) {
         for (int mu = 0; mu < 4; mu++) {
             MorningstarLattice[mu] = MorAct.getActionDerivative(testLattice,mu);
         }
@@ -246,7 +246,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(int NTests)
 
     // Runs timers on the luscher deriative method
     preUpdate = steady_clock::now();
-    for (int i = 0; i < NTests; i++) {
+    for (unsigned long int i = 0; i < NTests; i++) {
         for (int mu = 0; mu < 4; mu++) {
             LuscherLattice[mu] = LusAct.getActionDerivative(testLattice,mu);
         }
