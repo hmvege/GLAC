@@ -1,7 +1,7 @@
 #include "index.h"
 
-std::vector<unsigned int> Parallel::Index::m_N;
-std::vector<unsigned int> Parallel::Index::m_NTot;
+std::vector<unsigned long int> Parallel::Index::m_N;
+std::vector<unsigned long int> Parallel::Index::m_NTot;
 
 Parallel::Index::Index()
 {
@@ -15,7 +15,7 @@ Parallel::Index::~Index()
 
 }
 
-void Parallel::Index::setN(std::vector<unsigned int> N)
+void Parallel::Index::setN(std::vector<unsigned long int> N)
 {
     /*
      * Function for setting the dimensionality of the sublattice.
@@ -25,7 +25,7 @@ void Parallel::Index::setN(std::vector<unsigned int> N)
     m_N = N;
 }
 
-void Parallel::Index::setNTot(int NSpatial, int NTemporal)
+void Parallel::Index::setNTot(unsigned int NSpatial, unsigned int NTemporal)
 {
     /*
      * Function for setting the dimensionality of the total lattice.

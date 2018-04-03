@@ -9,7 +9,7 @@ class Correlator
 {
 protected:
     // Lattice dimension array
-    std::vector<unsigned int> m_N;
+    std::vector<unsigned long int> m_N;
 
     // (sub)lattice size
     double m_latticeSize;

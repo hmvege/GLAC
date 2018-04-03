@@ -13,7 +13,7 @@ const int IO::FieldIO::m_SU3Doubles = 18;
 const int IO::FieldIO::m_SU3Size = m_SU3Doubles*sizeof(double);
 const int IO::FieldIO::m_linkDoubles = m_SU3Doubles*4;
 const int IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);
-std::vector<unsigned int> IO::FieldIO::m_N;
+std::vector<unsigned long int> IO::FieldIO::m_N;
 
 IO::FieldIO::FieldIO()
 {

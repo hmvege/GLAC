@@ -21,7 +21,7 @@ private:
     /// Parameters that must be retrieved ///
     /////////////////////////////////////////
     // Lattice sizes
-    std::vector<unsigned int> m_N;
+    std::vector<unsigned long int> m_N;
     unsigned int m_latticeSize;
     // Updating constants
     int m_NCf;

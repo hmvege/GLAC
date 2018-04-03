@@ -11,7 +11,7 @@ class Action
 {
 protected:
     // Index length array
-    std::vector<unsigned int> m_N;
+    std::vector<unsigned long int> m_N;
     // For handling the shift-method in parallelization
     std::vector<int> m_position;
 public:

@@ -15,7 +15,7 @@ namespace IO {
         static const int m_SU3Doubles;
         static const int m_SU3Size;
 
-        static std::vector<unsigned int> m_N;
+        static std::vector<unsigned long int> m_N;
         static inline double reverseDouble(const double inDouble);
         static inline bool check_file_existence (const std::string fname);
     public:

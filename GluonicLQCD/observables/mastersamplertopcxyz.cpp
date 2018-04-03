@@ -30,8 +30,8 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
 
     // Allocates temporary array for gathering results into a single time array
     m_tempTopctArray = new double[Parameters::getNTemporal() * (Parameters::getNFlows() + 1)];
-    for (int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
-        for (int it = 0; it < Parameters::getNTemporal(); it++) {
+    for (unsigned int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
+        for (unsigned int it = 0; it < Parameters::getNTemporal(); it++) {
             m_tempTopctArray[iFlow*Parameters::getNTemporal() + it] = 0;
         }
     }
@@ -117,7 +117,7 @@ void MasterSamplerTopcXYZ::reset()
     m_topcObservable->reset();
     m_energyObservable->reset();
     m_topctObservable->reset();
-    for (int i = 0; i < Parameters::getNTemporal() * Parameters::getNFlows(); i++) {
+    for (unsigned int i = 0; i < Parameters::getNTemporal() * Parameters::getNFlows(); i++) {
         m_tempTopctArray[i] = 0;
     }
 }

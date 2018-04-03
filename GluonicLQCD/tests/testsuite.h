@@ -19,7 +19,7 @@ private:
     double zNorm, zNormSquared;
 
     // Lattice test variables. Since only the matrix changes, we can reuse previous variables
-    std::vector<unsigned int> m_dim;
+    std::vector<unsigned long int> m_dim;
     Lattice<SU3> latticeSU3_U1, latticeSU3_U2;
     Lattice<complex> latticeComplex_z1, latticeComplex_z2;
     double latticeDoubleValue1, latticeDoubleValue2;
@@ -32,8 +32,8 @@ private:
     // Variables used for full lattice testing
     int m_processRank;
     int m_numprocs;
-    int m_N, m_NT;
-    unsigned int m_subLatticeSize;
+    unsigned int m_N, m_NT;
+    unsigned long int m_subLatticeSize;
 
     // Verbose storage
     bool m_verbose = false;

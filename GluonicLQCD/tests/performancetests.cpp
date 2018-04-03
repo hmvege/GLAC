@@ -208,7 +208,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(int NTests)
     steady_clock::time_point preUpdate;
 
     // Sets up a full set of sub-lattices
-    std::vector<unsigned int> NLatticeDims = Parameters::getN();
+    std::vector<unsigned long int> NLatticeDims = Parameters::getN();
     Parallel::Communicator::initializeSubLattice();
     unsigned int subLatticeSize = Parameters::getSubLatticeSize();
 

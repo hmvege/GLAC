@@ -10,7 +10,7 @@
 bool Parallel::Communicator::muDir = 0;
 bool Parallel::Communicator::nuDir = 0;
 SU3 Parallel::Communicator::exchangeU; // Carefull! This might give a bug!
-std::vector<unsigned int> Parallel::Communicator::m_N = {0,0,0,0};
+std::vector<unsigned long int> Parallel::Communicator::m_N = {0,0,0,0};
 // Variables used externally
 int Parallel::Communicator::m_processRank = 0;
 int Parallel::Communicator::m_numprocs = 0;
@@ -202,12 +202,12 @@ void Parallel::Communicator::reduceToTemporalDimension(double * obsResults, doub
     // Sets up the temporary buffers
     double tempSend[Parameters::getNTemporal()];
     double tempRecv[Parameters::getNTemporal()];
-    for (int it = 0; it < Parameters::getNTemporal(); it++) {
+    for (unsigned int it = 0; it < Parameters::getNTemporal(); it++) {
         tempSend[it] = 0;
         tempRecv[it] = 0;
     }
 
-    for (int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
+    for (unsigned int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
         // Places obs values into temporary buffer
         for (unsigned int it = 0; it < m_N[3]; it++) {
             tempSend[it + m_N[3]*Neighbours::getProcessorDimensionPosition(3)] = obs[iFlow * m_N[3] + it];
@@ -215,12 +215,12 @@ void Parallel::Communicator::reduceToTemporalDimension(double * obsResults, doub
 
         MPI_Reduce(tempSend, tempRecv, Parameters::getNTemporal(), MPI_DOUBLE, MPI_SUM, 0, ParallelParameters::ACTIVE_COMM);
 
-        for (int it = 0; it < Parameters::getNTemporal(); it++) {
+        for (unsigned int it = 0; it < Parameters::getNTemporal(); it++) {
             obsResults[iFlow * Parameters::getNTemporal() + it] = tempRecv[it];
         }
 
         // Resets temporary buffer
-        for (int it = 0; it < Parameters::getNTemporal(); it++) {
+        for (unsigned int it = 0; it < Parameters::getNTemporal(); it++) {
             tempSend[it] = 0;
             tempRecv[it] = 0;
         }
@@ -415,14 +415,14 @@ void Parallel::Communicator::MPIPrint(std::string message)
     setBarrier();
 }
 
-void Parallel::Communicator::gatherDoubleResults(double * data, int N)
+void Parallel::Communicator::gatherDoubleResults(double * data, unsigned int N)
 {
     double tempData[N]; // Possibly bad?! TEST
     MPI_Allreduce(data,tempData,N,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
-    for (int i = 0; i < N; i++) data[i] = tempData[i];
+    for (unsigned int i = 0; i < N; i++) data[i] = tempData[i];
 }
 
-void Parallel::Communicator::setN(std::vector<unsigned int> N)
+void Parallel::Communicator::setN(std::vector<unsigned long int> N)
 {
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];

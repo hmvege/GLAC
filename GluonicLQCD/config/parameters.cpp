@@ -2,13 +2,13 @@
 #include <cmath>
 
 // Lattice specific constants
-int Parameters::m_NSpatial = 0;
-int Parameters::m_NTemporal = 0;
-unsigned int Parameters::m_latticeSize = 1;
+unsigned int Parameters::m_NSpatial = 0;
+unsigned int Parameters::m_NTemporal = 0;
+unsigned long int Parameters::m_latticeSize = 1;
 
 // Sub lattice / parallel related variables
-std::vector<unsigned int> Parameters::m_N;
-unsigned int Parameters::m_subLatticeSize = 1;
+std::vector<unsigned long int> Parameters::m_N;
+unsigned long int Parameters::m_subLatticeSize = 1;
 int Parameters::m_processorsPerDimension[4] = {0,0,0,0};
 bool Parameters::m_subLatticeSizePreset = false;
 
@@ -18,15 +18,15 @@ double Parameters::m_a = 0;
 const double Parameters::r0 = 0.5; // Sommer parameter
 
 // Run specific constants
-int Parameters::m_NCf = 0;
-int Parameters::m_NCor = 0;
-int Parameters::m_NTherm = 0;
-int Parameters::m_NUpdates = 0;
-int Parameters::m_NFlows = 0;
+unsigned int Parameters::m_NCf = 0;
+unsigned int Parameters::m_NCor = 0;
+unsigned int Parameters::m_NTherm = 0;
+unsigned int Parameters::m_NUpdates = 0;
+unsigned int Parameters::m_NFlows = 0;
 
 // Number of points we are storing
-int Parameters::m_configSamplePoints = 0;
-int Parameters::m_flowSamplePoints = 0;
+unsigned int Parameters::m_configSamplePoints = 0;
+unsigned int Parameters::m_flowSamplePoints = 0;
 
 // Variables holding if we are to calculate and store the thermalization variables
 bool Parameters::m_storeThermalizationObservables = false;

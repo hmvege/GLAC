@@ -78,7 +78,7 @@ void IO::writeFlowObservableToFile(double *observables,
         file << std::fixed << std::setprecision(15);
 
         // Writes out the observable
-        for (int i = 0; i < Parameters::getNFlows() + 1; i++) {
+        for (unsigned int i = 0; i < Parameters::getNFlows() + 1; i++) {
             file << i*flowStep << " " << observables[i] << endl;
         }
 
@@ -124,9 +124,9 @@ void IO::writeMatrixToFile(double * observables, std::string observableName, int
         file << std::fixed << std::setprecision(15);
 
         // Writing out the matrix columns along each line
-        for (int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
+        for (unsigned int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
             file << iFlow*flowStep;
-            for (int i = 0; i < N; i++) {
+            for (unsigned int i = 0; i < N; i++) {
                 file << " " << observables[iFlow * N + i];
             }
             file << endl;

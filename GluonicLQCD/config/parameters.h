@@ -10,13 +10,13 @@ class Parameters
     friend class SysPrint;
 private:
     // Total lattice sizes
-    static int m_NSpatial;
-    static int m_NTemporal;
-    static unsigned int m_latticeSize;
+    static unsigned int m_NSpatial;
+    static unsigned int m_NTemporal;
+    static unsigned long int m_latticeSize;
 
     // Sub lattice / parallel related variables
-    static std::vector<unsigned int> m_N;
-    static unsigned int m_subLatticeSize;
+    static std::vector<unsigned long int> m_N;
+    static unsigned long int m_subLatticeSize;
     static int m_processorsPerDimension[4];
     static bool m_subLatticeSizePreset;
 
@@ -49,13 +49,13 @@ private:
     static std::string m_outputFolder;
 
     // Run specific variables
-    static int m_NCf;
-    static int m_NCor;
-    static int m_NTherm;
-    static int m_NUpdates;
-    static int m_NFlows;
-    static int m_configSamplePoints;
-    static int m_flowSamplePoints;
+    static unsigned int m_NCf;
+    static unsigned int m_NCor;
+    static unsigned int m_NTherm;
+    static unsigned int m_NUpdates;
+    static unsigned int m_NFlows;
+    static unsigned int m_configSamplePoints;
+    static unsigned int m_flowSamplePoints;
 
     // Unit testing
     static bool m_unitTesting;
@@ -149,7 +149,7 @@ public:
     static void setLatticeSize(int latticeSize) { m_latticeSize = latticeSize; }
 
     // Sub lattice / parallel related setters
-    static void setN(std::vector<unsigned int> N) { m_N = N; }
+    static void setN(std::vector<unsigned long int> N) { m_N = N; }
     static void setSubLatticePreset(bool subLatticeSizePreset) { m_subLatticeSizePreset = subLatticeSizePreset; }
     static void setSubLatticeSize(int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
     static void setProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
@@ -175,14 +175,14 @@ public:
     //// Getters ////
     /////////////////
     // Lattice related run getters
-    static int getNSpatial() { return m_NSpatial; }
-    static int getNTemporal() { return m_NTemporal; }
+    static unsigned int getNSpatial() { return m_NSpatial; }
+    static unsigned int getNTemporal() { return m_NTemporal; }
     static double getBeta() { return m_beta; }
-    static int getNCf() { return m_NCf; }
-    static int getNCor() { return m_NCor; }
-    static int getNTherm() { return m_NTherm; }
-    static int getNUpdates() { return m_NUpdates; }
-    static int getNFlows() { return m_NFlows; }
+    static unsigned int getNCf() { return m_NCf; }
+    static unsigned int getNCor() { return m_NCor; }
+    static unsigned int getNTherm() { return m_NTherm; }
+    static unsigned int getNUpdates() { return m_NUpdates; }
+    static unsigned int getNFlows() { return m_NFlows; }
 
     // Data storage related getters
     static std::string getOutputFolder() { return m_outputFolder; }
@@ -223,7 +223,7 @@ public:
     static unsigned int getLatticeSize() { return m_latticeSize; }
 
     // Sub lattice / parallel related getters
-    static std::vector<unsigned int> getN() { return m_N; }
+    static std::vector<unsigned long int> getN() { return m_N; }
     static bool getSubLatticePreset() { return m_subLatticeSizePreset; }
     static unsigned int getSubLatticeSize() { return m_subLatticeSize; }
     static void getProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
