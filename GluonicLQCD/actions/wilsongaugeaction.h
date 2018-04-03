@@ -7,31 +7,39 @@ class WilsonGaugeAction : public Action
 {
 private:
     // Lorentz indices arrays
-    int muIndex[4];
-    int nuIndex[4];
+    int m_muIndex[4];
+    int m_nuIndex[4];
     // Action based constants
     double m_beta;
-    double multiplicationFactor;
-    SU3 staple;
+    double m_multiplicationFactor;
+//    SU3 m_staple, m_X, m_staple1, m_staple2;
+    SU3 m_staple, m_staple1, m_staple2;
+    Lattice<SU3> m_latticeStaple,m_tempStaple1,m_tempStaple2;
+    Lattice<double> m_tempDiag;
+    // FOR ALTERNATIVE DERIVATIVE METHOD!
+//    SU3 Q, C, Omega;
+//    double tempDiag;
+
 public:
-    WilsonGaugeAction(double beta);
+    WilsonGaugeAction();
     ~WilsonGaugeAction();
-    double getDeltaAction(Links *lattice, SU3 UPrime, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
-    void computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    double getDeltaAction(SU3 U, SU3 UPrime);
+    void computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    Lattice<SU3> getActionDerivative(Lattice<SU3> *lattice, int mu);
 
     inline void updateMuIndex(int mu) {
         for (int i = 0; i < 4; i++)
         {
-            muIndex[i] = 0;
+            m_muIndex[i] = 0;
         }
-        muIndex[mu] = 1;
+        m_muIndex[mu] = 1;
     }
     inline void updateNuIndex(int nu) {
         for (int i = 0; i < 4; i++)
         {
-            nuIndex[i] = 0;
+            m_nuIndex[i] = 0;
         }
-        nuIndex[nu] = 1;
+        m_nuIndex[nu] = 1;
     }
 };
 

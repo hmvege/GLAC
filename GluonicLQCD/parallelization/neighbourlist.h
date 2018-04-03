@@ -1,18 +1,17 @@
 #ifndef NEIGHBOURLIST_H
 #define NEIGHBOURLIST_H
 
-
-class NeighbourList
+struct NeighbourList
 {
-public:
     NeighbourList();
     ~NeighbourList();
     // Neighbour list:
     int list[8];
 
-//    int *dimensionsToCubesToShareWithNeighbour;
     int rank;
     void print();
+
+    int &operator [](int i) { return list[i]; }
 };
 
 #endif // NEIGHBOURLIST_H

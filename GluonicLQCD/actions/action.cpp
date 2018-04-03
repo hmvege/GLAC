@@ -1,50 +1,34 @@
 #include "action.h"
-#include "links.h"
-#include "matrices/su3.h"
-#include "functions.h"
-#include "parallelization/indexorganiser.h"
-#include "parallelization/neighbours.h"
-
-// TEMP
-#include <iostream>
-using std::cout;
-using std::endl;
+#include "config/parameters.h"
 
 Action::Action()
 {
-    m_N = new unsigned int[4];
-    for (int i = 0; i < 4; i++) {
-        m_N[i] = 0;
-    }
-    indexes = std::vector<int>(4,0);
+    m_N = Parameters::getN();
+    m_position = std::vector<int>(4,0);
 }
 
 Action::~Action()
 {
-    delete [] m_N;
 }
 
-double Action::getDeltaAction(Links * lattice, SU3 U, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+double Action::getDeltaAction(SU3 U, SU3 UPrime)
 {
     cout << "In Action::getDeltaAction: If you are seeing this, something is wrong!" << endl;
     exit(1);
+    U = UPrime;
     return 1.0;
 }
 
-void Action::computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+void Action::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     cout << "In Action::computeStaple: If you are seeing this, something is wrong!" << endl;
     exit(1);
+    lattice[mu][i+j+k+l].print();
 }
 
-void Action::setN(unsigned int *N)
+Lattice<SU3> Action::getActionDerivative(Lattice<SU3> *lattice, int mu)
 {
-    for (int i = 0; i < 4; i++) {
-        m_N[i] = N[i];
-    }
-}
-
-void Action::initializeIndexHandler(IndexOrganiser *Index)
-{
-    m_Index = Index;
+    cout << "In Action::getActionDerivative: If you are seeing this, something is wrong!" << endl;
+    exit(1);
+    lattice[mu][0].print();
 }

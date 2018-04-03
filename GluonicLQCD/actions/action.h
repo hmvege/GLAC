@@ -1,41 +1,25 @@
 #ifndef ACTION_H
 #define ACTION_H
 
-#include "links.h"
-#include "functions.h"
-#include "parallelization/indexorganiser.h"
-#include "parallelization/neighbours.h"
+#include "math/lattice.h"
 #include <vector>
+
+using std::cout;
+using std::endl;
 
 class Action
 {
 protected:
     // Index length array
-    unsigned int *m_N;
+    std::vector<unsigned long int> m_N;
     // For handling the shift-method in parallelization
-    std::vector<int> indexes;
-    IndexOrganiser *m_Index = nullptr;
+    std::vector<int> m_position;
 public:
     Action();
-//    Action(int *N);
     virtual ~Action();
-    virtual double getDeltaAction(Links * lattice, SU3 U, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
-    virtual void computeStaple(Links *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
-    // Setters
-    void setN(unsigned int *N);
-    void initializeIndexHandler(IndexOrganiser *Index);
-
-//    inline void lorentzIndex(int mu, int *lorentzIndices)
-//    {
-//        /*
-//         * Fills the lorentz array with correct indices
-//         */
-//        for (int i = 0; i < 4; i++)
-//        {
-//            lorentzIndices[i] = 0;
-//        }
-//        lorentzIndices[mu] = 1;
-//    }
+    virtual double getDeltaAction(SU3 U, SU3 UPrime);
+    virtual void computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    virtual Lattice<SU3> getActionDerivative(Lattice<SU3> * lattice, int mu);
 };
 
 
