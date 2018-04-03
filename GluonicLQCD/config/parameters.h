@@ -151,7 +151,7 @@ public:
     // Sub lattice / parallel related setters
     static void setN(std::vector<unsigned long int> N) { m_N = N; }
     static void setSubLatticePreset(bool subLatticeSizePreset) { m_subLatticeSizePreset = subLatticeSizePreset; }
-    static void setSubLatticeSize(int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
+    static void setSubLatticeSize(unsigned long int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
     static void setProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
 
     // Name of samplers setters

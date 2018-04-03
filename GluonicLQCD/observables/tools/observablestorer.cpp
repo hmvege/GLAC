@@ -98,7 +98,7 @@ void ObservableStorer::writeObservableToFile(double acceptanceRatio)
                                m_stdObservable, m_observables, m_NObs, m_observableName);
 }
 
-void ObservableStorer::writeFlowObservableToFile(unsigned long configNumber)
+void ObservableStorer::writeFlowObservableToFile(unsigned long int configNumber)
 {
     /*
      * Writes a flow observable to file

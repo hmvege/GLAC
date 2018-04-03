@@ -9,10 +9,10 @@
 using std::cout;
 using std::endl;
 
-const int IO::FieldIO::m_SU3Doubles = 18;
-const int IO::FieldIO::m_SU3Size = m_SU3Doubles*sizeof(double);
-const int IO::FieldIO::m_linkDoubles = m_SU3Doubles*4;
-const int IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);
+const unsigned long int IO::FieldIO::m_SU3Doubles = 18;
+const unsigned long int IO::FieldIO::m_SU3Size = m_SU3Doubles*sizeof(double);
+const unsigned long int IO::FieldIO::m_linkDoubles = m_SU3Doubles*4;
+const unsigned long int IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);
 std::vector<unsigned long int> IO::FieldIO::m_N;
 
 IO::FieldIO::FieldIO()
@@ -53,15 +53,15 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
     MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
-    for (unsigned int t = 0; t < m_N[3]; t++) {
+    for (unsigned long int t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (unsigned int z = 0; z < m_N[2]; z++) {
+        for (unsigned long int z = 0; z < m_N[2]; z++) {
             nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned long int y = 0; y < m_N[1]; y++) {
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (unsigned int x = 0; x < m_N[0]; x++) {
+                for (unsigned long int x = 0; x < m_N[0]; x++) {
                     nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
-                    for (int mu = 0; mu < 4; mu++) {
+                    for (unsigned long int mu = 0; mu < 4; mu++) {
                         MPI_File_write_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     }
                 }
@@ -102,13 +102,13 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, int configNum
     MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
-    for (unsigned int t = 0; t < m_N[3]; t++) {
+    for (unsigned long int t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (unsigned int z = 0; z < m_N[2]; z++) {
+        for (unsigned long int z = 0; z < m_N[2]; z++) {
             nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned long int y = 0; y < m_N[1]; y++) {
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (unsigned int x = 0; x < m_N[0]; x++) {
+                for (unsigned long int x = 0; x < m_N[0]; x++) {
                     nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
                     MPI_File_write_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*sizeof(double), &lattice[Parallel::Index::getIndex(x,y,z,t)], 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
                 }
@@ -144,14 +144,14 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
     MPI_File_open(MPI_COMM_SELF, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
-    for (unsigned int mu = 0; mu < 4; mu++) {
-        for (unsigned int t = 0; t < m_N[3]; t++) {
+    for (unsigned long int mu = 0; mu < 4; mu++) {
+        for (unsigned long int t = 0; t < m_N[3]; t++) {
             nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
-            for (unsigned int z = 0; z < m_N[2]; z++) {
+            for (unsigned long int z = 0; z < m_N[2]; z++) {
                 nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
-                for (unsigned int y = 0; y < m_N[1]; y++) {
+                for (unsigned long int y = 0; y < m_N[1]; y++) {
                     ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
-                    for (unsigned int x = 0; x < m_N[0]; x++) {
+                    for (unsigned long int x = 0; x < m_N[0]; x++) {
                         nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
                         MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     }
@@ -184,16 +184,16 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
     MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
 
     double temp = 0;
-    for (unsigned int t = 0; t < m_N[3]; t++) {
+    for (unsigned long int t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (unsigned int z = 0; z < m_N[2]; z++) {
+        for (unsigned long int z = 0; z < m_N[2]; z++) {
             nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned long int y = 0; y < m_N[1]; y++) {
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (unsigned int x = 0; x < m_N[0]; x++) {
+                for (unsigned long int x = 0; x < m_N[0]; x++) {
                     nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        for (int i = 0; i < 18; i++) {
+                    for (unsigned long int mu = 0; mu < 4; mu++) {
+                        for (unsigned long int i = 0; i < 18; i++) {
                             MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size + i*sizeof(double), &temp, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
                             lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] = reverseDouble(temp);
                             // Checking for corruption

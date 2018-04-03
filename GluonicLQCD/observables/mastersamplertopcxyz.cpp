@@ -117,7 +117,7 @@ void MasterSamplerTopcXYZ::reset()
     m_topcObservable->reset();
     m_energyObservable->reset();
     m_topctObservable->reset();
-    for (unsigned int i = 0; i < Parameters::getNTemporal() * Parameters::getNFlows(); i++) {
+    for (unsigned int i = 0; i < Parameters::getNTemporal() * (Parameters::getNFlows() + 1); i++) {
         m_tempTopctArray[i] = 0;
     }
 }

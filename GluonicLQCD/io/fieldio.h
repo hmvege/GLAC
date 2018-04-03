@@ -10,10 +10,10 @@ namespace IO {
     {
     private:
         // For writing to file
-        static const int m_linkDoubles;// = 72;
-        static const int m_linkSize;// = m_linkDoubles*sizeof(double);
-        static const int m_SU3Doubles;
-        static const int m_SU3Size;
+        static const unsigned long int m_linkDoubles;// = 72;
+        static const unsigned long int m_linkSize;// = m_linkDoubles*sizeof(double);
+        static const unsigned long int m_SU3Doubles;
+        static const unsigned long int m_SU3Size;
 
         static std::vector<unsigned long int> m_N;
         static inline double reverseDouble(const double inDouble);

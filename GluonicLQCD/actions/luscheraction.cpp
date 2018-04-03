@@ -2,13 +2,6 @@
 #include "config/parameters.h"
 #include "math/functions.h"
 
-//using LatOps::FORWARDS;
-//using LatOps::BACKWARDS;
-//using LatOps::shift;
-//using LatOps::imagTrace;
-//using LatOps::subtractImag;
-//using LatOps::inv;
-
 LuscherAction::LuscherAction(): Action()
 {
     m_beta = Parameters::getBeta();

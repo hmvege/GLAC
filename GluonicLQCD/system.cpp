@@ -161,7 +161,7 @@ void System::copyToFlowLattice()
      * Small function for copying the lattice to the flow lattice,
      * as we need to ensure the old lattice remains unchanged.
      */
-    for (int mu = 0; mu < 4; mu++) {
+    for (unsigned int mu = 0; mu < 4; mu++) {
         m_flowLattice[mu] = m_lattice[mu];
     }
 }

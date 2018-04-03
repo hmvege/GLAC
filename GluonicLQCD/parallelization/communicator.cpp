@@ -202,25 +202,25 @@ void Parallel::Communicator::reduceToTemporalDimension(double * obsResults, doub
     // Sets up the temporary buffers
     double tempSend[Parameters::getNTemporal()];
     double tempRecv[Parameters::getNTemporal()];
-    for (unsigned int it = 0; it < Parameters::getNTemporal(); it++) {
+    for (unsigned long int it = 0; it < Parameters::getNTemporal(); it++) {
         tempSend[it] = 0;
         tempRecv[it] = 0;
     }
 
-    for (unsigned int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
+    for (unsigned long int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
         // Places obs values into temporary buffer
-        for (unsigned int it = 0; it < m_N[3]; it++) {
+        for (unsigned long int it = 0; it < m_N[3]; it++) {
             tempSend[it + m_N[3]*Neighbours::getProcessorDimensionPosition(3)] = obs[iFlow * m_N[3] + it];
         }
 
         MPI_Reduce(tempSend, tempRecv, Parameters::getNTemporal(), MPI_DOUBLE, MPI_SUM, 0, ParallelParameters::ACTIVE_COMM);
 
-        for (unsigned int it = 0; it < Parameters::getNTemporal(); it++) {
+        for (unsigned long int it = 0; it < Parameters::getNTemporal(); it++) {
             obsResults[iFlow * Parameters::getNTemporal() + it] = tempRecv[it];
         }
 
         // Resets temporary buffer
-        for (unsigned int it = 0; it < Parameters::getNTemporal(); it++) {
+        for (unsigned long int it = 0; it < Parameters::getNTemporal(); it++) {
             tempSend[it] = 0;
             tempRecv[it] = 0;
         }
@@ -334,7 +334,7 @@ void Parallel::Communicator::checkSubLatticeDimensionsValidity()
 void Parallel::Communicator::initializeSubLattice()
 {
     int restProc = m_numprocs;
-    double subLatticeSize = 1;
+    unsigned long int subLatticeSize = 1;
 
     // Only finds the sub lattice size iteratively if no preset value has been defined.
     if (!Parameters::getSubLatticePreset()) {
@@ -419,7 +419,7 @@ void Parallel::Communicator::gatherDoubleResults(double * data, unsigned int N)
 {
     double tempData[N]; // Possibly bad?! TEST
     MPI_Allreduce(data,tempData,N,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
-    for (unsigned int i = 0; i < N; i++) data[i] = tempData[i];
+    for (unsigned long int i = 0; i < N; i++) data[i] = tempData[i];
 }
 
 void Parallel::Communicator::setN(std::vector<unsigned long int> N)

@@ -82,7 +82,7 @@ private:
 
     // Function for updating our system using the Metropolis algorithm
     void update();
-    inline void updateLink(unsigned long iSite, int mu);
+    inline void updateLink(unsigned long int iSite, int mu);
 
     // Thermalization function
     void thermalize();

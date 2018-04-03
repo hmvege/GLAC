@@ -14,7 +14,7 @@ class Lattice
 public:
     std::vector<T> m_sites;
     std::vector<unsigned long int> m_dim; // Lattice dimensions
-    unsigned int m_latticeSize;
+    unsigned long int m_latticeSize;
 
     // Default contructors
     Lattice() { }
@@ -56,7 +56,7 @@ public:
         return *this;
     }
 
-    void allocate(std::vector<unsigned long> dim);
+    void allocate(std::vector<unsigned long int> dim);
 
     // Overloading lattice position getter
     T &operator[](unsigned long int i) { return m_sites[i]; }
