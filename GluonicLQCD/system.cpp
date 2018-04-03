@@ -178,7 +178,7 @@ void System::latticeSetup()
                 // All starts with a completely random matrix.
                 for (int mu = 0; mu < 4; mu++)
                 {
-                    for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++)
+                    for (unsigned long int iSite = 0; iSite < m_subLatticeSize; iSite++)
                     {
                         if (Parameters::getRSTHotStart())
                         {
@@ -192,7 +192,7 @@ void System::latticeSetup()
                 // Cold start: everything starts out at unity.
                 for (int mu = 0; mu < 4; mu++)
                 {
-                    for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++)
+                    for (unsigned long int iSite = 0; iSite < m_subLatticeSize; iSite++)
                     {
                         m_lattice[mu][iSite].identity();
                     }
@@ -249,7 +249,7 @@ void System::thermalize()
         m_correlator->printObservable(0);
     }
     // Running thermalization
-    for (int iTherm = 1; iTherm < m_NTherm + 1; iTherm++)
+    for (unsigned int iTherm = 1; iTherm < m_NTherm + 1; iTherm++)
     {
         // Pre update time
         m_preUpdate = steady_clock::now();
@@ -292,7 +292,7 @@ void System::thermalize()
     }
 }
 
-void System::updateLink(int iSite, int mu)
+void System::updateLink(unsigned long int iSite, int mu)
 {
     /*
      * Private function used for updating our system. Updates a single gauge link.
@@ -315,7 +315,7 @@ void System::update()
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
-                        for (int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
+                        for (unsigned int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(Parallel::Index::getIndex(x,y,z,t), mu);
                             if (exp(-m_S->getDeltaAction(m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_updatedMatrix)) > m_uniform_distribution(m_generator))
@@ -362,9 +362,9 @@ void System::runMetropolis()
     m_updateStorer = 0;
 
     // Main part of algorithm
-    for (int iConfig = 0; iConfig < m_NCf; iConfig++)
+    for (unsigned int iConfig = 0; iConfig < m_NCf; iConfig++)
     {
-        for (int i = 0; i < m_NCor; i++) // Updating NCor times before updating the lattice
+        for (unsigned int i = 0; i < m_NCor; i++) // Updating NCor times before updating the lattice
         {
             // Pre timer
             m_preUpdate = steady_clock::now();
@@ -431,7 +431,7 @@ void System::runMetropolis()
     m_correlator->printStatistics();
 }
 
-void System::flowConfiguration(int iConfig)
+void System::flowConfiguration(unsigned int iConfig)
 {
     /*
      * Flows configuration, performs flow statistics and writes it to a file.
@@ -447,7 +447,7 @@ void System::flowConfiguration(int iConfig)
     }
 
     // Runs the flow
-    for (int iFlow = 0; iFlow < m_NFlows; iFlow++)
+    for (unsigned int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
         m_flow->flowField(m_flowLattice);
         m_flowCorrelator->calculate(m_flowLattice,iFlow + 1);

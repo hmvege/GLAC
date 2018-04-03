@@ -21,7 +21,7 @@ EnergyDensity::~EnergyDensity()
 
 }
 
-void EnergyDensity::calculate(Lattice<SU3> *lattice, int iObs)
+void EnergyDensity::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 {
     m_energyDensity = 0;
     mu = 0;

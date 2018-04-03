@@ -24,7 +24,7 @@ Correlator::~Correlator()
     delete m_observable;
 }
 
-void Correlator::calculate(Lattice<SU3> *lattice, int iObs)
+void Correlator::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 {
     /*
      * Default correlator is not implemented. Pushes to observable array at position iObs.
@@ -38,12 +38,12 @@ void Correlator::printHeader()
     printf("%-*s",m_headerWidth,m_observableName.c_str());
 }
 
-double Correlator::getObservable(int iObs)
+double Correlator::getObservable(unsigned int iObs)
 {
     return (*m_observable)[iObs];
 }
 
-void Correlator::printObservable(int iObs)
+void Correlator::printObservable(unsigned int iObs)
 {
     if (Parallel::Communicator::getProcessRank() == 0) {
         if (!m_storeFlowObservable) {
@@ -63,7 +63,7 @@ void Correlator::runStatistics()
     m_observable->runStatistics();
 }
 
-void Correlator::writeFlowObservablesToFile(int iFlow)
+void Correlator::writeFlowObservablesToFile(unsigned int iFlow)
 {
     m_observable->gatherResults();
     m_observable->writeFlowObservableToFile(iFlow);
@@ -93,18 +93,18 @@ void Correlator::reset()
     m_observable->reset();
 }
 
-void Correlator::copyObservable(int iObs, std::vector<double> obs) {
+void Correlator::copyObservable(unsigned int iObs, std::vector<double> obs) {
     /*
      * Used when we already have calculated the observable in the
      */
     (*m_observable)[iObs] = obs[0];
 }
 
-void Correlator::setObservable(int iObs, double obs) {
+void Correlator::setObservable(unsigned int iObs, double obs) {
     (*m_observable)[iObs] = obs;
 }
 
-std::vector<double> Correlator::getObservablesVector(int iObs) {
+std::vector<double> Correlator::getObservablesVector(unsigned int iObs) {
     std::vector<double> obs(1);
     obs[0] = (*m_observable)[iObs];
     return obs;

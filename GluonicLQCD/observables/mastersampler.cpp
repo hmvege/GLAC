@@ -55,7 +55,7 @@ void MasterSampler::initializeObservableStorer(bool storeFlowObservable)
     m_energyObservable->setObservableName("energy");
 }
 
-void MasterSampler::writeFlowObservablesToFile(int iFlow)
+void MasterSampler::writeFlowObservablesToFile(unsigned int iFlow)
 {
     // Gathers and writes plaquette results to file
     m_plaqObservable->gatherResults();
@@ -108,7 +108,7 @@ void MasterSampler::printHeader()
     }
 }
 
-void MasterSampler::printObservable(int iObs)
+void MasterSampler::printObservable(unsigned int iObs)
 {
     if (!m_storeFlowObservable) {
         if (Parallel::Communicator::getProcessRank() == 0) {
@@ -142,14 +142,14 @@ void MasterSampler::printStatistics()
     m_energyObservable->printStatistics();
 }
 
-void MasterSampler::copyObservable(int iObs, std::vector<double> obs)
+void MasterSampler::copyObservable(unsigned int iObs, std::vector<double> obs)
 {
     (*m_plaqObservable)[iObs] = obs[0];
     (*m_topcObservable)[iObs] = obs[1];
     (*m_energyObservable)[iObs] = obs[2];
 }
 
-std::vector<double> MasterSampler::getObservablesVector(int iObs)
+std::vector<double> MasterSampler::getObservablesVector(unsigned int iObs)
 {
     std::vector<double> obs(3);
     obs[0] = (*m_plaqObservable)[iObs];
@@ -158,7 +158,7 @@ std::vector<double> MasterSampler::getObservablesVector(int iObs)
     return obs;
 }
 
-void MasterSampler::calculate(Lattice<SU3> *lattice, int iObs)
+void MasterSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 {
     ///////////////////////////
     //// SYMMETRIC CLOVER /////

@@ -42,12 +42,6 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
     char cfg_number[6];
     sprintf(cfg_number,"%05d",configNumber + Parameters::getConfigStartNumber());
 
-//    std::string filename = Parameters::getBatchName() + "_beta" + std::to_string(Parameters::getBeta())
-//                                                      + "_spatial" + std::to_string(Parameters::getNSpatial())
-//                                                      + "_temporal" + std::to_string(Parameters::getNTemporal())
-//                                                      + "_threads" + std::to_string(Parallel::Communicator::getNumProc())
-//                                                      + "_config" + std::string(cfg_number) + ".bin";
-
     std::string filename = Parameters::getBatchName() + "_b" + std::to_string(Parameters::getBeta())
                                                       + "_N" + std::to_string(Parameters::getNSpatial())
                                                       + "_NT" + std::to_string(Parameters::getNTemporal())

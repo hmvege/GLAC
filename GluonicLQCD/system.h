@@ -22,26 +22,26 @@ private:
     /////////////////////////////////////////
     // Lattice sizes
     std::vector<unsigned long int> m_N;
-    unsigned int m_latticeSize;
+    unsigned long int m_latticeSize;
     // Updating constants
-    int m_NCf;
-    int m_NCor;
-    int m_NTherm;
-    int m_NUpdates; // N updates before calculating the action, as that is costly
-    int m_NFlows;
+    unsigned int m_NCf;
+    unsigned int m_NCor;
+    unsigned int m_NTherm;
+    unsigned int m_NUpdates; // N updates before calculating the action, as that is costly
+    unsigned int m_NFlows;
     // Variable for storing the thermalization observables
     bool m_storeThermalizationObservables = false;
     bool m_systemIsThermalized = false;
     bool m_writeConfigsToFile = false;
     // Paralellization setup
     int m_processRank; // Move to communicator/printer...?
-    unsigned int m_subLatticeSize;
+    unsigned long int m_subLatticeSize;
 
     /////////////////////////////////////////
     /////// Parameters and functions ////////
     /////////////////////////////////////////
     // Variable for storing how many steps we are shifting in the observables storage array if we choose to store the thermalization variables
-    int m_NThermSteps = 0;
+    unsigned int m_NThermSteps = 0;
 
     // For handling the acceptance rate
     unsigned long long int m_acceptanceCounter = 0;
@@ -76,13 +76,13 @@ private:
 
     // Flow
     Flow * m_flow = nullptr;
-    void flowConfiguration(int iConfig);
+    void flowConfiguration(unsigned int iConfig);
     void copyToFlowLattice();
     Lattice<SU3> * m_flowLattice;
 
     // Function for updating our system using the Metropolis algorithm
     void update();
-    inline void updateLink(int iSite, int mu);
+    inline void updateLink(unsigned long iSite, int mu);
 
     // Thermalization function
     void thermalize();

@@ -17,14 +17,14 @@ Plaquette::~Plaquette()
 {
 }
 
-void Plaquette::setLatticeSize(int latticeSize)
+void Plaquette::setLatticeSize(unsigned long latticeSize)
 {
     m_latticeSize = double(latticeSize);
     m_temp.allocate(m_N);
     m_multiplicationFactor = 1/(18.0*m_latticeSize); // 3 from SU3, 6 from number of plaquettes, 3*6=18
 }
 
-void Plaquette::calculate(Lattice<SU3> *lattice, int iObs)
+void Plaquette::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 {
     m_tempObservable = 0;
     for (int mu = 0; mu < 4; mu++) {
@@ -51,7 +51,7 @@ void Plaquette::runStatistics()
     m_observable->runStatistics();
 }
 
-void Plaquette::printObservable(int iObs)
+void Plaquette::printObservable(unsigned int iObs)
 {
     if (Parallel::Communicator::getProcessRank() == 0) {
         if (!m_storeFlowObservable) {

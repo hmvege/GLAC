@@ -16,15 +16,15 @@ private:
 public:
     Plaquette(bool storeFlowObservable);
     ~Plaquette();
-    void calculate(Lattice<SU3> *lattice, int iObs);
+    void calculate(Lattice<SU3> *lattice, unsigned int iObs);
     // Statistics getter
     void runStatistics();
     // Setters
-    void setLatticeSize(int latticeSize);
+    void setLatticeSize(unsigned long int latticeSize);
     // Getters
     std::string getObservableName() { return m_observableName; }
     // Printers
-    void printObservable(int iObs);
+    void printObservable(unsigned int iObs);
     void printHeader();
 };
 

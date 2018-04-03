@@ -23,7 +23,7 @@ TopologicalCharge::~TopologicalCharge()
 
 }
 
-void TopologicalCharge::calculate(Lattice<SU3> *lattice, int iObs)
+void TopologicalCharge::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 {
     /*
      * Function to be used when no clover is provided. SHOULD BE TESTED

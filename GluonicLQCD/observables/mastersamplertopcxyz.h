@@ -25,18 +25,18 @@ private:
 public:
     MasterSamplerTopcXYZ(bool flow);
     ~MasterSamplerTopcXYZ();
-    void calculate(Lattice<SU3> * lattice, int iObs);
+    void calculate(Lattice<SU3> * lattice, unsigned int iObs);
     void initializeObservableStorer(bool storeFlowObservable);
 
     void writeObservableToFile(double acceptanceRatio);
-    void writeFlowObservablesToFile(int configNumber);
+    void writeFlowObservablesToFile(unsigned int configNumber);
     void reset();
     void runStatistics();
     void printHeader();
-    void printObservable(int iObs);
+    void printObservable(unsigned int iObs);
     void printStatistics();
-    std::vector<double> getObservablesVector(int iObs);
-    void copyObservable(int iObs, std::vector<double> obs);
+    std::vector<double> getObservablesVector(unsigned int iObs);
+    void copyObservable(unsigned int iObs, std::vector<double> obs);
 };
 
 #endif // MASTERSAMPLERTOPCXYZ_H

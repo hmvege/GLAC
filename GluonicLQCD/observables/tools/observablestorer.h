@@ -12,7 +12,7 @@ private:
     bool m_normalizeObservableByProcessor = false;
 
     // Observable data
-    int m_NObs;
+    unsigned long int m_NObs;
     double m_averagedObservable = 0;
     double m_varianceObservable = 0;
     double m_averagedObservableSquared = 0;
@@ -20,11 +20,11 @@ private:
     double * m_observables;
     double * m_observablesSquared;
 public:
-    ObservableStorer(int NSize);
+    ObservableStorer(unsigned long int NSize);
     ~ObservableStorer();
 
     // Accessor for the observable
-    double &operator[](int iObs) { return m_observables[iObs]; }
+    double &operator[](unsigned long int iObs) { return m_observables[iObs]; }
 
     // Runs statistics, perhaps create its own class? But that increases overhead, so maybe not
     void gatherResults();
@@ -35,11 +35,11 @@ public:
 
     // File writers
     void writeObservableToFile(double acceptanceRatio);
-    void writeFlowObservableToFile(int configNumber);
+    void writeFlowObservableToFile(unsigned long int configNumber);
 
     // Getters
     double *getObservableArray() { return m_observables; }
-    double getObservable(int iObs) { return m_observables[iObs]; }
+    double getObservable(unsigned long int iObs) { return m_observables[iObs]; }
     std::string getObservableName() { return m_observableName; }
 
     // Setters

@@ -62,7 +62,7 @@ void LatticeActionChargeDensity::initializeObservableStorer(bool storeFlowObserv
     m_energyObservable->setObservableName("energy");
 }
 
-void LatticeActionChargeDensity::writeFlowObservablesToFile(int iFlow)
+void LatticeActionChargeDensity::writeFlowObservablesToFile(unsigned int iFlow)
 {
     // Gathers and writes plaquette results to file
     m_plaqObservable->gatherResults();
@@ -115,7 +115,7 @@ void LatticeActionChargeDensity::printHeader()
     }
 }
 
-void LatticeActionChargeDensity::printObservable(int iObs)
+void LatticeActionChargeDensity::printObservable(unsigned int iObs)
 {
     if (!m_storeFlowObservable) {
         if (Parallel::Communicator::getProcessRank() == 0) {
@@ -149,14 +149,14 @@ void LatticeActionChargeDensity::printStatistics()
     m_energyObservable->printStatistics();
 }
 
-void LatticeActionChargeDensity::copyObservable(int iObs, std::vector<double> obs)
+void LatticeActionChargeDensity::copyObservable(unsigned int iObs, std::vector<double> obs)
 {
     (*m_plaqObservable)[iObs] = obs[0];
     (*m_topcObservable)[iObs] = obs[1];
     (*m_energyObservable)[iObs] = obs[2];
 }
 
-std::vector<double> LatticeActionChargeDensity::getObservablesVector(int iObs)
+std::vector<double> LatticeActionChargeDensity::getObservablesVector(unsigned int iObs)
 {
     std::vector<double> obs(3);
     obs[0] = (*m_plaqObservable)[iObs];
@@ -165,7 +165,7 @@ std::vector<double> LatticeActionChargeDensity::getObservablesVector(int iObs)
     return obs;
 }
 
-void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, int iObs)
+void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 {
     ///////////////////////////
     //// SYMMETRIC CLOVER /////

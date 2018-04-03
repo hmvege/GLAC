@@ -75,7 +75,7 @@ void MasterSamplerTopcXYZ::initializeObservableStorer(bool storeFlowObservable)
     m_topctObservable->setObservableName("topct");
 }
 
-void MasterSamplerTopcXYZ::writeFlowObservablesToFile(int configNumber)
+void MasterSamplerTopcXYZ::writeFlowObservablesToFile(unsigned int configNumber)
 {
     // Gathers and writes plaquette results to file
     m_plaqObservable->gatherResults();
@@ -151,7 +151,7 @@ void MasterSamplerTopcXYZ::printHeader()
     }
 }
 
-void MasterSamplerTopcXYZ::printObservable(int iObs)
+void MasterSamplerTopcXYZ::printObservable(unsigned int iObs)
 {
     if (!m_storeFlowObservable) {
         double topctObs = 0;
@@ -207,30 +207,30 @@ void MasterSamplerTopcXYZ::printStatistics()
     m_energyObservable->printStatistics();
 }
 
-void MasterSamplerTopcXYZ::copyObservable(int iObs, std::vector<double> obs)
+void MasterSamplerTopcXYZ::copyObservable(unsigned int iObs, std::vector<double> obs)
 {
     (*m_plaqObservable)[iObs] = obs[0];
     (*m_topcObservable)[iObs] = obs[1];
     (*m_energyObservable)[iObs] = obs[2];
-    for (unsigned int it = 0; it < m_N[3]; it++) {
+    for (unsigned long int it = 0; it < m_N[3]; it++) {
         (*m_topctObservable)[iObs*m_N[3] + it] = obs[3 + it];
     }
 }
 
-std::vector<double> MasterSamplerTopcXYZ::getObservablesVector(int iObs)
+std::vector<double> MasterSamplerTopcXYZ::getObservablesVector(unsigned int iObs)
 {
     std::vector<double> obs(3 + m_N[3]);
     obs[0] = (*m_plaqObservable)[iObs];
     obs[1] = (*m_topcObservable)[iObs];
     obs[2] = (*m_energyObservable)[iObs];
-    for (unsigned int it = 0; it < m_N[3]; it++) {
+    for (unsigned long int it = 0; it < m_N[3]; it++) {
         obs[3 + it] = (*m_topctObservable)[iObs*m_N[3] + it];
     }
 
     return obs;
 }
 
-void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
+void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 {
     ///////////////////////////
     //// SYMMETRIC CLOVER /////
@@ -339,7 +339,7 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, int iObs)
         m_tempTopcT = sumXYZ(realTraceMultiplication(m_clov1,m_clov2));
 
         // Loops over time dimension
-        for (unsigned int it = 0; it < m_N[3]; it++) {
+        for (unsigned long int it = 0; it < m_N[3]; it++) {
             // Sums the topological charge values at the xyz axis into a observable holder
             (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempTopcT[it];
 
