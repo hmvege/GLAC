@@ -22,8 +22,8 @@ namespace IO {
         FieldIO();
         ~FieldIO();
         static void init();
-        static void writeFieldToFile(Lattice<SU3> *lattice, unsigned long int configNumber);
-        static void writeDoublesFieldToFile(Lattice<double> lattice, unsigned long int configNumber, std::string observable);
+        static void writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNumber);
+        static void writeDoublesFieldToFile(Lattice<double> lattice, unsigned int configNumber, std::string observable);
         static void loadFieldConfiguration(std::string filename, Lattice<SU3> *lattice);
         static void loadChromaFieldConfiguration(std::string filename, Lattice<SU3> *lattice);
     };

@@ -249,7 +249,7 @@ void System::thermalize()
         m_correlator->printObservable(0);
     }
     // Running thermalization
-    for (unsigned long int iTherm = 1; iTherm < m_NTherm + 1; iTherm++)
+    for (unsigned int iTherm = 1; iTherm < m_NTherm + 1; iTherm++)
     {
         // Pre update time
         m_preUpdate = steady_clock::now();
@@ -262,17 +262,13 @@ void System::thermalize()
         m_updateStorerTherm += m_updateTime.count();
         if (m_processRank == 0 && iTherm % 20 == 0) { // Progress and Avg. time per update every 10th update
             printf("\n%6.2f %% done. Avg. update time: %10.6f sec", iTherm/double(m_NTherm)*100, m_updateStorerTherm/double(iTherm));
-//            if (!m_storeThermalizationObservables) {
-//                // Flushes if we are not storing any thermalization observables
-//                std::fflush(stdout);
-//            }
         }
 
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (m_storeThermalizationObservables) {
             // Calculating the correlator
             m_correlator->calculate(m_lattice,iTherm);
-            if (m_processRank == 0) printf("\n%-4lu ",iTherm);
+            if (m_processRank == 0) printf("\n%-4d ",iTherm);
             m_correlator->printObservable(iTherm);
         }
     }
@@ -362,9 +358,9 @@ void System::runMetropolis()
     m_updateStorer = 0;
 
     // Main part of algorithm
-    for (unsigned long int iConfig = 0; iConfig < m_NCf; iConfig++)
+    for (unsigned int iConfig = 0; iConfig < m_NCf; iConfig++)
     {
-        for (unsigned long int i = 0; i < m_NCor; i++) // Updating NCor times before updating the lattice
+        for (unsigned int i = 0; i < m_NCor; i++) // Updating NCor times before updating the lattice
         {
             // Pre timer
             m_preUpdate = steady_clock::now();
@@ -390,7 +386,7 @@ void System::runMetropolis()
 
         if (m_processRank == 0) {
             // Printing the observables
-            printf("\n%-4lu ",iConfig);
+            printf("\n%-4d ", iConfig);
         }
         m_correlator->printObservable(iConfig + m_NThermSteps);
 
@@ -447,7 +443,7 @@ void System::flowConfiguration(unsigned int iConfig)
     }
 
     // Runs the flow
-    for (unsigned long int iFlow = 0; iFlow < m_NFlows; iFlow++)
+    for (unsigned int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
         m_flow->flowField(m_flowLattice);
         m_flowCorrelator->calculate(m_flowLattice,iFlow + 1);
