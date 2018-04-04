@@ -19,7 +19,7 @@ private:
     static SU3 exchangeU;
 
     // Sub lattice dimensions
-    static std::vector<unsigned long int> m_N;
+    static std::vector<unsigned int> m_N;
 
     // Private fetchSU3 functions
     inline static void MPIfetchSU3Positive(Lattice<SU3> *lattice, std::vector<int> n, int mu, int SU3Dir);
@@ -43,7 +43,7 @@ public:
     static int getNumProc() { return m_numprocs; }
 
     // Setters
-    static void setN(std::vector<unsigned long int> N);
+    static void setN(std::vector<unsigned int> N);
 
     // MPI
     static void MPIExit(std::string message);

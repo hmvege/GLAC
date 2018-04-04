@@ -13,7 +13,7 @@ Flow::Flow(Action *S)
     m_subLatticeSize = Parameters::getSubLatticeSize();
     m_tempLattice = new Lattice<SU3>[4];
     m_tempExpLattice.allocate(m_N);
-    for (int mu = 0; mu < 4; mu++) {
+    for (unsigned int mu = 0; mu < 4; mu++) {
         m_tempLattice[mu].allocate(m_N);
     }
     m_S = S;

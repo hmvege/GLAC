@@ -9,11 +9,11 @@ namespace IO {
                                     double varianceObservable,
                                     double stdObservable,
                                     double *observables,
-                                    int NObs,
+                                    unsigned int NObs,
                                     std::string observableName);
         void writeFlowObservableToFile(double *observables,
                                        std::string observableName,
-                                       int configNumber);
+                                       unsigned int configNumber);
         void writeMatrixToFile(double *observables, std::string observableName, unsigned int configNumber, unsigned int N);
 }
 

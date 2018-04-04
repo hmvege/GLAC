@@ -7,8 +7,8 @@ namespace Parallel {
     class Index
     {
     private:
-        static std::vector<unsigned long int> m_N;
-        static std::vector<unsigned long int> m_NTot;
+        static std::vector<unsigned int> m_N;
+        static std::vector<unsigned int> m_NTot;
     public:
         Index();
         ~Index();
@@ -27,7 +27,7 @@ namespace Parallel {
         }
 
         // Setters
-        static void setN(std::vector<unsigned long int> N);
+        static void setN(std::vector<unsigned int> N);
         static void setNTot(unsigned int NSpatial, unsigned int NTemporal);
     };
 }

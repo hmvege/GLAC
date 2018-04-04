@@ -10,7 +10,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
                                 double varianceObservable,
                                 double stdObservable,
                                 double *observables,
-                                int NObs,
+                                unsigned int NObs,
                                 std::string observableName)
 {
     /*
@@ -34,7 +34,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
         file << "Average" << observableName << " " << averagedObservable << endl;
         file << "Variance" << observableName << " " << varianceObservable << endl;
         file << "std"  << observableName << " " << stdObservable << endl;
-        for (int i = 0; i < NObs; i++) {
+        for (unsigned int i = 0; i < NObs; i++) {
             file << observables[i] << endl;
         }
         file.close();
@@ -45,7 +45,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
 
 void IO::writeFlowObservableToFile(double *observables,
                                    std::string observableName,
-                                   int configNumber)
+                                   unsigned int configNumber)
 {
     /*
      * Method for writing a flow variable to file.

@@ -12,11 +12,11 @@ private:
     // Total lattice sizes
     static unsigned int m_NSpatial;
     static unsigned int m_NTemporal;
-    static unsigned long int m_latticeSize;
+    static unsigned int m_latticeSize;
 
     // Sub lattice / parallel related variables
-    static std::vector<unsigned long int> m_N;
-    static unsigned long int m_subLatticeSize;
+    static std::vector<unsigned int> m_N;
+    static unsigned int m_subLatticeSize;
     static int m_processorsPerDimension[4];
     static bool m_subLatticeSizePreset;
 
@@ -102,14 +102,14 @@ public:
     //// Setters ////
     /////////////////
     // Lattice related run setters
-    static void setNSpatial(int NSpatial);
-    static void setNTemporal(int NTemporal);
+    static void setNSpatial(unsigned long int NSpatial);
+    static void setNTemporal(unsigned long int NTemporal);
     static void setBeta(double beta);
-    static void setNCf(int NCf) { m_NCf = NCf; }
-    static void setNCor(int NCor) { m_NCor = NCor; }
-    static void setNTherm(int NTherm) { m_NTherm = NTherm; }
-    static void setNFlows(int NFlows) { m_NFlows = NFlows; }
-    static void setNUpdates(int NUpdates) { m_NUpdates = NUpdates; }
+    static void setNCf(unsigned long int NCf) { m_NCf = NCf; }
+    static void setNCor(unsigned long int NCor) { m_NCor = NCor; }
+    static void setNTherm(unsigned long int NTherm) { m_NTherm = NTherm; }
+    static void setNFlows(unsigned long int NFlows) { m_NFlows = NFlows; }
+    static void setNUpdates(unsigned long int NUpdates) { m_NUpdates = NUpdates; }
 
     // Data storage related setters
     static void setOutputFolder(std::string outputFolder) { m_outputFolder = outputFolder; }
@@ -134,8 +134,8 @@ public:
 
     // Performance testing related setters
     static void setPerformanceTesting(bool performanceTesting) { m_performanceTesting = performanceTesting; }
-    static void setNExpTests(int NExpTests) { m_NExpTests = NExpTests; }
-    static void setNRandTests(int NRandTests) { m_NRandTests = NRandTests; }
+    static void setNExpTests(unsigned long int NExpTests) { m_NExpTests = NExpTests; }
+    static void setNRandTests(unsigned long int NRandTests) { m_NRandTests = NRandTests; }
     static void setNDerivaitveTests(int NDerivativeTests) { m_NDerivativeTests = NDerivativeTests; }
     static void setTaylorPolDegree(int NTaylorPolDegree) { m_NTaylorPolDegree = NTaylorPolDegree; }
 
@@ -149,10 +149,10 @@ public:
     static void setLatticeSize(int latticeSize) { m_latticeSize = latticeSize; }
 
     // Sub lattice / parallel related setters
-    static void setN(std::vector<unsigned long int> N) { m_N = N; }
+    static void setN(std::vector<unsigned int> N) { m_N = N; }
     static void setSubLatticePreset(bool subLatticeSizePreset) { m_subLatticeSizePreset = subLatticeSizePreset; }
     static void setSubLatticeSize(unsigned long int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
-    static void setProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
+    static void setProcessorsPerDimension(int *processorsPerDimension) { for (unsigned int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
 
     // Name of samplers setters
     static void setExpFuncName(std::string expFuncName) { m_expFuncName = expFuncName;}
@@ -223,10 +223,10 @@ public:
     static unsigned int getLatticeSize() { return m_latticeSize; }
 
     // Sub lattice / parallel related getters
-    static std::vector<unsigned long int> getN() { return m_N; }
+    static std::vector<unsigned int> getN() { return m_N; }
     static bool getSubLatticePreset() { return m_subLatticeSizePreset; }
     static unsigned int getSubLatticeSize() { return m_subLatticeSize; }
-    static void getProcessorsPerDimension(int *processorsPerDimension) { for (int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
+    static void getProcessorsPerDimension(int *processorsPerDimension) { for (unsigned int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
 
     // Exponential getters
     static std::string getExpFuncName() { return m_expFuncName; }

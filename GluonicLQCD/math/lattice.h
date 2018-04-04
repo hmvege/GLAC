@@ -13,12 +13,12 @@ class Lattice
 {
 public:
     std::vector<T> m_sites;
-    std::vector<unsigned long int> m_dim; // Lattice dimensions
+    std::vector<unsigned int> m_dim; // Lattice dimensions
     unsigned long int m_latticeSize;
 
     // Default contructors
     Lattice() { }
-    Lattice(std::vector<unsigned long int>latticeDimensions) {
+    Lattice(std::vector<unsigned int>latticeDimensions) {
         allocate(latticeDimensions);
     }
 
@@ -56,10 +56,10 @@ public:
         return *this;
     }
 
-    void allocate(std::vector<unsigned long int> dim);
+    void allocate(std::vector<unsigned int> dim);
 
     // Overloading lattice position getter
-    T &operator[](unsigned long int i) { return m_sites[i]; }
+    T &operator[](unsigned int i) { return m_sites[i]; }
     // Overloading lattice operations
     Lattice<T> &operator+=(Lattice<T>& B);
     Lattice<T> &operator+=(Lattice<T>&& B);
@@ -308,7 +308,7 @@ inline void Lattice<double>::zeros() {
 
 // Allocates memory to the lattice. Has to be called every time(unless we are copying)
 template <class T>
-inline void Lattice<T>::allocate(std::vector<unsigned long int> dim) {
+inline void Lattice<T>::allocate(std::vector<unsigned int> dim) {
     m_latticeSize = dim[0] * dim[1] * dim[2] * dim[3];
     m_dim = dim;
     m_sites.resize(m_latticeSize);
@@ -505,7 +505,7 @@ enum DIR {
     FORWARDS = 1
 };
 
-inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, int lorentzVector)
+inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVector)
 {
     /*
      * Function for shifting lattice in on or another direction.

@@ -249,7 +249,7 @@ void System::thermalize()
         m_correlator->printObservable(0);
     }
     // Running thermalization
-    for (unsigned int iTherm = 1; iTherm < m_NTherm + 1; iTherm++)
+    for (unsigned long int iTherm = 1; iTherm < m_NTherm + 1; iTherm++)
     {
         // Pre update time
         m_preUpdate = steady_clock::now();
@@ -272,7 +272,7 @@ void System::thermalize()
         if (m_storeThermalizationObservables) {
             // Calculating the correlator
             m_correlator->calculate(m_lattice,iTherm);
-            if (m_processRank == 0) printf("\n%-4d ",iTherm);
+            if (m_processRank == 0) printf("\n%-4lu ",iTherm);
             m_correlator->printObservable(iTherm);
         }
     }
@@ -292,7 +292,7 @@ void System::thermalize()
     }
 }
 
-void System::updateLink(unsigned long int iSite, int mu)
+void System::updateLink(unsigned int iSite, int mu)
 {
     /*
      * Private function used for updating our system. Updates a single gauge link.
@@ -309,13 +309,13 @@ void System::update()
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
+    for (unsigned long int x = 0; x < m_N[0]; x++) {
+        for (unsigned long int y = 0; y < m_N[1]; y++) {
+            for (unsigned long int z = 0; z < m_N[2]; z++) {
+                for (unsigned long int t = 0; t < m_N[3]; t++) {
+                    for (unsigned long int mu = 0; mu < 4; mu++) {
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
-                        for (unsigned int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
+                        for (unsigned long int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(Parallel::Index::getIndex(x,y,z,t), mu);
                             if (exp(-m_S->getDeltaAction(m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_updatedMatrix)) > m_uniform_distribution(m_generator))
@@ -362,9 +362,9 @@ void System::runMetropolis()
     m_updateStorer = 0;
 
     // Main part of algorithm
-    for (unsigned int iConfig = 0; iConfig < m_NCf; iConfig++)
+    for (unsigned long int iConfig = 0; iConfig < m_NCf; iConfig++)
     {
-        for (unsigned int i = 0; i < m_NCor; i++) // Updating NCor times before updating the lattice
+        for (unsigned long int i = 0; i < m_NCor; i++) // Updating NCor times before updating the lattice
         {
             // Pre timer
             m_preUpdate = steady_clock::now();
@@ -390,7 +390,7 @@ void System::runMetropolis()
 
         if (m_processRank == 0) {
             // Printing the observables
-            printf("\n%-4d ",iConfig);
+            printf("\n%-4lu ",iConfig);
         }
         m_correlator->printObservable(iConfig + m_NThermSteps);
 
@@ -447,7 +447,7 @@ void System::flowConfiguration(unsigned int iConfig)
     }
 
     // Runs the flow
-    for (unsigned int iFlow = 0; iFlow < m_NFlows; iFlow++)
+    for (unsigned long int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
         m_flow->flowField(m_flowLattice);
         m_flowCorrelator->calculate(m_flowLattice,iFlow + 1);
@@ -491,6 +491,7 @@ void System::load(std::string configurationName)
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
     if (m_NFlows != 0 && !Parameters::getLoadConfigAndRun()) {
+        Parallel::Communicator::MPIPrint("LOADING CONFIGURATION AND RUNNING!");
         IO::FieldIO::loadFieldConfiguration(configurationName,m_flowLattice);
     } else {
         IO::FieldIO::loadFieldConfiguration(configurationName,m_lattice);
@@ -517,6 +518,7 @@ void System::flowConfigurations()
      * Method for flowing several configurations given as a vector of strings.
      */
 
+
     // Loads the vector of configurations to flow.
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
     for (unsigned int i = 0; i < configurationNames.size(); i++) {
@@ -525,7 +527,7 @@ void System::flowConfigurations()
             load(configurationNames[i]);
         } else {
             loadChroma(configurationNames[i]);
-        }
+        }        
 
         // Prints a new header for each flow.
         if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose()) {

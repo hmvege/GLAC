@@ -13,7 +13,7 @@ const unsigned long int IO::FieldIO::m_SU3Doubles = 18;
 const unsigned long int IO::FieldIO::m_SU3Size = m_SU3Doubles*sizeof(double);
 const unsigned long int IO::FieldIO::m_linkDoubles = m_SU3Doubles*4;
 const unsigned long int IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);
-std::vector<unsigned long int> IO::FieldIO::m_N;
+std::vector<unsigned int> IO::FieldIO::m_N;
 
 IO::FieldIO::FieldIO()
 {
@@ -28,7 +28,7 @@ void IO::FieldIO::init()
     m_N = Parameters::getN();
 }
 
-void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
+void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned long int configNumber)
 {
     /*
      * C-method for writing out configuration to file.
@@ -40,7 +40,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
 
     // Converting config number to a more machine friendly layout
     char cfg_number[6];
-    sprintf(cfg_number,"%05d",configNumber + Parameters::getConfigStartNumber());
+    sprintf(cfg_number,"%05lu",configNumber + Parameters::getConfigStartNumber());
 
     std::string filename = Parameters::getBatchName() + "_b" + std::to_string(Parameters::getBeta())
                                                       + "_N" + std::to_string(Parameters::getNSpatial())
@@ -75,7 +75,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, int configNumber)
     }
 }
 
-void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, int configNumber, std::string observable)
+void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned long int configNumber, std::string observable)
 {
     /*
      * C-method for writing out single double lattice field to file. No lorentz indices
@@ -88,7 +88,7 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, int configNum
 
     // Converting config number to a more machine friendly layout
     char cfg_number[6];
-    sprintf(cfg_number, "%05d", configNumber + Parameters::getConfigStartNumber());
+    sprintf(cfg_number, "%05lu", configNumber + Parameters::getConfigStartNumber());
 
     std::string filename = Parameters::getBatchName() + "_b" + std::to_string(Parameters::getBeta())
                                                       + "_N" + std::to_string(Parameters::getNSpatial())
@@ -140,11 +140,12 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
     if (!check_file_existence(fname.c_str())) {
         Parallel::Communicator::MPIExit("File " + fname + " does not exist");
     }
+    MPI_Offset offset = 0;
 
     MPI_File_open(MPI_COMM_SELF, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-    MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
+    int nt = 0, nz = 0, ny = 0, nx = 0;
 
-    for (unsigned long int mu = 0; mu < 4; mu++) {
+    for (int mu = 0; mu < 4; mu++) {
         for (unsigned long int t = 0; t < m_N[3]; t++) {
             nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
             for (unsigned long int z = 0; z < m_N[2]; z++) {
@@ -153,7 +154,17 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
                     ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
                     for (unsigned long int x = 0; x < m_N[0]; x++) {
                         nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
-                        MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                        offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size;
+                        MPI_File_read_at(file, offset, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+
+//                        // Temp. checking for loading file! //
+//                        for (unsigned long int i = 0; i < 18; i++) {
+//                            if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))
+//                            {
+//                                lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
+//                                Parallel::Communicator::MPIExit("\nConfiguration is corrupt.\n");
+//                            }
+//                        }
                     }
                 }
             }
@@ -181,10 +192,11 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
     }
 
     MPI_File_open(MPI_COMM_SELF, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-    MPI_Offset nt = 0, nz = 0, ny = 0, nx = 0;
+    int nt = 0, nz = 0, ny = 0, nx = 0;
+    MPI_Offset offset = 0;
 
     double temp = 0;
-    for (unsigned long int t = 0; t < m_N[3]; t++) {
+    for (unsigned int t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
         for (unsigned long int z = 0; z < m_N[2]; z++) {
             nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
@@ -194,14 +206,14 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
                     nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
                     for (unsigned long int mu = 0; mu < 4; mu++) {
                         for (unsigned long int i = 0; i < 18; i++) {
-                            MPI_File_read_at(file, Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size + i*sizeof(double), &temp, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                            offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size + i*sizeof(double);
+                            MPI_File_read_at(file, offset, &temp, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
                             lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] = reverseDouble(temp);
                             // Checking for corruption
                             if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))
                             {
                                 lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                printf("\nConfiguration is corrupt.\n");
-                                exit(1);
+                                Parallel::Communicator::MPIExit("\nConfiguration is corrupt.\n");
                             }
                         }
                     }

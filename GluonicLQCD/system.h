@@ -21,8 +21,8 @@ private:
     /// Parameters that must be retrieved ///
     /////////////////////////////////////////
     // Lattice sizes
-    std::vector<unsigned long int> m_N;
-    unsigned long int m_latticeSize;
+    std::vector<unsigned int> m_N;
+    unsigned int m_latticeSize;
     // Updating constants
     unsigned int m_NCf;
     unsigned int m_NCor;
@@ -35,7 +35,7 @@ private:
     bool m_writeConfigsToFile = false;
     // Paralellization setup
     int m_processRank; // Move to communicator/printer...?
-    unsigned long int m_subLatticeSize;
+    unsigned int m_subLatticeSize;
 
     /////////////////////////////////////////
     /////// Parameters and functions ////////
@@ -82,7 +82,7 @@ private:
 
     // Function for updating our system using the Metropolis algorithm
     void update();
-    inline void updateLink(unsigned long int iSite, int mu);
+    inline void updateLink(unsigned int iSite, int mu);
 
     // Thermalization function
     void thermalize();

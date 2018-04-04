@@ -19,7 +19,7 @@ private:
     double zNorm, zNormSquared;
 
     // Lattice test variables. Since only the matrix changes, we can reuse previous variables
-    std::vector<unsigned long int> m_dim;
+    std::vector<unsigned int> m_dim;
     Lattice<SU3> latticeSU3_U1, latticeSU3_U2;
     Lattice<complex> latticeComplex_z1, latticeComplex_z2;
     double latticeDoubleValue1, latticeDoubleValue2;

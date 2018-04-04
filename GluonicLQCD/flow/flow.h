@@ -11,7 +11,7 @@ private:
     // Flow update step
     double m_epsilon = 0.02;
     // Lattice constants
-    std::vector<unsigned long int> m_N;
+    std::vector<unsigned int> m_N;
     unsigned long int m_subLatticeSize;
     // Temporary lattice to use when flowing
     Lattice<SU3> * m_tempLattice;

@@ -10,7 +10,7 @@
 bool Parallel::Communicator::muDir = 0;
 bool Parallel::Communicator::nuDir = 0;
 SU3 Parallel::Communicator::exchangeU; // Carefull! This might give a bug!
-std::vector<unsigned long int> Parallel::Communicator::m_N = {0,0,0,0};
+std::vector<unsigned int> Parallel::Communicator::m_N = {0,0,0,0};
 // Variables used externally
 int Parallel::Communicator::m_processRank = 0;
 int Parallel::Communicator::m_numprocs = 0;
@@ -422,7 +422,7 @@ void Parallel::Communicator::gatherDoubleResults(double * data, unsigned int N)
     for (unsigned long int i = 0; i < N; i++) data[i] = tempData[i];
 }
 
-void Parallel::Communicator::setN(std::vector<unsigned long int> N)
+void Parallel::Communicator::setN(std::vector<unsigned int> N)
 {
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];

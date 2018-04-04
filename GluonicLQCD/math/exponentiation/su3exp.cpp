@@ -58,7 +58,7 @@ SU3 SU3Exp::exp(SU3 Q)
     h[2].setIm(-3*u*xi0*cosu + sinu*cosw + sin2u);
 
     // Sets f
-    for (int i = 0; i < 3; i++) {
+    for (unsigned int i = 0; i < 3; i++) {
         f[i] = h[i] / (9*uu - ww);
     }
 
