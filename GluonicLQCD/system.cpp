@@ -305,13 +305,13 @@ void System::update()
     /*
      * Sweeps the entire Lattice, and gives every matrix a chance to update.
      */
-    for (unsigned long int x = 0; x < m_N[0]; x++) {
-        for (unsigned long int y = 0; y < m_N[1]; y++) {
-            for (unsigned long int z = 0; z < m_N[2]; z++) {
-                for (unsigned long int t = 0; t < m_N[3]; t++) {
-                    for (unsigned long int mu = 0; mu < 4; mu++) {
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
-                        for (unsigned long int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
+                        for (unsigned int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
                             updateLink(Parallel::Index::getIndex(x,y,z,t), mu);
                             if (exp(-m_S->getDeltaAction(m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_updatedMatrix)) > m_uniform_distribution(m_generator))
@@ -487,7 +487,6 @@ void System::load(std::string configurationName)
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
     if (m_NFlows != 0 && !Parameters::getLoadConfigAndRun()) {
-        Parallel::Communicator::MPIPrint("LOADING CONFIGURATION AND RUNNING!");
         IO::FieldIO::loadFieldConfiguration(configurationName,m_flowLattice);
     } else {
         IO::FieldIO::loadFieldConfiguration(configurationName,m_lattice);
