@@ -729,7 +729,7 @@ def main(args):
     job_parser.add_argument('-chr', '--cpu_approx_runtime_hr',  default=config_default["cpu_approx_runtime_hr"],    type=int, help='Approximate cpu time in hours that will be used')
     job_parser.add_argument('-cmin', '--cpu_approx_runtime_min',default=config_default["cpu_approx_runtime_min"],   type=int, help='Approximate cpu time in minutes that will be used')
     job_parser.add_argument('-ex', '--exclude',                 default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
-    job_parser.add_argument('-lcfg', '--load_configurations',   default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
+    job_parser.add_argument('-lcfg', '--load_configurations',   default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder by scanning and for files with .bin extensions.')
     job_parser.add_argument('-chroma', '--chroma_config',       default=config_default["chroma_config"],            action='store_true', help='If flagged, loads the configuration as a chroma configuration.')
     job_parser.add_argument('-lcfgr', '--load_config_and_run',  default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
     job_parser.add_argument('-cfgnum', '--config_start_number', default=config_default["config_start_number"],      type=int, help='Starts naming the configuration from this number.')
@@ -743,7 +743,7 @@ def main(args):
     load_parser.add_argument('file',                            default=False,                                      type=str, help='Loads config file')
     load_parser.add_argument('-s', '--system',                  default=False,                                      type=str, required=True, choices=['smaug', 'abel', 'laconia'], help='Cluster name')
     load_parser.add_argument('-p', '--partition',               default="normal",                                   type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
-    load_parser.add_argument('-lcfg', '--load_configurations',  default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder in the input directory by scanning and for files with .bin extensions.')
+    load_parser.add_argument('-lcfg', '--load_configurations',  default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder by scanning and for files with .bin extensions.')
     load_parser.add_argument('-lcfgr', '--load_config_and_run', default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
     load_parser.add_argument('-NCfgs', '--NConfigs',            default=False,                                      type=int, help='N configurations to generate based on loaded configuration.')
     load_parser.add_argument('-NFlows', '--NFlows',             default=False,                                      type=int, help='number of flows to perform per configuration')
@@ -841,10 +841,12 @@ def main(args):
             if not args.NConfigs:
                 # Error catching, as we require to know how many addition configurations we wish to create from loaded configuration.
                 sys.exit("ERROR: we require to know how many addition configurations we wish to create from loaded configuration(specified by -lcfgr).")
-            configuration["load_config_and_run"] = args.load_config_and_run
+            _config_path, _config_file = os.path.split(args.load_config_and_run)
+            configuration["load_config_and_run"] = _config_file
+            configuration["inputFolder"] = os.path.normpath(_config_path)
+
             configuration["NCf"] = args.NConfigs
             configuration["NTherm"] = 0
-            configuration["NFlows"] = 0
 
         # Excludes certain nodes if arguments have been provided
         if args.exclude:
@@ -926,8 +928,12 @@ def main(args):
             excluded_nodes = ""
 
         if args.load_config_and_run != False:
-            config_default["load_config_and_run"] = args.load_config_and_run
+            _config_path, _config_file = os.path.split(args.load_config_and_run)
+            configuration["load_config_and_run"] = _config_file
+            configuration["inputFolder"] = os.path.normpath(_config_path)
+
         config_default["config_start_number"] = args.config_start_number
+
         if args.load_configurations:
             config_default = set_field_configs(config_default, args.load_configurations, args.config_start_number)
             config_default["chroma_config"] = args.chroma_config
@@ -1053,7 +1059,9 @@ def main(args):
         configuration["NCf"] = 0
 
         # Requiring an new estimate of the run time if we are flowing
-        config_default["load_config_and_run"] = args.load_configuration
+        _config_path, _config_file = os.path.split(args.load_configuration)
+        config_default["load_config_and_run"] = _config_file
+        config_default["inputFolder"] = os.path.normpath(_config_path)
         assert os.path.splitext(config_default["load_config_and_run"])[-1] == ".bin", ".bin file not provided %s" % config_path
         config_default["config_start_number"] = 0
 
