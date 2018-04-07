@@ -759,10 +759,12 @@ def main(args):
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
     unit_test_parser.add_argument('system',                     default=False,                                      type=str, choices=['smaug', 'abel', 'laconia', 'local'], help='Specify system we are running on.')
-    unit_test_parser.add_argument('-v', '--verbose',            default=False,                                      action='store_true', help='Prints more information during testing.')
+    unit_test_parser.add_argument('threads',                    default=False,                                      type=int, help='Number of threads to run on')
+    unit_test_parser.add_argument('-vr', '--verboseRun',        default=config_default["verboseRun"],               action='store_true', help='Prints more information during testing.')
     unit_test_parser.add_argument('-cgi', '--check_gauge_invariance', default=False,                                type=str, help='Loads and checks the gauge field invariance of a field.')
-    unit_test_parser.add_argument('-N', '--NSpatial',           default=False,                                      type=int, help='spatial lattice dimension')
-    unit_test_parser.add_argument('-NT', '--NTemporal',         default=False,                                      type=int, help='temporal lattice dimension')
+    unit_test_parser.add_argument('-sq', '--square',            default=False,                                      action='store_true', help='Enforce square sub lattices(or as close as possible).')
+    unit_test_parser.add_argument('-N', '--NSpatial',           default=config_default["N"],                        type=int, help='spatial lattice dimension')
+    unit_test_parser.add_argument('-NT', '--NTemporal',         default=config_default["NT"],                       type=int, help='temporal lattice dimension')
     unit_test_parser.add_argument('-ex', '--exclude',           default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
 
     ######## Performance test parser ########
@@ -929,8 +931,8 @@ def main(args):
 
         if args.load_config_and_run != False:
             _config_path, _config_file = os.path.split(args.load_config_and_run)
-            configuration["load_config_and_run"] = _config_file
-            configuration["inputFolder"] = os.path.normpath(_config_path)
+            config_default["load_config_and_run"] = _config_file
+            config_default["inputFolder"] = os.path.normpath(_config_path)
 
         config_default["config_start_number"] = args.config_start_number
 
@@ -970,18 +972,22 @@ def main(args):
         COMMAND FOR UNIT TESTING
         """
         config_default["runName"] = "defaultTestRun"
+        config_default["threads"] = args.threads
         config_default["uTest"] = True
         config_default["cpu_approx_runtime_hr"] = 0
         config_default["cpu_approx_runtime_min"] = 20
         partition = "normal"
         system = args.system
-        config_default["uTestVerbose"] = args.verbose
+        config_default["uTestVerbose"] = args.verboseRun
         if args.check_gauge_invariance:
             config_default["uTestFieldGaugeInvarince"] = args.check_gauge_invariance
             if not args.NSpatial or not args.NTemporal:
                 sys.exit("ERROR: need to specifiy dimensions of loaded lattice.")
-            config_default["N"] = args.NSpatial
-            config_default["NT"] = args.NTemporal
+        
+        config_default["N"] = args.NSpatial
+        config_default["NT"] = args.NTemporal
+        if args.square:
+            config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
 
         # Checks if we are to exclude any of the nodes
         if args.exclude:

@@ -89,7 +89,7 @@ void IO::writeFlowObservableToFile(double *observables,
     }
 }
 
-void IO::writeMatrixToFile(double * observables, std::string observableName, unsigned int configNumber, unsigned int N)
+void IO::writeMatrixToFile(std::vector<double> observables, std::string observableName, unsigned int configNumber, unsigned int N)
 {
     /*
      * Function for writing out a matrix of observables to file, e.g. the topc in euclidean time.

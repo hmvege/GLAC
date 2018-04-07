@@ -269,9 +269,9 @@ def testIfEqualMemoryPositions(arr1,arr2):
 
 def main():
 	# CONSTANTS
-	dimensions = [2,2,2,2]
-	dimensions = map(lambda x: 8*x, dimensions)
-	numprocs = 32
+	dimensions = [4,4,4,8]
+	dimensions = map(lambda x: 12*x, dimensions)
+	numprocs = 512
 	storeOutput = True
 	max_index = np.prod(dimensions)
 	index_ceiling = max_index/8

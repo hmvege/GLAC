@@ -8,7 +8,7 @@ namespace Parallel {
     {
     private:
         static std::vector<unsigned int> m_N;
-        static std::vector<unsigned int> m_NTot;
+        static std::vector<long long> m_NTot;
     public:
         Index();
         ~Index();
@@ -22,7 +22,7 @@ namespace Parallel {
             return i + m_N[0]*(j + m_N[1]*(k + m_N[2]*l));
         }
 
-        static inline unsigned long int getGlobalIndex(unsigned long int i, unsigned long int j, unsigned long int k, unsigned long int l) {
+        static inline long long getGlobalIndex(long long i, long long j, long long k, long long l) {
             return i + m_NTot[0]*(j + m_NTot[1]*(k + m_NTot[2]*l)); // column-major
         }
 

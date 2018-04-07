@@ -9,10 +9,10 @@
 using std::cout;
 using std::endl;
 
-const unsigned long int IO::FieldIO::m_SU3Doubles = 18;
-const unsigned long int IO::FieldIO::m_SU3Size = m_SU3Doubles*sizeof(double);
-const unsigned long int IO::FieldIO::m_linkDoubles = m_SU3Doubles*4;
-const unsigned long int IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);
+const long long IO::FieldIO::m_SU3Doubles = 18;
+const long long IO::FieldIO::m_SU3Size = m_SU3Doubles*sizeof(double);
+const long long IO::FieldIO::m_linkDoubles = m_SU3Doubles*4;
+const long long IO::FieldIO::m_linkSize = m_linkDoubles*sizeof(double);
 std::vector<unsigned int> IO::FieldIO::m_N;
 
 IO::FieldIO::FieldIO()
@@ -40,7 +40,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
 
     // Converting config number to a more machine friendly layout
     char cfg_number[6];
-    sprintf(cfg_number,"%05d",configNumber + Parameters::getConfigStartNumber());
+    sprintf(cfg_number, "%05d", configNumber + Parameters::getConfigStartNumber());
 
     std::string filename = Parameters::getBatchName() + "_b" + std::to_string(Parameters::getBeta())
                                                       + "_N" + std::to_string(Parameters::getNSpatial())
@@ -51,7 +51,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
     std::string filenamePath = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/" + filename;
 
     MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
-    unsigned int nt = 0, nz = 0, ny = 0, nx = 0;
+    long long nt = 0, nz = 0, ny = 0, nx = 0;
     MPI_Offset offset = 0;
 
     for (unsigned long int t = 0; t < m_N[3]; t++) {
@@ -62,7 +62,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
                 for (unsigned long int x = 0; x < m_N[0]; x++) {
                     nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
-                    for (unsigned long int mu = 0; mu < 4; mu++) {
+                    for (long long mu = 0; mu < 4; mu++) {
                         offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size;
                         MPI_File_write_at(file, offset, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
                     }
@@ -103,7 +103,7 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned int 
 
     MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 
-    unsigned int nt = 0, nz = 0, ny = 0, nx = 0;
+    long long nt = 0, nz = 0, ny = 0, nx = 0;
     MPI_Offset offset = 0;
 
     for (unsigned long int t = 0; t < m_N[3]; t++) {
@@ -148,9 +148,9 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
     MPI_Offset offset = 0;
 
     MPI_File_open(MPI_COMM_SELF, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-    unsigned int nt = 0, nz = 0, ny = 0, nx = 0;
+    long long nt = 0, nz = 0, ny = 0, nx = 0;
 
-    for (int mu = 0; mu < 4; mu++) {
+    for (long long mu = 0; mu < 4; mu++) {
         for (unsigned long int t = 0; t < m_N[3]; t++) {
             nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
             for (unsigned long int z = 0; z < m_N[2]; z++) {
@@ -197,7 +197,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
     }
 
     MPI_File_open(MPI_COMM_SELF, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-    int nt = 0, nz = 0, ny = 0, nx = 0;
+    long long nt = 0, nz = 0, ny = 0, nx = 0;
     MPI_Offset offset = 0;
 
     double temp = 0;

@@ -14,8 +14,8 @@ private:
     Lattice<SU3> m_clov1, m_clov2, m_U2Temp, m_U3Temp, m_temp;
 
     // Container for the topc xyz observable
-    std::vector<double> m_tempTopcT;
-    double * m_tempTopctArray;
+    std::vector<double> m_topctGatherVector;//m_tempTopctArray;
+    std::vector<double> m_tempTopct;
 
     // Creates a object that store the observable
     ObservableStorer * m_plaqObservable = nullptr;

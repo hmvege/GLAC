@@ -5,9 +5,6 @@
 #include "config/parameters.h"
 #include "io/observablesio.h"
 
-
-#include "parallelization/neighbours.h"
-
 MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
 {
     // Sets up observable storage containers
@@ -26,13 +23,13 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
     m_temp.allocate(m_N);
 
     // Allocates temporary vector for retrieves results from the lattice method
-    m_tempTopcT.resize(m_N[3]);
+    m_tempTopct.resize(m_N[3]);
 
     // Allocates temporary array for gathering results into a single time array
-    m_tempTopctArray = new double[Parameters::getNTemporal() * (Parameters::getNFlows() + 1)];
+    m_topctGatherVector.resize(Parameters::getNTemporal() * (Parameters::getNFlows() + 1));
     for (unsigned int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
         for (unsigned int it = 0; it < Parameters::getNTemporal(); it++) {
-            m_tempTopctArray[iFlow*Parameters::getNTemporal() + it] = 0;
+            m_topctGatherVector[iFlow*Parameters::getNTemporal() + it] = 0;
         }
     }
 }
@@ -43,7 +40,6 @@ MasterSamplerTopcXYZ::~MasterSamplerTopcXYZ()
     delete m_topcObservable;
     delete m_energyObservable;
     delete m_topctObservable;
-    delete [] m_tempTopctArray;
 }
 
 void MasterSamplerTopcXYZ::initializeObservableStorer(bool storeFlowObservable)
@@ -90,10 +86,10 @@ void MasterSamplerTopcXYZ::writeFlowObservablesToFile(unsigned int configNumber)
     m_energyObservable->writeFlowObservableToFile(configNumber);
 
     // Flattens topct to t direction and gathers topct results into a single array
-    Parallel::Communicator::reduceToTemporalDimension(m_tempTopctArray,m_topctObservable->getObservableArray());
+    Parallel::Communicator::reduceToTemporalDimension(m_topctGatherVector, m_topctObservable->getObservableArray());
 
     // Gathers and writes the Euclidean time array
-    IO::writeMatrixToFile(m_tempTopctArray,m_topctObservable->getObservableName(),configNumber,Parameters::getNTemporal());
+    IO::writeMatrixToFile(m_topctGatherVector,m_topctObservable->getObservableName(),configNumber,Parameters::getNTemporal());
 }
 
 void MasterSamplerTopcXYZ::writeObservableToFile(double acceptanceRatio)
@@ -118,8 +114,14 @@ void MasterSamplerTopcXYZ::reset()
     m_energyObservable->reset();
     m_topctObservable->reset();
     for (unsigned int i = 0; i < Parameters::getNTemporal() * (Parameters::getNFlows() + 1); i++) {
-        m_tempTopctArray[i] = 0;
+        m_topctGatherVector[i] = 0;
     }
+
+//    m_clov1.zeros();
+//    m_clov2.zeros();
+//    m_U2Temp.zeros();
+//    m_U3Temp.zeros();
+//    m_temp.zeros();
 }
 
 void MasterSamplerTopcXYZ::runStatistics()
@@ -238,11 +240,11 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, unsigned int iObs)
     m_topCharge = 0;
     m_energy = 0;
     m_plaquette = 0;
+    for (unsigned int it = 0; it < m_N[3]; it++) {
+        m_tempTopct[it] = 0;
+    }
     mu = 0;
 
-    for (unsigned int it = 0; it < m_N[3]; it++) {
-        m_tempTopcT[it] = 0;
-    }
 
     for (int nu = 1; nu < 4; nu++)
     {
@@ -336,15 +338,15 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         m_clov2 = subtractImag(m_clov2,m_tempDiag);
 
         // Sums take the real trace multiplication and sums into a temporary holder
-        m_tempTopcT = sumXYZ(realTraceMultiplication(m_clov1,m_clov2));
+        m_tempTopct = sumXYZ(realTraceMultiplication(m_clov1,m_clov2));
 
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {
             // Sums the topological charge values at the xyz axis into a observable holder
-            (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempTopcT[it];
+            (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempTopct[it];
 
             // Sums the topological charge, negative sign already taken care of
-            m_topCharge -= m_tempTopcT[it];
+            m_topCharge -= m_tempTopct[it];
         }
 
         // Picks up the action density

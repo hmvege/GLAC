@@ -3,7 +3,6 @@
 #include <cmath>
 #include "parallelization/communicator.h"
 #include "config/parameters.h"
-#include "io/fieldio.h"
 
 MasterSampler::MasterSampler(bool flow) : Correlator()
 {

@@ -239,7 +239,7 @@ TestSuite::TestSuite()
     latticeDoubleValue2 = 1.5;
     m_N = Parameters::getNSpatial();
     m_NT = Parameters::getNTemporal();
-    Parameters::setSubLatticePreset(false);
+//    Parameters::setSubLatticePreset(false);
     Parallel::Communicator::initializeSubLattice();
     m_subLatticeSize = Parameters::getSubLatticeSize();
     m_dim = Parameters::getN();
@@ -1555,64 +1555,67 @@ bool TestSuite::testLatticeShift() {
      * Tests the lattice shift function.
      */
     bool passed = true;
-    unsigned int position;
-    unsigned int N1,N2,N3;
-    Lattice<SU3>L;
-    L.allocate(m_dim);
-    for (int dir = 0; dir < 8; dir++) {
-        // Sets the lattice sites with the value of the processor they are running on.
-        for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++) {
-            L[iSite] = double(m_processRank);
-        }
-        if (dir % 2 == 0) {
-            // Backwards
-            L = shift(L,BACKWARDS,dir / 2);
-        } else {
-            // Forwards
-            L = shift(L,FORWARDS,dir / 2);
-        }
-        if (dir / 2 == 0) {
-            N1 = L.m_dim[1];
-            N2 = L.m_dim[2];
-            N3 = L.m_dim[3];
-        }
-        else if (dir / 2 == 1) {
-            N1 = L.m_dim[0];
-            N2 = L.m_dim[2];
-            N3 = L.m_dim[3];
-        }
-        else if (dir / 2 == 2) {
-            N1 = L.m_dim[0];
-            N2 = L.m_dim[1];
-            N3 = L.m_dim[3];
-        }
-        else {
-            N1 = L.m_dim[0];
-            N2 = L.m_dim[1];
-            N3 = L.m_dim[2];
-        }
-        // Loops over cube and checks that it has received the correct values
-        for (unsigned int i = 0; i < N1; i++) {
-            for (unsigned int j = 0; j < N2; j++) {
-                for (unsigned int k = 0; k < N3; k++) {
-                    if (dir / 2 == 0) { // x direction
-                        position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),i,j,k);
-                    } else if (dir / 2 == 1) { // y direction
-                        position = Parallel::Index::getIndex(i,(L.m_dim[1] - 1) * (dir % 2),j,k);
-                    } else if (dir / 2 == 2) { // z direction
-                        position = Parallel::Index::getIndex(i,j,(L.m_dim[2] - 1) * (dir % 2),k);
-                    } else if (dir / 2 == 3) { // t direction
-                        position = Parallel::Index::getIndex(i,j,k,(L.m_dim[3] - 1) * (dir % 2));
-                    }
-                    // Compares matrices at position.
-                    for (unsigned int iMat = 0; iMat < 18; iMat++) {
-                        if (L.m_sites[position].mat[iMat] != double(Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2))) {
-                            passed = false;
-                            exit(m_processRank);
-                            break;
+
+    if (Parallel::ParallelParameters::active) {
+        unsigned int position;
+        unsigned int N1,N2,N3;
+        Lattice<SU3>L;
+        L.allocate(m_dim);
+        for (int dir = 0; dir < 8; dir++) {
+            // Sets the lattice sites with the value of the processor they are running on.
+            for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++) {
+                L[iSite] = double(m_processRank);
+            }
+            if (dir % 2 == 0) {
+                // Backwards
+                L = shift(L,BACKWARDS,dir / 2);
+            } else {
+                // Forwards
+                L = shift(L,FORWARDS,dir / 2);
+            }
+            if (dir / 2 == 0) {
+                N1 = L.m_dim[1];
+                N2 = L.m_dim[2];
+                N3 = L.m_dim[3];
+            }
+            else if (dir / 2 == 1) {
+                N1 = L.m_dim[0];
+                N2 = L.m_dim[2];
+                N3 = L.m_dim[3];
+            }
+            else if (dir / 2 == 2) {
+                N1 = L.m_dim[0];
+                N2 = L.m_dim[1];
+                N3 = L.m_dim[3];
+            }
+            else {
+                N1 = L.m_dim[0];
+                N2 = L.m_dim[1];
+                N3 = L.m_dim[2];
+            }
+            // Loops over cube and checks that it has received the correct values
+            for (unsigned int i = 0; i < N1; i++) {
+                for (unsigned int j = 0; j < N2; j++) {
+                    for (unsigned int k = 0; k < N3; k++) {
+                        if (dir / 2 == 0) { // x direction
+                            position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),i,j,k);
+                        } else if (dir / 2 == 1) { // y direction
+                            position = Parallel::Index::getIndex(i,(L.m_dim[1] - 1) * (dir % 2),j,k);
+                        } else if (dir / 2 == 2) { // z direction
+                            position = Parallel::Index::getIndex(i,j,(L.m_dim[2] - 1) * (dir % 2),k);
+                        } else if (dir / 2 == 3) { // t direction
+                            position = Parallel::Index::getIndex(i,j,k,(L.m_dim[3] - 1) * (dir % 2));
                         }
+                        // Compares matrices at position.
+                        for (unsigned int iMat = 0; iMat < 18; iMat++) {
+                            if (L.m_sites[position].mat[iMat] != double(Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2))) {
+                                passed = false;
+                                exit(m_processRank);
+                                break;
+                            }
+                        }
+                        if (!passed) break;
                     }
-                    if (!passed) break;
                 }
             }
         }

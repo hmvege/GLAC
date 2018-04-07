@@ -2,6 +2,7 @@
 #define OBSERVABLESIO_H
 
 #include <string>
+#include <vector>
 
 namespace IO {
         void writeObservablesToFile(double acceptanceRate,
@@ -14,7 +15,7 @@ namespace IO {
         void writeFlowObservableToFile(double *observables,
                                        std::string observableName,
                                        unsigned int configNumber);
-        void writeMatrixToFile(double *observables, std::string observableName, unsigned int configNumber, unsigned int N);
+        void writeMatrixToFile(std::vector<double> observables, std::string observableName, unsigned int configNumber, unsigned int N);
 }
 
 #endif // OBSERVABLESIO_H

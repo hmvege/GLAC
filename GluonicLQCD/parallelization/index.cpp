@@ -1,7 +1,7 @@
 #include "index.h"
 
 std::vector<unsigned int> Parallel::Index::m_N;
-std::vector<unsigned int> Parallel::Index::m_NTot;
+std::vector<long long> Parallel::Index::m_NTot;
 
 Parallel::Index::Index()
 {
@@ -34,8 +34,8 @@ void Parallel::Index::setNTot(unsigned int NSpatial, unsigned int NTemporal)
      */
     m_NTot.resize(4);
     for (int i = 0; i < 3; i++) {
-        m_NTot[i] = (unsigned int) NSpatial;
+        m_NTot[i] = (long long) NSpatial;
     }
-    m_NTot[3] = (unsigned int) NTemporal;
+    m_NTot[3] = (long long) NTemporal;
 }
 

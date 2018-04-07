@@ -194,7 +194,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
     }
 }
 
-void Parallel::Communicator::reduceToTemporalDimension(double * obsResults, double * obs)
+void Parallel::Communicator::reduceToTemporalDimension(std::vector<double> &obsResults, double * obs)
 {
     /*
      * Reduces flow results in matrix format to a the temporal dimension
