@@ -33,6 +33,11 @@ PerformanceTests::PerformanceTests()
 
 }
 
+PerformanceTests::~PerformanceTests()
+{
+    delete m_SU3Generator;
+}
+
 void PerformanceTests::run()
 {
     /*

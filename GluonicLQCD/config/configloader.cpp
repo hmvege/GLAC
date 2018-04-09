@@ -31,7 +31,7 @@ namespace ConfigLoader {
         }
     }
 
-    void load(std::string jsonFileName)
+    void  load(std::string jsonFileName)
     {
         std::ifstream i(jsonFileName.c_str());
         json j;

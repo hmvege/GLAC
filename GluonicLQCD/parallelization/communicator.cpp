@@ -194,7 +194,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
     }
 }
 
-void Parallel::Communicator::reduceToTemporalDimension(std::vector<double> &obsResults, double * obs)
+void Parallel::Communicator::reduceToTemporalDimension(std::vector<double> &obsResults, std::vector<double> obs)
 {
     /*
      * Reduces flow results in matrix format to a the temporal dimension
@@ -403,7 +403,6 @@ void Parallel::Communicator::MPIExit(std::string message)
 {
     if (m_processRank == 0) printf("\n%s", message.c_str());
     freeMPIGroups();
-    setBarrier();
     MPI_Finalize();
     exit(0);
 }

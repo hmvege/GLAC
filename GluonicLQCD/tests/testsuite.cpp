@@ -261,6 +261,7 @@ TestSuite::TestSuite()
 }
 
 TestSuite::~TestSuite() {
+    delete m_SU3Generator;
 }
 
 void TestSuite::runFullTestSuite()

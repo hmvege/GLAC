@@ -162,7 +162,7 @@ void System::copyToFlowLattice()
      * Small function for copying the lattice to the flow lattice,
      * as we need to ensure the old lattice remains unchanged.
      */
-    for (unsigned int mu = 0; mu < 4; mu++) {
+    for (int mu = 0; mu < 4; mu++) {
         m_flowLattice[mu] = m_lattice[mu];
     }
 }
@@ -179,7 +179,7 @@ void System::latticeSetup()
                 // All starts with a completely random matrix.
                 for (int mu = 0; mu < 4; mu++)
                 {
-                    for (unsigned long int iSite = 0; iSite < m_subLatticeSize; iSite++)
+                    for (unsigned long iSite = 0; iSite < m_subLatticeSize; iSite++)
                     {
                         if (Parameters::getRSTHotStart())
                         {
@@ -193,7 +193,7 @@ void System::latticeSetup()
                 // Cold start: everything starts out at unity.
                 for (int mu = 0; mu < 4; mu++)
                 {
-                    for (unsigned long int iSite = 0; iSite < m_subLatticeSize; iSite++)
+                    for (unsigned long iSite = 0; iSite < m_subLatticeSize; iSite++)
                     {
                         m_lattice[mu][iSite].identity();
                     }
@@ -371,10 +371,52 @@ void System::runMetropolis()
             m_updateTime = duration_cast<duration<double>>(steady_clock::now() - m_preUpdate);
             m_updateStorer += m_updateTime.count();
         }
+
+        // TEST FOR LARGE LATTICE BUG HUNTING!!
+        for (unsigned int x = 0; x < m_N[0]; x++) {
+            for (unsigned int y = 0; y < m_N[1]; y++) {
+                for (unsigned int z = 0; z < m_N[2]; z++) {
+                    for (unsigned int t = 0; t < m_N[3]; t++) {
+                        for (unsigned int mu = 0; mu < 4; mu++) {
+                            for (unsigned int i = 0; i < 18; i++) {
+                                if (std::isnan(m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                                {
+                                    m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
+                                    if (m_processRank == 0) printf("\nConfiguration is corrupt in system right before copying to flow lattice\n");
+                                    exit(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // Flowing configuration
         if (m_NFlows != 0) {
             // Copys lattice into flow-lattice in order to avoid overwriting when generating configurations
             copyToFlowLattice();
+
+            // TEST FOR LARGE LATTICE BUG HUNTING!!
+            for (unsigned int x = 0; x < m_N[0]; x++) {
+                for (unsigned int y = 0; y < m_N[1]; y++) {
+                    for (unsigned int z = 0; z < m_N[2]; z++) {
+                        for (unsigned int t = 0; t < m_N[3]; t++) {
+                            for (unsigned int mu = 0; mu < 4; mu++) {
+                                for (unsigned int i = 0; i < 18; i++) {
+                                    if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                                    {
+                                        m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
+                                        if (m_processRank == 0) printf("\nConfiguration is corrupt in system right after copying to flow lattice\n");
+                                        exit(0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             flowConfiguration(iConfig);
         }
 
@@ -410,10 +452,12 @@ void System::runMetropolis()
                     for (unsigned int t = 0; t < m_N[3]; t++) {
                         for (unsigned int mu = 0; mu < 4; mu++) {
                             for (unsigned int i = 0; i < 18; i++) {
-                                if (std::isnan(m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))
+                                if (std::isnan(m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
                                 {
                                     m_lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                    Parallel::Communicator::MPIExit("\nConfiguration is corrupt.\n");
+                                    if (m_processRank == 0) printf("\nConfiguration is corrupt in system before write field to file\n");
+//                                    MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+                                    exit(0);
                                 }
                             }
                         }
@@ -453,6 +497,26 @@ void System::flowConfiguration(unsigned int iConfig)
      * Flows configuration, performs flow statistics and writes it to a file.
      */
 
+    // TEST FOR LARGE LATTICE BUG HUNTING!!
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
+                        for (unsigned int i = 0; i < 18; i++) {
+                            if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                            {
+                                printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", Parallel::Communicator::getProcessRank(),x,y,z,t,Parallel::Index::getIndex(x,y,z,t));
+                                if (m_processRank == 0) printf("\nConfiguration is corrupt at flowConfiguration pt 0.\n");
+                                exit(0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // After each configuration has been flowed, the values must be resetted.
     m_flowCorrelator->reset();
 
@@ -463,10 +527,12 @@ void System::flowConfiguration(unsigned int iConfig)
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
                         for (unsigned int i = 0; i < 18; i++) {
-                            if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))
+                            if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
                             {
-                                m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                Parallel::Communicator::MPIExit("\nConfiguration is corrupt.\n");
+                                printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", Parallel::Communicator::getProcessRank(),x,y,z,t,Parallel::Index::getIndex(x,y,z,t));
+                                if (m_processRank == 0) printf("\nConfiguration is corrupt at flowConfiguration pt 1.\n");
+//                                MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+                                exit(0);
                             }
                         }
                     }
@@ -488,10 +554,12 @@ void System::flowConfiguration(unsigned int iConfig)
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
                         for (unsigned int i = 0; i < 18; i++) {
-                            if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))
+                            if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
                             {
-                                m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                Parallel::Communicator::MPIExit("\nConfiguration is corrupt.\n");
+                                printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", Parallel::Communicator::getProcessRank(),x,y,z,t,Parallel::Index::getIndex(x,y,z,t));
+                                if (m_processRank == 0) printf("\nConfiguration is corrupt at flowConfiguration pt 2.\n");
+//                                MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+                                exit(0);
                             }
                         }
                     }
@@ -503,8 +571,68 @@ void System::flowConfiguration(unsigned int iConfig)
     // Runs the flow
     for (unsigned int iFlow = 0; iFlow < m_NFlows; iFlow++)
     {
+        // TEST FOR LARGE LATTICE BUG HUNTING!!
+        for (unsigned int x = 0; x < m_N[0]; x++) {
+            for (unsigned int y = 0; y < m_N[1]; y++) {
+                for (unsigned int z = 0; z < m_N[2]; z++) {
+                    for (unsigned int t = 0; t < m_N[3]; t++) {
+                        for (unsigned int mu = 0; mu < 4; mu++) {
+                            for (unsigned int i = 0; i < 18; i++) {
+                                if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                                {
+                                    printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", Parallel::Communicator::getProcessRank(),x,y,z,t,Parallel::Index::getIndex(x,y,z,t));
+                                    if (m_processRank == 0) printf("\nConfiguration is corrupt at flowConfiguration pt 2.5, before flow.\n");
+//                                    MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+                                    exit(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         m_flow->flowField(m_flowLattice);
+        // TEST FOR LARGE LATTICE BUG HUNTING!!
+        for (unsigned int x = 0; x < m_N[0]; x++) {
+            for (unsigned int y = 0; y < m_N[1]; y++) {
+                for (unsigned int z = 0; z < m_N[2]; z++) {
+                    for (unsigned int t = 0; t < m_N[3]; t++) {
+                        for (unsigned int mu = 0; mu < 4; mu++) {
+                            for (unsigned int i = 0; i < 18; i++) {
+                                if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                                {
+                                    printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", Parallel::Communicator::getProcessRank(),x,y,z,t,Parallel::Index::getIndex(x,y,z,t));
+                                    if (m_processRank == 0) printf("\nConfiguration is corrupt at flowConfiguration pt 2.5, after flow.\n");
+//                                    MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+                                    exit(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         m_flowCorrelator->calculate(m_flowLattice,iFlow + 1);
+        // TEST FOR LARGE LATTICE BUG HUNTING!!
+        for (unsigned int x = 0; x < m_N[0]; x++) {
+            for (unsigned int y = 0; y < m_N[1]; y++) {
+                for (unsigned int z = 0; z < m_N[2]; z++) {
+                    for (unsigned int t = 0; t < m_N[3]; t++) {
+                        for (unsigned int mu = 0; mu < 4; mu++) {
+                            for (unsigned int i = 0; i < 18; i++) {
+                                if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                                {
+                                    printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", Parallel::Communicator::getProcessRank(),x,y,z,t,Parallel::Index::getIndex(x,y,z,t));
+                                    if (m_processRank == 0) printf("\nConfiguration is corrupt at flowConfiguration pt 2.5, after flow and after correlator calculation.\n");
+//                                    MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+                                    exit(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if (Parameters::getVerbose()) {
             m_flowCorrelator->printObservable(iFlow + 1);
         }
@@ -517,10 +645,12 @@ void System::flowConfiguration(unsigned int iConfig)
                 for (unsigned int t = 0; t < m_N[3]; t++) {
                     for (unsigned int mu = 0; mu < 4; mu++) {
                         for (unsigned int i = 0; i < 18; i++) {
-                            if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))
+                            if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
                             {
-                                m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                Parallel::Communicator::MPIExit("\nConfiguration is corrupt.\n");
+                                printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", Parallel::Communicator::getProcessRank(),x,y,z,t,Parallel::Index::getIndex(x,y,z,t));
+                                if (m_processRank == 0) printf("\nConfiguration is corrupt at flowConfiguration pt 3.\n");
+//                                MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+                                exit(0);
                             }
                         }
                     }
@@ -531,6 +661,27 @@ void System::flowConfiguration(unsigned int iConfig)
 
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);
+
+    // TEST FOR LARGE LATTICE BUG HUNTING!!
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
+                        for (unsigned int i = 0; i < 18; i++) {
+                            if (std::isnan(m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || m_flowLattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                            {
+                                printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", Parallel::Communicator::getProcessRank(),x,y,z,t,Parallel::Index::getIndex(x,y,z,t));
+                                if (m_processRank == 0) printf("\nConfiguration is corrupt at flowConfiguration pt 4.\n");
+//                                MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+                                exit(0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 void System::loadConfigurationAndRunMetropolis()
@@ -564,8 +715,10 @@ void System::load(std::string configurationName)
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
     if (m_NFlows != 0 && !Parameters::getLoadConfigAndRun()) {
+        if (Parallel::Communicator::getProcessRank() == 0) cout << "\nLoading flow lattice @ line 606" << endl;
         IO::FieldIO::loadFieldConfiguration(configurationName,m_flowLattice);
     } else {
+        if (Parallel::Communicator::getProcessRank() == 0) cout << "\nLoading non-flow lattice @ line 609" << endl;
         IO::FieldIO::loadFieldConfiguration(configurationName,m_lattice);
     }
 }
@@ -589,8 +742,6 @@ void System::flowConfigurations()
     /*
      * Method for flowing several configurations given as a vector of strings.
      */
-
-
     // Loads the vector of configurations to flow.
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
     for (unsigned int i = 0; i < configurationNames.size(); i++) {
@@ -599,7 +750,7 @@ void System::flowConfigurations()
             load(configurationNames[i]);
         } else {
             loadChroma(configurationNames[i]);
-        }        
+        }
 
         // Prints a new header for each flow.
         if (Parallel::Communicator::getProcessRank() == 0 && Parameters::getVerbose()) {

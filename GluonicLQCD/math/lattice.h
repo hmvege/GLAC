@@ -432,7 +432,7 @@ inline Lattice<double> realTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
     /*
      * Function for multiplying lattice and taking the real trace without summing the matrix
      */
-    unsigned long int site = 0;
+    unsigned long site = 0;
     Lattice<double>latticeSum;
     latticeSum.allocate(L1.m_dim);
     latticeSum.zeros();

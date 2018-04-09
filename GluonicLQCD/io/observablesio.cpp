@@ -4,12 +4,13 @@
 #include <cmath>
 #include <fstream>
 #include <iomanip>
+#include <vector>
 
 void IO::writeObservablesToFile(double acceptanceRate,
                                 double averagedObservable,
                                 double varianceObservable,
                                 double stdObservable,
-                                double *observables,
+                                std::vector<double> observables,
                                 unsigned int NObs,
                                 std::string observableName)
 {
@@ -43,7 +44,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
     }
 }
 
-void IO::writeFlowObservableToFile(double *observables,
+void IO::writeFlowObservableToFile(std::vector<double> observables,
                                    std::string observableName,
                                    unsigned int configNumber)
 {

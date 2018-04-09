@@ -271,24 +271,16 @@ void MasterSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
     ///////////////////////////
     m_plaquette *= m_plaqMultiplicationFactor;
     (*m_plaqObservable)[iObs] = m_plaquette;
-//    MPI_Allreduce(&m_plaquette,&m_plaquette,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-//    m_plaquette /= double(Parallel::Communicator::getNumProc());
-//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nPlaquette           = %20.16f",m_plaquette);
 
     ///////////////////////////
     //// TOPOLOGICAL CHARGE ///
     ///////////////////////////
     m_topCharge *= m_topcMultiplicationFactor;
     (*m_topcObservable)[iObs] = m_topCharge;
-//    MPI_Allreduce(&m_topCharge,&m_topCharge,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nTopological charge  = %20.16f",m_topCharge);
 
     ///////////////////////////
     ///////// ENERGY //////////
     ///////////////////////////
     m_energy *= m_energyMultiplicationFactor;
     (*m_energyObservable)[iObs] = m_energy;
-//    MPI_Allreduce(&m_energy,&m_energy,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
-//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nEnergy              = %20.16f",m_energy);
-
 }

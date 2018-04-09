@@ -2,6 +2,7 @@
 #define OBSERVABLESTORER_H
 
 #include <string>
+#include <vector>
 
 class ObservableStorer
 {
@@ -17,8 +18,10 @@ private:
     double m_varianceObservable = 0;
     double m_averagedObservableSquared = 0;
     double m_stdObservable = 0;
-    double * m_observables;
-    double * m_observablesSquared;
+//    double * m_observables;
+//    double * m_observablesSquared;
+    std::vector<double> m_observables;
+    std::vector<double> m_observablesSquared;
 public:
     ObservableStorer(unsigned long int NSize);
     ~ObservableStorer();
@@ -38,7 +41,7 @@ public:
     void writeFlowObservableToFile(unsigned long int configNumber);
 
     // Getters
-    double *getObservableArray() { return m_observables; }
+    std::vector<double> getObservableArray() { return m_observables; }
     double getObservable(unsigned long int iObs) { return m_observables[iObs]; }
     std::string getObservableName() { return m_observableName; }
 

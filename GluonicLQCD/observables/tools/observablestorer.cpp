@@ -14,15 +14,17 @@ ObservableStorer::ObservableStorer(unsigned long int NSize)
      */
     m_NObs = NSize;
     // Initializes arrays for storing the observables
-    m_observables = new double[m_NObs];
-    m_observablesSquared = new double[m_NObs];
+//    m_observables = new double[m_NObs];
+//    m_observablesSquared = new double[m_NObs];
+    m_observables.resize(m_NObs);
+    m_observablesSquared.resize(m_NObs);
     for (unsigned long int iObs = 0; iObs < m_NObs; iObs++) m_observables[iObs] = 0;
 }
 
 ObservableStorer::~ObservableStorer()
 {
-    delete [] m_observables;
-    delete [] m_observablesSquared;
+//    delete [] m_observables;
+//    delete [] m_observablesSquared;
 }
 
 void ObservableStorer::gatherResults()
@@ -38,7 +40,7 @@ void ObservableStorer::gatherResults()
     }
 
     // Performing an average over the Monte Carlo obtained values
-    MPI_Reduce(m_observables, tempBuffer, m_NObs, MPI_DOUBLE, MPI_SUM, 0, Parallel::ParallelParameters::ACTIVE_COMM);
+    MPI_Reduce(&m_observables.front(), tempBuffer, m_NObs, MPI_DOUBLE, MPI_SUM, 0, Parallel::ParallelParameters::ACTIVE_COMM);
 
     // Retrieving observable from temporary buffer
     for (unsigned long int iBuffer = 0; iBuffer < m_NObs; iBuffer++) {

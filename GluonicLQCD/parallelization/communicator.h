@@ -53,7 +53,7 @@ public:
     static void freeMPIGroups();
 
     // MPI method for reducing to a single dimension
-    static void reduceToTemporalDimension(std::vector<double> &obsResults, double * obs);
+    static void reduceToTemporalDimension(std::vector<double> &obsResults, std::vector<double> obs);
 
     // Validity checkers
     static void checkProcessorValidity();

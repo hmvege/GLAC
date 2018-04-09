@@ -755,6 +755,9 @@ def main(args):
     load_parser.add_argument('-cfgnum', '--config_start_number',default=config_default["config_start_number"],      type=int, help='Starts naming the configuration from this number.')
     load_parser.add_argument('-rn', '--run_name',               default=False,                                      type=str, help='Specify the run name')
     load_parser.add_argument('-ex', '--exclude',                default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
+    load_parser.add_argument('-NUp', '--NUpdates',              default=False,                                      type=int, help='number of updates per link')
+    load_parser.add_argument('-NCor', '--NCor',                 default=False,                                      type=int, help='number of correlation updates to perform')
+
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
@@ -864,6 +867,10 @@ def main(args):
             configuration["NCf"] = args.NConfigs
         if args.NFlows != False:
             configuration["NFlows"] = args.NFlows
+        if args.NCor != False:
+            configuration["NCor"] = args.NCor
+        if args.NUpdates != False:
+            configuration["NUpdates"] = args.NUpdates
         if args.load_config_min_time_estimate != None:
             configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
         if args.load_config_hr_time_estimate != None:

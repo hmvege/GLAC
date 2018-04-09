@@ -14,11 +14,11 @@ namespace Parallel {
         ~Index();
 
         // Index getter
-        static inline unsigned long int cubeIndex(unsigned long int i, unsigned long int j, unsigned long int k, unsigned long int Ni, unsigned long int Nj) {
+        static inline unsigned long cubeIndex(unsigned long int i, unsigned long int j, unsigned long int k, unsigned long int Ni, unsigned long int Nj) {
             return i + Ni*(j + Nj*k);
         }
 
-        static inline unsigned long int getIndex(unsigned long int i, unsigned long int j, unsigned long int k, unsigned long int l) {
+        static inline unsigned long getIndex(unsigned int i, unsigned int j, unsigned int k, unsigned int l) {
             return i + m_N[0]*(j + m_N[1]*(k + m_N[2]*l));
         }
 

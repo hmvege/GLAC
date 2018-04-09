@@ -80,7 +80,7 @@ void Flow::setSU3ExpFunc()
 
 inline Lattice<SU3> Flow::matrixExp(const Lattice<SU3> &lattice)
 {
-    for (unsigned long int iSite = 0; iSite < lattice.m_latticeSize; iSite++) {
+    for (unsigned long iSite = 0; iSite < lattice.m_latticeSize; iSite++) {
         m_tempExpLattice.m_sites[iSite] = m_SU3ExpFunc->exp(lattice.m_sites[iSite]);
     }
     return m_tempExpLattice;
@@ -88,7 +88,7 @@ inline Lattice<SU3> Flow::matrixExp(const Lattice<SU3> &lattice)
 
 inline Lattice<SU3> Flow::matrixExp(Lattice<SU3> &&lattice)
 {
-    for (unsigned long int iSite = 0; iSite < lattice.m_latticeSize; iSite++) {
+    for (unsigned long iSite = 0; iSite < lattice.m_latticeSize; iSite++) {
         m_tempExpLattice.m_sites[iSite] = m_SU3ExpFunc->exp(lattice.m_sites[iSite]);
     }
     return m_tempExpLattice;

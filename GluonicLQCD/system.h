@@ -52,7 +52,7 @@ private:
     void subLatticeSetup();
 
     // Lattice variables
-    Lattice<SU3> *m_lattice;
+    Lattice<SU3> * m_lattice;
     SU3 m_updatedMatrix;
 
     // Time counting
