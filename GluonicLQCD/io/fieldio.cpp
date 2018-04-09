@@ -170,22 +170,16 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
                         nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
                         offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size;
                         MPI_File_read_at(file, offset, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
-
-                        if (Parameters::getDebug()) {
-                            for (unsigned long int i = 0; i < 18; i++) {
-                                if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
-                                {
-                                    lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                    if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration is corrupt in load field\n");
-                                    exit(0);
-                                }
-                            }
-                        }
                     }
                 }
             }
         }
     }
+
+    if (Parameters::getDebug()) {
+        Parallel::Communicator::checkLattice(lattice, "Configuration is corrupt in IO::FieldIO load field after loaded");
+    }
+
     MPI_File_close(&file);
     if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration %s loaded", fname.c_str());
 }
