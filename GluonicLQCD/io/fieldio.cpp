@@ -50,25 +50,9 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
 
     std::string filenamePath = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/" + filename;
 
-    // TEST FOR LARGE LATTICE BUG HUNTING!!
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        for (unsigned int i = 0; i < 18; i++) {
-                            if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
-                            {
-                                lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration is corrupt in write field before\n");
-//                                MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
-                                exit(0);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+
+    if (Parameters::getDebug()) {
+        Parallel::Communicator::checkLattice(lattice, "Configuration is corrupt in IO::FieldIO write field before");
     }
 
     MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
@@ -93,25 +77,8 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
     }
     MPI_File_close(&file);
 
-    // TEST FOR LARGE LATTICE BUG HUNTING!!
-    for (unsigned int x = 0; x < m_N[0]; x++) {
-        for (unsigned int y = 0; y < m_N[1]; y++) {
-            for (unsigned int z = 0; z < m_N[2]; z++) {
-                for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
-                        for (unsigned int i = 0; i < 18; i++) {
-                            if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
-                            {
-                                lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration is corrupt in write field after\n");
-//                                MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
-                                exit(0);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    if (Parameters::getDebug()) {
+        Parallel::Communicator::checkLattice(lattice, "Configuration is corrupt in IO::FieldIO write field after");
     }
 
     if (Parallel::Communicator::getProcessRank() == 0) {
@@ -204,14 +171,14 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
                         offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size;
                         MPI_File_read_at(file, offset, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
 
-                        // Temp. checking for loading file! //
-                        for (unsigned long int i = 0; i < 18; i++) {
-                            if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
-                            {
-                                lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration is corrupt in load field\n");
-//                                MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
-                                exit(0);
+                        if (Parameters::getDebug()) {
+                            for (unsigned long int i = 0; i < 18; i++) {
+                                if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                                {
+                                    lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
+                                    if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration is corrupt in load field\n");
+                                    exit(0);
+                                }
                             }
                         }
                     }
@@ -258,11 +225,14 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
                             offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size + i*sizeof(double);
                             MPI_File_read_at(file, offset, &temp, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
                             lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] = reverseDouble(temp);
-                            // Checking for corruption
-                            if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))
-                            {
-                                lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                Parallel::Communicator::MPIExit("\nConfiguration is corrupt.\n");
+
+                            if (Parameters::getDebug()) {
+                                // Checking for corruption
+                                if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))
+                                {
+                                    lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
+                                    Parallel::Communicator::MPIExit("\nConfiguration is corrupt.\n");
+                                }
                             }
                         }
                     }

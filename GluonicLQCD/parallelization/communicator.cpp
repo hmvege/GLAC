@@ -427,3 +427,29 @@ void Parallel::Communicator::setN(std::vector<unsigned int> N)
         m_N[i] = N[i];
     }
 }
+
+void Parallel::Communicator::checkLattice(Lattice<SU3> *lattice, std::string message)
+{
+    /*
+     * Test for bug hunting in a large lattice.
+     */
+    for (unsigned int x = 0; x < m_N[0]; x++) {
+        for (unsigned int y = 0; y < m_N[1]; y++) {
+            for (unsigned int z = 0; z < m_N[2]; z++) {
+                for (unsigned int t = 0; t < m_N[3]; t++) {
+                    for (unsigned int mu = 0; mu < 4; mu++) {
+                        for (unsigned int i = 0; i < 18; i++) {
+                            if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                            {
+                                printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", m_processRank, x, y, z, t, Parallel::Index::getIndex(x,y,z,t));
+                                lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
+                                if (m_processRank == 0) printf("\n%s\n", message.c_str());
+                                exit(0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

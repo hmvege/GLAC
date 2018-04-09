@@ -18,8 +18,6 @@ private:
     double m_varianceObservable = 0;
     double m_averagedObservableSquared = 0;
     double m_stdObservable = 0;
-//    double * m_observables;
-//    double * m_observablesSquared;
     std::vector<double> m_observables;
     std::vector<double> m_observablesSquared;
 public:

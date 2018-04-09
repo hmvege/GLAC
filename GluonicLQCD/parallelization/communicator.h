@@ -59,6 +59,9 @@ public:
     static void checkProcessorValidity();
     static void checkSubLatticeDimensionsValidity();
     static void checkSubLatticeValidity();
+
+    // Function used for bug testing
+    static void checkLattice(Lattice<SU3> *lattice, std::string message);
 };
 }
 

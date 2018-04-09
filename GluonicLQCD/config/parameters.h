@@ -93,6 +93,9 @@ private:
     // Integer for storing the sampling frequency
     static int m_samplingFrequency;
 
+    // Debug parameter
+    static bool m_debug;
+
     static double calculateLatticeSpacing(double beta);
 public:
     Parameters();
@@ -171,6 +174,9 @@ public:
     // Setter for the sampling frequency
     static void setSamplingFrequency(int samplingFrequency) { m_samplingFrequency = samplingFrequency; }
 
+    // Getter for debug parameter
+    static void setDebug(bool debug) { m_debug = debug; }
+
     /////////////////
     //// Getters ////
     /////////////////
@@ -244,6 +250,9 @@ public:
 
     // Getter for field density sampling frequency
     static int getSamplingFrequency() { return m_samplingFrequency; }
+
+    // Getter for debug parameter
+    static bool getDebug() { return m_debug; }
 };
 
 #endif // PARAMETERS_H

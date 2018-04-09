@@ -114,6 +114,9 @@ namespace ConfigLoader {
         Parameters::setNDerivaitveTests(j["NDerivativeTests"]);
         Parameters::setTaylorPolDegree(j["TaylorPolDegree"]);
 
+        // Sets debug variable
+        Parameters::setDebug(j["debug"]);
+
         // Checking if we have provideda gauge field to test
         std::string test_gauge_field = j["uTestFieldGaugeInvarince"];
         if (test_gauge_field.length() != 0) {

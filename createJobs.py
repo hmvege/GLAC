@@ -266,6 +266,9 @@ class JobCreator:
         json_dict["randomMatrixSeed"] = config_dict["randomMatrixSeed"]
         json_dict["samplingFrequency"] = config_dict["samplingFrequency"]
 
+        # Debugger
+        json_dict["debug"] = config_dict["debug"]
+
         # Source
         json_fpath = os.path.join(self.base_folder, "input", self.json_file_name)
 
@@ -658,6 +661,7 @@ def main(args):
         "threads"                   : 64,
         "scalar_fields_folders"     : False,
         "samplingFrequency"         : 25,
+        "debug"                     : False,
         "cpu_approx_runtime_hr"     : 2,
         "cpu_approx_runtime_min"    : 0,
         "cpu_memory"                : 3800,
@@ -734,6 +738,9 @@ def main(args):
     job_parser.add_argument('-lcfgr', '--load_config_and_run',  default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
     job_parser.add_argument('-cfgnum', '--config_start_number', default=config_default["config_start_number"],      type=int, help='Starts naming the configuration from this number.')
 
+    # Debug option
+    job_parser.add_argument('--debug',                          default=config_default["debug"],                    action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
+
     ######## Abel specific commands ########
     job_parser.add_argument('--cpu_memory',                     default=config_default["cpu_memory"],               type=int, help='CPU memory to be allocated to each core')
     job_parser.add_argument('--account_name',                   default=config_default["account_name"],             type=str, help='Account name associated to the abel cluster')
@@ -757,6 +764,7 @@ def main(args):
     load_parser.add_argument('-ex', '--exclude',                default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
     load_parser.add_argument('-NUp', '--NUpdates',              default=False,                                      type=int, help='number of updates per link')
     load_parser.add_argument('-NCor', '--NCor',                 default=False,                                      type=int, help='number of correlation updates to perform')
+    load_parser.add_argument('--debug',                         default=False,                                      action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
 
 
     ######## Unit test parser ########
@@ -806,6 +814,9 @@ def main(args):
     field_density_parser.add_argument('-bf', '--base_folder',  default=config_default["base_folder"],              type=str, help='Sets the base folder. Default is os.path.getcwd().')
     field_density_parser.add_argument('-sf', '--samplingFrequency', default=config_default["samplingFrequency"],   type=int, help='Sets the sampling frequency of the flow. Lattice to be written to file every given number.')
     field_density_parser.add_argument('-vr', '--verboseRun',   default=config_default["verboseRun"],               action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
+    
+    # Debug variables
+    field_density_parser.add_argument('--debug',               default=config_default["debug"],                    action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
 
     args = parser.parse_args()
 
@@ -878,10 +889,11 @@ def main(args):
         if args.no_flow:
             configuration["NFlows"] = 0
             configuration["flowObservables"] = []
+        if args.debug != False:
+            configuration["debug"] = args.debug
         for key in config_default.keys():
             if not key in configuration:
                 configuration[key] = config_default[key]
-
 
         configuration["config_start_number"] = args.config_start_number
 
@@ -922,6 +934,7 @@ def main(args):
         config_default["account_name"]              = args.account_name
         config_default["cpu_memory"]                = args.cpu_memory
         config_default["base_folder"]               = args.base_folder
+        config_default["debug"]                     = args.debug
 
         # Non-trivial default values
         if args.subDims:
@@ -1070,6 +1083,8 @@ def main(args):
 
         # Sets the number of configurations to run for to be zero just in case
         configuration["NCf"] = 0
+
+        configuration["debug"] = args.debug
 
         # Requiring an new estimate of the run time if we are flowing
         _config_path, _config_file = os.path.split(args.load_configuration)

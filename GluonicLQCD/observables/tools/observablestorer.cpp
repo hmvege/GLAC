@@ -13,18 +13,15 @@ ObservableStorer::ObservableStorer(unsigned long int NSize)
      *  NSize: the number of observables we will sample.
      */
     m_NObs = NSize;
+
     // Initializes arrays for storing the observables
-//    m_observables = new double[m_NObs];
-//    m_observablesSquared = new double[m_NObs];
     m_observables.resize(m_NObs);
     m_observablesSquared.resize(m_NObs);
-    for (unsigned long int iObs = 0; iObs < m_NObs; iObs++) m_observables[iObs] = 0;
+    for (unsigned long iObs = 0; iObs < m_NObs; iObs++) m_observables[iObs] = 0;
 }
 
 ObservableStorer::~ObservableStorer()
 {
-//    delete [] m_observables;
-//    delete [] m_observablesSquared;
 }
 
 void ObservableStorer::gatherResults()
@@ -32,10 +29,12 @@ void ObservableStorer::gatherResults()
     /*
      * Gather all observable data from all of the processors
      */
+
     // Temporary buffer for summing the observables
     double tempBuffer[m_NObs];
 
-    for (unsigned long int iObs = 0; iObs < m_NObs; iObs++) {
+    for (unsigned long iObs = 0; iObs < m_NObs; iObs++)
+    {
         tempBuffer[iObs] = 0;
     }
 
@@ -43,14 +42,17 @@ void ObservableStorer::gatherResults()
     MPI_Reduce(&m_observables.front(), tempBuffer, m_NObs, MPI_DOUBLE, MPI_SUM, 0, Parallel::ParallelParameters::ACTIVE_COMM);
 
     // Retrieving observable from temporary buffer
-    for (unsigned long int iBuffer = 0; iBuffer < m_NObs; iBuffer++) {
+    for (unsigned long iBuffer = 0; iBuffer < m_NObs; iBuffer++)
+    {
         m_observables[iBuffer] = tempBuffer[iBuffer];
     }
 
     // Normalizing by the number of processors if specified
-    if (m_normalizeObservableByProcessor) {
+    if (m_normalizeObservableByProcessor)
+    {
         double numprocs = double(Parallel::Communicator::getNumProc());
-        for (unsigned long int i = 0; i < m_NObs; i++) {
+        for (unsigned long  i = 0; i < m_NObs; i++)
+        {
             m_observables[i] /= double(numprocs);
         }
     }
@@ -62,11 +64,13 @@ void ObservableStorer::runStatistics()
      * Performs the statistics on the observables.
      * Best used in conjecture with ObservableStorer::gatherResults().
      */
-    for (unsigned long int i = 0; i < m_NObs; i++) {
+    for (unsigned long i = 0; i < m_NObs; i++)
+    {
         m_observablesSquared[i] = m_observables[i]*m_observables[i];
     }
+
     // Gets average of the observable
-    for (unsigned long int i = 0; i < m_NObs; i++)
+    for (unsigned long i = 0; i < m_NObs; i++)
     {
         m_averagedObservable += m_observables[i];
         m_averagedObservableSquared += m_observablesSquared[i];
@@ -113,7 +117,7 @@ void ObservableStorer::reset()
     /*
      * Sets all the observables to zero. A must-have when flowing.
      */
-    for (unsigned long int i = 0; i < m_NObs; i++)
+    for (unsigned long i = 0; i < m_NObs; i++)
     {
         m_observables[i] = 0;
         m_observablesSquared[i] = 0;

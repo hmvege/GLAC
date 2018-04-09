@@ -12,14 +12,9 @@ private:
     // Action based constants
     double m_beta;
     double m_multiplicationFactor;
-//    SU3 m_staple, m_X, m_staple1, m_staple2;
     SU3 m_staple, m_staple1, m_staple2;
     Lattice<SU3> m_latticeStaple,m_tempStaple1,m_tempStaple2;
     Lattice<double> m_tempDiag;
-    // FOR ALTERNATIVE DERIVATIVE METHOD!
-//    SU3 Q, C, Omega;
-//    double tempDiag;
-
 public:
     WilsonGaugeAction();
     ~WilsonGaugeAction();

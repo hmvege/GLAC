@@ -24,6 +24,7 @@ MasterSampler::MasterSampler(bool flow) : Correlator()
 
 MasterSampler::~MasterSampler()
 {
+    // Freeing class specific observable
     delete m_plaqObservable;
     delete m_topcObservable;
     delete m_energyObservable;

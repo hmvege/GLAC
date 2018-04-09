@@ -36,6 +36,7 @@ MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
 
 MasterSamplerTopcXYZ::~MasterSamplerTopcXYZ()
 {
+    // Freeing class specific observable
     delete m_plaqObservable;
     delete m_topcObservable;
     delete m_energyObservable;

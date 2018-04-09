@@ -27,6 +27,7 @@ private:
     void testDerivativeTimeAndAccuracy(unsigned long int NTests);
 public:
     PerformanceTests();
+    ~PerformanceTests();
 
     void run();
 };

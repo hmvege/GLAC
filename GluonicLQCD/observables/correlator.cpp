@@ -21,6 +21,7 @@ Correlator::Correlator()
 
 Correlator::~Correlator()
 {
+    // Freeing observable storage container
     delete m_observable;
 }
 
@@ -45,10 +46,14 @@ double Correlator::getObservable(unsigned int iObs)
 
 void Correlator::printObservable(unsigned int iObs)
 {
-    if (Parallel::Communicator::getProcessRank() == 0) {
-        if (!m_storeFlowObservable) {
+    if (Parallel::Communicator::getProcessRank() == 0)
+    {
+        if (!m_storeFlowObservable)
+        {
             printf("%-*.8f",m_headerWidth,(*m_observable)[iObs]);
-        } else {
+        }
+        else
+        {
             printf("\n%-4d %-*.8f",iObs,m_headerWidth,(*m_observable)[iObs]);
         }
     }

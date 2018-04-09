@@ -85,6 +85,9 @@ int Parameters::m_configStartNumber = 0;
 // Parameter for storing the sampling frequency of the field
 int Parameters::m_samplingFrequency = 25;
 
+// Debug parameter
+bool Parameters::m_debug = false;
+
 Parameters::Parameters()
 {
 

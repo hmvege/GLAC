@@ -32,6 +32,7 @@ LatticeActionChargeDensity::LatticeActionChargeDensity(bool flow) : Correlator()
 
 LatticeActionChargeDensity::~LatticeActionChargeDensity()
 {
+    // Freeing class specific observable
     delete m_plaqObservable;
     delete m_topcObservable;
     delete m_energyObservable;
