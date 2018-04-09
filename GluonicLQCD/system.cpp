@@ -537,10 +537,10 @@ void System::load(std::string configurationName)
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
     if (m_NFlows != 0 && !Parameters::getLoadConfigAndRun()) {
-        if (Parallel::Communicator::getProcessRank() == 0) cout << "\nLoading flow lattice @ line 606" << endl;
+        if (Parallel::Communicator::getProcessRank() == 0) cout << "\nLoading flow lattice @ line 540" << endl;
         IO::FieldIO::loadFieldConfiguration(configurationName,m_flowLattice);
     } else {
-        if (Parallel::Communicator::getProcessRank() == 0) cout << "\nLoading non-flow lattice @ line 609" << endl;
+        if (Parallel::Communicator::getProcessRank() == 0) cout << "\nLoading non-flow lattice @ line 543" << endl;
         IO::FieldIO::loadFieldConfiguration(configurationName,m_lattice);
     }
 }

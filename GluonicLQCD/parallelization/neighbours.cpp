@@ -6,7 +6,7 @@ int Parallel::Neighbours::m_Nx = 0;
 int Parallel::Neighbours::m_Ny = 0;
 int Parallel::Neighbours::m_Nz = 0;
 int Parallel::Neighbours::m_Nt = 0; // Prosessors per dimension
-int Parallel::Neighbours::m_P[4]; // Prosessor coordinate
+long Parallel::Neighbours::m_P[4]; // Prosessor coordinate
 std::vector<NeighbourList> Parallel::Neighbours::m_neighbourLists;
 
 Parallel::Neighbours::Neighbours()
@@ -26,10 +26,10 @@ void Parallel::Neighbours::initialize(int processRank, int numproc, int * proces
     m_Nt = processorsPerDim[3];
     m_neighbourLists.resize(m_numproc);
     generateNeighbourList();
-    m_P[0] = processRank % m_Nx;
-    m_P[1] = (processRank / m_Nx) % m_Ny;
-    m_P[2] = (processRank / (m_Nx * m_Ny)) % m_Nz;
-    m_P[3] = (processRank / (m_Nx * m_Ny * m_Nz)) % m_Nt;
+    m_P[0] = (long) processRank % m_Nx;
+    m_P[1] = (long) (processRank / m_Nx) % m_Ny;
+    m_P[2] = (long) (processRank / (m_Nx * m_Ny)) % m_Nz;
+    m_P[3] = (long) (processRank / (m_Nx * m_Ny * m_Nz)) % m_Nt;
 }
 
 void Parallel::Neighbours::generateNeighbourList()

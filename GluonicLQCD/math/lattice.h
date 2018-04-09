@@ -14,7 +14,7 @@ class Lattice
 public:
     std::vector<T> m_sites;
     std::vector<unsigned int> m_dim; // Lattice dimensions
-    unsigned long int m_latticeSize;
+    unsigned long m_latticeSize;
 
     // Default contructors
     Lattice() { }
@@ -59,7 +59,15 @@ public:
     void allocate(std::vector<unsigned int> dim);
 
     // Overloading lattice position getter
-    T &operator[](unsigned int i) { return m_sites[i]; }
+//    T &operator[](unsigned int i) { return m_sites[i]; }
+    T &operator[](unsigned long i) {
+        if (i >= m_latticeSize) {
+            printf("OUT OF BUNDS WITH INDEX %lu of %lu", i, m_latticeSize);
+            exit(1);
+        }
+        return m_sites[i];
+    }
+
     // Overloading lattice operations
     Lattice<T> &operator+=(Lattice<T>& B);
     Lattice<T> &operator+=(Lattice<T>&& B);

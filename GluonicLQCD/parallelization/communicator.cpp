@@ -384,7 +384,11 @@ void Parallel::Communicator::initializeSubLattice()
 
 void Parallel::Communicator::setBarrier()
 {
-    MPI_Barrier(MPI_COMM_WORLD);
+    if (Parallel::ParallelParameters::ACTIVE_COMM != MPI_COMM_NULL) {
+        MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
+    } else {
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
 }
 
 void Parallel::Communicator::freeMPIGroups()
@@ -402,6 +406,7 @@ void Parallel::Communicator::freeMPIGroups()
 void Parallel::Communicator::MPIExit(std::string message)
 {
     if (m_processRank == 0) printf("\n%s", message.c_str());
+    setBarrier();
     freeMPIGroups();
     MPI_Finalize();
     exit(0);
@@ -443,8 +448,7 @@ void Parallel::Communicator::checkLattice(Lattice<SU3> *lattice, std::string mes
                             {
                                 printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", m_processRank, x, y, z, t, Parallel::Index::getIndex(x,y,z,t));
                                 lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                if (m_processRank == 0) printf("\n%s\n", message.c_str());
-                                exit(0);
+                                Parallel::Communicator::MPIExit(message);
                             }
                         }
                     }

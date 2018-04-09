@@ -11,7 +11,7 @@ private:
     static int m_processRank;
     static int m_numproc;
     static int m_Nx, m_Ny, m_Nz, m_Nt; // Prosessors per dimension
-    static int m_P[4]; // Prosessor coordinate
+    static long m_P[4]; // Prosessor coordinate
     static void generateNeighbourList();
     static std::vector<NeighbourList> m_neighbourLists;
 
@@ -104,7 +104,7 @@ public:
     // Getters
     static NeighbourList* getNeighbours(int Np);
     static int getListLength() { return m_numproc; }
-    static int getProcessorDimensionPosition(int dim) { return m_P[dim]; }
+    static long getProcessorDimensionPosition(int dim) { return m_P[dim]; }
 };
 }
 

@@ -6,6 +6,9 @@ output/*
 *.txt
 *.dat
 
+# Binary files
+*.bin
+
 # Numpy binary
 *.npy
 

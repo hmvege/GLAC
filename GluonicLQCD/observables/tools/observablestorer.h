@@ -13,7 +13,7 @@ private:
     bool m_normalizeObservableByProcessor = false;
 
     // Observable data
-    unsigned long int m_NObs;
+    unsigned long m_NObs;
     double m_averagedObservable = 0;
     double m_varianceObservable = 0;
     double m_averagedObservableSquared = 0;
@@ -25,7 +25,8 @@ public:
     ~ObservableStorer();
 
     // Accessor for the observable
-    double &operator[](unsigned long int iObs) { return m_observables[iObs]; }
+    double &operator[](unsigned long int iObs) { return m_observables.at(iObs); }
+//    double &operator[](unsigned long int iObs) { return m_observables[iObs]; }
 
     // Runs statistics, perhaps create its own class? But that increases overhead, so maybe not
     void gatherResults();
