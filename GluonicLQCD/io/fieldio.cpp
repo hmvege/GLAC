@@ -55,7 +55,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
         Parallel::Communicator::checkLattice(lattice, "Configuration is corrupt in IO::FieldIO write field before");
     }
 
-    MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
     long long nt = 0, nz = 0, ny = 0, nx = 0;
     MPI_Offset offset = 0;
 
@@ -110,7 +110,7 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned int 
     std::string filenamePath = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName()
                                                          + "/scalar_fields/" + observable + "/" + filename;
 
-    MPI_File_open(MPI_COMM_SELF, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 
     long long nt = 0, nz = 0, ny = 0, nx = 0;
     MPI_Offset offset = 0;
@@ -150,8 +150,6 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
     // Sets up file name
     std::string fname = Parameters::getFilePath() + Parameters::getInputFolder() + filename;
 
-    if (Parallel::Communicator::getProcessRank()==0) cout << "Loading file " << fname << endl;
-
     // Checks if file we are trying to load exists or not
     if (!check_file_existence(fname.c_str())) {
         Parallel::Communicator::MPIExit("File " + fname + " does not exist");
@@ -159,7 +157,7 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
 
     MPI_Offset offset = 0;
 
-    MPI_File_open(MPI_COMM_SELF, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     long long nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (long long mu = 0; mu < 4; mu++) {
@@ -174,26 +172,21 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
                         offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size;
                         MPI_File_read_at(file, offset, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
 
-                        // TEMP!
-                        for (unsigned int i = 0; i < 18; i++) {
-                            if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
-                            {
-                                printf("\nCorruption in loading: Proc: %d Pos: %lld %lld %lld %lld index: %lu\n", Parallel::Communicator::getProcessRank(), x, y, z, t, Parallel::Index::getIndex(x,y,z,t));
-                                lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                exit(0);
-//                                break;
+                        if (Parameters::getDebug()) { // TEMP!
+                            for (unsigned int i = 0; i < 18; i++) {
+                                if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
+                                {
+                                    printf("\nCorruption in loading: Proc: %d Pos: %lld %lld %lld %lld index: %lu\n", Parallel::Communicator::getProcessRank(), x, y, z, t, Parallel::Index::getIndex(x,y,z,t));
+                                    lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
+                                    exit(0);
+                                }
                             }
                         }
                     }
                 }
             }
-            if (Parallel::Communicator::getProcessRank() == 0) printf("\n%lld %.2f", mu, double(t)/double(m_N[3]));
         }
     }
-
-    printf("\nDEBUGGING at processor %d...", Parallel::Communicator::getProcessRank());
-    Parallel::Communicator::MPIExit("Done loading");
-
 
     if (Parameters::getDebug()) {
         Parallel::Communicator::checkLattice(lattice, "Configuration is corrupt in IO::FieldIO load field after loaded");
@@ -220,7 +213,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
         Parallel::Communicator::MPIExit("File " + fname + " does not exist");
     }
 
-    MPI_File_open(MPI_COMM_SELF, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+    MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
     long long nt = 0, nz = 0, ny = 0, nx = 0;
     MPI_Offset offset = 0;
 

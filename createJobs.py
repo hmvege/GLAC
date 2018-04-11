@@ -413,8 +413,10 @@ class JobCreator:
             content += "\n#PBS -N {0:<s}".format(job_name)
             content += "\n#PBS -M h.m.m.vege@fys.uio.no"
             content += "\n#PBS -m bea"
-            content += "\nmodule load GNU/6.2"
-            content += "\nmodule load OpenMPI/2.0.2"
+            # content += "\nmodule load GNU/6.2"
+            # content += "\nmodule load OpenMPI/2.0.2"
+            content += "\nmodule load GNU/4.9"
+            content += "\nmodule load OpenMPI/1.10.0"
             #content += "\nmodule load Qt/5.6.2"
 
         elif system == "local":
@@ -425,17 +427,13 @@ class JobCreator:
         # Setting run-command
         if not system == "laconia":
             run_command = "mpirun -n {0:<d}".format(threads)
-            run_command += " "
-            run_command += os.path.join(self.CURRENT_PATH, binary_filename)
-            run_command += " "
-            run_command += os.path.join(self.base_folder, "input", self.json_file_name)
-
         else :
             run_command = "mpirun -np {0:<d}".format(threads)
-            run_command += " "
-            run_command += os.path.join(self.CURRENT_PATH, binary_filename)
-            run_command += " "
-            run_command += os.path.join(self.base_folder, "input", self.json_file_name)
+
+        run_command += " "
+        run_command += os.path.join(self.CURRENT_PATH, binary_filename)
+        run_command += " "
+        run_command += os.path.join(self.base_folder, "input", self.json_file_name)
 
         content += "\n" + run_command
 

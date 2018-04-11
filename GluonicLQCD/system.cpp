@@ -267,8 +267,8 @@ void System::thermalize()
         // Print correlator every somehting or store them all(useful when doing the thermalization).
         if (m_storeThermalizationObservables) {
             // Calculating the correlator
-            m_correlator->calculate(m_lattice,iTherm);
-            if (m_processRank == 0) printf("\n%-4d ",iTherm);
+            m_correlator->calculate(m_lattice, iTherm);
+            if (m_processRank == 0) printf("\n%-4d ", iTherm);
             m_correlator->printObservable(iTherm);
         }
     }
@@ -280,10 +280,10 @@ void System::thermalize()
 
     // Taking the average of the acceptance rate across the processors.
     if (m_NTherm != 0) {
-        MPI_Allreduce(&m_acceptanceScore,&m_acceptanceScore,1,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
+        MPI_Allreduce(&m_acceptanceScore, &m_acceptanceScore, 1, MPI_DOUBLE, MPI_SUM, Parallel::ParallelParameters::ACTIVE_COMM);
         // Printing post-thermalization correlator and acceptance rate
         if (m_processRank == 0) {
-            printf("\nTermalization complete. Acceptance rate: %f",m_acceptanceScore/double(m_NTherm));
+            printf("\nTermalization complete. Acceptance rate: %f", m_acceptanceScore/double(m_NTherm));
         }
     }
 }
@@ -425,7 +425,7 @@ void System::runMetropolis()
     }
 
     // Taking the average of the acceptance rate across the processors.
-    MPI_Allreduce(&m_acceptanceScore,&m_acceptanceScore,1,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
+    MPI_Allreduce(&m_acceptanceScore, &m_acceptanceScore, 1, MPI_DOUBLE, MPI_SUM, Parallel::ParallelParameters::ACTIVE_COMM);
     if (m_processRank == 0) {
         printf("\n");
         SysPrint::printLine();
@@ -537,10 +537,8 @@ void System::load(std::string configurationName)
     m_systemIsThermalized = true;
     m_storeThermalizationObservables = false;
     if (m_NFlows != 0 && !Parameters::getLoadConfigAndRun()) {
-        if (Parallel::Communicator::getProcessRank() == 0) cout << "\nLoading flow lattice @ line 540" << endl;
         IO::FieldIO::loadFieldConfiguration(configurationName,m_flowLattice);
     } else {
-        if (Parallel::Communicator::getProcessRank() == 0) cout << "\nLoading non-flow lattice @ line 543" << endl;
         IO::FieldIO::loadFieldConfiguration(configurationName,m_lattice);
     }
 }

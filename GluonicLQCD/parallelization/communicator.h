@@ -49,6 +49,7 @@ public:
     static void MPIExit(std::string message);
     static void MPIPrint(std::string message);
     static void setBarrier();
+    static void setBarrierActive();
     static void gatherDoubleResults(double * data, unsigned int N);
     static void freeMPIGroups();
 

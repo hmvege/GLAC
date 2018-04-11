@@ -291,15 +291,15 @@ void Parallel::Communicator::init(int *numberOfArguments, char ***cmdLineArgumen
     m_numprocs = maxProcRank;
 
     // Creating world group
-    MPI_Comm_group(MPI_COMM_WORLD,&Parallel::ParallelParameters::WORLD_GROUP);
+    MPI_Comm_group(MPI_COMM_WORLD, &Parallel::ParallelParameters::WORLD_GROUP);
 
     // Create group based on active processors
     int activeProcs[m_numprocs];
     for (int i = 0; i < m_numprocs; i++) activeProcs[i] = i;
-    MPI_Group_incl(Parallel::ParallelParameters::WORLD_GROUP,m_numprocs,activeProcs,&Parallel::ParallelParameters::ACTIVE_GROUP);
+    MPI_Group_incl(Parallel::ParallelParameters::WORLD_GROUP, m_numprocs,activeProcs, &Parallel::ParallelParameters::ACTIVE_GROUP);
 
     // Creates a new communications group for all the active processors
-    MPI_Comm_create_group(MPI_COMM_WORLD,Parallel::ParallelParameters::ACTIVE_GROUP,0,&Parallel::ParallelParameters::ACTIVE_COMM);
+    MPI_Comm_create_group(MPI_COMM_WORLD, Parallel::ParallelParameters::ACTIVE_GROUP, 0, &Parallel::ParallelParameters::ACTIVE_COMM);
 
     checkProcessorValidity();
 }
@@ -384,11 +384,12 @@ void Parallel::Communicator::initializeSubLattice()
 
 void Parallel::Communicator::setBarrier()
 {
-    if (Parallel::ParallelParameters::ACTIVE_COMM != MPI_COMM_NULL) {
-        MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
-    } else {
-        MPI_Barrier(MPI_COMM_WORLD);
-    }
+    MPI_Barrier(MPI_COMM_WORLD);
+}
+
+void Parallel::Communicator::setBarrierActive()
+{
+    MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
 }
 
 void Parallel::Communicator::freeMPIGroups()
@@ -406,7 +407,7 @@ void Parallel::Communicator::freeMPIGroups()
 void Parallel::Communicator::MPIExit(std::string message)
 {
     if (m_processRank == 0) printf("\n%s", message.c_str());
-    setBarrier();
+//    setBarrier();
     freeMPIGroups();
     MPI_Finalize();
     exit(0);
