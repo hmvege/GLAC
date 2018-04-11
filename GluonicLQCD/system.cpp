@@ -412,10 +412,6 @@ void System::runMetropolis()
             }
         }
 
-        if (Parameters::getDebug()) {
-            Parallel::Communicator::checkLattice(m_lattice, "Configuration is corrupt in system before write field to file");
-        }
-
         // Writing field config to file
         if (m_writeConfigsToFile)
         {
@@ -447,19 +443,11 @@ void System::flowConfiguration(unsigned int iConfig)
      * Flows configuration, performs flow statistics and writes it to a file.
      */
 
-    if (Parameters::getDebug()) {
-        Parallel::Communicator::checkLattice(m_flowLattice, "Configuration is corrupt at flowConfiguration pt 0.");
-    }
-
     // After each configuration has been flowed, the values must be resetted.
     m_flowCorrelator->reset();
 
-    if (Parameters::getDebug()) {
-        Parallel::Communicator::checkLattice(m_flowLattice, "Configuration is corrupt at flowConfiguration pt 1.");
-    }
-
     // Calculates the flow observables at zeroth flow time
-    m_flowCorrelator->calculate(m_flowLattice,0);
+    m_flowCorrelator->calculate(m_flowLattice, 0);
     if (Parameters::getVerbose()) {
         m_flowCorrelator->printObservable(0);
     }
@@ -483,16 +471,10 @@ void System::flowConfiguration(unsigned int iConfig)
 
         m_flowCorrelator->calculate(m_flowLattice,iFlow + 1);
 
-
-        if (Parameters::getDebug()) {
-            Parallel::Communicator::checkLattice(m_flowLattice, "Configuration is corrupt at flowConfiguration pt 2.5, after flow and after correlator calculation.");
-        }
-
         if (Parameters::getVerbose()) {
             m_flowCorrelator->printObservable(iFlow + 1);
         }
     }
-
 
     if (Parameters::getDebug()) {
         Parallel::Communicator::checkLattice(m_flowLattice, "Configuration is corrupt at flowConfiguration pt 3.");
@@ -501,9 +483,6 @@ void System::flowConfiguration(unsigned int iConfig)
     // Write flow data to file
     m_flowCorrelator->writeFlowObservablesToFile(iConfig);
 
-    if (Parameters::getDebug()) {
-        Parallel::Communicator::checkLattice(m_flowLattice, "Configuration is corrupt at flowConfiguration pt 4.");
-    }
 }
 
 void System::loadConfigurationAndRunMetropolis()

@@ -171,17 +171,6 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
                         nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
                         offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size;
                         MPI_File_read_at(file, offset, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
-
-                        if (Parameters::getDebug()) { // TEMP!
-                            for (unsigned int i = 0; i < 18; i++) {
-                                if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]) || lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] == 0)
-                                {
-                                    printf("\nCorruption in loading: Proc: %d Pos: %lld %lld %lld %lld index: %lu\n", Parallel::Communicator::getProcessRank(), x, y, z, t, Parallel::Index::getIndex(x,y,z,t));
-                                    lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                    exit(0);
-                                }
-                            }
-                        }
                     }
                 }
             }
