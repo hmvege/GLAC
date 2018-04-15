@@ -856,6 +856,8 @@ def main(args):
                 # Error catching, as we require to know how many addition configurations we wish to create from loaded configuration.
                 sys.exit("ERROR: we require to know how many addition configurations we wish to create from loaded configuration(specified by -lcfgr).")
             _config_path, _config_file = os.path.split(args.load_config_and_run)
+            assert not os.path.isdir(args.load_config_and_run), "%s is a folder and not a binary(.bin) file." % args.load_config_and_run
+            assert _config_file.split(".")[-1] == "bin", "%s is not a binary(.bin) file." % _config_file
             configuration["load_config_and_run"] = _config_file
             configuration["inputFolder"] = os.path.normpath(_config_path)
 
@@ -949,6 +951,8 @@ def main(args):
 
         if args.load_config_and_run != False:
             _config_path, _config_file = os.path.split(args.load_config_and_run)
+            assert not os.path.isdir(args.load_config_and_run), "%s is a folder and not a binary(.bin) file." % args.load_config_and_run
+            assert _config_file.split(".")[-1] == "bin", "%s is not a binary(.bin) file." % _config_file
             config_default["load_config_and_run"] = _config_file
             config_default["inputFolder"] = os.path.normpath(_config_path)
 
@@ -1086,9 +1090,10 @@ def main(args):
 
         # Requiring an new estimate of the run time if we are flowing
         _config_path, _config_file = os.path.split(args.load_configuration)
+        assert not os.path.isdir(args.load_config_and_run), "%s is a folder and not a binary(.bin) file." % args.load_config_and_run
+        assert _config_file.split(".")[-1] == "bin", "%s is not a binary(.bin) file." % _config_file
         config_default["load_config_and_run"] = _config_file
         config_default["inputFolder"] = os.path.normpath(_config_path)
-        assert os.path.splitext(config_default["load_config_and_run"])[-1] == ".bin", ".bin file not provided %s" % config_path
         config_default["config_start_number"] = 0
 
         # Sets some regular variables
