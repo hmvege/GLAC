@@ -7,11 +7,15 @@ SOURCES += main.cpp \
     system.cpp \
     actions/action.cpp \
     actions/wilsongaugeaction.cpp \
+    actions/luscheraction.cpp \
     observables/correlator.cpp \
     observables/plaquette.cpp \
     observables/topologicalcharge.cpp \
     observables/energydensity.cpp \
     observables/tools/observablestorer.cpp \
+    observables/mastersampler.cpp \
+    observables/mastersamplertopcxyz.cpp \
+    observables/latticeactionchargedensity.cpp \
     math/links.cpp \
     math/complex.cpp \
     math/matrices/su2.cpp \
@@ -21,34 +25,37 @@ SOURCES += main.cpp \
     math/exponentiation/expluscher.cpp \
     math/exponentiation/taylor2exp.cpp \
     math/exponentiation/taylor4exp.cpp \
+    math/exponentiation/taylorexp.cpp \
     parallelization/neighbours.cpp \
     parallelization/neighbourlist.cpp \
     parallelization/index.cpp \
     parallelization/communicator.cpp \
-    tests/testsuite.cpp \
-    tests/performancetests.cpp \
+    parallelization/parallelparameters.cpp \
     io/observablesio.cpp \
     io/fieldio.cpp \
+    tests/testsuite.cpp \
+    tests/performancetests.cpp \
     config/parameters.cpp \
-    flow/flow.cpp \
     config/configloader.cpp \
     config/sysprint.cpp \
-    observables/mastersampler.cpp \
-    parallelization/parallelparameters.cpp \
-    math/exponentiation/taylorexp.cpp \
-    actions/luscheraction.cpp \
-    observables/mastersamplertopcxyz.cpp \
-    observables/latticeactionchargedensity.cpp
+    flow/flow.cpp \
+    observables/supersampler.cpp
 
 HEADERS += \
     system.h \
     actions/action.h \
     actions/wilsongaugeaction.h \
+    actions/actions.h \
+    actions/luscheraction.h \
     observables/correlator.h \
     observables/plaquette.h \
     observables/topologicalcharge.h \
     observables/energydensity.h \
     observables/tools/observablestorer.h \
+    observables/mastersampler.h \
+    observables/observables.h \
+    observables/mastersamplertopcxyz.h \
+    observables/latticeactionchargedensity.h \
     math/functions.h \
     math/links.h \
     math/complex.h \
@@ -60,31 +67,26 @@ HEADERS += \
     math/exponentiation/taylor2exp.h \
     math/exponentiation/taylor4exp.h \
     math/latticemath.h \
+    math/flowexpfunctions.h \
+    math/lattice.h \
+    math/exponentiation/taylorexp.h \
     parallelization/neighbours.h \
     parallelization/neighbourlist.h \
     parallelization/index.h \
     parallelization/communicator.h \
-    tests/testsuite.h \
-    tests/performancetests.h \
+    parallelization/parallel.h \
+    parallelization/parallelparameters.h \
     io/observablesio.h \
     io/fieldio.h \
-    config/parameters.h \
-    flow/flow.h \
-    config/configloader.h \
-    lib/json.hpp \
-    config/sysprint.h \
-    math/flowexpfunctions.h \
-    actions/actions.h \
-    parallelization/parallel.h \
-    math/lattice.h \
-    observables/mastersampler.h \
-    observables/observables.h \
-    parallelization/parallelparameters.h \
+    tests/testsuite.h \
+    tests/performancetests.h \
     tests/test.h \
-    math/exponentiation/taylorexp.h \
-    actions/luscheraction.h \
-    observables/mastersamplertopcxyz.h \
-    observables/latticeactionchargedensity.h
+    config/parameters.h \
+    config/configloader.h \
+    config/sysprint.h \
+    flow/flow.h \
+    lib/json.hpp \
+    observables/mastersamplertopcxyz_copy.h
 
 #QMAKE_PRE_LINK = hpclink #??
 

@@ -56,6 +56,10 @@ data8
 
 # Lattice density figures
 figures/act_density
+figures/b60
+figures/b61
+figures/b62
+figures/b645
 figures/prodRunBeta6_0
 figures/prodRunBeta6_1
 figures/prodRunBeta6_2
