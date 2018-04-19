@@ -63,15 +63,24 @@ void System::setObservable(std::vector<std::string> obsList, bool flow)
     bool topc = false;
     bool energy = false;
     bool topct = false;
+    bool weinberg = false;
     bool energyTopcFieldDensity = false;
     for (unsigned int i = 0; i < obsList.size(); i++) {
         if (obsList[i] == "plaq") plaq = true;
         if (obsList[i] == "topc") topc = true;
         if (obsList[i] == "energy") energy = true;
         if (obsList[i] == "topct") topct = true;
+        if (obsList[i] == "weinberg") weinberg = true;
         if (obsList[i] == "energyTopcFieldDensity") energyTopcFieldDensity = true;
     }
-    if ((topc || energy) && !topct) {
+    if (weinberg) {
+        // Initializes the full mechinery except for the QxyzQt sampler
+        if (flow) {
+            m_flowCorrelator = new SuperSampler(flow);
+        } else {
+            m_correlator = new SuperSampler(flow);
+        }
+     }else if ((topc || energy) && !topct) {
         // Initializes the full mechinery except for the QxyzQt sampler
         if (flow) {
             m_flowCorrelator = new MasterSampler(flow);

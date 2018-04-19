@@ -8,8 +8,9 @@ import ast
 import shutil
 import re
 
-AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct"]
-AVAILABLE_SCALAR_FIELDS = ["plaq", "topc", "energy"]
+AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct", "weinberg"]
+# AVAILABLE_SCALAR_FIELDS = ["plaq", "topc", "energy", "weinberg"]
+AVAILABLE_SCALAR_FIELDS = ["topc", "energy"]
 AVAILABLE_EXP_FUNCS = ["morningstar", "luscher", "taylor2", "taylor4"]
 
 def get_arg_max_index(N):

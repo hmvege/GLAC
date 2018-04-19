@@ -16,6 +16,7 @@ SOURCES += main.cpp \
     observables/mastersampler.cpp \
     observables/mastersamplertopcxyz.cpp \
     observables/latticeactionchargedensity.cpp \
+    observables/supersampler.cpp \
     math/links.cpp \
     math/complex.cpp \
     math/matrices/su2.cpp \
@@ -38,8 +39,7 @@ SOURCES += main.cpp \
     config/parameters.cpp \
     config/configloader.cpp \
     config/sysprint.cpp \
-    flow/flow.cpp \
-    observables/supersampler.cpp
+    flow/flow.cpp
 
 HEADERS += \
     system.h \
@@ -56,6 +56,7 @@ HEADERS += \
     observables/observables.h \
     observables/mastersamplertopcxyz.h \
     observables/latticeactionchargedensity.h \
+    observables/supersampler.h \
     math/functions.h \
     math/links.h \
     math/complex.h \
@@ -85,8 +86,7 @@ HEADERS += \
     config/configloader.h \
     config/sysprint.h \
     flow/flow.h \
-    lib/json.hpp \
-    observables/mastersamplertopcxyz_copy.h
+    lib/json.hpp
 
 #QMAKE_PRE_LINK = hpclink #??
 

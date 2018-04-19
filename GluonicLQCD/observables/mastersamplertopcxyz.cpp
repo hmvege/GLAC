@@ -243,7 +243,7 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, unsigned int iObs)
     m_plaquette = 0;
     for (unsigned int it = 0; it < m_N[3]; it++) {
 //        m_tempTopct[it] = 0;
-        m_tempTopct.at(it) = 0;
+        m_tempTopct[it] = 0;
     }
     mu = 0;
 
@@ -345,11 +345,10 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {
             // Sums the topological charge values at the xyz axis into a observable holder
-//            (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempTopct[it];
-            (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempTopct.at(it);
+            (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempTopct[it];
 
             // Sums the topological charge, negative sign already taken care of
-            m_topCharge -= m_tempTopct.at(it);
+            m_topCharge -= m_tempTopct[it];
         }
 
         // Picks up the action density

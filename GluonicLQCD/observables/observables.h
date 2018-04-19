@@ -10,5 +10,6 @@
 #include "mastersampler.h"
 #include "mastersamplertopcxyz.h"
 #include "latticeactionchargedensity.h"
+#include "supersampler.h"
 
 #endif // OBSERVABLES_H
