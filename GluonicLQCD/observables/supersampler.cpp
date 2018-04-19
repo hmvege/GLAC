@@ -12,7 +12,7 @@ SuperSampler::SuperSampler(bool flow) : Correlator()
     // Sets up multiplication factors
     m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
     m_topcMultiplicationFactor = 1.0/(16*16*M_PI*M_PI);
-    m_wMultiplicationFactor = 1.0/(16*16*M_PI*M_PI);
+    m_wMultiplicationFactor = 8;
     m_energyMultiplicationFactor = 1.0/double(Parameters::getLatticeSize()); // Cant divide by size if we are not normalizing as well
 
     // Allocates memory to the helper variables
@@ -23,8 +23,7 @@ SuperSampler::SuperSampler(bool flow) : Correlator()
     m_temp.allocate(m_N);
 
     // Allocates temporary vector for retrieves results from the lattice method
-    m_tempTopct.resize(m_N[3]);
-    m_tempWt.resize(m_N[3]);
+    m_tempEucl.resize(m_N[3]);
 
     // Allocates temporary array for gathering results into a single time array
     m_topctGatherVector.resize(Parameters::getNTemporal() * (Parameters::getNFlows() + 1));
@@ -93,8 +92,8 @@ void SuperSampler::initializeObservableStorer(bool storeFlowObservable)
     m_energyObservable->setObservableName("energy");
     m_topcObservable->setObservableName("topc");
     m_topctObservable->setObservableName("topct");
-    m_wObservable->setObservableName("w");
-    m_wtObservable->setObservableName("wt");
+    m_wObservable->setObservableName("weinberg");
+    m_wtObservable->setObservableName("weinbergt");
 }
 
 void SuperSampler::writeFlowObservablesToFile(unsigned int configNumber)
@@ -279,15 +278,13 @@ void SuperSampler::copyObservable(unsigned int iObs, std::vector<double> obs)
 
 std::vector<double> SuperSampler::getObservablesVector(unsigned int iObs)
 {
-    std::vector<double> obs(3 + m_N[3]);
+    std::vector<double> obs(3 + 2*m_N[3]);
     obs[0] = (*m_plaqObservable)[iObs];
     obs[1] = (*m_topcObservable)[iObs];
     obs[2] = (*m_energyObservable)[iObs];
     obs[3] = (*m_wObservable)[iObs];
     for (unsigned long int it = 0; it < m_N[3]; it++) {
         obs[4 + it] = (*m_topctObservable)[iObs*m_N[3] + it];
-    }
-    for (unsigned long int it = 0; it < m_N[3]; it++) {
         obs[4 + m_N[3] + it] = (*m_wtObservable)[iObs*m_N[3] + it];
     }
 
@@ -304,8 +301,7 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
     m_plaquette = 0;
     m_weinberg = 0;
     for (unsigned int it = 0; it < m_N[3]; it++) {
-        m_tempTopct[it] = 0;
-        m_tempWt[it] = 0;
+        m_tempEucl[it] = 0;
     }
     mu = 0;
 
@@ -347,10 +343,12 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         m_temp *= inv(lattice[nu]);
         m_clov1 -= m_temp;
 
-        rho = nu % 3;
-        rho++;
-        sigma = rho % 3;
-        sigma++;
+        rho = next_index(nu);
+        sigma = next_index(rho);
+//        rho = nu % 3;
+//        rho++;
+//        sigma = rho % 3;
+//        sigma++;
 
         // Second clover
         // First leaf
@@ -404,17 +402,15 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         m_fieldTensorG[index_mapper(rho, sigma)] = m_clov2;
 
         // Sums take the real trace multiplication and sums into a temporary holder
-        m_tempEucl = sumXYZ(realTraceMultiplication(m_clov1, m_clov2));
+        m_tempEucl = sumSpatial(realTraceMultiplication(m_clov1, m_clov2));
 
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {
             // Sums the observable in xyz into a euclidean time observable holder
             (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempEucl[it];
-//            (*m_wtObservable)[iObs*m_N[3] + it] -= m_tempWt[it];
 
             // Sums the topological charge, negative sign already taken care of
             m_topCharge -= m_tempEucl[it];
-//            m_weinberg -= m_tempWt[it];
         }
 
         // Picks up the action density
@@ -438,12 +434,10 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 
         }
 
-        rho = nu % 3;
-        rho++;
-        sigma = rho % 3;
-        sigma++;
+        rho = next_index(nu);
+        sigma = next_index(rho);
 
-        m_tempEucl = sumXYZ(realTraceMultiplication(m_temp, m_fieldTensorG[index_mapper(rho, sigma)]));
+        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[index_mapper(rho, sigma)])*0.3333333333333333);
 
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {

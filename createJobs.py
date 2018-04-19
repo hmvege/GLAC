@@ -8,7 +8,7 @@ import ast
 import shutil
 import re
 
-AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct", "weinberg"]
+AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct", "weinberg", "weinbergt"]
 # AVAILABLE_SCALAR_FIELDS = ["plaq", "topc", "energy", "weinberg"]
 AVAILABLE_SCALAR_FIELDS = ["topc", "energy"]
 AVAILABLE_EXP_FUNCS = ["morningstar", "luscher", "taylor2", "taylor4"]

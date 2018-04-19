@@ -14,12 +14,10 @@ private:
     Lattice<SU3> m_fieldTensorG[6];
     Lattice<SU3> m_clov1, m_clov2, m_U2Temp, m_U3Temp, m_temp;
 
-    // Container for the topc xyz observable
+    // Container for the spatial observables
     std::vector<double> m_topctGatherVector;
-    std::vector<double> m_tempEucl;
-//    std::vector<double> m_tempTopct;
     std::vector<double> m_wtGatherVector;
-//    std::vector<double> m_tempWt;
+    std::vector<double> m_tempEucl;
 
     // Creates a object that store the observable
     ObservableStorer * m_plaqObservable = nullptr;
@@ -35,11 +33,11 @@ private:
         return int(i!=0)*3 + j - 1;
     }
 
-//    inline int next_index(int i)
-//    {
-//        /*Function for getting the next index.*/
-//        return i % 3 + 1;
-//    }
+    inline int next_index(int i)
+    {
+        /*Function for getting the next index.*/
+        return i % 3 + 1;
+    }
 
 public:
     SuperSampler(bool flow);

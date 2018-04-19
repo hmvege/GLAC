@@ -412,27 +412,27 @@ inline T sum(Lattice<T> L)
 }
 
 //template <>
-inline std::vector<double> sumXYZ(Lattice<double> L)
+inline std::vector<double> sumSpatial(Lattice<double> L)
 {
     /*
      * For summing the topological charge xyz into the time axis.
      */
 
     // Creates empty vector for time axis points
-    std::vector<double> latticeXYZSum(L.m_dim[3], 0);
+    std::vector<double> latticeSpatialSum(L.m_dim[3], 0);
 
     // Sums the xyz directions into the time axis
     for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
         for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
             for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
                 for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                    latticeXYZSum[it] += L[Parallel::Index::getIndex(ix,iy,iz,it)];
+                    latticeSpatialSum[it] += L[Parallel::Index::getIndex(ix,iy,iz,it)];
                 }
             }
         }
     }
 
-    return latticeXYZSum;
+    return latticeSpatialSum;
 }
 
 inline Lattice<double> realTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)

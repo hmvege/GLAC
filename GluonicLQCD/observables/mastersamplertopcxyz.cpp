@@ -340,7 +340,7 @@ void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         m_clov2 = subtractImag(m_clov2,m_tempDiag);
 
         // Sums take the real trace multiplication and sums into a temporary holder
-        m_tempTopct = sumXYZ(realTraceMultiplication(m_clov1,m_clov2));
+        m_tempTopct = sumSpatial(realTraceMultiplication(m_clov1,m_clov2));
 
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {
