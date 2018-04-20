@@ -1,6 +1,8 @@
 # Run by:
-#   python createJobs.py load weinberg_config.py -bf {base directory}
+#   python createJobs.py load weinberg_config.py -s laconia -bf {base directory}
 # 
+# -s {system} specifies the run system to be laconia.
+#
 # -bf {base_directory} is the full path leading up to where to output directory is situated.
 # On my account, that would be /mnt/ls15/scratch/users/f0003959/ aka my scratch directory
 # 
@@ -16,17 +18,17 @@
 {   
     "bin_fn"                    : "build/GluonicLQCD",
     "runName"                   : "weinbergConfigFlow1",
-    "N"                         : 24,
-    "NT"                        : 48,
-    "subDims"                   : [6, 6, 6, 6],
+    "N"                         : 32,
+    "NT"                        : 64,
+    "subDims"                   : [8, 8, 8, 8],
     "beta"                      : 6.0,
     "NFlows"                    : 1000,
     "flowObservables"           : ["weinberg"],
     "flowEpsilon"               : 0.01,
-    "inputFolder"               : "input", # Where to load the configurations from, can be absolute folder or relative folder if you wish.
-    "outputFolder"              : "output", # Output directory. If not base-folder is given, this will be the same as the folder where you submit from
+    "inputFolder"               : "input", # Where to load the configurations from. Default is {base directory}/output.
+    "outputFolder"              : "output", # Output directory. Usually {base directory}/output, if no base-folder is given, this will be the same as the folder where you submit from
     "threads"                   : 512,
-    "cpu_approx_runtime_hr"     : 65,
+    "cpu_approx_runtime_hr"     : 1, # Specify estimated time here in hours!
     "cpu_approx_runtime_min"    : 0,
     "cpu_memory"                : 3800,
     "account_name"              : "nn2977k",

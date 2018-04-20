@@ -71,7 +71,7 @@ def check_sub_dim_viability(subDims):
         if dim <= 2:
             raise ValueError("%d is not a valid dimension" % dim)
 
-def set_field_configs(config, config_folder, config_start_number):
+def set_field_configs(config, config_folder, config_start_number, base_folder=""):
     """
     Populates list of sorted field configs from folder config_folder into the 
     config dictionary.
@@ -89,6 +89,7 @@ def set_field_configs(config, config_folder, config_start_number):
 
     config["load_field_configs"] = True
     config["inputFolder"] = os.path.normpath(config_folder)
+    config["inputFolder"] = os.path.relpath(config["inputFolder"], base_folder)
 
     if os.path.isdir(config_folder):
         config["field_configs"] = natural_sort([fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")])
@@ -184,7 +185,7 @@ class JobCreator:
             if self.dryrun or self.verbose:
                 print "> mkdir %s" % os.path.join(self.base_folder, folder)
 
-    def _clean_file_Path(self, p):
+    def _clean_file_path(self, p):
         """
         Cleans file-path of base folder and of extraneous slashes.
 
@@ -198,7 +199,12 @@ class JobCreator:
             cleaned_p = os.path.relpath(cleaned_p, self.base_folder)
         else:
             cleaned_p = p
+
         cleaned_p = (os.sep + os.path.normpath(cleaned_p) + os.sep).replace("//", os.sep)
+
+        if self.verbose or self.dryrun:
+            print "Cleaned path from:\n    %s\nto\n    %s" % (p, cleaned_p)
+
         return cleaned_p
 
     def _create_json(self, config_dict):
@@ -224,8 +230,8 @@ class JobCreator:
         json_dict["NUpdates"] = config_dict["NUpdates"]
 
         # Data storage related variables
-        json_dict["outputFolder"] = self._clean_file_Path(config_dict["outputFolder"])
-        json_dict["inputFolder"] = self._clean_file_Path(config_dict["inputFolder"])
+        json_dict["outputFolder"] = self._clean_file_path(config_dict["outputFolder"])
+        json_dict["inputFolder"] = self._clean_file_path(config_dict["inputFolder"])
         json_dict["storeConfigurations"] = config_dict["storeCfgs"]
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
 
@@ -764,7 +770,7 @@ def main(args):
     load_parser.add_argument('-NUp', '--NUpdates',              default=False,                                      type=int, help='number of updates per link')
     load_parser.add_argument('-NCor', '--NCor',                 default=False,                                      type=int, help='number of correlation updates to perform')
     load_parser.add_argument('--debug',                         default=False,                                      action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
-
+    load_parser.add_argument('-vr', '--verboseRun',              default=config_default["verboseRun"],               action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
@@ -833,6 +839,10 @@ def main(args):
         COMMAND FOR LOADING SCRIPT JOBS AND GENERATING CONFIGS OR FLOWING
         """
         configuration = ast.literal_eval(open(args.file, "r").read())
+
+        # Sets the base folder
+        configuration["base_folder"] = args.base_folder
+
         # If we are to load and flow configurations
         if args.load_configurations:
             if args.load_config_and_run:
@@ -847,7 +857,7 @@ def main(args):
             configuration["NCf"] = 0
 
             # Requiring an new estimate of the run time if we are flowing
-            configuration = set_field_configs(configuration, args.load_configurations, args.config_start_number)
+            configuration = set_field_configs(configuration, args.load_configurations, args.config_start_number, base_folder=configuration["base_folder"])
             if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
                 sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
 
@@ -872,7 +882,6 @@ def main(args):
             excluded_nodes = ""
 
         # Populate configuration with default values if certain keys are not present
-        config_default["base_folder"] = args.base_folder
         if args.run_name != False:
             configuration["runName"] = args.run_name
         if args.NConfigs != False:
@@ -895,6 +904,8 @@ def main(args):
         for key in config_default.keys():
             if not key in configuration:
                 configuration[key] = config_default[key]
+
+        configuration["verboseRun"] = args.verboseRun
 
         configuration["config_start_number"] = args.config_start_number
 
@@ -960,7 +971,7 @@ def main(args):
         config_default["config_start_number"] = args.config_start_number
 
         if args.load_configurations:
-            config_default = set_field_configs(config_default, args.load_configurations, args.config_start_number)
+            config_default = set_field_configs(config_default, args.load_configurations, args.config_start_number,  base_folder=config_default["base_folder"])
             config_default["chroma_config"] = args.chroma_config
 
             # Requiring flow to be specified if we are loading configurations to flow
