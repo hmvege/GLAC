@@ -112,8 +112,8 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned int 
 
     MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
 
-    long long nt = 0, nz = 0, ny = 0, nx = 0;
     MPI_Offset offset = 0;
+    long long nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (unsigned long int t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
@@ -155,9 +155,9 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
         Parallel::Communicator::MPIExit("File " + fname + " does not exist");
     }
 
-    MPI_Offset offset = 0;
-
     MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
+
+    MPI_Offset offset = 0;
     long long nt = 0, nz = 0, ny = 0, nx = 0;
 
     for (long long mu = 0; mu < 4; mu++) {
@@ -202,33 +202,27 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
         Parallel::Communicator::MPIExit("File " + fname + " does not exist");
     }
 
+    if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration to be loaded: %s", fname.c_str());
+
     MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-    long long nt = 0, nz = 0, ny = 0, nx = 0;
+
     MPI_Offset offset = 0;
+    long long nt = 0, nz = 0, ny = 0, nx = 0;
 
     double temp = 0;
-    for (long long t = 0; t < m_N[3]; t++) {
-        nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (long long z = 0; z < m_N[2]; z++) {
-            nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (long long y = 0; y < m_N[1]; y++) {
-                ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (long long x = 0; x < m_N[0]; x++) {
-                    nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
-                    for (long long mu = 0; mu < 4; mu++) {
+    for (long long mu = 0; mu < 4; mu++) {
+        for (long long t = 0; t < m_N[3]; t++) {
+            nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
+            for (long long z = 0; z < m_N[2]; z++) {
+                nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
+                for (long long y = 0; y < m_N[1]; y++) {
+                    ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
+                    for (long long x = 0; x < m_N[0]; x++) {
+                        nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
                         for (long long i = 0; i < 18; i++) {
                             offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size + i*sizeof(double);
                             MPI_File_read_at(file, offset, &temp, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
                             lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] = reverseDouble(temp);
-
-                            if (Parameters::getDebug()) {
-                                // Checking for corruption
-                                if (std::isnan(lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i]))
-                                {
-                                    lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                    Parallel::Communicator::MPIExit("\nConfiguration is corrupt in loadChromaFieldConfiguration.\n");
-                                }
-                            }
                         }
                     }
                 }
@@ -237,6 +231,11 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
     }
 
     MPI_File_close(&file);
+
+    if (Parameters::getDebug()) {
+        Parallel::Communicator::checkLattice(lattice, "Configuration is corrupt in IO::FieldIO load chroma field after loaded.");
+    }
+
     if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration %s loaded", fname.c_str());
 }
 

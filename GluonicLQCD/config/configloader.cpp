@@ -97,6 +97,7 @@ namespace ConfigLoader {
             setFieldConfigurations(tempVec);
             Parameters::setNCf(j["NCf"]);
             Parameters::setLoadConfigAndRun(true);
+            Parameters::setLoadChromaConfigurations(bool(j["chroma_config"]));
         }
 
         if (!j["config_start_number"].empty()) {

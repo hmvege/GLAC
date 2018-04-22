@@ -906,7 +906,7 @@ def main(args):
                 configuration[key] = config_default[key]
 
         configuration["verboseRun"] = args.verboseRun
-
+        configuration["chroma_config"] = args.chroma_config
         configuration["config_start_number"] = args.config_start_number
 
         # Submitting job

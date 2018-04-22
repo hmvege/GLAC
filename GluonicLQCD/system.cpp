@@ -550,8 +550,15 @@ void System::flowConfigurations()
     /*
      * Method for flowing several configurations given as a vector of strings.
      */
+    if (m_processRank==0) printf("\nFlowing starting!" );
+
     // Loads the vector of configurations to flow.
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
+
+    if (configurationNames.size() == 0) {
+        Parallel::Communicator::MPIExit("Missing configurations to flow. Check input folder: " + Parameters::getInputFolder());
+    }
+
     for (unsigned int i = 0; i < configurationNames.size(); i++) {
         // Loads configuration, either in chroma format(reversed doubles) or regular format.
         if (!Parameters::getLoadChromaConfigurations()) {

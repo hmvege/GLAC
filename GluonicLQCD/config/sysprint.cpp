@@ -100,7 +100,9 @@ void SysPrint::printSystemInfo()
                 cout << "Random start close to unity:           " << getTrueOrFalseString(Parameters::m_RSTHotStart) << endl;
             }
         }
-        cout << "Debug:                                 " << getTrueOrFalseString(Parameters::m_debug) << endl;
+        if (Parameters::m_debug) {
+            cout << "Debug:                                 TRUE" << endl;
+        }
         printLine();
     }
 }
