@@ -207,16 +207,16 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
     MPI_Offset offset = 0;
 
     double temp = 0;
-    for (unsigned int t = 0; t < m_N[3]; t++) {
+    for (long long t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (unsigned long int z = 0; z < m_N[2]; z++) {
+        for (long long z = 0; z < m_N[2]; z++) {
             nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (unsigned long int y = 0; y < m_N[1]; y++) {
+            for (long long y = 0; y < m_N[1]; y++) {
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (unsigned long int x = 0; x < m_N[0]; x++) {
+                for (long long x = 0; x < m_N[0]; x++) {
                     nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
-                    for (unsigned long int mu = 0; mu < 4; mu++) {
-                        for (unsigned long int i = 0; i < 18; i++) {
+                    for (long long mu = 0; mu < 4; mu++) {
+                        for (long long i = 0; i < 18; i++) {
                             offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size + i*sizeof(double);
                             MPI_File_read_at(file, offset, &temp, 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
                             lattice[mu][Parallel::Index::getIndex(x,y,z,t)][i] = reverseDouble(temp);
