@@ -12,7 +12,7 @@ SuperSampler::SuperSampler(bool flow) : Correlator()
     // Sets up multiplication factors
     m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
     m_topcMultiplicationFactor = 1.0/(16*16*M_PI*M_PI);
-    m_wMultiplicationFactor = 8;
+    m_wMultiplicationFactor = 8.0;
     m_energyMultiplicationFactor = 1.0/double(Parameters::getLatticeSize()); // Cant divide by size if we are not normalizing as well
 
     // Allocates memory to the helper variables
@@ -432,7 +432,6 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
                 m_temp += m_fieldTensorG[index_mapper(mu, lambda)]*m_fieldTensorG[index_mapper(nu, lambda)];
 //                m_temp -= m_fieldTensorG[index_mapper(nu, lambda)]*m_fieldTensorG[index_mapper(mu, lambda)];
             }
-
         }
 
         rho = next_index(nu);
@@ -444,10 +443,10 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {
             // Sums the observable in xyz into a euclidean time observable holder
-            (*m_wtObservable)[iObs*m_N[3] + it] -= m_tempEucl[it];
+            (*m_wtObservable)[iObs*m_N[3] + it] += m_tempEucl[it]; // Minus or pluss here?
 
             // Sums the weinberg, negative sign already taken care of
-            m_weinberg -= m_tempEucl[it];
+            m_weinberg += m_tempEucl[it];
         }
 
     }
