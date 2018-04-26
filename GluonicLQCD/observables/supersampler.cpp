@@ -398,8 +398,8 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         m_tempDiag = imagTrace(m_clov2)/3.0;
         m_clov2 = subtractImag(m_clov2, m_tempDiag);
 
-        m_fieldTensorG[index_mapper(mu, nu)] = m_clov1;
-        m_fieldTensorG[index_mapper(rho, sigma)] = m_clov2;
+        m_fieldTensorG[index_mapper(mu, nu)] = m_clov1 / 16.0;
+        m_fieldTensorG[index_mapper(rho, sigma)] = m_clov2 / 16.0;
 
         // Sums take the real trace multiplication and sums into a temporary holder
         m_tempEucl = sumSpatial(realTraceMultiplication(m_clov1, m_clov2));
@@ -409,7 +409,7 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
             // Sums the observable in xyz into a euclidean time observable holder
             (*m_topctObservable)[iObs*m_N[3] + it] -= m_tempEucl[it];
 
-            // Sums the topological charge, negative sign already taken care of
+            // Sums the topological charge
             m_topCharge -= m_tempEucl[it];
         }
 
@@ -443,10 +443,10 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {
             // Sums the observable in xyz into a euclidean time observable holder
-            (*m_wtObservable)[iObs*m_N[3] + it] += m_tempEucl[it]; // Minus or pluss here?
+            (*m_wtObservable)[iObs*m_N[3] + it] -= m_tempEucl[it]; // Minus or pluss here?
 
             // Sums the weinberg, negative sign already taken care of
-            m_weinberg += m_tempEucl[it];
+            m_weinberg -= m_tempEucl[it];
         }
 
     }

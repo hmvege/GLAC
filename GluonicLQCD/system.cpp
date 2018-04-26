@@ -550,8 +550,6 @@ void System::flowConfigurations()
     /*
      * Method for flowing several configurations given as a vector of strings.
      */
-    if (m_processRank==0) printf("\nFlowing starting!" );
-
     // Loads the vector of configurations to flow.
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
 
