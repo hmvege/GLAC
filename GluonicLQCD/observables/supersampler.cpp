@@ -430,15 +430,15 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
             if (nu != lambda) {
 //                m_temp += m_fieldTensorG[index_mapper(mu, lambda)]*m_fieldTensorG[index_mapper(nu, lambda)] * 2.0;
                 m_temp += m_fieldTensorG[index_mapper(mu, lambda)]*m_fieldTensorG[index_mapper(nu, lambda)];
-//                m_temp -= m_fieldTensorG[index_mapper(nu, lambda)]*m_fieldTensorG[index_mapper(mu, lambda)];
+                m_temp -= m_fieldTensorG[index_mapper(nu, lambda)]*m_fieldTensorG[index_mapper(mu, lambda)];
             }
         }
 
         rho = next_index(nu);
         sigma = next_index(rho);
 
-//        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[index_mapper(rho, sigma)])*0.3333333333333333);
-        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[index_mapper(rho, sigma)])*0.6666666666666666);
+        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[index_mapper(rho, sigma)])*0.3333333333333333);
+//        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[index_mapper(rho, sigma)])*0.6666666666666666);
 
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {
