@@ -407,9 +407,8 @@ void Parallel::Communicator::freeMPIGroups()
 void Parallel::Communicator::MPIExit(std::string message)
 {
     if (m_processRank == 0) printf("\n%s", message.c_str());
-//    setBarrier();
     freeMPIGroups();
-    MPI_Finalize();
+    MPI_Abort(MPI_COMM_WORLD, 0);
     exit(0);
 }
 

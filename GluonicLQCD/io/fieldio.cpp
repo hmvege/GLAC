@@ -202,12 +202,13 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
         Parallel::Communicator::MPIExit("File " + fname + " does not exist");
     }
 
-    if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration to be loaded: %s", fname.c_str());
+//    if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration to be loaded: %s", fname.c_str());
 
     MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
 
     MPI_Offset offset = 0;
     long long nt = 0, nz = 0, ny = 0, nx = 0;
+
 
     double temp = 0;
     for (long long mu = 0; mu < 4; mu++) {
@@ -237,6 +238,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
     }
 
     if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration %s loaded", fname.c_str());
+
 }
 
 inline bool IO::FieldIO::check_file_existence (const std::string fname) {
