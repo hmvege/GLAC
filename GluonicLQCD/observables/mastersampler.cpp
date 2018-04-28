@@ -250,13 +250,13 @@ void MasterSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         // Makes first clover anti hermitian and traceless
         m_temp = inv(m_clov1);
         m_clov1 -= m_temp;
-        m_tempDiag = imagTrace(m_clov1)/3.0;
+        m_tempDiag = imagTrace(m_clov1)*0.3333333333333333;
         m_clov1 = subtractImag(m_clov1,m_tempDiag);
 
         // Makes second clover anti hermitian and traceless
         m_temp = inv(m_clov2);
         m_clov2 -= m_temp;
-        m_tempDiag = imagTrace(m_clov2)/3.0;
+        m_tempDiag = imagTrace(m_clov2)*0.3333333333333333;
         m_clov2 = subtractImag(m_clov2,m_tempDiag);
 
         // Picks up the topological charge

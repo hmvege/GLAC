@@ -3,6 +3,7 @@
 #include "parallelization/communicator.h"
 #include "config/parameters.h"
 #include "io/observablesio.h"
+//#include <map>
 
 SuperSampler::SuperSampler(bool flow) : Correlator()
 {
@@ -389,17 +390,17 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         // Makes first clover anti hermitian and traceless
         m_temp = inv(m_clov1);
         m_clov1 -= m_temp;
-        m_tempDiag = imagTrace(m_clov1)/3.0;
+        m_tempDiag = imagTrace(m_clov1)*0.3333333333333333;
         m_clov1 = subtractImag(m_clov1, m_tempDiag);
 
         // Makes second clover anti hermitian and traceless
         m_temp = inv(m_clov2);
         m_clov2 -= m_temp;
-        m_tempDiag = imagTrace(m_clov2)/3.0;
+        m_tempDiag = imagTrace(m_clov2)*0.3333333333333333;
         m_clov2 = subtractImag(m_clov2, m_tempDiag);
 
-        m_fieldTensorG[index_mapper(mu, nu)] = m_clov1 / 16.0;
-        m_fieldTensorG[index_mapper(rho, sigma)] = m_clov2 / 16.0;
+        m_fieldTensorG[index_mapper(mu, nu)] = m_clov1 * (0.0625); // *(-1/16)
+        m_fieldTensorG[index_mapper(rho, sigma)] = m_clov2 * (0.0625);
 
         // Sums take the real trace multiplication and sums into a temporary holder
         m_tempEucl = sumSpatial(realTraceMultiplication(m_clov1, m_clov2));
@@ -428,17 +429,23 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         // Retrieves the contracted term
         for (int lambda = 1; lambda < 4; lambda++) {
             if (nu != lambda) {
-//                m_temp += m_fieldTensorG[index_mapper(mu, lambda)]*m_fieldTensorG[index_mapper(nu, lambda)] * 2.0;
-                m_temp += m_fieldTensorG[index_mapper(mu, lambda)]*m_fieldTensorG[index_mapper(nu, lambda)];
-                m_temp -= m_fieldTensorG[index_mapper(nu, lambda)]*m_fieldTensorG[index_mapper(mu, lambda)];
+                if (nu < lambda) { // Since sometimes
+                    m_temp += m_fieldTensorG[m_indexMap[mu][lambda]]*m_fieldTensorG[m_indexMap[nu][lambda]];
+//                    m_temp += m_fieldTensorG[m_indexMap[mu][lambda]]*m_fieldTensorG[m_indexMap.at(nu).at(lambda)];
+                } else {
+//                    m_temp -= m_fieldTensorG[m_indexMap[mu][lambda]]*m_fieldTensorG[m_indexMap.at(lambda).at(nu)];
+                    m_temp -= m_fieldTensorG[m_indexMap[mu][lambda]]*inv(m_fieldTensorG[m_indexMap[lambda][nu]]);
+                }
+//                m_temp += m_fieldTensorG[index_mapper(mu, lambda)]*m_fieldTensorG[index_mapper(nu, lambda)];
+//                m_temp -= m_fieldTensorG[index_mapper(nu, lambda)]*m_fieldTensorG[index_mapper(mu, lambda)];
             }
         }
 
         rho = next_index(nu);
         sigma = next_index(rho);
 
-        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[index_mapper(rho, sigma)])*0.3333333333333333);
-//        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[index_mapper(rho, sigma)])*0.6666666666666666);
+//        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[index_mapper(rho, sigma)])*0.3333333333333333);
+        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[m_indexMap[rho][sigma]])*0.6666666666666666);
 
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {
@@ -448,8 +455,9 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
             // Sums the weinberg, negative sign already taken care of
             m_weinberg -= m_tempEucl[it];
         }
-
+//        cout << m_weinberg << endl;
     }
+//    exit(1);
 
     ///////////////////////////
     //////// PLAQUETTE ////////

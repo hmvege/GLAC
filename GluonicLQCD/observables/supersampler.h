@@ -3,6 +3,7 @@
 
 #include "math/lattice.h"
 #include "observables/observables.h"
+#include <map>
 
 class SuperSampler : public Correlator
 {
@@ -27,10 +28,24 @@ private:
     ObservableStorer * m_wObservable = nullptr; // Weinberg
     ObservableStorer * m_wtObservable = nullptr;
 
+    std::map<int, std::map<int, int>> m_indexMap = {
+        {0, {{1, 0}, {2, 1}, {3, 2}}},
+        {1, {{2, 3}, {3, 4}}},
+        {2, {{3, 5}}},
+    };
+
     inline int index_mapper(int i, int j)
     {
         /*Function for mapping index onto a lattice array of length 6.*/
-        return int(i!=0)*3 + j - 1;
+        if (i < j) {
+            return m_indexMap[i][j];
+//            return m_indexMap.at(i).at(j);
+//            return int(i!=0)*3 + j - 1;
+        } else {
+            return m_indexMap[j][i];
+//            return m_indexMap.at(j).at(i);
+//            return int(i!=0)*3 + j - 1;
+        }
     }
 
     inline int next_index(int i)
