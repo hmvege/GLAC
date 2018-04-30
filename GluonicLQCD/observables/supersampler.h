@@ -8,6 +8,9 @@
 class SuperSampler : public Correlator
 {
 private:
+    const std::string m_observableName = "Weinberg operator";
+    const std::string m_observableNameCompact = "weinberg";
+
     int mu, rho, sigma;
     double m_plaqMultiplicationFactor, m_topcMultiplicationFactor, m_energyMultiplicationFactor, m_wMultiplicationFactor;
     double m_topCharge, m_energy, m_plaquette, m_weinberg;
@@ -68,6 +71,7 @@ public:
     void printHeader();
     void printObservable(unsigned int iObs);
     void printStatistics();
+    std::string getObservableName() { return m_observableName; }
     std::vector<double> getObservablesVector(unsigned int iObs);
     void copyObservable(unsigned int iObs, std::vector<double> obs);
 };

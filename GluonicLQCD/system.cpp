@@ -122,15 +122,17 @@ System::~System()
     /*
      * Class destructor
      */
-    delete m_S;
-    delete m_SU3Generator;
-    delete [] m_lattice;
-    delete m_correlator;
+    if (Parallel::ParallelParameters::active) {
+        delete m_S;
+        delete m_SU3Generator;
+        delete [] m_lattice;
+        delete m_correlator;
 
-    // Deleting flow related variables - should strictly speaking not be necesseary.
-    delete [] m_flowLattice;
-    delete m_flowCorrelator;
-    delete m_flow;
+        // Deleting flow related variables - should strictly speaking not be necesseary.
+        delete [] m_flowLattice;
+        delete m_flowCorrelator;
+        delete m_flow;
+    }
 }
 
 void System::subLatticeSetup()
@@ -396,6 +398,7 @@ void System::runMetropolis()
             flowConfiguration(iConfig);
         }
 
+
         // Averaging the observable values. Avoids calculating twice if we are flowing
         if (m_NFlows == 0) {
             m_correlator->calculate(m_lattice,iConfig + m_NThermSteps);
@@ -428,6 +431,8 @@ void System::runMetropolis()
         }
 
     }
+
+
 
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceScore, &m_acceptanceScore, 1, MPI_DOUBLE, MPI_SUM, Parallel::ParallelParameters::ACTIVE_COMM);
@@ -573,6 +578,9 @@ void System::flowConfigurations()
         // Flows the configuration loaded
         flowConfiguration(i);
     }
+
+
+
     if (m_processRank==0) printf("\nFlowing of %lu configurations done.", configurationNames.size());
 }
 

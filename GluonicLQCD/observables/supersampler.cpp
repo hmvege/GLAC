@@ -279,7 +279,7 @@ void SuperSampler::copyObservable(unsigned int iObs, std::vector<double> obs)
 
 std::vector<double> SuperSampler::getObservablesVector(unsigned int iObs)
 {
-    std::vector<double> obs(3 + 2*m_N[3]);
+    std::vector<double> obs(4 + 2*m_N[3]);
     obs[0] = (*m_plaqObservable)[iObs];
     obs[1] = (*m_topcObservable)[iObs];
     obs[2] = (*m_energyObservable)[iObs];
@@ -438,17 +438,17 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
                 if (nu==2 && iLambda==1) { // (2,1) == (1,2)
 //                    m_temp -= m_fieldTensorG[m_indexMap[mu][iLambda]]*conjugate(m_fieldTensorG[m_indexMap[iLambda][nu]]);
 //                    m_temp -= m_fieldTensorG[m_indexMap[mu][iLambda]]*transpose(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]);
-                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*m_fieldTensorG[m_indexMap.at(iLambda).at(nu)];
+                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*m_fieldTensorG[m_indexMap[iLambda][nu]];
 //                    m_temp += m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]*m_fieldTensorG[m_indexMap[mu][iLambda]];
                 } else if (nu==1 && iLambda==3) { // (3,1) == (1,3)
 //                    m_temp -= m_fieldTensorG[m_indexMap[mu][iLambda]]*conjugate(m_fieldTensorG[m_indexMap[iLambda][nu]]);
 //                    m_temp -= m_fieldTensorG[m_indexMap[mu][iLambda]]*transpose(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]);
-                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*m_fieldTensorG[m_indexMap.at(iLambda).at(nu)];
+                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*m_fieldTensorG[m_indexMap[iLambda][nu]];
 //                    m_temp += m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]*m_fieldTensorG[m_indexMap[mu][iLambda]];
                 } else if (nu==3 && iLambda==2) { // (3,2) == (2,3)
 //                    m_temp -= m_fieldTensorG[m_indexMap[mu][iLambda]]*conjugate(m_fieldTensorG[m_indexMap[iLambda][nu]]);
 //                    m_temp -= m_fieldTensorG[m_indexMap[mu][iLambda]]*transpose(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]);
-                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*m_fieldTensorG[m_indexMap.at(iLambda).at(nu)];
+                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*m_fieldTensorG[m_indexMap[iLambda][nu]];
 //                    m_temp += m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]*m_fieldTensorG[m_indexMap[mu][iLambda]];
                 } else {
                     m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*m_fieldTensorG[m_indexMap[nu][iLambda]];
@@ -466,7 +466,8 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 
 //        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[m_indexMap[rho][sigma]])*0.3333333333333333);
 //        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[m_indexMap[rho][sigma]])*0.6666666666666666);
-        m_tempEucl = sumSpatial(imagTraceMultiplication(m_temp, m_fieldTensorG[m_indexMap[rho][sigma]])*0.6666666666666666);
+//        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[m_indexMap[rho][sigma]])*0.6666666666666666);
+        m_tempEucl = sumSpatial(realTrace(makeAntiHermitian(m_temp*m_fieldTensorG[m_indexMap[rho][sigma]]))*0.6666666666666666);
 
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {

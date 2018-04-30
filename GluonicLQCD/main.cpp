@@ -36,7 +36,6 @@ int main(int numberOfArguments, char* cmdLineArguments[])
         printf("\nProgram complete. Time used: %f hours (%f seconds)", double(programTime.count())/3600.0, programTime.count());
     }
 
-//    printf("\nI am rank %d\n", Parallel::Communicator::getProcessRank());
     Parallel::Communicator::freeMPIGroups();
     Parallel::Communicator::setBarrier();
     MPI_Finalize();
