@@ -15,19 +15,23 @@ s = {
 		3: 2,
 	},
 	1 : {
-		2: 3,
-		3: 4,
+		2: 4,
 	},
 	2 : {
 		3: 5,
 	},
+	3 : {
+		1: 3,
+	},
 }
 
-print s[2][3]
-# exit()
-
 def index_mapper(i, j):
-	return _mapper(i,j)
+	# return _mapper(i,j)
+	# print "%-20s" % s[i], " | ", i, j
+	return s[i][j]
+
+# def index_mapper(i, j):
+# 	return s[i][j]
 
 # def index_mapper(i, j):
 # 	if i < j:
@@ -54,17 +58,24 @@ header += "rho   "
 header += "sigma "
 header += "map(mu, nu):     "
 header += "map(rho, sigma): "
-header += "lambda-sum"
+header += "lambda-sum(nu, lambda): "
 print header
 
-husk å invertere*(-1) hver gang orginal rekkefølge på indekser er switcha
+#husk aa invertere*(-1) hver gang orginal rekkefolge paa indekser er switcha
 
 mu = 0
 for nu in range(1,4):
 	lambda_indexes = []
 	for iLambda in range(0,4):
 		if iLambda != mu and iLambda != nu:
-			lambda_indexes.append("%d %d %d | %d %d %d" % (mu, iLambda, index_mapper(mu, iLambda), nu, iLambda, index_mapper(nu, iLambda)))
+			if nu == 1 and iLambda == 3:
+				lambda_indexes.append("(%d, %d): %d | (%d, %d): %d*" % (mu, iLambda, index_mapper(mu, iLambda), nu, iLambda, index_mapper(iLambda, nu)))
+			elif nu == 2 and iLambda == 1:
+				lambda_indexes.append("(%d, %d): %d | (%d, %d): %d*" % (mu, iLambda, index_mapper(mu, iLambda), nu, iLambda, index_mapper(iLambda, nu)))
+			elif nu == 3 and iLambda == 2:
+				lambda_indexes.append("(%d, %d): %d | (%d, %d): %d*" % (mu, iLambda, index_mapper(mu, iLambda), nu, iLambda, index_mapper(iLambda, nu)))
+			else:
+				lambda_indexes.append("(%d, %d): %d | (%d, %d): %d" % (mu, iLambda, index_mapper(mu, iLambda), nu, iLambda, index_mapper(nu, iLambda)))
 
 	rho = next_index(nu)
 	sigma = next_index(rho)

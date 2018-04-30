@@ -1,48 +1,88 @@
+#!/usr/bin/env python2
+
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
-# Chroma data
-dc = np.loadtxt("cfg3050_Qt_Ord2_Test.txt", usecols=(1))
+def get_chroma_data(data, N=32, NT=64, NF=1001):
+	"""
+	Args:
+		data: numpy array, chroma data
+	Returns:
+		w: numpy array, weinberg
+		wt: numpy array, weinberg in euclidean time
+	"""
+	w = np.zeros(NF)
+	wt = np.zeros((NF, NT))
 
-N = 32
-NT = 64
-NF = 1001
+	for i in xrange(0, NF):
+		w[i] = data[i*(NT+1)]
+		wt[i] = data[i*(NT+1)+1: i*(NT+1)+NT+1]
 
-w = np.zeros(NF)
-wt = np.zeros((NF, NT))
+	difference = np.abs(np.sum(wt, axis=1) - w)
+	print "Maximum difference between chroma summed wt and w: ", \
+		np.max(difference)
+	assert np.all(difference < 1e-13), "Chroma summed wt do not match w"
 
-for i in xrange(0, NF):
-	w[i] = dc[i*(NT+1)]
-	wt[i] = dc[i*(NT+1)+1: i*(NT+1)+NT+1]
+	return w, wt
 
+def compare(f1, f2, N=32, NT=64, NF=1001):
+	"""
+	Args:
+		f1: str, filename of Chroma data
+		f2: str, filename of GluonAction
+	"""
+	f1_data = np.loadtxt(f1, usecols=(1))
 
-difference = np.abs(np.sum(wt, axis=1) - w)
-print np.max(difference)
-assert np.all(difference < 1e-13), "summed wt do not match w"
+	w_chroma, wt_chroma = get_chroma_data(f1_data, N=N, NT=NT, NF=NF)
 
-# Data I generated
-fname_me = "weinbergTest10_weinberg_flow_config00000.dat"
-# fname_me = "weinbergTest9/flow_observables/weinberg/weinbergTest9_weinberg_flow_config00000.dat"
-# fname_me = "weinbergTest6_weinberg_flow_config00000.dat"
-flow_time, w_me = np.loadtxt(fname_me, skiprows=3, unpack=True)
+	ftime, w_gluon = f2_data = np.loadtxt(f2, skiprows=3, unpack=True)
 
+	return ftime, w_gluon, w_chroma, wt_chroma
 
+def plot_runs(ftime, w_gluon, w_chroma, show_plot=False):
+	"""
+	Plots data from runs.
+	"""
+	plt.plot(ftime, w_gluon, label="GluonAction")
+	plt.plot(ftime, w_chroma, label="Chroma")
+	plt.legend()
+	plt.title("Weinberg data from Chroma and GluonAction")
+	plt.xlabel(r"Flow time $t$")
+	plt.ylabel(r"Weinberg $W$")
+	plt.grid(True)
+	plt.savefig("weinberg_")
+	if show_plot:
+		plt.show()
 
-w_ratio = w / w_me
+def main(args):
+	if len(args) == 0:
+		run_num = 16
+		fname1 = "cfg3050_Qt_Ord2_Test.txt"
+		fname2 = "weinbergTest%d_weinberg_flow_config00000.dat" % run_num
+	else:
+		assert len(args)==2, "please provide two Weinberg data files to compare."
+		fname1 = str(args[0])
+		fname2 = str(args[1])
 
-print w
-print w_me
-print w_ratio
-# exit(1)
+	assert os.path.isfile(fname1), "file %s does not exist" % fname1
+	assert os.path.isfile(fname2), "file %s does not exist" % fname2
 
-plt.plot(flow_time, w_me, label="me")
-plt.plot(flow_time, w, label="chroma")
-plt.legend()
-plt.title("Weinberg ratio between me and chroma")
-plt.xlabel(r"Flow time $t$")
-plt.ylabel(r"Weinberg $W$")
-plt.grid(True)
+	ftime, w_gluon, w_chroma, wt_chroma = compare(fname1, fname2)
+	w_ratio = w_gluon / w_chroma
+	w_diff = w_gluon - w_chroma
 
-# plt.figure()
-# plt.plot(w_ratio)
-plt.show()
+	break_point = 20
+
+	print "i   wg             wc             wratio       wdiff"
+	for i, vals in enumerate(zip(w_gluon, w_chroma, w_ratio, w_diff)):
+		wg, wc, wratio, w_diff = vals
+		print "%-3d %-12.8f  %-13.8f  %-12.8f %-14.8f" % (i, wg, wc, wratio, w_diff)
+		if i == break_point:
+			break
+
+	plot_runs(ftime, w_gluon, w_chroma)
+
+if __name__ == '__main__':
+	import sys
+	main(sys.argv[1:])

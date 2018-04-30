@@ -460,6 +460,31 @@ inline Lattice<double> realTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
 }
 
 
+inline Lattice<double> imagTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
+{
+    /*
+     * Function for multiplying lattice and taking the imaginary trace without summing the matrix.
+     */
+    unsigned long site = 0;
+    Lattice<double>latticeSum;
+    latticeSum.allocate(L1.m_dim);
+    latticeSum.zeros();
+
+    for (unsigned long int ix = 0; ix < L1.m_dim[0]; ix++) {
+        for (unsigned long int iy = 0; iy < L1.m_dim[1]; iy++) {
+            for (unsigned long int iz = 0; iz < L1.m_dim[2]; iz++) {
+                for (unsigned long int it = 0; it < L1.m_dim[3]; it++) {
+                    site = Parallel::Index::getIndex(ix,iy,iz,it);
+                    latticeSum[site] += traceImagMultiplication(L1[site],L2[site]);
+                }
+            }
+        }
+    }
+
+    return latticeSum;
+}
+
+
 template <class SU3>
 inline double sumRealTrace(Lattice<SU3> L)
 {
@@ -500,6 +525,106 @@ inline Lattice<SU3> inv(Lattice<SU3> &&B)
     _L.allocate(B.m_dim);
     for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
         _L.m_sites[iSite] = B.m_sites[iSite].inv();
+    }
+    return std::move(_L);
+}
+
+template <class SU3>
+inline Lattice<SU3> transpose(Lattice<SU3> &B)
+{
+    Lattice<SU3> _L;
+    _L.allocate(B.m_dim);
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+        _L.m_sites[iSite] = B.m_sites[iSite].transpose();
+    }
+    return std::move(_L);
+}
+
+template <class SU3>
+inline Lattice<SU3> transpose(Lattice<SU3> &&B)
+{
+    Lattice<SU3> _L;
+    _L.allocate(B.m_dim);
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+        _L.m_sites[iSite] = B.m_sites[iSite].transpose();
+    }
+    return std::move(_L);
+}
+
+template <class SU3>
+inline Lattice<SU3> conjugate(Lattice<SU3> &B)
+{
+    Lattice<SU3> _L;
+    _L.allocate(B.m_dim);
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+        _L.m_sites[iSite] = B.m_sites[iSite].conjugate();
+    }
+    return std::move(_L);
+}
+
+template <class SU3>
+inline Lattice<SU3> conjugate(Lattice<SU3> &&B)
+{
+    Lattice<SU3> _L;
+    _L.allocate(B.m_dim);
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+        _L.m_sites[iSite] = B.m_sites[iSite].conjugate();
+    }
+    return std::move(_L);
+}
+
+template <class SU3>
+inline Lattice<SU3> makeAntiHermitian(Lattice<SU3> &B)
+{
+    /*
+     * Multiplies by (i).
+     */
+    Lattice<SU3> _L;
+    _L.allocate(B.m_dim);
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+        _L.m_sites[iSite] = B.m_sites[iSite].makeAntiHermitian();
+    }
+    return std::move(_L);
+}
+
+template <class SU3>
+inline Lattice<SU3> makeAntiHermitian(Lattice<SU3> &&B)
+{
+    /*
+     * Multiplies by (i).
+     */
+    Lattice<SU3> _L;
+    _L.allocate(B.m_dim);
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+        _L.m_sites[iSite] = B.m_sites[iSite].makeAntiHermitian();
+    }
+    return std::move(_L);
+}
+
+template <class SU3>
+inline Lattice<SU3> makeHermitian(Lattice<SU3> &B)
+{
+    /*
+     * Multiplies by (-i).
+     */
+    Lattice<SU3> _L;
+    _L.allocate(B.m_dim);
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+        _L.m_sites[iSite] = B.m_sites[iSite].makeHermitian();
+    }
+    return std::move(_L);
+}
+
+template <class SU3>
+inline Lattice<SU3> makeHermitian(Lattice<SU3> &&B)
+{
+    /*
+     * Multiplies by (-i).
+     */
+    Lattice<SU3> _L;
+    _L.allocate(B.m_dim);
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+        _L.m_sites[iSite] = B.m_sites[iSite].makeHermitian();
     }
     return std::move(_L);
 }
