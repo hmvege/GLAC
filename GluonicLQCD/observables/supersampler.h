@@ -38,20 +38,6 @@ private:
         {2, {{3, 5}}},
     };
 
-//    inline int index_mapper(int i, int j)
-//    {
-//        /*Function for mapping index onto a lattice array of length 6.*/
-//        if (i < j) {
-//            return m_indexMap[i][j];
-////            return m_indexMap.at(i).at(j);
-////            return int(i!=0)*3 + j - 1;
-//        } else {
-//            return m_indexMap[j][i];
-////            return m_indexMap.at(j).at(i);
-////            return int(i!=0)*3 + j - 1;
-//        }
-//    }
-
     inline int next_index(int i)
     {
         /*Function for getting the next index.*/
