@@ -86,6 +86,7 @@ public:
     // Lattice value setters
     void identity();
     void zeros();
+    Lattice<T> copy(Lattice<T> B);
 };
 
 //////////////////////////////////////////
@@ -320,6 +321,17 @@ inline void Lattice<T>::allocate(std::vector<unsigned int> dim) {
     m_latticeSize = dim[0] * dim[1] * dim[2] * dim[3];
     m_dim = dim;
     m_sites.resize(m_latticeSize);
+}
+
+template <class T> // TEMP TEST!!
+inline Lattice<T> Lattice<T>::copy(Lattice<T> B) {
+    m_dim = B.m_dim;
+    m_latticeSize = B.m_latticeSize;
+    m_sites.resize(m_latticeSize);
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+        m_sites[iSite] = B[iSite];
+    }
+    return *this;
 }
 
 //////////////////////////////////////////

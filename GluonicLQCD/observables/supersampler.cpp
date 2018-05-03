@@ -399,8 +399,10 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 
 //        m_fieldTensorG[m_indexMap[mu][nu]] = makeHermitian(m_clov1) * (0.0625); // *(-1/16)
 //        m_fieldTensorG[m_indexMap[rho][sigma]] = makeHermitian(m_clov2) * (0.0625);
-        m_fieldTensorG[m_indexMap[mu][nu]] = m_clov1; // *(-1/16)
-        m_fieldTensorG[m_indexMap[rho][sigma]] = m_clov2;
+//        m_fieldTensorG[m_indexMap[mu][nu]] = m_clov1; // *(-1/16)
+//        m_fieldTensorG[m_indexMap[rho][sigma]] = m_clov2;
+        m_fieldTensorG[m_indexMap[mu][nu]].copy(m_clov1); // *(-1/16)
+        m_fieldTensorG[m_indexMap[rho][sigma]].copy(m_clov2);
 
 //        cout << endl;
 //        Parallel::Communicator::setBarrierActive();
