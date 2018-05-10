@@ -13,9 +13,10 @@ SuperSampler::SuperSampler(bool flow) : Correlator()
     // Sets up multiplication factors
     m_plaqMultiplicationFactor = 1.0/(18.0*double(m_latticeSize));
     m_topcMultiplicationFactor = 1.0/(16*16*M_PI*M_PI);
-//    m_wMultiplicationFactor = 1.0/(3*16*16); // 2*8.0/(3*16*16*16)
-//    m_wMultiplicationFactor = 8.0; // 2*8.0/(3*16*16*16)
-    m_wMultiplicationFactor = 2*8.0/(3*16*16*16);
+    // Saves calculating about the G_munu about 16 times(8*2) compared to Chroma.
+    // Weinberg gets one 8 factor from the symmetries related to the levi-cevita
+    // Factor 1/3 from form Weinberg definition. 1/16^3 from the clover term definition, F_munu->G_munu
+    m_wMultiplicationFactor = 2*8.0*8.0/(3*16*16*16);
     m_energyMultiplicationFactor = 1.0/double(Parameters::getLatticeSize()); // Cant divide by size if we are not normalizing as well
 
     // Allocates memory to the helper variables
@@ -397,32 +398,8 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         m_tempDiag = imagTrace(m_clov2)*0.3333333333333333;
         m_clov2 = subtractImag(m_clov2, m_tempDiag);
 
-//        m_fieldTensorG[m_indexMap[mu][nu]] = makeHermitian(m_clov1) * (0.0625); // *(-1/16)
-//        m_fieldTensorG[m_indexMap[rho][sigma]] = makeHermitian(m_clov2) * (0.0625);
-//        m_fieldTensorG[m_indexMap[mu][nu]] = m_clov1; // *(-1/16)
-//        m_fieldTensorG[m_indexMap[rho][sigma]] = m_clov2;
-        m_fieldTensorG[m_indexMap[mu][nu]].copy(m_clov1); // *(-1/16)
+        m_fieldTensorG[m_indexMap[mu][nu]].copy(m_clov1);
         m_fieldTensorG[m_indexMap[rho][sigma]].copy(m_clov2);
-
-//        cout << endl;
-//        Parallel::Communicator::setBarrierActive();
-//        for (int p = 0; p <2; p++) {
-//            if (Parallel::Communicator::getProcessRank() == p) {
-//                m_fieldTensorG[m_indexMap[rho][sigma]][0].print();
-//            }
-//            Parallel::Communicator::setBarrierActive();
-//        }
-//        Parallel::Communicator::setBarrierActive();
-//        m_fieldTensorG[m_indexMap[rho][sigma]] = inv(m_fieldTensorG[m_indexMap[rho][sigma]]);
-//        Parallel::Communicator::setBarrierActive();
-//        for (int p = 0; p <2; p++) {
-//            if (Parallel::Communicator::getProcessRank() == p) {
-//                m_fieldTensorG[m_indexMap[rho][sigma]][0].print();
-//            }
-//            Parallel::Communicator::setBarrierActive();
-//        }
-//        Parallel::Communicator::setBarrierActive();
-//        exit(1);
 
         // Sums take the real trace multiplication and sums into a temporary holder
         m_tempEucl = sumSpatial(realTraceMultiplication(m_clov1, m_clov2));
@@ -452,38 +429,14 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         for (int iLambda = 1; iLambda < 4; iLambda++) {
             if (iLambda != nu) {
                 if (nu==2 && iLambda==1) { // (2,1) == (1,2)
-//                    m_temp += m_fieldTensorG[m_indexMap[nu][iLambda]]*inv(m_fieldTensorG[m_indexMap[iLambda][mu]]);
-//                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*inv(m_fieldTensorG[m_indexMap[iLambda][nu]]);
                     m_temp += m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]);
-//                    m_temp -= m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]);
-//                    (m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]))[0].print();
-
-//                    m_temp -= inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)])*m_fieldTensorG[m_indexMap.at(mu).at(iLambda)];
                 } else if (nu==1 && iLambda==3) { // (1,3) == (3.1)
-//                    m_temp += m_fieldTensorG[m_indexMap[nu][iLambda]]*inv(m_fieldTensorG[m_indexMap[iLambda][mu]]);
-//                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*inv(m_fieldTensorG[m_indexMap[iLambda][nu]]);
                     m_temp += m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]);
-//                    m_temp -= m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]);
-//                    (m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]))[0].print();
-//                    m_temp -= inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)])*m_fieldTensorG[m_indexMap.at(mu).at(iLambda)];
                 } else if (nu==3 && iLambda==2) { // (3,2) == (2,3)
-//                    m_temp += m_fieldTensorG[m_indexMap[nu][iLambda]]*inv(m_fieldTensorG[m_indexMap[iLambda][mu]]);
-//                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*inv(m_fieldTensorG[m_indexMap[iLambda][nu]]);
                     m_temp += m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]);
-//                    m_temp -= m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]);
-//                    (m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)]))[0].print();
-//                    m_temp -= inv(m_fieldTensorG[m_indexMap.at(iLambda).at(nu)])*m_fieldTensorG[m_indexMap.at(mu).at(iLambda)];
                 } else {
                     m_temp += m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*m_fieldTensorG[m_indexMap.at(nu).at(iLambda)];
-//                    (m_fieldTensorG[m_indexMap.at(mu).at(iLambda)]*m_fieldTensorG[m_indexMap.at(nu).at(iLambda)])[0].print();
-
-//                    m_temp -= m_fieldTensorG[m_indexMap.at(nu).at(iLambda)]*m_fieldTensorG[m_indexMap.at(mu).at(iLambda)];
-//                    m_temp += m_fieldTensorG[m_indexMap[mu][iLambda]]*m_fieldTensorG[m_indexMap[nu][iLambda]];
-//                    m_temp -= m_fieldTensorG[m_indexMap[nu][iLambda]]*m_fieldTensorG[m_indexMap[mu][iLambda]];
                 }
-
-//                m_temp += m_fieldTensorG[index_mapper(mu, iLambda)]*m_fieldTensorG[index_mapper(nu, iLambda)];
-//                m_temp -= m_fieldTensorG[index_mapper(nu, iLambda)]*m_fieldTensorG[index_mapper(mu, iLambda)];
             }
         }
 
@@ -491,10 +444,6 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
         sigma = next_index(rho);
 
         m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[m_indexMap[rho][sigma]]));
-//        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[m_indexMap[rho][sigma]])*0.6666666666666666);
-//        m_tempEucl = sumSpatial(realTraceMultiplication(m_temp, m_fieldTensorG[m_indexMap[rho][sigma]])*0.3333333333333333);
-//        m_tempEucl = sumSpatial(realTrace(makeHermitian(m_temp*m_fieldTensorG[m_indexMap[rho][sigma]]))*0.6666666666666666); // Swithcing to making matrices hermitian makes no difference, as i^4 is the same as 1:/
-//        m_tempEucl = sumSpatial(realTrace(makeAntiHermitian(m_temp*m_fieldTensorG[m_indexMap[rho][sigma]]))*0.3333333333333333);
 
         // Loops over time dimension
         for (unsigned long int it = 0; it < m_N[3]; it++) {
@@ -504,9 +453,7 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
             // Sums the weinberg, negative sign already taken care of
             m_weinberg -= m_tempEucl[it];
         }
-//        cout << m_weinberg << endl;
     }
-//    exit(1);
 
     ///////////////////////////
     //////// PLAQUETTE ////////
