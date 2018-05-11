@@ -9,7 +9,7 @@
     "NTherm"                    : 1000,
     "NFlows"                    : 1000,
     "NUpdates"                  : 20,
-    "storeCfgs"                 : True,
+    "storeCfgs"                 : False,
     "storeThermCfgs"            : True,
     "verboseRun"                : False,
     "hotStart"                  : False,
