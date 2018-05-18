@@ -88,18 +88,14 @@ HEADERS += \
     flow/flow.h \
     lib/json.hpp
 
-#QMAKE_PRE_LINK = hpclink #??
-
 # MPI Settings
 QMAKE_CXX = mpicxx
 QMAKE_CXX_RELEASE = $$QMAKE_CXX
 QMAKE_CXX_DEBUG = $$QMAKE_CXX
-#QMAKE_LINK = hpclink $$QMAKE_CXX
 QMAKE_LINK = $$QMAKE_CXX
 QMAKE_CC = mpicc
 
 QMAKE_CFLAGS += -O3 -std=c++11 $$system(mpicc --showme:compile)
-#QMAKE_LFLAGS += -static $$system(mpicxx --showme:link)
 QMAKE_LFLAGS += $$system(mpicxx --showme:link)
 QMAKE_CXXFLAGS += -O3 -std=c++11 $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
 QMAKE_CXXFLAGS_RELEASE += -O3 -std=c++11 $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
