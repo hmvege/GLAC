@@ -25,12 +25,6 @@ PerformanceTests::PerformanceTests()
     // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
     m_generator                         = std::mt19937_64(-1);
     m_uniform_distribution              = std::uniform_real_distribution<double>(0,1);
-
-    // Initialize basics, perhaps subclasses for different types of testing?
-
-    // Include 2 derivative speed tests
-
-
 }
 
 PerformanceTests::~PerformanceTests()
