@@ -312,26 +312,6 @@ inline SU3 &SU3::operator*=(SU3 B)
     temp[16] = mat[12]*B.mat[4] - mat[13]*B.mat[5] + mat[14]*B.mat[10] - mat[15]*B.mat[11] + mat[16]*B.mat[16] - mat[17]*B.mat[17];
     temp[17] = mat[12]*B.mat[5] + mat[13]*B.mat[4] + mat[14]*B.mat[11] + mat[15]*B.mat[10] + mat[16]*B.mat[17] + mat[17]*B.mat[16];
 
-//    temp[0] = mat[0]*B.mat[0] - mat[1]*B.mat[1] + mat[2]*B.mat[6] - mat[3]*B.mat[7] + mat[4]*B.mat[12] - mat[5]*B.mat[13];
-//    temp[6] = mat[6]*B.mat[0] - mat[7]*B.mat[1] + mat[8]*B.mat[6] - mat[9]*B.mat[7] + mat[10]*B.mat[12] - mat[11]*B.mat[13];
-//    temp[12] = mat[12]*B.mat[0] - mat[13]*B.mat[1] + mat[14]*B.mat[6] - mat[15]*B.mat[7] + mat[16]*B.mat[12] - mat[17]*B.mat[13];
-//    temp[2] = mat[0]*B.mat[2] - mat[1]*B.mat[3] + mat[2]*B.mat[8] - mat[3]*B.mat[9] + mat[4]*B.mat[14] - mat[5]*B.mat[15];
-//    temp[8] = mat[6]*B.mat[2] - mat[7]*B.mat[3] + mat[8]*B.mat[8] - mat[9]*B.mat[9] + mat[10]*B.mat[14] - mat[11]*B.mat[15];
-//    temp[14] = mat[12]*B.mat[2] - mat[13]*B.mat[3] + mat[14]*B.mat[8] - mat[15]*B.mat[9] + mat[16]*B.mat[14] - mat[17]*B.mat[15];
-//    temp[4] = mat[0]*B.mat[4] - mat[1]*B.mat[5] + mat[2]*B.mat[10] - mat[3]*B.mat[11] + mat[4]*B.mat[16] - mat[5]*B.mat[17];
-//    temp[10] = mat[6]*B.mat[4] - mat[7]*B.mat[5] + mat[8]*B.mat[10] - mat[9]*B.mat[11] + mat[10]*B.mat[16] - mat[11]*B.mat[17];
-//    temp[16] = mat[12]*B.mat[4] - mat[13]*B.mat[5] + mat[14]*B.mat[10] - mat[15]*B.mat[11] + mat[16]*B.mat[16] - mat[17]*B.mat[17];
-
-//    temp[1] = mat[0]*B.mat[1] + mat[1]*B.mat[0] + mat[2]*B.mat[7] + mat[3]*B.mat[6] + mat[4]*B.mat[13] + mat[5]*B.mat[12];
-//    temp[7] = mat[6]*B.mat[1] + mat[7]*B.mat[0] + mat[8]*B.mat[7] + mat[9]*B.mat[6] + mat[10]*B.mat[13] + mat[11]*B.mat[12];
-//    temp[13] = mat[12]*B.mat[1] + mat[13]*B.mat[0] + mat[14]*B.mat[7] + mat[15]*B.mat[6] + mat[16]*B.mat[13] + mat[17]*B.mat[12];
-//    temp[3] = mat[0]*B.mat[3] + mat[1]*B.mat[2] + mat[2]*B.mat[9] + mat[3]*B.mat[8] + mat[4]*B.mat[15] + mat[5]*B.mat[14];
-//    temp[9] = mat[6]*B.mat[3] + mat[7]*B.mat[2] + mat[8]*B.mat[9] + mat[9]*B.mat[8] + mat[10]*B.mat[15] + mat[11]*B.mat[14];
-//    temp[15] = mat[12]*B.mat[3] + mat[13]*B.mat[2] + mat[14]*B.mat[9] + mat[15]*B.mat[8] + mat[16]*B.mat[15] + mat[17]*B.mat[14];
-//    temp[5] = mat[0]*B.mat[5] + mat[1]*B.mat[4] + mat[2]*B.mat[11] + mat[3]*B.mat[10] + mat[4]*B.mat[17] + mat[5]*B.mat[16];
-//    temp[11] = mat[6]*B.mat[5] + mat[7]*B.mat[4] + mat[8]*B.mat[11] + mat[9]*B.mat[10] + mat[10]*B.mat[17] + mat[11]*B.mat[16];
-//    temp[17] = mat[12]*B.mat[5] + mat[13]*B.mat[4] + mat[14]*B.mat[11] + mat[15]*B.mat[10] + mat[16]*B.mat[17] + mat[17]*B.mat[16];
-
     for (int i = 0; i < 18; i++)
     {
         mat[i] = temp[i];
