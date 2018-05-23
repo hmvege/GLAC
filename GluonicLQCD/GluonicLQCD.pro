@@ -95,10 +95,25 @@ QMAKE_CXX_DEBUG = $$QMAKE_CXX
 QMAKE_LINK = $$QMAKE_CXX
 QMAKE_CC = mpicc
 
-QMAKE_CFLAGS += -O3 -std=c++11 $$system(mpicc --showme:compile)
+QMAKE_CFLAGS += $$system(mpicc --showme:compile)
 QMAKE_LFLAGS += $$system(mpicxx --showme:link)
-QMAKE_CXXFLAGS += -O3 -std=c++11 $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
-QMAKE_CXXFLAGS_RELEASE += -O3 -std=c++11 $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
+QMAKE_CXXFLAGS += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
+QMAKE_CXXFLAGS_RELEASE += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
+
+# Adds processor specific optimizations
+QMAKE_CFLAGS += -march=native
+QMAKE_CXXFLAGS += -march=native
+QMAKE_CXXFLAGS_RELEASE += -march=native
+
+# Adds O3 optimizations
+QMAKE_CFLAGS += -O3
+QMAKE_CXXFLAGS += -O3
+QMAKE_CXXFLAGS_RELEASE += -O3
+
+# Forces C++11
+QMAKE_CFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS_RELEASE += -std=c++11
 
 # Removes flags
 QMAKE_CFLAGS -= -O2
