@@ -16,14 +16,15 @@ public:
 //    // Copy constructor
 //    SU3(const SU3& other)
 //    {
-//        mat = other.mat;
+//        std::copy(mat, mat+18, other.mat);
+////        mat = other.mat;
 //    }
 
 //    // Move constructor
 //    SU3(SU3 && other) noexcept
 //    {
 ////        mat = std::move(other.mat);
-//        std::copy(mat, mat+18, other.mat);
+//        std::swap(mat, other.mat);
 //    }
 
 //    // Copy assignement operator
@@ -35,7 +36,7 @@ public:
 
 //    // Move assignement operator
 //    SU3 &operator= (SU3 && other) noexcept {
-//        mat = std::move(other.mat);
+//        std::swap(mat, other.mat);
 //        return *this;
 //    }
 
