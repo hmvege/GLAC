@@ -231,10 +231,11 @@ inline SU3 &SU3::operator*=(SU3 B)
     temp[16] = mat[12]*B.mat[4] - mat[13]*B.mat[5] + mat[14]*B.mat[10] - mat[15]*B.mat[11] + mat[16]*B.mat[16] - mat[17]*B.mat[17];
     temp[17] = mat[12]*B.mat[5] + mat[13]*B.mat[4] + mat[14]*B.mat[11] + mat[15]*B.mat[10] + mat[16]*B.mat[17] + mat[17]*B.mat[16];
 
-    for (int i = 0; i < 18; i++)
-    {
-        mat[i] = temp[i];
-    }
+    std::swap(mat, temp);
+//    for (int i = 0; i < 18; i++)
+//    {
+//        mat[i] = temp[i];
+//    }
     return *this;
 }
 

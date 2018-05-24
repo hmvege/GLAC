@@ -786,6 +786,7 @@ def main(args):
     ######## Performance test parser ########
     performance_test_parser = subparser.add_parser('perf_test', help='Runs performance tests on the certain components of the GluonicLQCD program. Will exit when complete.')
     performance_test_parser.add_argument('system',              default=False,                                      type=str, choices=['smaug', 'abel', 'laconia', 'local'], help='Specify system we are running on.')
+    performance_test_parser.add_argument('threads',             default=False,                                      type=int, help='Number of threads to run on')
     performance_test_parser.add_argument('-NExpTests',          default=config_default["NExpTests"],                type=int, help='Number of exponentiation tests we will run.')
     performance_test_parser.add_argument('-NRandTests',         default=config_default["NRandTests"],               type=int, help='Number of random tests we will run.')
     performance_test_parser.add_argument('-NDerivativeTests',   default=config_default["NDerivativeTests"],         type=int, help='Number of full lattice derivative tests we will run.')
@@ -1040,8 +1041,9 @@ def main(args):
         config_default["performanceTesting"] = True
         config_default["cpu_approx_runtime_hr"] = 0
         config_default["cpu_approx_runtime_min"] = 20
-        config_default["N"] = 16
-        config_default["NT"] = 32
+        config_default["N"] = 8
+        config_default["NT"] = 16
+        config_default["threads"] = args.threads
         config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
         partition = "normal"
         config_default["NExpTests"] = args.NExpTests

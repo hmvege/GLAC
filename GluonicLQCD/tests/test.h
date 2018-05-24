@@ -3,6 +3,7 @@
 
 #include "tests/testsuite.h"
 #include "performancetests.h"
+#include "parallelization/communicator.h"
 
 void runUnitTests(bool runTests)
 {
@@ -10,7 +11,11 @@ void runUnitTests(bool runTests)
     {
         TestSuite unitTester;
         unitTester.runFullTestSuite();
-        Parallel::Communicator::MPIExit("Unit tests complete.");
+        Parallel::Communicator::setBarrier();
+        Parallel::Communicator::freeMPIGroups();
+        Parallel::Communicator::setBarrier();
+        MPI_Finalize();
+        exit(0);
     }
 }
 
@@ -20,7 +25,11 @@ void runPerformanceTests(bool runTests)
     {
         PerformanceTests performenceTester;
         performenceTester.run();
-        Parallel::Communicator::MPIExit("Performance tester complete.");
+        Parallel::Communicator::setBarrier();
+        Parallel::Communicator::freeMPIGroups();
+        Parallel::Communicator::setBarrier();
+        MPI_Finalize();
+        exit(0);
     }
 }
 

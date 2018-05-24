@@ -43,6 +43,7 @@ void PerformanceTests::run()
         testExponentiationAccuracy();
         testRandomGenerators(Parameters::getNRandTests());
     }
+    Parallel::Communicator::setBarrierActive();
     testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
 }
 
@@ -201,6 +202,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned long int NTests)
     if (Parallel::Communicator::getProcessRank() == 0) {
         printf("\n\nRunning timing of SU3 derivation methods with %lu full lattice derivation tests.",NTests);
     }
+
 
     // Timers
     double luscherTimer = 0, morningstarTimer = 0;
