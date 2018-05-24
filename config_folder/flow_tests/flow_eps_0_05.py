@@ -1,5 +1,5 @@
 {   "bin_fn"                    : "build/GluonicLQCD",
-    "runName"                   : "flow_eps_0_005", # 0.001 0.005 0.007 0.01 0.03 0.05 0.1 0.5
+    "runName"                   : "flow_eps_0_05", # 0.001 0.005 0.007 0.01 0.03 0.05 0.1 0.5
     "N"                         : 32,
     "NT"                        : 64,
     "subDims"                   : [8, 8, 8, 8],
@@ -19,7 +19,7 @@
     "uTest"                     : False,
     "uTestVerbose"              : False,
     "SU3Eps"                    : 0.24,
-    "flowEpsilon"               : 0.005, # 0.001 0.005 0.007 0.01 0.03 0.05 0.1 0.5
+    "flowEpsilon"               : 0.05, # 0.001 0.005 0.007 0.01 0.03 0.05 0.1 0.5
     "metropolisSeed"            : 0,
     "randomMatrixSeed"          : 0,
     "threads"                   : 512,

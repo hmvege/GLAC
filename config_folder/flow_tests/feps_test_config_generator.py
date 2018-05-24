@@ -1,13 +1,13 @@
 {   "bin_fn"                    : "build/GluonicLQCD",
-    "runName"                   : "flow_eps_0_005", # 0.001 0.005 0.007 0.01 0.03 0.05 0.1 0.5
+    "runName"                   : "flow_eps_test_confgen_b62",
     "N"                         : 32,
     "NT"                        : 64,
     "subDims"                   : [8, 8, 8, 8],
     "beta"                      : 6.2,
-    "NCf"                       : 1, # LOADS A CONFIG FROM feps test config generator!!
+    "NCf"                       : 1,
     "NCor"                      : 600,
     "NTherm"                    : 20000,
-    "NFlows"                    : 1000,
+    "NFlows"                    : 0,
     "NUpdates"                  : 30,
     "storeCfgs"                 : True,
     "storeThermCfgs"            : False,
@@ -19,7 +19,7 @@
     "uTest"                     : False,
     "uTestVerbose"              : False,
     "SU3Eps"                    : 0.24,
-    "flowEpsilon"               : 0.005, # 0.001 0.005 0.007 0.01 0.03 0.05 0.1 0.5
+    "flowEpsilon"               : 0.01,
     "metropolisSeed"            : 0,
     "randomMatrixSeed"          : 0,
     "threads"                   : 512,
