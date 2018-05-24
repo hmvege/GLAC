@@ -1102,7 +1102,7 @@ def main(args):
 
         # Requiring an new estimate of the run time if we are flowing
         _config_path, _config_file = os.path.split(args.load_configuration)
-        assert not os.path.isdir(args.load_config_and_run), "%s is a folder and not a binary(.bin) file." % args.load_config_and_run
+        assert not os.path.isdir(args.load_configuration), "%s is a folder and not a binary(.bin) file." % args.load_configuration
         assert _config_file.split(".")[-1] == "bin", "%s is not a binary(.bin) file." % _config_file
         config_default["load_config_and_run"] = _config_file
         config_default["inputFolder"] = os.path.normpath(_config_path)
