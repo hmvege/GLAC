@@ -17,6 +17,9 @@ double Parameters::m_beta = 0;
 double Parameters::m_a = 0;
 const double Parameters::r0 = 0.5; // Sommer parameter
 
+// Action type
+std::string Parameters::m_actionType = "";
+
 // Run specific constants
 unsigned int Parameters::m_NCf = 0;
 unsigned int Parameters::m_NCor = 0;

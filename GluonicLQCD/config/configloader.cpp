@@ -48,6 +48,8 @@ namespace ConfigLoader {
         Parameters::setNFlows(j["NFlows"]);
         Parameters::setNUpdates(j["NUpdates"]);
 
+        // Action type retrieval
+        Parameters::setActionType(j["action"]);
 
         // Data storage related variables
         Parameters::setOutputFolder(j["outputFolder"]);

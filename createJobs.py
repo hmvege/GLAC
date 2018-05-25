@@ -12,6 +12,7 @@ AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct", "weinberg", "weinber
 # AVAILABLE_SCALAR_FIELDS = ["plaq", "topc", "energy", "weinberg"]
 AVAILABLE_SCALAR_FIELDS = ["topc", "energy"]
 AVAILABLE_EXP_FUNCS = ["morningstar", "luscher", "taylor2", "taylor4"]
+AVAILABLE_ACTIONS = ["luscher", "wilson"]
 
 def get_arg_max_index(N):
     """For getting the maximum index of an list."""
@@ -159,7 +160,7 @@ class JobCreator:
                 self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables"))
                 if self.create_fields_folders:
                     self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields"))
-                for fobs in AVAILABLE_OBSERVABLES:
+                for fobs in self.flow_observables:
                     self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables", fobs))
                     if self.create_fields_folders and fobs in AVAILABLE_SCALAR_FIELDS:
                         self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", fobs))
@@ -248,6 +249,7 @@ class JobCreator:
         json_dict["hotStart"] = config_dict["hotStart"]
         json_dict["RSTHotStart"] = config_dict["RSTHotStart"]
         json_dict["expFunc"] = config_dict["expFunc"]
+        json_dict["action"] = config_dict["action"]
         json_dict["observables"] = config_dict["observables"]
         json_dict["flowObservables"] = config_dict["flowObservables"]
         json_dict["load_field_configs"] = config_dict["load_field_configs"]
@@ -321,7 +323,7 @@ class JobCreator:
         self.flow_observables   = job_config["flowObservables"]
         self.inputFolder        = job_config["inputFolder"]
         self.outputFolder       = job_config["outputFolder"]
-        observables             = job_config["observables"]
+        self.observables        = job_config["observables"]
         flowEpsilon             = job_config["flowEpsilon"]
         storeCfgs               = job_config["storeCfgs"]
         storeThermCfgs          = job_config["storeThermCfgs"]
@@ -641,6 +643,7 @@ def main(args):
         "hotStart"                  : False,
         "RSTHotStart"               : False,
         "expFunc"                   : "morningstar",
+        "action"                    : "wilson", # options: wilson, luscher - both first order
         "observables"               : ["plaq"],
         "flowObservables"           : ["plaq","topc","energy"],
         "load_field_configs"        : False,
@@ -726,6 +729,7 @@ def main(args):
     job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],                  type=str, choices=AVAILABLE_EXP_FUNCS, help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
     job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],              type=str, choices=AVAILABLE_OBSERVABLES, nargs='+', help='Observables to sample for in flow.')
     job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],          type=str, choices=AVAILABLE_OBSERVABLES, nargs='+', help='Observables to sample for in flow.')
+    job_parser.add_argument('-act', '--action',                 default=config_default["action"],                   type=str, choices=AVAILABLE_ACTIONS, nargs=None, help='Action to use.')
 
     # Data generation related variables
     job_parser.add_argument('-SU3Eps', '--SU3Epsilon',          default=config_default["SU3Eps"],                   type=float, help='SU3 epsilon random increment value.')
@@ -936,6 +940,7 @@ def main(args):
         config_default["hotStart"]                  = bool(args.hotStart)
         config_default["RSTHotStart"]               = bool(args.RSTHotStart)
         config_default["expFunc"]                   = args.expFunc
+        config_default["action"]                    = args.action
         config_default["observables"]               = args.observables
         config_default["flowObservables"]           = args.flowObservables
         config_default["SU3Eps"]                    = args.SU3Epsilon

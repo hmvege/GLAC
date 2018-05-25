@@ -20,6 +20,9 @@ private:
     static int m_processorsPerDimension[4];
     static bool m_subLatticeSizePreset;
 
+    // Action type
+    static std::string m_actionType;
+
     // Beta value constant
     static double m_beta;
 
@@ -157,6 +160,9 @@ public:
     static void setSubLatticeSize(unsigned long int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
     static void setProcessorsPerDimension(int *processorsPerDimension) { for (unsigned int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
 
+    // Action type
+    static void setActionType(std::string actionType) { m_actionType = actionType; }
+
     // Name of samplers setters
     static void setExpFuncName(std::string expFuncName) { m_expFuncName = expFuncName;}
     static void setObservableList(std::vector<std::string> observablesList) { m_observablesList = observablesList; }
@@ -233,6 +239,9 @@ public:
     static bool getSubLatticePreset() { return m_subLatticeSizePreset; }
     static unsigned int getSubLatticeSize() { return m_subLatticeSize; }
     static void getProcessorsPerDimension(int *processorsPerDimension) { for (unsigned int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
+
+    // Action type
+    static std::string getActionType() { return m_actionType; }
 
     // Exponential getters
     static std::string getExpFuncName() { return m_expFuncName; }

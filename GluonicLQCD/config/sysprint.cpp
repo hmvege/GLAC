@@ -76,6 +76,7 @@ void SysPrint::printSystemInfo()
         if (Parameters::m_NFlows != 0) {
             cout << "Exponentiation function:               " << Parameters::m_expFuncName << endl;
         }
+        cout << "Action type:                           " << Parameters::getActionType() << endl;
         if (!Parameters::getLoadFieldConfigurations()) {
             cout << "Observables:                           " << getListString(Parameters::m_observablesList) << endl;
         }
