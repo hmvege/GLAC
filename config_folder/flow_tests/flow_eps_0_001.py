@@ -1,9 +1,9 @@
 {   "bin_fn"                    : "build/GluonicLQCD",
     "runName"                   : "flow_eps_0_001", # 0.001 0.005 0.007 0.01 0.03 0.05 0.1 0.5
-    "N"                         : 32,
-    "NT"                        : 64,
-    "subDims"                   : [8, 8, 8, 8],
-    "beta"                      : 6.2,
+    "N"                         : 24,
+    "NT"                        : 48,
+    "subDims"                   : [6, 6, 6, 6],
+    "beta"                      : 6.0,
     "NCf"                       : 1, # LOADS A CONFIG FROM feps test config generator!!
     "NCor"                      : 600,
     "NTherm"                    : 20000,
