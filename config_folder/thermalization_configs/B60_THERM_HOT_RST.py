@@ -1,20 +1,21 @@
 {   "bin_fn"                    : "build/GluonicLQCD",
-    "runName"                   : "B60_NU30",
+    "runName"                   : "B60_THERM_HOT_RST",
     "N"                         : 24,
     "NT"                        : 48,
     "subDims"                   : [6, 6, 6, 6],
     "beta"                      : 6.0,
-    "NCf"                       : 10,
+    "NCf"                       : 1,
     "NCor"                      : 600,
-    "NTherm"                    : 0,
+    "NTherm"                    : 25000,
     "NFlows"                    : 0,
     "NUpdates"                  : 30,
-    "storeCfgs"                 : True,
-    "storeThermCfgs"            : False,
+    "storeCfgs"                 : False,
+    "storeThermCfgs"            : True,
     "verboseRun"                : False,
-    "hotStart"                  : False,
+    "hotStart"                  : True,
+    "RSTHotStart"               : True,
     "expFunc"                   : "morningstar", # options: luscher, taylor2, taylor4
-    "observables"               : ["plaq"], # Optional: topologicalCharge, energyDensity
+    "observables"               : ["plaq","topc","energy"], # Optional: topologicalCharge, energyDensity
     "flowObservables"           : ["plaq","topc","energy"], # Optional: topologicalCharge, energyDensity
     "uTest"                     : False,
     "uTestVerbose"              : False,
@@ -23,7 +24,7 @@
     "metropolisSeed"            : 0,
     "randomMatrixSeed"          : 0,
     "threads"                   : 512,
-    "cpu_approx_runtime_hr"     : 2,
-    "cpu_approx_runtime_min"    : 0,
+    "cpu_approx_runtime_hr"     : 4,
+    "cpu_approx_runtime_min"    : 30,
     "cpu_memory"                : 3800,
     "account_name"              : "nn2977k"}
