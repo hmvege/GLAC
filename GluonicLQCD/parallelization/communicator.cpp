@@ -309,8 +309,10 @@ void Parallel::Communicator::checkProcessorValidity()
     /*
      * Exits if number of processors are odd.
      */
-    if (m_numprocs % 2 != 0) {
-        MPIExit("Error: odd number of processors --> exiting.");
+    if (m_numprocs >= 2) {
+        if (m_numprocs % 2 != 0) {
+            MPIExit("Error: odd number of processors --> exiting.");
+        }
     }
 }
 
