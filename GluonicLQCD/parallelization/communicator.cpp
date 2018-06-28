@@ -364,7 +364,6 @@ void Parallel::Communicator::initializeSubLattice()
         subLatticeSize *= m_N[i];
     }
     Parameters::setSubLatticeSize(subLatticeSize);
-
     // Ensures correct sub lattice dimensions
     checkSubLatticeValidity();
 

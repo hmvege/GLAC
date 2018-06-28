@@ -14,6 +14,7 @@ void runPerformanceTests();
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
     Parallel::Communicator::init(&numberOfArguments, &cmdLineArguments);
+
     ConfigLoader::load(std::string(cmdLineArguments[1]));
 
     // Unit and performance tests
