@@ -106,11 +106,11 @@ def change_config_folder(folder, replace_values, append_to_values=None,
             os.remove(f2_path)
 
         # print(json.dumps(ord_data_dict, indent=4, separators=(", ", ": ")), "\n")
-        exit(0)
+        # exit("Exits after changing file %s" % f)
 
     print("Changed config files in folder %s." % folder)
 
-    exit(0)
+    # exit("Exits after folder %s" % folder)
 
 def main():
     dryrun = False
@@ -126,30 +126,11 @@ def main():
         value_to_replace = {
             "runName": ["_flow" for i in range(len(files))],
             "NCf": 0,
-            "NCorr": 0,
+            "NCor": 0,
             "NUp": 0,
             "NFlows": 1000,
             "storeCfgs": False,
             # "cpu_approx_runtime_hr": [],
-        }
-        change_config_folder(dict_folder, value_to_replace, 
-            append_to_values=append_to_values, 
-            modify_values=modify_values,
-            dryrun=dryrun)
-
-
-        dict_folder = "%s_scaling/full" % scaling
-        files = [f for f in os.listdir(dict_folder) if f.endswith(".py")]
-        append_to_values = ["runName"]
-        modify_values = None
-        value_to_replace = {
-            "runName": ["_full" for i in range(len(files))],
-            "NCf": 5,
-            "NCorr": 600,
-            "NUp": 30,
-            "NFlows": 1000,
-            "storeCfgs": True,
-            "cpu_approx_runtime_hr": [20, 12, 6, 4, 3, 2, 2, 2, 2, 2, 2],
         }
         change_config_folder(dict_folder, value_to_replace, 
             append_to_values=append_to_values, 
@@ -164,7 +145,7 @@ def main():
         value_to_replace = {
             "runName": ["_cfg_gen" for i in range(len(files))],
             "NCf": 1,
-            "NCorr": 600,
+            "NCor": 600,
             "NUp": 30,
             "NFlows": 1000,
             "storeCfgs": True,
@@ -174,6 +155,27 @@ def main():
             append_to_values=append_to_values, 
             modify_values=modify_values,
             dryrun=dryrun)
+
+
+        # dict_folder = "%s_scaling/full" % scaling
+        # files = [f for f in os.listdir(dict_folder) if f.endswith(".py")]
+        # append_to_values = ["runName"]
+        # modify_values = None
+        # value_to_replace = {
+        #     "runName": ["_full" for i in range(len(files))],
+        #     "NCf": 5,
+        #     "NCor": 600,
+        #     "NUp": 30,
+        #     "NFlows": 1000,
+        #     "storeCfgs": True,
+        #     "cpu_approx_runtime_hr": [20, 12, 6, 4, 3, 2, 2, 2, 2, 2, 2],
+        # }
+        # change_config_folder(dict_folder, value_to_replace, 
+        #     append_to_values=append_to_values, 
+        #     modify_values=modify_values,
+        #     dryrun=dryrun)
+
+        exit("Exiting after run for %s scaling." % scaling)
 
 if __name__ == '__main__':
     main()

@@ -11,7 +11,7 @@
     ], 
     "beta": 6.0, 
     "NCf": 0, 
-    "NCor": 600, 
+    "NCor": 0, 
     "NTherm": 0, 
     "NFlows": 1000, 
     "NUpdates": 30, 
