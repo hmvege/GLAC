@@ -1,6 +1,6 @@
 {
     "bin_fn": "build/GluonicLQCD", 
-    "runName": "weak_scaling_np4_cfg_gen", 
+    "runName": "weak_scaling_np4_gen", 
     "N": 4, 
     "NT": 16, 
     "subDims": [
@@ -13,7 +13,7 @@
     "NCf": 1, 
     "NCor": 600, 
     "NTherm": 0, 
-    "NFlows": 1000, 
+    "NFlows": 0, 
     "NUpdates": 30, 
     "storeCfgs": True, 
     "storeThermCfgs": False, 
@@ -36,7 +36,7 @@
     "metropolisSeed": 0, 
     "randomMatrixSeed": 0, 
     "threads": 4, 
-    "cpu_approx_runtime_hr": 25, 
+    "cpu_approx_runtime_hr": 2, 
     "cpu_approx_runtime_min": 0, 
     "cpu_memory": 3800, 
     "account_name": "nn2977k"
