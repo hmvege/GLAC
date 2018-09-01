@@ -36,7 +36,7 @@
     "metropolisSeed": 0, 
     "randomMatrixSeed": 0, 
     "threads": 2048, 
-    "cpu_approx_runtime_hr": 4, 
+    "cpu_approx_runtime_hr": 8, 
     "cpu_approx_runtime_min": 0, 
     "cpu_memory": 3800, 
     "account_name": "nn2977k"

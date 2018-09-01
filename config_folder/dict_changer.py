@@ -84,8 +84,8 @@ def change_config_folder(folder, replace_values, append_to_values=None,
                 else:
                     print_val = val
 
-                # if data_dict[key] != print_val:
-                print("    %25s: %30s -> %s" % (key, data_dict[key], print_val))
+                if data_dict[key] != print_val:
+                    print("    %25s: %30s -> %s" % (key, data_dict[key], print_val))
 
             # If we have a list, we first check if we are to append
             # Then we check if we are to modify the value somehow through a function
@@ -272,11 +272,11 @@ def main():
             "64", "64", "32", "16", "8", "4", "2", "1", "1"]
 
         arguments = weak_flow_args
-        arguments = weak_cfg_gen_args
-        arguments = weak_io_args
-        arguments = strong_flow_args
-        arguments = strong_cfg_gen_args
-        arguments = strong_io_args
+        # arguments = weak_cfg_gen_args
+        # arguments = weak_io_args
+        # arguments = strong_flow_args
+        # arguments = strong_cfg_gen_args
+        # arguments = strong_io_args
 
         # arguments.insert(0, "--dryrun")
         # arguments.remove("-v")
