@@ -15,11 +15,12 @@ DRYRUN=$4
 
 set EMPTY=""
 set GAUGECONFIGARGUMENT=""
+set ADDITIONAL_ARGS=""
 
 if [[ "${FOLDER}" = "${EMPTY}" ]]
 then
     echo "Missing folder of setup configurations."
-    echo "Args: [folder] [system] [gaugeconfig]"
+    echo "Args: [folder] [system] [gaugeconfig] [(optional) dryrun]"
     exit 0
 fi
 
@@ -43,11 +44,21 @@ then
     GAUGECONFIGARGUMENT=""
 elif [[ "${GAUGECONFIG}" != "${EMPTY}" ]]
 then 
-    # echo "Missing configuration to pass to createJobs."
-    GAUGECONFIGARGUMENT="-lcfg $GAUGECONFIG"
+    fname_temp=$(basename -- "$GAUGECONFIG")
+    extension="${fname_temp##*.}"
+    if [[ "${extension}" == "bin" ]]
+    then
+        if [[ $(basename $FOLDER) != "io" ]]
+        then
+            ADDITIONAL_ARGS="-NCf 1"
+        fi
+        GAUGECONFIGARGUMENT="-lcfgr $GAUGECONFIG"
+    else
+        # echo "Missing configuration to pass to createJobs."
+        GAUGECONFIGARGUMENT="-lcfg $GAUGECONFIG"
+    fi
 fi
 
-ADDITIONAL_ARGS=""
 if [[ $(basename $FOLDER) = "io" ]]
 then
     ADDITIONAL_ARGS="-NCf 10"
