@@ -28,6 +28,8 @@ then
     exit 0
 fi
 
+# For when we need to generate configurations 
+# for each of the weak scaling tests.
 if [[ "${GAUGECONFIG}" == "weak" ]]
 then
     GAUGECONFIGARGUMENT=""
