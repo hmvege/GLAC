@@ -227,7 +227,7 @@ def main():
         "-NTh", "--NTherm", default=None, type=int,
         help="number of thermalization steps")
     parser.add_argument(
-        "-sc", "--storeCfgs", default=None,
+        "-sc", "--storeCfgs", default=False,
         action="store_true", help="Store configurations(Default=false)")
     parser.add_argument(
         "-chr", "--cpu_approx_runtime_hr", default=None, nargs="*",
@@ -248,12 +248,12 @@ def main():
 
         weak_cfg_gen_args = [
             "-v", "weak_scaling/cfg_gen", "-rn_app", "_gen", "-NCf", "1",
-            "-NCor", "600", "-NUp", "30", "-NFlows", "0", "-chr",
+            "-NCor", "600", "-NUp", "30", "-NFlows", "0", "-NTh", "1", "-sc", "-chr",
             "2", "2", "2", "3", "3", "4", "4", "6", "6", "8", "8"]
 
         weak_io_args = [
-            "-v", "weak_scaling/io", "-rn_app", "_io", "-NCf", "10",
-            "-NCor", "1", "-NUp", "1", "-NFlows", "0", "-sc", "-chr",
+            "-v", "weak_scaling/io", "-rn_app", "_io", "-NCf", "10", "-NTh", 
+            "0", "-NCor", "1", "-NUp", "1", "-NFlows", "0", "-sc", "-chr",
             "2", "2", "2", "3", "3", "4", "4", "6", "6", "8", "8"]
 
         strong_flow_args = [
@@ -263,7 +263,7 @@ def main():
 
         strong_cfg_gen_args = [
             "-v", "strong_scaling/cfg_gen", "-rn_app", "_gen", "-NCf", "1",
-            "-NCor", "600", "-NUp", "30", "-chr",
+            "-NCor", "600", "-NUp", "30", "-NTh", "0", "-chr",
             "64", "64", "32", "16", "8", "4", "2", "1", "1"]
 
         strong_io_args = [
@@ -272,7 +272,7 @@ def main():
             "64", "64", "32", "16", "8", "4", "2", "1", "1"]
 
         arguments = weak_flow_args
-        # arguments = weak_cfg_gen_args
+        arguments = weak_cfg_gen_args
         # arguments = weak_io_args
         # arguments = strong_flow_args
         # arguments = strong_cfg_gen_args
@@ -308,6 +308,8 @@ def main():
         values_to_replace["NCor"] = args.NCor
     if not isinstance(args.NUpdates, type(None)):
         values_to_replace["NUpdates"] = args.NUpdates
+    if not isinstance(args.NTherm, type(None)):
+        values_to_replace["NTherm"] = args.NTherm
     if not isinstance(args.NFlows, type(None)):
         values_to_replace["NFlows"] = args.NFlows
     if not isinstance(args.storeCfgs, type(None)):

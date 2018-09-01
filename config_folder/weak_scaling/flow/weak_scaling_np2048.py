@@ -15,7 +15,7 @@
     "NTherm": 0, 
     "NFlows": 1000, 
     "NUpdates": 0, 
-    "storeCfgs": True, 
+    "storeCfgs": False, 
     "storeThermCfgs": False, 
     "verboseRun": False, 
     "hotStart": False, 
