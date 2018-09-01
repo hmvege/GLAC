@@ -10,6 +10,7 @@ import numpy as np
 
 __NAME_STR = "Batch name:"
 __TIME_STR = "Program complete. Time used:"
+__TOT_UP_TIME = "Total update time for 600 updates: "
 __LAT_DIMS = "Lattice dimensions(spatial, temporal): "
 __SUB_DIMS = "Sub lattice dimensions:                "
 
@@ -17,7 +18,7 @@ _regex_name_str = re.compile(r"%s[ ]*(\w)" % __NAME_STR)
 _regex_time_str = re.compile(r"(%s[ ]\w+)" % __TIME_STR)
 
 
-def rename_jobs(folder, get_run_times=False, verbose=False, dryrun=False):
+def JobRenamer(folder, get_run_times=False, verbose=False, dryrun=False):
     """Function for renaming jobs."""
 
     if dryrun:
@@ -38,10 +39,10 @@ def rename_jobs(folder, get_run_times=False, verbose=False, dryrun=False):
 
     for f in folder_list:
         fpath = os.path.join(folder, f)
-        if not check_if_complete(fpath):
+        if not __check_if_complete(fpath):
             continue
 
-        runname, job_dict = get_slurm_job_content(fpath)
+        runname, job_dict = __get_job_content(fpath)
 
         if get_run_times:
             json_dict["runs"].append(job_dict)
@@ -72,7 +73,7 @@ def rename_jobs(folder, get_run_times=False, verbose=False, dryrun=False):
                 json.dump(json_dict, json_file, indent=4)
 
 
-def check_if_complete(fpath):
+def __check_if_complete(fpath):
     """Checks if job is complete."""
     is_complete = False
     with open(fpath, "r") as f:
@@ -85,13 +86,15 @@ def check_if_complete(fpath):
     return is_complete
 
 
-def get_slurm_job_content(fpath):
+def __get_job_content(fpath):
     found_first_elem = False
     sub_dims_found = False
     lat_dims_found = False
+    tot_up_time = False
 
     runname = ""
     seconds_used = 0
+    update_time = 0
     size_N = 0
     size_NT = 0
     sub_dims = []
@@ -113,6 +116,12 @@ def get_slurm_job_content(fpath):
                 sub_dims = map(int, sub_dims)
                 sub_dims_found = True
 
+            if not tot_up_time and __TOT_UP_TIME in l:
+                update_time = l.split(__TOT_UP_TIME)
+                update_time = update_time[-1].strip("\n ")
+                update_time = float(update_time.split(" ")[0])
+                tot_up_time = True
+
             if found_first_elem and __TIME_STR in l:
                 seconds_used = re.findall(r"\(([\.\w]+){1} seconds\)", l)[0]
                 seconds_used = float(seconds_used)
@@ -126,6 +135,7 @@ def get_slurm_job_content(fpath):
     results_dictionary = {
         "runname": runname,
         "time": seconds_used,
+        "update_time": update_time,
         "subdims": sub_dims,
         "subdimsize": np.prod(sub_dims),
         "N": size_N,
@@ -162,15 +172,15 @@ def main():
                               "saves in a text file."))
 
     if len(sys.argv) == 1:
-        arguments = ["testoutfolder", "--extract_times"]
+        arguments = ["test_out", "--extract_times"]
         # arguments = ["testoutfolder", "--dryrun",
         #              "--verbose", "--extract_times"]
         args = parser.parse_args(arguments)
     else:
         args = parser.parse_args()
 
-    rename_jobs(args.folder, get_run_times=args.extract_times,
-                verbose=args.verbose, dryrun=args.dryrun)
+    JobRenamer(args.folder, get_run_times=args.extract_times,
+               verbose=args.verbose, dryrun=args.dryrun)
 
 
 if __name__ == '__main__':
