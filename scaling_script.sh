@@ -28,7 +28,10 @@ then
     exit 0
 fi
 
-if [[ "${GAUGECONFIG}" != "${EMPTY}" ]]
+if [[ "${GAUGECONFIG}" == "weak" ]]
+then
+    GAUGECONFIGARGUMENT=""
+elif [[ "${GAUGECONFIG}" != "${EMPTY}" ]]
 then 
     # echo "Missing configuration to pass to createJobs."
     GAUGECONFIGARGUMENT="-lcfg $GAUGECONFIG"
