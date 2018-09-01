@@ -386,7 +386,7 @@ class JobCreator:
                 nodes = threads/tasks_per_node
             if threads % tasks_per_node != 0:
                 if ignore_tasks_per_node:
-                    print "Warning: Tasks(number of threads) are not divisible by 16: {} % {} = {}".format(
+                    print "Warning: Tasks(number of threads) are not divisible by 16: {0:d} % {1:d} = {2:d}".format(
                         threads, tasks_per_node, threads % tasks_per_node)
                 else:
                     raise ValueError("Tasks(number of threads) have to be divisible by 16.")
