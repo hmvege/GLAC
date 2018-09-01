@@ -11,6 +11,7 @@
 FOLDER=$1
 SYSTEM=$2
 GAUGECONFIG=$3
+DRYRUN=$4
 
 set EMPTY=""
 set GAUGECONFIGARGUMENT=""
@@ -26,6 +27,13 @@ if [[ "${SYSTEM}" = "${EMPTY}" ]]
 then 
     echo "No system specified."
     exit 0
+fi
+
+if [[ "${DRYRUN}" = "dryrun" ]]
+then
+    DRYRUN="--dryrun"
+else
+    DRYRUN=""
 fi
 
 # For when we need to generate configurations 
@@ -50,6 +58,6 @@ fi
 for filename in $FOLDER/*.py;
 do
     echo ""
-    echo "python createJobs.py --dryrun load $filename -s $SYSTEM $GAUGECONFIGARGUMENT --ignore_tasks_per_node $ADDITIONAL_ARGS"
-    python2 createJobs.py --dryrun load $filename -s $SYSTEM $GAUGECONFIGARGUMENT --ignore_tasks_per_node $ADDITIONAL_ARGS
+    echo "python createJobs.py $DRYRUN load $filename -s $SYSTEM $GAUGECONFIGARGUMENT --ignore_tasks_per_node $ADDITIONAL_ARGS"
+    python2 createJobs.py $DRYRUN load $filename -s $SYSTEM $GAUGECONFIGARGUMENT --ignore_tasks_per_node $ADDITIONAL_ARGS
 done
