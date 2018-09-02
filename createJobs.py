@@ -391,7 +391,6 @@ class JobCreator:
                 else:
                     raise ValueError("Tasks(number of threads) have to be divisible by 16.")
 
-
             content = "#!/bin/bash"
             content += "\n#SBATCH --job-name={0:<s}".format(job_name)
             content += "\n#SBATCH --account={0:<s}".format(account_name)
@@ -507,7 +506,7 @@ class JobCreator:
             StoreCfgs = [12, 10, bool(storeCfgs)],
             StoreThermCfgs = [13, len("StoreThermCfgs") + 1, bool(storeThermCfgs)],
             HotStart = [14, len("HotStart") + 1, bool(hotStart)],
-            SubDims = [15, len("SubDims") + 1, ' '.join(map(str, subDims))],
+            SubDims = [15, 15, ' '.join(map(str, subDims))],
             CPU_hr = [16, 7, cpu_approx_runtime_hr],
             CPU_min = [17, 7, cpu_approx_runtime_min])
 

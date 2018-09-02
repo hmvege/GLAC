@@ -158,12 +158,10 @@ def change_config_folder(folder, replace_values, append_to_values=None,
 
         if verbose:
             print("")
-        # print(json.dumps(ord_data_dict, indent=4, separators=(", ", ": ")), "\n")
-        # exit("Exits after changing file %s" % f)
+            # print(json.dumps(ord_data_dict, indent=4, separators=(", ", ": ")), "\n")
+            # exit("Exits after changing file %s" % f)
 
     print("Changed config files in folder %s." % folder)
-
-    # exit("Exits after folder %s" % folder)
 
 
 def main():
@@ -322,7 +320,6 @@ def main():
     if not isinstance(args.cpu_approx_runtime_min, type(None)):
         values_to_replace["cpu_approx_runtime_min"] = \
             args.cpu_approx_runtime_min
-
 
     change_config_folder(
         dict_folder, values_to_replace,

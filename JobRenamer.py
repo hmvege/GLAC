@@ -65,11 +65,11 @@ def JobRenamer(folder, get_run_times=False, verbose=False, dryrun=False):
         print("Writing json job run times file at location {0:<s}".format(
             json_fpath))
 
-        if verbose:
-            print(json.dumps(json_dict, indent=4, separators=(", ", ": ")), "\n")
+        # if verbose:
+        #     print(json.dumps(json_dict, indent=4, separators=(", ", ": ")), "\n")
 
         if not dryrun:
-            with file(json_fpath, "w+") as json_file:
+            with open(json_fpath, "w+") as json_file:
                 json.dump(json_dict, json_file, indent=4)
 
 
@@ -108,12 +108,12 @@ def __get_job_content(fpath):
 
             if not lat_dims_found and __LAT_DIMS in l:
                 __temp_sizes = l.split(__LAT_DIMS)[-1].strip("\n").split(" ")
-                size_N, size_NT = map(int, __temp_sizes)
+                size_N, size_NT = list(map(int, __temp_sizes))
                 lat_dims_found = True
 
             if not sub_dims_found and __SUB_DIMS in l:
                 sub_dims = l.split(__SUB_DIMS)[-1].strip("\n ").split(" ")
-                sub_dims = map(int, sub_dims)
+                sub_dims = list(map(int, sub_dims))
                 sub_dims_found = True
 
             if not tot_up_time and __TOT_UP_TIME in l:
@@ -137,7 +137,7 @@ def __get_job_content(fpath):
         "time": seconds_used,
         "update_time": update_time,
         "subdims": sub_dims,
-        "subdimsize": np.prod(sub_dims),
+        "subdimsize": int(np.prod(sub_dims)),
         "N": size_N,
         "NT": size_NT,
         "totsize": size_N*size_N*size_N*size_NT,
@@ -172,7 +172,7 @@ def main():
                               "saves in a text file."))
 
     if len(sys.argv) == 1:
-        arguments = ["test_out", "--extract_times"]
+        arguments = ["temp_outputfolder", "--extract_times"]
         # arguments = ["testoutfolder", "--dryrun",
         #              "--verbose", "--extract_times"]
         args = parser.parse_args(arguments)
