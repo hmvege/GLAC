@@ -1,14 +1,8 @@
 #!/usr/bin/env python3
 
 import os
-import ast
 import re
-import json
-import types
-import shutil
-import fileinput
 import argparse
-import sys
 
 
 def natural_sort(l):
@@ -23,10 +17,10 @@ def natural_sort(l):
         A sorted list.
     """
 
-    convert = lambda text: int(text) if text.isdigit() else text.lower()
-    alphanum_key = lambda key: [convert(c) for c in re.split('(\d+)', key)]
-    return sorted(l, key=alphanum_key)
+    def convert(text): return int(text) if text.isdigit() else text.lower()
 
+    def alphanum_key(key): return [convert(c) for c in re.split('(\d+)', key)]
+    return sorted(l, key=alphanum_key)
 
 
 def build_cmd(run_config, field_cfg, args, run_type=None):
@@ -49,7 +43,7 @@ def build_cmd(run_config, field_cfg, args, run_type=None):
 
     if not isinstance(field_cfg, type(None)):
         # Checks if we are loading a folder or single config.
-        if os.isdir(field_cfg):
+        if os.path.isdir(field_cfg):
             cmd.append("-lcfg")
         else:
             cmd.append("-lcfgr")
@@ -128,22 +122,49 @@ def main():
         #     raise NameError("Config folder not recognized: {0}".format(run_type))
 
     if args.load_multiple_field_configs != False:
-        _cfgs = os.listdir(args.load_multiple_field_configs)
+        output_folder = args.load_multiple_field_configs
+        _cfgs = os.listdir(output_folder)
+
+        print(_cfgs)
+
+        # Because we were silly, and didnt make gen the default.
+        if run_type == "cfg_gen":
+            _run_type = "gen"
+        else:
+            _run_type = run_type
 
         def _filter_func(_c):
             """Function for filtering out configs
              not being of correct run type(e.g. flow, io, cfg_gen)."""
-            if _c in run_type:
+            if _run_type in _c and "np" in _c:
                 return _c
 
+        # Temporary sorts the different runs we are going to look for
+        # configs in.
         _tmp_cfgs = natural_sort(filter(_filter_func, _cfgs))
 
-        print(_tmp_cfgs)
+        # Gets the processor size (REDUNDANT)
+        _tmp_proc_size = [re.findall(r"(\w*np\d+\w*)", _i)[0]
+                          for _i in _tmp_cfgs]
 
-        # for run_cfg in run_cfgs:
+        # Builds up the field config folders
+        _field_cfg_folders = [os.path.join(output_folder, _c,
+                                           "field_configurations")
+                              for _c in _tmp_cfgs]
 
-        #     if "weak" in run_type:
-        #         field_cfgs.append()
+        # Makes sure we have at least one config in the folder to load.
+        assert_msg = (
+            "Config folders for {0:s} does not contain any configs.".format(
+                " ".join(_field_cfg_folders)))
+        for elem in [len(os.listdir(_c)) for _c in _field_cfg_folders]:
+            assert elem > 0, assert_msg
+
+        # Builds up the field config folders with full field .bin paths
+        if run_type == "flow":
+            field_cfgs = _field_cfg_folders
+        else:
+            field_cfgs = [os.path.join(_c, natural_sort(os.listdir(_c))[0])
+                          for _c in _field_cfg_folders]
 
     if ((not args.load_single_field_config) and
             (not args.load_multiple_field_configs)):
