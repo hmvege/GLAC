@@ -246,15 +246,20 @@ def main():
             "-NCor", "0", "-NUp", "0", "-NFlows", "1000", "-chr",
             "2", "2", "2", "3", "3", "4", "4", "6", "6", "8", "8"]
 
+        # weak_cfg_gen_args = [
+        #     "-v", "weak_scaling/cfg_gen", "-rn_app", "_gen", "-NCf", "1",
+        #     "-NCor", "600", "-NUp", "30", "-NFlows", "0", "-NTh", "1", "-sc", "-chr",
+        #     "2", "2", "2", "3", "3", "4", "4", "6", "6", "8", "8"]
+
         weak_cfg_gen_args = [
             "-v", "weak_scaling/cfg_gen", "-rn_app", "_gen", "-NCf", "1",
-            "-NCor", "600", "-NUp", "30", "-NFlows", "0", "-NTh", "1", "-sc", "-chr",
+            "-NCor", "600", "-NUp", "30", "-NFlows", "0", "-NTh", "0", "-chr",
             "2", "2", "2", "3", "3", "4", "4", "6", "6", "8", "8"]
 
         weak_io_args = [
             "-v", "weak_scaling/io", "-rn_app", "_io", "-NCf", "10", "-NTh", 
             "0", "-NCor", "1", "-NUp", "1", "-NFlows", "0", "-sc", "-chr",
-            "2", "2", "2", "3", "3", "4", "4", "6", "6", "8", "8"]
+            "1", "1", "1", "2", "2", "2", "2", "3", "3", "4", "4"]
 
         strong_flow_args = [
             "-v", "strong_scaling/flow", "-rn_app", "_flow", "-NCf", "0",
@@ -263,7 +268,7 @@ def main():
 
         strong_cfg_gen_args = [
             "-v", "strong_scaling/cfg_gen", "-rn_app", "_gen", "-NCf", "1",
-            "-NCor", "600", "-NUp", "30", "-NTh", "0", "-chr",
+            "-NCor", "600", "-NUp", "30", "-NFlows", "0", "-NTh", "0", "-chr",
             "64", "64", "32", "16", "8", "4", "2", "1", "1"]
 
         strong_io_args = [
@@ -273,10 +278,10 @@ def main():
 
         arguments = weak_flow_args
         arguments = weak_cfg_gen_args
-        # arguments = weak_io_args
-        # arguments = strong_flow_args
-        # arguments = strong_cfg_gen_args
-        # arguments = strong_io_args
+        arguments = weak_io_args
+        arguments = strong_flow_args
+        arguments = strong_cfg_gen_args
+        arguments = strong_io_args
 
         # arguments.insert(0, "--dryrun")
         # arguments.remove("-v")

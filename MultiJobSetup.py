@@ -3,6 +3,7 @@
 import os
 import re
 import argparse
+import subprocess
 
 
 def natural_sort(l):
@@ -19,14 +20,14 @@ def natural_sort(l):
 
     def convert(text): return int(text) if text.isdigit() else text.lower()
 
-    def alphanum_key(key): return [convert(c) for c in re.split('(\d+)', key)]
+    def alphanum_key(key): return [convert(c) for c in re.split(r'(\d+)', key)]
     return sorted(l, key=alphanum_key)
 
 
-def build_cmd(run_config, field_cfg, args, run_type=None):
+def build_cmd(run_config, field_cfg, args, run_type=None, add_Ncf=None):
     """Builds a single argument list"""
 
-    cmd = ["python2", "createJobs"]
+    cmd = ["python2", "createJobs.py"]
 
     if args.dryrun:
         cmd.append("--dryrun")
@@ -36,8 +37,8 @@ def build_cmd(run_config, field_cfg, args, run_type=None):
     cmd.append("-s")
     cmd.append("{0:s}".format(args.system))
 
-    if run_type == "io":
-        num_cfgs_args = ["-NCf", "10"]
+    if not isinstance(add_Ncf, type(None)):
+        num_cfgs_args = ["-NCf", "%d" % add_Ncf]
     else:
         num_cfgs_args = []
 
@@ -48,8 +49,10 @@ def build_cmd(run_config, field_cfg, args, run_type=None):
         else:
             cmd.append("-lcfgr")
             # At least 1 config must be generated with lcfgr
-            num_cfgs_args = ["-NCf", "1"]
+            # num_cfgs_args = ["-NCf", "1"]
         cmd.append(field_cfg)
+
+    cmd += num_cfgs_args
 
     cmd.append("--ignore_tasks_per_node")
 
@@ -98,10 +101,12 @@ def main():
         exit("Only one argument of either lscfg or lmcfgs allowed.")
 
     # Gets base path name and run type
+    folder = os.path.normpath(args.folder)
     try:
-        base_path, scaling_type, run_type = args.folder.split("/")
+        base_path, scaling_type, run_type = folder.split("/")
+        scaling_type = scaling_type.split("_")[0]
     except ValueError:
-        paths = args.folder.split("/")
+        paths = folder.split("/")
         run_type = paths[-1]
 
     # Gets number of run configs
@@ -125,18 +130,22 @@ def main():
         output_folder = args.load_multiple_field_configs
         _cfgs = os.listdir(output_folder)
 
-        print(_cfgs)
-
         # Because we were silly, and didnt make gen the default.
-        if run_type == "cfg_gen":
-            _run_type = "gen"
-        else:
-            _run_type = run_type
+        # if run_type == "cfg_gen":
+        #     _run_type = "gen"
+        # else:
+        #     _run_type = run_type
+
+        # Configurations to use in lmcfgs is always in gen folder
+        _run_type = "gen" 
 
         def _filter_func(_c):
             """Function for filtering out configs
              not being of correct run type(e.g. flow, io, cfg_gen)."""
-            if _run_type in _c and "np" in _c:
+            c_contents = _c.split("_")
+            if ((_run_type == c_contents[-1]) and 
+                ("np" in c_contents[-2]) and
+                (c_contents[0] == scaling_type)):
                 return _c
 
         # Temporary sorts the different runs we are going to look for
@@ -146,6 +155,11 @@ def main():
         # Gets the processor size (REDUNDANT)
         _tmp_proc_size = [re.findall(r"(\w*np\d+\w*)", _i)[0]
                           for _i in _tmp_cfgs]
+
+        # Assures that we actually picks up a config to use
+        if run_type != "cfg_gen":
+            _tmp_cfgs = [_c.replace("flow", "gen")
+                         for _c in _tmp_cfgs]
 
         # Builds up the field config folders
         _field_cfg_folders = [os.path.join(output_folder, _c,
@@ -166,24 +180,49 @@ def main():
             field_cfgs = [os.path.join(_c, natural_sort(os.listdir(_c))[0])
                           for _c in _field_cfg_folders]
 
+    run_cfgs = [os.path.join(args.folder, _c) for _c in run_cfgs]
+
     if ((not args.load_single_field_config) and
             (not args.load_multiple_field_configs)):
         field_cfgs = [None for i in range(N_configs)]
+    elif (args.load_multiple_field_configs and
+          not args.load_single_field_config):
+
+        for run_cfg, field_cfg in zip(run_cfgs, field_cfgs):
+            # Checks that we have use the correct number of processors
+            numprocs_run_cfg = re.findall(r"np(\d+)", run_cfg)[0]
+            numprocs_field_cfg = re.findall(r"np(\d+)", field_cfg)[0]
+            assert numprocs_run_cfg == numprocs_field_cfg, (
+                "Number of processors used do not "
+                "match:\n    '{0}'\nand\n    '{1}'".format(
+                    run_cfg, field_cfg))
+
+    if ((not args.load_single_field_config) and
+            (not args.load_multiple_field_configs)):
+        add_Ncf = None
+    else:
+        if run_type == "io":
+            add_Ncf = 10
+        elif run_type == "cfg_gen":
+            add_Ncf = 1
+        elif run_type == "flow":
+            add_Ncf = None
+        else:
+            raise ValueError("{0:s} not recognized.".format(run_type))
 
     cmds = []
     for run_cfg, field_cfg in zip(run_cfgs, field_cfgs):
-        cmds.append(build_cmd(os.path.join(args.folder, run_cfg),
-                              field_cfg, args, run_type=run_type))
+        cmds.append(build_cmd(run_cfg, field_cfg, args,
+                              run_type=run_type, add_Ncf=add_Ncf))
 
     for cmd in cmds:
         print("> " + " ".join(cmd))
-        if not args.dryrun:
-            raise NotImplementedError("running createJobs not implemented yet")
-            # proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-            # print(proc.stdout.read())
+        # if not args.dryrun:
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        print(proc.stdout.read())
+
     print("Started {0:d} jobs.".format(len(cmds)))
 
 
-# python2 createJobs.py $DRYRUN load $filename - s $SYSTEM $GAUGECONFIGARGUMENT - -ignore_tasks_per_node $ADDITIONAL_ARGS
 if __name__ == '__main__':
     main()

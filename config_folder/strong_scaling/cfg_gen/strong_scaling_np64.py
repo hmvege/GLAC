@@ -13,7 +13,7 @@
     "NCf": 1, 
     "NCor": 600, 
     "NTherm": 0, 
-    "NFlows": 1000, 
+    "NFlows": 0, 
     "NUpdates": 30, 
     "storeCfgs": False, 
     "storeThermCfgs": False, 
