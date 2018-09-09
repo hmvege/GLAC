@@ -341,7 +341,8 @@ class JobCreator:
 
         # Checks that binary file exists in expected location
         if not os.path.isfile(os.path.join(self.CURRENT_PATH, binary_filename)):
-            exit("Error: binary file path not in expected location %s/%s" % (self.CURRENT_PATH, binary_filename))
+            exit("Error: binary file path not in expected location %s/%s" % (
+                self.CURRENT_PATH, binary_filename))
 
         # Ensures that we have a viable number of sub dimensions
         if len(subDims) != 0:
@@ -359,10 +360,12 @@ class JobCreator:
                 % os.path.join(self.base_folder, "input", self.json_file_name))
 
         # Setting job name before creating content file.
-        job_name = "{0:<3.2f}beta_{1:<d}cube{2:<d}_{3:<d}threads".format(beta, NSpatial, NTemporal, threads)
+        job_name = "b{0:<3.2f}_cfg{1:<d}_nf{2:<d}_{3:<d}cube{4:<d}_{5:<d}threads".format(
+            beta, NCf, self.NFlows, NSpatial, NTemporal, threads)
 
         # Setting approximated run time
-        estimated_time = "{0:0>2d}:{1:0>2d}:00".format(cpu_approx_runtime_hr, cpu_approx_runtime_min)
+        estimated_time = "{0:0>2d}:{1:0>2d}:00".format(
+            cpu_approx_runtime_hr, cpu_approx_runtime_min)
 
         # Choosing system
         if system == "smaug":
@@ -768,7 +771,7 @@ def main(args):
     load_parser.add_argument('-p', '--partition',               default="normal",                                   type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
     load_parser.add_argument('-lcfg', '--load_configurations',  default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder by scanning and for files with .bin extensions.')
     load_parser.add_argument('-lcfgr', '--load_config_and_run', default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
-    load_parser.add_argument('-NCfgs', '--NConfigs',            default=False,                                      type=int, help='N configurations to generate based on loaded configuration.')
+    load_parser.add_argument('-NCfgs', '-NCfg', '-NCf', '--NConfigs', default=False,                                type=int, help='N configurations to generate based on loaded configuration.')
     load_parser.add_argument('-NFlows', '--NFlows',             default=False,                                      type=int, help='number of flows to perform per configuration')
     load_parser.add_argument('-chroma', '--chroma_config',      default=config_default["chroma_config"],            action='store_true', help='If flagged, loads the configuration as a chroma configuration.')
     load_parser.add_argument('-lhr', '--load_config_hr_time_estimate', default=None,                                type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
@@ -779,9 +782,9 @@ def main(args):
     load_parser.add_argument('-rn', '--run_name',               default=False,                                      type=str, help='Specify the run name')
     load_parser.add_argument('-ex', '--exclude',                default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
     load_parser.add_argument('-NUp', '--NUpdates',              default=False,                                      type=int, help='number of updates per link')
-    load_parser.add_argument('-NCor', '--NCor',                 default=False,                                      type=int, help='number of correlation updates to perform')
+    load_parser.add_argument('-NCor', '-NCorr', '--NCor',       default=False,                                      type=int, help='number of correlation updates to perform')
     load_parser.add_argument('--debug',                         default=False,                                      action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
-    load_parser.add_argument('-vr', '--verboseRun',              default=config_default["verboseRun"],              action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
+    load_parser.add_argument('-vr', '--verboseRun',             default=config_default["verboseRun"],              action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
     load_parser.add_argument('-igntsk', '--ignore_tasks_per_node', default=False,                                   action='store_true', help='If enabled, will ignore requirement of having 16 tasks per node.')
 
     ######## Unit test parser ########
