@@ -10,6 +10,8 @@ import ast
 import shutil
 import re
 
+# TODO: implement a way of checking that the .bin file exists in case of lcfgr
+
 AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct", "weinberg", "weinbergt"]
 # AVAILABLE_SCALAR_FIELDS = ["plaq", "topc", "energy", "weinberg"]
 AVAILABLE_SCALAR_FIELDS = ["topc", "energy"]
@@ -188,7 +190,21 @@ class JobCreator:
             if self.dryrun or self.verbose:
                 print "> mkdir %s" % os.path.join(self.base_folder, folder)
 
-    def _clean_file_path(self, p):
+    def _check_lcfgr_path(self, config_dict):
+        """Performs a check when loading and running from a configuration, 
+        assuring the binary file we are loading exists at assumed location.
+        """
+        input_folder =  self._clean_file_path(config_dict["inputFolder"], quiet=True)
+        if len(config_dict["load_config_and_run"]) != 0:
+            cfg_path = os.path.join(os.path.normpath(self.base_folder) + 
+                os.path.normpath(input_folder),
+                config_dict["load_config_and_run"])
+            if not os.path.isfile(cfg_path):
+                exit("ERROR: binary file for 'load_config_and_run' not "
+                    "found: {0:s}".format(cfg_path))
+
+
+    def _clean_file_path(self, p, quiet=False):
         """
         Cleans file-path of base folder and of extraneous slashes.
 
@@ -205,7 +221,7 @@ class JobCreator:
 
         cleaned_p = (os.sep + os.path.normpath(cleaned_p) + os.sep).replace("//", os.sep)
 
-        if self.verbose or self.dryrun:
+        if self.verbose or self.dryrun and not quiet:
             print "Cleaned path from:\n    %s\nto\n    %s" % (p, cleaned_p)
 
         return cleaned_p
@@ -238,7 +254,6 @@ class JobCreator:
         json_dict["storeConfigurations"] = config_dict["storeCfgs"]
         json_dict["storeThermalizationObservables"] = config_dict["storeThermCfgs"]
 
-        # For loading and running from a configuration
         json_dict["load_config_and_run"] = config_dict["load_config_and_run"]
         json_dict["config_start_number"] = config_dict["config_start_number"]
 
@@ -339,9 +354,11 @@ class JobCreator:
         cpu_approx_runtime_min  = job_config["cpu_approx_runtime_min"]
         self.create_fields_folders = job_config["scalar_fields_folders"]
 
+        self._check_lcfgr_path(job_config)
+
         # Checks that binary file exists in expected location
         if not os.path.isfile(os.path.join(self.CURRENT_PATH, binary_filename)):
-            exit("Error: binary file path not in expected location %s/%s" % (
+            exit("ERROR: binary file path not in expected location %s/%s" % (
                 self.CURRENT_PATH, binary_filename))
 
         # Ensures that we have a viable number of sub dimensions
@@ -438,9 +455,9 @@ class JobCreator:
             #content += "\nmodule load Qt/5.6.2"
 
         elif system == "local":
-            sys.exit("Error: this is a local production run. Should never see this error message.")
+            sys.exit("ERROR: this is a local production run. Should never see this error message.")
         else:
-            sys.exit("Error: system %s not recognized." % system)
+            sys.exit("ERROR: system %s not recognized." % system)
 
         # Setting run-command
         if not system == "laconia":
