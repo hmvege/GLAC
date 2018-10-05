@@ -17,6 +17,7 @@ AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct", "weinberg", "weinber
 AVAILABLE_SCALAR_FIELDS = ["topc", "energy"]
 AVAILABLE_EXP_FUNCS = ["morningstar", "luscher", "taylor2", "taylor4"]
 AVAILABLE_ACTIONS = ["luscher", "wilson"]
+AVAILABLE_HPC_SYSTEMS = ["slurm", "torque", "local"]
 
 def get_arg_max_index(N):
     """For getting the maximum index of an list."""
@@ -353,6 +354,7 @@ class JobCreator:
         cpu_approx_runtime_hr   = job_config["cpu_approx_runtime_hr"]
         cpu_approx_runtime_min  = job_config["cpu_approx_runtime_min"]
         self.create_fields_folders = job_config["scalar_fields_folders"]
+        self.user_mail          = job_config["user_mail"]
 
         self._check_lcfgr_path(job_config)
 
@@ -384,18 +386,18 @@ class JobCreator:
         estimated_time = "{0:0>2d}:{1:0>2d}:00".format(
             cpu_approx_runtime_hr, cpu_approx_runtime_min)
 
-        # Choosing system
-        if system == "smaug":
-            # Smaug batch file.
-            # #SBATCH --exclude=smaug-b2 excludes an unstable node
-            content = "#!/bin/bash"
-            content += "\n#SBATCH --job-name={0:<s}".format(job_name)
-            content += "\n#SBATCH --partition={0:<s}".format(partition)
-            content += "\n#SBATCH --ntasks={0:<d}".format(threads)
-            content += "\n#SBATCH --time={0:<s}".format(estimated_time)
-            content += "\n" + sbatch_exclusions
+        # # Choosing system
+        # if system == "smaug":
+        #     # Smaug batch file.
+        #     # #SBATCH --exclude=smaug-b2 excludes an unstable node
+        #     content = "#!/bin/bash"
+        #     content += "\n#SBATCH --job-name={0:<s}".format(job_name)
+        #     content += "\n#SBATCH --partition={0:<s}".format(partition)
+        #     content += "\n#SBATCH --ntasks={0:<d}".format(threads)
+        #     content += "\n#SBATCH --time={0:<s}".format(estimated_time)
+        #     content += "\n" + sbatch_exclusions
 
-        elif system == "abel":
+        if system == "slurm":
             # Abel specific commands
             cpu_memory = job_config["cpu_memory"]
             account_name = job_config["account_name"]
@@ -426,7 +428,7 @@ class JobCreator:
             content += "\nmodule load openmpi.gnu     # loads mpi\n"
             content += "\nset -o errexit              # exit on errors\n"
 
-        elif system == "laconia":
+        elif system == "torque":
             account_name = "ptg"
             tasks_per_node = 28
             
@@ -446,7 +448,7 @@ class JobCreator:
             content += "\n#PBS -A {0:<s}".format(account_name)
             content += "\n#PBS -l walltime={0:<s},nodes={1:<1d}:ppn={2:<d},mem={3:<4d}MB".format(estimated_time, nodes, tasks_per_node, cpu_memory*threads)
             content += "\n#PBS -N {0:<s}".format(job_name)
-            content += "\n#PBS -M h.m.m.vege@fys.uio.no"
+            content += "\n#PBS -M {0:<s}".format(self.user_mail)
             content += "\n#PBS -m bea"
             # content += "\nmodule load GNU/6.2"
             # content += "\nmodule load OpenMPI/2.0.2"
@@ -459,11 +461,11 @@ class JobCreator:
         else:
             sys.exit("ERROR: system %s not recognized." % system)
 
-        # Setting run-command
-        if not system == "laconia":
-            run_command = "mpirun -n {0:<d}".format(threads)
-        else :
-            run_command = "mpirun -np {0:<d}".format(threads)
+        # Setting run-command. Not needed anymore
+        # if not system == "laconia":
+        #     run_command = "mpirun -n {0:<d}".format(threads)
+        # else :
+        #     run_command = "mpirun -np {0:<d}".format(threads)
 
         run_command += " "
         run_command += os.path.join(self.CURRENT_PATH, binary_filename)
@@ -472,7 +474,7 @@ class JobCreator:
 
         content += "\n" + run_command
 
-        if not system == "laconia":
+        if system == "slurm":
             job = 'jobfile.slurm'
         else:
             job = 'jobfile.qsub'
@@ -486,7 +488,7 @@ class JobCreator:
             print "Writing %s to slurm batch file: \n\n" % job, content, "\n"
 
         # Sets up command based on system we have.
-        if not system == "laconia":
+        if system == "slurm":
             cmd = ['sbatch', os.path.join(self.CURRENT_PATH,job)]
         else:
             cmd = ['qsub', os.path.join(self.CURRENT_PATH,job)]
@@ -500,7 +502,7 @@ class JobCreator:
             tmp = proc.stdout.read()
             # tmp = "123 456" # Used for bug-hunting
             try:
-                if not system == "laconia":
+                if system == "slurm":
                     ID = int(tmp.split()[-1]) # ID of job
                 else:
                     tmp2 = tmp.split()[-1]
@@ -554,22 +556,32 @@ class JobCreator:
             with open(self.idFilesName, "w+") as f:
                 json.dump(self.jobs, f, indent=4)
 
-    def cancel_job(self, jobID):
-        """Cancels jobID."""
+    def __select_system_cancel(self, system):
+        """Selects system method for canceling HPC job."""
+        if system == "torque":
+            return "qdel"
+        elif system == "slurm":
+            return "scancel"
+        else:
+            raise KeyError("{} not a recognized system".format(system))
 
+
+    def cancel_job(self, jobID, system):
+        """Cancels jobID."""
+        system_cmd = self.__select_system_cancel(system)
         if not self.dryrun:
-            os.system("scancel %d" % jobID)
+            os.system("{0:s} {1:d}".format(system_cmd, jobID))
         if self.dryrun or self.verbose:
-            print "> scancel %d" % jobID
+            print "> {0:s} {1:d}".format(system_cmd, jobID)
 
     def cancel_all_jobs(self):
         """Cancels all jobs."""
-
+        system_cmd = self.__select_system_cancel(system)
         for i in self.jobs:
             if not self.dryrun:
-                os.system("scancel %d" % int(i))
+                os.system("{0:s} {1:d}".format(system_cmd, int(i)))
             if self.dryrun or self.verbose:
-                print "> scancel %d" % int(i)
+                print "> {0:s} {1:d}".format(system_cmd, int(i))
 
     def list_jobs(self):
         """Shows jobs with ID numbers."""
@@ -700,6 +712,7 @@ def main(args):
         # "cpu_approx_runtime_min"    : 0,
         "cpu_memory"                : 3800,
         "account_name"              : "nn2977k",
+        "user_mail"                 : "h.m.m.vege@fys.uio.no",
     }
 
     ######## Initiating command line parser ########
@@ -727,7 +740,7 @@ def main(args):
 
     ######## Manual job setup ########
     job_parser = subparser.add_parser('setup', help='Sets up the job.')
-    job_parser.add_argument('system',                           default=False,                                      type=str, choices=['smaug', 'abel', 'laconia', 'local'], help='Specify system we are running on.')
+    job_parser.add_argument('system',                           default=False,                                      type=str, choices=AVAILABLE_HPC_SYSTEMS, help='Specify system we are running on.')
     job_parser.add_argument('threads',                          default=False,                                      type=int, help='Number of threads to run on')
     job_parser.add_argument('-p', '--partition',                default="normal",                                   type=str, help='Specify partition to run program on.')
     job_parser.add_argument('-rn', '--run_name',                default=config_default["runName"],                  type=str, help='Specify the run name')
@@ -784,7 +797,7 @@ def main(args):
     ######## Job load parser ########
     load_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
     load_parser.add_argument('file',                            default=False,                                      type=str, help='Loads config file')
-    load_parser.add_argument('-s', '--system',                  default=False,                                      type=str, required=True, choices=['smaug', 'abel', 'laconia'], help='Cluster name')
+    load_parser.add_argument('-s', '--system',                  default=False,                                      type=str, required=True, choices=AVAILABLE_HPC_SYSTEMS, help='Cluster name')
     load_parser.add_argument('-p', '--partition',               default="normal",                                   type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
     load_parser.add_argument('-lcfg', '--load_configurations',  default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder by scanning and for files with .bin extensions.')
     load_parser.add_argument('-lcfgr', '--load_config_and_run', default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
@@ -806,7 +819,7 @@ def main(args):
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
-    unit_test_parser.add_argument('system',                     default=False,                                      type=str, choices=['smaug', 'abel', 'laconia', 'local'], help='Specify system we are running on.')
+    unit_test_parser.add_argument('system',                     default=False,                                      type=str, choices=AVAILABLE_HPC_SYSTEMS, help='Specify system we are running on.')
     unit_test_parser.add_argument('threads',                    default=False,                                      type=int, help='Number of threads to run on')
     unit_test_parser.add_argument('-vr', '--verboseRun',        default=config_default["verboseRun"],               action='store_true', help='Prints more information during testing.')
     unit_test_parser.add_argument('-cgi', '--check_gauge_invariance', default=False,                                type=str, help='Loads and checks the gauge field invariance of a field.')
@@ -818,7 +831,7 @@ def main(args):
 
     ######## Performance test parser ########
     performance_test_parser = subparser.add_parser('perf_test', help='Runs performance tests on the certain components of the GluonicLQCD program. Will exit when complete.')
-    performance_test_parser.add_argument('system',              default=False,                                      type=str, choices=['smaug', 'abel', 'laconia', 'local'], help='Specify system we are running on.')
+    performance_test_parser.add_argument('system',              default=False,                                      type=str, choices=AVAILABLE_HPC_SYSTEMS, help='Specify system we are running on.')
     performance_test_parser.add_argument('threads',             default=False,                                      type=int, help='Number of threads to run on')
     performance_test_parser.add_argument('-NExpTests',          default=config_default["NExpTests"],                type=int, help='Number of exponentiation tests we will run.')
     performance_test_parser.add_argument('-NRandTests',         default=config_default["NRandTests"],               type=int, help='Number of random tests we will run.')
@@ -831,7 +844,7 @@ def main(args):
     field_density_parser = subparser.add_parser("field_density", help="Will run a single config through the energyTopcFieldDensity observable and produce observables of the entire field from them")
     
     # Setup related variable
-    field_density_parser.add_argument('-s', '--system',        default=False,                                      type=str, required=True, choices=['smaug', 'abel', 'laconia', 'local'], help='Cluster name')
+    field_density_parser.add_argument('-s', '--system',        default=False,                                      type=str, required=True, choices=AVAILABLE_HPC_SYSTEMS, help='Cluster name')
     field_density_parser.add_argument('-nt', '--threads',      default=config_default["threads"],                  type=int, required=True, help='Number of threads to run on')
     field_density_parser.add_argument('-cfgf', '--config_file', default=False,                                     type=str, help='Loads config file')
     field_density_parser.add_argument('-p', '--partition',     default="normal",                                   type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
@@ -1027,10 +1040,10 @@ def main(args):
         COMMAND FOR VIEWING JOBS
         """
         if args.scancel:
-            s.cancel_job(args.scancel)
+            s.cancel_job(args.scancel, args.system)
             return
         if args.scancel_all:
-            s.cancel_all_jobs()
+            s.cancel_all_jobs(args.system)
             return
         if args.list_jobs:
             s.list_jobs()
