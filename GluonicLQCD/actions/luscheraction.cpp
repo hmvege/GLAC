@@ -85,6 +85,7 @@ Lattice<SU3> LuscherAction::getActionDerivative(Lattice<SU3> *lattice, int mu)
     m_latticeStaple = lattice[mu]*m_latticeStaple;
 
     // Luscher method of taking derivative
+    // NOTE: can probably change this to be more vectorization friendly
     for (unsigned int iSite = 0; iSite < m_latticeStaple.m_latticeSize; iSite++) {
         // Diagonals
         m_tempStaple2[iSite][0] = 0;

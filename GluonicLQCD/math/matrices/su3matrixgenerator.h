@@ -117,9 +117,6 @@ inline SU3 SU3MatrixGenerator::generateRandom()
     H[16] = H[2]*H[6] - H[3]*H[7] - H[8]*H[0] + H[9]*H[1];
     H[17] = H[8]*H[1] + H[9]*H[0] - H[2]*H[7] - H[3]*H[6];
 
-//    std::cout << "BAD! SHOULD NOT USE GENERATE RANDOM!" << std::endl;
-//    exit(1);
-
     return H;
 }
 
@@ -250,7 +247,7 @@ inline SU3 SU3MatrixGenerator::RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 
     rs[2] = r[4]*s[2] - r[5]*s[3];
     rs[3] = r[5]*s[2] + r[4]*s[3];
 
-    // Upper triangular
+    // Upper triangular // TODO: this can probably be fixed to be far more efficient
     X[6]  =   rs[0]*t[4] - r[3]*t[1] + r[2]*t[0] - rs[1]*t[5];
     X[7]  = - rs[1]*t[4] - r[3]*t[0] - r[2]*t[1] - rs[0]*t[5];
     X[12] =   rs[0]*t[6] - r[3]*t[3] + r[2]*t[2] - rs[1]*t[7];

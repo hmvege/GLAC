@@ -708,8 +708,8 @@ def main(args):
         "scalar_fields_folders"     : False,
         "samplingFrequency"         : 25,
         "debug"                     : False,
-        # "cpu_approx_runtime_hr"     : 2, # In order to catch if config we are loading contains cpu approx time
-        # "cpu_approx_runtime_min"    : 0,
+        "cpu_approx_runtime_hr"     : 2, # In order to catch if config we are loading contains cpu approx time
+        "cpu_approx_runtime_min"    : 0,
         "cpu_memory"                : 3800,
         "account_name"              : "nn2977k",
         "user_mail"                 : "h.m.m.vege@fys.uio.no",
