@@ -1,0 +1,265 @@
+\hypertarget{class_lattice_action_charge_density}{}\section{Lattice\+Action\+Charge\+Density Class Reference}
+\label{class_lattice_action_charge_density}\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+
+
+{\ttfamily \#include $<$latticeactionchargedensity.\+h$>$}
+
+
+
+Inheritance diagram for Lattice\+Action\+Charge\+Density\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{class_lattice_action_charge_density__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Lattice\+Action\+Charge\+Density\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{class_lattice_action_charge_density__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_lattice_action_charge_density_acda2a43db75cca34586441d4ac7ec39e}{Lattice\+Action\+Charge\+Density}} (bool flow)
+\item 
+\mbox{\hyperlink{class_lattice_action_charge_density_a72679dfadb215889401f5403909b7b93}{$\sim$\+Lattice\+Action\+Charge\+Density}} ()
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_a3dddc75188042c645fbdd1c8b3e80c8a}{calculate}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int i\+Obs)
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_aba3131bbe5bd930adccc2852b4d44bb9}{initialize\+Observable\+Storer}} (bool store\+Flow\+Observable)
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_a719f71aaccbf1b4147ea944781d69908}{write\+Observable\+To\+File}} (double acceptance\+Ratio)
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_a54226556dc1497c311e4a4d50bf44c26}{write\+Flow\+Observables\+To\+File}} (unsigned int i\+Flow)
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_aebbc2cc72334e7b33d9cce2ad469280b}{reset}} ()
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_a21d608703811d2814e7f654588eaa0c0}{run\+Statistics}} ()
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_a2a7a806862f23975161316a37f47f22e}{print\+Header}} ()
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_abb7db718d4069faab0ed19f31aa85ad4}{print\+Observable}} (unsigned int i\+Obs)
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_abdaa497dd70dee58b810de7315241a56}{print\+Statistics}} ()
+\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{class_lattice_action_charge_density_a72952fbe5ade96d53196d6c2c93896e5}{get\+Observables\+Vector}} (unsigned int i\+Obs)
+\item 
+void \mbox{\hyperlink{class_lattice_action_charge_density_aef63c9fba819e838a87b509d53be248b}{copy\+Observable}} (unsigned int i\+Obs, std\+::vector$<$ double $>$ obs)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_lattice_action_charge_density_acda2a43db75cca34586441d4ac7ec39e}\label{class_lattice_action_charge_density_acda2a43db75cca34586441d4ac7ec39e}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{LatticeActionChargeDensity()}{LatticeActionChargeDensity()}}
+{\footnotesize\ttfamily Lattice\+Action\+Charge\+Density\+::\+Lattice\+Action\+Charge\+Density (\begin{DoxyParamCaption}\item[{bool}]{flow }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_acda2a43db75cca34586441d4ac7ec39e_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_action_charge_density_a72679dfadb215889401f5403909b7b93}\label{class_lattice_action_charge_density_a72679dfadb215889401f5403909b7b93}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!````~LatticeActionChargeDensity@{$\sim$LatticeActionChargeDensity}}
+\index{````~LatticeActionChargeDensity@{$\sim$LatticeActionChargeDensity}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{$\sim$LatticeActionChargeDensity()}{~LatticeActionChargeDensity()}}
+{\footnotesize\ttfamily Lattice\+Action\+Charge\+Density\+::$\sim$\+Lattice\+Action\+Charge\+Density (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_lattice_action_charge_density_a3dddc75188042c645fbdd1c8b3e80c8a}\label{class_lattice_action_charge_density_a3dddc75188042c645fbdd1c8b3e80c8a}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!calculate@{calculate}}
+\index{calculate@{calculate}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{calculate()}{calculate()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::calculate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{unsigned int}]{i\+Obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_a3dddc75188042c645fbdd1c8b3e80c8a_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_action_charge_density_aef63c9fba819e838a87b509d53be248b}\label{class_lattice_action_charge_density_aef63c9fba819e838a87b509d53be248b}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!copyObservable@{copyObservable}}
+\index{copyObservable@{copyObservable}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{copyObservable()}{copyObservable()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::copy\+Observable (\begin{DoxyParamCaption}\item[{unsigned int}]{i\+Obs,  }\item[{std\+::vector$<$ double $>$}]{obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ac780d8b180294ee4801ede6e6a13f7f4}{Correlator}}.
+
+\mbox{\Hypertarget{class_lattice_action_charge_density_a72952fbe5ade96d53196d6c2c93896e5}\label{class_lattice_action_charge_density_a72952fbe5ade96d53196d6c2c93896e5}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!getObservablesVector@{getObservablesVector}}
+\index{getObservablesVector@{getObservablesVector}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{getObservablesVector()}{getObservablesVector()}}
+{\footnotesize\ttfamily std\+::vector$<$ double $>$ Lattice\+Action\+Charge\+Density\+::get\+Observables\+Vector (\begin{DoxyParamCaption}\item[{unsigned int}]{i\+Obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a7fb062b098beb078f3e546f4717b4941}{Correlator}}.
+
+\mbox{\Hypertarget{class_lattice_action_charge_density_aba3131bbe5bd930adccc2852b4d44bb9}\label{class_lattice_action_charge_density_aba3131bbe5bd930adccc2852b4d44bb9}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!initializeObservableStorer@{initializeObservableStorer}}
+\index{initializeObservableStorer@{initializeObservableStorer}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{initializeObservableStorer()}{initializeObservableStorer()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::initialize\+Observable\+Storer (\begin{DoxyParamCaption}\item[{bool}]{store\+Flow\+Observable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ab99886c09dd27dfc8676d0032cecf9bc}{Correlator}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_aba3131bbe5bd930adccc2852b4d44bb9_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_aba3131bbe5bd930adccc2852b4d44bb9_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_action_charge_density_a2a7a806862f23975161316a37f47f22e}\label{class_lattice_action_charge_density_a2a7a806862f23975161316a37f47f22e}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!printHeader@{printHeader}}
+\index{printHeader@{printHeader}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{printHeader()}{printHeader()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::print\+Header (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ac7c5a07d7cbee97c417a1659b93083b2}{Correlator}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_a2a7a806862f23975161316a37f47f22e_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_action_charge_density_abb7db718d4069faab0ed19f31aa85ad4}\label{class_lattice_action_charge_density_abb7db718d4069faab0ed19f31aa85ad4}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!printObservable@{printObservable}}
+\index{printObservable@{printObservable}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{printObservable()}{printObservable()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::print\+Observable (\begin{DoxyParamCaption}\item[{unsigned int}]{i\+Obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a15744ddb9f2b71fff34ac762d101df38}{Correlator}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_abb7db718d4069faab0ed19f31aa85ad4_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_action_charge_density_abdaa497dd70dee58b810de7315241a56}\label{class_lattice_action_charge_density_abdaa497dd70dee58b810de7315241a56}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!printStatistics@{printStatistics}}
+\index{printStatistics@{printStatistics}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{printStatistics()}{printStatistics()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::print\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_abdaa497dd70dee58b810de7315241a56_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_action_charge_density_aebbc2cc72334e7b33d9cce2ad469280b}\label{class_lattice_action_charge_density_aebbc2cc72334e7b33d9cce2ad469280b}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!reset@{reset}}
+\index{reset@{reset}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{reset()}{reset()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::reset (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_aacca40262d2cd62f0a3964e832f948c1}{Correlator}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_aebbc2cc72334e7b33d9cce2ad469280b_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_action_charge_density_a21d608703811d2814e7f654588eaa0c0}\label{class_lattice_action_charge_density_a21d608703811d2814e7f654588eaa0c0}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!runStatistics@{runStatistics}}
+\index{runStatistics@{runStatistics}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{runStatistics()}{runStatistics()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::run\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_a21d608703811d2814e7f654588eaa0c0_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_action_charge_density_a54226556dc1497c311e4a4d50bf44c26}\label{class_lattice_action_charge_density_a54226556dc1497c311e4a4d50bf44c26}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!writeFlowObservablesToFile@{writeFlowObservablesToFile}}
+\index{writeFlowObservablesToFile@{writeFlowObservablesToFile}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{writeFlowObservablesToFile()}{writeFlowObservablesToFile()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::write\+Flow\+Observables\+To\+File (\begin{DoxyParamCaption}\item[{unsigned int}]{i\+Flow }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a168512b2ce182d9478db47f100125fa6}{Correlator}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_a54226556dc1497c311e4a4d50bf44c26_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_action_charge_density_a719f71aaccbf1b4147ea944781d69908}\label{class_lattice_action_charge_density_a719f71aaccbf1b4147ea944781d69908}} 
+\index{LatticeActionChargeDensity@{LatticeActionChargeDensity}!writeObservableToFile@{writeObservableToFile}}
+\index{writeObservableToFile@{writeObservableToFile}!LatticeActionChargeDensity@{LatticeActionChargeDensity}}
+\subsubsection{\texorpdfstring{writeObservableToFile()}{writeObservableToFile()}}
+{\footnotesize\ttfamily void Lattice\+Action\+Charge\+Density\+::write\+Observable\+To\+File (\begin{DoxyParamCaption}\item[{double}]{acceptance\+Ratio }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a9e8d80e30e4fbe3b7fe57521538cb5ff}{Correlator}}.
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_action_charge_density_a719f71aaccbf1b4147ea944781d69908_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Gluonic\+L\+Q\+C\+D/observables/\mbox{\hyperlink{latticeactionchargedensity_8h}{latticeactionchargedensity.\+h}}\item 
+Gluonic\+L\+Q\+C\+D/observables/\mbox{\hyperlink{latticeactionchargedensity_8cpp}{latticeactionchargedensity.\+cpp}}\end{DoxyCompactItemize}

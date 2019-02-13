@@ -1,0 +1,12 @@
+<map id="nlohmann::basic_json::basic_json" name="nlohmann::basic_json::basic_json">
+<area shape="rect" id="node1" title="create an empty value with a given type" alt="" coords="600,128,751,167"/>
+<area shape="rect" id="node2" href="$classnlohmann_1_1basic__json.html#a4a4ec75e4d2845d9bcf7a9e5458e4949" title="explicitly create an array from an initializer list" alt="" coords="402,33,552,72"/>
+<area shape="rect" id="node6" href="$classnlohmann_1_1basic__json.html#a9f42ee7d10eee2d5a73fd94ca7f767ca" title="explicitly create an object from an initializer list" alt="" coords="402,96,552,135"/>
+<area shape="rect" id="node8" href="$classnlohmann_1_1basic__json.html#ac871e3b03fb2eeca9a8de4db2bea760f" title="access specified array element" alt="" coords="402,159,552,197"/>
+<area shape="rect" id="node10" href="$classnlohmann_1_1basic__json.html#ab2716cbe2e997ab8309926b87f044434" title="add an object to an object" alt="" coords="402,221,552,260"/>
+<area shape="rect" id="node3" href="$classnlohmann_1_1basic__json.html#a86f339e8449cce96b89e86635a7d389e" title="deserialize from an array" alt="" coords="204,33,354,72"/>
+<area shape="rect" id="node4" href="$classnlohmann_1_1basic__json.html#ab275a3e00a40189e96d244de6c8f311a" title="deserialize from string literal" alt="" coords="5,5,156,44"/>
+<area shape="rect" id="node5" href="$json_8hpp.html#ae90d59ab420a183cd5fb8588bdc95e06" title="user&#45;defined string literal for JSON values" alt="" coords="24,68,137,93"/>
+<area shape="rect" id="node7" href="$classnlohmann_1_1basic__json.html#a543bd5f7490de54c875b2c0912dc9a49" title="creates a diff as a JSON patch" alt="" coords="204,96,354,135"/>
+<area shape="rect" id="node9" href="$classnlohmann_1_1basic__json.html#a1416bbec9d9a8eeca21c213cf5290868" title="access specified object element" alt="" coords="204,159,354,197"/>
+</map>

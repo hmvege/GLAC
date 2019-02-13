@@ -1,0 +1,13 @@
+<map id="nlohmann::basic_json::is_null" name="nlohmann::basic_json::is_null">
+<area shape="rect" id="node1" title="return whether value is null" alt="" coords="402,131,552,169"/>
+<area shape="rect" id="node2" href="$classnlohmann_1_1basic__json.html#a6362b88718eb5c6d4fed6a61eed44b95" title="return whether type is primitive" alt="" coords="204,5,354,44"/>
+<area shape="rect" id="node3" href="$classnlohmann_1_1basic__json.html#ac871e3b03fb2eeca9a8de4db2bea760f" title="access specified array element" alt="" coords="204,68,354,107"/>
+<area shape="rect" id="node5" href="$classnlohmann_1_1basic__json.html#ac8e523ddc8c2dd7e5d2daf0d49a9c0d7" title="add an object to an array" alt="" coords="204,131,354,169"/>
+<area shape="rect" id="node10" href="$classnlohmann_1_1basic__json.html#aacf5eed15a8b66fb1e88910707a5e229" title="add an object to an array" alt="" coords="204,193,354,232"/>
+<area shape="rect" id="node11" href="$classnlohmann_1_1basic__json.html#a5338e282d1d02bed389d852dd670d98d" title="add an object to an object if key does not exist" alt="" coords="204,256,354,295"/>
+<area shape="rect" id="node4" href="$classnlohmann_1_1basic__json.html#a1416bbec9d9a8eeca21c213cf5290868" title="access specified object element" alt="" coords="5,5,156,44"/>
+<area shape="rect" id="node6" href="$classnlohmann_1_1basic__json.html#aea1085f2d35cc0e1ce119cf0110119e6" title="add an object to an array" alt="" coords="5,68,156,107"/>
+<area shape="rect" id="node7" href="$classnlohmann_1_1basic__json.html#ab2716cbe2e997ab8309926b87f044434" title="add an object to an object" alt="" coords="5,131,156,169"/>
+<area shape="rect" id="node8" href="$classnlohmann_1_1basic__json.html#a81e0c41a4a9dff4df2f6973f7f8b2a83" title="applies a JSON patch" alt="" coords="5,193,156,232"/>
+<area shape="rect" id="node9" href="$classnlohmann_1_1basic__json.html#a543bd5f7490de54c875b2c0912dc9a49" title="creates a diff as a JSON patch" alt="" coords="5,256,156,295"/>
+</map>

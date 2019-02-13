@@ -1,0 +1,32 @@
+\hypertarget{structnlohmann_1_1detail_1_1has__from__json}{}\section{nlohmann\+::detail\+::has\+\_\+from\+\_\+json$<$ Basic\+Json\+Type, T $>$ Struct Template Reference}
+\label{structnlohmann_1_1detail_1_1has__from__json}\index{nlohmann::detail::has\_from\_json$<$ BasicJsonType, T $>$@{nlohmann::detail::has\_from\_json$<$ BasicJsonType, T $>$}}
+
+
+{\ttfamily \#include $<$json.\+hpp$>$}
+
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr bool \mbox{\hyperlink{structnlohmann_1_1detail_1_1has__from__json_a16701d806343c58ae7e884024dd14955}{value}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structnlohmann_1_1detail_1_1has__from__json_a16701d806343c58ae7e884024dd14955}\label{structnlohmann_1_1detail_1_1has__from__json_a16701d806343c58ae7e884024dd14955}} 
+\index{nlohmann::detail::has\_from\_json$<$ BasicJsonType, T $>$@{nlohmann::detail::has\_from\_json$<$ BasicJsonType, T $>$}!value@{value}}
+\index{value@{value}!nlohmann::detail::has\_from\_json$<$ BasicJsonType, T $>$@{nlohmann::detail::has\_from\_json$<$ BasicJsonType, T $>$}}
+\subsubsection{\texorpdfstring{value}{value}}
+{\footnotesize\ttfamily template$<$typename Basic\+Json\+Type , typename T $>$ \\
+constexpr bool \mbox{\hyperlink{structnlohmann_1_1detail_1_1has__from__json}{nlohmann\+::detail\+::has\+\_\+from\+\_\+json}}$<$ Basic\+Json\+Type, T $>$\+::value\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= std::is\_integral<decltype(}
+\DoxyCodeLine{                                      detect(std::declval<\textcolor{keyword}{typename} BasicJsonType::template json\_serializer<T, void>>()))>\mbox{\hyperlink{structnlohmann_1_1detail_1_1has__from__json_a16701d806343c58ae7e884024dd14955}{::value}}}
+
+\end{DoxyCode}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Gluonic\+L\+Q\+C\+D/lib/\mbox{\hyperlink{json_8hpp}{json.\+hpp}}\end{DoxyCompactItemize}

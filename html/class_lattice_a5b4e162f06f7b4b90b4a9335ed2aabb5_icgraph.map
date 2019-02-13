@@ -1,0 +1,31 @@
+<map id="Lattice::allocate" name="Lattice::allocate">
+<area shape="rect" id="node1" title=" " alt="" coords="497,463,611,488"/>
+<area shape="rect" id="node2" href="$class_luscher_action.html#a2389aab5b35b4c5ccb0ae5a45f68430b" title=" " alt="" coords="245,5,443,31"/>
+<area shape="rect" id="node3" href="$class_wilson_gauge_action.html#a50d06446cf93f7e738e88c372920f518" title=" " alt="" coords="271,55,417,93"/>
+<area shape="rect" id="node4" href="$class_flow.html#a25ae85599c0ae330374f0840efde7ebc" title=" " alt="" coords="301,117,386,143"/>
+<area shape="rect" id="node5" href="$class_lattice.html#a0c212e4f17842acee8697ce79eef3dff" title=" " alt="" coords="266,167,422,192"/>
+<area shape="rect" id="node6" href="$lattice_8h.html#ab2d48b63b79e5e5ee3ca25483fe98b3e" title=" " alt="" coords="267,216,421,241"/>
+<area shape="rect" id="node10" href="$lattice_8h.html#adb16681d0c7120b111172c031ec74d06" title=" " alt="" coords="264,364,424,389"/>
+<area shape="rect" id="node11" href="$lattice_8h.html#a491004d1505561625a8915464f3c6cab" title=" " alt="" coords="325,315,363,340"/>
+<area shape="rect" id="node18" href="$lattice_8h.html#a64dd6a80a2d6f4a5fb73f90c31fdb6ac" title=" " alt="" coords="304,413,384,439"/>
+<area shape="rect" id="node19" href="$lattice_8h.html#a23d5cd768af53db3d528ba7ed2e06439" title=" " alt="" coords="304,463,384,488"/>
+<area shape="rect" id="node20" href="$lattice_8h.html#ac9e572cd88422198dd6105892065f862" title=" " alt="" coords="277,512,411,537"/>
+<area shape="rect" id="node21" href="$lattice_8h.html#a4ec59a9f0de72a8ac099bd7a6c156d4d" title=" " alt="" coords="288,561,399,587"/>
+<area shape="rect" id="node22" href="$lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" title=" " alt="" coords="321,265,367,291"/>
+<area shape="rect" id="node23" href="$class_energy_density.html#a1d23cfe5690c9daf8b2f0ec8f6471c5f" title=" " alt="" coords="243,611,445,636"/>
+<area shape="rect" id="node24" href="$class_lattice_action_charge_density.html#acda2a43db75cca34586441d4ac7ec39e" title=" " alt="" coords="247,660,441,699"/>
+<area shape="rect" id="node25" href="$class_master_sampler.html#ac5ee503e8391aca36f73872a45bb6bd9" title=" " alt="" coords="239,723,449,748"/>
+<area shape="rect" id="node26" href="$class_master_sampler_topc_x_y_z.html#ad8ba8f2c50c66d823c551f71fd62a99b" title=" " alt="" coords="257,772,431,811"/>
+<area shape="rect" id="node27" href="$class_super_sampler.html#a6bf01b68f9befc5bf01c822e28c0c88d" title=" " alt="" coords="244,835,444,860"/>
+<area shape="rect" id="node28" href="$class_topological_charge.html#a415e32f865f7b5c83f4ac4471838d514" title=" " alt="" coords="274,884,414,923"/>
+<area shape="rect" id="node29" href="$class_test_suite.html#af7291e6d8b53443604ee0c1fcf1fadfc" title=" " alt="" coords="275,947,413,972"/>
+<area shape="rect" id="node7" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,91,191,129"/>
+<area shape="rect" id="node8" href="$class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" title=" " alt="" coords="15,153,181,192"/>
+<area shape="rect" id="node9" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title=" " alt="" coords="15,216,182,241"/>
+<area shape="rect" id="node12" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title=" " alt="" coords="14,427,183,465"/>
+<area shape="rect" id="node13" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title=" " alt="" coords="25,489,171,528"/>
+<area shape="rect" id="node14" href="$class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" title=" " alt="" coords="14,552,182,577"/>
+<area shape="rect" id="node15" href="$class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" title=" " alt="" coords="12,265,184,291"/>
+<area shape="rect" id="node16" href="$class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" title=" " alt="" coords="29,315,167,340"/>
+<area shape="rect" id="node17" href="$class_topological_charge.html#a8ed78c28c3484df04b1cb24187de2f5b" title=" " alt="" coords="29,364,168,403"/>
+</map>

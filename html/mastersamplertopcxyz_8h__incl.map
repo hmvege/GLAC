@@ -1,0 +1,26 @@
+<map id="GluonicLQCD/observables/mastersamplertopcxyz.h" name="GluonicLQCD/observables/mastersamplertopcxyz.h">
+<area shape="rect" id="node1" title=" " alt="" coords="539,5,718,44"/>
+<area shape="rect" id="node2" href="$lattice_8h.html" title=" " alt="" coords="721,312,822,337"/>
+<area shape="rect" id="node14" href="$observables_8h.html" title=" " alt="" coords="539,92,719,117"/>
+<area shape="rect" id="node3" title=" " alt="" coords="504,459,562,484"/>
+<area shape="rect" id="node4" title=" " alt="" coords="952,459,1006,484"/>
+<area shape="rect" id="node5" href="$index_8h.html" title=" " alt="" coords="458,385,607,411"/>
+<area shape="rect" id="node6" href="$neighbours_8h.html" title=" " alt="" coords="682,385,866,411"/>
+<area shape="rect" id="node8" href="$parallelparameters_8h.html" title=" " alt="" coords="941,385,1169,411"/>
+<area shape="rect" id="node9" href="$functions_8h.html" title=" " alt="" coords="148,385,234,411"/>
+<area shape="rect" id="node7" href="$neighbourlist_8h.html" title=" " alt="" coords="720,459,828,484"/>
+<area shape="rect" id="node10" href="$su3_8h.html" title=" " alt="" coords="5,459,113,484"/>
+<area shape="rect" id="node11" href="$complex_8h.html" title=" " alt="" coords="134,532,249,557"/>
+<area shape="rect" id="node13" href="$su2_8h.html" title=" " alt="" coords="137,459,245,484"/>
+<area shape="rect" id="node12" title=" " alt="" coords="155,605,228,631"/>
+<area shape="rect" id="node15" href="$correlator_8h.html" title=" " alt="" coords="377,239,465,264"/>
+<area shape="rect" id="node18" href="$energydensity_8h.html" title=" " alt="" coords="107,165,222,191"/>
+<area shape="rect" id="node19" href="$plaquette_8h.html" title=" " alt="" coords="246,165,334,191"/>
+<area shape="rect" id="node20" href="$topologicalcharge_8h.html" title=" " alt="" coords="358,165,495,191"/>
+<area shape="rect" id="node21" href="$mastersampler_8h.html" title=" " alt="" coords="569,165,689,191"/>
+<area shape="rect" id="node22" href="$latticeactionchargedensity_8h.html" title=" " alt="" coords="850,165,1034,191"/>
+<area shape="rect" id="node23" href="$supersampler_8h.html" title=" " alt="" coords="712,165,825,191"/>
+<area shape="rect" id="node16" href="$observablestorer_8h.html" title=" " alt="" coords="221,312,383,337"/>
+<area shape="rect" id="node17" title=" " alt="" coords="275,385,329,411"/>
+<area shape="rect" id="node24" title=" " alt="" coords="686,239,734,264"/>
+</map>

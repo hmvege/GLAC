@@ -1,0 +1,5 @@
+<map id="nlohmann::basic_json::type" name="nlohmann::basic_json::type">
+<area shape="rect" id="node1" title="return the type of the JSON value (explicit)" alt="" coords="204,37,354,76"/>
+<area shape="rect" id="node2" href="$classnlohmann_1_1basic__json.html#aefa46bd2d96bb77a38d1c8b431eab44f" title="get a pointer value (implicit)" alt="" coords="5,5,156,44"/>
+<area shape="rect" id="node3" href="$classnlohmann_1_1basic__json.html#a543bd5f7490de54c875b2c0912dc9a49" title="creates a diff as a JSON patch" alt="" coords="5,68,156,107"/>
+</map>

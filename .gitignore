@@ -73,6 +73,9 @@ figures/field_density_freq10_NF400_beta60/
 figures/field_density_freq10_NF400_beta61/
 figures/field_density_freq10_NF400_beta62/
 
+# Old config files
+old_configs
+
 # HPC profiler related stuff
 hpctoolkit*
 GluonicLQCD.hpcstruct

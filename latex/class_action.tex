@@ -1,0 +1,118 @@
+\hypertarget{class_action}{}\section{Action Class Reference}
+\label{class_action}\index{Action@{Action}}
+
+
+{\ttfamily \#include $<$action.\+h$>$}
+
+
+
+Inheritance diagram for Action\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{class_action__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_action_a4f457ccfc8336b565cadca56b36e0271}{Action}} ()
+\item 
+virtual \mbox{\hyperlink{class_action_acdb06775d157339256a8ecd55749226c}{$\sim$\+Action}} ()
+\item 
+virtual double \mbox{\hyperlink{class_action_a9409aad86cbfe3b6ec25bf5a837eaea5}{get\+Delta\+Action}} (\mbox{\hyperlink{class_s_u3}{S\+U3}} U, \mbox{\hyperlink{class_s_u3}{S\+U3}} U\+Prime)
+\item 
+virtual void \mbox{\hyperlink{class_action_a2d5a64b47a8913955e5911ca072ff80d}{compute\+Staple}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+\item 
+virtual \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \mbox{\hyperlink{class_action_a78168dd7c3819a3365e28fc1aae1b9b6}{get\+Action\+Derivative}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, int mu)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ unsigned int $>$ \mbox{\hyperlink{class_action_a80654d2311707f24689cd9e480edb2f6}{m\+\_\+N}}
+\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{class_action_a133fd17c83db233423855178bc81fb16}{m\+\_\+position}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_action_a4f457ccfc8336b565cadca56b36e0271}\label{class_action_a4f457ccfc8336b565cadca56b36e0271}} 
+\index{Action@{Action}!Action@{Action}}
+\index{Action@{Action}!Action@{Action}}
+\subsubsection{\texorpdfstring{Action()}{Action()}}
+{\footnotesize\ttfamily Action\+::\+Action (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=288pt]{class_action_a4f457ccfc8336b565cadca56b36e0271_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_action_acdb06775d157339256a8ecd55749226c}\label{class_action_acdb06775d157339256a8ecd55749226c}} 
+\index{Action@{Action}!````~Action@{$\sim$Action}}
+\index{````~Action@{$\sim$Action}!Action@{Action}}
+\subsubsection{\texorpdfstring{$\sim$Action()}{~Action()}}
+{\footnotesize\ttfamily Action\+::$\sim$\+Action (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_action_a2d5a64b47a8913955e5911ca072ff80d}\label{class_action_a2d5a64b47a8913955e5911ca072ff80d}} 
+\index{Action@{Action}!computeStaple@{computeStaple}}
+\index{computeStaple@{computeStaple}!Action@{Action}}
+\subsubsection{\texorpdfstring{computeStaple()}{computeStaple()}}
+{\footnotesize\ttfamily void Action\+::compute\+Staple (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{unsigned int}]{i,  }\item[{unsigned int}]{j,  }\item[{unsigned int}]{k,  }\item[{unsigned int}]{l,  }\item[{int}]{mu }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{class_luscher_action_a42285b6e3015935588e1fab6b90c1a11}{Luscher\+Action}}, and \mbox{\hyperlink{class_wilson_gauge_action_af1f6ba42fcc2b923dc3b37bf150bfae9}{Wilson\+Gauge\+Action}}.
+
+\mbox{\Hypertarget{class_action_a78168dd7c3819a3365e28fc1aae1b9b6}\label{class_action_a78168dd7c3819a3365e28fc1aae1b9b6}} 
+\index{Action@{Action}!getActionDerivative@{getActionDerivative}}
+\index{getActionDerivative@{getActionDerivative}!Action@{Action}}
+\subsubsection{\texorpdfstring{getActionDerivative()}{getActionDerivative()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ Action\+::get\+Action\+Derivative (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{int}]{mu }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{class_luscher_action_ac11785b2df276816a098a87e6ac514c7}{Luscher\+Action}}, and \mbox{\hyperlink{class_wilson_gauge_action_a43cf939cd53495b7225fbeaa8a0ff6e8}{Wilson\+Gauge\+Action}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=334pt]{class_action_a78168dd7c3819a3365e28fc1aae1b9b6_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_action_a9409aad86cbfe3b6ec25bf5a837eaea5}\label{class_action_a9409aad86cbfe3b6ec25bf5a837eaea5}} 
+\index{Action@{Action}!getDeltaAction@{getDeltaAction}}
+\index{getDeltaAction@{getDeltaAction}!Action@{Action}}
+\subsubsection{\texorpdfstring{getDeltaAction()}{getDeltaAction()}}
+{\footnotesize\ttfamily double Action\+::get\+Delta\+Action (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u3}{S\+U3}}}]{U,  }\item[{\mbox{\hyperlink{class_s_u3}{S\+U3}}}]{U\+Prime }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{class_luscher_action_a1955f8eea8b0771f6c737c39e3fc11b2}{Luscher\+Action}}, and \mbox{\hyperlink{class_wilson_gauge_action_a60f2892e61489004df3cde6cc856b00b}{Wilson\+Gauge\+Action}}.
+
+
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{class_action_a80654d2311707f24689cd9e480edb2f6}\label{class_action_a80654d2311707f24689cd9e480edb2f6}} 
+\index{Action@{Action}!m\_N@{m\_N}}
+\index{m\_N@{m\_N}!Action@{Action}}
+\subsubsection{\texorpdfstring{m\_N}{m\_N}}
+{\footnotesize\ttfamily std\+::vector$<$unsigned int$>$ Action\+::m\+\_\+N\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_action_a133fd17c83db233423855178bc81fb16}\label{class_action_a133fd17c83db233423855178bc81fb16}} 
+\index{Action@{Action}!m\_position@{m\_position}}
+\index{m\_position@{m\_position}!Action@{Action}}
+\subsubsection{\texorpdfstring{m\_position}{m\_position}}
+{\footnotesize\ttfamily std\+::vector$<$int$>$ Action\+::m\+\_\+position\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Gluonic\+L\+Q\+C\+D/actions/\mbox{\hyperlink{action_8h}{action.\+h}}\item 
+Gluonic\+L\+Q\+C\+D/actions/\mbox{\hyperlink{action_8cpp}{action.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,108 @@
+\hypertarget{class_parallel_1_1_neighbours}{}\section{Parallel\+::Neighbours Class Reference}
+\label{class_parallel_1_1_neighbours}\index{Parallel::Neighbours@{Parallel::Neighbours}}
+
+
+{\ttfamily \#include $<$neighbours.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_parallel_1_1_neighbours_a4d96a6238767e2662ed3dbad9ff29a32}{Neighbours}} ()
+\item 
+\mbox{\hyperlink{class_parallel_1_1_neighbours_a5c3a373ff91768a91099e7b347a62ce9}{$\sim$\+Neighbours}} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_parallel_1_1_neighbours_a5838dbe2c3c086c5943b5b75ad8fa35c}{initialize}} (int process\+Rank, int numproc, int $\ast$processors\+Per\+Dim)
+\item 
+static int \mbox{\hyperlink{class_parallel_1_1_neighbours_a84653f3e22436280ac5a4689a24e7146}{get}} (int i\+Proc\+Dir)
+\item 
+static \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}} $\ast$ \mbox{\hyperlink{class_parallel_1_1_neighbours_a246afc374290bb0d3e86c07892872392}{get\+Neighbours}} (int Np)
+\item 
+static int \mbox{\hyperlink{class_parallel_1_1_neighbours_aadbdf345a7b541bd6705bddac1969961}{get\+List\+Length}} ()
+\item 
+static long \mbox{\hyperlink{class_parallel_1_1_neighbours_ad1a2a616b4089eded3545faf11409b85}{get\+Processor\+Dimension\+Position}} (int dim)
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_a4d96a6238767e2662ed3dbad9ff29a32}\label{class_parallel_1_1_neighbours_a4d96a6238767e2662ed3dbad9ff29a32}} 
+\index{Parallel::Neighbours@{Parallel::Neighbours}!Neighbours@{Neighbours}}
+\index{Neighbours@{Neighbours}!Parallel::Neighbours@{Parallel::Neighbours}}
+\subsubsection{\texorpdfstring{Neighbours()}{Neighbours()}}
+{\footnotesize\ttfamily Parallel\+::\+Neighbours\+::\+Neighbours (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_a5c3a373ff91768a91099e7b347a62ce9}\label{class_parallel_1_1_neighbours_a5c3a373ff91768a91099e7b347a62ce9}} 
+\index{Parallel::Neighbours@{Parallel::Neighbours}!````~Neighbours@{$\sim$Neighbours}}
+\index{````~Neighbours@{$\sim$Neighbours}!Parallel::Neighbours@{Parallel::Neighbours}}
+\subsubsection{\texorpdfstring{$\sim$Neighbours()}{~Neighbours()}}
+{\footnotesize\ttfamily Parallel\+::\+Neighbours\+::$\sim$\+Neighbours (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_a84653f3e22436280ac5a4689a24e7146}\label{class_parallel_1_1_neighbours_a84653f3e22436280ac5a4689a24e7146}} 
+\index{Parallel::Neighbours@{Parallel::Neighbours}!get@{get}}
+\index{get@{get}!Parallel::Neighbours@{Parallel::Neighbours}}
+\subsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily static int Parallel\+::\+Neighbours\+::get (\begin{DoxyParamCaption}\item[{int}]{i\+Proc\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_parallel_1_1_neighbours_a84653f3e22436280ac5a4689a24e7146_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_aadbdf345a7b541bd6705bddac1969961}\label{class_parallel_1_1_neighbours_aadbdf345a7b541bd6705bddac1969961}} 
+\index{Parallel::Neighbours@{Parallel::Neighbours}!getListLength@{getListLength}}
+\index{getListLength@{getListLength}!Parallel::Neighbours@{Parallel::Neighbours}}
+\subsubsection{\texorpdfstring{getListLength()}{getListLength()}}
+{\footnotesize\ttfamily static int Parallel\+::\+Neighbours\+::get\+List\+Length (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_a246afc374290bb0d3e86c07892872392}\label{class_parallel_1_1_neighbours_a246afc374290bb0d3e86c07892872392}} 
+\index{Parallel::Neighbours@{Parallel::Neighbours}!getNeighbours@{getNeighbours}}
+\index{getNeighbours@{getNeighbours}!Parallel::Neighbours@{Parallel::Neighbours}}
+\subsubsection{\texorpdfstring{getNeighbours()}{getNeighbours()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}} $\ast$ Parallel\+::\+Neighbours\+::get\+Neighbours (\begin{DoxyParamCaption}\item[{int}]{Np }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_parallel_1_1_neighbours_a246afc374290bb0d3e86c07892872392_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_ad1a2a616b4089eded3545faf11409b85}\label{class_parallel_1_1_neighbours_ad1a2a616b4089eded3545faf11409b85}} 
+\index{Parallel::Neighbours@{Parallel::Neighbours}!getProcessorDimensionPosition@{getProcessorDimensionPosition}}
+\index{getProcessorDimensionPosition@{getProcessorDimensionPosition}!Parallel::Neighbours@{Parallel::Neighbours}}
+\subsubsection{\texorpdfstring{getProcessorDimensionPosition()}{getProcessorDimensionPosition()}}
+{\footnotesize\ttfamily static long Parallel\+::\+Neighbours\+::get\+Processor\+Dimension\+Position (\begin{DoxyParamCaption}\item[{int}]{dim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_parallel_1_1_neighbours_ad1a2a616b4089eded3545faf11409b85_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_a5838dbe2c3c086c5943b5b75ad8fa35c}\label{class_parallel_1_1_neighbours_a5838dbe2c3c086c5943b5b75ad8fa35c}} 
+\index{Parallel::Neighbours@{Parallel::Neighbours}!initialize@{initialize}}
+\index{initialize@{initialize}!Parallel::Neighbours@{Parallel::Neighbours}}
+\subsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily void Parallel\+::\+Neighbours\+::initialize (\begin{DoxyParamCaption}\item[{int}]{process\+Rank,  }\item[{int}]{numproc,  }\item[{int $\ast$}]{processors\+Per\+Dim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_parallel_1_1_neighbours_a5838dbe2c3c086c5943b5b75ad8fa35c_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Gluonic\+L\+Q\+C\+D/parallelization/\mbox{\hyperlink{neighbours_8h}{neighbours.\+h}}\item 
+Gluonic\+L\+Q\+C\+D/parallelization/\mbox{\hyperlink{neighbours_8cpp}{neighbours.\+cpp}}\end{DoxyCompactItemize}

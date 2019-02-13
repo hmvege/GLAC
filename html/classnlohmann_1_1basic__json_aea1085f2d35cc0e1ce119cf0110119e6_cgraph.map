@@ -1,0 +1,7 @@
+<map id="nlohmann::basic_json::operator+=" name="nlohmann::basic_json::operator+=">
+<area shape="rect" id="node1" title="add an object to an array" alt="" coords="5,68,156,107"/>
+<area shape="rect" id="node2" href="$classnlohmann_1_1basic__json.html#ac8e523ddc8c2dd7e5d2daf0d49a9c0d7" title="add an object to an array" alt="" coords="204,68,354,107"/>
+<area shape="rect" id="node3" href="$classnlohmann_1_1basic__json.html#a8faa039ca82427ed29c486ffd00600c3" title="return whether value is null" alt="" coords="402,5,552,44"/>
+<area shape="rect" id="node4" href="$classnlohmann_1_1basic__json.html#aef9ce5dd2381caee1f8ddcdb5bdd9c65" title="return whether value is an array" alt="" coords="402,68,552,107"/>
+<area shape="rect" id="node5" href="$classnlohmann_1_1basic__json.html#a6b75862bdb4d26650616cf9821430755" title="return the type as string" alt="" coords="402,131,552,169"/>
+</map>

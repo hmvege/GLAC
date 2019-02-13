@@ -1,0 +1,8 @@
+<map id="sumRealTrace" name="sumRealTrace">
+<area shape="rect" id="node1" title=" " alt="" coords="239,124,347,149"/>
+<area shape="rect" id="node2" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,5,191,44"/>
+<area shape="rect" id="node3" href="$class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" title=" " alt="" coords="12,68,184,93"/>
+<area shape="rect" id="node4" href="$class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" title=" " alt="" coords="15,117,181,156"/>
+<area shape="rect" id="node5" href="$class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" title=" " alt="" coords="29,180,167,205"/>
+<area shape="rect" id="node6" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title=" " alt="" coords="15,229,182,255"/>
+</map>

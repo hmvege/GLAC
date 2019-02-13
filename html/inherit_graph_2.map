@@ -1,0 +1,10 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$class_correlator.html" title=" " alt="" coords="5,153,86,179"/>
+<area shape="rect" id="node2" href="$class_energy_density.html" title=" " alt="" coords="173,5,281,31"/>
+<area shape="rect" id="node3" href="$class_lattice_action_charge_density.html" title=" " alt="" coords="134,55,320,80"/>
+<area shape="rect" id="node4" href="$class_master_sampler.html" title=" " alt="" coords="171,104,283,129"/>
+<area shape="rect" id="node5" href="$class_master_sampler_topc_x_y_z.html" title=" " alt="" coords="144,153,310,179"/>
+<area shape="rect" id="node6" href="$class_plaquette.html" title=" " alt="" coords="188,203,266,228"/>
+<area shape="rect" id="node7" href="$class_super_sampler.html" title=" " alt="" coords="174,252,280,277"/>
+<area shape="rect" id="node8" href="$class_topological_charge.html" title=" " alt="" coords="161,301,293,327"/>
+</map>

@@ -1,0 +1,297 @@
+\hypertarget{class_lattice}{}\section{Lattice$<$ T $>$ Class Template Reference}
+\label{class_lattice}\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+
+
+{\ttfamily \#include $<$lattice.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_lattice_ac32e6300cc5ebc246a060cd67d99f370}{Lattice}} ()
+\item 
+\mbox{\hyperlink{class_lattice_a0c212e4f17842acee8697ce79eef3dff}{Lattice}} (std\+::vector$<$ unsigned int $>$lattice\+Dimensions)
+\item 
+\mbox{\hyperlink{class_lattice_a006bd75dd4c599fe17f8ca7e96413487}{$\sim$\+Lattice}} ()
+\item 
+\mbox{\hyperlink{class_lattice_a74cc98beb36f76dcfa27535e43528d57}{Lattice}} (const \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&other)
+\item 
+\mbox{\hyperlink{class_lattice_ad2826da8e42dcaea917b9a2e50ca1ca2}{Lattice}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&other) noexcept
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}} \& \mbox{\hyperlink{class_lattice_acc09c6b9abeafc6b735c3b95d8537edf}{operator=}} (const \mbox{\hyperlink{class_lattice}{Lattice}} \&other)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}} \& \mbox{\hyperlink{class_lattice_a29505c3ad95dc2695401c049cc34ba62}{operator=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&other) noexcept
+\item 
+void \mbox{\hyperlink{class_lattice_a5b4e162f06f7b4b90b4a9335ed2aabb5}{allocate}} (std\+::vector$<$ unsigned int $>$ dim)
+\item 
+T \& \mbox{\hyperlink{class_lattice_ab7d585cf03c540d70ff91a58facbdef5}{operator\mbox{[}$\,$\mbox{]}}} (unsigned long i)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_aa5eb9113987a4a411cd57245d591a458}{operator+=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_a83e9265a5da00384a19dc47eff5f9e00}{operator+=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_abc6ee1293f4490f34f96b85233b03ed1}{operator-\/=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_a814b798e40210ac2aed7cbd876625c30}{operator-\/=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_a123a54c46163261b0332ff10c1f79f80}{operator $\ast$=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_a610be724a235b1de20babde84dcd16dd}{operator $\ast$=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_a1d7db986711ac8ff3a26e8d865d66a89}{operator $\ast$=}} (double B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_aafe786fd40986031094f2d76ca28640b}{operator/=}} (double B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_ab94a46cade378e4daa689e2ddcf61ff3}{operator+=}} (\mbox{\hyperlink{classcomplex}{complex}} B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_a848d049b47fe69fc99fd54d8a39b544f}{operator-\/=}} (\mbox{\hyperlink{classcomplex}{complex}} B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_ae4405517258f14d94479ad6f2c2f4343}{operator $\ast$=}} (\mbox{\hyperlink{classcomplex}{complex}} B)
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_afa9568877b23d2266c7d2f29fe0ec6ad}{operator/=}} (\mbox{\hyperlink{classcomplex}{complex}} B)
+\item 
+void \mbox{\hyperlink{class_lattice_a5ad6bf603b4b455f0368362aeeddb748}{identity}} ()
+\item 
+void \mbox{\hyperlink{class_lattice_a1e8bfb54f85e78f2c97e8b90d2b47dc9}{zeros}} ()
+\item 
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \mbox{\hyperlink{class_lattice_a85154fbd1b0ae42af329135c6cd11f34}{copy}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ B)
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ T $>$ \mbox{\hyperlink{class_lattice_a605a93a5b2a973811f7cff44a8ab84f7}{m\+\_\+sites}}
+\item 
+std\+::vector$<$ unsigned int $>$ \mbox{\hyperlink{class_lattice_a6adf73dcd2ef1663d7d38b192f7fd91e}{m\+\_\+dim}}
+\item 
+unsigned long \mbox{\hyperlink{class_lattice_a933045fb4a76f62d29472e6061ed8a34}{m\+\_\+lattice\+Size}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_lattice_ac32e6300cc5ebc246a060cd67d99f370}\label{class_lattice_ac32e6300cc5ebc246a060cd67d99f370}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!Lattice@{Lattice}}
+\index{Lattice@{Lattice}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{Lattice()}{Lattice()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::\mbox{\hyperlink{class_lattice}{Lattice}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a0c212e4f17842acee8697ce79eef3dff}\label{class_lattice_a0c212e4f17842acee8697ce79eef3dff}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!Lattice@{Lattice}}
+\index{Lattice@{Lattice}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{Lattice()}{Lattice()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::\mbox{\hyperlink{class_lattice}{Lattice}} (\begin{DoxyParamCaption}\item[{std\+::vector$<$ unsigned int $>$}]{lattice\+Dimensions }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a006bd75dd4c599fe17f8ca7e96413487}\label{class_lattice_a006bd75dd4c599fe17f8ca7e96413487}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!````~Lattice@{$\sim$Lattice}}
+\index{````~Lattice@{$\sim$Lattice}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{$\sim$Lattice()}{~Lattice()}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::$\sim$\mbox{\hyperlink{class_lattice}{Lattice}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a74cc98beb36f76dcfa27535e43528d57}\label{class_lattice_a74cc98beb36f76dcfa27535e43528d57}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!Lattice@{Lattice}}
+\index{Lattice@{Lattice}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{Lattice()}{Lattice()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::\mbox{\hyperlink{class_lattice}{Lattice}} (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_ad2826da8e42dcaea917b9a2e50ca1ca2}\label{class_lattice_ad2826da8e42dcaea917b9a2e50ca1ca2}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!Lattice@{Lattice}}
+\index{Lattice@{Lattice}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{Lattice()}{Lattice()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::\mbox{\hyperlink{class_lattice}{Lattice}} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_lattice_a5b4e162f06f7b4b90b4a9335ed2aabb5}\label{class_lattice_a5b4e162f06f7b4b90b4a9335ed2aabb5}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!allocate@{allocate}}
+\index{allocate@{allocate}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{allocate()}{allocate()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::allocate (\begin{DoxyParamCaption}\item[{std\+::vector$<$ unsigned int $>$}]{dim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_a5b4e162f06f7b4b90b4a9335ed2aabb5_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_a85154fbd1b0ae42af329135c6cd11f34}\label{class_lattice_a85154fbd1b0ae42af329135c6cd11f34}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!copy@{copy}}
+\index{copy@{copy}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{copy()}{copy()}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::copy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=313pt]{class_lattice_a85154fbd1b0ae42af329135c6cd11f34_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_a5ad6bf603b4b455f0368362aeeddb748}\label{class_lattice_a5ad6bf603b4b455f0368362aeeddb748}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!identity@{identity}}
+\index{identity@{identity}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{identity()}{identity()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::identity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_a5ad6bf603b4b455f0368362aeeddb748_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_lattice_a123a54c46163261b0332ff10c1f79f80}\label{class_lattice_a123a54c46163261b0332ff10c1f79f80}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a610be724a235b1de20babde84dcd16dd}\label{class_lattice_a610be724a235b1de20babde84dcd16dd}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a1d7db986711ac8ff3a26e8d865d66a89}\label{class_lattice_a1d7db986711ac8ff3a26e8d865d66a89}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{double}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_ae4405517258f14d94479ad6f2c2f4343}\label{class_lattice_ae4405517258f14d94479ad6f2c2f4343}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_aa5eb9113987a4a411cd57245d591a458}\label{class_lattice_aa5eb9113987a4a411cd57245d591a458}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator+= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a83e9265a5da00384a19dc47eff5f9e00}\label{class_lattice_a83e9265a5da00384a19dc47eff5f9e00}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator+= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_ab94a46cade378e4daa689e2ddcf61ff3}\label{class_lattice_ab94a46cade378e4daa689e2ddcf61ff3}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator+= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_abc6ee1293f4490f34f96b85233b03ed1}\label{class_lattice_abc6ee1293f4490f34f96b85233b03ed1}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator-\/=()}{operator-=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator-\/= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a814b798e40210ac2aed7cbd876625c30}\label{class_lattice_a814b798e40210ac2aed7cbd876625c30}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator-\/=()}{operator-=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator-\/= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a848d049b47fe69fc99fd54d8a39b544f}\label{class_lattice_a848d049b47fe69fc99fd54d8a39b544f}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator-\/=()}{operator-=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator-\/= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_aafe786fd40986031094f2d76ca28640b}\label{class_lattice_aafe786fd40986031094f2d76ca28640b}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator/=@{operator/=}}
+\index{operator/=@{operator/=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator/=()}{operator/=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator/= (\begin{DoxyParamCaption}\item[{double}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_afa9568877b23d2266c7d2f29fe0ec6ad}\label{class_lattice_afa9568877b23d2266c7d2f29fe0ec6ad}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator/=@{operator/=}}
+\index{operator/=@{operator/=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator/=()}{operator/=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator/= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_acc09c6b9abeafc6b735c3b95d8537edf}\label{class_lattice_acc09c6b9abeafc6b735c3b95d8537edf}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}\& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a29505c3ad95dc2695401c049cc34ba62}\label{class_lattice_a29505c3ad95dc2695401c049cc34ba62}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+\mbox{\hyperlink{class_lattice}{Lattice}}\& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\mbox{\Hypertarget{class_lattice_ab7d585cf03c540d70ff91a58facbdef5}\label{class_lattice_ab7d585cf03c540d70ff91a58facbdef5}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+T\& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{unsigned long}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_lattice_a1e8bfb54f85e78f2c97e8b90d2b47dc9}\label{class_lattice_a1e8bfb54f85e78f2c97e8b90d2b47dc9}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!zeros@{zeros}}
+\index{zeros@{zeros}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{zeros()}{zeros()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::zeros (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_lattice_a1e8bfb54f85e78f2c97e8b90d2b47dc9_icgraph}
+\end{center}
+\end{figure}
+
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{class_lattice_a6adf73dcd2ef1663d7d38b192f7fd91e}\label{class_lattice_a6adf73dcd2ef1663d7d38b192f7fd91e}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!m\_dim@{m\_dim}}
+\index{m\_dim@{m\_dim}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{m\_dim}{m\_dim}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+std\+::vector$<$unsigned int$>$ \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::m\+\_\+dim}
+
+\mbox{\Hypertarget{class_lattice_a933045fb4a76f62d29472e6061ed8a34}\label{class_lattice_a933045fb4a76f62d29472e6061ed8a34}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!m\_latticeSize@{m\_latticeSize}}
+\index{m\_latticeSize@{m\_latticeSize}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{m\_latticeSize}{m\_latticeSize}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+unsigned long \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::m\+\_\+lattice\+Size}
+
+\mbox{\Hypertarget{class_lattice_a605a93a5b2a973811f7cff44a8ab84f7}\label{class_lattice_a605a93a5b2a973811f7cff44a8ab84f7}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!m\_sites@{m\_sites}}
+\index{m\_sites@{m\_sites}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{m\_sites}{m\_sites}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+std\+::vector$<$T$>$ \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::m\+\_\+sites}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Gluonic\+L\+Q\+C\+D/math/\mbox{\hyperlink{lattice_8h}{lattice.\+h}}\end{DoxyCompactItemize}

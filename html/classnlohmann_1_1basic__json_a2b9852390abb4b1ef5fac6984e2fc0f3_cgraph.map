@@ -1,0 +1,5 @@
+<map id="nlohmann::basic_json::is_number" name="nlohmann::basic_json::is_number">
+<area shape="rect" id="node1" title="return whether value is a number" alt="" coords="5,37,156,76"/>
+<area shape="rect" id="node2" href="$classnlohmann_1_1basic__json.html#abac8af76067f1e8fdca9052882c74428" title="return whether value is an integer number" alt="" coords="204,5,354,44"/>
+<area shape="rect" id="node3" href="$classnlohmann_1_1basic__json.html#a33b4bf898b857c962e798fc7f6e86e70" title="return whether value is a floating&#45;point number" alt="" coords="204,68,354,107"/>
+</map>

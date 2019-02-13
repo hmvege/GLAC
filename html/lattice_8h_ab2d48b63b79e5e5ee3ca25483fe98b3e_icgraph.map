@@ -1,0 +1,6 @@
+<map id="realTraceMultiplication" name="realTraceMultiplication">
+<area shape="rect" id="node1" title=" " alt="" coords="239,75,393,100"/>
+<area shape="rect" id="node2" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,5,191,44"/>
+<area shape="rect" id="node3" href="$class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" title=" " alt="" coords="15,68,181,107"/>
+<area shape="rect" id="node4" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title=" " alt="" coords="15,131,182,156"/>
+</map>

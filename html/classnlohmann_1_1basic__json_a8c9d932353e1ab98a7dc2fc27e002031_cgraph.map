@@ -1,0 +1,4 @@
+<map id="nlohmann::basic_json::swap" name="nlohmann::basic_json::swap">
+<area shape="rect" id="node1" title="exchanges the values" alt="" coords="5,5,156,44"/>
+<area shape="rect" id="node2" href="$namespacestd.html#a907191b7578e209391ce938e3b2afdf7" title="exchanges the values of two JSON objects" alt="" coords="204,12,281,37"/>
+</map>

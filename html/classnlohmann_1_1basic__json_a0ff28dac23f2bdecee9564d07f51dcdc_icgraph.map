@@ -1,0 +1,8 @@
+<map id="nlohmann::basic_json::begin" name="nlohmann::basic_json::begin">
+<area shape="rect" id="node1" title="returns an iterator to the first element" alt="" coords="204,131,354,169"/>
+<area shape="rect" id="node2" href="$classnlohmann_1_1basic__json.html#a3acba9c6ceb7214e565fe08c3ba5b352" title="access the first element" alt="" coords="5,5,156,44"/>
+<area shape="rect" id="node3" href="$classnlohmann_1_1basic__json.html#ac77aed0925d447744676725ab0b6d535" title="returns an iterator to the reverse&#45;end" alt="" coords="5,68,156,107"/>
+<area shape="rect" id="node4" href="$classnlohmann_1_1basic__json.html#a5338e282d1d02bed389d852dd670d98d" title="add an object to an object if key does not exist" alt="" coords="5,131,156,169"/>
+<area shape="rect" id="node5" href="$classnlohmann_1_1basic__json.html#a81e0c41a4a9dff4df2f6973f7f8b2a83" title="applies a JSON patch" alt="" coords="5,193,156,232"/>
+<area shape="rect" id="node6" href="$classnlohmann_1_1basic__json.html#a543bd5f7490de54c875b2c0912dc9a49" title="creates a diff as a JSON patch" alt="" coords="5,256,156,295"/>
+</map>

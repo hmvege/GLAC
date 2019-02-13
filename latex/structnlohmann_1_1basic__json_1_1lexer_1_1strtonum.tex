@@ -1,0 +1,65 @@
+\hypertarget{structnlohmann_1_1basic__json_1_1lexer_1_1strtonum}{}\section{nlohmann\+::basic\+\_\+json$<$ Object\+Type, Array\+Type, String\+Type, Boolean\+Type, Number\+Integer\+Type, Number\+Unsigned\+Type, Number\+Float\+Type, Allocator\+Type, J\+S\+O\+N\+Serializer $>$\+::lexer\+::strtonum Struct Reference}
+\label{structnlohmann_1_1basic__json_1_1lexer_1_1strtonum}\index{nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum@{nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum}}
+
+
+parse string into a built-\/in arithmetic type as if the current locale is P\+O\+S\+IX.  
+
+
+
+
+{\ttfamily \#include $<$json.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structnlohmann_1_1basic__json_1_1lexer_1_1strtonum_ae065098e24b08ea79a359950190006d8}{strtonum}} (const char $\ast$start, const char $\ast$\mbox{\hyperlink{classnlohmann_1_1basic__json_a13e032a02a7fd8a93fdddc2fcbc4763c}{end}})
+\item 
+{\footnotesize template$<$typename T , typename  = typename std\+::enable\+\_\+if$<$std\+::is\+\_\+arithmetic$<$\+T$>$\+::value$>$\+::type$>$ }\\bool \mbox{\hyperlink{structnlohmann_1_1basic__json_1_1lexer_1_1strtonum_af1b3dc99a67a854750437a60a22f4989}{to}} (T \&val) const
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$template$<$ typename U, typename V, typename... Args $>$ class Object\+Type = std\+::map, template$<$ typename U, typename... Args $>$ class Array\+Type = std\+::vector, class String\+Type = std\+::string, class Boolean\+Type = bool, class Number\+Integer\+Type = std\+::int64\+\_\+t, class Number\+Unsigned\+Type = std\+::uint64\+\_\+t, class Number\+Float\+Type = double, template$<$ typename U $>$ class Allocator\+Type = std\+::allocator, template$<$ typename T, typename S\+F\+I\+N\+A\+E=void $>$ class J\+S\+O\+N\+Serializer = adl\+\_\+serializer$>$\newline
+struct nlohmann\+::basic\+\_\+json$<$ Object\+Type, Array\+Type, String\+Type, Boolean\+Type, Number\+Integer\+Type, Number\+Unsigned\+Type, Number\+Float\+Type, Allocator\+Type, J\+S\+O\+N\+Serializer $>$\+::lexer\+::strtonum}
+
+parse string into a built-\/in arithmetic type as if the current locale is P\+O\+S\+IX. 
+
+\begin{DoxyNote}{Note}
+in floating-\/point case strtod may parse past the token\textquotesingle{}s end -\/ this is not an error
+
+any leading blanks are not handled 
+\end{DoxyNote}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structnlohmann_1_1basic__json_1_1lexer_1_1strtonum_ae065098e24b08ea79a359950190006d8}\label{structnlohmann_1_1basic__json_1_1lexer_1_1strtonum_ae065098e24b08ea79a359950190006d8}} 
+\index{nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum@{nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum}!strtonum@{strtonum}}
+\index{strtonum@{strtonum}!nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum@{nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum}}
+\subsubsection{\texorpdfstring{strtonum()}{strtonum()}}
+{\footnotesize\ttfamily template$<$template$<$ typename U, typename V, typename... Args $>$ class Object\+Type = std\+::map, template$<$ typename U, typename... Args $>$ class Array\+Type = std\+::vector, class String\+Type  = std\+::string, class Boolean\+Type  = bool, class Number\+Integer\+Type  = std\+::int64\+\_\+t, class Number\+Unsigned\+Type  = std\+::uint64\+\_\+t, class Number\+Float\+Type  = double, template$<$ typename U $>$ class Allocator\+Type = std\+::allocator, template$<$ typename T, typename S\+F\+I\+N\+A\+E=void $>$ class J\+S\+O\+N\+Serializer = adl\+\_\+serializer$>$ \\
+\mbox{\hyperlink{classnlohmann_1_1basic__json}{nlohmann\+::basic\+\_\+json}}$<$ Object\+Type, Array\+Type, String\+Type, Boolean\+Type, Number\+Integer\+Type, Number\+Unsigned\+Type, Number\+Float\+Type, Allocator\+Type, J\+S\+O\+N\+Serializer $>$\+::lexer\+::strtonum\+::strtonum (\begin{DoxyParamCaption}\item[{const char $\ast$}]{start,  }\item[{const char $\ast$}]{end }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{structnlohmann_1_1basic__json_1_1lexer_1_1strtonum_af1b3dc99a67a854750437a60a22f4989}\label{structnlohmann_1_1basic__json_1_1lexer_1_1strtonum_af1b3dc99a67a854750437a60a22f4989}} 
+\index{nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum@{nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum}!to@{to}}
+\index{to@{to}!nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum@{nlohmann::basic\_json$<$ ObjectType, ArrayType, StringType, BooleanType, NumberIntegerType, NumberUnsignedType, NumberFloatType, AllocatorType, JSONSerializer $>$::lexer::strtonum}}
+\subsubsection{\texorpdfstring{to()}{to()}}
+{\footnotesize\ttfamily template$<$template$<$ typename U, typename V, typename... Args $>$ class Object\+Type = std\+::map, template$<$ typename U, typename... Args $>$ class Array\+Type = std\+::vector, class String\+Type  = std\+::string, class Boolean\+Type  = bool, class Number\+Integer\+Type  = std\+::int64\+\_\+t, class Number\+Unsigned\+Type  = std\+::uint64\+\_\+t, class Number\+Float\+Type  = double, template$<$ typename U $>$ class Allocator\+Type = std\+::allocator, template$<$ typename T, typename S\+F\+I\+N\+A\+E=void $>$ class J\+S\+O\+N\+Serializer = adl\+\_\+serializer$>$ \\
+template$<$typename T , typename  = typename std\+::enable\+\_\+if$<$std\+::is\+\_\+arithmetic$<$\+T$>$\+::value$>$\+::type$>$ \\
+bool \mbox{\hyperlink{classnlohmann_1_1basic__json}{nlohmann\+::basic\+\_\+json}}$<$ Object\+Type, Array\+Type, String\+Type, Boolean\+Type, Number\+Integer\+Type, Number\+Unsigned\+Type, Number\+Float\+Type, Allocator\+Type, J\+S\+O\+N\+Serializer $>$\+::lexer\+::strtonum\+::to (\begin{DoxyParamCaption}\item[{T \&}]{val }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+true iff parsed successfully as number of type T
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em val} & shall contain parsed value, or undefined value if could not parse \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Gluonic\+L\+Q\+C\+D/lib/\mbox{\hyperlink{json_8hpp}{json.\+hpp}}\end{DoxyCompactItemize}

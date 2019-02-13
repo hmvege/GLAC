@@ -1,0 +1,16 @@
+<map id="nlohmann::basic_json::diff" name="nlohmann::basic_json::diff">
+<area shape="rect" id="node1" title="creates a diff as a JSON patch" alt="" coords="5,223,156,261"/>
+<area shape="rect" id="node2" href="$classnlohmann_1_1basic__json.html#a2b2d781d7f2a4ee41bc0016e931cadf7" title="return the type of the JSON value (explicit)" alt="" coords="204,5,354,44"/>
+<area shape="rect" id="node3" href="$classnlohmann_1_1basic__json.html#ac8e523ddc8c2dd7e5d2daf0d49a9c0d7" title="add an object to an array" alt="" coords="204,68,354,107"/>
+<area shape="rect" id="node7" href="$classnlohmann_1_1basic__json.html#a25e27ad0c6d53c01871c5485e1f75b96" title="returns the number of elements" alt="" coords="204,193,354,232"/>
+<area shape="rect" id="node8" href="$classnlohmann_1_1basic__json.html#a0136728f5db69d4051c77b94307abd6c" title="inserts element" alt="" coords="204,131,354,169"/>
+<area shape="rect" id="node9" href="$classnlohmann_1_1basic__json.html#a13e032a02a7fd8a93fdddc2fcbc4763c" title="returns an iterator to one past the last element" alt="" coords="402,257,582,283"/>
+<area shape="rect" id="node10" href="$classnlohmann_1_1basic__json.html#a0ff28dac23f2bdecee9564d07f51dcdc" title="returns an iterator to the first element" alt="" coords="204,371,354,409"/>
+<area shape="rect" id="node11" href="$classnlohmann_1_1basic__json.html#a9f42ee7d10eee2d5a73fd94ca7f767ca" title="explicitly create an object from an initializer list" alt="" coords="204,433,354,472"/>
+<area shape="rect" id="node13" href="$classnlohmann_1_1basic__json.html#aeed33787bd362c7ead59a4ba945392db" title="find an element in a JSON object" alt="" coords="204,308,354,347"/>
+<area shape="rect" id="node4" href="$classnlohmann_1_1basic__json.html#a8faa039ca82427ed29c486ffd00600c3" title="return whether value is null" alt="" coords="417,5,567,44"/>
+<area shape="rect" id="node5" href="$classnlohmann_1_1basic__json.html#aef9ce5dd2381caee1f8ddcdb5bdd9c65" title="return whether value is an array" alt="" coords="417,68,567,107"/>
+<area shape="rect" id="node6" href="$classnlohmann_1_1basic__json.html#a6b75862bdb4d26650616cf9821430755" title="return the type as string" alt="" coords="417,131,567,169"/>
+<area shape="rect" id="node12" href="$classnlohmann_1_1basic__json.html#a32124a16dc80729d964d9caf607c2bc8" title="create an empty value with a given type" alt="" coords="417,433,567,472"/>
+<area shape="rect" id="node14" href="$classnlohmann_1_1basic__json.html#af8f511af124e82e4579f444b4175787c" title="return whether value is an object" alt="" coords="417,308,567,347"/>
+</map>

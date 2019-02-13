@@ -1,0 +1,35 @@
+\hypertarget{structnlohmann_1_1detail_1_1is__basic__json__nested__type}{}\section{nlohmann\+::detail\+::is\+\_\+basic\+\_\+json\+\_\+nested\+\_\+type$<$ Basic\+Json\+Type, T $>$ Struct Template Reference}
+\label{structnlohmann_1_1detail_1_1is__basic__json__nested__type}\index{nlohmann::detail::is\_basic\_json\_nested\_type$<$ BasicJsonType, T $>$@{nlohmann::detail::is\_basic\_json\_nested\_type$<$ BasicJsonType, T $>$}}
+
+
+{\ttfamily \#include $<$json.\+hpp$>$}
+
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static auto constexpr \mbox{\hyperlink{structnlohmann_1_1detail_1_1is__basic__json__nested__type_aee5fee744e5298a78d557f2ee5f090db}{value}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structnlohmann_1_1detail_1_1is__basic__json__nested__type_aee5fee744e5298a78d557f2ee5f090db}\label{structnlohmann_1_1detail_1_1is__basic__json__nested__type_aee5fee744e5298a78d557f2ee5f090db}} 
+\index{nlohmann::detail::is\_basic\_json\_nested\_type$<$ BasicJsonType, T $>$@{nlohmann::detail::is\_basic\_json\_nested\_type$<$ BasicJsonType, T $>$}!value@{value}}
+\index{value@{value}!nlohmann::detail::is\_basic\_json\_nested\_type$<$ BasicJsonType, T $>$@{nlohmann::detail::is\_basic\_json\_nested\_type$<$ BasicJsonType, T $>$}}
+\subsubsection{\texorpdfstring{value}{value}}
+{\footnotesize\ttfamily template$<$typename Basic\+Json\+Type , typename T $>$ \\
+auto constexpr \mbox{\hyperlink{structnlohmann_1_1detail_1_1is__basic__json__nested__type}{nlohmann\+::detail\+::is\+\_\+basic\+\_\+json\+\_\+nested\+\_\+type}}$<$ Basic\+Json\+Type, T $>$\+::value\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= std::is\_same<T, typename BasicJsonType::iterator>::value or}
+\DoxyCodeLine{                                  std::is\_same<T, typename BasicJsonType::const\_iterator>::value or}
+\DoxyCodeLine{                                  std::is\_same<T, typename BasicJsonType::reverse\_iterator>::value or}
+\DoxyCodeLine{                                  std::is\_same<T, typename BasicJsonType::const\_reverse\_iterator>::value or}
+\DoxyCodeLine{                                  std::is\_same<T, typename BasicJsonType::json\_pointer>::value}
+
+\end{DoxyCode}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Gluonic\+L\+Q\+C\+D/lib/\mbox{\hyperlink{json_8hpp}{json.\+hpp}}\end{DoxyCompactItemize}

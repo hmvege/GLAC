@@ -1,0 +1,8 @@
+<map id="MasterSampler::printObservable" name="MasterSampler::printObservable">
+<area shape="rect" id="node1" title=" " alt="" coords="5,124,219,149"/>
+<area shape="rect" id="node2" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="297,5,457,44"/>
+<area shape="rect" id="node3" href="$class_observable_storer.html#af03e1c58c3e0efff251ef9b65cc8d152" title=" " alt="" coords="267,68,487,93"/>
+<area shape="rect" id="node4" href="$class_parallel_1_1_communicator.html#a6c60f0fbbe23ef0bf342b0157d080007" title=" " alt="" coords="297,117,457,156"/>
+<area shape="rect" id="node5" href="$class_parameters.html#a96dbafc27f287de83dfaec3bc2d45efe" title=" " alt="" coords="283,180,471,205"/>
+<area shape="rect" id="node6" href="$class_parallel_1_1_communicator.html#a7b1f80fb49a0cc83f2031c3415174150" title=" " alt="" coords="297,229,457,268"/>
+</map>
