@@ -1558,7 +1558,7 @@ bool TestSuite::testLatticeShift() {
     bool passed = true;
 
     if (Parallel::ParallelParameters::active) {
-        unsigned int position;
+        unsigned int position = 0;
         unsigned int N1,N2,N3;
         Lattice<SU3>L;
         L.allocate(m_dim);
@@ -1611,8 +1611,8 @@ bool TestSuite::testLatticeShift() {
                         for (unsigned int iMat = 0; iMat < 18; iMat++) {
                             if (L.m_sites[position].mat[iMat] != double(Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2))) {
                                 passed = false;
-                                exit(m_processRank);
-                                break;
+//                                exit(m_processRank);
+//                                break;
                             }
                         }
                         if (!passed) break;
@@ -1639,7 +1639,7 @@ bool TestSuite::testFieldGaugeInvariance() {
     bool passed = true;
     double obsBefore = 0, obsAfter = 0;
     // Temporary sets the number of observables we are to store to 2
-    int tempNCf = Parameters::getNCf();
+    unsigned int tempNCf = Parameters::getNCf();
     Parameters::setNCf(2);
     // Temporary changes the input folder for the files, as the file is provided from the command line
     std::string tempInputFolderPath = Parameters::getInputFolder();

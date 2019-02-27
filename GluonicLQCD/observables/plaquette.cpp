@@ -27,8 +27,8 @@ void Plaquette::setLatticeSize(unsigned long latticeSize)
 void Plaquette::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 {
     m_tempObservable = 0;
-    for (int mu = 0; mu < 4; mu++) {
-        for (int nu = mu+1; nu < 4; nu++) {
+    for (unsigned int mu = 0; mu < 4; mu++) {
+        for (unsigned int nu = mu+1; nu < 4; nu++) {
             m_temp = lattice[mu];
             m_temp *= shift(lattice[nu],FORWARDS,mu);
             m_temp *= inv(shift(lattice[mu],FORWARDS,nu));
@@ -55,14 +55,14 @@ void Plaquette::printObservable(unsigned int iObs)
 {
     if (Parallel::Communicator::getProcessRank() == 0) {
         if (!m_storeFlowObservable) {
-            printf("%-*.8f",m_headerWidth,(*m_observable)[iObs]);
+            printf("%-*.8f", m_headerWidth, (*m_observable)[iObs]);
         } else {
-            printf("\n%-4d %-*.8f",iObs,m_headerWidth,(*m_observable)[iObs]);
+            printf("\n%-4d %-*.8f", iObs, m_headerWidth, (*m_observable)[iObs]);
         }
     }
 }
 
 void Plaquette::printHeader()
 {
-    printf("%-*s",m_headerWidth,m_observableName.c_str());
+    printf("%-*s", m_headerWidth, m_observableName.c_str());
 }

@@ -669,7 +669,7 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             sendCube.resize(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]); // Four of these can actually be stored globally
             recvCube.resize(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]);
             /* Max memory usage: 48*48*48*96 /w 512 procs -->  12 12 12 12 --> 4 cubes of size 12^3 = 1728*18 bytes
-             * --> 1728*28 / 1024(to kilobytes) / 1024(to megabytes) = 0.03 MB.
+             * --> 1728*28 / 1024(to kilobytes) / 1024(to megabytes) = 0.03 MB per processor.
              * Maximum use of 4 volumes, one for each direction(assuming that spatial directionality may vary) --> 0.12 MB in total for this part
              */
             // Populates package to send

@@ -111,11 +111,11 @@ public:
     static void setNSpatial(unsigned long int NSpatial);
     static void setNTemporal(unsigned long int NTemporal);
     static void setBeta(double beta);
-    static void setNCf(unsigned long int NCf) { m_NCf = NCf; }
-    static void setNCor(unsigned long int NCor) { m_NCor = NCor; }
-    static void setNTherm(unsigned long int NTherm) { m_NTherm = NTherm; }
-    static void setNFlows(unsigned long int NFlows) { m_NFlows = NFlows; }
-    static void setNUpdates(unsigned long int NUpdates) { m_NUpdates = NUpdates; }
+    static void setNCf(unsigned int NCf) { m_NCf = NCf; }
+    static void setNCor(unsigned int NCor) { m_NCor = NCor; }
+    static void setNTherm(unsigned int NTherm) { m_NTherm = NTherm; }
+    static void setNFlows(unsigned int NFlows) { m_NFlows = NFlows; }
+    static void setNUpdates(unsigned int NUpdates) { m_NUpdates = NUpdates; }
 
     // Data storage related setters
     static void setOutputFolder(std::string outputFolder) { m_outputFolder = outputFolder; }
