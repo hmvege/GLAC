@@ -167,7 +167,7 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
                 nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
                 for (long long y = 0; y < m_N[1]; y++) {
                     ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
-                    for (long long x = 0; x < m_N[0]; x++) {
+                    for (long long x = 0; x < m_N[0]; x++) { // TODO: Maybe change this to read x at once
                         nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
                         offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size;
                         MPI_File_read_at(file, offset, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
