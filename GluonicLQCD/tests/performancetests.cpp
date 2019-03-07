@@ -2,6 +2,9 @@
 
 #include <chrono>
 #include "config/parameters.h"
+#include "parallelization/communicator.h"
+#include <fstream>
+#include <iomanip>
 
 // Exponentiation imports
 #include "math/exponentiation/expluscher.h"
@@ -23,7 +26,7 @@ PerformanceTests::PerformanceTests()
     // Sets pointers to use
     m_SU3Generator                      = new SU3MatrixGenerator;
     // Initializing the Mersenne-Twister19937 RNG for the Metropolis algorithm
-    m_generator                         = std::mt19937_64(-1);
+    m_generator                         = std::mt19937_64(1234);
     m_uniform_distribution              = std::uniform_real_distribution<double>(0,1);
 }
 
@@ -47,12 +50,15 @@ void PerformanceTests::run()
     testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
 }
 
-void PerformanceTests::testExponentiationTime(unsigned long int NTests)
+void PerformanceTests::testExponentiationTime(unsigned int NTests)
 {
-    printf("\nRunning performance tests for exponentiation timing with %lu samples.", NTests);
+    /*
+     * Method for comparing the timing of different matrix exponentiation methods.
+     */
+    printf("\nRunning performance tests for exponentiation timing with %d samples.", NTests);
 
     // Timers
-    double luscherTimer = 0, morningstarTimer = 0, taylor2Timer = 0, taylor4Timer = 0,taylorTimer = 0;
+    double luscherTimer = 0, morningstarTimer = 0, taylor2Timer = 0, taylor4Timer = 0;
     steady_clock::time_point preUpdate;
 
     // Initiating different exponentiation matrices
@@ -60,7 +66,7 @@ void PerformanceTests::testExponentiationTime(unsigned long int NTests)
     SU3Exp expMorningstar;
     Taylor2Exp expTaylor2;
     Taylor4Exp expTaylor4;
-    TaylorExp expTaylor(m_NTaylorDegree);
+    TaylorExp expTaylor(16);
 
     // Generates matrix to test for
     SU3 sampleMatrix, resultMatrix;
@@ -69,50 +75,84 @@ void PerformanceTests::testExponentiationTime(unsigned long int NTests)
 
     // Luscher
     preUpdate = steady_clock::now();
-    for (unsigned long int i = 0; i < NTests; i++) {
+    for (unsigned int i = 0; i < NTests; i++) {
         resultMatrix = expLuscher.exp(sampleMatrix);
     }
     luscherTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Morningstar
     preUpdate = steady_clock::now();
-    for (unsigned long int i = 0; i < NTests; i++) {
+    for (unsigned int i = 0; i < NTests; i++) {
         resultMatrix = expMorningstar.exp(sampleMatrix);
     }
     morningstarTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Taylor 2
     preUpdate = steady_clock::now();
-    for (unsigned long int i = 0; i < NTests; i++) {
+    for (unsigned int i = 0; i < NTests; i++) {
         resultMatrix = expTaylor2.exp(sampleMatrix);
     }
     taylor2Timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Taylor 4
     preUpdate = steady_clock::now();
-    for (unsigned long int i = 0; i < NTests; i++) {
+    for (unsigned int i = 0; i < NTests; i++) {
         resultMatrix = expTaylor4.exp(sampleMatrix);
     }
     taylor4Timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Taylor 16 (numerical precision limit)
-    preUpdate = steady_clock::now();
-    for (unsigned long int i = 0; i < NTests; i++) {
-        resultMatrix = expTaylor.exp(sampleMatrix);
+    std::vector<double>taylorNtimerResults(m_NTaylorDegree + 1);
+    for (unsigned int n = 0; n < m_NTaylorDegree + 1; n++)
+    {
+        expTaylor.setTaylorDegree(n);
+        preUpdate = steady_clock::now();
+        for (unsigned int i = 0; i < NTests; i++) {
+            resultMatrix = expTaylor.exp(sampleMatrix);
+        }
+        taylorNtimerResults[n] = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
     }
-    taylorTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
+    // Prints timing results
     printf("\nLuscher exponentiation time:      %8.2f seconds",luscherTimer);
     printf("\nMorningstar exponentiation time:  %8.2f seconds",morningstarTimer);
     printf("\nTaylor2 exponentiation time:      %8.2f seconds",taylor2Timer);
     printf("\nTaylor4 exponentiation time:      %8.2f seconds",taylor4Timer);
-    printf("\nTaylor%2d exponentiation time:     %8.2f seconds",m_NTaylorDegree, taylorTimer);
-    printf("\nMorningstar/Taylor%2d: %.4f", m_NTaylorDegree, morningstarTimer/taylorTimer);
+    printf("\nn TaylorNExpTime Morningstar/TaylorN");
+    for (unsigned int n = 0; n < m_NTaylorDegree + 1; n++) {
+        printf("\n%2d %8.2f %8.4f",n, taylorNtimerResults[n], morningstarTimer/taylorNtimerResults[n]);
+    }
     printf("\n");
+
+    // Writes timing results to file
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        auto oldPrecision = cout.precision(16);
+        std::ofstream file;
+        std::string fname = Parameters::getFilePath()
+                          + Parameters::getOutputFolder()
+                          + Parameters::getBatchName() + "/"
+                          + "observables/" + "exp_timing" + ".dat";
+        file.open(fname);
+        file << std::fixed << std::setprecision(16);
+        file << "Luscher " << luscherTimer << endl;
+        file << "Morningstar " << morningstarTimer << endl;
+        file << "taylor2" << taylor2Timer << endl;
+        file << "taylor4" << taylor4Timer << endl;
+        file << "n" << " " << "taylorN" << "taylorN/Morningstar" << endl;
+        for (unsigned int n = 0; n < m_NTaylorDegree + 1; n++) {
+            file << n << " " << taylorNtimerResults[n] << " " << morningstarTimer/taylorNtimerResults[n] << endl;
+        }
+        file.close();
+        printf("\n%s written.",fname.c_str());
+        std::setprecision(int(oldPrecision));
+    }
 }
 
 void PerformanceTests::testExponentiationAccuracy()
 {
+    /*
+     * Method for testing the exponentiation accuracy.
+     */
     // Initiating different exponentiation matrices
     ExpLuscher expLuscher;
     SU3Exp expMorningstar;
@@ -122,56 +162,107 @@ void PerformanceTests::testExponentiationAccuracy()
 
     // Generates matrix to test for
     complex temp_diag(0,0);
-    SU3 sampleMatrix, temp_sampleMatrix, resultMatrix;
-    sampleMatrix = m_SU3Generator->generateRST();
+    SU3 temp_sampleMatrix1, temp_sampleMatrix2, resultMatrix;
+    temp_sampleMatrix1 = m_SU3Generator->generateRST();
     resultMatrix.zeros();
 
     // Results to compare for
-    double LuscherResult, MorningstarResult, Taylor2Result, Taylor4Result, TaylorNResult;
+    SU3 LuscherResult;
+    SU3 MorningstarResult;
+    SU3 Taylor2Result;
+    SU3 Taylor4Result;
+    std::vector<SU3> TaylorNResults(m_NTaylorDegree+1);
 
     // Makes matrix anti hermitian
-    temp_sampleMatrix = sampleMatrix.inv();
-    temp_sampleMatrix -= sampleMatrix;
-    temp_diag = temp_sampleMatrix.trace()/3.0;
+    temp_sampleMatrix2 = temp_sampleMatrix1.inv();
+    temp_sampleMatrix2 -= temp_sampleMatrix1;
+    temp_diag = temp_sampleMatrix2.trace()/3.0;
     temp_diag.setRe(0);
-    temp_sampleMatrix -= temp_diag;
-    sampleMatrix = temp_sampleMatrix*0.5;
+    temp_sampleMatrix2 -= temp_diag;
+    const SU3 sampleMatrix = temp_sampleMatrix2*0.5;
 
     // Luscher method
     resultMatrix = expLuscher.exp(sampleMatrix);
-    LuscherResult = resultMatrix[0];
+    LuscherResult = resultMatrix;
 
     // Morningstar method
     resultMatrix = expMorningstar.exp(sampleMatrix);
-    MorningstarResult = resultMatrix[0];
+    MorningstarResult = resultMatrix;
 
     // Taylor2 method
     resultMatrix = expTaylor2.exp(sampleMatrix);
-    Taylor2Result = resultMatrix[0];
+    Taylor2Result = resultMatrix;
 
     // Taylor4 method
     resultMatrix = expTaylor4.exp(sampleMatrix);
-    Taylor4Result = resultMatrix[0];
+    Taylor4Result = resultMatrix;
 
     // Taylor N method
-    resultMatrix = expTaylor.exp(sampleMatrix);
-    TaylorNResult = resultMatrix[0];
+    for (unsigned int n = 0; n < m_NTaylorDegree+1; n++) {
+        expTaylor.setTaylorDegree(n);
+        resultMatrix = expTaylor.exp(sampleMatrix);
+        TaylorNResults[n] = resultMatrix;
+    }
 
-    // Printing results
-    printf("\nComparing first element of test matrix");
-    printf("\nLuscher:       %.16f   abs(Luscher - Taylor%2d)     = %.18e", LuscherResult, m_NTaylorDegree, fabs(LuscherResult - TaylorNResult));
-    printf("\nMorningstar:   %.16f   abs(Morningstar - Taylor%2d) = %.18e", MorningstarResult, m_NTaylorDegree, fabs(MorningstarResult - TaylorNResult));
-    printf("\nTaylor2:       %.16f   abs(Taylor2 - Taylor%2d)     = %.18e", Taylor2Result, m_NTaylorDegree, fabs(Taylor2Result - TaylorNResult));
-    printf("\nTaylor4:       %.16f   abs(Taylor4 - Taylor%2d)     = %.18e", Taylor4Result, m_NTaylorDegree, fabs(Taylor4Result - TaylorNResult));
-    printf("\nTaylor%2d:      %.16f", m_NTaylorDegree, TaylorNResult);
+    // Sets up results file for writing out comparison in
+
+    // Element to compare for in matrix
+    int cmp_element_index = 0;
+
+    // Comparing results
+    printf("\nComparing first element of test matrix exponentiations(absolute error)");
+    for (unsigned int n = 0; n < m_NTaylorDegree; n++) {
+        printf("\n");
+        printf("\nLuscher:        %.16f   abs(Luscher - Taylor%2d)     = %.18e", LuscherResult[cmp_element_index], n, fabs(LuscherResult[cmp_element_index] - TaylorNResults[n][cmp_element_index]));
+        printf("\nMorningstar:    %.16f   abs(Morningstar - Taylor%2d) = %.18e", MorningstarResult[cmp_element_index], n, fabs(MorningstarResult[cmp_element_index] - TaylorNResults[n][cmp_element_index]));
+        printf("\nMorningstar:    %.16f   rel(Morningstar - Taylor%2d) = %.18e", MorningstarResult[cmp_element_index], n, fabs(MorningstarResult[cmp_element_index] - TaylorNResults[n][cmp_element_index])/fabs(TaylorNResults[n][cmp_element_index]));
+        printf("\nTaylor2:        %.16f   abs(Taylor2 - Taylor%2d)     = %.18e", Taylor2Result[cmp_element_index], n, fabs(Taylor2Result[cmp_element_index] - TaylorNResults[n][cmp_element_index]));
+        printf("\nTaylor4:        %.16f   abs(Taylor4 - Taylor%2d)     = %.18e", Taylor4Result[cmp_element_index], n, fabs(Taylor4Result[cmp_element_index] - TaylorNResults[n][cmp_element_index]));
+        printf("\nTaylor%2d:      %.16f", n, TaylorNResults[n][cmp_element_index]);
+        printf("\nTaylor%2d(abs): %.16e", n, fabs(TaylorNResults[n][cmp_element_index] - TaylorNResults[m_NTaylorDegree][cmp_element_index]));
+        printf("\nTaylor%2d(rel): %.16e", n, fabs(TaylorNResults[n][cmp_element_index] - TaylorNResults[m_NTaylorDegree][cmp_element_index])/fabs(TaylorNResults[m_NTaylorDegree][cmp_element_index]));
+    }
+
+    // Writes timing results to file
+    if (Parallel::Communicator::getProcessRank() == 0) {
+        auto oldPrecision = cout.precision(16);
+        std::ofstream file;
+        std::string fname = Parameters::getFilePath()
+                          + Parameters::getOutputFolder()
+                          + Parameters::getBatchName() + "/"
+                          + "observables/" + "exp_precision" + ".dat";
+        file.open(fname);
+        file << std::fixed << std::setprecision(16);
+        file << "luscher " << LuscherResult[cmp_element_index] << endl;
+        file << "morningstar " << MorningstarResult[cmp_element_index] << endl;
+        file << "taylor2 " << Taylor2Result[cmp_element_index] << endl;
+        file << "taylor4 " << Taylor4Result[cmp_element_index] << endl;
+        file << "n taylorN abs(luscher-taylorN) abs(Morningstar-taylorN) "
+             << "rel(Taylor2-taylorN) abs(Taylor4-taylorN) "
+             << "abs(taylorN-taylor16) rel(taylorN-taylor16)";
+        for (unsigned int n = 0; n < m_NTaylorDegree; n++) {
+            file << n << " ";
+            file << TaylorNResults[n][cmp_element_index] << " ";
+            file << fabs(LuscherResult[cmp_element_index] - TaylorNResults[n][cmp_element_index]) << " ";
+            file << fabs(MorningstarResult[cmp_element_index] - TaylorNResults[n][cmp_element_index]) << " ";
+            file << fabs(MorningstarResult[cmp_element_index] - TaylorNResults[n][cmp_element_index])/fabs(TaylorNResults[n][cmp_element_index]) << " ";
+            file << fabs(Taylor2Result[cmp_element_index] - TaylorNResults[n][cmp_element_index]) << " ";
+            file << fabs(Taylor4Result[cmp_element_index] - TaylorNResults[n][cmp_element_index]) << " ";
+            file << fabs(TaylorNResults[n][cmp_element_index] - TaylorNResults[m_NTaylorDegree][cmp_element_index]) << " ";
+            file << fabs(TaylorNResults[n][cmp_element_index] - TaylorNResults[m_NTaylorDegree][cmp_element_index])/fabs(TaylorNResults[m_NTaylorDegree][cmp_element_index]) << endl;
+        }
+        file.close();
+        printf("\n%s written.",fname.c_str());
+        std::setprecision(int(oldPrecision));
+    }
 }
 
-void PerformanceTests::testRandomGenerators(unsigned long int NTests)
+void PerformanceTests::testRandomGenerators(unsigned int NTests)
 {
     /*
      * Performance tester for the random SU3 matrix generators, RST and random.
      */
-    printf("\n\nRunning performance tests for random SU3 matrix generation timing with %lu samples.", NTests);
+    printf("\n\nRunning performance tests for random SU3 matrix generation timing with %d samples.", NTests);
 
     SU3 RSTRand, FullRand, resultMatrix;
 
@@ -197,10 +288,10 @@ void PerformanceTests::testRandomGenerators(unsigned long int NTests)
     printf("\nFull random generation time:  %8.2f seconds (%8.2E seconds per test)",FullRandomTimer,FullRandomTimer/double(NTests));
 }
 
-void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned long int NTests)
+void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
 {
     if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\n\nRunning timing of SU3 derivation methods with %lu full lattice derivation tests.",NTests);
+        printf("\n\nRunning timing of SU3 derivation methods with %d full lattice derivation tests.",NTests);
     }
 
 

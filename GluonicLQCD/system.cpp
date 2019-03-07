@@ -4,6 +4,7 @@
 #include "io/fieldio.h"
 #include <cmath>    // For exp()
 #include <mpi.h>
+#include "config/sysprint.h"
 
 using std::cout;
 using std::endl;

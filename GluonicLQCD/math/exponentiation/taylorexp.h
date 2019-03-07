@@ -13,6 +13,8 @@ private:
 public:
     TaylorExp(unsigned int N);
     SU3 exp(SU3 Q);
+
+    void setTaylorDegree(unsigned int N);
 };
 
 #endif // TAYLOREXP_H

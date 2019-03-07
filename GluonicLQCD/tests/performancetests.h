@@ -14,17 +14,17 @@ private:
     std::uniform_real_distribution<double> m_uniform_distribution;
 
     // Degree of the Taylor polynomial to use in exponentiation
-    int m_NTaylorDegree = 8;
+    unsigned int m_NTaylorDegree = 8;
 
     // Tests for the SU3 exponentiation
-    void testExponentiationTime(unsigned long int NTests);
+    void testExponentiationTime(unsigned int NTests);
     void testExponentiationAccuracy();
 
     // Tests of the RNGs
-    void testRandomGenerators(unsigned long int NTests);
+    void testRandomGenerators(unsigned int NTests);
 
     // Tests for the SU3 derivative
-    void testDerivativeTimeAndAccuracy(unsigned long int NTests);
+    void testDerivativeTimeAndAccuracy(unsigned int NTests);
 public:
     PerformanceTests();
     ~PerformanceTests();

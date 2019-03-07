@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include "config/sysprint.h"
 
 class Parameters
 {
@@ -68,10 +67,10 @@ private:
 
     // Performance testing
     static bool m_performanceTesting;
-    static int m_NExpTests;
-    static int m_NRandTests;
-    static int m_NDerivativeTests;
-    static int m_NTaylorPolDegree;
+    static unsigned int m_NExpTests;
+    static unsigned int m_NRandTests;
+    static unsigned int m_NDerivativeTests;
+    static unsigned int m_NTaylorPolDegree;
 
     // Data generation related variables
     static double m_SU3Eps;
@@ -108,8 +107,8 @@ public:
     //// Setters ////
     /////////////////
     // Lattice related run setters
-    static void setNSpatial(unsigned long int NSpatial);
-    static void setNTemporal(unsigned long int NTemporal);
+    static void setNSpatial(unsigned int NSpatial);
+    static void setNTemporal(unsigned int NTemporal);
     static void setBeta(double beta);
     static void setNCf(unsigned int NCf) { m_NCf = NCf; }
     static void setNCor(unsigned int NCor) { m_NCor = NCor; }
@@ -140,10 +139,10 @@ public:
 
     // Performance testing related setters
     static void setPerformanceTesting(bool performanceTesting) { m_performanceTesting = performanceTesting; }
-    static void setNExpTests(unsigned long int NExpTests) { m_NExpTests = NExpTests; }
-    static void setNRandTests(unsigned long int NRandTests) { m_NRandTests = NRandTests; }
-    static void setNDerivaitveTests(int NDerivativeTests) { m_NDerivativeTests = NDerivativeTests; }
-    static void setTaylorPolDegree(int NTaylorPolDegree) { m_NTaylorPolDegree = NTaylorPolDegree; }
+    static void setNExpTests(unsigned int NExpTests) { m_NExpTests = NExpTests; }
+    static void setNRandTests(unsigned int NRandTests) { m_NRandTests = NRandTests; }
+    static void setNDerivaitveTests(unsigned int NDerivativeTests) { m_NDerivativeTests = NDerivativeTests; }
+    static void setTaylorPolDegree(unsigned int NTaylorPolDegree) { m_NTaylorPolDegree = NTaylorPolDegree; }
 
     // Data generation related setters
     static void setFlowEpsilon(double flowEpsilon) { m_flowEpsilon = flowEpsilon; }
@@ -152,12 +151,12 @@ public:
     static void setRandomMatrixSeed(double randomMatrixSeed);
 
     // Lattice related setters, initiated after config input
-    static void setLatticeSize(int latticeSize) { m_latticeSize = latticeSize; }
+    static void setLatticeSize(unsigned int latticeSize) { m_latticeSize = latticeSize; }
 
     // Sub lattice / parallel related setters
     static void setN(std::vector<unsigned int> N) { m_N = N; }
     static void setSubLatticePreset(bool subLatticeSizePreset) { m_subLatticeSizePreset = subLatticeSizePreset; }
-    static void setSubLatticeSize(unsigned long int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
+    static void setSubLatticeSize(unsigned int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
     static void setProcessorsPerDimension(int *processorsPerDimension) { for (unsigned int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
 
     // Action type
@@ -219,10 +218,10 @@ public:
 
     // Performance testing related getters
     static bool getPerformanceTesting() { return m_performanceTesting; }
-    static int getNExpTests() { return m_NExpTests; }
-    static int getNRandTests() { return m_NRandTests; }
-    static int getNDerivativeTests() { return m_NDerivativeTests; }
-    static int getTaylorPolDegree() { return m_NTaylorPolDegree; }
+    static unsigned int getNExpTests() { return m_NExpTests; }
+    static unsigned int getNRandTests() { return m_NRandTests; }
+    static unsigned int getNDerivativeTests() { return m_NDerivativeTests; }
+    static unsigned int getTaylorPolDegree() { return m_NTaylorPolDegree; }
 
     // Data generation related getters
     static double getFlowEpsilon() { return m_flowEpsilon; }

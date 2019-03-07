@@ -1,6 +1,7 @@
 #include "wilsongaugeaction.h"
 #include "config/parameters.h"
 #include "math/functions.h"
+#include "parallelization/communicator.h"
 
 WilsonGaugeAction::WilsonGaugeAction(): Action()
 {

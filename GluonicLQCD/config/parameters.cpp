@@ -1,4 +1,5 @@
 #include "parameters.h"
+#include "config/sysprint.h"
 #include <cmath>
 
 // Lattice specific constants
@@ -60,10 +61,10 @@ std::string Parameters::m_latticeFileNameToCheck = "";
 
 // Performance testing
 bool Parameters::m_performanceTesting = false;
-int Parameters::m_NExpTests = 0;
-int Parameters::m_NRandTests = 0;
-int Parameters::m_NDerivativeTests = 0;
-int Parameters::m_NTaylorPolDegree = 8;
+unsigned int Parameters::m_NExpTests = 0;
+unsigned int Parameters::m_NRandTests = 0;
+unsigned int Parameters::m_NDerivativeTests = 0;
+unsigned int Parameters::m_NTaylorPolDegree = 8;
 
 // Data generation related variables
 double Parameters::m_SU3Eps = 0.24;
@@ -121,16 +122,16 @@ double Parameters::calculateLatticeSpacing(double beta)
     return a/r0;
 }
 
-void Parameters::setNSpatial(unsigned long int NSpatial)
+void Parameters::setNSpatial(unsigned int NSpatial)
 {
     m_NSpatial = NSpatial;
-    m_latticeSize *= (unsigned long int) NSpatial*NSpatial*NSpatial;
+    m_latticeSize *= NSpatial*NSpatial*NSpatial;
 }
 
-void Parameters::setNTemporal(unsigned long int NTemporal)
+void Parameters::setNTemporal(unsigned int NTemporal)
 {
     m_NTemporal = NTemporal;
-    m_latticeSize *= (unsigned long int) NTemporal;
+    m_latticeSize *= NTemporal;
 }
 
 void Parameters::setMetropolisSeed(double metropolisSeed)
