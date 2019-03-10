@@ -467,6 +467,7 @@ class JobCreator:
         # else :
         #     run_command = "mpirun -np {0:<d}".format(threads)
 
+        run_command = "mpirun -np {0:<d}".format(threads)
         run_command += " "
         run_command += os.path.join(self.CURRENT_PATH, binary_filename)
         run_command += " "
@@ -816,6 +817,7 @@ def main(args):
     load_parser.add_argument('--debug',                         default=False,                                      action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
     load_parser.add_argument('-vr', '--verboseRun',             default=config_default["verboseRun"],              action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
     load_parser.add_argument('-igntsk', '--ignore_tasks_per_node', default=False,                                   action='store_true', help='If enabled, will ignore requirement of having 16 tasks per node.')
+    load_parser.add_argument('--account_name',                   default=config_default["account_name"],             type=str, help='Account name associated to the abel cluster')
 
     ######## Unit test parser ########
     unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
@@ -957,6 +959,9 @@ def main(args):
         for key in config_default.keys():
             if not key in configuration:
                 configuration[key] = config_default[key]
+
+        configuration["account_name"] = args.account_name
+
 
         configuration["verboseRun"] = args.verboseRun
         configuration["chroma_config"] = args.chroma_config

@@ -246,26 +246,23 @@ inline SU3 SU3MatrixGenerator::RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 
     // Block two shortenings
     rs[2] = r[4]*s[2] - r[5]*s[3];
     rs[3] = r[5]*s[2] + r[4]*s[3];
-
-    // Upper triangular // TODO: this can probably be fixed to be far more efficient
-    X[6]  =   rs[0]*t[4] - r[3]*t[1] + r[2]*t[0] - rs[1]*t[5];
-    X[7]  = - rs[1]*t[4] - r[3]*t[0] - r[2]*t[1] - rs[0]*t[5];
-    X[12] =   rs[0]*t[6] - r[3]*t[3] + r[2]*t[2] - rs[1]*t[7];
-    X[13] = - rs[1]*t[6] - r[3]*t[2] - r[2]*t[3] - rs[0]*t[7];
-    X[14] =   rs[2]*t[6] - r[7]*t[3] + r[6]*t[2] - rs[3]*t[7];
-    X[15] = - rs[3]*t[6] - r[7]*t[2] - r[6]*t[3] - rs[2]*t[7];
-    // Upper triangular
+    // Compact RST multiplication
+    X[0]  =   r[0]*s[0] - r[1]*s[1];
+    X[1]  = - r[1]*s[0] - r[0]*s[1];
     X[2]  =   r[4]*s[0] - r[5]*s[1];
     X[3]  = - r[5]*s[0] - r[4]*s[1];
     X[4]  =   s[4];
     X[5]  = - s[5];
-    X[10] =   s[6]*t[4] - s[7]*t[5];
-    X[11] = - s[7]*t[4] - s[6]*t[5];
-    // Diagonals
-    X[0]  =   r[0]*s[0] - r[1]*s[1];
-    X[1]  = - r[1]*s[0] - r[0]*s[1];
+    X[6]  =   rs[0]*t[4] - r[3]*t[1] + r[2]*t[0] - rs[1]*t[5];
+    X[7]  = - rs[1]*t[4] - r[3]*t[0] - r[2]*t[1] - rs[0]*t[5];
     X[8]  =   rs[2]*t[4] - r[7]*t[1] + r[6]*t[0] - rs[3]*t[5];;
     X[9]  = - rs[3]*t[4] - r[7]*t[0] - r[6]*t[1] - rs[2]*t[5];
+    X[10] =   s[6]*t[4] - s[7]*t[5];
+    X[11] = - s[7]*t[4] - s[6]*t[5];
+    X[12] =   rs[0]*t[6] - r[3]*t[3] + r[2]*t[2] - rs[1]*t[7];
+    X[13] = - rs[1]*t[6] - r[3]*t[2] - r[2]*t[3] - rs[0]*t[7];
+    X[14] =   rs[2]*t[6] - r[7]*t[3] + r[6]*t[2] - rs[3]*t[7];
+    X[15] = - rs[3]*t[6] - r[7]*t[2] - r[6]*t[3] - rs[2]*t[7];
     X[16] =   s[6]*t[6] - s[7]*t[7];
     X[17] = - s[7]*t[6] - s[6]*t[7];
 
