@@ -14,7 +14,7 @@ import re
 
 AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct", "weinberg", "weinbergt"]
 # AVAILABLE_SCALAR_FIELDS = ["plaq", "topc", "energy", "weinberg"]
-AVAILABLE_SCALAR_FIELDS = ["topc", "energy"]
+AVAILABLE_SCALAR_FIELDS = ["energyTopcFieldDensity"]
 AVAILABLE_EXP_FUNCS = ["morningstar", "luscher", "taylor2", "taylor4"]
 AVAILABLE_ACTIONS = ["luscher", "wilson"]
 AVAILABLE_HPC_SYSTEMS = ["slurm", "torque", "local"]
@@ -162,14 +162,26 @@ class JobCreator:
             self._checkFolderPath(self.outputFolder)
             self._checkFolderPath(os.path.join(self.outputFolder, self.runName))
             if self.NFlows != 0:
-                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables"))
+
+                # Only in the case we are not creating any scalar fields
+                if not self.create_fields_folders:
+                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables"))
                 if self.create_fields_folders:
                     self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields"))
+
                 for fobs in self.flow_observables:
-                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables", fobs))
+
+                    # Only in the case we are not creating any scalar fields
+                    if not self.create_fields_folders:
+                        self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables", fobs))
+
+                    # The name of the observable for the scalar fields is different than the default names.
                     if self.create_fields_folders and fobs in AVAILABLE_SCALAR_FIELDS:
-                        self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", fobs))
-            if not self.load_field_configs:
+                        if "topc" in fobs.lower():
+                            self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", "topc"))
+                        if "energy" in fobs.lower():
+                            self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", "energy"))
+            if not self.load_field_configs and not self.create_fields_folders:
                 self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "field_configurations"))
                 self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "observables"))
         self._checkFolderPath(os.path.join(self.inputFolder))
@@ -322,6 +334,16 @@ class JobCreator:
         # Checks if flow is sampling more observables than the regular config sampler, then sets it equal
         if (job_config["NFlows"] != 0):
             job_config["observables"] = job_config["flowObservables"]
+
+        # Since topct gives us all of the observables basically for free,
+        # we set the fobs to plaq, topc, energy, topct.
+        if "topct" in job_config["flowObservables"]:
+            job_config["flowObservables"] += ["plaq", "topc", "energy", "topct"]
+            job_config["flowObservables"] = list(set(job_config["flowObservables"]))
+
+        if "topct" in job_config["observables"]:
+            job_config["observables"] += ["plaq", "topc", "energy", "topct"]
+            job_config["observables"] = list(set(job_config["observables"]))
 
         # Retrieving config contents
         self.base_folder        = job_config["base_folder"]
@@ -1119,7 +1141,8 @@ def main(args):
         s.submit_job(config_default, args.system, partition, excluded_nodes, ignore_tasks_per_node=args.ignore_tasks_per_node)
 
     elif args.subparser == "field_density":
-        field_density_parser = subparser.add_parser("field_density", help="Will run a single config through the energyTopcFieldDensity observable and produce observables of the entire field from them")
+        field_density_parser = subparser.add_parser("field_density", help=("Will run a single config through the "
+            "energyTopcFieldDensity observable and produce observables of the entire field from them"))
 
         if args.config_file != False:
             # Loads the config file
