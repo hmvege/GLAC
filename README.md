@@ -12,16 +12,11 @@ Lattice Quantum Chromo Dynamics program for generating pure gauge field configur
 #### Program folder structure
 * `GLAC` contains main program. 
 * `config_folder` contains parameter-files for different runs.
-* 
-```
-GLAC
-config_folder
-docs
-python_scripts
-JobRenamer.py 
-createJobs.py
-multiJobSetup.py
-```
+* `docs` contains the documentation of GLAC.
+* `python_scripts` contains various Python scripts used during development.
+* `JobRenamer.py` is a script for renaming Slurm `.out` output files.
+* `multiJobSetup.py` is script for starting multiple jobs.
+* `createJobs.py` is the main script for generating `.json` configuration files for GLAC, as well as submitting files to either Torque or Slurm.
 
 #### Installation
 Compile with following libraries:
@@ -45,7 +40,7 @@ Example:
 ```
 This will automatically create a job script and submit it to the cluster the script is running on.
 
-`-s {system}` specifies the run system. Either slurm, torque or local.
+`-s {system}` specifies the run system. Either Slurm, Torque or local.
 
 `-bf {base_directory}` is the full path leading up to where to output directory is situated. This would be the scratch space or wherever you want to store the output data. `createJobs.py` will automatically setup all relevant folders in a following structure,
 ```
@@ -75,4 +70,11 @@ If you want to perform a dryrun(i.e. no permanent change is performed), run:
 ```
 > python createJobs.py --dryrun load weinberg_config.py -bf ${base directory}
 ```
-This will then print out every detail of the run, without submitting the job. Usefull for double check the settings without actually submitting.
+This will then print out every detail of the run, without submitting the job. Useful for double check the settings without actually submitting.
+
+#### Additional resources
+The analysis code used for this thesis program can be seen in [LatticeAnalyser](https://github.com/hmvege/LatticeAnalyser).
+
+To generate visualizations of the topological charge or energy, we used a program called [LatViz](https://github.com/hmvege/LatViz).
+
+A list of the Slurm commands can be found [here](https://slurm.schedmd.com/pdfs/summary.pdf). A list of the Torque commands can be found [here](https://gif.biotech.iastate.edu torque-pbs-job-management-cheat-sheet). A Rosetta stone for going between Slurm and Torque can be seen [here](https://slurm.schedmd.com/rosetta.pdf).
