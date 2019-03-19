@@ -6,7 +6,9 @@ Lattice Quantum Chromo Dynamics program for generating pure gauge field configur
     <img src="docs/field_density_b62_b6.200000_N32_NT64_np512_config00600.gif" alt="Action density of the gauge field" width="600"/>
 </p>
 
-*The action density of a gauge field. Created using [LatViz](https://github.com/hmvege/LatViz)*
+<center>
+    *The action density of a gauge field. Created using [LatViz](https://github.com/hmvege/LatViz)*
+</center>
 
 
 #### Program folder structure
@@ -73,8 +75,6 @@ If you want to perform a dryrun(i.e. no permanent change is performed), run:
 This will then print out every detail of the run, without submitting the job. Useful for double check the settings without actually submitting.
 
 #### Additional resources
-The analysis code used for this thesis program can be seen in [LatticeAnalyser](https://github.com/hmvege/LatticeAnalyser).
-
-To generate visualizations of the topological charge or energy, we used a program called [LatViz](https://github.com/hmvege/LatViz).
-
-A list of the Slurm commands can be found [here](https://slurm.schedmd.com/pdfs/summary.pdf). A list of the Torque commands can be found [here](https://gif.biotech.iastate.edu/torque-pbs-job-management-cheat-sheet). A Rosetta stone for going between Slurm and Torque can be seen [here](https://slurm.schedmd.com/rosetta.pdf).
+* The analysis code used for this thesis program can be seen in [LatticeAnalyser](https://github.com/hmvege/LatticeAnalyser).
+* To generate visualizations of the topological charge or energy, we used a program called [LatViz](https://github.com/hmvege/LatViz).
+* A list of the Slurm commands can be found [here](https://slurm.schedmd.com/pdfs/summary.pdf). A list of the Torque commands can be found [here](https://gif.biotech.iastate.edu/torque-pbs-job-management-cheat-sheet). A Rosetta stone for going between Slurm and Torque can be seen [here](https://slurm.schedmd.com/rosetta.pdf).
