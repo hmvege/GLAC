@@ -2,11 +2,11 @@
 
 Lattice Quantum Chromo Dynamics program for generating pure gauge field configurations and applying gradient flow on them. Created by Hans Mathias Mamen Vege at UiO(University of Oslo).
 
-<p algin="center">
+<p align="center">
     <img src="docs/field_density_b62_b6.200000_N32_NT64_np512_config00600.gif" alt="Action density of the gauge field" width="600"/>
-
-    *The action density of a gauge field. Created using [LatViz](https://github.com/hmvege/LatViz)*
 </p>
+
+*The action density of a gauge field. Created using [LatViz](https://github.com/hmvege/LatViz)*
 
 
 #### Program folder structure
