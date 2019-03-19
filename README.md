@@ -2,6 +2,9 @@
 
 Lattice Quantum Chromo Dynamics program for generating pure gauge field configurations and flowing them. Created by Hans Mathias Mamen Vege at UiO(University of Oslo).
 
+![action density of the field](docs/field_density_b62_b6.200000_N32_NT64_np512_config00600.gif)
+*The action density of a gauge field.*
+
 #### Program folder structure
 * `GLAC` contains main program. 
 * `config_folder` contains parameter-files for different runs.
