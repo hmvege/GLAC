@@ -4,11 +4,10 @@ Lattice Quantum Chromo Dynamics program for generating pure gauge field configur
 
 <p align="center">
     <img src="docs/field_density_b62_b6.200000_N32_NT64_np512_config00600.gif" alt="Action density of the gauge field" width="600"/>
+    
+    <i>The action density of a gauge field. Created using <a href="https://github.com/hmvege/LatViz">LatViz</a></i>
 </p>
 
-<center>
-    *The action density of a gauge field. Created using [LatViz](https://github.com/hmvege/LatViz)*
-</center>
 
 
 #### Program folder structure
