@@ -77,4 +77,4 @@ The analysis code used for this thesis program can be seen in [LatticeAnalyser](
 
 To generate visualizations of the topological charge or energy, we used a program called [LatViz](https://github.com/hmvege/LatViz).
 
-A list of the Slurm commands can be found [here](https://slurm.schedmd.com/pdfs/summary.pdf). A list of the Torque commands can be found [here](https://gif.biotech.iastate.edu torque-pbs-job-management-cheat-sheet). A Rosetta stone for going between Slurm and Torque can be seen [here](https://slurm.schedmd.com/rosetta.pdf).
+A list of the Slurm commands can be found [here](https://slurm.schedmd.com/pdfs/summary.pdf). A list of the Torque commands can be found [here](https://gif.biotech.iastate.edu/torque-pbs-job-management-cheat-sheet). A Rosetta stone for going between Slurm and Torque can be seen [here](https://slurm.schedmd.com/rosetta.pdf).
