@@ -2,6 +2,11 @@
 \label{class_wilson_gauge_action}\index{WilsonGaugeAction@{WilsonGaugeAction}}
 
 
+An implementation of the Wilson gauge action,.  
+
+
+
+
 {\ttfamily \#include $<$wilsongaugeaction.\+h$>$}
 
 
@@ -41,6 +46,21 @@ void \mbox{\hyperlink{class_wilson_gauge_action_a010b3b8870476dfec4c48a01b6d6fc1
 \end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
 
+
+\subsection{Detailed Description}
+An implementation of the Wilson gauge action,. 
+
+\begin{eqnarray*} S_G[U] = \frac{\beta}{3} \sum_{n\in\Lambda} \sum_{\mu<\nu} \mathrm{Re} \mathrm{tr} \big[ 1 - P_{\mu\nu}(n) \big]. \end{eqnarray*}
+
+The different between this and \mbox{\hyperlink{class_luscher_action}{Luscher\+Action}} is that in the get\+Action\+Derivative we perform an explicit calculation of the derivative in terms of its $\mathrm{SU}(3)$ generator.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019/03/18
+\end{DoxyDate}
+Contact\+: \href{mailto:mathias.vege@gmail.com}{\texttt{ mathias.\+vege@gmail.\+com}} 
 
 \subsection{Constructor \& Destructor Documentation}
 \mbox{\Hypertarget{class_wilson_gauge_action_a50d06446cf93f7e738e88c372920f518}\label{class_wilson_gauge_action_a50d06446cf93f7e738e88c372920f518}} 
@@ -121,9 +141,6 @@ get\+Action\+Derivative, computes the derivative of the lattice in given directi
 {\em mu} & lorentz index, $\mu$. \\
 \hline
 \end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-
-\end{DoxyReturn}
 
 
 Reimplemented from \mbox{\hyperlink{class_action_a78168dd7c3819a3365e28fc1aae1b9b6}{Action}}.

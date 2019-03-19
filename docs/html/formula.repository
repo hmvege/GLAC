@@ -9,3 +9,5 @@
 \form#8:$\beta$
 \form#9:\begin{eqnarray*} S_G[U] = \frac{\beta}{3} \sum_{n\in\Lambda} \sum_{\mu<\nu} \Re \mathrm{tr} \big[ 1 - P_{\mu\nu}(n) \big]. \end{eqnarray*}
 \form#10:\begin{eqnarray*} S_G[U] = \frac{\beta}{3} \sum_{n\in\Lambda} \sum_{\mu<\nu} \mathrm{Re} \mathrm{tr} \big[ 1 - P_{\mu\nu}(n) \big]. \end{eqnarray*}
+\form#11:$T^a$
+\form#12:$\beta/3$

@@ -68,6 +68,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>An implementation of the Wilson gauge action,.  
+ <a href="class_wilson_gauge_action.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="wilsongaugeaction_8h_source.html">wilsongaugeaction.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for WilsonGaugeAction:</div>
@@ -117,7 +120,16 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:a133fd17c83db233423855178bc81fb16 inherit pro_attribs_class_action"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array for holding the position in lattice.  <a href="class_action.html#a133fd17c83db233423855178bc81fb16">More...</a><br /></td></tr>
 <tr class="separator:a133fd17c83db233423855178bc81fb16 inherit pro_attribs_class_action"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>An implementation of the Wilson gauge action,. </p>
+<p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{eqnarray*} S_G[U] = \frac{\beta}{3} \sum_{n\in\Lambda} \sum_{\mu&lt;\nu} \mathrm{Re} \mathrm{tr} \big[ 1 - P_{\mu\nu}(n) \big]. \end{eqnarray*}" src="form_10.png"/>
+</p>
+<p>The different between this and <a class="el" href="class_luscher_action.html" title="An implementation of the Wilson gauge action,.">LuscherAction</a> is that in the getActionDerivative we perform an explicit calculation of the derivative in terms of its <img class="formulaInl" alt="$\mathrm{SU}(3)$" src="form_7.png"/> generator.</p>
+<dl class="section author"><dt>Author</dt><dd>Mathias M. Vege</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2019/03/18</dd></dl>
+<p>Contact: <a href="#" onclick="location.href='mai'+'lto:'+'mat'+'hi'+'as.'+'ve'+'ge@'+'gm'+'ail'+'.c'+'om'; return false;">mathi<span style="display: none;">.nosp@m.</span>as.v<span style="display: none;">.nosp@m.</span>ege@g<span style="display: none;">.nosp@m.</span>mail<span style="display: none;">.nosp@m.</span>.com</a> </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a50d06446cf93f7e738e88c372920f518"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a50d06446cf93f7e738e88c372920f518">&#9670;&nbsp;</a></span>WilsonGaugeAction()</h2>
 
@@ -281,7 +293,6 @@ Here is the call graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 <p>Reimplemented from <a class="el" href="class_action.html#a78168dd7c3819a3365e28fc1aae1b9b6">Action</a>.</p>
 <div class="dynheader">

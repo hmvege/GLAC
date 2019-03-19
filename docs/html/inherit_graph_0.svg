@@ -36,7 +36,7 @@
 <!-- Node2 -->
 <g id="node3" class="node">
 <title>Node2</title>
-<g id="a_node3"><a xlink:href="class_wilson_gauge_action.html" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_wilson_gauge_action.html" target="_top" xlink:title="An implementation of the Wilson gauge action,.">
 <polygon fill="#ffffff" stroke="#000000" points="79.793,-.5 79.793,-18.5 183.6152,-18.5 183.6152,-.5 79.793,-.5"/>
 <text text-anchor="middle" x="131.7041" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">WilsonGaugeAction</text>
 </a>

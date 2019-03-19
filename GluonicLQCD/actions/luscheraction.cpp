@@ -12,7 +12,7 @@
  * in terms of its \f$\mathrm{SU}(3)\f$ generator.
  *
  * \author Mathias M. Vege
- *
+ * \version 1.0
  * \date 2019/03/18
  *
  * Contact: mathias.vege@gmail.com

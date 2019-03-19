@@ -127,7 +127,7 @@ Additional Inherited Members</h2></td></tr>
 <p class="formulaDsp">
 <img class="formulaDsp" alt="\begin{eqnarray*} S_G[U] = \frac{\beta}{3} \sum_{n\in\Lambda} \sum_{\mu&lt;\nu} \mathrm{Re} \mathrm{tr} \big[ 1 - P_{\mu\nu}(n) \big]. \end{eqnarray*}" src="form_10.png"/>
 </p>
-<p>The different between this and <a class="el" href="class_wilson_gauge_action.html">WilsonGaugeAction</a> is that in the getActionDerivative we perform an explicit calculation of the derivative in terms of its <img class="formulaInl" alt="$\mathrm{SU}(3)$" src="form_7.png"/> generator.</p>
+<p>The different between this and <a class="el" href="class_wilson_gauge_action.html" title="An implementation of the Wilson gauge action,.">WilsonGaugeAction</a> is that in the getActionDerivative we perform an explicit calculation of the derivative in terms of its <img class="formulaInl" alt="$\mathrm{SU}(3)$" src="form_7.png"/> generator.</p>
 <dl class="section author"><dt>Author</dt><dd>Mathias M. Vege</dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2019/03/18</dd></dl>
 <p>Contact: <a href="#" onclick="location.href='mai'+'lto:'+'mat'+'hi'+'as.'+'ve'+'ge@'+'gm'+'ail'+'.c'+'om'; return false;">mathi<span style="display: none;">.nosp@m.</span>as.v<span style="display: none;">.nosp@m.</span>ege@g<span style="display: none;">.nosp@m.</span>mail<span style="display: none;">.nosp@m.</span>.com</a> </p>
@@ -295,11 +295,7 @@ Here is the call graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
-<p>Luschers method as presented in his paper from 2010, Properties and uses of the Wilson flow in lattice QCD.</p>
-<p>Multiply the product of this with each of the 8 T^a generators Take trace, real, and the multiply with beta/3 Multiply with 8 generators T^a again, sum and return matrix Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann_matrix_multiplication.py for more details.</p>
-<p>Multiplying staple together with link</p>
-<p>Luscher method of taking derivative NOTE: can probably change this to be more vectorization friendly </p>
+<p>A slightly modified version of the <a class="el" href="class_action.html" title="The Action class.">Action</a> derivative Multiply the product of this with each of the 8 <img class="formulaInl" alt="$T^a$" src="form_11.png"/> generators Take trace, real, and the multiply with <img class="formulaInl" alt="$\beta/3$" src="form_12.png"/>. Multiply with 8 generators <img class="formulaInl" alt="$T^a$" src="form_11.png"/> again, sum and return matrix Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann_matrix_multiplication.py for more details.</p>
 
 <p>Reimplemented from <a class="el" href="class_action.html#a78168dd7c3819a3365e28fc1aae1b9b6">Action</a>.</p>
 <div class="dynheader">

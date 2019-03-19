@@ -141,16 +141,7 @@ get\+Action\+Derivative, computes the derivative of the lattice in given directi
 {\em mu} & lorentz index, $\mu$. \\
 \hline
 \end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-
-\end{DoxyReturn}
-Luschers method as presented in his paper from 2010, Properties and uses of the Wilson flow in lattice Q\+CD.
-
-Multiply the product of this with each of the 8 T$^\wedge$a generators Take trace, real, and the multiply with beta/3 Multiply with 8 generators T$^\wedge$a again, sum and return matrix Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann\+\_\+matrix\+\_\+multiplication.\+py for more details.
-
-Multiplying staple together with link
-
-Luscher method of taking derivative N\+O\+TE\+: can probably change this to be more vectorization friendly 
+A slightly modified version of the \mbox{\hyperlink{class_action}{Action}} derivative Multiply the product of this with each of the 8 $T^a$ generators Take trace, real, and the multiply with $\beta/3$. Multiply with 8 generators $T^a$ again, sum and return matrix Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann\+\_\+matrix\+\_\+multiplication.\+py for more details.
 
 Reimplemented from \mbox{\hyperlink{class_action_a78168dd7c3819a3365e28fc1aae1b9b6}{Action}}.
 
