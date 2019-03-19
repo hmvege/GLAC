@@ -16,7 +16,6 @@
  * \date 2019/03/18
  *
  * Contact: mathias.vege@gmail.com
- *
  */
 
 #include "luscheraction.h"

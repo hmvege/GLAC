@@ -687,7 +687,7 @@ def main(args):
 
     # Default config
     config_default = {
-        "bin_fn"                    : "build/GluonicLQCD",
+        "bin_fn"                    : "build/GLAC",
         "runName"                   : "defaultRun",
         "N"                         : 8, # Small lattice as default
         "NT"                        : 16,
@@ -742,7 +742,7 @@ def main(args):
     description_string = '''
     Program for starting large parallel Lattice Quantum Chromo Dynamics jobs.
     '''
-    parser = argparse.ArgumentParser(prog='GluonicLQCD job creator', description=description_string)
+    parser = argparse.ArgumentParser(prog='GLAC job creator', description=description_string)
     
     ######## Prints program version if prompted ########
     parser.add_argument('--version', action='version', version='%(prog)s 1.0.2')
@@ -783,7 +783,7 @@ def main(args):
     job_parser.add_argument('-sc', '--storeCfgs',               default=config_default["storeCfgs"],                type=int, choices=[0,1], help='Specifying if we are to store configurations')
     job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],           type=int, choices=[0,1], help='Specifies if we are to store the thermalization plaquettes')
     job_parser.add_argument('-bf', '--base_folder',             default=config_default["base_folder"],              type=str, help='Sets the base folder. Default is os.path.getcwd().') # Human readable output related variables
-    job_parser.add_argument('-vr', '--verboseRun',              default=config_default["verboseRun"],               action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
+    job_parser.add_argument('-vr', '--verboseRun',              default=config_default["verboseRun"],               action='store_true', help='Verbose run of GLAC. By default, it is off.')
 
     # Setup related variables
     job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],                 type=int, choices=[0,1], help='Hot start or cold start')
@@ -837,12 +837,12 @@ def main(args):
     load_parser.add_argument('-NUp', '--NUpdates',              default=False,                                      type=int, help='number of updates per link')
     load_parser.add_argument('-NCor', '-NCorr', '--NCor',       default=False,                                      type=int, help='number of correlation updates to perform')
     load_parser.add_argument('--debug',                         default=False,                                      action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
-    load_parser.add_argument('-vr', '--verboseRun',             default=config_default["verboseRun"],              action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
+    load_parser.add_argument('-vr', '--verboseRun',             default=config_default["verboseRun"],              action='store_true', help='Verbose run of GLAC. By default, it is off.')
     load_parser.add_argument('-igntsk', '--ignore_tasks_per_node', default=False,                                   action='store_true', help='If enabled, will ignore requirement of having 16 tasks per node.')
     load_parser.add_argument('--account_name',                   default=config_default["account_name"],             type=str, help='Account name associated to the abel cluster')
 
     ######## Unit test parser ########
-    unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GluonicLQCD program. Will exit when complete.')
+    unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GLAC program. Will exit when complete.')
     unit_test_parser.add_argument('system',                     default=False,                                      type=str, choices=AVAILABLE_HPC_SYSTEMS, help='Specify system we are running on.')
     unit_test_parser.add_argument('threads',                    default=False,                                      type=int, help='Number of threads to run on')
     unit_test_parser.add_argument('-vr', '--verboseRun',        default=config_default["verboseRun"],               action='store_true', help='Prints more information during testing.')
@@ -854,7 +854,7 @@ def main(args):
     unit_test_parser.add_argument('-igntsk', '--ignore_tasks_per_node', default=False,                              action='store_true', help='If enabled, will ignore requirement of having 16 tasks per node.')
 
     ######## Performance test parser ########
-    performance_test_parser = subparser.add_parser('perf_test', help='Runs performance tests on the certain components of the GluonicLQCD program. Will exit when complete.')
+    performance_test_parser = subparser.add_parser('perf_test', help='Runs performance tests on the certain components of the GLAC program. Will exit when complete.')
     performance_test_parser.add_argument('system',              default=False,                                      type=str, choices=AVAILABLE_HPC_SYSTEMS, help='Specify system we are running on.')
     performance_test_parser.add_argument('threads',             default=False,                                      type=int, help='Number of threads to run on')
     performance_test_parser.add_argument('-NExpTests',          default=config_default["NExpTests"],                type=int, help='Number of exponentiation tests we will run.')
@@ -891,7 +891,7 @@ def main(args):
     # Data storage related variables
     field_density_parser.add_argument('-bf', '--base_folder',  default=config_default["base_folder"],              type=str, help='Sets the base folder. Default is os.path.getcwd().')
     field_density_parser.add_argument('-sf', '--samplingFrequency', default=config_default["samplingFrequency"],   type=int, help='Sets the sampling frequency of the flow. Lattice to be written to file every given number.')
-    field_density_parser.add_argument('-vr', '--verboseRun',   default=config_default["verboseRun"],               action='store_true', help='Verbose run of GluonicLQCD. By default, it is off.')
+    field_density_parser.add_argument('-vr', '--verboseRun',   default=config_default["verboseRun"],               action='store_true', help='Verbose run of GLAC. By default, it is off.')
     
     # Debug variables
     field_density_parser.add_argument('--debug',               default=config_default["debug"],                    action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
