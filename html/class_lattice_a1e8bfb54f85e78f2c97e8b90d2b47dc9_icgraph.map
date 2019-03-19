@@ -1,7 +1,7 @@
 <map id="Lattice::zeros" name="Lattice::zeros">
 <area shape="rect" id="node1" title=" " alt="" coords="456,183,557,208"/>
-<area shape="rect" id="node2" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title=" " alt="" coords="239,5,408,44"/>
-<area shape="rect" id="node3" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title=" " alt="" coords="251,68,397,107"/>
+<area shape="rect" id="node2" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="239,5,408,44"/>
+<area shape="rect" id="node3" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="251,68,397,107"/>
 <area shape="rect" id="node4" href="$lattice_8h.html#ab2d48b63b79e5e5ee3ca25483fe98b3e" title=" " alt="" coords="246,183,401,208"/>
 <area shape="rect" id="node5" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,113,191,152"/>
 <area shape="rect" id="node7" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title=" " alt="" coords="15,239,182,264"/>

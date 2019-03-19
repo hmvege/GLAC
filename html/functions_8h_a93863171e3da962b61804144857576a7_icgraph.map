@@ -1,7 +1,7 @@
 <map id="traceRealMultiplication" name="traceRealMultiplication">
 <area shape="rect" id="node1" title=" " alt="" coords="487,89,643,115"/>
-<area shape="rect" id="node2" href="$class_luscher_action.html#a1955f8eea8b0771f6c737c39e3fc11b2" title=" " alt="" coords="239,5,439,31"/>
-<area shape="rect" id="node3" href="$class_wilson_gauge_action.html#a60f2892e61489004df3cde6cc856b00b" title=" " alt="" coords="266,55,412,93"/>
+<area shape="rect" id="node2" href="$class_luscher_action.html#a1955f8eea8b0771f6c737c39e3fc11b2" title="getDeltaAction computes the change in action. Staple must have already have been calculated." alt="" coords="239,5,439,31"/>
+<area shape="rect" id="node3" href="$class_wilson_gauge_action.html#a60f2892e61489004df3cde6cc856b00b" title="getDeltaAction computes the change in action. Staple must have already have been calculated." alt="" coords="266,55,412,93"/>
 <area shape="rect" id="node4" href="$lattice_8h.html#ab2d48b63b79e5e5ee3ca25483fe98b3e" title=" " alt="" coords="262,117,416,143"/>
 <area shape="rect" id="node8" href="$lattice_8h.html#a2a635fe0bbbaca1e8903db8d3bf61f01" title=" " alt="" coords="247,183,431,208"/>
 <area shape="rect" id="node5" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,32,191,71"/>

@@ -1,21 +1,18 @@
 <map id="GluonicLQCD/actions/action.cpp" name="GluonicLQCD/actions/action.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="227,5,376,44"/>
-<area shape="rect" id="node2" href="$action_8h.html" title=" " alt="" coords="398,312,466,337"/>
-<area shape="rect" id="node15" href="$parameters_8h.html" title=" " alt="" coords="160,92,299,117"/>
-<area shape="rect" id="node3" href="$lattice_8h.html" title=" " alt="" coords="454,385,555,411"/>
-<area shape="rect" id="node4" title=" " alt="" coords="317,532,374,557"/>
-<area shape="rect" id="node5" title=" " alt="" coords="917,532,971,557"/>
-<area shape="rect" id="node6" href="$index_8h.html" title=" " alt="" coords="134,459,283,484"/>
-<area shape="rect" id="node7" href="$neighbours_8h.html" title=" " alt="" coords="459,459,643,484"/>
-<area shape="rect" id="node9" href="$parallelparameters_8h.html" title=" " alt="" coords="828,459,1056,484"/>
-<area shape="rect" id="node10" href="$functions_8h.html" title=" " alt="" coords="667,459,753,484"/>
-<area shape="rect" id="node8" href="$neighbourlist_8h.html" title=" " alt="" coords="469,532,577,557"/>
-<area shape="rect" id="node11" href="$su3_8h.html" title=" " alt="" coords="653,532,761,557"/>
-<area shape="rect" id="node12" href="$complex_8h.html" title=" " alt="" coords="649,605,765,631"/>
-<area shape="rect" id="node14" href="$su2_8h.html" title=" " alt="" coords="785,532,893,557"/>
-<area shape="rect" id="node13" title=" " alt="" coords="671,679,743,704"/>
-<area shape="rect" id="node16" title=" " alt="" coords="5,165,59,191"/>
-<area shape="rect" id="node17" href="$sysprint_8h.html" title=" " alt="" coords="171,165,288,191"/>
-<area shape="rect" id="node18" href="$parallel_8h.html" title=" " alt="" coords="185,239,346,264"/>
-<area shape="rect" id="node19" href="$communicator_8h.html" title=" " alt="" coords="259,312,374,337"/>
+<area shape="rect" id="node1" title=" " alt="" coords="698,5,847,44"/>
+<area shape="rect" id="node2" href="$action_8h.html" title=" " alt="" coords="675,92,743,117"/>
+<area shape="rect" id="node15" href="$parameters_8h.html" title=" " alt="" coords="767,92,906,117"/>
+<area shape="rect" id="node3" href="$lattice_8h.html" title=" " alt="" coords="480,165,580,191"/>
+<area shape="rect" id="node4" title=" " alt="" coords="613,312,671,337"/>
+<area shape="rect" id="node5" title=" " alt="" coords="168,312,222,337"/>
+<area shape="rect" id="node6" href="$index_8h.html" title=" " alt="" coords="567,239,717,264"/>
+<area shape="rect" id="node7" href="$neighbours_8h.html" title=" " alt="" coords="309,239,493,264"/>
+<area shape="rect" id="node9" href="$parallelparameters_8h.html" title=" " alt="" coords="5,239,233,264"/>
+<area shape="rect" id="node10" href="$functions_8h.html" title=" " alt="" coords="842,239,928,264"/>
+<area shape="rect" id="node8" href="$neighbourlist_8h.html" title=" " alt="" coords="347,312,455,337"/>
+<area shape="rect" id="node11" href="$su3_8h.html" title=" " alt="" coords="739,312,847,337"/>
+<area shape="rect" id="node12" href="$complex_8h.html" title=" " alt="" coords="827,385,942,411"/>
+<area shape="rect" id="node14" href="$su2_8h.html" title=" " alt="" coords="923,312,1031,337"/>
+<area shape="rect" id="node13" title=" " alt="" coords="848,459,921,484"/>
+<area shape="rect" id="node16" title=" " alt="" coords="842,165,896,191"/>
 </map>

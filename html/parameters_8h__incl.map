@@ -1,19 +1,5 @@
 <map id="GluonicLQCD/config/parameters.h" name="GluonicLQCD/config/parameters.h">
-<area shape="rect" id="node1" title=" " alt="" coords="745,5,888,44"/>
-<area shape="rect" id="node2" title=" " alt="" coords="680,92,734,117"/>
-<area shape="rect" id="node3" title=" " alt="" coords="751,459,808,484"/>
-<area shape="rect" id="node4" href="$sysprint_8h.html" title=" " alt="" coords="758,92,876,117"/>
-<area shape="rect" id="node5" href="$parallel_8h.html" title=" " alt="" coords="708,165,869,191"/>
-<area shape="rect" id="node6" href="$communicator_8h.html" title=" " alt="" coords="790,239,905,264"/>
-<area shape="rect" id="node9" href="$index_8h.html" title=" " alt="" coords="705,385,854,411"/>
-<area shape="rect" id="node12" href="$parallelparameters_8h.html" title=" " alt="" coords="143,385,371,411"/>
-<area shape="rect" id="node7" href="$lattice_8h.html" title=" " alt="" coords="488,312,588,337"/>
-<area shape="rect" id="node8" title=" " alt="" coords="334,459,388,484"/>
-<area shape="rect" id="node10" href="$neighbours_8h.html" title=" " alt="" coords="446,385,630,411"/>
-<area shape="rect" id="node13" href="$functions_8h.html" title=" " alt="" coords="33,385,118,411"/>
-<area shape="rect" id="node11" href="$neighbourlist_8h.html" title=" " alt="" coords="484,459,592,484"/>
-<area shape="rect" id="node14" href="$su3_8h.html" title=" " alt="" coords="21,459,129,484"/>
-<area shape="rect" id="node15" href="$complex_8h.html" title=" " alt="" coords="18,532,133,557"/>
-<area shape="rect" id="node17" href="$su2_8h.html" title=" " alt="" coords="153,459,261,484"/>
-<area shape="rect" id="node16" title=" " alt="" coords="39,605,112,631"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,148,44"/>
+<area shape="rect" id="node2" title=" " alt="" coords="10,92,64,117"/>
+<area shape="rect" id="node3" title=" " alt="" coords="88,92,146,117"/>
 </map>

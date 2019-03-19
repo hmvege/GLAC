@@ -21,7 +21,7 @@
 <!-- Node156 -->
 <g id="node2" class="node">
 <title>Node156</title>
-<g id="a_node2"><a xlink:href="class_action.html#a4f457ccfc8336b565cadca56b36e0271" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_action.html#a4f457ccfc8336b565cadca56b36e0271" target="_top" xlink:title="Action base constructor.">
 <polygon fill="#ffffff" stroke="#000000" points="156.4873,-150.5 156.4873,-168.5 233.6299,-168.5 233.6299,-150.5 156.4873,-150.5"/>
 <text text-anchor="middle" x="195.0586" y="-156.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Action::Action</text>
 </a>

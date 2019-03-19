@@ -1,4 +1,4 @@
 <map id="LuscherAction::getDeltaAction" name="LuscherAction::getDeltaAction">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,205,31"/>
+<area shape="rect" id="node1" title="getDeltaAction computes the change in action. Staple must have already have been calculated." alt="" coords="5,5,205,31"/>
 <area shape="rect" id="node2" href="$functions_8h.html#a93863171e3da962b61804144857576a7" title=" " alt="" coords="253,5,409,31"/>
 </map>

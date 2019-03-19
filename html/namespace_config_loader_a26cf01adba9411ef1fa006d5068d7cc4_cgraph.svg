@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="class_parameters.html#a92a822961dcf3b448ce2ce49d1de507f" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_parameters.html#a4b2041032efc8d6e9f99a99f87543f26" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="162.3491,-1762.5 162.3491,-1780.5 286.728,-1780.5 286.728,-1762.5 162.3491,-1762.5"/>
 <text text-anchor="middle" x="224.5386" y="-1768.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNSpatial</text>
 </a>
@@ -36,7 +36,7 @@
 <!-- Node2 -->
 <g id="node3" class="node">
 <title>Node2</title>
-<g id="a_node3"><a xlink:href="class_parameters.html#a37e6a1dcc980eae30848edfc626013c8" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_parameters.html#a8b9ea6055d41cd08a060bc72332a63af" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="157.0732,-1725.5 157.0732,-1743.5 292.0039,-1743.5 292.0039,-1725.5 157.0732,-1725.5"/>
 <text text-anchor="middle" x="224.5386" y="-1731.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNTemporal</text>
 </a>
@@ -81,7 +81,7 @@
 <!-- Node5 -->
 <g id="node6" class="node">
 <title>Node5</title>
-<g id="a_node6"><a xlink:href="class_parameters.html#abc64214062166fdcfc1b45aa17387144" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_parameters.html#a3c35caa5de4bb545a2b48af07e1756f3" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="172.6372,-1614.5 172.6372,-1632.5 276.4399,-1632.5 276.4399,-1614.5 172.6372,-1614.5"/>
 <text text-anchor="middle" x="224.5386" y="-1620.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNCf</text>
 </a>
@@ -96,7 +96,7 @@
 <!-- Node6 -->
 <g id="node7" class="node">
 <title>Node6</title>
-<g id="a_node7"><a xlink:href="class_parameters.html#a4569e95e4e4491ffa2011b2de3d5017c" target="_top" xlink:title=" ">
+<g id="a_node7"><a xlink:href="class_parameters.html#afb3ef2dca9d24511a1904bc313fd8513" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="169.5806,-1577.5 169.5806,-1595.5 279.4966,-1595.5 279.4966,-1577.5 169.5806,-1577.5"/>
 <text text-anchor="middle" x="224.5386" y="-1583.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNCor</text>
 </a>
@@ -111,7 +111,7 @@
 <!-- Node7 -->
 <g id="node8" class="node">
 <title>Node7</title>
-<g id="a_node8"><a xlink:href="class_parameters.html#a7ce7297f49aedb2a6c2b9b9986c9fdc8" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_parameters.html#a97a1e5d00965cf1d552a8c8dbb45cd53" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="163.1914,-1540.5 163.1914,-1558.5 285.8857,-1558.5 285.8857,-1540.5 163.1914,-1540.5"/>
 <text text-anchor="middle" x="224.5386" y="-1546.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNTherm</text>
 </a>
@@ -126,7 +126,7 @@
 <!-- Node8 -->
 <g id="node9" class="node">
 <title>Node8</title>
-<g id="a_node9"><a xlink:href="class_parameters.html#adf7b409a289f909bee79b637c3cf783c" target="_top" xlink:title=" ">
+<g id="a_node9"><a xlink:href="class_parameters.html#ae9bb965e9bfa37365c5b5ef83e95f97d" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="164.5806,-1503.5 164.5806,-1521.5 284.4966,-1521.5 284.4966,-1503.5 164.5806,-1503.5"/>
 <text text-anchor="middle" x="224.5386" y="-1509.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNFlows</text>
 </a>
@@ -141,7 +141,7 @@
 <!-- Node9 -->
 <g id="node10" class="node">
 <title>Node9</title>
-<g id="a_node10"><a xlink:href="class_parameters.html#aab36705fc88e86536a95b096a970723f" target="_top" xlink:title=" ">
+<g id="a_node10"><a xlink:href="class_parameters.html#ae443546fea1f1ceaf3683cb368f7f5bb" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="159.0142,-1466.5 159.0142,-1484.5 290.063,-1484.5 290.063,-1466.5 159.0142,-1466.5"/>
 <text text-anchor="middle" x="224.5386" y="-1472.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNUpdates</text>
 </a>
@@ -495,7 +495,7 @@
 <!-- Node32 -->
 <g id="node33" class="node">
 <title>Node32</title>
-<g id="a_node33"><a xlink:href="class_parameters.html#af26361c35ce69a80cb20d98026983176" target="_top" xlink:title=" ">
+<g id="a_node33"><a xlink:href="class_parameters.html#a5cbf802e3e5db24cf0b8afc3f39f0830" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="157.3516,-525.5 157.3516,-543.5 291.7256,-543.5 291.7256,-525.5 157.3516,-525.5"/>
 <text text-anchor="middle" x="224.5386" y="-531.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNExpTests</text>
 </a>
@@ -510,7 +510,7 @@
 <!-- Node33 -->
 <g id="node34" class="node">
 <title>Node33</title>
-<g id="a_node34"><a xlink:href="class_parameters.html#ad9357404fe38f9c4a71d027e8e875e0c" target="_top" xlink:title=" ">
+<g id="a_node34"><a xlink:href="class_parameters.html#a24bd9c86cda80898bc65b950983b6a17" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="154.0142,-488.5 154.0142,-506.5 295.063,-506.5 295.063,-488.5 154.0142,-488.5"/>
 <text text-anchor="middle" x="224.5386" y="-494.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNRandTests</text>
 </a>
@@ -525,7 +525,7 @@
 <!-- Node34 -->
 <g id="node35" class="node">
 <title>Node34</title>
-<g id="a_node35"><a xlink:href="class_parameters.html#a8e32b55712f1e730e6024e94389e4225" target="_top" xlink:title=" ">
+<g id="a_node35"><a xlink:href="class_parameters.html#ae924eabec82bfe600eda893c6f71b00e" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="155.4082,-441.5 155.4082,-469.5 293.6689,-469.5 293.6689,-441.5 155.4082,-441.5"/>
 <text text-anchor="start" x="163.4082" y="-457.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setNDerivaitve</text>
 <text text-anchor="middle" x="224.5386" y="-447.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Tests</text>
@@ -541,7 +541,7 @@
 <!-- Node35 -->
 <g id="node36" class="node">
 <title>Node35</title>
-<g id="a_node36"><a xlink:href="class_parameters.html#accf88dfe623bf72c2e0ab95e19eb50aa" target="_top" xlink:title=" ">
+<g id="a_node36"><a xlink:href="class_parameters.html#a68fb3eccef5dae481915be728ef61fb6" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="160.6841,-394.5 160.6841,-422.5 288.3931,-422.5 288.3931,-394.5 160.6841,-394.5"/>
 <text text-anchor="start" x="168.6841" y="-410.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setTaylorPol</text>
 <text text-anchor="middle" x="224.5386" y="-400.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Degree</text>

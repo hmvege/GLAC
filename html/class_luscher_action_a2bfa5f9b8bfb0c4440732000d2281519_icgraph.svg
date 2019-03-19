@@ -12,7 +12,7 @@
 <!-- Node30 -->
 <g id="node1" class="node">
 <title>Node30</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="updateMuIndex updates the m_muIndex based on mu.">
 <polygon fill="#bfbfbf" stroke="#000000" points="187.6348,-.5 187.6348,-18.5 341.501,-18.5 341.501,-.5 187.6348,-.5"/>
 <text text-anchor="middle" x="264.5679" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LuscherAction::updateMuIndex</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node31 -->
 <g id="node2" class="node">
 <title>Node31</title>
-<g id="a_node2"><a xlink:href="class_luscher_action.html#a42285b6e3015935588e1fab6b90c1a11" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_luscher_action.html#a42285b6e3015935588e1fab6b90c1a11" target="_top" xlink:title="computeStaple computes the staple at given poisition.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-.5 0,-18.5 151.6348,-18.5 151.6348,-.5 0,-.5"/>
 <text text-anchor="middle" x="75.8174" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LuscherAction::computeStaple</text>
 </a>

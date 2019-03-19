@@ -21,7 +21,7 @@
 <!-- Node9 -->
 <g id="node2" class="node">
 <title>Node9</title>
-<g id="a_node2"><a xlink:href="class_luscher_action.html#a1955f8eea8b0771f6c737c39e3fc11b2" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_luscher_action.html#a1955f8eea8b0771f6c737c39e3fc11b2" target="_top" xlink:title="getDeltaAction computes the change in action. Staple must have already have been calculated.">
 <polygon fill="#ffffff" stroke="#000000" points="175.3984,-235.5 175.3984,-253.5 325.3633,-253.5 325.3633,-235.5 175.3984,-235.5"/>
 <text text-anchor="middle" x="250.3809" y="-241.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LuscherAction::getDeltaAction</text>
 </a>
@@ -36,7 +36,7 @@
 <!-- Node10 -->
 <g id="node3" class="node">
 <title>Node10</title>
-<g id="a_node3"><a xlink:href="class_wilson_gauge_action.html#a60f2892e61489004df3cde6cc856b00b" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_wilson_gauge_action.html#a60f2892e61489004df3cde6cc856b00b" target="_top" xlink:title="getDeltaAction computes the change in action. Staple must have already have been calculated.">
 <polygon fill="#ffffff" stroke="#000000" points="195.6914,-188.5 195.6914,-216.5 305.0703,-216.5 305.0703,-188.5 195.6914,-188.5"/>
 <text text-anchor="start" x="203.6914" y="-204.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">WilsonGaugeAction::</text>
 <text text-anchor="middle" x="250.3809" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">getDeltaAction</text>

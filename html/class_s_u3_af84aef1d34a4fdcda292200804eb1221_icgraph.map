@@ -1,6 +1,8 @@
 <map id="SU3::identity" name="SU3::identity">
-<area shape="rect" id="node1" title=" " alt="" coords="214,55,311,80"/>
-<area shape="rect" id="node2" href="$class_taylor2_exp.html#ac3b48be4c567e163f7baaa041121a93f" title=" " alt="" coords="5,5,166,31"/>
-<area shape="rect" id="node3" href="$class_taylor4_exp.html#a0eac1c3288d296110c6a5e11acc0934d" title=" " alt="" coords="5,55,166,80"/>
-<area shape="rect" id="node4" href="$class_taylor_exp.html#ac8929cf53cb6b8d109220c8284169a82" title=" " alt="" coords="13,104,159,129"/>
+<area shape="rect" id="node1" title=" " alt="" coords="238,104,335,129"/>
+<area shape="rect" id="node2" href="$class_taylor2_exp.html#ac3b48be4c567e163f7baaa041121a93f" title=" " alt="" coords="17,5,178,31"/>
+<area shape="rect" id="node3" href="$class_taylor4_exp.html#a0eac1c3288d296110c6a5e11acc0934d" title=" " alt="" coords="17,55,178,80"/>
+<area shape="rect" id="node4" href="$class_taylor_exp.html#ac8929cf53cb6b8d109220c8284169a82" title=" " alt="" coords="25,104,170,129"/>
+<area shape="rect" id="node5" href="$class_taylor_exp.html#a622c4af7d88a43a7bcda97722b62fc82" title=" " alt="" coords="43,153,152,179"/>
+<area shape="rect" id="node6" href="$class_taylor_exp.html#a6a048363483f372300e412b27f218773" title=" " alt="" coords="5,203,190,228"/>
 </map>

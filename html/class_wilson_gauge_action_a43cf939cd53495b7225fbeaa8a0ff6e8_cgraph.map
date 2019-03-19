@@ -1,5 +1,5 @@
 <map id="WilsonGaugeAction::getActionDerivative" name="WilsonGaugeAction::getActionDerivative">
-<area shape="rect" id="node1" title=" " alt="" coords="5,97,151,136"/>
+<area shape="rect" id="node1" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="5,97,151,136"/>
 <area shape="rect" id="node2" href="$class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" title=" " alt="" coords="199,5,300,31"/>
 <area shape="rect" id="node3" href="$lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" title=" " alt="" coords="227,104,272,129"/>
 <area shape="rect" id="node8" href="$lattice_8h.html#a491004d1505561625a8915464f3c6cab" title=" " alt="" coords="230,55,269,80"/>

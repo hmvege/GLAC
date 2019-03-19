@@ -1,7 +1,7 @@
 <map id="Parallel::Index::getIndex" name="Parallel::Index::getIndex">
 <area shape="rect" id="node1" title=" " alt="" coords="582,407,746,432"/>
-<area shape="rect" id="node2" href="$class_luscher_action.html#a42285b6e3015935588e1fab6b90c1a11" title=" " alt="" coords="18,68,220,93"/>
-<area shape="rect" id="node3" href="$class_wilson_gauge_action.html#af1f6ba42fcc2b923dc3b37bf150bfae9" title=" " alt="" coords="46,152,192,191"/>
+<area shape="rect" id="node2" href="$class_luscher_action.html#a42285b6e3015935588e1fab6b90c1a11" title="computeStaple computes the staple at given poisition." alt="" coords="18,68,220,93"/>
+<area shape="rect" id="node3" href="$class_wilson_gauge_action.html#af1f6ba42fcc2b923dc3b37bf150bfae9" title="computeStaple computes the staple at given poisition." alt="" coords="46,152,192,191"/>
 <area shape="rect" id="node4" href="$class_i_o_1_1_field_i_o.html#a44dc4aa1786974c091082c5b37be73a1" title=" " alt="" coords="26,299,212,324"/>
 <area shape="rect" id="node5" href="$class_i_o_1_1_field_i_o.html#a4bfe0fd7890fe69b88fbbe3864fd00ae" title=" " alt="" coords="322,515,492,553"/>
 <area shape="rect" id="node7" href="$class_i_o_1_1_field_i_o.html#afdd7f357ed71f7ff3ab1b5be987a51b5" title=" " alt="" coords="5,359,232,384"/>
@@ -18,8 +18,8 @@
 <area shape="rect" id="node6" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="26,501,212,540"/>
 <area shape="rect" id="node10" href="$class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" title=" " alt="" coords="36,564,202,603"/>
 <area shape="rect" id="node11" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title=" " alt="" coords="35,627,202,652"/>
-<area shape="rect" id="node15" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title=" " alt="" coords="34,676,203,715"/>
-<area shape="rect" id="node16" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title=" " alt="" coords="46,739,192,777"/>
+<area shape="rect" id="node15" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="34,676,203,715"/>
+<area shape="rect" id="node16" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="46,739,192,777"/>
 <area shape="rect" id="node17" href="$class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" title=" " alt="" coords="35,801,203,827"/>
 <area shape="rect" id="node18" href="$class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" title=" " alt="" coords="33,851,205,876"/>
 <area shape="rect" id="node19" href="$class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" title=" " alt="" coords="50,900,187,925"/>

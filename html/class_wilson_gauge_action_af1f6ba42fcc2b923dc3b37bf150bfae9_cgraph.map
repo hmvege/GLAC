@@ -1,5 +1,5 @@
 <map id="WilsonGaugeAction::computeStaple" name="WilsonGaugeAction::computeStaple">
-<area shape="rect" id="node1" title=" " alt="" coords="5,209,151,248"/>
+<area shape="rect" id="node1" title="computeStaple computes the staple at given poisition." alt="" coords="5,209,151,248"/>
 <area shape="rect" id="node2" href="$class_s_u3.html#a9f3527fd882882ddfa18d72f5f43176c" title=" " alt="" coords="256,5,344,31"/>
 <area shape="rect" id="node3" href="$class_wilson_gauge_action.html#ab7ed4ab8e475f5a188cd19ce720a5eb9" title=" " alt="" coords="227,55,373,93"/>
 <area shape="rect" id="node4" href="$class_wilson_gauge_action.html#a010b3b8870476dfec4c48a01b6d6fc1d" title=" " alt="" coords="227,117,373,156"/>

@@ -68,6 +68,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>An implementation of the Wilson gauge action,.  
+ <a href="class_luscher_action.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="luscheraction_8h_source.html">luscheraction.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for LuscherAction:</div>
@@ -87,30 +90,48 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3b4de167f04479da56fd4aa1e7fe0bbb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_luscher_action.html#a3b4de167f04479da56fd4aa1e7fe0bbb">~LuscherAction</a> ()</td></tr>
 <tr class="separator:a3b4de167f04479da56fd4aa1e7fe0bbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1955f8eea8b0771f6c737c39e3fc11b2"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_luscher_action.html#a1955f8eea8b0771f6c737c39e3fc11b2">getDeltaAction</a> (<a class="el" href="class_s_u3.html">SU3</a> U, <a class="el" href="class_s_u3.html">SU3</a> UPrime)</td></tr>
+<tr class="memdesc:a1955f8eea8b0771f6c737c39e3fc11b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">getDeltaAction computes the change in action. Staple must have already have been calculated.  <a href="#a1955f8eea8b0771f6c737c39e3fc11b2">More...</a><br /></td></tr>
 <tr class="separator:a1955f8eea8b0771f6c737c39e3fc11b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42285b6e3015935588e1fab6b90c1a11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_luscher_action.html#a42285b6e3015935588e1fab6b90c1a11">computeStaple</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; <a class="el" href="class_s_u3.html">SU3</a> &gt; *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)</td></tr>
+<tr class="memdesc:a42285b6e3015935588e1fab6b90c1a11"><td class="mdescLeft">&#160;</td><td class="mdescRight">computeStaple computes the staple at given poisition.  <a href="#a42285b6e3015935588e1fab6b90c1a11">More...</a><br /></td></tr>
 <tr class="separator:a42285b6e3015935588e1fab6b90c1a11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac11785b2df276816a098a87e6ac514c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_lattice.html">Lattice</a>&lt; <a class="el" href="class_s_u3.html">SU3</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7">getActionDerivative</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; <a class="el" href="class_s_u3.html">SU3</a> &gt; *lattice, int mu)</td></tr>
+<tr class="memdesc:ac11785b2df276816a098a87e6ac514c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">getActionDerivative, computes the derivative of the lattice in given direction.  <a href="#ac11785b2df276816a098a87e6ac514c7">More...</a><br /></td></tr>
 <tr class="separator:ac11785b2df276816a098a87e6ac514c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bfa5f9b8bfb0c4440732000d2281519"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_luscher_action.html#a2bfa5f9b8bfb0c4440732000d2281519">updateMuIndex</a> (int mu)</td></tr>
+<tr class="memdesc:a2bfa5f9b8bfb0c4440732000d2281519"><td class="mdescLeft">&#160;</td><td class="mdescRight">updateMuIndex updates the m_muIndex based on mu.  <a href="#a2bfa5f9b8bfb0c4440732000d2281519">More...</a><br /></td></tr>
 <tr class="separator:a2bfa5f9b8bfb0c4440732000d2281519"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6496c97ed38401c0d94855bf940fd6ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_luscher_action.html#a6496c97ed38401c0d94855bf940fd6ff">updateNuIndex</a> (int nu)</td></tr>
+<tr class="memdesc:a6496c97ed38401c0d94855bf940fd6ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">updateNuIndex updates the m_nuIndex based on nu.  <a href="#a6496c97ed38401c0d94855bf940fd6ff">More...</a><br /></td></tr>
 <tr class="separator:a6496c97ed38401c0d94855bf940fd6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_action"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_action')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_action.html">Action</a></td></tr>
 <tr class="memitem:a4f457ccfc8336b565cadca56b36e0271 inherit pub_methods_class_action"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_action.html#a4f457ccfc8336b565cadca56b36e0271">Action</a> ()</td></tr>
+<tr class="memdesc:a4f457ccfc8336b565cadca56b36e0271 inherit pub_methods_class_action"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_action.html" title="The Action class.">Action</a> base constructor.  <a href="class_action.html#a4f457ccfc8336b565cadca56b36e0271">More...</a><br /></td></tr>
 <tr class="separator:a4f457ccfc8336b565cadca56b36e0271 inherit pub_methods_class_action"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdb06775d157339256a8ecd55749226c inherit pub_methods_class_action"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_action.html#acdb06775d157339256a8ecd55749226c">~Action</a> ()</td></tr>
+<tr class="memdesc:acdb06775d157339256a8ecd55749226c inherit pub_methods_class_action"><td class="mdescLeft">&#160;</td><td class="mdescRight">~Action destructor. Nothing to de-allocate in base class  <a href="class_action.html#acdb06775d157339256a8ecd55749226c">More...</a><br /></td></tr>
 <tr class="separator:acdb06775d157339256a8ecd55749226c inherit pub_methods_class_action"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_attribs_class_action"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_action')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_action.html">Action</a></td></tr>
 <tr class="memitem:a80654d2311707f24689cd9e480edb2f6 inherit pro_attribs_class_action"><td class="memItemLeft" align="right" valign="top">std::vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_action.html#a80654d2311707f24689cd9e480edb2f6">m_N</a></td></tr>
+<tr class="memdesc:a80654d2311707f24689cd9e480edb2f6 inherit pro_attribs_class_action"><td class="mdescLeft">&#160;</td><td class="mdescRight">m_N <a class="el" href="class_lattice.html">Lattice</a> dimension array  <a href="class_action.html#a80654d2311707f24689cd9e480edb2f6">More...</a><br /></td></tr>
 <tr class="separator:a80654d2311707f24689cd9e480edb2f6 inherit pro_attribs_class_action"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a133fd17c83db233423855178bc81fb16 inherit pro_attribs_class_action"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_action.html#a133fd17c83db233423855178bc81fb16">m_position</a></td></tr>
+<tr class="memdesc:a133fd17c83db233423855178bc81fb16 inherit pro_attribs_class_action"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array for holding the position in lattice.  <a href="class_action.html#a133fd17c83db233423855178bc81fb16">More...</a><br /></td></tr>
 <tr class="separator:a133fd17c83db233423855178bc81fb16 inherit pro_attribs_class_action"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>An implementation of the Wilson gauge action,. </p>
+<p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{eqnarray*} S_G[U] = \frac{\beta}{3} \sum_{n\in\Lambda} \sum_{\mu&lt;\nu} \mathrm{Re} \mathrm{tr} \big[ 1 - P_{\mu\nu}(n) \big]. \end{eqnarray*}" src="form_10.png"/>
+</p>
+<p>The different between this and <a class="el" href="class_wilson_gauge_action.html">WilsonGaugeAction</a> is that in the getActionDerivative we perform an explicit calculation of the derivative in terms of its <img class="formulaInl" alt="$\mathrm{SU}(3)$" src="form_7.png"/> generator.</p>
+<dl class="section author"><dt>Author</dt><dd>Mathias M. Vege</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2019/03/18</dd></dl>
+<p>Contact: <a href="#" onclick="location.href='mai'+'lto:'+'mat'+'hi'+'as.'+'ve'+'ge@'+'gm'+'ail'+'.c'+'om'; return false;">mathi<span style="display: none;">.nosp@m.</span>as.v<span style="display: none;">.nosp@m.</span>ege@g<span style="display: none;">.nosp@m.</span>mail<span style="display: none;">.nosp@m.</span>.com</a> </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2389aab5b35b4c5ccb0ae5a45f68430b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2389aab5b35b4c5ccb0ae5a45f68430b">&#9670;&nbsp;</a></span>LuscherAction()</h2>
 
@@ -209,6 +230,20 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>computeStaple computes the staple at given poisition. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lattice</td><td>a pointer of four lattice objects, one for each lorentz index. </td></tr>
+    <tr><td class="paramname">i</td><td>spatial <img class="formulaInl" alt="$x$" src="form_1.png"/> position. </td></tr>
+    <tr><td class="paramname">j</td><td>spatial <img class="formulaInl" alt="$y$" src="form_2.png"/> position. </td></tr>
+    <tr><td class="paramname">k</td><td>spatial <img class="formulaInl" alt="$z$" src="form_3.png"/> position. </td></tr>
+    <tr><td class="paramname">l</td><td>temporal <img class="formulaInl" alt="$t$" src="form_4.png"/> position. </td></tr>
+    <tr><td class="paramname">mu</td><td>lorentz index, <img class="formulaInl" alt="$\mu$" src="form_5.png"/>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns change in action <img class="formulaInl" alt="$\Delta S$" src="form_6.png"/> </dd></dl>
+
 <p>Reimplemented from <a class="el" href="class_action.html#a2d5a64b47a8913955e5911ca072ff80d">Action</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
@@ -251,6 +286,20 @@ Here is the call graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>getActionDerivative, computes the derivative of the lattice in given direction. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lattice</td><td>a pointer of four lattice objects, one for each lorentz index. </td></tr>
+    <tr><td class="paramname">mu</td><td>lorentz index, <img class="formulaInl" alt="$\mu$" src="form_5.png"/>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<p>Luschers method as presented in his paper from 2010, Properties and uses of the Wilson flow in lattice QCD.</p>
+<p>Multiply the product of this with each of the 8 T^a generators Take trace, real, and the multiply with beta/3 Multiply with 8 generators T^a again, sum and return matrix Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann_matrix_multiplication.py for more details.</p>
+<p>Multiplying staple together with link</p>
+<p>Luscher method of taking derivative NOTE: can probably change this to be more vectorization friendly </p>
 
 <p>Reimplemented from <a class="el" href="class_action.html#a78168dd7c3819a3365e28fc1aae1b9b6">Action</a>.</p>
 <div class="dynheader">
@@ -295,6 +344,15 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>getDeltaAction computes the change in action. Staple must have already have been calculated. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">U</td><td>Old link </td></tr>
+    <tr><td class="paramname">UPrime</td><td>Updated link </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented from <a class="el" href="class_action.html#a9409aad86cbfe3b6ec25bf5a837eaea5">Action</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
@@ -327,6 +385,14 @@ Here is the call graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>updateMuIndex updates the m_muIndex based on mu. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mu</td><td>direction which will be set to 1. All others set to zero. </td></tr>
+  </table>
+  </dd>
+</dl>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -358,6 +424,14 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>updateNuIndex updates the m_nuIndex based on nu. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nu</td><td>direction which will be set to 1. All others set to zero. </td></tr>
+  </table>
+  </dd>
+</dl>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">

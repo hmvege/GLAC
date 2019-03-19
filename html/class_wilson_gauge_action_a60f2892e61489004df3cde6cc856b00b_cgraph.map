@@ -1,4 +1,4 @@
 <map id="WilsonGaugeAction::getDeltaAction" name="WilsonGaugeAction::getDeltaAction">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,151,44"/>
+<area shape="rect" id="node1" title="getDeltaAction computes the change in action. Staple must have already have been calculated." alt="" coords="5,5,151,44"/>
 <area shape="rect" id="node2" href="$functions_8h.html#a93863171e3da962b61804144857576a7" title=" " alt="" coords="199,12,355,37"/>
 </map>

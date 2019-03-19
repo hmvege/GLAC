@@ -21,7 +21,7 @@
 <!-- Node3 -->
 <g id="node2" class="node">
 <title>Node3</title>
-<g id="a_node2"><a xlink:href="class_action.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_action.html" target="_top" xlink:title="The Action class.">
 <polygon fill="#ffffff" stroke="#000000" points="30.0146,-55.5 30.0146,-73.5 73.8076,-73.5 73.8076,-55.5 30.0146,-55.5"/>
 <text text-anchor="middle" x="51.9111" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Action</text>
 </a>

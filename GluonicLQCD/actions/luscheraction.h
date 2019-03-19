@@ -6,13 +6,42 @@
 class LuscherAction : public Action
 {
 private:
-    // Lorentz indices arrays
+    /*!
+     * \brief m_muIndex Lorentz indices array.
+     *
+     * Needed for loop over the two Lorentz indices in the field strength tensor
+     */
     int m_muIndex[4];
+
+    /*!
+     * \brief m_nuIndex Lorentz indices array.
+     *
+     * Needed for loop over the two Lorentz indices in the field strength tensor
+     */
     int m_nuIndex[4];
-    // Action based constants
+
+    /*!
+     * \brief m_beta the strong coupling constant.
+     *
+     * \f$\beta\f$ determines the strength of interaction and the lattice spacing(and more).
+     */
     double m_beta;
+
+    /*!
+     * \brief m_multiplicationFactor to be factored in at the end.
+     *
+     * m_multiplicationFactor is setup during construction. Saves a few flops.
+     */
     double m_multiplicationFactor;
+
+    /*!
+     * \brief m_staple, m_staple1, m_staple2 is needed for computing the staple.
+     */
     SU3 m_staple, m_staple1, m_staple2;
+
+    /*!
+     * \brief m_latticeStaple
+     */
     Lattice<SU3> m_latticeStaple,m_tempStaple1,m_tempStaple2;
 
 public:
@@ -22,6 +51,10 @@ public:
     void computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
     Lattice<SU3> getActionDerivative(Lattice<SU3> *lattice, int mu);
 
+    /*!
+     * \brief updateMuIndex updates the m_muIndex based on mu.
+     * \param mu direction which will be set to 1. All others set to zero.
+     */
     inline void updateMuIndex(int mu) {
         for (int i = 0; i < 4; i++)
         {
@@ -29,6 +62,11 @@ public:
         }
         m_muIndex[mu] = 1;
     }
+
+    /*!
+     * \brief updateNuIndex updates the m_nuIndex based on nu.
+     * \param nu direction which will be set to 1. All others set to zero.
+     */
     inline void updateNuIndex(int nu) {
         for (int i = 0; i < 4; i++)
         {

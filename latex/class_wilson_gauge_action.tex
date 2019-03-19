@@ -30,11 +30,11 @@ Collaboration diagram for Wilson\+Gauge\+Action\+:\nopagebreak
 \mbox{\hyperlink{class_wilson_gauge_action_a0995cd407b76b4f5d035659718591c11}{$\sim$\+Wilson\+Gauge\+Action}} ()
 \item 
 double \mbox{\hyperlink{class_wilson_gauge_action_a60f2892e61489004df3cde6cc856b00b}{get\+Delta\+Action}} (\mbox{\hyperlink{class_s_u3}{S\+U3}} U, \mbox{\hyperlink{class_s_u3}{S\+U3}} U\+Prime)
-\item 
+\begin{DoxyCompactList}\small\item\em get\+Delta\+Action computes the change in action. Staple must have already have been calculated. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_wilson_gauge_action_af1f6ba42fcc2b923dc3b37bf150bfae9}{compute\+Staple}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
-\item 
+\begin{DoxyCompactList}\small\item\em compute\+Staple computes the staple at given poisition. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \mbox{\hyperlink{class_wilson_gauge_action_a43cf939cd53495b7225fbeaa8a0ff6e8}{get\+Action\+Derivative}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, int mu)
-\item 
+\begin{DoxyCompactList}\small\item\em get\+Action\+Derivative, computes the derivative of the lattice in given direction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_wilson_gauge_action_ab7ed4ab8e475f5a188cd19ce720a5eb9}{update\+Mu\+Index}} (int mu)
 \item 
 void \mbox{\hyperlink{class_wilson_gauge_action_a010b3b8870476dfec4c48a01b6d6fc1d}{update\+Nu\+Index}} (int nu)
@@ -73,6 +73,28 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
+compute\+Staple computes the staple at given poisition. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & a pointer of four lattice objects, one for each lorentz index. \\
+\hline
+{\em i} & spatial $x$ position. \\
+\hline
+{\em j} & spatial $y$ position. \\
+\hline
+{\em k} & spatial $z$ position. \\
+\hline
+{\em l} & temporal $t$ position. \\
+\hline
+{\em mu} & lorentz index, $\mu$. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns change in action $\Delta S$ 
+\end{DoxyReturn}
+
+
 Reimplemented from \mbox{\hyperlink{class_action_a2d5a64b47a8913955e5911ca072ff80d}{Action}}.
 
 Here is the call graph for this function\+:\nopagebreak
@@ -90,6 +112,20 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
+get\+Action\+Derivative, computes the derivative of the lattice in given direction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & a pointer of four lattice objects, one for each lorentz index. \\
+\hline
+{\em mu} & lorentz index, $\mu$. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
 Reimplemented from \mbox{\hyperlink{class_action_a78168dd7c3819a3365e28fc1aae1b9b6}{Action}}.
 
 Here is the call graph for this function\+:\nopagebreak
@@ -105,6 +141,17 @@ Here is the call graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{getDeltaAction()}{getDeltaAction()}}
 {\footnotesize\ttfamily double Wilson\+Gauge\+Action\+::get\+Delta\+Action (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u3}{S\+U3}}}]{U,  }\item[{\mbox{\hyperlink{class_s_u3}{S\+U3}}}]{U\+Prime }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
 
+
+
+get\+Delta\+Action computes the change in action. Staple must have already have been calculated. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em U} & Old link \\
+\hline
+{\em U\+Prime} & Updated link \\
+\hline
+\end{DoxyParams}
 
 
 Reimplemented from \mbox{\hyperlink{class_action_a9409aad86cbfe3b6ec25bf5a837eaea5}{Action}}.

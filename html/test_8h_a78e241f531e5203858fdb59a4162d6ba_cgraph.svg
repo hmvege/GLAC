@@ -68,7 +68,7 @@
 <!-- Node2 -->
 <g id="node3" class="node">
 <title>Node2</title>
-<g id="a_node3"><a xlink:href="class_parameters.html#acd6d4dcdf32d886f0148cc51d8a44c32" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_parameters.html#a272f8ebfbd305fb4a3b03db68417fc90" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="309.6348,-215.5 309.6348,-243.5 437.9053,-243.5 437.9053,-215.5 309.6348,-215.5"/>
 <text text-anchor="start" x="317.6348" y="-231.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getTaylorPol</text>
 <text text-anchor="middle" x="373.77" y="-221.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Degree</text>
@@ -100,7 +100,7 @@
 <!-- Node4 -->
 <g id="node5" class="node">
 <title>Node4</title>
-<g id="a_node5"><a xlink:href="class_parameters.html#aa8154f18548c0b745e8fee753b21b724" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_parameters.html#abd70d1df3ee0109789496fc9d21c2aef" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="306.3022,-131.5 306.3022,-149.5 441.2378,-149.5 441.2378,-131.5 306.3022,-131.5"/>
 <text text-anchor="middle" x="373.77" y="-137.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getNExpTests</text>
 </a>
@@ -115,7 +115,7 @@
 <!-- Node5 -->
 <g id="node6" class="node">
 <title>Node5</title>
-<g id="a_node6"><a xlink:href="class_parameters.html#a257f8b74dd092aa6f54aa9b717a1ab75" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_parameters.html#a492a81a7a0951b1165f500f8c0768fe1" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="302.9648,-94.5 302.9648,-112.5 444.5752,-112.5 444.5752,-94.5 302.9648,-94.5"/>
 <text text-anchor="middle" x="373.77" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getNRandTests</text>
 </a>
@@ -146,7 +146,7 @@
 <!-- Node7 -->
 <g id="node8" class="node">
 <title>Node7</title>
-<g id="a_node8"><a xlink:href="class_parameters.html#a335e87485c8d2ded45a9a97651225622" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_parameters.html#a24545a7987ec3056a6c0ad742edd9ba5" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="304.3589,-.5 304.3589,-28.5 443.1812,-28.5 443.1812,-.5 304.3589,-.5"/>
 <text text-anchor="start" x="312.3589" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getNDerivative</text>
 <text text-anchor="middle" x="373.77" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Tests</text>

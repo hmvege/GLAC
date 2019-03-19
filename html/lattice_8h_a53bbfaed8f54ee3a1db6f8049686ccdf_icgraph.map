@@ -1,7 +1,7 @@
 <map id="shift" name="shift">
 <area shape="rect" id="node1" title=" " alt="" coords="239,243,285,268"/>
-<area shape="rect" id="node2" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title=" " alt="" coords="14,5,183,44"/>
-<area shape="rect" id="node3" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title=" " alt="" coords="25,68,171,107"/>
+<area shape="rect" id="node2" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="14,5,183,44"/>
+<area shape="rect" id="node3" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="25,68,171,107"/>
 <area shape="rect" id="node4" href="$class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" title=" " alt="" coords="14,131,182,156"/>
 <area shape="rect" id="node5" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,180,191,219"/>
 <area shape="rect" id="node6" href="$class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" title=" " alt="" coords="12,243,184,268"/>

@@ -12,7 +12,7 @@
 <!-- Node8 -->
 <g id="node1" class="node">
 <title>Node8</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="getActionDerivative, computes the derivative of the lattice in given direction.">
 <polygon fill="#bfbfbf" stroke="#000000" points="118.1279,-.5 118.1279,-18.5 253.6299,-18.5 253.6299,-.5 118.1279,-.5"/>
 <text text-anchor="middle" x="185.8789" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Action::getActionDerivative</text>
 </a>

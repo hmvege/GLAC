@@ -12,7 +12,7 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="class_action.html" target="_top" xlink:title=" ">
+<g id="a_node1"><a xlink:href="class_action.html" target="_top" xlink:title="The Action class.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-18.5 0,-36.5 43.793,-36.5 43.793,-18.5 0,-18.5"/>
 <text text-anchor="middle" x="21.8965" y="-24.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Action</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="class_luscher_action.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_luscher_action.html" target="_top" xlink:title="An implementation of the Wilson gauge action,.">
 <polygon fill="#ffffff" stroke="#000000" points="92.0195,-37.5 92.0195,-55.5 171.3887,-55.5 171.3887,-37.5 92.0195,-37.5"/>
 <text text-anchor="middle" x="131.7041" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LuscherAction</text>
 </a>

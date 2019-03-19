@@ -1,3 +1,24 @@
+/**
+ * \class LuscherAction
+ *
+ * \brief An implementation of the Wilson gauge action,
+ *
+ * \f{eqnarray*}{
+ * S_G[U] = \frac{\beta}{3} \sum_{n\in\Lambda} \sum_{\mu<\nu} \mathrm{Re} \mathrm{tr} \big[ 1 - P_{\mu\nu}(n) \big].
+ * \f}
+ *
+ * The different between this and WilsonGaugeAction is that in the
+ * getActionDerivative we perform an explicit calculation of the derivative
+ * in terms of its \f$\mathrm{SU}(3)\f$ generator.
+ *
+ * \author Mathias M. Vege
+ *
+ * \date 2019/03/18
+ *
+ * Contact: mathias.vege@gmail.com
+ *
+ */
+
 #include "luscheraction.h"
 #include "config/parameters.h"
 #include "math/functions.h"
@@ -53,14 +74,13 @@ void LuscherAction::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigne
 
 Lattice<SU3> LuscherAction::getActionDerivative(Lattice<SU3> *lattice, int mu)
 {
-    /*
-     * Luschers method as presented in his paper from 2010, Properties and uses of the Wilson flow in lattice QCD.
-     *
-     * Multiply the product of this with each of the 8 T^a generators
-     * Take trace, real, and the multiply with beta/3
-     * Multiply with 8 generators T^a again, sum and return matrix
+    /*!
+     * A slightly modified version of the Action derivative
+     * Multiply the product of this with each of the 8 \f$T^a\f$ generators
+     * Take trace, real, and the multiply with \f$\beta/3\f$.
+     * Multiply with 8 generators \f$T^a\f$ again, sum and return matrix
      * Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect.
-     * See python script gellmann_matrix_multiplication.py.
+     * See python script gellmann_matrix_multiplication.py for more details.
      */
 
     // Computes the staple for current link
@@ -81,35 +101,31 @@ Lattice<SU3> LuscherAction::getActionDerivative(Lattice<SU3> *lattice, int mu)
         m_latticeStaple += m_tempStaple1;
         m_latticeStaple += shift(m_tempStaple2,BACKWARDS,nu);
     }
-
+    
     // Multiplying staple together with link
     m_latticeStaple = lattice[mu]*m_latticeStaple;
-
+    
     // Luscher method of taking derivative
-    // NOTE: can probably change this to be more vectorization friendly
     for (unsigned int iSite = 0; iSite < m_latticeStaple.m_latticeSize; iSite++) {
-        // Diagonals
         m_tempStaple2[iSite][0] = 0;
         m_tempStaple2[iSite][1] = (m_latticeStaple[iSite][9] - 2*m_latticeStaple[iSite][1] + m_latticeStaple[iSite][17])*0.3333333333333333;
-        m_tempStaple2[iSite][8] = 0;
-        m_tempStaple2[iSite][9] = (m_latticeStaple[iSite][1] - 2*m_latticeStaple[iSite][9] + m_latticeStaple[iSite][17])*0.3333333333333333;
-        m_tempStaple2[iSite][16] = 0;
-        m_tempStaple2[iSite][17] = (m_latticeStaple[iSite][1] + m_latticeStaple[iSite][9] - 2*m_latticeStaple[iSite][17])*0.3333333333333333;
-        // Upper triangular
         m_tempStaple2[iSite][2] =    0.5 * (m_latticeStaple[iSite][6]  - m_latticeStaple[iSite][2]);
         m_tempStaple2[iSite][3] =  - 0.5 * (m_latticeStaple[iSite][3]  + m_latticeStaple[iSite][7]);
         m_tempStaple2[iSite][4] =    0.5 * (m_latticeStaple[iSite][12] - m_latticeStaple[iSite][4]);
         m_tempStaple2[iSite][5] =  - 0.5 * (m_latticeStaple[iSite][5]  + m_latticeStaple[iSite][13]);
-        m_tempStaple2[iSite][10] =   0.5 * (m_latticeStaple[iSite][14] - m_latticeStaple[iSite][10]);
-        m_tempStaple2[iSite][11] = - 0.5 * (m_latticeStaple[iSite][11] + m_latticeStaple[iSite][15]);
-        // Lower triangular
         m_tempStaple2[iSite][6] = - m_tempStaple2[iSite][2];
         m_tempStaple2[iSite][7] = m_tempStaple2[iSite][3];
+        m_tempStaple2[iSite][8] = 0;
+        m_tempStaple2[iSite][9] = (m_latticeStaple[iSite][1] - 2*m_latticeStaple[iSite][9] + m_latticeStaple[iSite][17])*0.3333333333333333;
+        m_tempStaple2[iSite][10] =   0.5 * (m_latticeStaple[iSite][14] - m_latticeStaple[iSite][10]);
+        m_tempStaple2[iSite][11] = - 0.5 * (m_latticeStaple[iSite][11] + m_latticeStaple[iSite][15]);
         m_tempStaple2[iSite][12] = - m_tempStaple2[iSite][4];
         m_tempStaple2[iSite][13] = m_tempStaple2[iSite][5];
         m_tempStaple2[iSite][14] = - m_tempStaple2[iSite][10];
         m_tempStaple2[iSite][15] = m_tempStaple2[iSite][11];
+        m_tempStaple2[iSite][16] = 0;
+        m_tempStaple2[iSite][17] = (m_latticeStaple[iSite][1] + m_latticeStaple[iSite][9] - 2*m_latticeStaple[iSite][17])*0.3333333333333333;
     }
-
+    
     return m_tempStaple2;
 }

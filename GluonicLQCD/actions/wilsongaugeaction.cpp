@@ -1,3 +1,23 @@
+/**
+ * \class WilsonGaugeAction
+ *
+ * \brief An implementation of the Wilson gauge action,
+ *
+ * \f{eqnarray*}{
+ * S_G[U] = \frac{\beta}{3} \sum_{n\in\Lambda} \sum_{\mu<\nu} \mathrm{Re} \mathrm{tr} \big[ 1 - P_{\mu\nu}(n) \big].
+ * \f}
+ *
+ * The different between this and LuscherAction is that in the
+ * getActionDerivative we perform an explicit calculation of the derivative
+ * in terms of its \f$\mathrm{SU}(3)\f$ generator.
+ *
+ * \author Mathias M. Vege
+ *
+ * \date 2019/03/18
+ *
+ * Contact: mathias.vege@gmail.com
+ *
+ */
 #include "wilsongaugeaction.h"
 #include "config/parameters.h"
 #include "math/functions.h"

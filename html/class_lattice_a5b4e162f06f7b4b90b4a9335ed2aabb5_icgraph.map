@@ -22,8 +22,8 @@
 <area shape="rect" id="node7" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,91,191,129"/>
 <area shape="rect" id="node8" href="$class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" title=" " alt="" coords="15,153,181,192"/>
 <area shape="rect" id="node9" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title=" " alt="" coords="15,216,182,241"/>
-<area shape="rect" id="node12" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title=" " alt="" coords="14,427,183,465"/>
-<area shape="rect" id="node13" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title=" " alt="" coords="25,489,171,528"/>
+<area shape="rect" id="node12" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="14,427,183,465"/>
+<area shape="rect" id="node13" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="25,489,171,528"/>
 <area shape="rect" id="node14" href="$class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" title=" " alt="" coords="14,552,182,577"/>
 <area shape="rect" id="node15" href="$class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" title=" " alt="" coords="12,265,184,291"/>
 <area shape="rect" id="node16" href="$class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" title=" " alt="" coords="29,315,167,340"/>

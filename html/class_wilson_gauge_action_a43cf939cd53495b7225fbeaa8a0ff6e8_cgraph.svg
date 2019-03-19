@@ -12,7 +12,7 @@
 <!-- Node17 -->
 <g id="node1" class="node">
 <title>Node17</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="getActionDerivative, computes the derivative of the lattice in given direction.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-69.5 0,-97.5 109.3789,-97.5 109.3789,-69.5 0,-69.5"/>
 <text text-anchor="start" x="8" y="-85.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">WilsonGaugeAction::</text>
 <text text-anchor="middle" x="54.6895" y="-75.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">getActionDerivative</text>

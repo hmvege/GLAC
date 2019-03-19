@@ -36,7 +36,7 @@
 <!-- Node7 -->
 <g id="node3" class="node">
 <title>Node7</title>
-<g id="a_node3"><a xlink:href="class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" target="_top" xlink:title="getActionDerivative, computes the derivative of the lattice in given direction.">
 <polygon fill="#ffffff" stroke="#000000" points="6.3892,-336.5 6.3892,-364.5 133.0093,-364.5 133.0093,-336.5 6.3892,-336.5"/>
 <text text-anchor="start" x="14.3892" y="-352.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LuscherAction::getAction</text>
 <text text-anchor="middle" x="69.6992" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Derivative</text>
@@ -52,7 +52,7 @@
 <!-- Node8 -->
 <g id="node4" class="node">
 <title>Node8</title>
-<g id="a_node4"><a xlink:href="class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" target="_top" xlink:title="getActionDerivative, computes the derivative of the lattice in given direction.">
 <polygon fill="#ffffff" stroke="#000000" points="15.0098,-289.5 15.0098,-317.5 124.3887,-317.5 124.3887,-289.5 15.0098,-289.5"/>
 <text text-anchor="start" x="23.0098" y="-305.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">WilsonGaugeAction::</text>
 <text text-anchor="middle" x="69.6992" y="-295.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">getActionDerivative</text>

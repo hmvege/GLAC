@@ -12,7 +12,7 @@
 <!-- Node6 -->
 <g id="node1" class="node">
 <title>Node6</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="computeStaple computes the staple at given poisition.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-153.5 0,-171.5 151.6348,-171.5 151.6348,-153.5 0,-153.5"/>
 <text text-anchor="middle" x="75.8174" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LuscherAction::computeStaple</text>
 </a>
@@ -36,7 +36,7 @@
 <!-- Node8 -->
 <g id="node3" class="node">
 <title>Node8</title>
-<g id="a_node3"><a xlink:href="class_luscher_action.html#a2bfa5f9b8bfb0c4440732000d2281519" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_luscher_action.html#a2bfa5f9b8bfb0c4440732000d2281519" target="_top" xlink:title="updateMuIndex updates the m_muIndex based on mu.">
 <polygon fill="#ffffff" stroke="#000000" points="187.6348,-254.5 187.6348,-272.5 341.501,-272.5 341.501,-254.5 187.6348,-254.5"/>
 <text text-anchor="middle" x="264.5679" y="-260.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LuscherAction::updateMuIndex</text>
 </a>
@@ -51,7 +51,7 @@
 <!-- Node9 -->
 <g id="node4" class="node">
 <title>Node9</title>
-<g id="a_node4"><a xlink:href="class_luscher_action.html#a6496c97ed38401c0d94855bf940fd6ff" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_luscher_action.html#a6496c97ed38401c0d94855bf940fd6ff" target="_top" xlink:title="updateNuIndex updates the m_nuIndex based on nu.">
 <polygon fill="#ffffff" stroke="#000000" points="188.189,-217.5 188.189,-235.5 340.9468,-235.5 340.9468,-217.5 188.189,-217.5"/>
 <text text-anchor="middle" x="264.5679" y="-223.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LuscherAction::updateNuIndex</text>
 </a>

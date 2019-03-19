@@ -2,6 +2,11 @@
 \label{class_luscher_action}\index{LuscherAction@{LuscherAction}}
 
 
+An implementation of the Wilson gauge action,.  
+
+
+
+
 {\ttfamily \#include $<$luscheraction.\+h$>$}
 
 
@@ -30,17 +35,32 @@ Collaboration diagram for Luscher\+Action\+:\nopagebreak
 \mbox{\hyperlink{class_luscher_action_a3b4de167f04479da56fd4aa1e7fe0bbb}{$\sim$\+Luscher\+Action}} ()
 \item 
 double \mbox{\hyperlink{class_luscher_action_a1955f8eea8b0771f6c737c39e3fc11b2}{get\+Delta\+Action}} (\mbox{\hyperlink{class_s_u3}{S\+U3}} U, \mbox{\hyperlink{class_s_u3}{S\+U3}} U\+Prime)
-\item 
+\begin{DoxyCompactList}\small\item\em get\+Delta\+Action computes the change in action. Staple must have already have been calculated. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_luscher_action_a42285b6e3015935588e1fab6b90c1a11}{compute\+Staple}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
-\item 
+\begin{DoxyCompactList}\small\item\em compute\+Staple computes the staple at given poisition. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \mbox{\hyperlink{class_luscher_action_ac11785b2df276816a098a87e6ac514c7}{get\+Action\+Derivative}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, int mu)
-\item 
+\begin{DoxyCompactList}\small\item\em get\+Action\+Derivative, computes the derivative of the lattice in given direction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_luscher_action_a2bfa5f9b8bfb0c4440732000d2281519}{update\+Mu\+Index}} (int mu)
-\item 
+\begin{DoxyCompactList}\small\item\em update\+Mu\+Index updates the m\+\_\+mu\+Index based on mu. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_luscher_action_a6496c97ed38401c0d94855bf940fd6ff}{update\+Nu\+Index}} (int nu)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em update\+Nu\+Index updates the m\+\_\+nu\+Index based on nu. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
 
+
+\subsection{Detailed Description}
+An implementation of the Wilson gauge action,. 
+
+\begin{eqnarray*} S_G[U] = \frac{\beta}{3} \sum_{n\in\Lambda} \sum_{\mu<\nu} \mathrm{Re} \mathrm{tr} \big[ 1 - P_{\mu\nu}(n) \big]. \end{eqnarray*}
+
+The different between this and \mbox{\hyperlink{class_wilson_gauge_action}{Wilson\+Gauge\+Action}} is that in the get\+Action\+Derivative we perform an explicit calculation of the derivative in terms of its $\mathrm{SU}(3)$ generator.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019/03/18
+\end{DoxyDate}
+Contact\+: \href{mailto:mathias.vege@gmail.com}{\texttt{ mathias.\+vege@gmail.\+com}} 
 
 \subsection{Constructor \& Destructor Documentation}
 \mbox{\Hypertarget{class_luscher_action_a2389aab5b35b4c5ccb0ae5a45f68430b}\label{class_luscher_action_a2389aab5b35b4c5ccb0ae5a45f68430b}} 
@@ -73,6 +93,28 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
+compute\+Staple computes the staple at given poisition. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & a pointer of four lattice objects, one for each lorentz index. \\
+\hline
+{\em i} & spatial $x$ position. \\
+\hline
+{\em j} & spatial $y$ position. \\
+\hline
+{\em k} & spatial $z$ position. \\
+\hline
+{\em l} & temporal $t$ position. \\
+\hline
+{\em mu} & lorentz index, $\mu$. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns change in action $\Delta S$ 
+\end{DoxyReturn}
+
+
 Reimplemented from \mbox{\hyperlink{class_action_a2d5a64b47a8913955e5911ca072ff80d}{Action}}.
 
 Here is the call graph for this function\+:\nopagebreak
@@ -89,6 +131,26 @@ Here is the call graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ Luscher\+Action\+::get\+Action\+Derivative (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{int}]{mu }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
 
 
+
+get\+Action\+Derivative, computes the derivative of the lattice in given direction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & a pointer of four lattice objects, one for each lorentz index. \\
+\hline
+{\em mu} & lorentz index, $\mu$. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+Luschers method as presented in his paper from 2010, Properties and uses of the Wilson flow in lattice Q\+CD.
+
+Multiply the product of this with each of the 8 T$^\wedge$a generators Take trace, real, and the multiply with beta/3 Multiply with 8 generators T$^\wedge$a again, sum and return matrix Can multiply the return matrix exactly instead of doing the 8 matrix multiplications and sums ect. See python script gellmann\+\_\+matrix\+\_\+multiplication.\+py for more details.
+
+Multiplying staple together with link
+
+Luscher method of taking derivative N\+O\+TE\+: can probably change this to be more vectorization friendly 
 
 Reimplemented from \mbox{\hyperlink{class_action_a78168dd7c3819a3365e28fc1aae1b9b6}{Action}}.
 
@@ -107,6 +169,17 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
+get\+Delta\+Action computes the change in action. Staple must have already have been calculated. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em U} & Old link \\
+\hline
+{\em U\+Prime} & Updated link \\
+\hline
+\end{DoxyParams}
+
+
 Reimplemented from \mbox{\hyperlink{class_action_a9409aad86cbfe3b6ec25bf5a837eaea5}{Action}}.
 
 Here is the call graph for this function\+:\nopagebreak
@@ -122,6 +195,15 @@ Here is the call graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{updateMuIndex()}{updateMuIndex()}}
 {\footnotesize\ttfamily void Luscher\+Action\+::update\+Mu\+Index (\begin{DoxyParamCaption}\item[{int}]{mu }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+update\+Mu\+Index updates the m\+\_\+mu\+Index based on mu. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mu} & direction which will be set to 1. All others set to zero. \\
+\hline
+\end{DoxyParams}
 Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
@@ -135,6 +217,15 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{updateNuIndex()}{updateNuIndex()}}
 {\footnotesize\ttfamily void Luscher\+Action\+::update\+Nu\+Index (\begin{DoxyParamCaption}\item[{int}]{nu }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+update\+Nu\+Index updates the m\+\_\+nu\+Index based on nu. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em nu} & direction which will be set to 1. All others set to zero. \\
+\hline
+\end{DoxyParams}
 Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
