@@ -1,3 +1,15 @@
+/*!
+ * \class Action
+ *
+ * \brief The Action class
+ *
+ * The base action class for all other actions to be derived upon.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef ACTION_H
 #define ACTION_H
 
@@ -6,12 +18,6 @@
 
 using std::cout;
 using std::endl;
-
-/*!
- * \brief The Action class
- *
- * The base action class for all other actions to be derived upon.
- */
 
 class Action
 {

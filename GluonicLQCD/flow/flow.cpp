@@ -2,10 +2,10 @@
 #include "parallelization/index.h"
 #include "config/parameters.h"
 
-/*
- * A class for performing Wilson flow on a gauge field configuration.
+/*!
+ * \brief Flow::Flow
+ * \param S
  */
-
 Flow::Flow(Action *S)
 {
     m_N = Parameters::getN();

@@ -1,6 +1,6 @@
 <map id="Parallel::Communicator::getNumProc" name="Parallel::Communicator::getNumProc">
 <area shape="rect" id="node1" title=" " alt="" coords="658,263,818,301"/>
-<area shape="rect" id="node2" href="$namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" title=" " alt="" coords="159,52,293,77"/>
+<area shape="rect" id="node2" href="$namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" title="load" alt="" coords="159,52,293,77"/>
 <area shape="rect" id="node4" href="$class_parameters.html#ace3967a0ee49901f55e9de69e0a96117" title=" " alt="" coords="399,52,607,77"/>
 <area shape="rect" id="node5" href="$class_sys_print.html#a4572572643f6f4685081a3ae419e5ca9" title=" " alt="" coords="418,101,589,127"/>
 <area shape="rect" id="node7" href="$class_i_o_1_1_field_i_o.html#a44dc4aa1786974c091082c5b37be73a1" title=" " alt="" coords="410,151,596,176"/>

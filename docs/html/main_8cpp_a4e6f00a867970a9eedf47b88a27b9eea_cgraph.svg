@@ -37,7 +37,7 @@
 <!-- Node2 -->
 <g id="node3" class="node">
 <title>Node2</title>
-<g id="a_node3"><a xlink:href="namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" target="_top" xlink:title="load">
 <polygon fill="#ffffff" stroke="#ff0000" points="95.6157,-899.5 95.6157,-917.5 196.1226,-917.5 196.1226,-899.5 95.6157,-899.5"/>
 <text text-anchor="middle" x="145.8691" y="-905.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ConfigLoader::load</text>
 </a>

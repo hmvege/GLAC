@@ -9,6 +9,9 @@ SysPrint::SysPrint()
 {
 }
 
+/*!
+ * \brief SysPrint::printLine prints a simple line for seperating outputs.
+ */
 void SysPrint::printLine()
 {
     for (int i = 0; i < 100; i++) cout << "=";
@@ -33,6 +36,9 @@ std::string SysPrint::getTrueOrFalseString(bool i)
     }
 }
 
+/*!
+ * \brief SysPrint::printSystemInfo prints out parametesr from Parallel:Communicator and Parameters.
+ */
 void SysPrint::printSystemInfo()
 {
     /*

@@ -1,7 +1,7 @@
 <map id="main" name="main">
 <area shape="rect" id="node1" title=" " alt="" coords="5,1935,56,1960"/>
 <area shape="rect" id="node2" href="$class_parallel_1_1_communicator.html#adc9248c5a0defbbf55bfca988bfd9e96" title=" " alt="" coords="120,949,280,988"/>
-<area shape="rect" id="node3" href="$namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" title=" " alt="" coords="133,1012,267,1037"/>
+<area shape="rect" id="node3" href="$namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" title="load" alt="" coords="133,1012,267,1037"/>
 <area shape="rect" id="node42" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="382,2053,541,2092"/>
 <area shape="rect" id="node43" href="$main_8cpp.html#adc55d66d01b104380f72a64f36c4cb9d" title=" " alt="" coords="152,1836,248,1861"/>
 <area shape="rect" id="node44" href="$class_parameters.html#a785042104e5f47f11d625ec346853174" title=" " alt="" coords="109,1885,291,1911"/>

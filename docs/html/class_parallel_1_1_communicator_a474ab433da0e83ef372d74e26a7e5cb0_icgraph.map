@@ -1,6 +1,6 @@
 <map id="Parallel::Communicator::getProcessRank" name="Parallel::Communicator::getProcessRank">
 <area shape="rect" id="node1" title=" " alt="" coords="857,566,1017,605"/>
-<area shape="rect" id="node2" href="$namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" title=" " alt="" coords="346,126,480,151"/>
+<area shape="rect" id="node2" href="$namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" title="load" alt="" coords="346,126,480,151"/>
 <area shape="rect" id="node3" href="$main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" title=" " alt="" coords="103,126,153,151"/>
 <area shape="rect" id="node4" href="$class_parameters.html#ace3967a0ee49901f55e9de69e0a96117" title=" " alt="" coords="589,126,797,151"/>
 <area shape="rect" id="node5" href="$class_parameters.html#a46615f8286bd7363ab1f09074fdc6940" title=" " alt="" coords="576,175,809,201"/>

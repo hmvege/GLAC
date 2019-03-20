@@ -1,3 +1,15 @@
+/*!
+ * \class Flow
+ *
+ * \brief Class for applying gradient flow on lattice.
+ *
+ * Performs one step with gradient flow on the lattice.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef FLOW_H
 #define FLOW_H
 

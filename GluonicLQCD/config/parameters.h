@@ -1,3 +1,15 @@
+/*!
+ * \class Parameters
+ *
+ * \brief Parameter holding class.
+ *
+ * Holds all of the parameters passed on from the json file. Stores parameters as static, thus being accessible from everywhere.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 

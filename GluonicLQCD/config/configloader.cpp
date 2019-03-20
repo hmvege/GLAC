@@ -31,6 +31,12 @@ namespace ConfigLoader {
         }
     }
 
+    /*!
+     * \brief load
+     * \param jsonFileName name of the json file to load parameters from.
+     *
+     * Method for loading json files.
+     */
     void  load(std::string jsonFileName)
     {
         std::ifstream i(jsonFileName.c_str());
