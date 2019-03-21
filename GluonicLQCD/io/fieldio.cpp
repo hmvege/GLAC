@@ -182,7 +182,7 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned int 
 /*!
  * \brief IO::FieldIO::loadFieldConfiguration loads a regular configuration into memory.
  * \param filename
- * \param lattice
+ * \param lattice is a pointer of four lattice objects, one for each Lorentz index, that will filled with the configuration read from file.
  *
  * If debug is true in the passed .json parameter file, it will perform a check for lattice corruption.
  */
@@ -238,7 +238,7 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
 /*!
  * \brief IO::FieldIO::loadChromaFieldConfiguration loads a configuration from Chroma into memory.
  * \param filename
- * \param lattice
+ * \param lattice is a pointer of four lattice objects, one for each Lorentz index, that will filled with the configuration read from file.
  *
  * If debug is true in the passed .json parameter file, it will perform a check for lattice corruption.
  */

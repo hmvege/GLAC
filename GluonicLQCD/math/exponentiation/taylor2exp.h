@@ -1,3 +1,15 @@
+/*!
+ * \class Taylor2Exp
+ *
+ * \brief Taylor expansion of second order.
+ *
+ * \todo remove this method, and instead use taylorExp.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef TAYLOR2EXP_H
 #define TAYLOR2EXP_H
 

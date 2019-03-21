@@ -1,3 +1,15 @@
+/*!
+ * \class SU3Exp
+ *
+ * \brief SU3 matrix exponentiation method that uses the method from https://journals.aps.org/prd/abstract/10.1103/PhysRevD.69.054501
+ *
+ * Also serves as base class for the other exponentiation methods.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef SU3EXP_H
 #define SU3EXP_H
 

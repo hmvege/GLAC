@@ -6,6 +6,26 @@
 #include <iomanip>
 #include <vector>
 
+/*!
+ * \brief IO::writeObservablesToFile method for writing an observable to file, using .15 precision.
+ * \param acceptanceRate acceptance rate from the Metropolis algorithm.
+ * \param averagedObservable the average of the observable.
+ * \param varianceObservable the variance of the observable.
+ * \param stdObservable the standard deviation of the observable.
+ * \param observables vector of doubles containing the observable.
+ * \param NObs the number of configurations, i.e. observables, to be written to file.
+ * \param observableName name of the observable. Topological charge, plaquette, energy ect.
+ *
+ * The top 8 rows contains,
+ * - beta,
+ * - acceptance rate,
+ * - number of correlation updates used,
+ * - number of configurations,
+ * - number of thermalization steps,
+ * - the average of the observable,
+ * - the variance of the observable,
+ * - the standard deviation of the observable,
+ */
 void IO::writeObservablesToFile(double acceptanceRate,
                                 double averagedObservable,
                                 double varianceObservable,
@@ -44,6 +64,18 @@ void IO::writeObservablesToFile(double acceptanceRate,
     }
 }
 
+/*!
+ * \brief IO::writeFlowObservableToFile method for writing a flow observable to file, using .15 precision.
+ * \param observables a vector of observables.
+ * \param observableName observable name.
+ * \param configNumber the configuration number.
+ *
+ * Top 3 rows of the output file will contain,
+ * - beta,
+ * - NFlows,
+ * - FlowEpsilon,
+ * with the rest containing the flowed observable.
+ */
 void IO::writeFlowObservableToFile(std::vector<double> observables,
                                    std::string observableName,
                                    unsigned int configNumber)
@@ -90,6 +122,19 @@ void IO::writeFlowObservableToFile(std::vector<double> observables,
     }
 }
 
+/*!
+ * \brief IO::writeMatrixToFile writes out a matrix of observables to file, i.e. the topological charge in Euclidean time. Uses a .15 precision.
+ * \param observables the observables in a vector of doubles.
+ * \param observableName the name of the observable.
+ * \param configNumber the configuration number.
+ * \param N the number of columns in the matrix of observables. The number of rows in the matrix is the number of flow steps, NFlows, retrieved from Parameters::getNFlows().
+ *
+ * Top 3 rows of the output file will contain,
+ * - beta,
+ * - NFlows,
+ * - FlowEpsilon,
+ * with the rest containing the flowed observable.
+ */
 void IO::writeMatrixToFile(std::vector<double> observables, std::string observableName, unsigned int configNumber, unsigned int N)
 {
     /*

@@ -1,3 +1,13 @@
+/*!
+ * \class ExpLuscher
+ *
+ * \brief Uses method for exponentiating SU3 matrix found in Appendix A in https://arxiv.org/abs/hep-lat/0409106
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef EXPLUSCHER_H
 #define EXPLUSCHER_H
 

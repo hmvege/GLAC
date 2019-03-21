@@ -45,6 +45,7 @@ void PerformanceTests::run()
         testExponentiationTime(Parameters::getNExpTests());
         testExponentiationAccuracy();
         testRandomGenerators(Parameters::getNRandTests());
+        testMatrixMultiplication();
     }
     Parallel::Communicator::setBarrierActive();
     testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
@@ -369,4 +370,36 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
     delete [] testLattice;
     delete [] LuscherLattice;
     delete [] MorningstarLattice;
+}
+
+void PerformanceTests::testMatrixMultiplication()
+{
+    unsigned int NTests = 100000000;
+
+    printf("\n\nRunning timing of SU3 matrix multiplication for %d tests",NTests);
+
+    SU3 V0, V1, V2;
+    SU3 V0Orig, V1Orig;
+
+    // Timers
+    double timer = 0;
+    steady_clock::time_point preUpdate;
+
+    V0 = m_SU3Generator->generateRandom();
+    V1 = m_SU3Generator->generateRandom();
+
+    V0Orig = V0;
+    V1Orig = V1;
+
+    preUpdate = steady_clock::now();
+
+    for (unsigned int i = 0; i < NTests; ++i) {
+        V0 = V0Orig;
+        V1 = V1Orig;
+        V2 = V1*V0;
+    }
+
+    timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
+
+    printf("\nMatrix multiplication tests:  %8.4f seconds (%8.4E seconds per test)",timer,timer/double(NTests));
 }

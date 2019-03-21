@@ -25,6 +25,9 @@ private:
 
     // Tests for the SU3 derivative
     void testDerivativeTimeAndAccuracy(unsigned int NTests);
+
+    // Tests for the SU3 matrix multiplication
+    void testMatrixMultiplication();
 public:
     PerformanceTests();
     ~PerformanceTests();

@@ -5,6 +5,11 @@ ExpLuscher::ExpLuscher()
 
 }
 
+/*!
+ * \brief ExpLuscher::exp method for exponentiation, found in paper appendix A, https://arxiv.org/abs/hep-lat/0409106
+ * \param Q matrix to exponentiate.
+ * \return The exponentiated SU3 Q matrix.
+ */
 SU3 ExpLuscher::exp(SU3 Q)
 {
     /*

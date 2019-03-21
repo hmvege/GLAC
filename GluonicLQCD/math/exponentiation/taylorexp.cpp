@@ -29,6 +29,12 @@ SU3 TaylorExp::exp(SU3 Q)
     return m_QSum;
 }
 
+/*!
+ * \brief TaylorExp::setTaylorDegree
+ * \param N taylor polynomial degree.
+ *
+ * Sets the taylor polynomial degree.
+ */
 void TaylorExp::setTaylorDegree(unsigned int N) {
     m_N = N;
     m_QMul.identity();

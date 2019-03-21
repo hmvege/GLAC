@@ -1,3 +1,13 @@
+/*!
+ * \class TaylorExp
+ *
+ * \brief uses a general Taylor polynomial to approximate the exponentiation of a SU(3) matrix.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef TAYLOREXP_H
 #define TAYLOREXP_H
 

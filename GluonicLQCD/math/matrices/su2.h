@@ -1,3 +1,15 @@
+/*!
+ * \class SU2
+ *
+ * \brief Class for holding \f$\mathrm{SU}(2)\f$ matrices.
+ *
+ * Operations have been overloaded for ease of use.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef SU2_H
 #define SU2_H
 
@@ -137,6 +149,10 @@ inline SU2 &SU2::operator*=(double b)
 //// SU2 specific functions ///
 ///////////////////////////////
 
+/*!
+ * \brief SU2::inv
+ * \return the inverse of itself.
+ */
 inline SU2 SU2::inv()
 {
     SU2 R;

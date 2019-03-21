@@ -2,6 +2,11 @@
 #include <iostream>
 #include <cmath>
 
+/*!
+ * \brief SU2::setComplex
+ * \param w complex number
+ * \param i matrix position(contigious) to set w as.
+ */
 void SU2::setComplex(complex w, int i)
 {
     mat[i] = w.z[0];

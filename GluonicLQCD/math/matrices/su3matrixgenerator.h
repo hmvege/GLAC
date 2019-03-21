@@ -1,3 +1,13 @@
+/*!
+ * \class
+ *
+ * \brief
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef SU3MATRIXGENERATOR_H
 #define SU3MATRIXGENERATOR_H
 
