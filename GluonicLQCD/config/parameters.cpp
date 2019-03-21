@@ -134,12 +134,24 @@ void Parameters::setNTemporal(unsigned int NTemporal)
     m_latticeSize *= NTemporal;
 }
 
+/*!
+ * \brief Parameters::setMetropolisSeed set a seed for the Metropolis algorithm.
+ * \param metropolisSeed
+ *
+ * Will ensure a different seed is used for each processor.
+ */
 void Parameters::setMetropolisSeed(double metropolisSeed)
 {
         metropolisSeed += double(Parallel::Communicator::getNumProc()) + double(Parallel::Communicator::getProcessRank());
         m_metropolisSeed = metropolisSeed;
 }
 
+/*!
+ * \brief Parameters::setRandomMatrixSeed set a seed for the random matrix generation(both RST and random methods).
+ * \param randomMatrixSeed
+ *
+ * Will ensure a different seed is used for each processor.
+ */
 void Parameters::setRandomMatrixSeed(double randomMatrixSeed)
 {
     randomMatrixSeed += double(Parallel::Communicator::getProcessRank());

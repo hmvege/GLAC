@@ -40,9 +40,9 @@
 <area shape="rect" id="node39" href="$class_parameters.html#afba800600f057fa6ed8fb317add0af30" title=" " alt="" coords="213,1991,397,2029"/>
 <area shape="rect" id="node40" href="$class_parameters.html#af882fdb68c96c27f1bb99cebe3aecd21" title=" " alt="" coords="223,2053,387,2079"/>
 <area shape="rect" id="node41" href="$class_parameters.html#a9114804031d3c9342f590ce223a8b5a7" title=" " alt="" coords="211,2103,398,2128"/>
-<area shape="rect" id="node42" href="$class_parameters.html#ace3967a0ee49901f55e9de69e0a96117" title=" " alt="" coords="201,2204,409,2229"/>
+<area shape="rect" id="node42" href="$class_parameters.html#ace3967a0ee49901f55e9de69e0a96117" title="Parameters::setMetropolisSeed set a seed for the Metropolis algorithm." alt="" coords="201,2204,409,2229"/>
 <area shape="rect" id="node43" href="$class_parallel_1_1_communicator.html#a7b1f80fb49a0cc83f2031c3415174150" title=" " alt="" coords="470,2167,630,2205"/>
 <area shape="rect" id="node44" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="470,2248,630,2287"/>
-<area shape="rect" id="node45" href="$class_parameters.html#a46615f8286bd7363ab1f09074fdc6940" title=" " alt="" coords="188,2305,421,2331"/>
+<area shape="rect" id="node45" href="$class_parameters.html#a46615f8286bd7363ab1f09074fdc6940" title="Parameters::setRandomMatrixSeed set a seed for the random matrix generation(both RST and random metho..." alt="" coords="188,2305,421,2331"/>
 <area shape="rect" id="node46" href="$class_parameters.html#ae9fa4bf77247404758c43179849ae3bf" title=" " alt="" coords="188,2355,422,2380"/>
 </map>

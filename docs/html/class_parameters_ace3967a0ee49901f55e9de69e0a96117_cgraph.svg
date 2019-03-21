@@ -12,7 +12,7 @@
 <!-- Node432 -->
 <g id="node1" class="node">
 <title>Node432</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Parameters::setMetropolisSeed set a seed for the Metropolis algorithm.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-28.5 0,-46.5 156.0635,-46.5 156.0635,-28.5 0,-28.5"/>
 <text text-anchor="middle" x="78.0317" y="-34.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setMetropolisSeed</text>
 </a>

@@ -52,7 +52,7 @@
 <!-- Node83 -->
 <g id="node4" class="node">
 <title>Node83</title>
-<g id="a_node4"><a xlink:href="class_parameters.html#ace3967a0ee49901f55e9de69e0a96117" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_parameters.html#ace3967a0ee49901f55e9de69e0a96117" target="_top" xlink:title="Parameters::setMetropolisSeed set a seed for the Metropolis algorithm.">
 <polygon fill="#ffffff" stroke="#000000" points="437.4644,-773.5 437.4644,-791.5 593.5278,-791.5 593.5278,-773.5 437.4644,-773.5"/>
 <text text-anchor="middle" x="515.4961" y="-779.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setMetropolisSeed</text>
 </a>
@@ -67,7 +67,7 @@
 <!-- Node84 -->
 <g id="node5" class="node">
 <title>Node84</title>
-<g id="a_node5"><a xlink:href="class_parameters.html#a46615f8286bd7363ab1f09074fdc6940" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_parameters.html#a46615f8286bd7363ab1f09074fdc6940" target="_top" xlink:title="Parameters::setRandomMatrixSeed set a seed for the random matrix generation(both RST and random metho...">
 <polygon fill="#ffffff" stroke="#000000" points="428.0186,-736.5 428.0186,-754.5 602.9736,-754.5 602.9736,-736.5 428.0186,-736.5"/>
 <text text-anchor="middle" x="515.4961" y="-742.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setRandomMatrixSeed</text>
 </a>
@@ -82,7 +82,7 @@
 <!-- Node85 -->
 <g id="node6" class="node">
 <title>Node85</title>
-<g id="a_node6"><a xlink:href="class_sys_print.html#a4572572643f6f4685081a3ae419e5ca9" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_sys_print.html#a4572572643f6f4685081a3ae419e5ca9" target="_top" xlink:title="SysPrint::printSystemInfo prints out parametesr from Parallel:Communicator and Parameters.">
 <polygon fill="#ffffff" stroke="#000000" points="451.3657,-699.5 451.3657,-717.5 579.6265,-717.5 579.6265,-699.5 451.3657,-699.5"/>
 <text text-anchor="middle" x="515.4961" y="-705.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SysPrint::printSystemInfo</text>
 </a>
@@ -97,7 +97,7 @@
 <!-- Node87 -->
 <g id="node8" class="node">
 <title>Node87</title>
-<g id="a_node8"><a xlink:href="class_i_o_1_1_field_i_o.html#a44dc4aa1786974c091082c5b37be73a1" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_i_o_1_1_field_i_o.html#a8af607f9a1d79e90d4514c36103c6601" target="_top" xlink:title="IO::FieldIO::writeFieldToFile writes a lattice of SU3 matrix objects to file.">
 <polygon fill="#ffffff" stroke="#000000" points="445.814,-662.5 445.814,-680.5 585.1782,-680.5 585.1782,-662.5 445.814,-662.5"/>
 <text text-anchor="middle" x="515.4961" y="-668.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::writeFieldToFile</text>
 </a>
@@ -112,7 +112,7 @@
 <!-- Node88 -->
 <g id="node9" class="node">
 <title>Node88</title>
-<g id="a_node9"><a xlink:href="class_i_o_1_1_field_i_o.html#a4bfe0fd7890fe69b88fbbe3864fd00ae" target="_top" xlink:title=" ">
+<g id="a_node9"><a xlink:href="class_i_o_1_1_field_i_o.html#aaf2bac2025d67c06e7c61e8cc9f44777" target="_top" xlink:title="IO::FieldIO::writeDoublesFieldToFile writes a lattice of doubles to file.">
 <polygon fill="#ffffff" stroke="#000000" points="451.644,-615.5 451.644,-643.5 579.3481,-643.5 579.3481,-615.5 451.644,-615.5"/>
 <text text-anchor="start" x="459.644" y="-631.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::writeDoubles</text>
 <text text-anchor="middle" x="515.4961" y="-621.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">FieldToFile</text>
@@ -128,7 +128,7 @@
 <!-- Node90 -->
 <g id="node11" class="node">
 <title>Node90</title>
-<g id="a_node11"><a xlink:href="class_i_o_1_1_field_i_o.html#afdd7f357ed71f7ff3ab1b5be987a51b5" target="_top" xlink:title=" ">
+<g id="a_node11"><a xlink:href="class_i_o_1_1_field_i_o.html#a02db864a48601edd7febaab5d655e495" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="430.5137,-578.5 430.5137,-596.5 600.4785,-596.5 600.4785,-578.5 430.5137,-578.5"/>
 <text text-anchor="middle" x="515.4961" y="-584.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::loadFieldConfiguration</text>
 </a>
@@ -143,7 +143,7 @@
 <!-- Node91 -->
 <g id="node12" class="node">
 <title>Node91</title>
-<g id="a_node12"><a xlink:href="class_i_o_1_1_field_i_o.html#a8d6ea988658b107eca71c858d3816c99" target="_top" xlink:title=" ">
+<g id="a_node12"><a xlink:href="class_i_o_1_1_field_i_o.html#af23fb6e02a6bd1cafd5be4acacbf848e" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="442.4717,-531.5 442.4717,-559.5 588.5205,-559.5 588.5205,-531.5 442.4717,-531.5"/>
 <text text-anchor="start" x="450.4717" y="-547.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::loadChromaField</text>
 <text text-anchor="middle" x="515.4961" y="-537.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Configuration</text>

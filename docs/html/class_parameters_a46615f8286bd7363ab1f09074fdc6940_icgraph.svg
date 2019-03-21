@@ -12,7 +12,7 @@
 <!-- Node500 -->
 <g id="node1" class="node">
 <title>Node500</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Parameters::setRandomMatrixSeed set a seed for the random matrix generation(both RST and random metho...">
 <polygon fill="#bfbfbf" stroke="#000000" points="210.1816,-.5 210.1816,-18.5 385.1367,-18.5 385.1367,-.5 210.1816,-.5"/>
 <text text-anchor="middle" x="297.6592" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setRandomMatrixSeed</text>
 </a>

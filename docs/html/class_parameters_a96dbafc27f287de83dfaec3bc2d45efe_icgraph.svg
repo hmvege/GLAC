@@ -21,7 +21,7 @@
 <!-- Node99 -->
 <g id="node2" class="node">
 <title>Node99</title>
-<g id="a_node2"><a xlink:href="class_flow.html#a25ae85599c0ae330374f0840efde7ebc" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_flow.html#a25ae85599c0ae330374f0840efde7ebc" target="_top" xlink:title="Flow::Flow.">
 <polygon fill="#ffffff" stroke="#000000" points="446.0752,-244.5 446.0752,-262.5 509.8584,-262.5 509.8584,-244.5 446.0752,-244.5"/>
 <text text-anchor="middle" x="477.9668" y="-250.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Flow::Flow</text>
 </a>

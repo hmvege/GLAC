@@ -1,3 +1,13 @@
+/*!
+ * \class FieldIO
+ *
+ * \brief Class for reading and writing lattice to file.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef FIELDIO_H
 #define FIELDIO_H
 

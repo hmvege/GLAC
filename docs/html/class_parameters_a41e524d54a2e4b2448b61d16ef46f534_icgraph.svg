@@ -36,7 +36,7 @@
 <!-- Node157 -->
 <g id="node3" class="node">
 <title>Node157</title>
-<g id="a_node3"><a xlink:href="class_flow.html#a25ae85599c0ae330374f0840efde7ebc" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_flow.html#a25ae85599c0ae330374f0840efde7ebc" target="_top" xlink:title="Flow::Flow.">
 <polygon fill="#ffffff" stroke="#000000" points="163.167,-113.5 163.167,-131.5 226.9502,-131.5 226.9502,-113.5 163.167,-113.5"/>
 <text text-anchor="middle" x="195.0586" y="-119.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Flow::Flow</text>
 </a>
@@ -51,7 +51,7 @@
 <!-- Node158 -->
 <g id="node4" class="node">
 <title>Node158</title>
-<g id="a_node4"><a xlink:href="class_i_o_1_1_field_i_o.html#ae01182be89137153bf043f9a34258601" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_i_o_1_1_field_i_o.html#a9093930584128c73a63fe8015bff9b38" target="_top" xlink:title="IO::FieldIO::init updates the lattice dimensions.">
 <polygon fill="#ffffff" stroke="#000000" points="153.7163,-76.5 153.7163,-94.5 236.4009,-94.5 236.4009,-76.5 153.7163,-76.5"/>
 <text text-anchor="middle" x="195.0586" y="-82.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::init</text>
 </a>

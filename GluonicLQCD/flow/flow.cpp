@@ -4,7 +4,12 @@
 
 /*!
  * \brief Flow::Flow
- * \param S
+ * \param S sets an action.
+ *
+ * Sets the lattice sizes, flow epsilon, sub lattice size parameters.
+ * Allocates a temporary lattice for the flowing procedure.
+ * Sets a up a temporary lattice for exponentiation.
+ * Initiates the method for the SU3 exponential function.
  */
 Flow::Flow(Action *S)
 {
@@ -20,12 +25,21 @@ Flow::Flow(Action *S)
     setSU3ExpFunc();
 }
 
+/*!
+ * \brief Flow::~Flow
+ *
+ * De-allocates the temporary lattice used in the Flow::flowField method, and de-allocates the SU3 exponential class.
+ */
 Flow::~Flow()
 {
     delete m_SU3ExpFunc;
     delete [] m_tempLattice;
 }
 
+/*!
+ * \brief Flow::flowField method for flowing the lattice one step ahead.
+ * \param lattice a pointer of 4 lattices of SU3 matrices, one for each Lorentz index.
+ */
 void Flow::flowField(Lattice<SU3> *lattice)
 {
     /*
@@ -80,6 +94,9 @@ void Flow::setSU3ExpFunc()
 
 inline Lattice<SU3> Flow::matrixExp(const Lattice<SU3> &lattice)
 {
+    /*
+     * Move semantic method for exponentiating the lattice, using reference.
+     */
     for (unsigned long iSite = 0; iSite < lattice.m_latticeSize; iSite++) {
         m_tempExpLattice.m_sites[iSite] = m_SU3ExpFunc->exp(lattice.m_sites[iSite]);
     }
@@ -88,6 +105,9 @@ inline Lattice<SU3> Flow::matrixExp(const Lattice<SU3> &lattice)
 
 inline Lattice<SU3> Flow::matrixExp(Lattice<SU3> &&lattice)
 {
+    /*
+     * Move semantic method for exponentiating the lattice, using rvalue.
+     */
     for (unsigned long iSite = 0; iSite < lattice.m_latticeSize; iSite++) {
         m_tempExpLattice.m_sites[iSite] = m_SU3ExpFunc->exp(lattice.m_sites[iSite]);
     }

@@ -1,4 +1,4 @@
 <map id="Action::getActionDerivative" name="Action::getActionDerivative">
 <area shape="rect" id="node1" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="163,5,344,31"/>
-<area shape="rect" id="node2" href="$class_flow.html#a284b490ddedc9cf5d0f2ab0660c328f6" title=" " alt="" coords="5,5,115,31"/>
+<area shape="rect" id="node2" href="$class_flow.html#a284b490ddedc9cf5d0f2ab0660c328f6" title="Flow::flowField method for flowing the lattice one step ahead." alt="" coords="5,5,115,31"/>
 </map>

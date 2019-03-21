@@ -7,7 +7,7 @@ var searchData=
   ['index',['Index',['../class_parallel_1_1_index.html',1,'Parallel::Index'],['../class_parallel_1_1_index.html#a5fbbb71f34413a7e99b8d748dd81c317',1,'Parallel::Index::Index()']]],
   ['index_2ecpp',['index.cpp',['../index_8cpp.html',1,'']]],
   ['index_2eh',['index.h',['../index_8h.html',1,'']]],
-  ['init',['init',['../class_i_o_1_1_field_i_o.html#ae01182be89137153bf043f9a34258601',1,'IO::FieldIO::init()'],['../class_parallel_1_1_communicator.html#adc9248c5a0defbbf55bfca988bfd9e96',1,'Parallel::Communicator::init()']]],
+  ['init',['init',['../class_i_o_1_1_field_i_o.html#a9093930584128c73a63fe8015bff9b38',1,'IO::FieldIO::init()'],['../class_parallel_1_1_communicator.html#adc9248c5a0defbbf55bfca988bfd9e96',1,'Parallel::Communicator::init()']]],
   ['initialize',['initialize',['../class_parallel_1_1_neighbours.html#a5838dbe2c3c086c5943b5b75ad8fa35c',1,'Parallel::Neighbours']]],
   ['initializeobservablestorer',['initializeObservableStorer',['../class_correlator.html#ab99886c09dd27dfc8676d0032cecf9bc',1,'Correlator::initializeObservableStorer()'],['../class_lattice_action_charge_density.html#aba3131bbe5bd930adccc2852b4d44bb9',1,'LatticeActionChargeDensity::initializeObservableStorer()'],['../class_master_sampler.html#a88e2eec68ea6bd60cc3f375ac04a8ded',1,'MasterSampler::initializeObservableStorer()'],['../class_master_sampler_topc_x_y_z.html#af6d2cf2023d9626908fd26b07a7a0b84',1,'MasterSamplerTopcXYZ::initializeObservableStorer()'],['../class_super_sampler.html#a4429d6ae37247a02259bc0c6d665821c',1,'SuperSampler::initializeObservableStorer()']]],
   ['initializesublattice',['initializeSubLattice',['../class_parallel_1_1_communicator.html#a71baca622b377e6537799857be416a77',1,'Parallel::Communicator']]],

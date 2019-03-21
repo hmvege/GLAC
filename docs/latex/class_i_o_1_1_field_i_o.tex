@@ -7,118 +7,166 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{class_i_o_1_1_field_i_o_ae07d1c91bc341be3d295e77e420b1c9b}{Field\+IO}} ()
-\item 
-\mbox{\hyperlink{class_i_o_1_1_field_i_o_a48f5f4f12c445e98607b1e44db6d4ad1}{$\sim$\+Field\+IO}} ()
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{class_i_o_1_1_field_i_o_a8ea52cca792b1a0f7812881b5282edf5}{Field\+IO}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_i_o_1_1_field_i_o_a8ea52cca792b1a0f7812881b5282edf5}{I\+O\+::\+Field\+I\+O\+::\+Field\+IO}} initializes the \mbox{\hyperlink{class_i_o_1_1_field_i_o}{Field\+IO}} object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_i_o_1_1_field_i_o_ae11a6e9e9a57b6f0f56718b82774af19}{$\sim$\+Field\+IO}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_i_o_1_1_field_i_o_ae11a6e9e9a57b6f0f56718b82774af19}{I\+O\+::\+Field\+I\+O\+::$\sim$\+Field\+IO}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_ae01182be89137153bf043f9a34258601}{init}} ()
+static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_a9093930584128c73a63fe8015bff9b38}{init}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_i_o_1_1_field_i_o_a9093930584128c73a63fe8015bff9b38}{I\+O\+::\+Field\+I\+O\+::init}} updates the lattice dimensions. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_a8af607f9a1d79e90d4514c36103c6601}{write\+Field\+To\+File}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int config\+Number)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_i_o_1_1_field_i_o_a8af607f9a1d79e90d4514c36103c6601}{I\+O\+::\+Field\+I\+O\+::write\+Field\+To\+File}} writes a lattice of \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix objects to file. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_aaf2bac2025d67c06e7c61e8cc9f44777}{write\+Doubles\+Field\+To\+File}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ double $>$ lattice, unsigned int config\+Number, std\+::string observable)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_i_o_1_1_field_i_o_aaf2bac2025d67c06e7c61e8cc9f44777}{I\+O\+::\+Field\+I\+O\+::write\+Doubles\+Field\+To\+File}} writes a lattice of doubles to file. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_a02db864a48601edd7febaab5d655e495}{load\+Field\+Configuration}} (std\+::string filename, \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice)
 \item 
-static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_a44dc4aa1786974c091082c5b37be73a1}{write\+Field\+To\+File}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int config\+Number)
-\item 
-static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_a4bfe0fd7890fe69b88fbbe3864fd00ae}{write\+Doubles\+Field\+To\+File}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ double $>$ lattice, unsigned int config\+Number, std\+::string observable)
-\item 
-static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_afdd7f357ed71f7ff3ab1b5be987a51b5}{load\+Field\+Configuration}} (std\+::string filename, \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice)
-\item 
-static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_a8d6ea988658b107eca71c858d3816c99}{load\+Chroma\+Field\+Configuration}} (std\+::string filename, \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice)
+static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_af23fb6e02a6bd1cafd5be4acacbf848e}{load\+Chroma\+Field\+Configuration}} (std\+::string filename, \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice)
 \end{DoxyCompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{class_i_o_1_1_field_i_o_ae07d1c91bc341be3d295e77e420b1c9b}\label{class_i_o_1_1_field_i_o_ae07d1c91bc341be3d295e77e420b1c9b}} 
+\mbox{\Hypertarget{class_i_o_1_1_field_i_o_a8ea52cca792b1a0f7812881b5282edf5}\label{class_i_o_1_1_field_i_o_a8ea52cca792b1a0f7812881b5282edf5}} 
 \index{IO::FieldIO@{IO::FieldIO}!FieldIO@{FieldIO}}
 \index{FieldIO@{FieldIO}!IO::FieldIO@{IO::FieldIO}}
 \subsubsection{\texorpdfstring{FieldIO()}{FieldIO()}}
-{\footnotesize\ttfamily I\+O\+::\+Field\+I\+O\+::\+Field\+IO (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Field\+I\+O\+::\+Field\+IO (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_i_o_1_1_field_i_o_a48f5f4f12c445e98607b1e44db6d4ad1}\label{class_i_o_1_1_field_i_o_a48f5f4f12c445e98607b1e44db6d4ad1}} 
+
+
+\mbox{\hyperlink{class_i_o_1_1_field_i_o_a8ea52cca792b1a0f7812881b5282edf5}{I\+O\+::\+Field\+I\+O\+::\+Field\+IO}} initializes the \mbox{\hyperlink{class_i_o_1_1_field_i_o}{Field\+IO}} object. 
+
+Empty constructor. \mbox{\Hypertarget{class_i_o_1_1_field_i_o_ae11a6e9e9a57b6f0f56718b82774af19}\label{class_i_o_1_1_field_i_o_ae11a6e9e9a57b6f0f56718b82774af19}} 
 \index{IO::FieldIO@{IO::FieldIO}!````~FieldIO@{$\sim$FieldIO}}
 \index{````~FieldIO@{$\sim$FieldIO}!IO::FieldIO@{IO::FieldIO}}
 \subsubsection{\texorpdfstring{$\sim$FieldIO()}{~FieldIO()}}
-{\footnotesize\ttfamily I\+O\+::\+Field\+I\+O\+::$\sim$\+Field\+IO (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Field\+I\+O\+::$\sim$\+Field\+IO (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
+
+\mbox{\hyperlink{class_i_o_1_1_field_i_o_ae11a6e9e9a57b6f0f56718b82774af19}{I\+O\+::\+Field\+I\+O\+::$\sim$\+Field\+IO}}. 
+
+Empty destructor. 
 
 \subsection{Member Function Documentation}
-\mbox{\Hypertarget{class_i_o_1_1_field_i_o_ae01182be89137153bf043f9a34258601}\label{class_i_o_1_1_field_i_o_ae01182be89137153bf043f9a34258601}} 
+\mbox{\Hypertarget{class_i_o_1_1_field_i_o_a9093930584128c73a63fe8015bff9b38}\label{class_i_o_1_1_field_i_o_a9093930584128c73a63fe8015bff9b38}} 
 \index{IO::FieldIO@{IO::FieldIO}!init@{init}}
 \index{init@{init}!IO::FieldIO@{IO::FieldIO}}
 \subsubsection{\texorpdfstring{init()}{init()}}
-{\footnotesize\ttfamily void I\+O\+::\+Field\+I\+O\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Field\+I\+O\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_i_o_1_1_field_i_o_a9093930584128c73a63fe8015bff9b38}{I\+O\+::\+Field\+I\+O\+::init}} updates the lattice dimensions. 
+
+Used in unit testing. Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=293pt]{class_i_o_1_1_field_i_o_ae01182be89137153bf043f9a34258601_cgraph}
+\includegraphics[width=293pt]{class_i_o_1_1_field_i_o_a9093930584128c73a63fe8015bff9b38_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=303pt]{class_i_o_1_1_field_i_o_ae01182be89137153bf043f9a34258601_icgraph}
+\includegraphics[width=303pt]{class_i_o_1_1_field_i_o_a9093930584128c73a63fe8015bff9b38_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_i_o_1_1_field_i_o_a8d6ea988658b107eca71c858d3816c99}\label{class_i_o_1_1_field_i_o_a8d6ea988658b107eca71c858d3816c99}} 
+\mbox{\Hypertarget{class_i_o_1_1_field_i_o_af23fb6e02a6bd1cafd5be4acacbf848e}\label{class_i_o_1_1_field_i_o_af23fb6e02a6bd1cafd5be4acacbf848e}} 
 \index{IO::FieldIO@{IO::FieldIO}!loadChromaFieldConfiguration@{loadChromaFieldConfiguration}}
 \index{loadChromaFieldConfiguration@{loadChromaFieldConfiguration}!IO::FieldIO@{IO::FieldIO}}
 \subsubsection{\texorpdfstring{loadChromaFieldConfiguration()}{loadChromaFieldConfiguration()}}
-{\footnotesize\ttfamily void I\+O\+::\+Field\+I\+O\+::load\+Chroma\+Field\+Configuration (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Field\+I\+O\+::load\+Chroma\+Field\+Configuration (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
 Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_a8d6ea988658b107eca71c858d3816c99_cgraph}
+\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_af23fb6e02a6bd1cafd5be4acacbf848e_cgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_i_o_1_1_field_i_o_afdd7f357ed71f7ff3ab1b5be987a51b5}\label{class_i_o_1_1_field_i_o_afdd7f357ed71f7ff3ab1b5be987a51b5}} 
+\mbox{\Hypertarget{class_i_o_1_1_field_i_o_a02db864a48601edd7febaab5d655e495}\label{class_i_o_1_1_field_i_o_a02db864a48601edd7febaab5d655e495}} 
 \index{IO::FieldIO@{IO::FieldIO}!loadFieldConfiguration@{loadFieldConfiguration}}
 \index{loadFieldConfiguration@{loadFieldConfiguration}!IO::FieldIO@{IO::FieldIO}}
 \subsubsection{\texorpdfstring{loadFieldConfiguration()}{loadFieldConfiguration()}}
-{\footnotesize\ttfamily void I\+O\+::\+Field\+I\+O\+::load\+Field\+Configuration (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Field\+I\+O\+::load\+Field\+Configuration (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
 Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_afdd7f357ed71f7ff3ab1b5be987a51b5_cgraph}
+\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_a02db864a48601edd7febaab5d655e495_cgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_i_o_1_1_field_i_o_a4bfe0fd7890fe69b88fbbe3864fd00ae}\label{class_i_o_1_1_field_i_o_a4bfe0fd7890fe69b88fbbe3864fd00ae}} 
+\mbox{\Hypertarget{class_i_o_1_1_field_i_o_aaf2bac2025d67c06e7c61e8cc9f44777}\label{class_i_o_1_1_field_i_o_aaf2bac2025d67c06e7c61e8cc9f44777}} 
 \index{IO::FieldIO@{IO::FieldIO}!writeDoublesFieldToFile@{writeDoublesFieldToFile}}
 \index{writeDoublesFieldToFile@{writeDoublesFieldToFile}!IO::FieldIO@{IO::FieldIO}}
 \subsubsection{\texorpdfstring{writeDoublesFieldToFile()}{writeDoublesFieldToFile()}}
-{\footnotesize\ttfamily void I\+O\+::\+Field\+I\+O\+::write\+Doubles\+Field\+To\+File (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ double $>$}]{lattice,  }\item[{unsigned int}]{config\+Number,  }\item[{std\+::string}]{observable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Field\+I\+O\+::write\+Doubles\+Field\+To\+File (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ double $>$}]{lattice,  }\item[{unsigned int}]{config\+Number,  }\item[{std\+::string}]{observable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_i_o_1_1_field_i_o_aaf2bac2025d67c06e7c61e8cc9f44777}{I\+O\+::\+Field\+I\+O\+::write\+Doubles\+Field\+To\+File}} writes a lattice of doubles to file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & is a pointer of four lattice objects, one for each Lorentz index. \\
+\hline
+{\em config\+Number} & configuration number. \\
+\hline
+{\em observable} & name of the observable.\\
+\hline
+\end{DoxyParams}
+Useful if one wants to visualize the lattice, using e.\+g. \begin{DoxySeeAlso}{See also}
+\{\href{https://github.com/hmvege/LatViz}{\texttt{ https\+://github.\+com/hmvege/\+Lat\+Viz}}\}
+\end{DoxySeeAlso}
+Uses M\+P\+I\+\_\+\+File\+\_\+write\+\_\+at to write the configuration to a file.
+
+If debug is true in the passed .json parameter file, it will perform a check for lattice corruption. Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_a4bfe0fd7890fe69b88fbbe3864fd00ae_cgraph}
+\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_aaf2bac2025d67c06e7c61e8cc9f44777_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_a4bfe0fd7890fe69b88fbbe3864fd00ae_icgraph}
+\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_aaf2bac2025d67c06e7c61e8cc9f44777_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_i_o_1_1_field_i_o_a44dc4aa1786974c091082c5b37be73a1}\label{class_i_o_1_1_field_i_o_a44dc4aa1786974c091082c5b37be73a1}} 
+\mbox{\Hypertarget{class_i_o_1_1_field_i_o_a8af607f9a1d79e90d4514c36103c6601}\label{class_i_o_1_1_field_i_o_a8af607f9a1d79e90d4514c36103c6601}} 
 \index{IO::FieldIO@{IO::FieldIO}!writeFieldToFile@{writeFieldToFile}}
 \index{writeFieldToFile@{writeFieldToFile}!IO::FieldIO@{IO::FieldIO}}
 \subsubsection{\texorpdfstring{writeFieldToFile()}{writeFieldToFile()}}
-{\footnotesize\ttfamily void I\+O\+::\+Field\+I\+O\+::write\+Field\+To\+File (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{unsigned int}]{config\+Number }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Field\+I\+O\+::write\+Field\+To\+File (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{unsigned int}]{config\+Number }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_i_o_1_1_field_i_o_a8af607f9a1d79e90d4514c36103c6601}{I\+O\+::\+Field\+I\+O\+::write\+Field\+To\+File}} writes a lattice of \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix objects to file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & is a pointer of four lattice objects, one for each Lorentz index. \\
+\hline
+{\em config\+Number} & the configuration number to name the file with.\\
+\hline
+\end{DoxyParams}
+Uses M\+P\+I\+\_\+\+File\+\_\+write\+\_\+at to write the configuration to a file.
+
+If debug is true in the passed .json parameter file, it will perform a check for lattice corruption. Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_a44dc4aa1786974c091082c5b37be73a1_cgraph}
+\includegraphics[width=350pt]{class_i_o_1_1_field_i_o_a8af607f9a1d79e90d4514c36103c6601_cgraph}
 \end{center}
 \end{figure}
 

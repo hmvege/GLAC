@@ -3,7 +3,7 @@
  *
  * \brief Class for applying gradient flow on lattice.
  *
- * Performs one step with gradient flow on the lattice.
+ * Performs one step with gradient flow on the lattice, as described in https://arxiv.org/abs/1006.4518
  *
  * \author Mathias M. Vege
  * \version 1.0
@@ -28,7 +28,7 @@ private:
     // Temporary lattice to use when flowing
     Lattice<SU3> * m_tempLattice;
     Lattice<SU3> m_tempExpLattice;
-    // Updates the lattice with the exponantiated lattice values
+    // Updates the lattice with the exponantiated lattice values using move semantics
     inline Lattice<SU3> matrixExp(const Lattice<SU3> &lattice);
     inline Lattice<SU3> matrixExp(Lattice<SU3> &&lattice);
     // SU3 exponentiation function

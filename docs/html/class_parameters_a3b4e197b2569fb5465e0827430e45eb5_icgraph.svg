@@ -21,7 +21,7 @@
 <!-- Node311 -->
 <g id="node2" class="node">
 <title>Node311</title>
-<g id="a_node2"><a xlink:href="class_sys_print.html#a4572572643f6f4685081a3ae419e5ca9" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_sys_print.html#a4572572643f6f4685081a3ae419e5ca9" target="_top" xlink:title="SysPrint::printSystemInfo prints out parametesr from Parallel:Communicator and Parameters.">
 <polygon fill="#ffffff" stroke="#000000" points="225.1743,-47.5 225.1743,-65.5 353.4351,-65.5 353.4351,-47.5 225.1743,-47.5"/>
 <text text-anchor="middle" x="289.3047" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SysPrint::printSystemInfo</text>
 </a>

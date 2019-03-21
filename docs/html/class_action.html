@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -228,15 +234,15 @@ Here is the call graph for this function:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">lattice</td><td>a pointer of four lattice objects, one for each lorentz index. </td></tr>
-    <tr><td class="paramname">i</td><td>spatial <img class="formulaInl" alt="$x$" src="form_0.png"/> position. </td></tr>
-    <tr><td class="paramname">j</td><td>spatial <img class="formulaInl" alt="$y$" src="form_1.png"/> position. </td></tr>
-    <tr><td class="paramname">k</td><td>spatial <img class="formulaInl" alt="$z$" src="form_2.png"/> position. </td></tr>
-    <tr><td class="paramname">l</td><td>temporal <img class="formulaInl" alt="$t$" src="form_3.png"/> position. </td></tr>
-    <tr><td class="paramname">mu</td><td>lorentz index, <img class="formulaInl" alt="$\mu$" src="form_4.png"/>. </td></tr>
+    <tr><td class="paramname">i</td><td>spatial \(x\) position. </td></tr>
+    <tr><td class="paramname">j</td><td>spatial \(y\) position. </td></tr>
+    <tr><td class="paramname">k</td><td>spatial \(z\) position. </td></tr>
+    <tr><td class="paramname">l</td><td>temporal \(t\) position. </td></tr>
+    <tr><td class="paramname">mu</td><td>lorentz index, \(\mu\). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns change in action <img class="formulaInl" alt="$\Delta S$" src="form_5.png"/> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns change in action \(\Delta S\) </dd></dl>
 
 <p>Reimplemented in <a class="el" href="class_luscher_action.html#a42285b6e3015935588e1fab6b90c1a11">LuscherAction</a>, and <a class="el" href="class_wilson_gauge_action.html#af1f6ba42fcc2b923dc3b37bf150bfae9">WilsonGaugeAction</a>.</p>
 
@@ -280,7 +286,7 @@ Here is the call graph for this function:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">lattice</td><td>a pointer of four lattice objects, one for each lorentz index. </td></tr>
-    <tr><td class="paramname">mu</td><td>lorentz index, <img class="formulaInl" alt="$\mu$" src="form_4.png"/>. </td></tr>
+    <tr><td class="paramname">mu</td><td>lorentz index, \(\mu\). </td></tr>
   </table>
   </dd>
 </dl>

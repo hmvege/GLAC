@@ -634,7 +634,7 @@
 <!-- Node41 -->
 <g id="node42" class="node">
 <title>Node41</title>
-<g id="a_node42"><a xlink:href="class_parameters.html#ace3967a0ee49901f55e9de69e0a96117" target="_top" xlink:title=" ">
+<g id="a_node42"><a xlink:href="class_parameters.html#ace3967a0ee49901f55e9de69e0a96117" target="_top" xlink:title="Parameters::setMetropolisSeed set a seed for the Metropolis algorithm.">
 <polygon fill="#ffffff" stroke="#000000" points="146.5068,-113.5 146.5068,-131.5 302.5703,-131.5 302.5703,-113.5 146.5068,-113.5"/>
 <text text-anchor="middle" x="224.5386" y="-119.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setMetropolisSeed</text>
 </a>
@@ -681,7 +681,7 @@
 <!-- Node44 -->
 <g id="node45" class="node">
 <title>Node44</title>
-<g id="a_node45"><a xlink:href="class_parameters.html#a46615f8286bd7363ab1f09074fdc6940" target="_top" xlink:title=" ">
+<g id="a_node45"><a xlink:href="class_parameters.html#a46615f8286bd7363ab1f09074fdc6940" target="_top" xlink:title="Parameters::setRandomMatrixSeed set a seed for the random matrix generation(both RST and random metho...">
 <polygon fill="#ffffff" stroke="#000000" points="137.061,-37.5 137.061,-55.5 312.0161,-55.5 312.0161,-37.5 137.061,-37.5"/>
 <text text-anchor="middle" x="224.5386" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setRandomMatrixSeed</text>
 </a>
