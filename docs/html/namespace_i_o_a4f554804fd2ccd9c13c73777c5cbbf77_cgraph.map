@@ -1,5 +1,5 @@
 <map id="IO::writeFlowObservableToFile" name="IO::writeFlowObservableToFile">
-<area shape="rect" id="node1" title=" " alt="" coords="5,229,208,255"/>
+<area shape="rect" id="node1" title="IO::writeFlowObservableToFile method for writing a flow observable to file, using ...." alt="" coords="5,229,208,255"/>
 <area shape="rect" id="node2" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="273,5,433,44"/>
 <area shape="rect" id="node3" href="$class_parameters.html#a96dbafc27f287de83dfaec3bc2d45efe" title=" " alt="" coords="259,68,447,93"/>
 <area shape="rect" id="node4" href="$class_parameters.html#a58f15668b37e705d34d6588e287e4bc0" title=" " alt="" coords="262,117,445,156"/>

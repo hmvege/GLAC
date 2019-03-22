@@ -21,7 +21,7 @@
 <!-- Node16 -->
 <g id="node2" class="node">
 <title>Node16</title>
-<g id="a_node2"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title="allocate method for allocating memory.">
 <polygon fill="#ffffff" stroke="#000000" points="175.5742,-111.5 175.5742,-129.5 261.0615,-129.5 261.0615,-111.5 175.5742,-111.5"/>
 <text text-anchor="middle" x="218.3179" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::allocate</text>
 </a>
@@ -36,7 +36,7 @@
 <!-- Node17 -->
 <g id="node3" class="node">
 <title>Node17</title>
-<g id="a_node3"><a xlink:href="class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" target="_top" xlink:title="zeros sets all of the SU3 elements in the lattice to zero.">
 <polygon fill="#ffffff" stroke="#000000" points="180.5815,-74.5 180.5815,-92.5 256.0542,-92.5 256.0542,-74.5 180.5815,-74.5"/>
 <text text-anchor="middle" x="218.3179" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::zeros</text>
 </a>
@@ -66,7 +66,7 @@
 <!-- Node19 -->
 <g id="node5" class="node">
 <title>Node19</title>
-<g id="a_node5"><a xlink:href="functions_8h.html#a1b9e8aa9d3525074c19d2dbef96e59ea" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="functions_8h.html#a1b9e8aa9d3525074c19d2dbef96e59ea" target="_top" xlink:title="traceImagMultiplication">
 <polygon fill="#ffffff" stroke="#000000" points="159.1851,-.5 159.1851,-18.5 277.4507,-18.5 277.4507,-.5 159.1851,-.5"/>
 <text text-anchor="middle" x="218.3179" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">traceImagMultiplication</text>
 </a>

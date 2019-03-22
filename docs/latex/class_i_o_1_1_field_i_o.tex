@@ -21,9 +21,9 @@ static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_a8af607f9a1d79e90d4514c3610
 static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_aaf2bac2025d67c06e7c61e8cc9f44777}{write\+Doubles\+Field\+To\+File}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ double $>$ lattice, unsigned int config\+Number, std\+::string observable)
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_i_o_1_1_field_i_o_aaf2bac2025d67c06e7c61e8cc9f44777}{I\+O\+::\+Field\+I\+O\+::write\+Doubles\+Field\+To\+File}} writes a lattice of doubles to file. \end{DoxyCompactList}\item 
 static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_a02db864a48601edd7febaab5d655e495}{load\+Field\+Configuration}} (std\+::string filename, \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice)
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_i_o_1_1_field_i_o_a02db864a48601edd7febaab5d655e495}{I\+O\+::\+Field\+I\+O\+::load\+Field\+Configuration}} loads a regular configuration into memory. \end{DoxyCompactList}\item 
 static void \mbox{\hyperlink{class_i_o_1_1_field_i_o_af23fb6e02a6bd1cafd5be4acacbf848e}{load\+Chroma\+Field\+Configuration}} (std\+::string filename, \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_i_o_1_1_field_i_o_af23fb6e02a6bd1cafd5be4acacbf848e}{I\+O\+::\+Field\+I\+O\+::load\+Chroma\+Field\+Configuration}} loads a configuration from Chroma into memory. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -82,7 +82,19 @@ Here is the caller graph for this function\+:
 \subsubsection{\texorpdfstring{loadChromaFieldConfiguration()}{loadChromaFieldConfiguration()}}
 {\footnotesize\ttfamily void Field\+I\+O\+::load\+Chroma\+Field\+Configuration (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_i_o_1_1_field_i_o_af23fb6e02a6bd1cafd5be4acacbf848e}{I\+O\+::\+Field\+I\+O\+::load\+Chroma\+Field\+Configuration}} loads a configuration from Chroma into memory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & \\
+\hline
+{\em lattice} & is a pointer of four lattice objects, one for each Lorentz index, that will filled with the configuration read from file.\\
+\hline
+\end{DoxyParams}
+If debug is true in the passed .json parameter file, it will perform a check for lattice corruption. Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -95,7 +107,19 @@ Here is the call graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{loadFieldConfiguration()}{loadFieldConfiguration()}}
 {\footnotesize\ttfamily void Field\+I\+O\+::load\+Field\+Configuration (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_i_o_1_1_field_i_o_a02db864a48601edd7febaab5d655e495}{I\+O\+::\+Field\+I\+O\+::load\+Field\+Configuration}} loads a regular configuration into memory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & \\
+\hline
+{\em lattice} & is a pointer of four lattice objects, one for each Lorentz index, that will filled with the configuration read from file.\\
+\hline
+\end{DoxyParams}
+If debug is true in the passed .json parameter file, it will perform a check for lattice corruption. Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -121,8 +145,8 @@ Here is the call graph for this function\+:\nopagebreak
 {\em observable} & name of the observable.\\
 \hline
 \end{DoxyParams}
-Useful if one wants to visualize the lattice, using e.\+g. \begin{DoxySeeAlso}{See also}
-\{\href{https://github.com/hmvege/LatViz}{\texttt{ https\+://github.\+com/hmvege/\+Lat\+Viz}}\}
+Useful if one wants to visualize the lattice. \begin{DoxySeeAlso}{See also}
+\href{https://github.com/hmvege/LatViz}{\texttt{ https\+://github.\+com/hmvege/\+Lat\+Viz}} for a configuration visualization method.
 \end{DoxySeeAlso}
 Uses M\+P\+I\+\_\+\+File\+\_\+write\+\_\+at to write the configuration to a file.
 

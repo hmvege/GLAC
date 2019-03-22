@@ -1,5 +1,5 @@
 <map id="IO::writeObservablesToFile" name="IO::writeObservablesToFile">
-<area shape="rect" id="node1" title=" " alt="" coords="5,192,187,217"/>
+<area shape="rect" id="node1" title="IO::writeObservablesToFile method for writing an observable to file, using .15 precision." alt="" coords="5,192,187,217"/>
 <area shape="rect" id="node2" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="252,5,412,44"/>
 <area shape="rect" id="node3" href="$class_parameters.html#abace4edb8ece38841b58c5ce6168cbc4" title=" " alt="" coords="249,68,414,93"/>
 <area shape="rect" id="node4" href="$class_parameters.html#afa4cfe5dc4302b1e8f8928606ea9b056" title=" " alt="" coords="235,117,429,143"/>

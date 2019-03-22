@@ -1,4 +1,4 @@
 <map id="SU3MatrixGenerator::generateSU2" name="SU3MatrixGenerator::generateSU2">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,149,44"/>
+<area shape="rect" id="node1" title="SU3MatrixGenerator::generateSU2 generates a random SU2 matrix close to unity." alt="" coords="5,5,149,44"/>
 <area shape="rect" id="node2" href="$class_s_u2.html#a348ca5d38346892060a05f7d9de02916" title=" " alt="" coords="197,12,284,37"/>
 </map>

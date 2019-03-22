@@ -1,11 +1,11 @@
 <map id="WilsonGaugeAction::getActionDerivative" name="WilsonGaugeAction::getActionDerivative">
 <area shape="rect" id="node1" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="5,97,151,136"/>
-<area shape="rect" id="node2" href="$class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" title=" " alt="" coords="199,5,300,31"/>
-<area shape="rect" id="node3" href="$lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" title=" " alt="" coords="227,104,272,129"/>
+<area shape="rect" id="node2" href="$class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" title="zeros sets all of the SU3 elements in the lattice to zero." alt="" coords="199,5,300,31"/>
+<area shape="rect" id="node3" href="$lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" title="shift copies the lattice L and shifts it in a specified lorentzVector direction DIR." alt="" coords="227,104,272,129"/>
 <area shape="rect" id="node8" href="$lattice_8h.html#a491004d1505561625a8915464f3c6cab" title=" " alt="" coords="230,55,269,80"/>
 <area shape="rect" id="node9" href="$lattice_8h.html#a0289122f97ef3c8e2dfc3bfaf5b8f52d" title=" " alt="" coords="208,153,291,179"/>
 <area shape="rect" id="node10" href="$lattice_8h.html#aa2ccd37933994e50a9c9669725ee0e9e" title=" " alt="" coords="200,203,299,228"/>
-<area shape="rect" id="node4" href="$class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" title=" " alt="" coords="378,55,492,80"/>
+<area shape="rect" id="node4" href="$class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" title="allocate method for allocating memory." alt="" coords="378,55,492,80"/>
 <area shape="rect" id="node5" href="$class_parallel_1_1_index.html#ac406d7ceb12e986a66d64ef98fcef5d3" title=" " alt="" coords="348,104,523,129"/>
 <area shape="rect" id="node6" href="$class_parallel_1_1_index.html#af31faeef1369fdc0997d1910e008bfe2" title=" " alt="" coords="353,153,517,179"/>
 <area shape="rect" id="node7" href="$class_parallel_1_1_neighbours.html#a84653f3e22436280ac5a4689a24e7146" title=" " alt="" coords="352,203,519,228"/>

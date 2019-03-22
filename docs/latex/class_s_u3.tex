@@ -2,6 +2,11 @@
 \label{class_s_u3}\index{SU3@{SU3}}
 
 
+class for holding $\mathrm{SU}(3)$ matrices.  
+
+
+
+
 {\ttfamily \#include $<$su3.\+h$>$}
 
 \subsection*{Public Member Functions}
@@ -48,7 +53,7 @@ void \mbox{\hyperlink{class_s_u3_a40d6e853cd73f87b4113e22a53d45e89}{print}} ()
 \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_a25e7cd46d60f25138585b76115e791a3}{make\+Anti\+Hermitian}} ()
 \item 
 \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_ad0e19706d3c6fdb50dcf788d4b48eb4c}{inv}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_s_u3_ad0e19706d3c6fdb50dcf788d4b48eb4c}{S\+U3\+::inv}} performs a matrix inversion. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_s_u3_a9f3527fd882882ddfa18d72f5f43176c}{zeros}} ()
 \item 
 void \mbox{\hyperlink{class_s_u3_af84aef1d34a4fdcda292200804eb1221}{identity}} ()
@@ -68,6 +73,25 @@ double \mbox{\hyperlink{class_s_u3_a7926e38b8705e0f5c3eaf7d0361f3543}{norm\+Squa
 \item 
 double \mbox{\hyperlink{class_s_u3_af003668305abe616f56568a075434be0}{mat}} \mbox{[}18\mbox{]}
 \end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+class for holding $\mathrm{SU}(3)$ matrices. 
+
+Operations have been overloaded for ease of use.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -98,7 +122,8 @@ double \mbox{\hyperlink{class_s_u3_af003668305abe616f56568a075434be0}{mat}} \mbo
 \subsubsection{\texorpdfstring{get()}{get()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} S\+U3\+::get (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -111,7 +136,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{identity()}{identity()}}
 {\footnotesize\ttfamily void S\+U3\+::identity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -124,7 +150,15 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{inv()}{inv()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+::inv (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_s_u3_ad0e19706d3c6fdb50dcf788d4b48eb4c}{S\+U3\+::inv}} performs a matrix inversion. 
+
+\begin{DoxyReturn}{Returns}
+a copy of the inverse of itself. 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -143,7 +177,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{makeHermitian()}{makeHermitian()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+::make\+Hermitian (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -168,13 +203,6 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u3}{S\+U3}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=265pt]{class_s_u3_a499ee2a922f1568eee9fe2e04d8cbe89_cgraph}
-\end{center}
-\end{figure}
 \mbox{\Hypertarget{class_s_u3_ad1b4ea5706f0d1764c7a9516255a74e4}\label{class_s_u3_ad1b4ea5706f0d1764c7a9516255a74e4}} 
 \index{SU3@{SU3}!operator $\ast$=@{operator $\ast$=}}
 \index{operator $\ast$=@{operator $\ast$=}!SU3@{SU3}}
@@ -259,7 +287,8 @@ Here is the call graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{setComplex()}{setComplex()}}
 {\footnotesize\ttfamily void S\+U3\+::set\+Complex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{w,  }\item[{int}]{i }\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -284,7 +313,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{zeros()}{zeros()}}
 {\footnotesize\ttfamily void S\+U3\+::zeros (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode

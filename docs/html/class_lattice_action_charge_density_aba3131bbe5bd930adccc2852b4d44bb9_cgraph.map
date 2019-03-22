@@ -1,5 +1,5 @@
 <map id="LatticeActionChargeDensity::initializeObservableStorer" name="LatticeActionChargeDensity::initializeObservableStorer">
-<area shape="rect" id="node1" title=" " alt="" coords="5,136,191,175"/>
+<area shape="rect" id="node1" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="5,136,191,175"/>
 <area shape="rect" id="node2" href="$class_parameters.html#aae314edb18d426571ab7b6df60da70aa" title=" " alt="" coords="286,5,447,31"/>
 <area shape="rect" id="node3" href="$class_parameters.html#a216f85b3c5980a33f8a54c42fb3575c7" title=" " alt="" coords="249,55,484,93"/>
 <area shape="rect" id="node4" href="$class_parameters.html#a03f8c0aa2a31b9bfc016441cb263082c" title=" " alt="" coords="297,117,436,143"/>

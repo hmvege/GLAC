@@ -81,7 +81,7 @@
 <!-- Node160 -->
 <g id="node6" class="node">
 <title>Node160</title>
-<g id="a_node6"><a xlink:href="class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a" target="_top" xlink:title="Correlator::Correlator.">
 <polygon fill="#ffffff" stroke="#000000" points="139.8223,-.5 139.8223,-18.5 250.2949,-18.5 250.2949,-.5 139.8223,-.5"/>
 <text text-anchor="middle" x="195.0586" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::Correlator</text>
 </a>

@@ -12,7 +12,7 @@
 <!-- Node12 -->
 <g id="node1" class="node">
 <title>Node12</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="SU3MatrixGenerator::generateRST generates a SU3 matrix close to unity.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-28.5 107.6992,-28.5 107.6992,-.5 0,-.5"/>
 <text text-anchor="start" x="8" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3MatrixGenerator</text>
 <text text-anchor="middle" x="53.8496" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::generateRST</text>
@@ -22,7 +22,7 @@
 <!-- Node13 -->
 <g id="node2" class="node">
 <title>Node13</title>
-<g id="a_node2"><a xlink:href="class_s_u3_matrix_generator.html#aa4e04caff654a1df7c43280b85f359bc" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_s_u3_matrix_generator.html#aa4e04caff654a1df7c43280b85f359bc" target="_top" xlink:title="SU3MatrixGenerator::generateSU2 generates a random SU2 matrix close to unity.">
 <polygon fill="#ffffff" stroke="#000000" points="143.6992,-.5 143.6992,-28.5 251.3984,-28.5 251.3984,-.5 143.6992,-.5"/>
 <text text-anchor="start" x="151.6992" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3MatrixGenerator</text>
 <text text-anchor="middle" x="197.5488" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::generateSU2</text>

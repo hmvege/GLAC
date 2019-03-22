@@ -12,7 +12,7 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="SU3 matrix exponentiation method that uses the method from https://journals.aps.org/prd/abstract/10....">
 <polygon fill="#bfbfbf" stroke="#000000" points="134.0615,-55.5 134.0615,-73.5 186.7461,-73.5 186.7461,-55.5 134.0615,-55.5"/>
 <text text-anchor="middle" x="160.4038" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3Exp</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="class_exp_luscher.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_exp_luscher.html" target="_top" xlink:title="Uses method for exponentiating SU3 matrix found in Appendix A in https://arxiv.org/abs/hep&#45;lat/040910...">
 <polygon fill="#ffffff" stroke="#000000" points="0,-.5 0,-18.5 68.8076,-18.5 68.8076,-.5 0,-.5"/>
 <text text-anchor="middle" x="34.4038" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ExpLuscher</text>
 </a>
@@ -36,7 +36,7 @@
 <!-- Node2 -->
 <g id="node3" class="node">
 <title>Node2</title>
-<g id="a_node3"><a xlink:href="class_taylor2_exp.html" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_taylor2_exp.html" target="_top" xlink:title="Taylor expansion of second order.">
 <polygon fill="#ffffff" stroke="#000000" points="86.6699,-.5 86.6699,-18.5 152.1377,-18.5 152.1377,-.5 86.6699,-.5"/>
 <text text-anchor="middle" x="119.4038" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Taylor2Exp</text>
 </a>
@@ -51,7 +51,7 @@
 <!-- Node3 -->
 <g id="node4" class="node">
 <title>Node3</title>
-<g id="a_node4"><a xlink:href="class_taylor4_exp.html" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_taylor4_exp.html" target="_top" xlink:title="Taylor expansion of second order.">
 <polygon fill="#ffffff" stroke="#000000" points="169.6699,-.5 169.6699,-18.5 235.1377,-18.5 235.1377,-.5 169.6699,-.5"/>
 <text text-anchor="middle" x="202.4038" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Taylor4Exp</text>
 </a>
@@ -66,7 +66,7 @@
 <!-- Node4 -->
 <g id="node5" class="node">
 <title>Node4</title>
-<g id="a_node5"><a xlink:href="class_taylor_exp.html" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_taylor_exp.html" target="_top" xlink:title="uses a general Taylor polynomial to approximate the exponentiation of a SU(3) matrix.">
 <polygon fill="#ffffff" stroke="#000000" points="253.4507,-.5 253.4507,-18.5 313.3569,-18.5 313.3569,-.5 253.4507,-.5"/>
 <text text-anchor="middle" x="283.4038" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TaylorExp</text>
 </a>

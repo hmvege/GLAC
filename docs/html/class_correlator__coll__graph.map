@@ -1,4 +1,4 @@
 <map id="Correlator" name="Correlator">
-<area shape="rect" id="node1" title=" " alt="" coords="28,92,109,117"/>
-<area shape="rect" id="node2" href="$class_observable_storer.html" title=" " alt="" coords="5,5,131,31"/>
+<area shape="rect" id="node1" title="base class for observables." alt="" coords="28,92,109,117"/>
+<area shape="rect" id="node2" href="$class_observable_storer.html" title="A class for storing the observable data." alt="" coords="5,5,131,31"/>
 </map>

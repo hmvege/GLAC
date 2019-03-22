@@ -88,12 +88,14 @@ $(function() {
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for lattice.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h__incl.svg" width="903" height="330"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h__incl.svg" width="903" height="330"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h__dep__incl.svg" width="4168" height="470"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h__dep__incl.svg" width="4168" height="470"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 </div>
 <p><a href="lattice_8h_source.html">Go to the source code of this file.</a></p>
@@ -101,6 +103,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html">Lattice&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A method for holding a lattice of type T.  <a href="class_lattice.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -108,6 +111,7 @@ Enumerations</h2></td></tr>
 <tr class="memitem:a49eb6ac4643553d04b85c70646c6786d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lattice_8h.html#a49eb6ac4643553d04b85c70646c6786d">DIR</a> { <a class="el" href="lattice_8h.html#a49eb6ac4643553d04b85c70646c6786daad5aa01ac1825d55dfc1978ee49c4c36">BACKWARDS</a> = 0, 
 <a class="el" href="lattice_8h.html#a49eb6ac4643553d04b85c70646c6786da8e0a822cdb9fa1c73df3936841e74601">FORWARDS</a> = 1
  }</td></tr>
+<tr class="memdesc:a49eb6ac4643553d04b85c70646c6786d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The DIR enum specifies if we are to move BACKWARDS or FORWARDS in the lattice shifts.  <a href="lattice_8h.html#a49eb6ac4643553d04b85c70646c6786d">More...</a><br /></td></tr>
 <tr class="separator:a49eb6ac4643553d04b85c70646c6786d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -215,6 +219,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a6e4021e10507c116876b2e28a3544588"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_lattice.html">Lattice</a>&lt; <a class="el" href="class_s_u3.html">SU3</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="lattice_8h.html#a6e4021e10507c116876b2e28a3544588">makeHermitian</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; <a class="el" href="class_s_u3.html">SU3</a> &gt; &amp;&amp;B)</td></tr>
 <tr class="separator:a6e4021e10507c116876b2e28a3544588"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53bbfaed8f54ee3a1db6f8049686ccdf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_lattice.html">Lattice</a>&lt; <a class="el" href="class_s_u3.html">SU3</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf">shift</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; <a class="el" href="class_s_u3.html">SU3</a> &gt; L, <a class="el" href="lattice_8h.html#a49eb6ac4643553d04b85c70646c6786d">DIR</a> direction, unsigned int lorentzVector)</td></tr>
+<tr class="memdesc:a53bbfaed8f54ee3a1db6f8049686ccdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">shift copies the lattice L and shifts it in a specified lorentzVector direction DIR.  <a href="#a53bbfaed8f54ee3a1db6f8049686ccdf">More...</a><br /></td></tr>
 <tr class="separator:a53bbfaed8f54ee3a1db6f8049686ccdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
@@ -229,6 +234,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The DIR enum specifies if we are to move BACKWARDS or FORWARDS in the lattice shifts. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a49eb6ac4643553d04b85c70646c6786daad5aa01ac1825d55dfc1978ee49c4c36"></a>BACKWARDS&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a49eb6ac4643553d04b85c70646c6786da8e0a822cdb9fa1c73df3936841e74601"></a>FORWARDS&#160;</td><td class="fielddoc"></td></tr>
@@ -265,7 +272,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a23d5cd768af53db3d528ba7ed2e06439_cgraph.svg" width="252" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a23d5cd768af53db3d528ba7ed2e06439_cgraph.svg" width="252" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -298,7 +306,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a2d8ed0753e13a5065c02794a4ac38ea4_cgraph.svg" width="252" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a2d8ed0753e13a5065c02794a4ac38ea4_cgraph.svg" width="252" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -331,7 +340,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a0289122f97ef3c8e2dfc3bfaf5b8f52d_icgraph.svg" width="328" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a0289122f97ef3c8e2dfc3bfaf5b8f52d_icgraph.svg" width="328" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -372,7 +382,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_adb16681d0c7120b111172c031ec74d06_cgraph.svg" width="384" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_adb16681d0c7120b111172c031ec74d06_cgraph.svg" width="384" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -405,12 +416,14 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a491004d1505561625a8915464f3c6cab_cgraph.svg" width="211" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a491004d1505561625a8915464f3c6cab_cgraph.svg" width="211" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a491004d1505561625a8915464f3c6cab_icgraph.svg" width="283" height="498"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a491004d1505561625a8915464f3c6cab_icgraph.svg" width="283" height="498"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -443,7 +456,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_af0977446cc8fd78c5b19ebdaf3030148_cgraph.svg" width="211" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_af0977446cc8fd78c5b19ebdaf3030148_cgraph.svg" width="211" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -476,7 +490,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_ac9e572cd88422198dd6105892065f862_cgraph.svg" width="307" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_ac9e572cd88422198dd6105892065f862_cgraph.svg" width="307" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -509,7 +524,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_aa1479ad975b23b5e1039d5756d30093e_cgraph.svg" width="307" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_aa1479ad975b23b5e1039d5756d30093e_cgraph.svg" width="307" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -542,7 +558,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a4ec59a9f0de72a8ac099bd7a6c156d4d_cgraph.svg" width="284" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a4ec59a9f0de72a8ac099bd7a6c156d4d_cgraph.svg" width="284" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -575,7 +592,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a6e4021e10507c116876b2e28a3544588_cgraph.svg" width="284" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a6e4021e10507c116876b2e28a3544588_cgraph.svg" width="284" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1100,12 +1118,14 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_ab2d48b63b79e5e5ee3ca25483fe98b3e_cgraph.svg" width="378" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_ab2d48b63b79e5e5ee3ca25483fe98b3e_cgraph.svg" width="378" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_ab2d48b63b79e5e5ee3ca25483fe98b3e_icgraph.svg" width="399" height="162"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_ab2d48b63b79e5e5ee3ca25483fe98b3e_icgraph.svg" width="399" height="162"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1149,15 +1169,30 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>shift copies the lattice L and shifts it in a specified lorentzVector direction DIR. </p>
+<p>The shift shares a face of the lattice with a neighbouring processsors, and retrieves a corresponding face from a neighboring processor, essentialle shifting the entire lattice one \(\hat{\mu}\).</p>
+<dl class="section see"><dt>See also</dt><dd>Chapter 5 in <a href="https://github.com/hmvege/LQCDMasterThesis">https://github.com/hmvege/LQCDMasterThesis</a> contains a detailed description of the sharing process.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">L</td><td>is the lattiece we are to shift </td></tr>
+    <tr><td class="paramname">direction</td><td>we are shifting in. Either FORWARDS or BACKWARDS. </td></tr>
+    <tr><td class="paramname">lorentzVector</td><td>the direction in the Lorentz index \(\hat{\mu}\) we are shifting in. Either 0, 1, 2 or 3. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a copy of the lattice L that contains the face of a neighboring lattice. </dd></dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a53bbfaed8f54ee3a1db6f8049686ccdf_cgraph.svg" width="279" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a53bbfaed8f54ee3a1db6f8049686ccdf_cgraph.svg" width="279" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a53bbfaed8f54ee3a1db6f8049686ccdf_icgraph.svg" width="291" height="498"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a53bbfaed8f54ee3a1db6f8049686ccdf_icgraph.svg" width="291" height="498"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1200,7 +1235,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_aa2ccd37933994e50a9c9669725ee0e9e_icgraph.svg" width="343" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_aa2ccd37933994e50a9c9669725ee0e9e_icgraph.svg" width="343" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1347,7 +1383,8 @@ template&lt;class T &gt; </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a878dd065f746286ae0392ccafbc88138_icgraph.svg" width="291" height="50"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a878dd065f746286ae0392ccafbc88138_icgraph.svg" width="291" height="50"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1380,7 +1417,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a8267d6f1684a10b876409efeb6f66fe9_icgraph.svg" width="352" height="260"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a8267d6f1684a10b876409efeb6f66fe9_icgraph.svg" width="352" height="260"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1423,12 +1461,14 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a2a635fe0bbbaca1e8903db8d3bf61f01_cgraph.svg" width="399" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a2a635fe0bbbaca1e8903db8d3bf61f01_cgraph.svg" width="399" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a2a635fe0bbbaca1e8903db8d3bf61f01_icgraph.svg" width="415" height="260"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a2a635fe0bbbaca1e8903db8d3bf61f01_icgraph.svg" width="415" height="260"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1459,12 +1499,14 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a19c12b39277c18bf341c75cc2929b314_cgraph.svg" width="311" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a19c12b39277c18bf341c75cc2929b314_cgraph.svg" width="311" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a19c12b39277c18bf341c75cc2929b314_icgraph.svg" width="312" height="99"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a19c12b39277c18bf341c75cc2929b314_icgraph.svg" width="312" height="99"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1525,7 +1567,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a64dd6a80a2d6f4a5fb73f90c31fdb6ac_cgraph.svg" width="252" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a64dd6a80a2d6f4a5fb73f90c31fdb6ac_cgraph.svg" width="252" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1558,7 +1601,8 @@ template&lt;class SU3 &gt; </div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a3b961bbbc096ad781c5205deb54f6995_cgraph.svg" width="252" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="lattice_8h_a3b961bbbc096ad781c5205deb54f6995_cgraph.svg" width="252" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>

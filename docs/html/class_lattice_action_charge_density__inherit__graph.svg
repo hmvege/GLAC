@@ -12,7 +12,7 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Method for calculating and storing the topological charge and energy density at every point of the la...">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-18.5 139.3984,-18.5 139.3984,-.5 0,-.5"/>
 <text text-anchor="middle" x="69.6992" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="class_correlator.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_correlator.html" target="_top" xlink:title="base class for observables.">
 <polygon fill="#ffffff" stroke="#000000" points="39.4702,-55.5 39.4702,-73.5 99.9282,-73.5 99.9282,-55.5 39.4702,-55.5"/>
 <text text-anchor="middle" x="69.6992" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator</text>
 </a>

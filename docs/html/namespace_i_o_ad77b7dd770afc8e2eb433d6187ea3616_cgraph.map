@@ -1,5 +1,5 @@
 <map id="IO::writeMatrixToFile" name="IO::writeMatrixToFile">
-<area shape="rect" id="node1" title=" " alt="" coords="5,229,148,255"/>
+<area shape="rect" id="node1" title="IO::writeMatrixToFile writes out a matrix of observables to file, i.e. the topological charge in Eucl..." alt="" coords="5,229,148,255"/>
 <area shape="rect" id="node2" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="213,5,373,44"/>
 <area shape="rect" id="node3" href="$class_parameters.html#a96dbafc27f287de83dfaec3bc2d45efe" title=" " alt="" coords="199,68,387,93"/>
 <area shape="rect" id="node4" href="$class_parameters.html#a58f15668b37e705d34d6588e287e4bc0" title=" " alt="" coords="202,117,385,156"/>

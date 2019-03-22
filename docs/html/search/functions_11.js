@@ -16,8 +16,6 @@ var searchData=
   ['trace',['trace',['../class_s_u3.html#ac1c6438d29178aa1255ee4f2f48d2430',1,'SU3::trace()'],['../lattice_8h.html#a8944e496aa9ca0bee758318e526c012b',1,'trace():&#160;lattice.h']]],
   ['traceimagmultiplication',['traceImagMultiplication',['../functions_8h.html#a1b9e8aa9d3525074c19d2dbef96e59ea',1,'functions.h']]],
   ['tracerealmultiplication',['traceRealMultiplication',['../functions_8h.html#a93863171e3da962b61804144857576a7',1,'functions.h']]],
-  ['tracesparseimagmultiplication',['traceSparseImagMultiplication',['../functions_8h.html#a6c116d498ab509712fa0243d23dfc0c8',1,'functions.h']]],
-  ['tracesparserealmultiplication',['traceSparseRealMultiplication',['../functions_8h.html#a1532e98cfb77bd701094664a0ed51270',1,'functions.h']]],
   ['transpose',['transpose',['../class_s_u2.html#a798389d4b2bc24cea6a466473004e3f8',1,'SU2::transpose()'],['../class_s_u3.html#af0229a4940c6c4355a2994ccaa663d0e',1,'SU3::transpose()'],['../lattice_8h.html#a64dd6a80a2d6f4a5fb73f90c31fdb6ac',1,'transpose(Lattice&lt; SU3 &gt; &amp;B):&#160;lattice.h'],['../lattice_8h.html#a3b961bbbc096ad781c5205deb54f6995',1,'transpose(Lattice&lt; SU3 &gt; &amp;&amp;B):&#160;lattice.h']]],
   ['type',['type',['../classnlohmann_1_1basic__json.html#a2b2d781d7f2a4ee41bc0016e931cadf7',1,'nlohmann::basic_json']]],
   ['type_5fname',['type_name',['../classnlohmann_1_1basic__json.html#a6b75862bdb4d26650616cf9821430755',1,'nlohmann::basic_json']]]

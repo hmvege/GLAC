@@ -12,7 +12,7 @@
 <!-- Node37 -->
 <g id="node1" class="node">
 <title>Node37</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::initializeObservableStorer initializes ObservableStorer.">
 <polygon fill="#bfbfbf" stroke="#000000" points="193.1523,-.5 193.1523,-28.5 318.0781,-28.5 318.0781,-.5 193.1523,-.5"/>
 <text text-anchor="start" x="201.1523" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::initialize</text>
 <text text-anchor="middle" x="255.6152" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer</text>

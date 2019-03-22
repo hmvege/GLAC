@@ -1,10 +1,10 @@
 <map id="imagTrace" name="imagTrace">
 <area shape="rect" id="node1" title=" " alt="" coords="239,180,323,205"/>
 <area shape="rect" id="node2" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="25,5,171,44"/>
-<area shape="rect" id="node3" href="$class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" title=" " alt="" coords="14,68,182,93"/>
-<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,117,191,156"/>
-<area shape="rect" id="node5" href="$class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" title=" " alt="" coords="12,180,184,205"/>
-<area shape="rect" id="node6" href="$class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" title=" " alt="" coords="15,229,181,268"/>
-<area shape="rect" id="node7" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title=" " alt="" coords="15,292,182,317"/>
-<area shape="rect" id="node8" href="$class_topological_charge.html#a8ed78c28c3484df04b1cb24187de2f5b" title=" " alt="" coords="29,341,168,380"/>
+<area shape="rect" id="node3" href="$class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" title="Correlator::calculate calculates a observable." alt="" coords="14,68,182,93"/>
+<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title="Correlator::calculate calculates a observable." alt="" coords="5,117,191,156"/>
+<area shape="rect" id="node5" href="$class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" title="Correlator::calculate calculates a observable." alt="" coords="12,180,184,205"/>
+<area shape="rect" id="node6" href="$class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" title="Correlator::calculate calculates a observable." alt="" coords="15,229,181,268"/>
+<area shape="rect" id="node7" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title="Correlator::calculate calculates a observable." alt="" coords="15,292,182,317"/>
+<area shape="rect" id="node8" href="$class_topological_charge.html#a8ed78c28c3484df04b1cb24187de2f5b" title="Correlator::calculate calculates a observable." alt="" coords="29,341,168,380"/>
 </map>

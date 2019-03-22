@@ -7,82 +7,83 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{class_parallel_1_1_communicator_ae4242fefd3f34197fab482141ce08550}{Communicator}} ()
+\mbox{\hyperlink{class_parallel_1_1_communicator_abd4c26c6a901e571bc9cfc4259e65de3}{Communicator}} ()
 \item 
-\mbox{\hyperlink{class_parallel_1_1_communicator_ac1e7afc1984908e5a44a713e37131f0a}{$\sim$\+Communicator}} ()
+\mbox{\hyperlink{class_parallel_1_1_communicator_a4ced5362bf7438924f8d7f1b0c5ec391}{$\sim$\+Communicator}} ()
 \end{DoxyCompactItemize}
 \subsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_adc9248c5a0defbbf55bfca988bfd9e96}{init}} (int $\ast$number\+Of\+Arguments, char $\ast$$\ast$$\ast$cmd\+Line\+Arguments)
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a4ed2a77c33cd899b31131e44fc906fd7}{init}} (int $\ast$number\+Of\+Arguments, char $\ast$$\ast$$\ast$cmd\+Line\+Arguments)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_a4ed2a77c33cd899b31131e44fc906fd7}{Parallel\+::\+Communicator\+::init}} initializes the communicater and sets up the lattice geometry. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a3094d713d09225738ecf0250019db115}{initialize\+Sub\+Lattice}} ()
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_a71baca622b377e6537799857be416a77}{initialize\+Sub\+Lattice}} ()
+static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432}{get\+Positive\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int S\+U3\+Dir)
 \item 
-static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_ae715d67d2e60def9bf529702a64f4caa}{get\+Positive\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int S\+U3\+Dir)
+static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_ae843d16f4aed13d5b5179a05b717ec88}{get\+Negative\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int S\+U3\+Dir)
 \item 
-static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_ad3b8781686b517c146d9d2f2dbf932de}{get\+Negative\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int S\+U3\+Dir)
+static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_a27862560cf6c7b8ccf650a422e014776}{get\+Neighbours\+Neighbour\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int nu, int $\ast$nu\+Index, int S\+U3\+Dir)
 \item 
-static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_a453ebde0502ed86b8bd95dede6f8e69c}{get\+Neighbours\+Neighbour\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int nu, int $\ast$nu\+Index, int S\+U3\+Dir)
-\item 
-static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_aebe919d44a02b37c98161ff4d3d23f6f}{get\+Neighbours\+Neighbour\+Negative\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int nu, int $\ast$nu\+Index, int S\+U3\+Dir)
+static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_a1c598fae96e05e3b36db368e60453d63}{get\+Neighbours\+Neighbour\+Negative\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int nu, int $\ast$nu\+Index, int S\+U3\+Dir)
 \item 
 static int \mbox{\hyperlink{class_parallel_1_1_communicator_a474ab433da0e83ef372d74e26a7e5cb0}{get\+Process\+Rank}} ()
 \item 
 static int \mbox{\hyperlink{class_parallel_1_1_communicator_a7b1f80fb49a0cc83f2031c3415174150}{get\+Num\+Proc}} ()
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_aea1c6e1ff8f4f40d3db0ac8e0b29db62}{setN}} (std\+::vector$<$ unsigned int $>$ N)
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a1db417babab93c8d8bf6339ff2bab540}{setN}} (std\+::vector$<$ unsigned int $>$ N)
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_a6759125172843d9229c644f2a3a21ab7}{M\+P\+I\+Exit}} (std\+::string message)
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a57bb28ee8dbc4efd708a2695423778c4}{M\+P\+I\+Exit}} (std\+::string message)
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_ab1b15401de819cf343398b767d6730ed}{M\+P\+I\+Print}} (std\+::string message)
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a34a1d27c0e2b2b101b97a53734dbc4f8}{M\+P\+I\+Print}} (std\+::string message)
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_ad48e48ab0137dab329d31fc1e3ebf179}{set\+Barrier}} ()
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a14aa3d54f5efe28094df886948e3dee2}{set\+Barrier}} ()
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_a13263be32405fa088f06b07f7fdfe281}{set\+Barrier\+Active}} ()
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_af61a4b8a49509982ae96d2a99dfb9f49}{set\+Barrier\+Active}} ()
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_a6c60f0fbbe23ef0bf342b0157d080007}{gather\+Double\+Results}} (double $\ast$data, unsigned int N)
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_ae5739683ff54a7c39af6e37920e70ea5}{gather\+Double\+Results}} (double $\ast$data, unsigned int N)
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_adc5e4acb372e9db19276572007940832}{free\+M\+P\+I\+Groups}} ()
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_aca0ac979aee1a649dbe5d4582b06a707}{free\+M\+P\+I\+Groups}} ()
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_a3da13427d693e0ce924159e871c83e19}{reduce\+To\+Temporal\+Dimension}} (std\+::vector$<$ double $>$ \&obs\+Results, std\+::vector$<$ double $>$ obs)
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a5d42989e7a3022de6042e3503aa35346}{reduce\+To\+Temporal\+Dimension}} (std\+::vector$<$ double $>$ \&obs\+Results, std\+::vector$<$ double $>$ obs)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_a5d42989e7a3022de6042e3503aa35346}{Parallel\+::\+Communicator\+::reduce\+To\+Temporal\+Dimension}} reduces the results to the temporal dimensions, i.\+e. Euclidean time. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_acd7e2f114728e5207093743a58ab3a40}{check\+Processor\+Validity}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_acd7e2f114728e5207093743a58ab3a40}{Parallel\+::\+Communicator\+::check\+Processor\+Validity}} checks that we do not have an odd number of processors. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a535fddf3fe091b82f8ca3de7974f7412}{check\+Sub\+Lattice\+Dimensions\+Validity}} ()
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_af507f05e369586d3ffea12d366e972ef}{check\+Processor\+Validity}} ()
-\item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_a5b2b11a63237238ac6b6552e5a7312d0}{check\+Sub\+Lattice\+Dimensions\+Validity}} ()
-\item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_a003d94aceebf2fddc6b4ceff584ac8d7}{check\+Sub\+Lattice\+Validity}} ()
-\item 
-static void \mbox{\hyperlink{class_parallel_1_1_communicator_a0975f377dbde235d418ca7054001f3a3}{check\+Lattice}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::string message)
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a5da7239eefebcebbeeabee499b2d724d}{check\+Sub\+Lattice\+Validity}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_a5da7239eefebcebbeeabee499b2d724d}{Parallel\+::\+Communicator\+::check\+Sub\+Lattice\+Validity}} runs a series of tests to ensure that the sub lattices has been correctly set up. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_parallel_1_1_communicator_a9471bf9448f34a0b4575310a3c54af61}{check\+Lattice}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::string message)
 \end{DoxyCompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_ae4242fefd3f34197fab482141ce08550}\label{class_parallel_1_1_communicator_ae4242fefd3f34197fab482141ce08550}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_abd4c26c6a901e571bc9cfc4259e65de3}\label{class_parallel_1_1_communicator_abd4c26c6a901e571bc9cfc4259e65de3}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!Communicator@{Communicator}}
 \index{Communicator@{Communicator}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{Communicator()}{Communicator()}}
-{\footnotesize\ttfamily Parallel\+::\+Communicator\+::\+Communicator (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Communicator\+::\+Communicator (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_parallel_1_1_communicator_ac1e7afc1984908e5a44a713e37131f0a}\label{class_parallel_1_1_communicator_ac1e7afc1984908e5a44a713e37131f0a}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a4ced5362bf7438924f8d7f1b0c5ec391}\label{class_parallel_1_1_communicator_a4ced5362bf7438924f8d7f1b0c5ec391}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!````~Communicator@{$\sim$Communicator}}
 \index{````~Communicator@{$\sim$Communicator}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{$\sim$Communicator()}{~Communicator()}}
-{\footnotesize\ttfamily Parallel\+::\+Communicator\+::$\sim$\+Communicator (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Communicator\+::$\sim$\+Communicator (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
 
 \subsection{Member Function Documentation}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_a0975f377dbde235d418ca7054001f3a3}\label{class_parallel_1_1_communicator_a0975f377dbde235d418ca7054001f3a3}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a9471bf9448f34a0b4575310a3c54af61}\label{class_parallel_1_1_communicator_a9471bf9448f34a0b4575310a3c54af61}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!checkLattice@{checkLattice}}
 \index{checkLattice@{checkLattice}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{checkLattice()}{checkLattice()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::check\+Lattice (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::string}]{message }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::check\+Lattice (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::string}]{message }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a0975f377dbde235d418ca7054001f3a3_cgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a9471bf9448f34a0b4575310a3c54af61_cgraph}
 \end{center}
 \end{figure}
 Here is the caller graph for this function\+:
@@ -90,111 +91,129 @@ Here is the caller graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a0975f377dbde235d418ca7054001f3a3_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a9471bf9448f34a0b4575310a3c54af61_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_af507f05e369586d3ffea12d366e972ef}\label{class_parallel_1_1_communicator_af507f05e369586d3ffea12d366e972ef}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_acd7e2f114728e5207093743a58ab3a40}\label{class_parallel_1_1_communicator_acd7e2f114728e5207093743a58ab3a40}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!checkProcessorValidity@{checkProcessorValidity}}
 \index{checkProcessorValidity@{checkProcessorValidity}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{checkProcessorValidity()}{checkProcessorValidity()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::check\+Processor\+Validity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::check\+Processor\+Validity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-\mbox{\Hypertarget{class_parallel_1_1_communicator_a5b2b11a63237238ac6b6552e5a7312d0}\label{class_parallel_1_1_communicator_a5b2b11a63237238ac6b6552e5a7312d0}} 
+
+
+\mbox{\hyperlink{class_parallel_1_1_communicator_acd7e2f114728e5207093743a58ab3a40}{Parallel\+::\+Communicator\+::check\+Processor\+Validity}} checks that we do not have an odd number of processors. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000005}{Todo}}]\+: this could probably be changed such that it just leaves out one processor that is left over. \end{DoxyRefDesc}
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a535fddf3fe091b82f8ca3de7974f7412}\label{class_parallel_1_1_communicator_a535fddf3fe091b82f8ca3de7974f7412}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!checkSubLatticeDimensionsValidity@{checkSubLatticeDimensionsValidity}}
 \index{checkSubLatticeDimensionsValidity@{checkSubLatticeDimensionsValidity}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{checkSubLatticeDimensionsValidity()}{checkSubLatticeDimensionsValidity()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::check\+Sub\+Lattice\+Dimensions\+Validity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::check\+Sub\+Lattice\+Dimensions\+Validity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-\mbox{\Hypertarget{class_parallel_1_1_communicator_a003d94aceebf2fddc6b4ceff584ac8d7}\label{class_parallel_1_1_communicator_a003d94aceebf2fddc6b4ceff584ac8d7}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a5da7239eefebcebbeeabee499b2d724d}\label{class_parallel_1_1_communicator_a5da7239eefebcebbeeabee499b2d724d}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!checkSubLatticeValidity@{checkSubLatticeValidity}}
 \index{checkSubLatticeValidity@{checkSubLatticeValidity}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{checkSubLatticeValidity()}{checkSubLatticeValidity()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::check\+Sub\+Lattice\+Validity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::check\+Sub\+Lattice\+Validity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_parallel_1_1_communicator_a5da7239eefebcebbeeabee499b2d724d}{Parallel\+::\+Communicator\+::check\+Sub\+Lattice\+Validity}} runs a series of tests to ensure that the sub lattices has been correctly set up. 
+
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a003d94aceebf2fddc6b4ceff584ac8d7_cgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a5da7239eefebcebbeeabee499b2d724d_cgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_adc5e4acb372e9db19276572007940832}\label{class_parallel_1_1_communicator_adc5e4acb372e9db19276572007940832}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_aca0ac979aee1a649dbe5d4582b06a707}\label{class_parallel_1_1_communicator_aca0ac979aee1a649dbe5d4582b06a707}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!freeMPIGroups@{freeMPIGroups}}
 \index{freeMPIGroups@{freeMPIGroups}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{freeMPIGroups()}{freeMPIGroups()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::free\+M\+P\+I\+Groups (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::free\+M\+P\+I\+Groups (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=347pt]{class_parallel_1_1_communicator_adc5e4acb372e9db19276572007940832_icgraph}
+\includegraphics[width=347pt]{class_parallel_1_1_communicator_aca0ac979aee1a649dbe5d4582b06a707_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_a6c60f0fbbe23ef0bf342b0157d080007}\label{class_parallel_1_1_communicator_a6c60f0fbbe23ef0bf342b0157d080007}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_ae5739683ff54a7c39af6e37920e70ea5}\label{class_parallel_1_1_communicator_ae5739683ff54a7c39af6e37920e70ea5}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!gatherDoubleResults@{gatherDoubleResults}}
 \index{gatherDoubleResults@{gatherDoubleResults}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{gatherDoubleResults()}{gatherDoubleResults()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::gather\+Double\+Results (\begin{DoxyParamCaption}\item[{double $\ast$}]{data,  }\item[{unsigned int}]{N }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::gather\+Double\+Results (\begin{DoxyParamCaption}\item[{double $\ast$}]{data,  }\item[{unsigned int}]{N }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a6c60f0fbbe23ef0bf342b0157d080007_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_ae5739683ff54a7c39af6e37920e70ea5_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_ad3b8781686b517c146d9d2f2dbf932de}\label{class_parallel_1_1_communicator_ad3b8781686b517c146d9d2f2dbf932de}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_ae843d16f4aed13d5b5179a05b717ec88}\label{class_parallel_1_1_communicator_ae843d16f4aed13d5b5179a05b717ec88}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!getNegativeLink@{getNegativeLink}}
 \index{getNegativeLink@{getNegativeLink}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{getNegativeLink()}{getNegativeLink()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} Parallel\+::\+Communicator\+::get\+Negative\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} Communicator\+::get\+Negative\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_ad3b8781686b517c146d9d2f2dbf932de_cgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_ae843d16f4aed13d5b5179a05b717ec88_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_ad3b8781686b517c146d9d2f2dbf932de_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_ae843d16f4aed13d5b5179a05b717ec88_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_a453ebde0502ed86b8bd95dede6f8e69c}\label{class_parallel_1_1_communicator_a453ebde0502ed86b8bd95dede6f8e69c}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a27862560cf6c7b8ccf650a422e014776}\label{class_parallel_1_1_communicator_a27862560cf6c7b8ccf650a422e014776}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!getNeighboursNeighbourLink@{getNeighboursNeighbourLink}}
 \index{getNeighboursNeighbourLink@{getNeighboursNeighbourLink}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{getNeighboursNeighbourLink()}{getNeighboursNeighbourLink()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} Parallel\+::\+Communicator\+::get\+Neighbours\+Neighbour\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{nu,  }\item[{int $\ast$}]{nu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} Communicator\+::get\+Neighbours\+Neighbour\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{nu,  }\item[{int $\ast$}]{nu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a453ebde0502ed86b8bd95dede6f8e69c_cgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a27862560cf6c7b8ccf650a422e014776_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a453ebde0502ed86b8bd95dede6f8e69c_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a27862560cf6c7b8ccf650a422e014776_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_aebe919d44a02b37c98161ff4d3d23f6f}\label{class_parallel_1_1_communicator_aebe919d44a02b37c98161ff4d3d23f6f}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a1c598fae96e05e3b36db368e60453d63}\label{class_parallel_1_1_communicator_a1c598fae96e05e3b36db368e60453d63}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!getNeighboursNeighbourNegativeLink@{getNeighboursNeighbourNegativeLink}}
 \index{getNeighboursNeighbourNegativeLink@{getNeighboursNeighbourNegativeLink}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{getNeighboursNeighbourNegativeLink()}{getNeighboursNeighbourNegativeLink()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} Parallel\+::\+Communicator\+::get\+Neighbours\+Neighbour\+Negative\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{nu,  }\item[{int $\ast$}]{nu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} Communicator\+::get\+Neighbours\+Neighbour\+Negative\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{nu,  }\item[{int $\ast$}]{nu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_aebe919d44a02b37c98161ff4d3d23f6f_cgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a1c598fae96e05e3b36db368e60453d63_cgraph}
 \end{center}
 \end{figure}
 \mbox{\Hypertarget{class_parallel_1_1_communicator_a7b1f80fb49a0cc83f2031c3415174150}\label{class_parallel_1_1_communicator_a7b1f80fb49a0cc83f2031c3415174150}} 
@@ -211,24 +230,26 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{class_parallel_1_1_communicator_a7b1f80fb49a0cc83f2031c3415174150_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_ae715d67d2e60def9bf529702a64f4caa}\label{class_parallel_1_1_communicator_ae715d67d2e60def9bf529702a64f4caa}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432}\label{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!getPositiveLink@{getPositiveLink}}
 \index{getPositiveLink@{getPositiveLink}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{getPositiveLink()}{getPositiveLink()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} Parallel\+::\+Communicator\+::get\+Positive\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} Communicator\+::get\+Positive\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_ae715d67d2e60def9bf529702a64f4caa_cgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_ae715d67d2e60def9bf529702a64f4caa_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432_icgraph}
 \end{center}
 \end{figure}
 \mbox{\Hypertarget{class_parallel_1_1_communicator_a474ab433da0e83ef372d74e26a7e5cb0}\label{class_parallel_1_1_communicator_a474ab433da0e83ef372d74e26a7e5cb0}} 
@@ -245,116 +266,146 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{class_parallel_1_1_communicator_a474ab433da0e83ef372d74e26a7e5cb0_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_adc9248c5a0defbbf55bfca988bfd9e96}\label{class_parallel_1_1_communicator_adc9248c5a0defbbf55bfca988bfd9e96}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a4ed2a77c33cd899b31131e44fc906fd7}\label{class_parallel_1_1_communicator_a4ed2a77c33cd899b31131e44fc906fd7}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!init@{init}}
 \index{init@{init}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{init()}{init()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::init (\begin{DoxyParamCaption}\item[{int $\ast$}]{number\+Of\+Arguments,  }\item[{char $\ast$$\ast$$\ast$}]{cmd\+Line\+Arguments }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::init (\begin{DoxyParamCaption}\item[{int $\ast$}]{number\+Of\+Arguments,  }\item[{char $\ast$$\ast$$\ast$}]{cmd\+Line\+Arguments }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_parallel_1_1_communicator_a4ed2a77c33cd899b31131e44fc906fd7}{Parallel\+::\+Communicator\+::init}} initializes the communicater and sets up the lattice geometry. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em number\+Of\+Arguments} & number of command line arguments. \\
+\hline
+{\em cmd\+Line\+Arguments} & command line arguments. \\
+\hline
+\end{DoxyParams}
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=274pt]{class_parallel_1_1_communicator_adc9248c5a0defbbf55bfca988bfd9e96_icgraph}
+\includegraphics[width=274pt]{class_parallel_1_1_communicator_a4ed2a77c33cd899b31131e44fc906fd7_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_a71baca622b377e6537799857be416a77}\label{class_parallel_1_1_communicator_a71baca622b377e6537799857be416a77}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a3094d713d09225738ecf0250019db115}\label{class_parallel_1_1_communicator_a3094d713d09225738ecf0250019db115}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!initializeSubLattice@{initializeSubLattice}}
 \index{initializeSubLattice@{initializeSubLattice}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{initializeSubLattice()}{initializeSubLattice()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::initialize\+Sub\+Lattice (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::initialize\+Sub\+Lattice (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a71baca622b377e6537799857be416a77_cgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a3094d713d09225738ecf0250019db115_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=340pt]{class_parallel_1_1_communicator_a71baca622b377e6537799857be416a77_icgraph}
+\includegraphics[width=340pt]{class_parallel_1_1_communicator_a3094d713d09225738ecf0250019db115_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_a6759125172843d9229c644f2a3a21ab7}\label{class_parallel_1_1_communicator_a6759125172843d9229c644f2a3a21ab7}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a57bb28ee8dbc4efd708a2695423778c4}\label{class_parallel_1_1_communicator_a57bb28ee8dbc4efd708a2695423778c4}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!MPIExit@{MPIExit}}
 \index{MPIExit@{MPIExit}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{MPIExit()}{MPIExit()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::\+M\+P\+I\+Exit (\begin{DoxyParamCaption}\item[{std\+::string}]{message }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::\+M\+P\+I\+Exit (\begin{DoxyParamCaption}\item[{std\+::string}]{message }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a6759125172843d9229c644f2a3a21ab7_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a57bb28ee8dbc4efd708a2695423778c4_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_ab1b15401de819cf343398b767d6730ed}\label{class_parallel_1_1_communicator_ab1b15401de819cf343398b767d6730ed}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a34a1d27c0e2b2b101b97a53734dbc4f8}\label{class_parallel_1_1_communicator_a34a1d27c0e2b2b101b97a53734dbc4f8}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!MPIPrint@{MPIPrint}}
 \index{MPIPrint@{MPIPrint}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{MPIPrint()}{MPIPrint()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::\+M\+P\+I\+Print (\begin{DoxyParamCaption}\item[{std\+::string}]{message }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::\+M\+P\+I\+Print (\begin{DoxyParamCaption}\item[{std\+::string}]{message }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-\mbox{\Hypertarget{class_parallel_1_1_communicator_a3da13427d693e0ce924159e871c83e19}\label{class_parallel_1_1_communicator_a3da13427d693e0ce924159e871c83e19}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a5d42989e7a3022de6042e3503aa35346}\label{class_parallel_1_1_communicator_a5d42989e7a3022de6042e3503aa35346}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!reduceToTemporalDimension@{reduceToTemporalDimension}}
 \index{reduceToTemporalDimension@{reduceToTemporalDimension}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{reduceToTemporalDimension()}{reduceToTemporalDimension()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::reduce\+To\+Temporal\+Dimension (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$ \&}]{obs\+Results,  }\item[{std\+::vector$<$ double $>$}]{obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::reduce\+To\+Temporal\+Dimension (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$ \&}]{obs\+Results,  }\item[{std\+::vector$<$ double $>$}]{obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_parallel_1_1_communicator_a5d42989e7a3022de6042e3503aa35346}{Parallel\+::\+Communicator\+::reduce\+To\+Temporal\+Dimension}} reduces the results to the temporal dimensions, i.\+e. Euclidean time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em obs\+Results} & contigious vector containing \\
+\hline
+{\em obs} & \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a3da13427d693e0ce924159e871c83e19_cgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a5d42989e7a3022de6042e3503aa35346_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a3da13427d693e0ce924159e871c83e19_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a5d42989e7a3022de6042e3503aa35346_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_ad48e48ab0137dab329d31fc1e3ebf179}\label{class_parallel_1_1_communicator_ad48e48ab0137dab329d31fc1e3ebf179}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a14aa3d54f5efe28094df886948e3dee2}\label{class_parallel_1_1_communicator_a14aa3d54f5efe28094df886948e3dee2}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!setBarrier@{setBarrier}}
 \index{setBarrier@{setBarrier}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{setBarrier()}{setBarrier()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::set\+Barrier (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::set\+Barrier (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_ad48e48ab0137dab329d31fc1e3ebf179_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a14aa3d54f5efe28094df886948e3dee2_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_a13263be32405fa088f06b07f7fdfe281}\label{class_parallel_1_1_communicator_a13263be32405fa088f06b07f7fdfe281}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_af61a4b8a49509982ae96d2a99dfb9f49}\label{class_parallel_1_1_communicator_af61a4b8a49509982ae96d2a99dfb9f49}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!setBarrierActive@{setBarrierActive}}
 \index{setBarrierActive@{setBarrierActive}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{setBarrierActive()}{setBarrierActive()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::set\+Barrier\+Active (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::set\+Barrier\+Active (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_a13263be32405fa088f06b07f7fdfe281_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_af61a4b8a49509982ae96d2a99dfb9f49_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_aea1c6e1ff8f4f40d3db0ac8e0b29db62}\label{class_parallel_1_1_communicator_aea1c6e1ff8f4f40d3db0ac8e0b29db62}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a1db417babab93c8d8bf6339ff2bab540}\label{class_parallel_1_1_communicator_a1db417babab93c8d8bf6339ff2bab540}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!setN@{setN}}
 \index{setN@{setN}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{setN()}{setN()}}
-{\footnotesize\ttfamily void Parallel\+::\+Communicator\+::setN (\begin{DoxyParamCaption}\item[{std\+::vector$<$ unsigned int $>$}]{N }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Communicator\+::setN (\begin{DoxyParamCaption}\item[{std\+::vector$<$ unsigned int $>$}]{N }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_aea1c6e1ff8f4f40d3db0ac8e0b29db62_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a1db417babab93c8d8bf6339ff2bab540_icgraph}
 \end{center}
 \end{figure}
 

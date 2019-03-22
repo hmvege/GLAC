@@ -69,7 +69,7 @@
 <!-- Node10 -->
 <g id="node5" class="node">
 <title>Node10</title>
-<g id="a_node5"><a xlink:href="class_parallel_1_1_communicator.html#ae715d67d2e60def9bf529702a64f4caa" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_parallel_1_1_communicator.html#a1c8d402df4a44becc1cab7a762f51432" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="160.96,-170.5 160.96,-198.5 280.8857,-198.5 280.8857,-170.5 160.96,-170.5"/>
 <text text-anchor="start" x="168.96" y="-186.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="220.9229" y="-176.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getPositiveLink</text>
@@ -100,7 +100,7 @@
 <!-- Node12 -->
 <g id="node7" class="node">
 <title>Node12</title>
-<g id="a_node7"><a xlink:href="class_s_u3.html#ad0e19706d3c6fdb50dcf788d4b48eb4c" target="_top" xlink:title=" ">
+<g id="a_node7"><a xlink:href="class_s_u3.html#ad0e19706d3c6fdb50dcf788d4b48eb4c" target="_top" xlink:title="SU3::inv performs a matrix inversion.">
 <polygon fill="#ffffff" stroke="#000000" points="194.0264,-94.5 194.0264,-112.5 247.8193,-112.5 247.8193,-94.5 194.0264,-94.5"/>
 <text text-anchor="middle" x="220.9229" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3::inv</text>
 </a>
@@ -115,7 +115,7 @@
 <!-- Node13 -->
 <g id="node8" class="node">
 <title>Node13</title>
-<g id="a_node8"><a xlink:href="class_parallel_1_1_communicator.html#a453ebde0502ed86b8bd95dede6f8e69c" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_parallel_1_1_communicator.html#a27862560cf6c7b8ccf650a422e014776" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="145.3789,-.5 145.3789,-28.5 296.4668,-28.5 296.4668,-.5 145.3789,-.5"/>
 <text text-anchor="start" x="153.3789" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="220.9229" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getNeighboursNeighbourLink</text>
@@ -131,7 +131,7 @@
 <!-- Node15 -->
 <g id="node10" class="node">
 <title>Node15</title>
-<g id="a_node10"><a xlink:href="class_parallel_1_1_communicator.html#ad3b8781686b517c146d9d2f2dbf932de" target="_top" xlink:title=" ">
+<g id="a_node10"><a xlink:href="class_parallel_1_1_communicator.html#ae843d16f4aed13d5b5179a05b717ec88" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="160.96,-47.5 160.96,-75.5 280.8857,-75.5 280.8857,-47.5 160.96,-47.5"/>
 <text text-anchor="start" x="168.96" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="220.9229" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getNegativeLink</text>

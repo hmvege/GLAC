@@ -22,7 +22,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="class_lattice_action_charge_density.html#aba3131bbe5bd930adccc2852b4d44bb9" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_lattice_action_charge_density.html#aba3131bbe5bd930adccc2852b4d44bb9" target="_top" xlink:title="Correlator::initializeObservableStorer initializes ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="199.2949,-111.5 199.2949,-139.5 338.6934,-139.5 338.6934,-111.5 199.2949,-111.5"/>
 <text text-anchor="start" x="207.2949" y="-127.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="268.9941" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initializeObservableStorer</text>
@@ -53,7 +53,7 @@
 <!-- Node9 -->
 <g id="node10" class="node">
 <title>Node9</title>
-<g id="a_node10"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title=" ">
+<g id="a_node10"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title="allocate method for allocating memory.">
 <polygon fill="#ffffff" stroke="#000000" points="226.2505,-37.5 226.2505,-55.5 311.7378,-55.5 311.7378,-37.5 226.2505,-37.5"/>
 <text text-anchor="middle" x="268.9941" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::allocate</text>
 </a>

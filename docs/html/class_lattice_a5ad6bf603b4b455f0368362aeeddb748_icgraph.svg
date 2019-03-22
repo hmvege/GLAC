@@ -12,7 +12,7 @@
 <!-- Node44 -->
 <g id="node1" class="node">
 <title>Node44</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="identity method for setting the SU3 matrices of the lattice to identity.">
 <polygon fill="#bfbfbf" stroke="#000000" points="216.8271,-.5 216.8271,-18.5 299.5313,-18.5 299.5313,-.5 216.8271,-.5"/>
 <text text-anchor="middle" x="258.1792" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::identity</text>
 </a>

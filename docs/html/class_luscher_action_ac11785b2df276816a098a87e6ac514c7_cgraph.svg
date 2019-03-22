@@ -22,7 +22,7 @@
 <!-- Node18 -->
 <g id="node2" class="node">
 <title>Node18</title>
-<g id="a_node2"><a xlink:href="class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" target="_top" xlink:title="zeros sets all of the SU3 elements in the lattice to zero.">
 <polygon fill="#ffffff" stroke="#000000" points="162.6201,-148.5 162.6201,-166.5 238.0928,-166.5 238.0928,-148.5 162.6201,-148.5"/>
 <text text-anchor="middle" x="200.3564" y="-154.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::zeros</text>
 </a>
@@ -37,7 +37,7 @@
 <!-- Node19 -->
 <g id="node3" class="node">
 <title>Node19</title>
-<g id="a_node3"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title="shift copies the lattice L and shifts it in a specified lorentzVector direction DIR.">
 <polygon fill="#ffffff" stroke="#000000" points="183.1865,-74.5 183.1865,-92.5 217.5264,-92.5 217.5264,-74.5 183.1865,-74.5"/>
 <text text-anchor="middle" x="200.3564" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">shift</text>
 </a>
@@ -67,7 +67,7 @@
 <!-- Node20 -->
 <g id="node4" class="node">
 <title>Node20</title>
-<g id="a_node4"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title="allocate method for allocating memory.">
 <polygon fill="#ffffff" stroke="#000000" points="296.8857,-111.5 296.8857,-129.5 382.373,-129.5 382.373,-111.5 296.8857,-111.5"/>
 <text text-anchor="middle" x="339.6294" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::allocate</text>
 </a>

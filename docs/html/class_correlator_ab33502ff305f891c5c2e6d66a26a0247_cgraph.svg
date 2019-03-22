@@ -12,7 +12,7 @@
 <!-- Node17 -->
 <g id="node1" class="node">
 <title>Node17</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-18.5 105.4824,-18.5 105.4824,-.5 0,-.5"/>
 <text text-anchor="middle" x="52.7412" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::calculate</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node18 -->
 <g id="node2" class="node">
 <title>Node18</title>
-<g id="a_node2"><a xlink:href="class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" target="_top" xlink:title="zeros sets all of the SU3 elements in the lattice to zero.">
 <polygon fill="#ffffff" stroke="#000000" points="141.4824,-.5 141.4824,-18.5 216.9551,-18.5 216.9551,-.5 141.4824,-.5"/>
 <text text-anchor="middle" x="179.2188" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::zeros</text>
 </a>

@@ -21,7 +21,7 @@
 <!-- Node183 -->
 <g id="node2" class="node">
 <title>Node183</title>
-<g id="a_node2"><a xlink:href="namespace_i_o.html#ad8cf5aef8f60d10b80292b69a091d5ac" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="namespace_i_o.html#ad8cf5aef8f60d10b80292b69a091d5ac" target="_top" xlink:title="IO::writeObservablesToFile method for writing an observable to file, using .15 precision.">
 <polygon fill="#ffffff" stroke="#000000" points="405.7822,-99.5 405.7822,-117.5 541.8213,-117.5 541.8213,-99.5 405.7822,-99.5"/>
 <text text-anchor="middle" x="473.8018" y="-105.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::writeObservablesToFile</text>
 </a>
@@ -51,7 +51,7 @@
 <!-- Node184 -->
 <g id="node3" class="node">
 <title>Node184</title>
-<g id="a_node3"><a xlink:href="class_observable_storer.html#a146f9acb8a0a2ce15782d26bdc4f0bf9" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_observable_storer.html#a146f9acb8a0a2ce15782d26bdc4f0bf9" target="_top" xlink:title="ObservableStorer::writeObservableToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="197.6055,-94.5 197.6055,-122.5 369.7822,-122.5 369.7822,-94.5 197.6055,-94.5"/>
 <text text-anchor="start" x="205.6055" y="-110.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::writeObservable</text>
 <text text-anchor="middle" x="283.6938" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
@@ -67,7 +67,7 @@
 <!-- Node185 -->
 <g id="node4" class="node">
 <title>Node185</title>
-<g id="a_node4"><a xlink:href="class_correlator.html#a9e8d80e30e4fbe3b7fe57521538cb5ff" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_correlator.html#a9e8d80e30e4fbe3b7fe57521538cb5ff" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="11.6699,-188.5 11.6699,-216.5 149.9355,-216.5 149.9355,-188.5 11.6699,-188.5"/>
 <text text-anchor="start" x="19.6699" y="-204.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::writeObservable</text>
 <text text-anchor="middle" x="80.8027" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
@@ -83,7 +83,7 @@
 <!-- Node186 -->
 <g id="node5" class="node">
 <title>Node186</title>
-<g id="a_node5"><a xlink:href="class_lattice_action_charge_density.html#a719f71aaccbf1b4147ea944781d69908" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_lattice_action_charge_density.html#a719f71aaccbf1b4147ea944781d69908" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="11.1035,-141.5 11.1035,-169.5 150.502,-169.5 150.502,-141.5 11.1035,-141.5"/>
 <text text-anchor="start" x="19.1035" y="-157.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="80.8027" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::writeObservableToFile</text>
@@ -99,7 +99,7 @@
 <!-- Node187 -->
 <g id="node6" class="node">
 <title>Node187</title>
-<g id="a_node6"><a xlink:href="class_master_sampler.html#a638714c38e1a6252ab8b6be1fa224bd4" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_master_sampler.html#a638714c38e1a6252ab8b6be1fa224bd4" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-94.5 0,-122.5 161.6055,-122.5 161.6055,-94.5 0,-94.5"/>
 <text text-anchor="start" x="8" y="-110.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::writeObservable</text>
 <text text-anchor="middle" x="80.8027" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
@@ -115,7 +115,7 @@
 <!-- Node188 -->
 <g id="node7" class="node">
 <title>Node188</title>
-<g id="a_node7"><a xlink:href="class_master_sampler_topc_x_y_z.html#a930f13a2a13f4b3820f40c8b52110cf2" target="_top" xlink:title=" ">
+<g id="a_node7"><a xlink:href="class_master_sampler_topc_x_y_z.html#a930f13a2a13f4b3820f40c8b52110cf2" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="18.6182,-47.5 18.6182,-75.5 142.9873,-75.5 142.9873,-47.5 18.6182,-47.5"/>
 <text text-anchor="start" x="26.6182" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="80.8027" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::writeObservableToFile</text>
@@ -131,7 +131,7 @@
 <!-- Node189 -->
 <g id="node8" class="node">
 <title>Node189</title>
-<g id="a_node8"><a xlink:href="class_super_sampler.html#a05b42b82879233dc329d280a61bfd7f0" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_super_sampler.html#a05b42b82879233dc329d280a61bfd7f0" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="1.9385,-.5 1.9385,-28.5 159.667,-28.5 159.667,-.5 1.9385,-.5"/>
 <text text-anchor="start" x="9.9385" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::writeObservable</text>
 <text text-anchor="middle" x="80.8027" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>

@@ -21,7 +21,7 @@
 <!-- Node118 -->
 <g id="node2" class="node">
 <title>Node118</title>
-<g id="a_node2"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-158.5 0,-186.5 139.3984,-186.5 139.3984,-158.5 0,-158.5"/>
 <text text-anchor="start" x="8" y="-174.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="69.6992" y="-164.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>
@@ -37,7 +37,7 @@
 <!-- Node119 -->
 <g id="node3" class="node">
 <title>Node119</title>
-<g id="a_node3"><a xlink:href="class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="5.2881,-121.5 5.2881,-139.5 134.1104,-139.5 134.1104,-121.5 5.2881,-121.5"/>
 <text text-anchor="middle" x="69.6992" y="-127.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::calculate</text>
 </a>
@@ -52,7 +52,7 @@
 <!-- Node120 -->
 <g id="node4" class="node">
 <title>Node120</title>
-<g id="a_node4"><a xlink:href="class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="7.5146,-74.5 7.5146,-102.5 131.8838,-102.5 131.8838,-74.5 7.5146,-74.5"/>
 <text text-anchor="start" x="15.5146" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="69.6992" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>
@@ -68,7 +68,7 @@
 <!-- Node121 -->
 <g id="node5" class="node">
 <title>Node121</title>
-<g id="a_node5"><a xlink:href="class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="18.0591,-37.5 18.0591,-55.5 121.3394,-55.5 121.3394,-37.5 18.0591,-37.5"/>
 <text text-anchor="middle" x="69.6992" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Plaquette::calculate</text>
 </a>
@@ -83,7 +83,7 @@
 <!-- Node122 -->
 <g id="node6" class="node">
 <title>Node122</title>
-<g id="a_node6"><a xlink:href="class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="7.2266,-.5 7.2266,-18.5 132.1719,-18.5 132.1719,-.5 7.2266,-.5"/>
 <text text-anchor="middle" x="69.6992" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::calculate</text>
 </a>

@@ -1,4 +1,4 @@
 <map id="SuperSampler::initializeObservableStorer" name="SuperSampler::initializeObservableStorer">
-<area shape="rect" id="node1" title=" " alt="" coords="253,5,414,44"/>
+<area shape="rect" id="node1" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="253,5,414,44"/>
 <area shape="rect" id="node2" href="$class_super_sampler.html#a6bf01b68f9befc5bf01c822e28c0c88d" title=" " alt="" coords="5,12,205,37"/>
 </map>

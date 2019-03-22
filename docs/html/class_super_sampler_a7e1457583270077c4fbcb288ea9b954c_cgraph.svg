@@ -12,7 +12,7 @@
 <!-- Node14 -->
 <g id="node1" class="node">
 <title>Node14</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-167.5 0,-185.5 124.9453,-185.5 124.9453,-167.5 0,-167.5"/>
 <text text-anchor="middle" x="62.4727" y="-173.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::calculate</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node15 -->
 <g id="node2" class="node">
 <title>Node15</title>
-<g id="a_node2"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title="shift copies the lattice L and shifts it in a specified lorentzVector direction DIR.">
 <polygon fill="#ffffff" stroke="#000000" points="213.0034,-335.5 213.0034,-353.5 247.3433,-353.5 247.3433,-335.5 213.0034,-335.5"/>
 <text text-anchor="middle" x="230.1733" y="-341.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">shift</text>
 </a>
@@ -96,7 +96,7 @@
 <!-- Node24 -->
 <g id="node11" class="node">
 <title>Node24</title>
-<g id="a_node11"><a xlink:href="class_lattice.html#a85154fbd1b0ae42af329135c6cd11f34" target="_top" xlink:title=" ">
+<g id="a_node11"><a xlink:href="class_lattice.html#a85154fbd1b0ae42af329135c6cd11f34" target="_top" xlink:title="copy method for copying content of another lattice B onto itself.">
 <polygon fill="#ffffff" stroke="#000000" points="194.1021,-.5 194.1021,-18.5 266.2446,-18.5 266.2446,-.5 194.1021,-.5"/>
 <text text-anchor="middle" x="230.1733" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::copy</text>
 </a>
@@ -141,7 +141,7 @@
 <!-- Node27 -->
 <g id="node14" class="node">
 <title>Node27</title>
-<g id="a_node14"><a xlink:href="class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" target="_top" xlink:title=" ">
+<g id="a_node14"><a xlink:href="class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" target="_top" xlink:title="zeros sets all of the SU3 elements in the lattice to zero.">
 <polygon fill="#ffffff" stroke="#000000" points="363.2017,-205.5 363.2017,-223.5 438.6743,-223.5 438.6743,-205.5 363.2017,-205.5"/>
 <text text-anchor="middle" x="400.938" y="-211.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::zeros</text>
 </a>
@@ -171,7 +171,7 @@
 <!-- Node16 -->
 <g id="node3" class="node">
 <title>Node16</title>
-<g id="a_node3"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title="allocate method for allocating memory.">
 <polygon fill="#ffffff" stroke="#000000" points="358.1943,-298.5 358.1943,-316.5 443.6816,-316.5 443.6816,-298.5 358.1943,-298.5"/>
 <text text-anchor="middle" x="400.938" y="-304.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::allocate</text>
 </a>
@@ -261,7 +261,7 @@
 <!-- Node28 -->
 <g id="node15" class="node">
 <title>Node28</title>
-<g id="a_node15"><a xlink:href="functions_8h.html#a93863171e3da962b61804144857576a7" target="_top" xlink:title=" ">
+<g id="a_node15"><a xlink:href="functions_8h.html#a93863171e3da962b61804144857576a7" target="_top" xlink:title="traceRealMultiplication">
 <polygon fill="#ffffff" stroke="#000000" points="342.6377,-168.5 342.6377,-186.5 459.2383,-186.5 459.2383,-168.5 342.6377,-168.5"/>
 <text text-anchor="middle" x="400.938" y="-174.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">traceRealMultiplication</text>
 </a>

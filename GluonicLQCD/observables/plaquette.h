@@ -7,7 +7,11 @@
  * \f[
  *      P = \frac{1}{16|\Lambda|} \sum_{n\in\Lambda} \sum_{\mu < \nu} \Re \tr P_{\mu\nu},
  * \f]
- * where \f$P_{\mu\nu}\f$ is the plquette.
+ * where
+ * \f[
+ *      P_{\mu\nu}=U_\mu(n) U_{\nu}(n+\hat{\mu}) U_{\mu}(n+\hat{\nu})^\dagger U_{\nu} (n)^\dagger
+ * \f]
+ * is the plquette.
  *
  * \author Mathias M. Vege
  * \version 1.0

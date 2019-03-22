@@ -21,7 +21,7 @@
 <!-- Node35 -->
 <g id="node2" class="node">
 <title>Node35</title>
-<g id="a_node2"><a xlink:href="class_s_u3_matrix_generator.html#aa4e04caff654a1df7c43280b85f359bc" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_s_u3_matrix_generator.html#aa4e04caff654a1df7c43280b85f359bc" target="_top" xlink:title="SU3MatrixGenerator::generateSU2 generates a random SU2 matrix close to unity.">
 <polygon fill="#ffffff" stroke="#000000" points="360.5264,-.5 360.5264,-28.5 468.2256,-28.5 468.2256,-.5 360.5264,-.5"/>
 <text text-anchor="start" x="368.5264" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3MatrixGenerator</text>
 <text text-anchor="middle" x="414.376" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::generateSU2</text>
@@ -37,7 +37,7 @@
 <!-- Node36 -->
 <g id="node3" class="node">
 <title>Node36</title>
-<g id="a_node3"><a xlink:href="class_s_u3_matrix_generator.html#a478a6d34a643f4ee30bc333ca1023b00" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_s_u3_matrix_generator.html#a478a6d34a643f4ee30bc333ca1023b00" target="_top" xlink:title="SU3MatrixGenerator::generateRST generates a SU3 matrix close to unity.">
 <polygon fill="#ffffff" stroke="#000000" points="216.8271,-.5 216.8271,-28.5 324.5264,-28.5 324.5264,-.5 216.8271,-.5"/>
 <text text-anchor="start" x="224.8271" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3MatrixGenerator</text>
 <text text-anchor="middle" x="270.6768" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::generateRST</text>

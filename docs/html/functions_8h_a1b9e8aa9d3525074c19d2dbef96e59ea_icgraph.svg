@@ -12,7 +12,7 @@
 <!-- Node5 -->
 <g id="node1" class="node">
 <title>Node5</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="traceImagMultiplication">
 <polygon fill="#bfbfbf" stroke="#000000" points="156.6729,-.5 156.6729,-18.5 274.9385,-18.5 274.9385,-.5 156.6729,-.5"/>
 <text text-anchor="middle" x="215.8057" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">traceImagMultiplication</text>
 </a>

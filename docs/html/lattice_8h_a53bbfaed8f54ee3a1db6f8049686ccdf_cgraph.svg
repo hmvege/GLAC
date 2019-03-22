@@ -12,7 +12,7 @@
 <!-- Node83 -->
 <g id="node1" class="node">
 <title>Node83</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="shift copies the lattice L and shifts it in a specified lorentzVector direction DIR.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-55.5 0,-73.5 34.3398,-73.5 34.3398,-55.5 0,-55.5"/>
 <text text-anchor="middle" x="17.1699" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">shift</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node84 -->
 <g id="node2" class="node">
 <title>Node84</title>
-<g id="a_node2"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title="allocate method for allocating memory.">
 <polygon fill="#ffffff" stroke="#000000" points="93.1328,-111.5 93.1328,-129.5 178.6201,-129.5 178.6201,-111.5 93.1328,-111.5"/>
 <text text-anchor="middle" x="135.8765" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::allocate</text>
 </a>

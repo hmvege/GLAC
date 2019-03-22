@@ -12,7 +12,7 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::Correlator.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-55.5 0,-73.5 110.4727,-73.5 110.4727,-55.5 0,-55.5"/>
 <text text-anchor="middle" x="55.2363" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::Correlator</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="class_correlator.html#ab99886c09dd27dfc8676d0032cecf9bc" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_correlator.html#ab99886c09dd27dfc8676d0032cecf9bc" target="_top" xlink:title="Correlator::initializeObservableStorer initializes ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="147.0366,-111.5 147.0366,-139.5 299.7603,-139.5 299.7603,-111.5 147.0366,-111.5"/>
 <text text-anchor="start" x="155.0366" y="-127.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::initializeObservable</text>
 <text text-anchor="middle" x="223.3984" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Storer</text>

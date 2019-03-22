@@ -75,6 +75,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Class for holding \(\mathrm{SU}(2)\) matrices.  
+ <a href="class_s_u2.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="su2_8h_source.html">su2.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -90,6 +93,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a17ce46d1d9db179d045602b90b3d5af4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_u2.html#a17ce46d1d9db179d045602b90b3d5af4">identity</a> ()</td></tr>
 <tr class="separator:a17ce46d1d9db179d045602b90b3d5af4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe1d093aaf7325c1a7490f84e4c59b12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_u2.html#afe1d093aaf7325c1a7490f84e4c59b12">setComplex</a> (<a class="el" href="classcomplex.html">complex</a> w, int i)</td></tr>
+<tr class="memdesc:afe1d093aaf7325c1a7490f84e4c59b12"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_s_u2.html#afe1d093aaf7325c1a7490f84e4c59b12" title="SU2::setComplex.">SU2::setComplex</a>.  <a href="#afe1d093aaf7325c1a7490f84e4c59b12">More...</a><br /></td></tr>
 <tr class="separator:afe1d093aaf7325c1a7490f84e4c59b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1eebb9f268f569b888f1ae6ab6a7e6c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_u2.html#ad1eebb9f268f569b888f1ae6ab6a7e6c">normSquared</a> (int i)</td></tr>
 <tr class="separator:ad1eebb9f268f569b888f1ae6ab6a7e6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -98,6 +102,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afb3a5fc8c00a45a0044113fb742727cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_s_u2.html">SU2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_u2.html#afb3a5fc8c00a45a0044113fb742727cc">conjugate</a> ()</td></tr>
 <tr class="separator:afb3a5fc8c00a45a0044113fb742727cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f7f6ade28078418c8ee97234fff4dd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_s_u2.html">SU2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_u2.html#a2f7f6ade28078418c8ee97234fff4dd0">inv</a> ()</td></tr>
+<tr class="memdesc:a2f7f6ade28078418c8ee97234fff4dd0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_s_u2.html#a2f7f6ade28078418c8ee97234fff4dd0" title="SU2::inv.">SU2::inv</a>.  <a href="#a2f7f6ade28078418c8ee97234fff4dd0">More...</a><br /></td></tr>
 <tr class="separator:a2f7f6ade28078418c8ee97234fff4dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f10c4617e00686b196653dd669e0697"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_u2.html#a4f10c4617e00686b196653dd669e0697">get</a> (int i, int j, int k)</td></tr>
 <tr class="separator:a4f10c4617e00686b196653dd669e0697"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,7 +124,14 @@ Data Fields</h2></td></tr>
 <tr class="memitem:ad4227484be245b63489c44a2bc02a625"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_s_u2.html#ad4227484be245b63489c44a2bc02a625">mat</a> [8]</td></tr>
 <tr class="separator:ad4227484be245b63489c44a2bc02a625"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class for holding \(\mathrm{SU}(2)\) matrices. </p>
+<p>Operations have been overloaded for ease of use.</p>
+<dl class="section author"><dt>Author</dt><dd>Mathias M. Vege </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2017-2019 </dd></dl>
+<dl class="section copyright"><dt>Copyright</dt><dd>MIT Licence </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a681fd5c1304d6f160686d7e9c0842ecb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a681fd5c1304d6f160686d7e9c0842ecb">&#9670;&nbsp;</a></span>SU2()</h2>
 
@@ -277,6 +289,9 @@ Data Fields</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="class_s_u2.html#a2f7f6ade28078418c8ee97234fff4dd0" title="SU2::inv.">SU2::inv</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>a copy of the inverse of itself. </dd></dl>
 
 </div>
 </div>
@@ -496,10 +511,20 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="class_s_u2.html#afe1d093aaf7325c1a7490f84e4c59b12" title="SU2::setComplex.">SU2::setComplex</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">w</td><td>complex number </td></tr>
+    <tr><td class="paramname">i</td><td>matrix position(contigious) to set w as. </td></tr>
+  </table>
+  </dd>
+</dl>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12_icgraph.svg" width="323" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12_icgraph.svg" width="323" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -546,7 +571,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_s_u2_a348ca5d38346892060a05f7d9de02916_icgraph.svg" width="771" height="50"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_s_u2_a348ca5d38346892060a05f7d9de02916_icgraph.svg" width="771" height="50"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>

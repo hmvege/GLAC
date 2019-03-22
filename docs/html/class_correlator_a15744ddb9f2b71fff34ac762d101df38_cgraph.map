@@ -1,4 +1,4 @@
 <map id="Correlator::printObservable" name="Correlator::printObservable">
-<area shape="rect" id="node1" title=" " alt="" coords="5,12,187,37"/>
+<area shape="rect" id="node1" title="Correlator::printObservable prints the observable for the output." alt="" coords="5,12,187,37"/>
 <area shape="rect" id="node2" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="235,5,395,44"/>
 </map>

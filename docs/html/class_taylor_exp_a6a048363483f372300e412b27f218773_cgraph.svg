@@ -12,7 +12,7 @@
 <!-- Node6 -->
 <g id="node1" class="node">
 <title>Node6</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="TaylorExp::setTaylorDegree.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-18.5 138.2754,-18.5 138.2754,-.5 0,-.5"/>
 <text text-anchor="middle" x="69.1377" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TaylorExp::setTaylorDegree</text>
 </a>

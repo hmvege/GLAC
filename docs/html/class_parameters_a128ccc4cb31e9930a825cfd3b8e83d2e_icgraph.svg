@@ -83,7 +83,7 @@
 <!-- Node133 -->
 <g id="node6" class="node">
 <title>Node133</title>
-<g id="a_node6"><a xlink:href="class_parallel_1_1_communicator.html#a003d94aceebf2fddc6b4ceff584ac8d7" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_parallel_1_1_communicator.html#a5da7239eefebcebbeeabee499b2d724d" target="_top" xlink:title="Parallel::Communicator::checkSubLatticeValidity runs a series of tests to ensure that the sub lattice...">
 <polygon fill="#ffffff" stroke="#000000" points="15.3589,-37.5 15.3589,-65.5 141.7935,-65.5 141.7935,-37.5 15.3589,-37.5"/>
 <text text-anchor="start" x="23.3589" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="78.5762" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::checkSubLatticeValidity</text>

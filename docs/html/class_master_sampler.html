@@ -74,16 +74,21 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Observable for calculating the plaquette, topological charge and energy.  
+ <a href="class_master_sampler.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="mastersampler_8h_source.html">mastersampler.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for MasterSampler:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler__inherit__graph.svg" width="123" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler__inherit__graph.svg" width="123" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for MasterSampler:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler__coll__graph.svg" width="162" height="198"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler__coll__graph.svg" width="162" height="198"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -93,42 +98,54 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a040e460a888f8dc066de84563f83caa6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#a040e460a888f8dc066de84563f83caa6">~MasterSampler</a> ()</td></tr>
 <tr class="separator:a040e460a888f8dc066de84563f83caa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3cc7e36498dbf4a39238de3ac59ae8b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b">calculate</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; <a class="el" href="class_s_u3.html">SU3</a> &gt; *lattice, unsigned int iObs)</td></tr>
+<tr class="memdesc:ad3cc7e36498dbf4a39238de3ac59ae8b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#ab33502ff305f891c5c2e6d66a26a0247" title="Correlator::calculate calculates a observable.">Correlator::calculate</a> calculates a observable.  <a href="#ad3cc7e36498dbf4a39238de3ac59ae8b">More...</a><br /></td></tr>
 <tr class="separator:ad3cc7e36498dbf4a39238de3ac59ae8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88e2eec68ea6bd60cc3f375ac04a8ded"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#a88e2eec68ea6bd60cc3f375ac04a8ded">initializeObservableStorer</a> (bool storeFlowObservable)</td></tr>
+<tr class="memdesc:a88e2eec68ea6bd60cc3f375ac04a8ded"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#ab99886c09dd27dfc8676d0032cecf9bc" title="Correlator::initializeObservableStorer initializes ObservableStorer.">Correlator::initializeObservableStorer</a> initializes <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a>.  <a href="#a88e2eec68ea6bd60cc3f375ac04a8ded">More...</a><br /></td></tr>
 <tr class="separator:a88e2eec68ea6bd60cc3f375ac04a8ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a638714c38e1a6252ab8b6be1fa224bd4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#a638714c38e1a6252ab8b6be1fa224bd4">writeObservableToFile</a> (double acceptanceRatio)</td></tr>
+<tr class="memdesc:a638714c38e1a6252ab8b6be1fa224bd4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#a9e8d80e30e4fbe3b7fe57521538cb5ff" title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">Correlator::writeObservableToFile</a> calls the <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a> for writing observable to file.  <a href="#a638714c38e1a6252ab8b6be1fa224bd4">More...</a><br /></td></tr>
 <tr class="separator:a638714c38e1a6252ab8b6be1fa224bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad475928217ac61fae134128904aaa9f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#ad475928217ac61fae134128904aaa9f8">writeFlowObservablesToFile</a> (unsigned int iFlow)</td></tr>
+<tr class="memdesc:ad475928217ac61fae134128904aaa9f8"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#a168512b2ce182d9478db47f100125fa6" title="Correlator::writeFlowObservablesToFile.">Correlator::writeFlowObservablesToFile</a>.  <a href="#ad475928217ac61fae134128904aaa9f8">More...</a><br /></td></tr>
 <tr class="separator:ad475928217ac61fae134128904aaa9f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a275a032513db03c899056fd07d71cc89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#a275a032513db03c899056fd07d71cc89">reset</a> ()</td></tr>
+<tr class="memdesc:a275a032513db03c899056fd07d71cc89"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#aacca40262d2cd62f0a3964e832f948c1" title="Correlator::reset resets ObservableStorer.">Correlator::reset</a> resets <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a>.  <a href="#a275a032513db03c899056fd07d71cc89">More...</a><br /></td></tr>
 <tr class="separator:a275a032513db03c899056fd07d71cc89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7913d0dbdea57af3f469a3cdd74f8fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#ab7913d0dbdea57af3f469a3cdd74f8fc">runStatistics</a> ()</td></tr>
+<tr class="memdesc:ab7913d0dbdea57af3f469a3cdd74f8fc"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#a35197b1d12b62ef30b79c0138a26456e" title="Correlator::runStatistics.">Correlator::runStatistics</a>.  <a href="#ab7913d0dbdea57af3f469a3cdd74f8fc">More...</a><br /></td></tr>
 <tr class="separator:ab7913d0dbdea57af3f469a3cdd74f8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51b207672764c100e1ae258fd2e33fcf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#a51b207672764c100e1ae258fd2e33fcf">printHeader</a> ()</td></tr>
+<tr class="memdesc:a51b207672764c100e1ae258fd2e33fcf"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#ac7c5a07d7cbee97c417a1659b93083b2" title="Correlator::printHeader prints a the observable name for output in header.">Correlator::printHeader</a> prints a the observable name for output in header.  <a href="#a51b207672764c100e1ae258fd2e33fcf">More...</a><br /></td></tr>
 <tr class="separator:a51b207672764c100e1ae258fd2e33fcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41853c3e4ab52fca7d93cf80e8702b7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#a41853c3e4ab52fca7d93cf80e8702b7a">printObservable</a> (unsigned int iObs)</td></tr>
+<tr class="memdesc:a41853c3e4ab52fca7d93cf80e8702b7a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#a15744ddb9f2b71fff34ac762d101df38" title="Correlator::printObservable prints the observable for the output.">Correlator::printObservable</a> prints the observable for the output.  <a href="#a41853c3e4ab52fca7d93cf80e8702b7a">More...</a><br /></td></tr>
 <tr class="separator:a41853c3e4ab52fca7d93cf80e8702b7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9accfc83c05d3013396355e40257a562"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#a9accfc83c05d3013396355e40257a562">printStatistics</a> ()</td></tr>
+<tr class="memdesc:a9accfc83c05d3013396355e40257a562"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#a2168d677f547769784781d2e2aaa53cf" title="Correlator::printStatistics prints statistics from ObservableStorer.">Correlator::printStatistics</a> prints statistics from <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a>.  <a href="#a9accfc83c05d3013396355e40257a562">More...</a><br /></td></tr>
 <tr class="separator:a9accfc83c05d3013396355e40257a562"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a471dffa3f29c68b4152b195708a9a5ac"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#a471dffa3f29c68b4152b195708a9a5ac">getObservablesVector</a> (unsigned int iObs)</td></tr>
+<tr class="memdesc:a471dffa3f29c68b4152b195708a9a5ac"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#a7fb062b098beb078f3e546f4717b4941" title="Correlator::getObservablesVector.">Correlator::getObservablesVector</a>.  <a href="#a471dffa3f29c68b4152b195708a9a5ac">More...</a><br /></td></tr>
 <tr class="separator:a471dffa3f29c68b4152b195708a9a5ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a893be9ba7dca98cb8d9d3cb30e42fcc3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_master_sampler.html#a893be9ba7dca98cb8d9d3cb30e42fcc3">copyObservable</a> (unsigned int iObs, std::vector&lt; double &gt; obs)</td></tr>
+<tr class="memdesc:a893be9ba7dca98cb8d9d3cb30e42fcc3"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#ac780d8b180294ee4801ede6e6a13f7f4" title="Correlator::copyObservable copies the observable if has already been calculated at zero flow time.">Correlator::copyObservable</a> copies the observable if has already been calculated at zero flow time.  <a href="#a893be9ba7dca98cb8d9d3cb30e42fcc3">More...</a><br /></td></tr>
 <tr class="separator:a893be9ba7dca98cb8d9d3cb30e42fcc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_correlator"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_correlator')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_correlator.html">Correlator</a></td></tr>
 <tr class="memitem:aff48ef3bf789e9c6231eacc21cd9ed9a inherit pub_methods_class_correlator"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a">Correlator</a> (bool storeFlowObservable)</td></tr>
+<tr class="memdesc:aff48ef3bf789e9c6231eacc21cd9ed9a inherit pub_methods_class_correlator"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a" title="Correlator::Correlator.">Correlator::Correlator</a>.  <a href="class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a">More...</a><br /></td></tr>
 <tr class="separator:aff48ef3bf789e9c6231eacc21cd9ed9a inherit pub_methods_class_correlator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6114955836dba0b4b61138490cd3fe91 inherit pub_methods_class_correlator"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_correlator.html#a6114955836dba0b4b61138490cd3fe91">Correlator</a> ()</td></tr>
+<tr class="memdesc:a6114955836dba0b4b61138490cd3fe91 inherit pub_methods_class_correlator"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a" title="Correlator::Correlator.">Correlator::Correlator</a>.  <a href="class_correlator.html#a6114955836dba0b4b61138490cd3fe91">More...</a><br /></td></tr>
 <tr class="separator:a6114955836dba0b4b61138490cd3fe91 inherit pub_methods_class_correlator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48307431ca91b41319c6b68c6684634d inherit pub_methods_class_correlator"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_correlator.html#a48307431ca91b41319c6b68c6684634d">~Correlator</a> ()</td></tr>
 <tr class="separator:a48307431ca91b41319c6b68c6684634d inherit pub_methods_class_correlator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aada8184c033e0465f540a368465c9ba5 inherit pub_methods_class_correlator"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_correlator.html#aada8184c033e0465f540a368465c9ba5">getObservable</a> (unsigned int iObs)</td></tr>
+<tr class="memdesc:aada8184c033e0465f540a368465c9ba5 inherit pub_methods_class_correlator"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_correlator.html#aada8184c033e0465f540a368465c9ba5" title="Correlator::getObservable.">Correlator::getObservable</a>.  <a href="class_correlator.html#aada8184c033e0465f540a368465c9ba5">More...</a><br /></td></tr>
 <tr class="separator:aada8184c033e0465f540a368465c9ba5 inherit pub_methods_class_correlator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1fa59e864917c3e48da037f90c3488f inherit pub_methods_class_correlator"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_correlator.html#ad1fa59e864917c3e48da037f90c3488f">getObservableName</a> ()</td></tr>
 <tr class="separator:ad1fa59e864917c3e48da037f90c3488f inherit pub_methods_class_correlator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76375274cb578f48b9d51489ca8cd503 inherit pub_methods_class_correlator"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_correlator.html#a76375274cb578f48b9d51489ca8cd503">getHeaderWidth</a> ()</td></tr>
 <tr class="separator:a76375274cb578f48b9d51489ca8cd503 inherit pub_methods_class_correlator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adea33006fd850314004c320c258d9ec6 inherit pub_methods_class_correlator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_correlator.html#adea33006fd850314004c320c258d9ec6">setObservable</a> (unsigned int iObs, double obs)</td></tr>
-<tr class="separator:adea33006fd850314004c320c258d9ec6 inherit pub_methods_class_correlator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -150,7 +167,26 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:aac0590e0ae6e3edc790279931b06a03c inherit pro_attribs_class_correlator"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_correlator.html#aac0590e0ae6e3edc790279931b06a03c">m_storeFlowObservable</a> = false</td></tr>
 <tr class="separator:aac0590e0ae6e3edc790279931b06a03c inherit pro_attribs_class_correlator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Observable for calculating the plaquette, topological charge and energy. </p>
+<p>Plaqeutte definition: </p><p class="formulaDsp">
+\[ P = \frac{1}{16|\Lambda|} \sum_{n\in\Lambda} \sum_{\mu &lt; \nu} \Re \tr P_{\mu\nu}, \]
+</p>
+<p> where </p><p class="formulaDsp">
+\[ P_{\mu\nu}=U_\mu(n) U_{\nu}(n+\hat{\mu}) U_{\mu}(n+\hat{\nu})^\dagger U_{\nu} (n)^\dagger \]
+</p>
+<p> is the plquette. Energy definition: </p><p class="formulaDsp">
+\[ E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda} \sum_{\mu&lt;\nu} \left(\tilde{C}_{\mu\nu}(n)\right)^2. \]
+</p>
+<p> Topological charge definition: </p><p class="formulaDsp">
+\[ Q = \frac{1}{32\pi^2} \sum_{n\in\Lambda} \epsilon_{\mu\nu\rho\sigma} \tr\left[F_{\mu\nu}(n)F_{\rho\sigma}(n)\right], \]
+</p>
+<p> where \(n\) is the position in the lattice.</p>
+<dl class="section author"><dt>Author</dt><dd>Mathias M. Vege </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2017-2019 </dd></dl>
+<dl class="section copyright"><dt>Copyright</dt><dd>MIT Licence </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac5ee503e8391aca36f73872a45bb6bd9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac5ee503e8391aca36f73872a45bb6bd9">&#9670;&nbsp;</a></span>MasterSampler()</h2>
 
@@ -169,7 +205,8 @@ Additional Inherited Members</h2></td></tr>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_ac5ee503e8391aca36f73872a45bb6bd9_cgraph.svg" width="752" height="310"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_ac5ee503e8391aca36f73872a45bb6bd9_cgraph.svg" width="752" height="310"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -226,11 +263,21 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#ab33502ff305f891c5c2e6d66a26a0247" title="Correlator::calculate calculates a observable.">Correlator::calculate</a> calculates a observable. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lattice</td><td>pointer to lattice of <a class="el" href="class_s_u3.html" title="class for holding  matrices.">SU3</a> matrices </td></tr>
+    <tr><td class="paramname">iObs</td><td>number of the observable </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#ab33502ff305f891c5c2e6d66a26a0247">Correlator</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_ad3cc7e36498dbf4a39238de3ac59ae8b_cgraph.svg" width="638" height="283"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_ad3cc7e36498dbf4a39238de3ac59ae8b_cgraph.svg" width="638" height="283"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -269,6 +316,15 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#ac780d8b180294ee4801ede6e6a13f7f4" title="Correlator::copyObservable copies the observable if has already been calculated at zero flow time.">Correlator::copyObservable</a> copies the observable if has already been calculated at zero flow time. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iObs</td><td>observable number. </td></tr>
+    <tr><td class="paramname">obs</td><td>vector containing observable information. Is a vector in case it consists of multiple values(e.g. topc in Euclidean time). </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#ac780d8b180294ee4801ede6e6a13f7f4">Correlator</a>.</p>
 
 </div>
@@ -296,6 +352,15 @@ Here is the call graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="class_correlator.html#a7fb062b098beb078f3e546f4717b4941" title="Correlator::getObservablesVector.">Correlator::getObservablesVector</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iObs</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a vector containing the observables at given iObs. </dd></dl>
 
 <p>Reimplemented from <a class="el" href="class_correlator.html#a7fb062b098beb078f3e546f4717b4941">Correlator</a>.</p>
 
@@ -325,16 +390,26 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#ab99886c09dd27dfc8676d0032cecf9bc" title="Correlator::initializeObservableStorer initializes ObservableStorer.">Correlator::initializeObservableStorer</a> initializes <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">storeFlowObservable</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#ab99886c09dd27dfc8676d0032cecf9bc">Correlator</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a88e2eec68ea6bd60cc3f375ac04a8ded_cgraph.svg" width="480" height="310"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a88e2eec68ea6bd60cc3f375ac04a8ded_cgraph.svg" width="480" height="310"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a88e2eec68ea6bd60cc3f375ac04a8ded_icgraph.svg" width="435" height="50"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a88e2eec68ea6bd60cc3f375ac04a8ded_icgraph.svg" width="435" height="50"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -362,11 +437,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#ac7c5a07d7cbee97c417a1659b93083b2" title="Correlator::printHeader prints a the observable name for output in header.">Correlator::printHeader</a> prints a the observable name for output in header. </p>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#ac7c5a07d7cbee97c417a1659b93083b2">Correlator</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a51b207672764c100e1ae258fd2e33fcf_cgraph.svg" width="503" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a51b207672764c100e1ae258fd2e33fcf_cgraph.svg" width="503" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -395,11 +473,20 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#a15744ddb9f2b71fff34ac762d101df38" title="Correlator::printObservable prints the observable for the output.">Correlator::printObservable</a> prints the observable for the output. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iObs</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#a15744ddb9f2b71fff34ac762d101df38">Correlator</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a41853c3e4ab52fca7d93cf80e8702b7a_cgraph.svg" width="492" height="274"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a41853c3e4ab52fca7d93cf80e8702b7a_cgraph.svg" width="492" height="274"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -427,11 +514,14 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#a2168d677f547769784781d2e2aaa53cf" title="Correlator::printStatistics prints statistics from ObservableStorer.">Correlator::printStatistics</a> prints statistics from <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a>. </p>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#a2168d677f547769784781d2e2aaa53cf">Correlator</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a9accfc83c05d3013396355e40257a562_cgraph.svg" width="678" height="50"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a9accfc83c05d3013396355e40257a562_cgraph.svg" width="678" height="50"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -459,11 +549,14 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#aacca40262d2cd62f0a3964e832f948c1" title="Correlator::reset resets ObservableStorer.">Correlator::reset</a> resets <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a>. </p>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#aacca40262d2cd62f0a3964e832f948c1">Correlator</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a275a032513db03c899056fd07d71cc89_cgraph.svg" width="371" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a275a032513db03c899056fd07d71cc89_cgraph.svg" width="371" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -491,11 +584,15 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#a35197b1d12b62ef30b79c0138a26456e" title="Correlator::runStatistics.">Correlator::runStatistics</a>. </p>
+<p>Gathers results and performs statistics in the <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a> object. </p>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#a35197b1d12b62ef30b79c0138a26456e">Correlator</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_ab7913d0dbdea57af3f469a3cdd74f8fc_cgraph.svg" width="456" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_ab7913d0dbdea57af3f469a3cdd74f8fc_cgraph.svg" width="456" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -524,11 +621,20 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#a168512b2ce182d9478db47f100125fa6" title="Correlator::writeFlowObservablesToFile.">Correlator::writeFlowObservablesToFile</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iFlow</td><td>Gathers results and performs statistics in the <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a> object. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#a168512b2ce182d9478db47f100125fa6">Correlator</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_ad475928217ac61fae134128904aaa9f8_cgraph.svg" width="916" height="458"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_ad475928217ac61fae134128904aaa9f8_cgraph.svg" width="916" height="458"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -557,11 +663,20 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_correlator.html#a9e8d80e30e4fbe3b7fe57521538cb5ff" title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">Correlator::writeObservableToFile</a> calls the <a class="el" href="class_observable_storer.html" title="A class for storing the observable data.">ObservableStorer</a> for writing observable to file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">acceptanceRatio</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Reimplemented from <a class="el" href="class_correlator.html#a9e8d80e30e4fbe3b7fe57521538cb5ff">Correlator</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a638714c38e1a6252ab8b6be1fa224bd4_cgraph.svg" width="975" height="395"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_master_sampler_a638714c38e1a6252ab8b6be1fa224bd4_cgraph.svg" width="975" height="395"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>

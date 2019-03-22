@@ -81,7 +81,7 @@
 <!-- Node15 -->
 <g id="node6" class="node">
 <title>Node15</title>
-<g id="a_node6"><a xlink:href="class_taylor_exp.html#a6a048363483f372300e412b27f218773" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_taylor_exp.html#a6a048363483f372300e412b27f218773" target="_top" xlink:title="TaylorExp::setTaylorDegree.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-.5 0,-18.5 138.2754,-18.5 138.2754,-.5 0,-.5"/>
 <text text-anchor="middle" x="69.1377" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TaylorExp::setTaylorDegree</text>
 </a>

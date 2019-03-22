@@ -12,7 +12,7 @@
 <!-- Node7 -->
 <g id="node1" class="node">
 <title>Node7</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-74.5 0,-92.5 126.0537,-92.5 126.0537,-74.5 0,-74.5"/>
 <text text-anchor="middle" x="63.0269" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">EnergyDensity::calculate</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node8 -->
 <g id="node2" class="node">
 <title>Node8</title>
-<g id="a_node2"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title="shift copies the lattice L and shifts it in a specified lorentzVector direction DIR.">
 <polygon fill="#ffffff" stroke="#000000" points="214.1118,-111.5 214.1118,-129.5 248.4517,-129.5 248.4517,-111.5 214.1118,-111.5"/>
 <text text-anchor="middle" x="231.2817" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">shift</text>
 </a>
@@ -96,7 +96,7 @@
 <!-- Node9 -->
 <g id="node3" class="node">
 <title>Node9</title>
-<g id="a_node3"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title="allocate method for allocating memory.">
 <polygon fill="#ffffff" stroke="#000000" points="359.3027,-148.5 359.3027,-166.5 444.79,-166.5 444.79,-148.5 359.3027,-148.5"/>
 <text text-anchor="middle" x="402.0464" y="-154.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::allocate</text>
 </a>
@@ -162,7 +162,7 @@
 <!-- Node17 -->
 <g id="node11" class="node">
 <title>Node17</title>
-<g id="a_node11"><a xlink:href="functions_8h.html#a93863171e3da962b61804144857576a7" target="_top" xlink:title=" ">
+<g id="a_node11"><a xlink:href="functions_8h.html#a93863171e3da962b61804144857576a7" target="_top" xlink:title="traceRealMultiplication">
 <polygon fill="#ffffff" stroke="#000000" points="343.7461,-.5 343.7461,-18.5 460.3467,-18.5 460.3467,-.5 343.7461,-.5"/>
 <text text-anchor="middle" x="402.0464" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">traceRealMultiplication</text>
 </a>

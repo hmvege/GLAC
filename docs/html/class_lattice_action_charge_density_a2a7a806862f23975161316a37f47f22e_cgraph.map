@@ -1,4 +1,4 @@
 <map id="LatticeActionChargeDensity::printHeader" name="LatticeActionChargeDensity::printHeader">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,191,44"/>
+<area shape="rect" id="node1" title="Correlator::printHeader prints a the observable name for output in header." alt="" coords="5,5,191,44"/>
 <area shape="rect" id="node2" href="$class_observable_storer.html#aa04dd06fe053670f4c8f027aa744277a" title=" " alt="" coords="239,12,495,37"/>
 </map>

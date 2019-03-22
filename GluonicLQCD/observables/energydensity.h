@@ -3,8 +3,9 @@
  *
  * \brief Solely calculates the energy density as given by,
  * \f[
- *      E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda}\sum_{\mu<\nu} \left(\tilde{C}_{\mu\nu}(n)\right)^2.
+ *      E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda}\sum_{\mu<\nu} \big(\tilde{C}_{\mu\nu}(n)\big)^2.
  * \f]
+ * The \f$F_{\mu\nu}\f$ is the clover.
  *
  * \author Mathias M. Vege
  * \version 1.0

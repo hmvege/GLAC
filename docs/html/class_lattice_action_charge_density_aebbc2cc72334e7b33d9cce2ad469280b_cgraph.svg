@@ -12,7 +12,7 @@
 <!-- Node69 -->
 <g id="node1" class="node">
 <title>Node69</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::reset resets ObservableStorer.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-28.5 139.3984,-28.5 139.3984,-.5 0,-.5"/>
 <text text-anchor="start" x="8" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="69.6992" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::reset</text>
@@ -22,7 +22,7 @@
 <!-- Node70 -->
 <g id="node2" class="node">
 <title>Node70</title>
-<g id="a_node2"><a xlink:href="class_observable_storer.html#a7b6285a532d796816d75262f91d43dad" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_observable_storer.html#a7b6285a532d796816d75262f91d43dad" target="_top" xlink:title="ObservableStorer::reset set all the members for observable storage to zero.">
 <polygon fill="#ffffff" stroke="#000000" points="175.3984,-5.5 175.3984,-23.5 297.5557,-23.5 297.5557,-5.5 175.3984,-5.5"/>
 <text text-anchor="middle" x="236.4771" y="-11.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::reset</text>
 </a>

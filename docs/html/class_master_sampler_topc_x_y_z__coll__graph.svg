@@ -12,7 +12,7 @@
 <!-- Node2 -->
 <g id="node1" class="node">
 <title>Node2</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Observable for calculating the plaquette, energy and euclidean time topological charge.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-18.5 124.3691,-18.5 124.3691,-.5 0,-.5"/>
 <text text-anchor="middle" x="62.1846" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node3 -->
 <g id="node2" class="node">
 <title>Node3</title>
-<g id="a_node2"><a xlink:href="class_correlator.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_correlator.html" target="_top" xlink:title="base class for observables.">
 <polygon fill="#ffffff" stroke="#000000" points="31.9556,-56.5 31.9556,-74.5 92.4136,-74.5 92.4136,-56.5 31.9556,-56.5"/>
 <text text-anchor="middle" x="62.1846" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator</text>
 </a>
@@ -36,7 +36,7 @@
 <!-- Node4 -->
 <g id="node3" class="node">
 <title>Node4</title>
-<g id="a_node3"><a xlink:href="class_observable_storer.html" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_observable_storer.html" target="_top" xlink:title="A class for storing the observable data.">
 <polygon fill="#ffffff" stroke="#000000" points="15,-121.5 15,-139.5 109.3691,-139.5 109.3691,-121.5 15,-121.5"/>
 <text text-anchor="middle" x="62.1846" y="-127.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer</text>
 </a>

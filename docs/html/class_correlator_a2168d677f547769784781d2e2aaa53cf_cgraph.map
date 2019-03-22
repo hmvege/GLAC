@@ -1,5 +1,5 @@
 <map id="Correlator::printStatistics" name="Correlator::printStatistics">
-<area shape="rect" id="node1" title=" " alt="" coords="5,12,173,37"/>
+<area shape="rect" id="node1" title="Correlator::printStatistics prints statistics from ObservableStorer." alt="" coords="5,12,173,37"/>
 <area shape="rect" id="node2" href="$class_observable_storer.html#a04a12e7da9e21d6947027230c953bffe" title=" " alt="" coords="221,12,433,37"/>
 <area shape="rect" id="node3" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="481,5,641,44"/>
 </map>

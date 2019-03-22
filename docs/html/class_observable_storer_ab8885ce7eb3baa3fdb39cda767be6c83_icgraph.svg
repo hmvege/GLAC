@@ -22,7 +22,7 @@
 <!-- Node26 -->
 <g id="node2" class="node">
 <title>Node26</title>
-<g id="a_node2"><a xlink:href="class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="18.623,-47.5 18.623,-75.5 165.2188,-75.5 165.2188,-47.5 18.623,-47.5"/>
 <text text-anchor="start" x="26.623" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="91.9209" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::writeFlowObservablesToFile</text>
@@ -38,7 +38,7 @@
 <!-- Node27 -->
 <g id="node3" class="node">
 <title>Node27</title>
-<g id="a_node3"><a xlink:href="class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-.5 0,-28.5 183.8418,-28.5 183.8418,-.5 0,-.5"/>
 <text text-anchor="start" x="8" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::writeFlowObservables</text>
 <text text-anchor="middle" x="91.9209" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>

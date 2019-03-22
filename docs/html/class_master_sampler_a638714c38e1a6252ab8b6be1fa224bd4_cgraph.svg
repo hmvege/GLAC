@@ -12,7 +12,7 @@
 <!-- Node74 -->
 <g id="node1" class="node">
 <title>Node74</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-124.5 0,-152.5 161.6055,-152.5 161.6055,-124.5 0,-124.5"/>
 <text text-anchor="start" x="8" y="-140.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::writeObservable</text>
 <text text-anchor="middle" x="80.8027" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
@@ -22,7 +22,7 @@
 <!-- Node75 -->
 <g id="node2" class="node">
 <title>Node75</title>
-<g id="a_node2"><a xlink:href="class_observable_storer.html#a146f9acb8a0a2ce15782d26bdc4f0bf9" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_observable_storer.html#a146f9acb8a0a2ce15782d26bdc4f0bf9" target="_top" xlink:title="ObservableStorer::writeObservableToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="197.6055,-124.5 197.6055,-152.5 369.7822,-152.5 369.7822,-124.5 197.6055,-124.5"/>
 <text text-anchor="start" x="205.6055" y="-140.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::writeObservable</text>
 <text text-anchor="middle" x="283.6938" y="-130.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
@@ -38,7 +38,7 @@
 <!-- Node76 -->
 <g id="node3" class="node">
 <title>Node76</title>
-<g id="a_node3"><a xlink:href="namespace_i_o.html#ad8cf5aef8f60d10b80292b69a091d5ac" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="namespace_i_o.html#ad8cf5aef8f60d10b80292b69a091d5ac" target="_top" xlink:title="IO::writeObservablesToFile method for writing an observable to file, using .15 precision.">
 <polygon fill="#ffffff" stroke="#000000" points="405.7822,-129.5 405.7822,-147.5 541.8213,-147.5 541.8213,-129.5 405.7822,-129.5"/>
 <text text-anchor="middle" x="473.8018" y="-135.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::writeObservablesToFile</text>
 </a>

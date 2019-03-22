@@ -12,7 +12,7 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Solely calculates the topological charge as given by, &#160;where &#160;is the position in the lattice in Eucli...">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-18.5 98.832,-18.5 98.832,-.5 0,-.5"/>
 <text text-anchor="middle" x="49.416" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TopologicalCharge</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="class_correlator.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_correlator.html" target="_top" xlink:title="base class for observables.">
 <polygon fill="#ffffff" stroke="#000000" points="19.187,-55.5 19.187,-73.5 79.645,-73.5 79.645,-55.5 19.187,-55.5"/>
 <text text-anchor="middle" x="49.416" y="-61.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator</text>
 </a>

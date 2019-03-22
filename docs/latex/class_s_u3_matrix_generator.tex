@@ -2,6 +2,11 @@
 \label{class_s_u3_matrix_generator}\index{SU3MatrixGenerator@{SU3MatrixGenerator}}
 
 
+Class for generating random \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices.  
+
+
+
+
 {\ttfamily \#include $<$su3matrixgenerator.\+h$>$}
 
 \subsection*{Public Member Functions}
@@ -12,15 +17,34 @@
 \mbox{\hyperlink{class_s_u3_matrix_generator_a58195e1974eed39db617eaea50778f47}{$\sim$\+S\+U3\+Matrix\+Generator}} ()
 \item 
 \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_matrix_generator_a06dc59b5a86ba6863b848ef1ca26629a}{generate\+Random}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_s_u3_matrix_generator_a06dc59b5a86ba6863b848ef1ca26629a}{S\+U3\+Matrix\+Generator\+::generate\+Random}} generates a fully random \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_matrix_generator_a478a6d34a643f4ee30bc333ca1023b00}{generate\+R\+ST}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_s_u3_matrix_generator_a478a6d34a643f4ee30bc333ca1023b00}{S\+U3\+Matrix\+Generator\+::generate\+R\+ST}} generates a \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix close to unity. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_s_u2}{S\+U2}} \mbox{\hyperlink{class_s_u3_matrix_generator_aa4e04caff654a1df7c43280b85f359bc}{generate\+S\+U2}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_s_u3_matrix_generator_aa4e04caff654a1df7c43280b85f359bc}{S\+U3\+Matrix\+Generator\+::generate\+S\+U2}} generates a random \mbox{\hyperlink{class_s_u2}{S\+U2}} matrix close to unity. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_matrix_generator_a05a57d1d429dc2c31d79ccf2de5efeee}{test\+R\+S\+T\+Multiplication}} (\mbox{\hyperlink{class_s_u2}{S\+U2}} r, \mbox{\hyperlink{class_s_u2}{S\+U2}} s, \mbox{\hyperlink{class_s_u2}{S\+U2}} t)
-\item 
+\begin{DoxyCompactList}\small\item\em test\+R\+S\+T\+Multiplication wrapper for testing the R\+S\+T\+Matrix\+Multiplication method. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_matrix_generator_a725f8c7882366bda7316a92c82cf4680}{test\+R\+S\+T\+Multiplication\+Inverse}} (\mbox{\hyperlink{class_s_u2}{S\+U2}} r, \mbox{\hyperlink{class_s_u2}{S\+U2}} s, \mbox{\hyperlink{class_s_u2}{S\+U2}} t)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em test\+R\+S\+T\+Multiplication\+Inverse wrapper for testing the R\+S\+T\+Matrix\+Multiplication\+Inverse method. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for generating random \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices. 
+
+Consists of two methods, one that generates fully random \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices, and one that generates matrices close to unity(\+R\+S\+T method).
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -30,7 +54,8 @@
 \subsubsection{\texorpdfstring{SU3MatrixGenerator()}{SU3MatrixGenerator()}}
 {\footnotesize\ttfamily S\+U3\+Matrix\+Generator\+::\+S\+U3\+Matrix\+Generator (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -52,14 +77,23 @@ Here is the call graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{generateRandom()}{generateRandom()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+Matrix\+Generator\+::generate\+Random (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_s_u3_matrix_generator_a06dc59b5a86ba6863b848ef1ca26629a}{S\+U3\+Matrix\+Generator\+::generate\+Random}} generates a fully random \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix. 
+
+\begin{DoxyReturn}{Returns}
+a random \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix. 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=289pt]{class_s_u3_matrix_generator_a06dc59b5a86ba6863b848ef1ca26629a_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -72,14 +106,23 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{generateRST()}{generateRST()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+Matrix\+Generator\+::generate\+R\+ST (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_s_u3_matrix_generator_a478a6d34a643f4ee30bc333ca1023b00}{S\+U3\+Matrix\+Generator\+::generate\+R\+ST}} generates a \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix close to unity. 
+
+\begin{DoxyReturn}{Returns}
+a \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{class_s_u3_matrix_generator_a478a6d34a643f4ee30bc333ca1023b00_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -92,14 +135,23 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{generateSU2()}{generateSU2()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} S\+U3\+Matrix\+Generator\+::generate\+S\+U2 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_s_u3_matrix_generator_aa4e04caff654a1df7c43280b85f359bc}{S\+U3\+Matrix\+Generator\+::generate\+S\+U2}} generates a random \mbox{\hyperlink{class_s_u2}{S\+U2}} matrix close to unity. 
+
+\begin{DoxyReturn}{Returns}
+a \mbox{\hyperlink{class_s_u2}{S\+U2}} matrix 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=289pt]{class_s_u3_matrix_generator_aa4e04caff654a1df7c43280b85f359bc_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -112,12 +164,48 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{testRSTMultiplication()}{testRSTMultiplication()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+Matrix\+Generator\+::test\+R\+S\+T\+Multiplication (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u2}{S\+U2}}}]{r,  }\item[{\mbox{\hyperlink{class_s_u2}{S\+U2}}}]{s,  }\item[{\mbox{\hyperlink{class_s_u2}{S\+U2}}}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+test\+R\+S\+T\+Multiplication wrapper for testing the R\+S\+T\+Matrix\+Multiplication method. 
+
+Using a wrapper since it is an inline function intended for use only in the \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix generator.
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & \mbox{\hyperlink{class_s_u2}{S\+U2}} matrix. \\
+\hline
+{\em s} & \mbox{\hyperlink{class_s_u2}{S\+U2}} matrix. \\
+\hline
+{\em t} & \mbox{\hyperlink{class_s_u2}{S\+U2}} matrix. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{class_s_u3}{S\+U3}} matrix. 
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_s_u3_matrix_generator_a725f8c7882366bda7316a92c82cf4680}\label{class_s_u3_matrix_generator_a725f8c7882366bda7316a92c82cf4680}} 
 \index{SU3MatrixGenerator@{SU3MatrixGenerator}!testRSTMultiplicationInverse@{testRSTMultiplicationInverse}}
 \index{testRSTMultiplicationInverse@{testRSTMultiplicationInverse}!SU3MatrixGenerator@{SU3MatrixGenerator}}
 \subsubsection{\texorpdfstring{testRSTMultiplicationInverse()}{testRSTMultiplicationInverse()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+Matrix\+Generator\+::test\+R\+S\+T\+Multiplication\+Inverse (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u2}{S\+U2}}}]{r,  }\item[{\mbox{\hyperlink{class_s_u2}{S\+U2}}}]{s,  }\item[{\mbox{\hyperlink{class_s_u2}{S\+U2}}}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+test\+R\+S\+T\+Multiplication\+Inverse wrapper for testing the R\+S\+T\+Matrix\+Multiplication\+Inverse method. 
+
+Using a wrapper since it is an inline function intended for use only in the \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix generator.
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & \mbox{\hyperlink{class_s_u2}{S\+U2}} matrix. \\
+\hline
+{\em s} & \mbox{\hyperlink{class_s_u2}{S\+U2}} matrix. \\
+\hline
+{\em t} & \mbox{\hyperlink{class_s_u2}{S\+U2}} matrix. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{class_s_u3}{S\+U3}} matrix. 
+\end{DoxyReturn}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

@@ -12,7 +12,7 @@
 <!-- Node53 -->
 <g id="node1" class="node">
 <title>Node53</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::initializeObservableStorer initializes ObservableStorer.">
 <polygon fill="#bfbfbf" stroke="#000000" points="180.9551,-.5 180.9551,-28.5 320.3535,-28.5 320.3535,-.5 180.9551,-.5"/>
 <text text-anchor="start" x="188.9551" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="250.6543" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initializeObservableStorer</text>

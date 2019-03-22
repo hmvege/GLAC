@@ -1,9 +1,9 @@
 <map id="LatticeActionChargeDensity::writeFlowObservablesToFile" name="LatticeActionChargeDensity::writeFlowObservablesToFile">
-<area shape="rect" id="node1" title=" " alt="" coords="5,192,201,231"/>
-<area shape="rect" id="node2" href="$class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" title=" " alt="" coords="258,160,429,199"/>
-<area shape="rect" id="node4" href="$class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" title=" " alt="" coords="249,223,438,261"/>
+<area shape="rect" id="node1" title="Correlator::writeFlowObservablesToFile." alt="" coords="5,192,201,231"/>
+<area shape="rect" id="node2" href="$class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" title="ObservableStorer::gatherResults." alt="" coords="258,160,429,199"/>
+<area shape="rect" id="node4" href="$class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" title="ObservableStorer::writeFlowObservableToFile." alt="" coords="249,223,438,261"/>
 <area shape="rect" id="node3" href="$class_parallel_1_1_communicator.html#a7b1f80fb49a0cc83f2031c3415174150" title=" " alt="" coords="508,160,668,199"/>
-<area shape="rect" id="node5" href="$namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" title=" " alt="" coords="486,229,689,255"/>
+<area shape="rect" id="node5" href="$namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" title="IO::writeFlowObservableToFile method for writing a flow observable to file, using ...." alt="" coords="486,229,689,255"/>
 <area shape="rect" id="node6" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="754,5,914,44"/>
 <area shape="rect" id="node7" href="$class_parameters.html#a96dbafc27f287de83dfaec3bc2d45efe" title=" " alt="" coords="740,68,928,93"/>
 <area shape="rect" id="node8" href="$class_parameters.html#a58f15668b37e705d34d6588e287e4bc0" title=" " alt="" coords="743,117,926,156"/>

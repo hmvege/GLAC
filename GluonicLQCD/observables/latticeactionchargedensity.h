@@ -5,13 +5,13 @@
  *
  * The energy is given by,
  * \f[
- *      E(n) = -\frac{1}{64} \sum_{\mu<\nu} \left(\tilde{C}_{\mu\nu}(n)\right)^2,
+ *      E(n) = -\frac{1}{64} \sum_{\mu<\nu} \big(\tilde{C}_{\mu\nu}(n)\big)^2,
  * \f]
  * and the topological charge is given by,
  * \f[
  *      q(n) = \frac{1}{32\pi^2} \epsilon_{\mu\nu\rho\sigma} \tr\left[F_{\mu\nu}(n)F_{\rho\sigma}(n)\right].
  * \f]
- * where \f$n\f$ is the position in the lattice.
+ * where \f$n\f$ is the position in the lattice. \f$F_{\nu\mu}\f$ is the clover.
  *
  * \author Mathias M. Vege
  * \version 1.0

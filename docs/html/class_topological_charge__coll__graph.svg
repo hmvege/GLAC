@@ -12,7 +12,7 @@
 <!-- Node2 -->
 <g id="node1" class="node">
 <title>Node2</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Solely calculates the topological charge as given by, &#160;where &#160;is the position in the lattice in Eucli...">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-18.5 98.832,-18.5 98.832,-.5 0,-.5"/>
 <text text-anchor="middle" x="49.416" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TopologicalCharge</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node3 -->
 <g id="node2" class="node">
 <title>Node3</title>
-<g id="a_node2"><a xlink:href="class_correlator.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_correlator.html" target="_top" xlink:title="base class for observables.">
 <polygon fill="#ffffff" stroke="#000000" points="19.187,-56.5 19.187,-74.5 79.645,-74.5 79.645,-56.5 19.187,-56.5"/>
 <text text-anchor="middle" x="49.416" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator</text>
 </a>
@@ -36,7 +36,7 @@
 <!-- Node4 -->
 <g id="node3" class="node">
 <title>Node4</title>
-<g id="a_node3"><a xlink:href="class_observable_storer.html" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_observable_storer.html" target="_top" xlink:title="A class for storing the observable data.">
 <polygon fill="#ffffff" stroke="#000000" points="2.2314,-121.5 2.2314,-139.5 96.6006,-139.5 96.6006,-121.5 2.2314,-121.5"/>
 <text text-anchor="middle" x="49.416" y="-127.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer</text>
 </a>

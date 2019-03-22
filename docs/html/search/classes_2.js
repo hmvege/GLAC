@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['communicator',['Communicator',['../class_parallel_1_1_communicator.html',1,'Parallel']]],
+  ['communicator',['Communicator',['../class_parallel_1_1_communicator.html',1,'Parallel::Communicator'],['../class_communicator.html',1,'Communicator']]],
   ['complex',['complex',['../classcomplex.html',1,'']]],
   ['conjunction',['conjunction',['../structnlohmann_1_1detail_1_1conjunction.html',1,'nlohmann::detail']]],
   ['conjunction_3c_20b1_20_3e',['conjunction&lt; B1 &gt;',['../structnlohmann_1_1detail_1_1conjunction_3_01_b1_01_4.html',1,'nlohmann::detail']]],

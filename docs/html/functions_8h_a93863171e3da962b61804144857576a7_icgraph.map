@@ -1,13 +1,13 @@
 <map id="traceRealMultiplication" name="traceRealMultiplication">
-<area shape="rect" id="node1" title=" " alt="" coords="487,89,643,115"/>
+<area shape="rect" id="node1" title="traceRealMultiplication" alt="" coords="487,89,643,115"/>
 <area shape="rect" id="node2" href="$class_luscher_action.html#a1955f8eea8b0771f6c737c39e3fc11b2" title="getDeltaAction computes the change in action. Staple must have already have been calculated." alt="" coords="239,5,439,31"/>
 <area shape="rect" id="node3" href="$class_wilson_gauge_action.html#a60f2892e61489004df3cde6cc856b00b" title="getDeltaAction computes the change in action. Staple must have already have been calculated." alt="" coords="266,55,412,93"/>
 <area shape="rect" id="node4" href="$lattice_8h.html#ab2d48b63b79e5e5ee3ca25483fe98b3e" title=" " alt="" coords="262,117,416,143"/>
 <area shape="rect" id="node8" href="$lattice_8h.html#a2a635fe0bbbaca1e8903db8d3bf61f01" title=" " alt="" coords="247,183,431,208"/>
-<area shape="rect" id="node5" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,32,191,71"/>
-<area shape="rect" id="node6" href="$class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" title=" " alt="" coords="15,95,181,133"/>
-<area shape="rect" id="node7" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title=" " alt="" coords="15,157,182,183"/>
-<area shape="rect" id="node9" href="$class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" title=" " alt="" coords="14,207,182,232"/>
-<area shape="rect" id="node10" href="$class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" title=" " alt="" coords="12,256,184,281"/>
-<area shape="rect" id="node11" href="$class_topological_charge.html#a8ed78c28c3484df04b1cb24187de2f5b" title=" " alt="" coords="29,305,168,344"/>
+<area shape="rect" id="node5" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title="Correlator::calculate calculates a observable." alt="" coords="5,32,191,71"/>
+<area shape="rect" id="node6" href="$class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" title="Correlator::calculate calculates a observable." alt="" coords="15,95,181,133"/>
+<area shape="rect" id="node7" href="$class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" title="Correlator::calculate calculates a observable." alt="" coords="15,157,182,183"/>
+<area shape="rect" id="node9" href="$class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" title="Correlator::calculate calculates a observable." alt="" coords="14,207,182,232"/>
+<area shape="rect" id="node10" href="$class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" title="Correlator::calculate calculates a observable." alt="" coords="12,256,184,281"/>
+<area shape="rect" id="node11" href="$class_topological_charge.html#a8ed78c28c3484df04b1cb24187de2f5b" title="Correlator::calculate calculates a observable." alt="" coords="29,305,168,344"/>
 </map>

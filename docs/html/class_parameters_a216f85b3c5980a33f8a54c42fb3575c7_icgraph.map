@@ -1,12 +1,12 @@
 <map id="Parameters::getStoreThermalizationObservables" name="Parameters::getStoreThermalizationObservables">
 <area shape="rect" id="node1" title=" " alt="" coords="515,163,750,201"/>
-<area shape="rect" id="node2" href="$class_correlator.html#ab99886c09dd27dfc8676d0032cecf9bc" title=" " alt="" coords="263,5,467,44"/>
-<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#aba3131bbe5bd930adccc2852b4d44bb9" title=" " alt="" coords="272,68,458,107"/>
-<area shape="rect" id="node6" href="$class_master_sampler.html#a88e2eec68ea6bd60cc3f375ac04a8ded" title=" " alt="" coords="281,131,448,169"/>
-<area shape="rect" id="node8" href="$class_master_sampler_topc_x_y_z.html#af6d2cf2023d9626908fd26b07a7a0b84" title=" " alt="" coords="274,193,455,232"/>
-<area shape="rect" id="node10" href="$class_super_sampler.html#a4429d6ae37247a02259bc0c6d665821c" title=" " alt="" coords="284,256,445,295"/>
+<area shape="rect" id="node2" href="$class_correlator.html#ab99886c09dd27dfc8676d0032cecf9bc" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="263,5,467,44"/>
+<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#aba3131bbe5bd930adccc2852b4d44bb9" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="272,68,458,107"/>
+<area shape="rect" id="node6" href="$class_master_sampler.html#a88e2eec68ea6bd60cc3f375ac04a8ded" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="281,131,448,169"/>
+<area shape="rect" id="node8" href="$class_master_sampler_topc_x_y_z.html#af6d2cf2023d9626908fd26b07a7a0b84" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="274,193,455,232"/>
+<area shape="rect" id="node10" href="$class_super_sampler.html#a4429d6ae37247a02259bc0c6d665821c" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="284,256,445,295"/>
 <area shape="rect" id="node12" href="$class_system.html#ae317936c9bcf1374d61745572e0f2f8a" title=" " alt="" coords="306,319,424,344"/>
-<area shape="rect" id="node3" href="$class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a" title=" " alt="" coords="36,12,184,37"/>
+<area shape="rect" id="node3" href="$class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a" title="Correlator::Correlator." alt="" coords="36,12,184,37"/>
 <area shape="rect" id="node5" href="$class_lattice_action_charge_density.html#acda2a43db75cca34586441d4ac7ec39e" title=" " alt="" coords="13,68,207,107"/>
 <area shape="rect" id="node7" href="$class_master_sampler.html#ac5ee503e8391aca36f73872a45bb6bd9" title=" " alt="" coords="5,137,215,163"/>
 <area shape="rect" id="node9" href="$class_master_sampler_topc_x_y_z.html#ad8ba8f2c50c66d823c551f71fd62a99b" title=" " alt="" coords="23,193,197,232"/>

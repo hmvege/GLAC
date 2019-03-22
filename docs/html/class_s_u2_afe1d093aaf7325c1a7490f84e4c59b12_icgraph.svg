@@ -12,7 +12,7 @@
 <!-- Node29 -->
 <g id="node1" class="node">
 <title>Node29</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="SU2::setComplex.">
 <polygon fill="#bfbfbf" stroke="#000000" points="139.8223,-.5 139.8223,-18.5 233.6299,-18.5 233.6299,-.5 139.8223,-.5"/>
 <text text-anchor="middle" x="186.7261" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU2::setComplex</text>
 </a>

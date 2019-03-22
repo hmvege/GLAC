@@ -2,27 +2,32 @@
 \label{class_observable_storer}\index{ObservableStorer@{ObservableStorer}}
 
 
+A class for storing the observable data.  
+
+
+
+
 {\ttfamily \#include $<$observablestorer.\+h$>$}
 
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{class_observable_storer_a12833458c54a15e1abe299d628fc993c}{Observable\+Storer}} (unsigned long int N\+Size)
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_observable_storer_a12833458c54a15e1abe299d628fc993c}{Observable\+Storer\+::\+Observable\+Storer}}. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_observable_storer_ac702a77bd6c6c0bff76d7b3959e8f658}{$\sim$\+Observable\+Storer}} ()
 \item 
 double \& \mbox{\hyperlink{class_observable_storer_a1eae8d9c9b4f9c60facc21a26b3bbb26}{operator\mbox{[}$\,$\mbox{]}}} (unsigned long int i\+Obs)
 \item 
 void \mbox{\hyperlink{class_observable_storer_a593f13b0dd0f9d20608ef6b84fda3f1d}{gather\+Results}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_observable_storer_a593f13b0dd0f9d20608ef6b84fda3f1d}{Observable\+Storer\+::gather\+Results}}. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_observable_storer_a41b3756b423d31c6535d2981ef92d1a1}{run\+Statistics}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_observable_storer_a41b3756b423d31c6535d2981ef92d1a1}{Observable\+Storer\+::run\+Statistics}}. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_observable_storer_a04a12e7da9e21d6947027230c953bffe}{print\+Statistics}} ()
 \item 
 void \mbox{\hyperlink{class_observable_storer_a146f9acb8a0a2ce15782d26bdc4f0bf9}{write\+Observable\+To\+File}} (double acceptance\+Ratio)
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_observable_storer_a146f9acb8a0a2ce15782d26bdc4f0bf9}{Observable\+Storer\+::write\+Observable\+To\+File}}. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_observable_storer_af51ebd65eae2a5087cfd47ddf230da93}{write\+Flow\+Observable\+To\+File}} (unsigned long int config\+Number)
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_observable_storer_af51ebd65eae2a5087cfd47ddf230da93}{Observable\+Storer\+::write\+Flow\+Observable\+To\+File}}. \end{DoxyCompactList}\item 
 std\+::vector$<$ double $>$ \mbox{\hyperlink{class_observable_storer_ab8885ce7eb3baa3fdb39cda767be6c83}{get\+Observable\+Array}} ()
 \item 
 double \mbox{\hyperlink{class_observable_storer_af03e1c58c3e0efff251ef9b65cc8d152}{get\+Observable}} (unsigned long int i\+Obs)
@@ -34,7 +39,26 @@ void \mbox{\hyperlink{class_observable_storer_a7f4847c4fdbf8764d8f07950c4d4b62a}
 void \mbox{\hyperlink{class_observable_storer_a6177ade7609fb0e4b739955eecba20e6}{set\+Normalize\+Observable\+By\+Processor}} (bool norm)
 \item 
 void \mbox{\hyperlink{class_observable_storer_a7b6285a532d796816d75262f91d43dad}{reset}} ()
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_observable_storer_a7b6285a532d796816d75262f91d43dad}{Observable\+Storer\+::reset}} set all the members for observable storage to zero. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A class for storing the observable data. 
+
+Contains methods for printing statistics, writing to file, setting observables and reseting ect.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -44,7 +68,16 @@ void \mbox{\hyperlink{class_observable_storer_a7b6285a532d796816d75262f91d43dad}
 \subsubsection{\texorpdfstring{ObservableStorer()}{ObservableStorer()}}
 {\footnotesize\ttfamily Observable\+Storer\+::\+Observable\+Storer (\begin{DoxyParamCaption}\item[{unsigned long int}]{N\+Size }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_observable_storer_ac702a77bd6c6c0bff76d7b3959e8f658}\label{class_observable_storer_ac702a77bd6c6c0bff76d7b3959e8f658}} 
+
+
+\mbox{\hyperlink{class_observable_storer_a12833458c54a15e1abe299d628fc993c}{Observable\+Storer\+::\+Observable\+Storer}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em N\+Size} & the number of observables to allow storage for.\\
+\hline
+\end{DoxyParams}
+Stores two arrays, one for observables, and one for observables squared. \mbox{\Hypertarget{class_observable_storer_ac702a77bd6c6c0bff76d7b3959e8f658}\label{class_observable_storer_ac702a77bd6c6c0bff76d7b3959e8f658}} 
 \index{ObservableStorer@{ObservableStorer}!````~ObservableStorer@{$\sim$ObservableStorer}}
 \index{````~ObservableStorer@{$\sim$ObservableStorer}!ObservableStorer@{ObservableStorer}}
 \subsubsection{\texorpdfstring{$\sim$ObservableStorer()}{~ObservableStorer()}}
@@ -59,14 +92,20 @@ void \mbox{\hyperlink{class_observable_storer_a7b6285a532d796816d75262f91d43dad}
 \subsubsection{\texorpdfstring{gatherResults()}{gatherResults()}}
 {\footnotesize\ttfamily void Observable\+Storer\+::gather\+Results (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_observable_storer_a593f13b0dd0f9d20608ef6b84fda3f1d}{Observable\+Storer\+::gather\+Results}}. 
+
+Performs a M\+PI reduce between all the data gathered and, if set -\/ divides by the number of processors. Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{class_observable_storer_a593f13b0dd0f9d20608ef6b84fda3f1d_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -79,7 +118,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{getObservable()}{getObservable()}}
 {\footnotesize\ttfamily double Observable\+Storer\+::get\+Observable (\begin{DoxyParamCaption}\item[{unsigned long int}]{i\+Obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -92,7 +132,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{getObservableArray()}{getObservableArray()}}
 {\footnotesize\ttfamily std\+::vector$<$double$>$ Observable\+Storer\+::get\+Observable\+Array (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -105,7 +146,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{getObservableName()}{getObservableName()}}
 {\footnotesize\ttfamily std\+::string Observable\+Storer\+::get\+Observable\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -124,14 +166,16 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{printStatistics()}{printStatistics()}}
 {\footnotesize\ttfamily void Observable\+Storer\+::print\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{class_observable_storer_a04a12e7da9e21d6947027230c953bffe_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -144,7 +188,12 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{reset()}{reset()}}
 {\footnotesize\ttfamily void Observable\+Storer\+::reset (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_observable_storer_a7b6285a532d796816d75262f91d43dad}{Observable\+Storer\+::reset}} set all the members for observable storage to zero. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -157,7 +206,12 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{runStatistics()}{runStatistics()}}
 {\footnotesize\ttfamily void Observable\+Storer\+::run\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_observable_storer_a41b3756b423d31c6535d2981ef92d1a1}{Observable\+Storer\+::run\+Statistics}}. 
+
+Performs simple statistics such as mean, variance and standard deviation. Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -170,7 +224,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{setNormalizeObservableByProcessor()}{setNormalizeObservableByProcessor()}}
 {\footnotesize\ttfamily void Observable\+Storer\+::set\+Normalize\+Observable\+By\+Processor (\begin{DoxyParamCaption}\item[{bool}]{norm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -183,7 +238,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{setObservableName()}{setObservableName()}}
 {\footnotesize\ttfamily void Observable\+Storer\+::set\+Observable\+Name (\begin{DoxyParamCaption}\item[{std\+::string}]{observable\+Name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -196,14 +252,25 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{writeFlowObservableToFile()}{writeFlowObservableToFile()}}
 {\footnotesize\ttfamily void Observable\+Storer\+::write\+Flow\+Observable\+To\+File (\begin{DoxyParamCaption}\item[{unsigned long int}]{config\+Number }\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_observable_storer_af51ebd65eae2a5087cfd47ddf230da93}{Observable\+Storer\+::write\+Flow\+Observable\+To\+File}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em config\+Number} & configuration number\\
+\hline
+\end{DoxyParams}
+Writes to file using the \mbox{\hyperlink{namespace_i_o_a4f554804fd2ccd9c13c73777c5cbbf77}{I\+O\+::write\+Flow\+Observable\+To\+File}} method. Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{class_observable_storer_af51ebd65eae2a5087cfd47ddf230da93_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -216,14 +283,25 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{writeObservableToFile()}{writeObservableToFile()}}
 {\footnotesize\ttfamily void Observable\+Storer\+::write\+Observable\+To\+File (\begin{DoxyParamCaption}\item[{double}]{acceptance\+Ratio }\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_observable_storer_a146f9acb8a0a2ce15782d26bdc4f0bf9}{Observable\+Storer\+::write\+Observable\+To\+File}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em acceptance\+Ratio} & from the Metropolis algorithm\\
+\hline
+\end{DoxyParams}
+Writes to file using the \mbox{\hyperlink{namespace_i_o_ad8cf5aef8f60d10b80292b69a091d5ac}{I\+O\+::write\+Observables\+To\+File}} method. Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{class_observable_storer_a146f9acb8a0a2ce15782d26bdc4f0bf9_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode

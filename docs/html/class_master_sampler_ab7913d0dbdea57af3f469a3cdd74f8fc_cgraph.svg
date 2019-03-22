@@ -12,7 +12,7 @@
 <!-- Node56 -->
 <g id="node1" class="node">
 <title>Node56</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::runStatistics.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-18.5 143.8174,-18.5 143.8174,-.5 0,-.5"/>
 <text text-anchor="middle" x="71.9087" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::runStatistics</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node57 -->
 <g id="node2" class="node">
 <title>Node57</title>
-<g id="a_node2"><a xlink:href="class_observable_storer.html#a41b3756b423d31c6535d2981ef92d1a1" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_observable_storer.html#a41b3756b423d31c6535d2981ef92d1a1" target="_top" xlink:title="ObservableStorer::runStatistics.">
 <polygon fill="#ffffff" stroke="#000000" points="179.8174,-.5 179.8174,-18.5 334.2061,-18.5 334.2061,-.5 179.8174,-.5"/>
 <text text-anchor="middle" x="257.0117" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::runStatistics</text>
 </a>

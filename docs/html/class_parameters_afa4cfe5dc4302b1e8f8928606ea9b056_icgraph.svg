@@ -9,33 +9,33 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 456)">
 <title>Parameters::getOutputFolder</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-456 765.6777,-456 765.6777,4 -4,4"/>
-<!-- Node278 -->
+<!-- Node272 -->
 <g id="node1" class="node">
-<title>Node278</title>
+<title>Node272</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="#bfbfbf" stroke="#000000" points="616.1709,-268.5 616.1709,-286.5 761.6777,-286.5 761.6777,-268.5 616.1709,-268.5"/>
 <text text-anchor="middle" x="688.9243" y="-274.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getOutputFolder</text>
 </a>
 </g>
 </g>
-<!-- Node279 -->
+<!-- Node273 -->
 <g id="node2" class="node">
-<title>Node279</title>
+<title>Node273</title>
 <g id="a_node2"><a xlink:href="class_i_o_1_1_field_i_o.html#a8af607f9a1d79e90d4514c36103c6601" target="_top" xlink:title="IO::FieldIO::writeFieldToFile writes a lattice of SU3 matrix objects to file.">
 <polygon fill="#ffffff" stroke="#000000" points="434.4126,-352.5 434.4126,-370.5 573.7769,-370.5 573.7769,-352.5 434.4126,-352.5"/>
 <text text-anchor="middle" x="504.0947" y="-358.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::writeFieldToFile</text>
 </a>
 </g>
 </g>
-<!-- Node278&#45;&gt;Node279 -->
+<!-- Node272&#45;&gt;Node273 -->
 <g id="edge1" class="edge">
-<title>Node278&#45;&gt;Node279</title>
+<title>Node272&#45;&gt;Node273</title>
 <path fill="none" stroke="#191970" d="M668.7034,-292.451C647.6054,-307.389 613.0737,-330.0176 580.1709,-343.5 571.5053,-347.0509 561.9843,-349.9952 552.6985,-352.4021"/>
 <polygon fill="#191970" stroke="#191970" points="670.8056,-295.2503 676.879,-286.569 666.7175,-289.5681 670.8056,-295.2503"/>
 </g>
-<!-- Node280 -->
+<!-- Node274 -->
 <g id="node3" class="node">
-<title>Node280</title>
+<title>Node274</title>
 <g id="a_node3"><a xlink:href="class_i_o_1_1_field_i_o.html#aaf2bac2025d67c06e7c61e8cc9f44777" target="_top" xlink:title="IO::FieldIO::writeDoublesFieldToFile writes a lattice of doubles to file.">
 <polygon fill="#ffffff" stroke="#000000" points="440.2427,-305.5 440.2427,-333.5 567.9468,-333.5 567.9468,-305.5 440.2427,-305.5"/>
 <text text-anchor="start" x="448.2427" y="-321.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::writeDoubles</text>
@@ -43,274 +43,274 @@
 </a>
 </g>
 </g>
-<!-- Node278&#45;&gt;Node280 -->
+<!-- Node272&#45;&gt;Node274 -->
 <g id="edge2" class="edge">
-<title>Node278&#45;&gt;Node280</title>
+<title>Node272&#45;&gt;Node274</title>
 <path fill="none" stroke="#191970" d="M639.2351,-288.7912C616.6603,-293.921 589.7242,-300.0419 565.8621,-305.4642"/>
 <polygon fill="#191970" stroke="#191970" points="640.2979,-292.139 649.2737,-286.5101 638.7467,-285.313 640.2979,-292.139"/>
 </g>
-<!-- Node282 -->
+<!-- Node276 -->
 <g id="node5" class="node">
-<title>Node282</title>
-<g id="a_node5"><a xlink:href="namespace_i_o.html#ad8cf5aef8f60d10b80292b69a091d5ac" target="_top" xlink:title=" ">
+<title>Node276</title>
+<g id="a_node5"><a xlink:href="namespace_i_o.html#ad8cf5aef8f60d10b80292b69a091d5ac" target="_top" xlink:title="IO::writeObservablesToFile method for writing an observable to file, using .15 precision.">
 <polygon fill="#ffffff" stroke="#000000" points="436.0752,-268.5 436.0752,-286.5 572.1143,-286.5 572.1143,-268.5 436.0752,-268.5"/>
 <text text-anchor="middle" x="504.0947" y="-274.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::writeObservablesToFile</text>
 </a>
 </g>
 </g>
-<!-- Node278&#45;&gt;Node282 -->
+<!-- Node272&#45;&gt;Node276 -->
 <g id="edge4" class="edge">
-<title>Node278&#45;&gt;Node282</title>
+<title>Node272&#45;&gt;Node276</title>
 <path fill="none" stroke="#191970" d="M605.8916,-277.5C594.6538,-277.5 583.2291,-277.5 572.2913,-277.5"/>
 <polygon fill="#191970" stroke="#191970" points="606.1401,-281.0001 616.1401,-277.5 606.1401,-274.0001 606.1401,-281.0001"/>
 </g>
-<!-- Node289 -->
+<!-- Node283 -->
 <g id="node12" class="node">
-<title>Node289</title>
-<g id="a_node12"><a xlink:href="namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" target="_top" xlink:title=" ">
+<title>Node283</title>
+<g id="a_node12"><a xlink:href="namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" target="_top" xlink:title="IO::writeFlowObservableToFile method for writing a flow observable to file, using ....">
 <polygon fill="#ffffff" stroke="#000000" points="428.0186,-156.5 428.0186,-174.5 580.1709,-174.5 580.1709,-156.5 428.0186,-156.5"/>
 <text text-anchor="middle" x="504.0947" y="-162.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::writeFlowObservableToFile</text>
 </a>
 </g>
 </g>
-<!-- Node278&#45;&gt;Node289 -->
+<!-- Node272&#45;&gt;Node283 -->
 <g id="edge11" class="edge">
-<title>Node278&#45;&gt;Node289</title>
+<title>Node272&#45;&gt;Node283</title>
 <path fill="none" stroke="#191970" d="M664.78,-262.8695C626.0514,-239.4013 551.1557,-194.0172 519.1699,-174.635"/>
 <polygon fill="#191970" stroke="#191970" points="663.4327,-266.1454 673.7989,-268.3346 667.0604,-260.1588 663.4327,-266.1454"/>
 </g>
-<!-- Node296 -->
+<!-- Node290 -->
 <g id="node19" class="node">
-<title>Node296</title>
-<g id="a_node19"><a xlink:href="namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" target="_top" xlink:title=" ">
+<title>Node290</title>
+<g id="a_node19"><a xlink:href="namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" target="_top" xlink:title="IO::writeMatrixToFile writes out a matrix of observables to file, i.e. the topological charge in Eucl...">
 <polygon fill="#ffffff" stroke="#000000" points="252.3687,-52.5 252.3687,-70.5 359.4917,-70.5 359.4917,-52.5 252.3687,-52.5"/>
 <text text-anchor="middle" x="305.9302" y="-58.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::writeMatrixToFile</text>
 </a>
 </g>
 </g>
-<!-- Node278&#45;&gt;Node296 -->
+<!-- Node272&#45;&gt;Node290 -->
 <g id="edge18" class="edge">
-<title>Node278&#45;&gt;Node296</title>
+<title>Node272&#45;&gt;Node290</title>
 <path fill="none" stroke="#191970" d="M678.7143,-259.6972C661.7848,-231.7381 625.2571,-177.6236 580.1709,-147.5 511.8177,-101.831 417.8623,-79.325 359.5668,-69.0831"/>
 <polygon fill="#191970" stroke="#191970" points="675.7653,-261.5864 683.8671,-268.4137 681.7911,-258.0242 675.7653,-261.5864"/>
 </g>
-<!-- Node281 -->
+<!-- Node275 -->
 <g id="node4" class="node">
-<title>Node281</title>
-<g id="a_node4"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title=" ">
+<title>Node275</title>
+<g id="a_node4"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="236.231,-329.5 236.231,-357.5 375.6294,-357.5 375.6294,-329.5 236.231,-329.5"/>
 <text text-anchor="start" x="244.231" y="-345.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="305.9302" y="-335.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>
 </a>
 </g>
 </g>
-<!-- Node280&#45;&gt;Node281 -->
+<!-- Node274&#45;&gt;Node275 -->
 <g id="edge3" class="edge">
-<title>Node280&#45;&gt;Node281</title>
+<title>Node274&#45;&gt;Node275</title>
 <path fill="none" stroke="#191970" d="M429.79,-328.4992C412.1469,-330.6359 393.3839,-332.9084 375.9399,-335.021"/>
 <polygon fill="#191970" stroke="#191970" points="430.5234,-331.936 440.03,-327.259 429.6817,-324.9868 430.5234,-331.936"/>
 </g>
-<!-- Node283 -->
+<!-- Node277 -->
 <g id="node6" class="node">
-<title>Node283</title>
-<g id="a_node6"><a xlink:href="class_observable_storer.html#a146f9acb8a0a2ce15782d26bdc4f0bf9" target="_top" xlink:title=" ">
+<title>Node277</title>
+<g id="a_node6"><a xlink:href="class_observable_storer.html#a146f9acb8a0a2ce15782d26bdc4f0bf9" target="_top" xlink:title="ObservableStorer::writeObservableToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="219.8418,-282.5 219.8418,-310.5 392.0186,-310.5 392.0186,-282.5 219.8418,-282.5"/>
 <text text-anchor="start" x="227.8418" y="-298.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::writeObservable</text>
 <text text-anchor="middle" x="305.9302" y="-288.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
 </a>
 </g>
 </g>
-<!-- Node282&#45;&gt;Node283 -->
+<!-- Node276&#45;&gt;Node277 -->
 <g id="edge5" class="edge">
-<title>Node282&#45;&gt;Node283</title>
+<title>Node276&#45;&gt;Node277</title>
 <path fill="none" stroke="#191970" d="M425.843,-285.0028C414.7647,-286.065 403.3226,-287.162 392.105,-288.2376"/>
 <polygon fill="#191970" stroke="#191970" points="426.2775,-288.4773 435.8977,-284.0387 425.6093,-281.5092 426.2775,-288.4773"/>
 </g>
-<!-- Node284 -->
+<!-- Node278 -->
 <g id="node7" class="node">
-<title>Node284</title>
-<g id="a_node7"><a xlink:href="class_correlator.html#a9e8d80e30e4fbe3b7fe57521538cb5ff" target="_top" xlink:title=" ">
+<title>Node278</title>
+<g id="a_node7"><a xlink:href="class_correlator.html#a9e8d80e30e4fbe3b7fe57521538cb5ff" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="22.7881,-423.5 22.7881,-451.5 161.0537,-451.5 161.0537,-423.5 22.7881,-423.5"/>
 <text text-anchor="start" x="30.7881" y="-439.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::writeObservable</text>
 <text text-anchor="middle" x="91.9209" y="-429.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
 </a>
 </g>
 </g>
-<!-- Node283&#45;&gt;Node284 -->
+<!-- Node277&#45;&gt;Node278 -->
 <g id="edge6" class="edge">
-<title>Node283&#45;&gt;Node284</title>
+<title>Node277&#45;&gt;Node278</title>
 <path fill="none" stroke="#191970" d="M225.2816,-316.0885C223.3854,-317.4617 221.5665,-318.9301 219.8418,-320.5 186.7588,-350.6147 217.3239,-384.8296 183.8418,-414.5 177.3165,-420.2825 169.5532,-424.6564 161.3441,-427.9573"/>
 <polygon fill="#191970" stroke="#191970" points="227.3851,-318.9024 234.0376,-310.6565 223.6949,-312.9541 227.3851,-318.9024"/>
 </g>
-<!-- Node285 -->
+<!-- Node279 -->
 <g id="node8" class="node">
-<title>Node285</title>
-<g id="a_node8"><a xlink:href="class_lattice_action_charge_density.html#a719f71aaccbf1b4147ea944781d69908" target="_top" xlink:title=" ">
+<title>Node279</title>
+<g id="a_node8"><a xlink:href="class_lattice_action_charge_density.html#a719f71aaccbf1b4147ea944781d69908" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="22.2217,-376.5 22.2217,-404.5 161.6201,-404.5 161.6201,-376.5 22.2217,-376.5"/>
 <text text-anchor="start" x="30.2217" y="-392.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="91.9209" y="-382.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::writeObservableToFile</text>
 </a>
 </g>
 </g>
-<!-- Node283&#45;&gt;Node285 -->
+<!-- Node277&#45;&gt;Node279 -->
 <g id="edge7" class="edge">
-<title>Node283&#45;&gt;Node285</title>
+<title>Node277&#45;&gt;Node279</title>
 <path fill="none" stroke="#191970" d="M229.5309,-314.7882C226.1643,-316.5235 222.9146,-318.4224 219.8418,-320.5 198.0441,-335.2379 205.8343,-353.0544 183.8418,-367.5 177.1045,-371.9254 169.5786,-375.4993 161.813,-378.3856"/>
 <polygon fill="#191970" stroke="#191970" points="231.0633,-317.9357 238.6748,-310.5658 228.1287,-311.5806 231.0633,-317.9357"/>
 </g>
-<!-- Node286 -->
+<!-- Node280 -->
 <g id="node9" class="node">
-<title>Node286</title>
-<g id="a_node9"><a xlink:href="class_master_sampler.html#a638714c38e1a6252ab8b6be1fa224bd4" target="_top" xlink:title=" ">
+<title>Node280</title>
+<g id="a_node9"><a xlink:href="class_master_sampler.html#a638714c38e1a6252ab8b6be1fa224bd4" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="11.1182,-329.5 11.1182,-357.5 172.7236,-357.5 172.7236,-329.5 11.1182,-329.5"/>
 <text text-anchor="start" x="19.1182" y="-345.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::writeObservable</text>
 <text text-anchor="middle" x="91.9209" y="-335.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
 </a>
 </g>
 </g>
-<!-- Node283&#45;&gt;Node286 -->
+<!-- Node277&#45;&gt;Node280 -->
 <g id="edge8" class="edge">
-<title>Node283&#45;&gt;Node286</title>
+<title>Node277&#45;&gt;Node280</title>
 <path fill="none" stroke="#191970" d="M231.9412,-312.7492C207.1821,-318.1867 179.8086,-324.1984 155.881,-329.4533"/>
 <polygon fill="#191970" stroke="#191970" points="232.9938,-316.1015 242.0102,-310.5379 231.4922,-309.2645 232.9938,-316.1015"/>
 </g>
-<!-- Node287 -->
+<!-- Node281 -->
 <g id="node10" class="node">
-<title>Node287</title>
-<g id="a_node10"><a xlink:href="class_master_sampler_topc_x_y_z.html#a930f13a2a13f4b3820f40c8b52110cf2" target="_top" xlink:title=" ">
+<title>Node281</title>
+<g id="a_node10"><a xlink:href="class_master_sampler_topc_x_y_z.html#a930f13a2a13f4b3820f40c8b52110cf2" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="29.7363,-282.5 29.7363,-310.5 154.1055,-310.5 154.1055,-282.5 29.7363,-282.5"/>
 <text text-anchor="start" x="37.7363" y="-298.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="91.9209" y="-288.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::writeObservableToFile</text>
 </a>
 </g>
 </g>
-<!-- Node283&#45;&gt;Node287 -->
+<!-- Node277&#45;&gt;Node281 -->
 <g id="edge9" class="edge">
-<title>Node283&#45;&gt;Node287</title>
+<title>Node277&#45;&gt;Node281</title>
 <path fill="none" stroke="#191970" d="M209.7056,-296.5C190.8594,-296.5 171.5626,-296.5 154.1857,-296.5"/>
 <polygon fill="#191970" stroke="#191970" points="209.8095,-300.0001 219.8095,-296.5 209.8095,-293.0001 209.8095,-300.0001"/>
 </g>
-<!-- Node288 -->
+<!-- Node282 -->
 <g id="node11" class="node">
-<title>Node288</title>
-<g id="a_node11"><a xlink:href="class_super_sampler.html#a05b42b82879233dc329d280a61bfd7f0" target="_top" xlink:title=" ">
+<title>Node282</title>
+<g id="a_node11"><a xlink:href="class_super_sampler.html#a05b42b82879233dc329d280a61bfd7f0" target="_top" xlink:title="Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.">
 <polygon fill="#ffffff" stroke="#000000" points="13.0566,-235.5 13.0566,-263.5 170.7852,-263.5 170.7852,-235.5 13.0566,-235.5"/>
 <text text-anchor="start" x="21.0566" y="-251.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::writeObservable</text>
 <text text-anchor="middle" x="91.9209" y="-241.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
 </a>
 </g>
 </g>
-<!-- Node283&#45;&gt;Node288 -->
+<!-- Node277&#45;&gt;Node282 -->
 <g id="edge10" class="edge">
-<title>Node283&#45;&gt;Node288</title>
+<title>Node277&#45;&gt;Node282</title>
 <path fill="none" stroke="#191970" d="M231.9412,-280.2508C207.1821,-274.8133 179.8086,-268.8016 155.881,-263.5467"/>
 <polygon fill="#191970" stroke="#191970" points="231.4922,-283.7355 242.0102,-282.4621 232.9938,-276.8985 231.4922,-283.7355"/>
 </g>
-<!-- Node290 -->
+<!-- Node284 -->
 <g id="node13" class="node">
-<title>Node290</title>
-<g id="a_node13"><a xlink:href="class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" target="_top" xlink:title=" ">
+<title>Node284</title>
+<g id="a_node13"><a xlink:href="class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" target="_top" xlink:title="ObservableStorer::writeFlowObservableToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="234.854,-113.5 234.854,-141.5 377.0063,-141.5 377.0063,-113.5 234.854,-113.5"/>
 <text text-anchor="start" x="242.854" y="-129.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::writeFlow</text>
 <text text-anchor="middle" x="305.9302" y="-119.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableToFile</text>
 </a>
 </g>
 </g>
-<!-- Node289&#45;&gt;Node290 -->
+<!-- Node283&#45;&gt;Node284 -->
 <g id="edge12" class="edge">
-<title>Node289&#45;&gt;Node290</title>
+<title>Node283&#45;&gt;Node284</title>
 <path fill="none" stroke="#191970" d="M447.0752,-154.566C425.3361,-150.3973 400.2796,-145.5924 377.3671,-141.1987"/>
 <polygon fill="#191970" stroke="#191970" points="446.6523,-158.0485 457.1325,-156.4945 447.9706,-151.1738 446.6523,-158.0485"/>
 </g>
-<!-- Node291 -->
+<!-- Node285 -->
 <g id="node14" class="node">
-<title>Node291</title>
-<g id="a_node14"><a xlink:href="class_correlator.html#a168512b2ce182d9478db47f100125fa6" target="_top" xlink:title=" ">
+<title>Node285</title>
+<g id="a_node14"><a xlink:href="class_correlator.html#a168512b2ce182d9478db47f100125fa6" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="9.7314,-188.5 9.7314,-216.5 174.1104,-216.5 174.1104,-188.5 9.7314,-188.5"/>
 <text text-anchor="start" x="17.7314" y="-204.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::writeFlowObservables</text>
 <text text-anchor="middle" x="91.9209" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
 </a>
 </g>
 </g>
-<!-- Node290&#45;&gt;Node291 -->
+<!-- Node284&#45;&gt;Node285 -->
 <g id="edge13" class="edge">
-<title>Node290&#45;&gt;Node291</title>
+<title>Node284&#45;&gt;Node285</title>
 <path fill="none" stroke="#191970" d="M266.9933,-145.9436C243.3112,-156.6911 212.2512,-169.9618 183.8418,-179.5 174.1729,-182.7462 163.7958,-185.7691 153.6206,-188.4865"/>
 <polygon fill="#191970" stroke="#191970" points="268.7034,-149.01 276.3355,-141.6614 265.7866,-142.6466 268.7034,-149.01"/>
 </g>
-<!-- Node292 -->
+<!-- Node286 -->
 <g id="node15" class="node">
-<title>Node292</title>
-<g id="a_node15"><a xlink:href="class_lattice_action_charge_density.html#a54226556dc1497c311e4a4d50bf44c26" target="_top" xlink:title=" ">
+<title>Node286</title>
+<g id="a_node15"><a xlink:href="class_lattice_action_charge_density.html#a54226556dc1497c311e4a4d50bf44c26" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="18.623,-141.5 18.623,-169.5 165.2188,-169.5 165.2188,-141.5 18.623,-141.5"/>
 <text text-anchor="start" x="26.623" y="-157.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="91.9209" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::writeFlowObservablesToFile</text>
 </a>
 </g>
 </g>
-<!-- Node290&#45;&gt;Node292 -->
+<!-- Node284&#45;&gt;Node286 -->
 <g id="edge14" class="edge">
-<title>Node290&#45;&gt;Node292</title>
+<title>Node284&#45;&gt;Node286</title>
 <path fill="none" stroke="#191970" d="M224.6201,-138.1382C205.1672,-140.6834 184.5101,-143.386 165.4327,-145.882"/>
 <polygon fill="#191970" stroke="#191970" points="225.2068,-141.5914 234.6682,-136.8236 224.2986,-134.6506 225.2068,-141.5914"/>
 </g>
-<!-- Node293 -->
+<!-- Node287 -->
 <g id="node16" class="node">
-<title>Node293</title>
-<g id="a_node16"><a xlink:href="class_master_sampler.html#ad475928217ac61fae134128904aaa9f8" target="_top" xlink:title=" ">
+<title>Node287</title>
+<g id="a_node16"><a xlink:href="class_master_sampler.html#ad475928217ac61fae134128904aaa9f8" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="26.1304,-94.5 26.1304,-122.5 157.7114,-122.5 157.7114,-94.5 26.1304,-94.5"/>
 <text text-anchor="start" x="34.1304" y="-110.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::writeFlow</text>
 <text text-anchor="middle" x="91.9209" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservablesToFile</text>
 </a>
 </g>
 </g>
-<!-- Node290&#45;&gt;Node293 -->
+<!-- Node284&#45;&gt;Node287 -->
 <g id="edge15" class="edge">
-<title>Node290&#45;&gt;Node293</title>
+<title>Node284&#45;&gt;Node287</title>
 <path fill="none" stroke="#191970" d="M224.6464,-120.2835C202.5646,-118.3231 178.9293,-116.2247 157.8131,-114.35"/>
 <polygon fill="#191970" stroke="#191970" points="224.3978,-123.7751 234.6682,-121.1733 225.0169,-116.8026 224.3978,-123.7751"/>
 </g>
-<!-- Node294 -->
+<!-- Node288 -->
 <g id="node17" class="node">
-<title>Node294</title>
-<g id="a_node17"><a xlink:href="class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" target="_top" xlink:title=" ">
+<title>Node288</title>
+<g id="a_node17"><a xlink:href="class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="18.623,-47.5 18.623,-75.5 165.2188,-75.5 165.2188,-47.5 18.623,-47.5"/>
 <text text-anchor="start" x="26.623" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="91.9209" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::writeFlowObservablesToFile</text>
 </a>
 </g>
 </g>
-<!-- Node290&#45;&gt;Node294 -->
+<!-- Node284&#45;&gt;Node288 -->
 <g id="edge16" class="edge">
-<title>Node290&#45;&gt;Node294</title>
+<title>Node284&#45;&gt;Node288</title>
 <path fill="none" stroke="#191970" d="M259.1481,-109.8697C236.5581,-101.6534 208.9631,-92.0488 183.8418,-84.5 173.4438,-81.3755 162.2975,-78.3333 151.4799,-75.5387"/>
 <polygon fill="#191970" stroke="#191970" points="258.2302,-113.2609 268.8239,-113.415 260.6385,-106.6882 258.2302,-113.2609"/>
 </g>
-<!-- Node295 -->
+<!-- Node289 -->
 <g id="node18" class="node">
-<title>Node295</title>
-<g id="a_node18"><a xlink:href="class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" target="_top" xlink:title=" ">
+<title>Node289</title>
+<g id="a_node18"><a xlink:href="class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-.5 0,-28.5 183.8418,-28.5 183.8418,-.5 0,-.5"/>
 <text text-anchor="start" x="8" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::writeFlowObservables</text>
 <text text-anchor="middle" x="91.9209" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
 </a>
 </g>
 </g>
-<!-- Node290&#45;&gt;Node295 -->
+<!-- Node284&#45;&gt;Node289 -->
 <g id="edge17" class="edge">
-<title>Node290&#45;&gt;Node295</title>
+<title>Node284&#45;&gt;Node289</title>
 <path fill="none" stroke="#191970" d="M265.6425,-108.8218C250.5216,-100.8653 233.6648,-90.8022 219.8418,-79.5 200.8086,-63.9378 204.7541,-50.4275 183.8418,-37.5 178.2447,-34.04 172.1525,-31.0998 165.8567,-28.6013"/>
 <polygon fill="#191970" stroke="#191970" points="264.293,-112.0627 274.7905,-113.4959 267.478,-105.8292 264.293,-112.0627"/>
 </g>
-<!-- Node296&#45;&gt;Node294 -->
+<!-- Node290&#45;&gt;Node288 -->
 <g id="edge19" class="edge">
-<title>Node296&#45;&gt;Node294</title>
+<title>Node290&#45;&gt;Node288</title>
 <path fill="none" stroke="#191970" d="M242.1084,-61.5C218.0109,-61.5 190.4026,-61.5 165.4842,-61.5"/>
 <polygon fill="#191970" stroke="#191970" points="242.2029,-65.0001 252.2028,-61.5 242.2028,-58.0001 242.2029,-65.0001"/>
 </g>
-<!-- Node296&#45;&gt;Node295 -->
+<!-- Node290&#45;&gt;Node289 -->
 <g id="edge20" class="edge">
-<title>Node296&#45;&gt;Node295</title>
+<title>Node290&#45;&gt;Node289</title>
 <path fill="none" stroke="#191970" d="M254.7889,-50.2685C225.1439,-43.758 187.5493,-35.5016 155.9507,-28.562"/>
 <polygon fill="#191970" stroke="#191970" points="254.4022,-53.7669 264.9203,-52.4935 255.9038,-46.9299 254.4022,-53.7669"/>
 </g>

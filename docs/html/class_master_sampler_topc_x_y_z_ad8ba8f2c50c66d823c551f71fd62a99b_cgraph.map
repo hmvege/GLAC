@@ -1,9 +1,9 @@
 <map id="MasterSamplerTopcXYZ::MasterSamplerTopcXYZ" name="MasterSamplerTopcXYZ::MasterSamplerTopcXYZ">
 <area shape="rect" id="node1" title=" " alt="" coords="5,167,179,205"/>
-<area shape="rect" id="node2" href="$class_master_sampler_topc_x_y_z.html#af6d2cf2023d9626908fd26b07a7a0b84" title=" " alt="" coords="227,111,408,149"/>
+<area shape="rect" id="node2" href="$class_master_sampler_topc_x_y_z.html#af6d2cf2023d9626908fd26b07a7a0b84" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="227,111,408,149"/>
 <area shape="rect" id="node3" href="$class_parameters.html#aae314edb18d426571ab7b6df60da70aa" title=" " alt="" coords="503,5,664,31"/>
 <area shape="rect" id="node9" href="$class_parameters.html#a128ccc4cb31e9930a825cfd3b8e83d2e" title=" " alt="" coords="227,173,408,199"/>
-<area shape="rect" id="node10" href="$class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" title=" " alt="" coords="260,223,374,248"/>
+<area shape="rect" id="node10" href="$class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" title="allocate method for allocating memory." alt="" coords="260,223,374,248"/>
 <area shape="rect" id="node11" href="$class_parameters.html#a237ea1286459e8c648e983464829fe8d" title=" " alt="" coords="227,272,408,297"/>
 <area shape="rect" id="node4" href="$class_parameters.html#a216f85b3c5980a33f8a54c42fb3575c7" title=" " alt="" coords="466,55,701,93"/>
 <area shape="rect" id="node5" href="$class_parameters.html#a03f8c0aa2a31b9bfc016441cb263082c" title=" " alt="" coords="514,117,653,143"/>

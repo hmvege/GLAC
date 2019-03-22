@@ -22,7 +22,7 @@
 <!-- Node44 -->
 <g id="node2" class="node">
 <title>Node44</title>
-<g id="a_node2"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-.5 0,-28.5 139.3984,-28.5 139.3984,-.5 0,-.5"/>
 <text text-anchor="start" x="8" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="69.6992" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>

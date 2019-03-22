@@ -1,5 +1,5 @@
 <map id="MasterSamplerTopcXYZ" name="MasterSamplerTopcXYZ">
-<area shape="rect" id="node1" title=" " alt="" coords="5,167,171,192"/>
-<area shape="rect" id="node2" href="$class_correlator.html" title=" " alt="" coords="48,92,129,117"/>
-<area shape="rect" id="node3" href="$class_observable_storer.html" title=" " alt="" coords="25,5,151,31"/>
+<area shape="rect" id="node1" title="Observable for calculating the plaquette, energy and euclidean time topological charge." alt="" coords="5,167,171,192"/>
+<area shape="rect" id="node2" href="$class_correlator.html" title="base class for observables." alt="" coords="48,92,129,117"/>
+<area shape="rect" id="node3" href="$class_observable_storer.html" title="A class for storing the observable data." alt="" coords="25,5,151,31"/>
 </map>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['parallelparameters',['ParallelParameters',['../class_parallel_1_1_parallel_parameters.html',1,'Parallel']]],
+  ['parallelparameters',['ParallelParameters',['../class_parallel_parameters.html',1,'ParallelParameters'],['../class_parallel_1_1_parallel_parameters.html',1,'Parallel::ParallelParameters']]],
   ['parameters',['Parameters',['../class_parameters.html',1,'']]],
   ['performancetests',['PerformanceTests',['../class_performance_tests.html',1,'']]],
   ['plaquette',['Plaquette',['../class_plaquette.html',1,'']]],

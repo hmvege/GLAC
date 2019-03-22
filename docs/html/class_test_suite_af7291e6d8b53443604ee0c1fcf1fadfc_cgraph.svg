@@ -68,7 +68,7 @@
 <!-- Node4 -->
 <g id="node5" class="node">
 <title>Node4</title>
-<g id="a_node5"><a xlink:href="class_s_u2.html#afe1d093aaf7325c1a7490f84e4c59b12" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_s_u2.html#afe1d093aaf7325c1a7490f84e4c59b12" target="_top" xlink:title="SU2::setComplex.">
 <polygon fill="#ffffff" stroke="#000000" points="169.8442,-305.5 169.8442,-323.5 263.6519,-323.5 263.6519,-305.5 169.8442,-305.5"/>
 <text text-anchor="middle" x="216.748" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU2::setComplex</text>
 </a>
@@ -113,7 +113,7 @@
 <!-- Node7 -->
 <g id="node8" class="node">
 <title>Node7</title>
-<g id="a_node8"><a xlink:href="class_parallel_1_1_communicator.html#a71baca622b377e6537799857be416a77" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_parallel_1_1_communicator.html#a3094d713d09225738ecf0250019db115" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="156.7852,-181.5 156.7852,-209.5 276.7109,-209.5 276.7109,-181.5 156.7852,-181.5"/>
 <text text-anchor="start" x="164.7852" y="-197.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="216.748" y="-187.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initializeSubLattice</text>
@@ -174,7 +174,7 @@
 <!-- Node17 -->
 <g id="node18" class="node">
 <title>Node17</title>
-<g id="a_node18"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title=" ">
+<g id="a_node18"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title="allocate method for allocating memory.">
 <polygon fill="#ffffff" stroke="#000000" points="174.0044,-31.5 174.0044,-49.5 259.4917,-49.5 259.4917,-31.5 174.0044,-31.5"/>
 <text text-anchor="middle" x="216.748" y="-37.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::allocate</text>
 </a>

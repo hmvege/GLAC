@@ -1,13 +1,13 @@
 <map id="EnergyDensity::calculate" name="EnergyDensity::calculate">
-<area shape="rect" id="node1" title=" " alt="" coords="5,104,173,129"/>
-<area shape="rect" id="node2" href="$lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" title=" " alt="" coords="291,55,337,80"/>
+<area shape="rect" id="node1" title="Correlator::calculate calculates a observable." alt="" coords="5,104,173,129"/>
+<area shape="rect" id="node2" href="$lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" title="shift copies the lattice L and shifts it in a specified lorentzVector direction DIR." alt="" coords="291,55,337,80"/>
 <area shape="rect" id="node7" href="$lattice_8h.html#a491004d1505561625a8915464f3c6cab" title=" " alt="" coords="294,5,333,31"/>
 <area shape="rect" id="node8" href="$lattice_8h.html#a0289122f97ef3c8e2dfc3bfaf5b8f52d" title=" " alt="" coords="272,104,356,129"/>
 <area shape="rect" id="node9" href="$lattice_8h.html#aa2ccd37933994e50a9c9669725ee0e9e" title=" " alt="" coords="265,153,363,179"/>
 <area shape="rect" id="node10" href="$lattice_8h.html#a2a635fe0bbbaca1e8903db8d3bf61f01" title=" " alt="" coords="221,203,406,228"/>
-<area shape="rect" id="node3" href="$class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" title=" " alt="" coords="484,5,598,31"/>
+<area shape="rect" id="node3" href="$class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" title="allocate method for allocating memory." alt="" coords="484,5,598,31"/>
 <area shape="rect" id="node4" href="$class_parallel_1_1_index.html#ac406d7ceb12e986a66d64ef98fcef5d3" title=" " alt="" coords="454,55,629,80"/>
 <area shape="rect" id="node5" href="$class_parallel_1_1_index.html#af31faeef1369fdc0997d1910e008bfe2" title=" " alt="" coords="459,104,624,129"/>
 <area shape="rect" id="node6" href="$class_parallel_1_1_neighbours.html#a84653f3e22436280ac5a4689a24e7146" title=" " alt="" coords="458,153,625,179"/>
-<area shape="rect" id="node11" href="$functions_8h.html#a93863171e3da962b61804144857576a7" title=" " alt="" coords="464,203,619,228"/>
+<area shape="rect" id="node11" href="$functions_8h.html#a93863171e3da962b61804144857576a7" title="traceRealMultiplication" alt="" coords="464,203,619,228"/>
 </map>

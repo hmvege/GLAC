@@ -1,6 +1,6 @@
 <map id="main" name="main">
 <area shape="rect" id="node1" title=" " alt="" coords="5,1935,56,1960"/>
-<area shape="rect" id="node2" href="$class_parallel_1_1_communicator.html#adc9248c5a0defbbf55bfca988bfd9e96" title=" " alt="" coords="120,949,280,988"/>
+<area shape="rect" id="node2" href="$class_parallel_1_1_communicator.html#a4ed2a77c33cd899b31131e44fc906fd7" title="Parallel::Communicator::init initializes the communicater and sets up the lattice geometry." alt="" coords="120,949,280,988"/>
 <area shape="rect" id="node3" href="$namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" title="load" alt="" coords="133,1012,267,1037"/>
 <area shape="rect" id="node42" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="382,2053,541,2092"/>
 <area shape="rect" id="node43" href="$main_8cpp.html#adc55d66d01b104380f72a64f36c4cb9d" title=" " alt="" coords="152,1836,248,1861"/>
@@ -8,9 +8,9 @@
 <area shape="rect" id="node45" href="$main_8cpp.html#aa78448b51454a62a48e3b8221e29300f" title=" " alt="" coords="126,1935,274,1960"/>
 <area shape="rect" id="node46" href="$class_parameters.html#a778a2311c27854392c34c15bd4ea19f8" title=" " alt="" coords="104,1984,296,2023"/>
 <area shape="rect" id="node47" href="$class_system.html#a93c8a8258ac8f6382ec393bca1271011" title=" " alt="" coords="128,2047,271,2072"/>
-<area shape="rect" id="node48" href="$class_parallel_1_1_communicator.html#ad48e48ab0137dab329d31fc1e3ebf179" title=" " alt="" coords="382,2116,541,2155"/>
+<area shape="rect" id="node48" href="$class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" title=" " alt="" coords="382,2116,541,2155"/>
 <area shape="rect" id="node49" href="$class_system.html#afa39feb75f96798930f4bfb48205f40b" title=" " alt="" coords="154,2148,246,2173"/>
-<area shape="rect" id="node50" href="$class_parallel_1_1_communicator.html#adc5e4acb372e9db19276572007940832" title=" " alt="" coords="120,2197,280,2236"/>
+<area shape="rect" id="node50" href="$class_parallel_1_1_communicator.html#aca0ac979aee1a649dbe5d4582b06a707" title=" " alt="" coords="120,2197,280,2236"/>
 <area shape="rect" id="node4" href="$class_parameters.html#a4b2041032efc8d6e9f99a99f87543f26" title=" " alt="" coords="379,5,544,31"/>
 <area shape="rect" id="node5" href="$class_parameters.html#a8b9ea6055d41cd08a060bc72332a63af" title=" " alt="" coords="372,55,551,80"/>
 <area shape="rect" id="node6" href="$class_parallel_1_1_index.html#a14d1d30c926a76761ed1a1a51912a516" title=" " alt="" coords="382,104,541,129"/>
@@ -32,7 +32,7 @@
 <area shape="rect" id="node22" href="$class_parameters.html#a84d9a6f8a32bbe13f7abe045453700a0" title=" " alt="" coords="366,907,557,932"/>
 <area shape="rect" id="node23" href="$class_parameters.html#a0e0118ebbe8f19148a5c6d737c7a2c85" title=" " alt="" coords="399,956,524,981"/>
 <area shape="rect" id="node24" href="$class_parameters.html#a95d3c7f35ed0421419d98faecb2c23e8" title=" " alt="" coords="372,1005,551,1044"/>
-<area shape="rect" id="node25" href="$class_parallel_1_1_communicator.html#aea1c6e1ff8f4f40d3db0ac8e0b29db62" title=" " alt="" coords="382,1068,541,1107"/>
+<area shape="rect" id="node25" href="$class_parallel_1_1_communicator.html#a1db417babab93c8d8bf6339ff2bab540" title=" " alt="" coords="382,1068,541,1107"/>
 <area shape="rect" id="node26" href="$class_parallel_1_1_index.html#ab8650936d7000d54b811dd128618f9ad" title=" " alt="" coords="391,1131,532,1156"/>
 <area shape="rect" id="node27" href="$class_parameters.html#abbcb8f09dfec507ec29caa248819522b" title=" " alt="" coords="360,1180,563,1205"/>
 <area shape="rect" id="node28" href="$class_parameters.html#a4f96947340b496b847a808b8be6fc5f9" title=" " alt="" coords="374,1229,548,1268"/>

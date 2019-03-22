@@ -12,7 +12,7 @@
 <!-- Node71 -->
 <g id="node1" class="node">
 <title>Node71</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-123.5 0,-151.5 183.8418,-151.5 183.8418,-123.5 0,-123.5"/>
 <text text-anchor="start" x="8" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::writeFlowObservables</text>
 <text text-anchor="middle" x="91.9209" y="-129.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
@@ -22,7 +22,7 @@
 <!-- Node72 -->
 <g id="node2" class="node">
 <title>Node72</title>
-<g id="a_node2"><a xlink:href="class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" target="_top" xlink:title="ObservableStorer::gatherResults.">
 <polygon fill="#ffffff" stroke="#000000" points="251.5215,-256.5 251.5215,-284.5 379.8018,-284.5 379.8018,-256.5 251.5215,-256.5"/>
 <text text-anchor="start" x="259.5215" y="-272.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::gather</text>
 <text text-anchor="middle" x="315.6616" y="-262.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Results</text>
@@ -38,7 +38,7 @@
 <!-- Node74 -->
 <g id="node4" class="node">
 <title>Node74</title>
-<g id="a_node4"><a xlink:href="class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" target="_top" xlink:title="ObservableStorer::writeFlowObservableToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="244.5854,-209.5 244.5854,-237.5 386.7378,-237.5 386.7378,-209.5 244.5854,-209.5"/>
 <text text-anchor="start" x="252.5854" y="-225.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::writeFlow</text>
 <text text-anchor="middle" x="315.6616" y="-215.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableToFile</text>
@@ -54,7 +54,7 @@
 <!-- Node85 -->
 <g id="node15" class="node">
 <title>Node85</title>
-<g id="a_node15"><a xlink:href="class_parallel_1_1_communicator.html#a3da13427d693e0ce924159e871c83e19" target="_top" xlink:title=" ">
+<g id="a_node15"><a xlink:href="class_parallel_1_1_communicator.html#a5d42989e7a3022de6042e3503aa35346" target="_top" xlink:title="Parallel::Communicator::reduceToTemporalDimension reduces the results to the temporal dimensions,...">
 <polygon fill="#ffffff" stroke="#000000" points="240.1299,-123.5 240.1299,-151.5 391.1934,-151.5 391.1934,-123.5 240.1299,-123.5"/>
 <text text-anchor="start" x="248.1299" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="315.6616" y="-129.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::reduceToTemporalDimension</text>
@@ -101,7 +101,7 @@
 <!-- Node89 -->
 <g id="node19" class="node">
 <title>Node89</title>
-<g id="a_node19"><a xlink:href="namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" target="_top" xlink:title=" ">
+<g id="a_node19"><a xlink:href="namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" target="_top" xlink:title="IO::writeMatrixToFile writes out a matrix of observables to file, i.e. the topological charge in Eucl...">
 <polygon fill="#ffffff" stroke="#000000" points="475.5649,-179.5 475.5649,-197.5 582.688,-197.5 582.688,-179.5 475.5649,-179.5"/>
 <text text-anchor="middle" x="529.1265" y="-185.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::writeMatrixToFile</text>
 </a>
@@ -147,7 +147,7 @@
 <!-- Node75 -->
 <g id="node5" class="node">
 <title>Node75</title>
-<g id="a_node5"><a xlink:href="namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" target="_top" xlink:title="IO::writeFlowObservableToFile method for writing a flow observable to file, using ....">
 <polygon fill="#ffffff" stroke="#000000" points="453.0503,-216.5 453.0503,-234.5 605.2026,-234.5 605.2026,-216.5 453.0503,-216.5"/>
 <text text-anchor="middle" x="529.1265" y="-222.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::writeFlowObservableToFile</text>
 </a>

@@ -2,11 +2,17 @@
 \label{class_energy_density}\index{EnergyDensity@{EnergyDensity}}
 
 
+Solely calculates the energy density as given by, \[ E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda}\sum_{\mu<\nu} \big(\tilde{C}_{\mu\nu}(n)\big)^2. \] The $F_{\mu\nu}$ is the clover.  
+
+
+
+
 {\ttfamily \#include $<$energydensity.\+h$>$}
 
 
 
-Inheritance diagram for Energy\+Density\+:\nopagebreak
+Inheritance diagram for Energy\+Density\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -15,7 +21,8 @@ Inheritance diagram for Energy\+Density\+:\nopagebreak
 \end{figure}
 
 
-Collaboration diagram for Energy\+Density\+:\nopagebreak
+Collaboration diagram for Energy\+Density\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -30,14 +37,31 @@ Collaboration diagram for Energy\+Density\+:\nopagebreak
 \mbox{\hyperlink{class_energy_density_a307e031858ac7149f5689911f8ff22fb}{$\sim$\+Energy\+Density}} ()
 \item 
 void \mbox{\hyperlink{class_energy_density_ae8e5e29257104d881bcabeadc3b2c9e7}{calculate}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int i\+Obs)
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator\+::calculate}} calculates a observable. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_energy_density_ad108e32bc670f17f15b4ed433d8bbec7}{print\+Statistics}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator\+::print\+Statistics}} prints statistics from \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. \end{DoxyCompactList}\item 
 std\+::string \mbox{\hyperlink{class_energy_density_a59b320595bca439333d36e3753ca07f0}{get\+Observable\+Name}} ()
 \item 
 void \mbox{\hyperlink{class_energy_density_a584e164453ce880a45478c9b48ce2c4b}{run\+Statistics}} ()
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator\+::run\+Statistics}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Solely calculates the energy density as given by, \[ E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda}\sum_{\mu<\nu} \big(\tilde{C}_{\mu\nu}(n)\big)^2. \] The $F_{\mu\nu}$ is the clover. 
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -47,7 +71,8 @@ void \mbox{\hyperlink{class_energy_density_a584e164453ce880a45478c9b48ce2c4b}{ru
 \subsubsection{\texorpdfstring{EnergyDensity()}{EnergyDensity()}}
 {\footnotesize\ttfamily Energy\+Density\+::\+Energy\+Density (\begin{DoxyParamCaption}\item[{bool}]{store\+Flow\+Observable }\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -71,9 +96,21 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
+\mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator\+::calculate}} calculates a observable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & pointer to lattice of \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices \\
+\hline
+{\em i\+Obs} & number of the observable \\
+\hline
+\end{DoxyParams}
+
+
 Reimplemented from \mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator}}.
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -98,9 +135,14 @@ Reimplemented from \mbox{\hyperlink{class_correlator_ad1fa59e864917c3e48da037f90
 
 
 
+\mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator\+::print\+Statistics}} prints statistics from \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. 
+
+
+
 Reimplemented from \mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator}}.
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -115,9 +157,14 @@ Here is the call graph for this function\+:\nopagebreak
 
 
 
+\mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator\+::run\+Statistics}}. 
+
+Gathers results and performs statistics in the \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}} object. 
+
 Reimplemented from \mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator}}.
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode

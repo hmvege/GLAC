@@ -2,6 +2,11 @@
 \label{class_lattice}\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}}
 
 
+A method for holding a lattice of type T.  
+
+
+
+
 {\ttfamily \#include $<$lattice.\+h$>$}
 
 \subsection*{Public Member Functions}
@@ -14,17 +19,19 @@
 \mbox{\hyperlink{class_lattice_a006bd75dd4c599fe17f8ca7e96413487}{$\sim$\+Lattice}} ()
 \item 
 \mbox{\hyperlink{class_lattice_a74cc98beb36f76dcfa27535e43528d57}{Lattice}} (const \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&other)
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_lattice}{Lattice}} copy constructor. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_lattice_ad2826da8e42dcaea917b9a2e50ca1ca2}{Lattice}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&other) noexcept
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_lattice}{Lattice}} move constructor. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_lattice}{Lattice}} \& \mbox{\hyperlink{class_lattice_acc09c6b9abeafc6b735c3b95d8537edf}{operator=}} (const \mbox{\hyperlink{class_lattice}{Lattice}} \&other)
-\item 
+\begin{DoxyCompactList}\small\item\em operator = Copy assignement operator \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_lattice}{Lattice}} \& \mbox{\hyperlink{class_lattice_a29505c3ad95dc2695401c049cc34ba62}{operator=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&other) noexcept
-\item 
+\begin{DoxyCompactList}\small\item\em operator = Move assignement operator \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_lattice_a5b4e162f06f7b4b90b4a9335ed2aabb5}{allocate}} (std\+::vector$<$ unsigned int $>$ dim)
-\item 
+\begin{DoxyCompactList}\small\item\em allocate method for allocating memory. \end{DoxyCompactList}\item 
 T \& \mbox{\hyperlink{class_lattice_ab7d585cf03c540d70ff91a58facbdef5}{operator\mbox{[}$\,$\mbox{]}}} (unsigned long i)
-\item 
+\begin{DoxyCompactList}\small\item\em operator \mbox{[}\mbox{]} access operator that has no boundary checking. \end{DoxyCompactList}\item 
+T \& \mbox{\hyperlink{class_lattice_ae588d401adbaab9889698b3e9c6e00b1}{operator()}} (unsigned long i)
+\begin{DoxyCompactList}\small\item\em operator () access operator that has boundary checking. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_aa5eb9113987a4a411cd57245d591a458}{operator+=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&B)
 \item 
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_a83e9265a5da00384a19dc47eff5f9e00}{operator+=}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&B)
@@ -50,11 +57,11 @@ T \& \mbox{\hyperlink{class_lattice_ab7d585cf03c540d70ff91a58facbdef5}{operator\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice_afa9568877b23d2266c7d2f29fe0ec6ad}{operator/=}} (\mbox{\hyperlink{classcomplex}{complex}} B)
 \item 
 void \mbox{\hyperlink{class_lattice_a5ad6bf603b4b455f0368362aeeddb748}{identity}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em identity method for setting the \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices of the lattice to identity. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_lattice_a1e8bfb54f85e78f2c97e8b90d2b47dc9}{zeros}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em zeros sets all of the \mbox{\hyperlink{class_s_u3}{S\+U3}} elements in the lattice to zero. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \mbox{\hyperlink{class_lattice_a85154fbd1b0ae42af329135c6cd11f34}{copy}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ B)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em copy method for copying content of another lattice B onto itself. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Data Fields}
 \begin{DoxyCompactItemize}
 \item 
@@ -64,6 +71,28 @@ std\+::vector$<$ unsigned int $>$ \mbox{\hyperlink{class_lattice_a6adf73dcd2ef16
 \item 
 unsigned long \mbox{\hyperlink{class_lattice_a933045fb4a76f62d29472e6061ed8a34}{m\+\_\+lattice\+Size}}
 \end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class T$>$\newline
+class Lattice$<$ T $>$}
+
+A method for holding a lattice of type T. 
+
+The lattice class is implemented such that is uses move semantics, i.\+e. rule of 5.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -95,6 +124,15 @@ unsigned long \mbox{\hyperlink{class_lattice_a933045fb4a76f62d29472e6061ed8a34}{
 {\footnotesize\ttfamily template$<$class T$>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::\mbox{\hyperlink{class_lattice}{Lattice}} (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+\mbox{\hyperlink{class_lattice}{Lattice}} copy constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{class_lattice_ad2826da8e42dcaea917b9a2e50ca1ca2}\label{class_lattice_ad2826da8e42dcaea917b9a2e50ca1ca2}} 
 \index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!Lattice@{Lattice}}
 \index{Lattice@{Lattice}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
@@ -102,6 +140,15 @@ unsigned long \mbox{\hyperlink{class_lattice_a933045fb4a76f62d29472e6061ed8a34}{
 {\footnotesize\ttfamily template$<$class T$>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::\mbox{\hyperlink{class_lattice}{Lattice}} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
 
+
+
+\mbox{\hyperlink{class_lattice}{Lattice}} move constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & \\
+\hline
+\end{DoxyParams}
 
 
 \subsection{Member Function Documentation}
@@ -112,7 +159,17 @@ unsigned long \mbox{\hyperlink{class_lattice_a933045fb4a76f62d29472e6061ed8a34}{
 {\footnotesize\ttfamily template$<$class T $>$ \\
 void \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::allocate (\begin{DoxyParamCaption}\item[{std\+::vector$<$ unsigned int $>$}]{dim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+
+
+allocate method for allocating memory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dim} & \\
+\hline
+\end{DoxyParams}
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -126,7 +183,20 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class T$>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::copy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+
+
+copy method for copying content of another lattice B onto itself. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em B} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+itself as copied from B. 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -140,7 +210,12 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class T $>$ \\
 void \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::identity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+
+
+identity method for setting the \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices of the lattice to identity. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -175,6 +250,25 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class T$>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+\mbox{\Hypertarget{class_lattice_ae588d401adbaab9889698b3e9c6e00b1}\label{class_lattice_ae588d401adbaab9889698b3e9c6e00b1}} 
+\index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator()@{operator()}}
+\index{operator()@{operator()}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator()()}{operator()()}}
+{\footnotesize\ttfamily template$<$class T$>$ \\
+T\& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator() (\begin{DoxyParamCaption}\item[{unsigned long}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+operator () access operator that has boundary checking. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_lattice_aa5eb9113987a4a411cd57245d591a458}\label{class_lattice_aa5eb9113987a4a411cd57245d591a458}} 
 \index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator+=@{operator+=}}
 \index{operator+=@{operator+=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
@@ -238,6 +332,18 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class T$>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}\& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+operator = Copy assignement operator 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_lattice_a29505c3ad95dc2695401c049cc34ba62}\label{class_lattice_a29505c3ad95dc2695401c049cc34ba62}} 
 \index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator=@{operator=}}
 \index{operator=@{operator=}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
@@ -245,6 +351,18 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class T$>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}\& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
 
+
+
+operator = Move assignement operator 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_lattice_ab7d585cf03c540d70ff91a58facbdef5}\label{class_lattice_ab7d585cf03c540d70ff91a58facbdef5}} 
 \index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
 \index{operator\mbox{[}\mbox{]}@{operator[]}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
@@ -252,6 +370,18 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class T$>$ \\
 T\& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{unsigned long}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+operator \mbox{[}\mbox{]} access operator that has no boundary checking. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_lattice_a1e8bfb54f85e78f2c97e8b90d2b47dc9}\label{class_lattice_a1e8bfb54f85e78f2c97e8b90d2b47dc9}} 
 \index{Lattice$<$ T $>$@{Lattice$<$ T $>$}!zeros@{zeros}}
 \index{zeros@{zeros}!Lattice$<$ T $>$@{Lattice$<$ T $>$}}
@@ -259,7 +389,12 @@ T\& \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::operator\mbox{[}$\,$\m
 {\footnotesize\ttfamily template$<$class T $>$ \\
 void \mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$\+::zeros (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+
+
+zeros sets all of the \mbox{\hyperlink{class_s_u3}{S\+U3}} elements in the lattice to zero. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode

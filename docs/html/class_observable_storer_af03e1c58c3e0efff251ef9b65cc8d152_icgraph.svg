@@ -21,7 +21,7 @@
 <!-- Node20 -->
 <g id="node2" class="node">
 <title>Node20</title>
-<g id="a_node2"><a xlink:href="class_lattice_action_charge_density.html#abb7db718d4069faab0ed19f31aa85ad4" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_lattice_action_charge_density.html#abb7db718d4069faab0ed19f31aa85ad4" target="_top" xlink:title="Correlator::printObservable prints the observable for the output.">
 <polygon fill="#ffffff" stroke="#000000" points="10.2734,-121.5 10.2734,-149.5 149.6719,-149.5 149.6719,-121.5 10.2734,-121.5"/>
 <text text-anchor="start" x="18.2734" y="-137.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="79.9727" y="-127.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::printObservable</text>
@@ -37,7 +37,7 @@
 <!-- Node21 -->
 <g id="node3" class="node">
 <title>Node21</title>
-<g id="a_node3"><a xlink:href="class_master_sampler.html#a41853c3e4ab52fca7d93cf80e8702b7a" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_master_sampler.html#a41853c3e4ab52fca7d93cf80e8702b7a" target="_top" xlink:title="Correlator::printObservable prints the observable for the output.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-84.5 0,-102.5 159.9453,-102.5 159.9453,-84.5 0,-84.5"/>
 <text text-anchor="middle" x="79.9727" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::printObservable</text>
 </a>
@@ -52,7 +52,7 @@
 <!-- Node22 -->
 <g id="node4" class="node">
 <title>Node22</title>
-<g id="a_node4"><a xlink:href="class_master_sampler_topc_x_y_z.html#ab2312c9e9dc1e9deeb5bce36784372ac" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_master_sampler_topc_x_y_z.html#ab2312c9e9dc1e9deeb5bce36784372ac" target="_top" xlink:title="Correlator::printObservable prints the observable for the output.">
 <polygon fill="#ffffff" stroke="#000000" points="17.7881,-37.5 17.7881,-65.5 142.1572,-65.5 142.1572,-37.5 17.7881,-37.5"/>
 <text text-anchor="start" x="25.7881" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="79.9727" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::printObservable</text>
@@ -68,7 +68,7 @@
 <!-- Node23 -->
 <g id="node5" class="node">
 <title>Node23</title>
-<g id="a_node5"><a xlink:href="class_super_sampler.html#adf92b9281ee9a782e6c00424dd23451d" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_super_sampler.html#adf92b9281ee9a782e6c00424dd23451d" target="_top" xlink:title="Correlator::printObservable prints the observable for the output.">
 <polygon fill="#ffffff" stroke="#000000" points="1.9385,-.5 1.9385,-18.5 158.0068,-18.5 158.0068,-.5 1.9385,-.5"/>
 <text text-anchor="middle" x="79.9727" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::printObservable</text>
 </a>

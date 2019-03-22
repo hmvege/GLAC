@@ -6,14 +6,16 @@
 {\ttfamily \#include \char`\"{}parallelization/neighbours.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}parallelization/parallelparameters.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}functions.\+h\char`\"{}}\newline
-Include dependency graph for lattice.\+h\+:\nopagebreak
+Include dependency graph for lattice.\+h\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{lattice_8h__incl}
 \end{center}
 \end{figure}
-This graph shows which files directly or indirectly include this file\+:\nopagebreak
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -24,14 +26,14 @@ This graph shows which files directly or indirectly include this file\+:\nopageb
 \begin{DoxyCompactItemize}
 \item 
 class \mbox{\hyperlink{class_lattice}{Lattice$<$ T $>$}}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em A method for holding a lattice of type T. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Enumerations}
 \begin{DoxyCompactItemize}
 \item 
 enum \mbox{\hyperlink{lattice_8h_a49eb6ac4643553d04b85c70646c6786d}{D\+IR}} \{ \mbox{\hyperlink{lattice_8h_a49eb6ac4643553d04b85c70646c6786daad5aa01ac1825d55dfc1978ee49c4c36}{B\+A\+C\+K\+W\+A\+R\+DS}} = 0, 
 \mbox{\hyperlink{lattice_8h_a49eb6ac4643553d04b85c70646c6786da8e0a822cdb9fa1c73df3936841e74601}{F\+O\+R\+W\+A\+R\+DS}} = 1
  \}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em The D\+IR enum specifies if we are to move B\+A\+C\+K\+W\+A\+R\+DS or F\+O\+R\+W\+A\+R\+DS in the lattice shifts. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -106,7 +108,7 @@ std\+::vector$<$ double $>$ \mbox{\hyperlink{lattice_8h_a19c12b39277c18bf341c75c
 {\footnotesize template$<$class S\+U3 $>$ }\\\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \mbox{\hyperlink{lattice_8h_a6e4021e10507c116876b2e28a3544588}{make\+Hermitian}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&\&B)
 \item 
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \mbox{\hyperlink{lattice_8h_a53bbfaed8f54ee3a1db6f8049686ccdf}{shift}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ L, \mbox{\hyperlink{lattice_8h_a49eb6ac4643553d04b85c70646c6786d}{D\+IR}} direction, unsigned int lorentz\+Vector)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em shift copies the lattice L and shifts it in a specified lorentz\+Vector direction D\+IR. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Enumeration Type Documentation}
@@ -115,6 +117,10 @@ std\+::vector$<$ double $>$ \mbox{\hyperlink{lattice_8h_a19c12b39277c18bf341c75c
 \index{DIR@{DIR}!lattice.h@{lattice.h}}
 \subsubsection{\texorpdfstring{DIR}{DIR}}
 {\footnotesize\ttfamily enum \mbox{\hyperlink{lattice_8h_a49eb6ac4643553d04b85c70646c6786d}{D\+IR}}}
+
+
+
+The D\+IR enum specifies if we are to move B\+A\+C\+K\+W\+A\+R\+DS or F\+O\+R\+W\+A\+R\+DS in the lattice shifts. 
 
 \begin{DoxyEnumFields}{Enumerator}
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BACKWARDS@{BACKWARDS}!lattice.h@{lattice.h}}\index{lattice.h@{lattice.h}!BACKWARDS@{BACKWARDS}}}\mbox{\Hypertarget{lattice_8h_a49eb6ac4643553d04b85c70646c6786daad5aa01ac1825d55dfc1978ee49c4c36}\label{lattice_8h_a49eb6ac4643553d04b85c70646c6786daad5aa01ac1825d55dfc1978ee49c4c36}} 
@@ -136,7 +142,8 @@ F\+O\+R\+W\+A\+R\+DS&\\
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ conjugate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -150,7 +157,8 @@ Here is the call graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ conjugate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&\&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -164,7 +172,8 @@ Here is the call graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$double$>$ imag\+Trace (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$}]{L }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -177,7 +186,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{imagTraceMultiplication()}{imagTraceMultiplication()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_lattice}{Lattice}}$<$double$>$ imag\+Trace\+Multiplication (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$}]{L1,  }\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$}]{L2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -191,14 +201,16 @@ Here is the call graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ inv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=230pt]{lattice_8h_a491004d1505561625a8915464f3c6cab_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -212,7 +224,8 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ inv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&\&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -226,7 +239,8 @@ Here is the call graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ make\+Anti\+Hermitian (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -240,7 +254,8 @@ Here is the call graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ make\+Anti\+Hermitian (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&\&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -254,7 +269,8 @@ Here is the call graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ make\+Hermitian (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -268,7 +284,8 @@ Here is the call graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ make\+Hermitian (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&\&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -372,14 +389,16 @@ Here is the call graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{realTraceMultiplication()}{realTraceMultiplication()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_lattice}{Lattice}}$<$double$>$ real\+Trace\+Multiplication (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$}]{L1,  }\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$}]{L2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{lattice_8h_ab2d48b63b79e5e5ee3ca25483fe98b3e_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -392,14 +411,37 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{shift()}{shift()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ shift (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$}]{L,  }\item[{\mbox{\hyperlink{lattice_8h_a49eb6ac4643553d04b85c70646c6786d}{D\+IR}}}]{direction,  }\item[{unsigned int}]{lorentz\+Vector }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+
+
+shift copies the lattice L and shifts it in a specified lorentz\+Vector direction D\+IR. 
+
+The shift shares a face of the lattice with a neighbouring processsors, and retrieves a corresponding face from a neighboring processor, essentialle shifting the entire lattice one $\hat{\mu}$.
+
+\begin{DoxySeeAlso}{See also}
+Chapter 5 in \href{https://github.com/hmvege/LQCDMasterThesis}{\texttt{ https\+://github.\+com/hmvege/\+L\+Q\+C\+D\+Master\+Thesis}} contains a detailed description of the sharing process.
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}{Parameters}
+{\em L} & is the lattiece we are to shift \\
+\hline
+{\em direction} & we are shifting in. Either F\+O\+R\+W\+A\+R\+DS or B\+A\+C\+K\+W\+A\+R\+DS. \\
+\hline
+{\em lorentz\+Vector} & the direction in the Lorentz index $\hat{\mu}$ we are shifting in. Either 0, 1, 2 or 3. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a copy of the lattice L that contains the face of a neighboring lattice. 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=281pt]{lattice_8h_a53bbfaed8f54ee3a1db6f8049686ccdf_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -413,7 +455,8 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ subtract\+Imag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&}]{L,  }\item[{const \mbox{\hyperlink{class_lattice}{Lattice}}$<$ double $>$ \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -448,7 +491,8 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class T $>$ \\
 T sum (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ T $>$}]{L }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -462,7 +506,8 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 double sum\+Real\+Trace (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$}]{L }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -476,14 +521,16 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 double sum\+Real\+Trace\+Multiplication (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$}]{L1,  }\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$}]{L2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{lattice_8h_a2a635fe0bbbaca1e8903db8d3bf61f01_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -496,14 +543,16 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{sumSpatial()}{sumSpatial()}}
 {\footnotesize\ttfamily std\+::vector$<$double$>$ sum\+Spatial (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ double $>$}]{L }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=305pt]{lattice_8h_a19c12b39277c18bf341c75cc2929b314_cgraph}
 \end{center}
 \end{figure}
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -524,7 +573,8 @@ Here is the caller graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ transpose (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -538,7 +588,8 @@ Here is the call graph for this function\+:\nopagebreak
 {\footnotesize\ttfamily template$<$class S\+U3 $>$ \\
 \mbox{\hyperlink{class_lattice}{Lattice}}$<$\mbox{\hyperlink{class_s_u3}{S\+U3}}$>$ transpose (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ \&\&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the call graph for this function\+:\nopagebreak
+Here is the call graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode

@@ -83,7 +83,7 @@
 <!-- Node30 -->
 <g id="node7" class="node">
 <title>Node30</title>
-<g id="a_node7"><a xlink:href="class_i_o_1_1_field_i_o.html#a02db864a48601edd7febaab5d655e495" target="_top" xlink:title=" ">
+<g id="a_node7"><a xlink:href="class_i_o_1_1_field_i_o.html#a02db864a48601edd7febaab5d655e495" target="_top" xlink:title="IO::FieldIO::loadFieldConfiguration loads a regular configuration into memory.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-453.5 0,-471.5 169.9648,-471.5 169.9648,-453.5 0,-453.5"/>
 <text text-anchor="middle" x="84.9824" y="-459.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::loadFieldConfiguration</text>
 </a>
@@ -98,7 +98,7 @@
 <!-- Node31 -->
 <g id="node8" class="node">
 <title>Node31</title>
-<g id="a_node8"><a xlink:href="class_i_o_1_1_field_i_o.html#af23fb6e02a6bd1cafd5be4acacbf848e" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_i_o_1_1_field_i_o.html#af23fb6e02a6bd1cafd5be4acacbf848e" target="_top" xlink:title="IO::FieldIO::loadChromaFieldConfiguration loads a configuration from Chroma into memory.">
 <polygon fill="#ffffff" stroke="#000000" points="11.958,-398.5 11.958,-426.5 158.0068,-426.5 158.0068,-398.5 11.958,-398.5"/>
 <text text-anchor="start" x="19.958" y="-414.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::loadChromaField</text>
 <text text-anchor="middle" x="84.9824" y="-404.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Configuration</text>
@@ -159,7 +159,7 @@
 <!-- Node37 -->
 <g id="node14" class="node">
 <title>Node37</title>
-<g id="a_node14"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title=" ">
+<g id="a_node14"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title="shift copies the lattice L and shifts it in a specified lorentzVector direction DIR.">
 <polygon fill="#ffffff" stroke="#000000" points="284.0728,-212.5 284.0728,-230.5 318.4126,-230.5 318.4126,-212.5 284.0728,-212.5"/>
 <text text-anchor="middle" x="301.2427" y="-218.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">shift</text>
 </a>
@@ -174,7 +174,7 @@
 <!-- Node44 -->
 <g id="node21" class="node">
 <title>Node44</title>
-<g id="a_node21"><a xlink:href="class_parallel_1_1_communicator.html#ae715d67d2e60def9bf529702a64f4caa" target="_top" xlink:title=" ">
+<g id="a_node21"><a xlink:href="class_parallel_1_1_communicator.html#a1c8d402df4a44becc1cab7a762f51432" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="241.2798,-668.5 241.2798,-696.5 361.2056,-696.5 361.2056,-668.5 241.2798,-668.5"/>
 <text text-anchor="start" x="249.2798" y="-684.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="301.2427" y="-674.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getPositiveLink</text>
@@ -190,7 +190,7 @@
 <!-- Node45 -->
 <g id="node22" class="node">
 <title>Node45</title>
-<g id="a_node22"><a xlink:href="class_parallel_1_1_communicator.html#ad3b8781686b517c146d9d2f2dbf932de" target="_top" xlink:title=" ">
+<g id="a_node22"><a xlink:href="class_parallel_1_1_communicator.html#ae843d16f4aed13d5b5179a05b717ec88" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="241.2798,-621.5 241.2798,-649.5 361.2056,-649.5 361.2056,-621.5 241.2798,-621.5"/>
 <text text-anchor="start" x="249.2798" y="-637.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="301.2427" y="-627.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getNegativeLink</text>
@@ -206,7 +206,7 @@
 <!-- Node46 -->
 <g id="node23" class="node">
 <title>Node46</title>
-<g id="a_node23"><a xlink:href="class_parallel_1_1_communicator.html#a453ebde0502ed86b8bd95dede6f8e69c" target="_top" xlink:title=" ">
+<g id="a_node23"><a xlink:href="class_parallel_1_1_communicator.html#a27862560cf6c7b8ccf650a422e014776" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="225.6987,-574.5 225.6987,-602.5 376.7866,-602.5 376.7866,-574.5 225.6987,-574.5"/>
 <text text-anchor="start" x="233.6987" y="-590.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="301.2427" y="-580.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getNeighboursNeighbourLink</text>
@@ -222,7 +222,7 @@
 <!-- Node47 -->
 <g id="node24" class="node">
 <title>Node47</title>
-<g id="a_node24"><a xlink:href="class_parallel_1_1_communicator.html#aebe919d44a02b37c98161ff4d3d23f6f" target="_top" xlink:title=" ">
+<g id="a_node24"><a xlink:href="class_parallel_1_1_communicator.html#a1c598fae96e05e3b36db368e60453d63" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="205.9648,-128.5 205.9648,-156.5 396.5205,-156.5 396.5205,-128.5 205.9648,-128.5"/>
 <text text-anchor="start" x="213.9648" y="-144.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="301.2427" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getNeighboursNeighbourNegativeLink</text>
@@ -238,7 +238,7 @@
 <!-- Node48 -->
 <g id="node25" class="node">
 <title>Node48</title>
-<g id="a_node25"><a xlink:href="class_parallel_1_1_communicator.html#a0975f377dbde235d418ca7054001f3a3" target="_top" xlink:title=" ">
+<g id="a_node25"><a xlink:href="class_parallel_1_1_communicator.html#a9471bf9448f34a0b4575310a3c54af61" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="241.2798,-412.5 241.2798,-440.5 361.2056,-440.5 361.2056,-412.5 241.2798,-412.5"/>
 <text text-anchor="start" x="249.2798" y="-428.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="301.2427" y="-418.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::checkLattice</text>
@@ -254,7 +254,7 @@
 <!-- Node29 -->
 <g id="node6" class="node">
 <title>Node29</title>
-<g id="a_node6"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="15.2832,-336.5 15.2832,-364.5 154.6816,-364.5 154.6816,-336.5 15.2832,-336.5"/>
 <text text-anchor="start" x="23.2832" y="-352.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="84.9824" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>
@@ -270,7 +270,7 @@
 <!-- Node33 -->
 <g id="node10" class="node">
 <title>Node33</title>
-<g id="a_node10"><a xlink:href="class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" target="_top" xlink:title=" ">
+<g id="a_node10"><a xlink:href="class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="22.7979,-289.5 22.7979,-317.5 147.167,-317.5 147.167,-289.5 22.7979,-289.5"/>
 <text text-anchor="start" x="30.7979" y="-305.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="84.9824" y="-295.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>
@@ -286,7 +286,7 @@
 <!-- Node34 -->
 <g id="node11" class="node">
 <title>Node34</title>
-<g id="a_node11"><a xlink:href="class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" target="_top" xlink:title=" ">
+<g id="a_node11"><a xlink:href="class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="22.5098,-252.5 22.5098,-270.5 147.4551,-270.5 147.4551,-252.5 22.5098,-252.5"/>
 <text text-anchor="middle" x="84.9824" y="-258.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::calculate</text>
 </a>
@@ -369,7 +369,7 @@
 <!-- Node40 -->
 <g id="node17" class="node">
 <title>Node40</title>
-<g id="a_node17"><a xlink:href="class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" target="_top" xlink:title=" ">
+<g id="a_node17"><a xlink:href="class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="21.9556,-121.5 21.9556,-139.5 148.0093,-139.5 148.0093,-121.5 21.9556,-121.5"/>
 <text text-anchor="middle" x="84.9824" y="-127.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">EnergyDensity::calculate</text>
 </a>
@@ -384,7 +384,7 @@
 <!-- Node41 -->
 <g id="node18" class="node">
 <title>Node41</title>
-<g id="a_node18"><a xlink:href="class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" target="_top" xlink:title=" ">
+<g id="a_node18"><a xlink:href="class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="20.5713,-84.5 20.5713,-102.5 149.3936,-102.5 149.3936,-84.5 20.5713,-84.5"/>
 <text text-anchor="middle" x="84.9824" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::calculate</text>
 </a>
@@ -399,7 +399,7 @@
 <!-- Node42 -->
 <g id="node19" class="node">
 <title>Node42</title>
-<g id="a_node19"><a xlink:href="class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" target="_top" xlink:title=" ">
+<g id="a_node19"><a xlink:href="class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="33.3423,-47.5 33.3423,-65.5 136.6226,-65.5 136.6226,-47.5 33.3423,-47.5"/>
 <text text-anchor="middle" x="84.9824" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Plaquette::calculate</text>
 </a>
@@ -414,7 +414,7 @@
 <!-- Node43 -->
 <g id="node20" class="node">
 <title>Node43</title>
-<g id="a_node20"><a xlink:href="class_topological_charge.html#a8ed78c28c3484df04b1cb24187de2f5b" target="_top" xlink:title=" ">
+<g id="a_node20"><a xlink:href="class_topological_charge.html#a8ed78c28c3484df04b1cb24187de2f5b" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="32.7881,-.5 32.7881,-28.5 137.1768,-28.5 137.1768,-.5 32.7881,-.5"/>
 <text text-anchor="start" x="40.7881" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TopologicalCharge::</text>
 <text text-anchor="middle" x="84.9824" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">calculate</text>

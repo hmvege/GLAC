@@ -53,7 +53,7 @@
 <!-- Node21 -->
 <g id="node5" class="node">
 <title>Node21</title>
-<g id="a_node5"><a xlink:href="class_i_o_1_1_field_i_o.html#a02db864a48601edd7febaab5d655e495" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_i_o_1_1_field_i_o.html#a02db864a48601edd7febaab5d655e495" target="_top" xlink:title="IO::FieldIO::loadFieldConfiguration loads a regular configuration into memory.">
 <polygon fill="#ffffff" stroke="#000000" points="175.3984,-47.5 175.3984,-65.5 345.3633,-65.5 345.3633,-47.5 175.3984,-47.5"/>
 <text text-anchor="middle" x="260.3809" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::loadFieldConfiguration</text>
 </a>
@@ -68,7 +68,7 @@
 <!-- Node22 -->
 <g id="node6" class="node">
 <title>Node22</title>
-<g id="a_node6"><a xlink:href="class_i_o_1_1_field_i_o.html#af23fb6e02a6bd1cafd5be4acacbf848e" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_i_o_1_1_field_i_o.html#af23fb6e02a6bd1cafd5be4acacbf848e" target="_top" xlink:title="IO::FieldIO::loadChromaFieldConfiguration loads a configuration from Chroma into memory.">
 <polygon fill="#ffffff" stroke="#000000" points="187.3564,-.5 187.3564,-28.5 333.4053,-28.5 333.4053,-.5 187.3564,-.5"/>
 <text text-anchor="start" x="195.3564" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::loadChromaField</text>
 <text text-anchor="middle" x="260.3809" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Configuration</text>
@@ -84,7 +84,7 @@
 <!-- Node20 -->
 <g id="node4" class="node">
 <title>Node20</title>
-<g id="a_node4"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-84.5 0,-112.5 139.3984,-112.5 139.3984,-84.5 0,-84.5"/>
 <text text-anchor="start" x="8" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="69.6992" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>

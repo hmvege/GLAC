@@ -37,7 +37,7 @@
 <!-- Node69 -->
 <g id="node3" class="node">
 <title>Node69</title>
-<g id="a_node3"><a xlink:href="class_lattice_action_charge_density.html#aba3131bbe5bd930adccc2852b4d44bb9" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_lattice_action_charge_density.html#aba3131bbe5bd930adccc2852b4d44bb9" target="_top" xlink:title="Correlator::initializeObservableStorer initializes ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="199.2607,-225.5 199.2607,-253.5 338.6592,-253.5 338.6592,-225.5 199.2607,-225.5"/>
 <text text-anchor="start" x="207.2607" y="-241.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="268.96" y="-231.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initializeObservableStorer</text>
@@ -53,7 +53,7 @@
 <!-- Node71 -->
 <g id="node5" class="node">
 <title>Node71</title>
-<g id="a_node5"><a xlink:href="class_master_sampler.html#a88e2eec68ea6bd60cc3f375ac04a8ded" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_master_sampler.html#a88e2eec68ea6bd60cc3f375ac04a8ded" target="_top" xlink:title="Correlator::initializeObservableStorer initializes ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="206.4971,-178.5 206.4971,-206.5 331.4229,-206.5 331.4229,-178.5 206.4971,-178.5"/>
 <text text-anchor="start" x="214.4971" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::initialize</text>
 <text text-anchor="middle" x="268.96" y="-184.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer</text>
@@ -69,7 +69,7 @@
 <!-- Node73 -->
 <g id="node7" class="node">
 <title>Node73</title>
-<g id="a_node7"><a xlink:href="class_master_sampler_topc_x_y_z.html#af6d2cf2023d9626908fd26b07a7a0b84" target="_top" xlink:title=" ">
+<g id="a_node7"><a xlink:href="class_master_sampler_topc_x_y_z.html#af6d2cf2023d9626908fd26b07a7a0b84" target="_top" xlink:title="Correlator::initializeObservableStorer initializes ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="201.2114,-131.5 201.2114,-159.5 336.7085,-159.5 336.7085,-131.5 201.2114,-131.5"/>
 <text text-anchor="start" x="209.2114" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="268.96" y="-137.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initializeObservableStorer</text>
@@ -100,7 +100,7 @@
 <!-- Node76 -->
 <g id="node10" class="node">
 <title>Node76</title>
-<g id="a_node10"><a xlink:href="class_super_sampler.html#a4429d6ae37247a02259bc0c6d665821c" target="_top" xlink:title=" ">
+<g id="a_node10"><a xlink:href="class_super_sampler.html#a4429d6ae37247a02259bc0c6d665821c" target="_top" xlink:title="Correlator::initializeObservableStorer initializes ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="208.4355,-47.5 208.4355,-75.5 329.4844,-75.5 329.4844,-47.5 208.4355,-47.5"/>
 <text text-anchor="start" x="216.4355" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::initialize</text>
 <text text-anchor="middle" x="268.96" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer</text>

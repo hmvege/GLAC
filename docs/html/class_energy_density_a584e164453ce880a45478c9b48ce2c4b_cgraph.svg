@@ -12,7 +12,7 @@
 <!-- Node25 -->
 <g id="node1" class="node">
 <title>Node25</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::runStatistics.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-21.5 0,-39.5 141.0488,-39.5 141.0488,-21.5 0,-21.5"/>
 <text text-anchor="middle" x="70.5244" y="-27.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">EnergyDensity::runStatistics</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node26 -->
 <g id="node2" class="node">
 <title>Node26</title>
-<g id="a_node2"><a xlink:href="class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" target="_top" xlink:title="ObservableStorer::gatherResults.">
 <polygon fill="#ffffff" stroke="#000000" points="190.103,-37.5 190.103,-65.5 318.3833,-65.5 318.3833,-37.5 190.103,-37.5"/>
 <text text-anchor="start" x="198.103" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::gather</text>
 <text text-anchor="middle" x="254.2432" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Results</text>
@@ -37,7 +37,7 @@
 <!-- Node28 -->
 <g id="node4" class="node">
 <title>Node28</title>
-<g id="a_node4"><a xlink:href="class_observable_storer.html#a41b3756b423d31c6535d2981ef92d1a1" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_observable_storer.html#a41b3756b423d31c6535d2981ef92d1a1" target="_top" xlink:title="ObservableStorer::runStatistics.">
 <polygon fill="#ffffff" stroke="#000000" points="177.0488,-.5 177.0488,-18.5 331.4375,-18.5 331.4375,-.5 177.0488,-.5"/>
 <text text-anchor="middle" x="254.2432" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::runStatistics</text>
 </a>

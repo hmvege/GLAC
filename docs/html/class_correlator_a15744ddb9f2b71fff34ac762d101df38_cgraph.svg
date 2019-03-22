@@ -12,7 +12,7 @@
 <!-- Node39 -->
 <g id="node1" class="node">
 <title>Node39</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::printObservable prints the observable for the output.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-5.5 0,-23.5 136.6055,-23.5 136.6055,-5.5 0,-5.5"/>
 <text text-anchor="middle" x="68.3027" y="-11.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::printObservable</text>
 </a>

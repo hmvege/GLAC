@@ -1,6 +1,6 @@
 <map id="EnergyDensity::runStatistics" name="EnergyDensity::runStatistics">
-<area shape="rect" id="node1" title=" " alt="" coords="5,40,193,65"/>
-<area shape="rect" id="node2" href="$class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" title=" " alt="" coords="259,5,430,44"/>
-<area shape="rect" id="node4" href="$class_observable_storer.html#a41b3756b423d31c6535d2981ef92d1a1" title=" " alt="" coords="241,68,447,93"/>
+<area shape="rect" id="node1" title="Correlator::runStatistics." alt="" coords="5,40,193,65"/>
+<area shape="rect" id="node2" href="$class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" title="ObservableStorer::gatherResults." alt="" coords="259,5,430,44"/>
+<area shape="rect" id="node4" href="$class_observable_storer.html#a41b3756b423d31c6535d2981ef92d1a1" title="ObservableStorer::runStatistics." alt="" coords="241,68,447,93"/>
 <area shape="rect" id="node3" href="$class_parallel_1_1_communicator.html#a7b1f80fb49a0cc83f2031c3415174150" title=" " alt="" coords="495,5,655,44"/>
 </map>

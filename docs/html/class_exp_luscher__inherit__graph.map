@@ -1,4 +1,4 @@
 <map id="ExpLuscher" name="ExpLuscher">
-<area shape="rect" id="node1" title=" " alt="" coords="5,79,97,104"/>
-<area shape="rect" id="node2" href="$class_s_u3_exp.html" title=" " alt="" coords="16,5,86,31"/>
+<area shape="rect" id="node1" title="Uses method for exponentiating SU3 matrix found in Appendix A in https://arxiv.org/abs/hep&#45;lat/040910..." alt="" coords="5,79,97,104"/>
+<area shape="rect" id="node2" href="$class_s_u3_exp.html" title="SU3 matrix exponentiation method that uses the method from https://journals.aps.org/prd/abstract/10...." alt="" coords="16,5,86,31"/>
 </map>

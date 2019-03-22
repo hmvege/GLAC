@@ -83,7 +83,7 @@
 <!-- Node20 -->
 <g id="node6" class="node">
 <title>Node20</title>
-<g id="a_node6"><a xlink:href="class_s_u3_matrix_generator.html#a478a6d34a643f4ee30bc333ca1023b00" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_s_u3_matrix_generator.html#a478a6d34a643f4ee30bc333ca1023b00" target="_top" xlink:title="SU3MatrixGenerator::generateRST generates a SU3 matrix close to unity.">
 <polygon fill="#ffffff" stroke="#000000" points="161.2139,-131.5 161.2139,-159.5 268.9131,-159.5 268.9131,-131.5 161.2139,-131.5"/>
 <text text-anchor="start" x="169.2139" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3MatrixGenerator</text>
 <text text-anchor="middle" x="215.0635" y="-137.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::generateRST</text>
@@ -99,7 +99,7 @@
 <!-- Node23 -->
 <g id="node9" class="node">
 <title>Node23</title>
-<g id="a_node9"><a xlink:href="class_s_u3_matrix_generator.html#a06dc59b5a86ba6863b848ef1ca26629a" target="_top" xlink:title=" ">
+<g id="a_node9"><a xlink:href="class_s_u3_matrix_generator.html#a06dc59b5a86ba6863b848ef1ca26629a" target="_top" xlink:title="SU3MatrixGenerator::generateRandom generates a fully random SU3 matrix.">
 <polygon fill="#ffffff" stroke="#000000" points="161.2139,-84.5 161.2139,-112.5 268.9131,-112.5 268.9131,-84.5 161.2139,-84.5"/>
 <text text-anchor="start" x="169.2139" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3MatrixGenerator</text>
 <text text-anchor="middle" x="215.0635" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::generateRandom</text>
@@ -115,7 +115,7 @@
 <!-- Node25 -->
 <g id="node11" class="node">
 <title>Node25</title>
-<g id="a_node11"><a xlink:href="class_lattice.html#a5ad6bf603b4b455f0368362aeeddb748" target="_top" xlink:title=" ">
+<g id="a_node11"><a xlink:href="class_lattice.html#a5ad6bf603b4b455f0368362aeeddb748" target="_top" xlink:title="identity method for setting the SU3 matrices of the lattice to identity.">
 <polygon fill="#ffffff" stroke="#000000" points="173.7114,-47.5 173.7114,-65.5 256.4155,-65.5 256.4155,-47.5 173.7114,-47.5"/>
 <text text-anchor="middle" x="215.0635" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::identity</text>
 </a>
@@ -145,7 +145,7 @@
 <!-- Node33 -->
 <g id="node19" class="node">
 <title>Node33</title>
-<g id="a_node19"><a xlink:href="class_parallel_1_1_communicator.html#ad48e48ab0137dab329d31fc1e3ebf179" target="_top" xlink:title=" ">
+<g id="a_node19"><a xlink:href="class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="155.1006,-.5 155.1006,-28.5 275.0264,-28.5 275.0264,-.5 155.1006,-.5"/>
 <text text-anchor="start" x="163.1006" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="215.0635" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::setBarrier</text>
@@ -161,7 +161,7 @@
 <!-- Node21 -->
 <g id="node7" class="node">
 <title>Node21</title>
-<g id="a_node7"><a xlink:href="class_s_u3_matrix_generator.html#aa4e04caff654a1df7c43280b85f359bc" target="_top" xlink:title=" ">
+<g id="a_node7"><a xlink:href="class_s_u3_matrix_generator.html#aa4e04caff654a1df7c43280b85f359bc" target="_top" xlink:title="SU3MatrixGenerator::generateSU2 generates a random SU2 matrix close to unity.">
 <polygon fill="#ffffff" stroke="#000000" points="359.1025,-131.5 359.1025,-159.5 466.8018,-159.5 466.8018,-131.5 359.1025,-131.5"/>
 <text text-anchor="start" x="367.1025" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3MatrixGenerator</text>
 <text text-anchor="middle" x="412.9521" y="-137.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::generateSU2</text>

@@ -12,7 +12,7 @@
 <!-- Node17 -->
 <g id="node1" class="node">
 <title>Node17</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="SU3::inv performs a matrix inversion.">
 <polygon fill="#bfbfbf" stroke="#000000" points="187.6348,-26.5 187.6348,-44.5 241.4277,-44.5 241.4277,-26.5 187.6348,-26.5"/>
 <text text-anchor="middle" x="214.5313" y="-32.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SU3::inv</text>
 </a>

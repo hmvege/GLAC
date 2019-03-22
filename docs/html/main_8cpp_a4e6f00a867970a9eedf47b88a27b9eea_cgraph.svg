@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="class_parallel_1_1_communicator.html#adc9248c5a0defbbf55bfca988bfd9e96" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_parallel_1_1_communicator.html#a4ed2a77c33cd899b31131e44fc906fd7" target="_top" xlink:title="Parallel::Communicator::init initializes the communicater and sets up the lattice geometry.">
 <polygon fill="#ffffff" stroke="#000000" points="85.9063,-936.5 85.9063,-964.5 205.832,-964.5 205.832,-936.5 85.9063,-936.5"/>
 <text text-anchor="start" x="93.9063" y="-952.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="145.8691" y="-942.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::init</text>
@@ -144,7 +144,7 @@
 <!-- Node68 -->
 <g id="node48" class="node">
 <title>Node68</title>
-<g id="a_node48"><a xlink:href="class_parallel_1_1_communicator.html#ad48e48ab0137dab329d31fc1e3ebf179" target="_top" xlink:title=" ">
+<g id="a_node48"><a xlink:href="class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="282.1323,-61.5 282.1323,-89.5 402.0581,-89.5 402.0581,-61.5 282.1323,-61.5"/>
 <text text-anchor="start" x="290.1323" y="-77.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="342.0952" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::setBarrier</text>
@@ -175,7 +175,7 @@
 <!-- Node70 -->
 <g id="node50" class="node">
 <title>Node70</title>
-<g id="a_node50"><a xlink:href="class_parallel_1_1_communicator.html#adc5e4acb372e9db19276572007940832" target="_top" xlink:title=" ">
+<g id="a_node50"><a xlink:href="class_parallel_1_1_communicator.html#aca0ac979aee1a649dbe5d4582b06a707" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="85.9063,-.5 85.9063,-28.5 205.832,-28.5 205.832,-.5 85.9063,-.5"/>
 <text text-anchor="start" x="93.9063" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="145.8691" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::freeMPIGroups</text>
@@ -508,7 +508,7 @@
 <!-- Node24 -->
 <g id="node25" class="node">
 <title>Node24</title>
-<g id="a_node25"><a xlink:href="class_parallel_1_1_communicator.html#aea1c6e1ff8f4f40d3db0ac8e0b29db62" target="_top" xlink:title=" ">
+<g id="a_node25"><a xlink:href="class_parallel_1_1_communicator.html#a1db417babab93c8d8bf6339ff2bab540" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="282.1323,-847.5 282.1323,-875.5 402.0581,-875.5 402.0581,-847.5 282.1323,-847.5"/>
 <text text-anchor="start" x="290.1323" y="-863.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="342.0952" y="-853.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::setN</text>

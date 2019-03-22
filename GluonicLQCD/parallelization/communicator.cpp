@@ -348,6 +348,9 @@ void Parallel::Communicator::checkProcessorValidity()
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::checkSubLatticeDimensionsValidity
+ */
 void Parallel::Communicator::checkSubLatticeDimensionsValidity()
 {
     /*

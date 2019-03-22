@@ -1,8 +1,8 @@
 var searchData=
 [
   ['setactiontype',['setActionType',['../class_parameters.html#aa7436b658d07358009b922584798fb6d',1,'Parameters']]],
-  ['setbarrier',['setBarrier',['../class_parallel_1_1_communicator.html#ad48e48ab0137dab329d31fc1e3ebf179',1,'Parallel::Communicator']]],
-  ['setbarrieractive',['setBarrierActive',['../class_parallel_1_1_communicator.html#a13263be32405fa088f06b07f7fdfe281',1,'Parallel::Communicator']]],
+  ['setbarrier',['setBarrier',['../class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2',1,'Parallel::Communicator']]],
+  ['setbarrieractive',['setBarrierActive',['../class_parallel_1_1_communicator.html#af61a4b8a49509982ae96d2a99dfb9f49',1,'Parallel::Communicator']]],
   ['setbatchname',['setBatchName',['../class_parameters.html#a8e349761195db7184f309e0f074da84d',1,'Parameters']]],
   ['setbeta',['setBeta',['../class_parameters.html#a8462149cb29ecf936f1f9945f5de4908',1,'Parameters']]],
   ['setcheckfieldgaugeinvariance',['setCheckFieldGaugeInvariance',['../class_parameters.html#ad6a40d1cf972c0f1379cf011bb7da2b1',1,'Parameters']]],
@@ -23,7 +23,7 @@ var searchData=
   ['setloadconfigandrun',['setLoadConfigAndRun',['../class_parameters.html#aa7e911174ec1991f6750b9774b184fd3',1,'Parameters']]],
   ['setloadfieldconfigurations',['setLoadFieldConfigurations',['../class_parameters.html#a4f96947340b496b847a808b8be6fc5f9',1,'Parameters']]],
   ['setmetropolisseed',['setMetropolisSeed',['../class_parameters.html#ace3967a0ee49901f55e9de69e0a96117',1,'Parameters']]],
-  ['setn',['setN',['../class_parameters.html#a0e0118ebbe8f19148a5c6d737c7a2c85',1,'Parameters::setN()'],['../class_parallel_1_1_communicator.html#aea1c6e1ff8f4f40d3db0ac8e0b29db62',1,'Parallel::Communicator::setN()'],['../class_parallel_1_1_index.html#ab8650936d7000d54b811dd128618f9ad',1,'Parallel::Index::setN()']]],
+  ['setn',['setN',['../class_parameters.html#a0e0118ebbe8f19148a5c6d737c7a2c85',1,'Parameters::setN()'],['../class_parallel_1_1_communicator.html#a1db417babab93c8d8bf6339ff2bab540',1,'Parallel::Communicator::setN()'],['../class_parallel_1_1_index.html#ab8650936d7000d54b811dd128618f9ad',1,'Parallel::Index::setN()']]],
   ['setncf',['setNCf',['../class_parameters.html#a3c35caa5de4bb545a2b48af07e1756f3',1,'Parameters']]],
   ['setncor',['setNCor',['../class_parameters.html#afb3ef2dca9d24511a1904bc313fd8513',1,'Parameters']]],
   ['setnderivaitvetests',['setNDerivaitveTests',['../class_parameters.html#ae924eabec82bfe600eda893c6f71b00e',1,'Parameters']]],
@@ -36,7 +36,6 @@ var searchData=
   ['setntherm',['setNTherm',['../class_parameters.html#a97a1e5d00965cf1d552a8c8dbb45cd53',1,'Parameters']]],
   ['setntot',['setNTot',['../class_parallel_1_1_index.html#a14d1d30c926a76761ed1a1a51912a516',1,'Parallel::Index']]],
   ['setnupdates',['setNUpdates',['../class_parameters.html#ae443546fea1f1ceaf3683cb368f7f5bb',1,'Parameters']]],
-  ['setobservable',['setObservable',['../class_correlator.html#adea33006fd850314004c320c258d9ec6',1,'Correlator']]],
   ['setobservablelist',['setObservableList',['../class_parameters.html#a6fb3ff88b2a2c9d5d4f2c3b64e672fa1',1,'Parameters']]],
   ['setobservablename',['setObservableName',['../class_observable_storer.html#a7f4847c4fdbf8764d8f07950c4d4b62a',1,'ObservableStorer']]],
   ['setoutputfolder',['setOutputFolder',['../class_parameters.html#a58dff6fbcc88bb916b9590057bf338ff',1,'Parameters']]],

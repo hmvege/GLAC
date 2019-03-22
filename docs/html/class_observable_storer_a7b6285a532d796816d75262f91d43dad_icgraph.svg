@@ -12,7 +12,7 @@
 <!-- Node50 -->
 <g id="node1" class="node">
 <title>Node50</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="ObservableStorer::reset set all the members for observable storage to zero.">
 <polygon fill="#bfbfbf" stroke="#000000" points="175.3984,-84.5 175.3984,-102.5 297.5557,-102.5 297.5557,-84.5 175.3984,-84.5"/>
 <text text-anchor="middle" x="236.4771" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::reset</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node51 -->
 <g id="node2" class="node">
 <title>Node51</title>
-<g id="a_node2"><a xlink:href="class_correlator.html#aacca40262d2cd62f0a3964e832f948c1" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_correlator.html#aacca40262d2cd62f0a3964e832f948c1" target="_top" xlink:title="Correlator::reset resets ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="25.5762,-168.5 25.5762,-186.5 113.8223,-186.5 113.8223,-168.5 25.5762,-168.5"/>
 <text text-anchor="middle" x="69.6992" y="-174.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::reset</text>
 </a>
@@ -36,7 +36,7 @@
 <!-- Node52 -->
 <g id="node3" class="node">
 <title>Node52</title>
-<g id="a_node3"><a xlink:href="class_lattice_action_charge_density.html#aebbc2cc72334e7b33d9cce2ad469280b" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_lattice_action_charge_density.html#aebbc2cc72334e7b33d9cce2ad469280b" target="_top" xlink:title="Correlator::reset resets ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-121.5 0,-149.5 139.3984,-149.5 139.3984,-121.5 0,-121.5"/>
 <text text-anchor="start" x="8" y="-137.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="69.6992" y="-127.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::reset</text>
@@ -52,7 +52,7 @@
 <!-- Node53 -->
 <g id="node4" class="node">
 <title>Node53</title>
-<g id="a_node4"><a xlink:href="class_master_sampler.html#a275a032513db03c899056fd07d71cc89" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_master_sampler.html#a275a032513db03c899056fd07d71cc89" target="_top" xlink:title="Correlator::reset resets ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="13.9063,-84.5 13.9063,-102.5 125.4922,-102.5 125.4922,-84.5 13.9063,-84.5"/>
 <text text-anchor="middle" x="69.6992" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::reset</text>
 </a>
@@ -67,7 +67,7 @@
 <!-- Node54 -->
 <g id="node5" class="node">
 <title>Node54</title>
-<g id="a_node5"><a xlink:href="class_master_sampler_topc_x_y_z.html#aef8d0b1b431711c6410cfece1c007b4a" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_master_sampler_topc_x_y_z.html#aef8d0b1b431711c6410cfece1c007b4a" target="_top" xlink:title="Correlator::reset resets ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="7.5146,-37.5 7.5146,-65.5 131.8838,-65.5 131.8838,-37.5 7.5146,-37.5"/>
 <text text-anchor="start" x="15.5146" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="69.6992" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::reset</text>
@@ -83,7 +83,7 @@
 <!-- Node55 -->
 <g id="node6" class="node">
 <title>Node55</title>
-<g id="a_node6"><a xlink:href="class_super_sampler.html#ab2f028561e015500fac1e3093aa4a725" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_super_sampler.html#ab2f028561e015500fac1e3093aa4a725" target="_top" xlink:title="Correlator::reset resets ObservableStorer.">
 <polygon fill="#ffffff" stroke="#000000" points="15.8447,-.5 15.8447,-18.5 123.5537,-18.5 123.5537,-.5 15.8447,-.5"/>
 <text text-anchor="middle" x="69.6992" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::reset</text>
 </a>

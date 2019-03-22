@@ -1,5 +1,5 @@
 <map id="MasterSamplerTopcXYZ::initializeObservableStorer" name="MasterSamplerTopcXYZ::initializeObservableStorer">
-<area shape="rect" id="node1" title=" " alt="" coords="5,136,186,175"/>
+<area shape="rect" id="node1" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="5,136,186,175"/>
 <area shape="rect" id="node2" href="$class_parameters.html#aae314edb18d426571ab7b6df60da70aa" title=" " alt="" coords="281,5,442,31"/>
 <area shape="rect" id="node3" href="$class_parameters.html#a216f85b3c5980a33f8a54c42fb3575c7" title=" " alt="" coords="244,55,479,93"/>
 <area shape="rect" id="node4" href="$class_parameters.html#a03f8c0aa2a31b9bfc016441cb263082c" title=" " alt="" coords="292,117,431,143"/>

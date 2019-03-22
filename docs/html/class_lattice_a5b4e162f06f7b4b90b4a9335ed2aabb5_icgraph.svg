@@ -12,7 +12,7 @@
 <!-- Node11 -->
 <g id="node1" class="node">
 <title>Node11</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="allocate method for allocating memory.">
 <polygon fill="#bfbfbf" stroke="#000000" points="368.5508,-363.5 368.5508,-381.5 454.0381,-381.5 454.0381,-363.5 368.5508,-363.5"/>
 <text text-anchor="middle" x="411.2944" y="-369.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::allocate</text>
 </a>
@@ -187,7 +187,7 @@
 <!-- Node32 -->
 <g id="node22" class="node">
 <title>Node32</title>
-<g id="a_node22"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title=" ">
+<g id="a_node22"><a xlink:href="lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" target="_top" xlink:title="shift copies the lattice L and shifts it in a specified lorentzVector direction DIR.">
 <polygon fill="#ffffff" stroke="#000000" points="236.8047,-511.5 236.8047,-529.5 271.1445,-529.5 271.1445,-511.5 236.8047,-511.5"/>
 <text text-anchor="middle" x="253.9746" y="-517.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">shift</text>
 </a>
@@ -310,7 +310,7 @@
 <!-- Node17 -->
 <g id="node7" class="node">
 <title>Node17</title>
-<g id="a_node7"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title=" ">
+<g id="a_node7"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-632.5 0,-660.5 139.3984,-660.5 139.3984,-632.5 0,-632.5"/>
 <text text-anchor="start" x="8" y="-648.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="69.6992" y="-638.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>
@@ -326,7 +326,7 @@
 <!-- Node18 -->
 <g id="node8" class="node">
 <title>Node18</title>
-<g id="a_node8"><a xlink:href="class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_master_sampler_topc_x_y_z.html#a0ea80ad9935db791f00461b7dfd548b7" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="7.5146,-585.5 7.5146,-613.5 131.8838,-613.5 131.8838,-585.5 7.5146,-585.5"/>
 <text text-anchor="start" x="15.5146" y="-601.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="69.6992" y="-591.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>
@@ -342,7 +342,7 @@
 <!-- Node19 -->
 <g id="node9" class="node">
 <title>Node19</title>
-<g id="a_node9"><a xlink:href="class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" target="_top" xlink:title=" ">
+<g id="a_node9"><a xlink:href="class_super_sampler.html#a7e1457583270077c4fbcb288ea9b954c" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="7.2266,-548.5 7.2266,-566.5 132.1719,-566.5 132.1719,-548.5 7.2266,-548.5"/>
 <text text-anchor="middle" x="69.6992" y="-554.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::calculate</text>
 </a>
@@ -407,7 +407,7 @@
 <!-- Node24 -->
 <g id="node14" class="node">
 <title>Node24</title>
-<g id="a_node14"><a xlink:href="class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" target="_top" xlink:title=" ">
+<g id="a_node14"><a xlink:href="class_energy_density.html#ae8e5e29257104d881bcabeadc3b2c9e7" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="6.6724,-296.5 6.6724,-314.5 132.7261,-314.5 132.7261,-296.5 6.6724,-296.5"/>
 <text text-anchor="middle" x="69.6992" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">EnergyDensity::calculate</text>
 </a>
@@ -422,7 +422,7 @@
 <!-- Node25 -->
 <g id="node15" class="node">
 <title>Node25</title>
-<g id="a_node15"><a xlink:href="class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" target="_top" xlink:title=" ">
+<g id="a_node15"><a xlink:href="class_master_sampler.html#ad3cc7e36498dbf4a39238de3ac59ae8b" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="5.2881,-511.5 5.2881,-529.5 134.1104,-529.5 134.1104,-511.5 5.2881,-511.5"/>
 <text text-anchor="middle" x="69.6992" y="-517.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::calculate</text>
 </a>
@@ -437,7 +437,7 @@
 <!-- Node26 -->
 <g id="node16" class="node">
 <title>Node26</title>
-<g id="a_node16"><a xlink:href="class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" target="_top" xlink:title=" ">
+<g id="a_node16"><a xlink:href="class_plaquette.html#a40cae6fd587c14836bdf61e69c615a00" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="18.0591,-474.5 18.0591,-492.5 121.3394,-492.5 121.3394,-474.5 18.0591,-474.5"/>
 <text text-anchor="middle" x="69.6992" y="-480.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Plaquette::calculate</text>
 </a>
@@ -452,7 +452,7 @@
 <!-- Node27 -->
 <g id="node17" class="node">
 <title>Node27</title>
-<g id="a_node17"><a xlink:href="class_topological_charge.html#a8ed78c28c3484df04b1cb24187de2f5b" target="_top" xlink:title=" ">
+<g id="a_node17"><a xlink:href="class_topological_charge.html#a8ed78c28c3484df04b1cb24187de2f5b" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="17.5049,-427.5 17.5049,-455.5 121.8936,-455.5 121.8936,-427.5 17.5049,-427.5"/>
 <text text-anchor="start" x="25.5049" y="-443.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TopologicalCharge::</text>
 <text text-anchor="middle" x="69.6992" y="-433.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">calculate</text>

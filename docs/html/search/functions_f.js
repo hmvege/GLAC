@@ -4,7 +4,7 @@ var searchData=
   ['re',['re',['../classcomplex.html#a696019188accc543e7c8297595e297ec',1,'complex']]],
   ['realtrace',['realTrace',['../lattice_8h.html#a598588ec190d960a5713182021808961',1,'lattice.h']]],
   ['realtracemultiplication',['realTraceMultiplication',['../lattice_8h.html#ab2d48b63b79e5e5ee3ca25483fe98b3e',1,'lattice.h']]],
-  ['reducetotemporaldimension',['reduceToTemporalDimension',['../class_parallel_1_1_communicator.html#a3da13427d693e0ce924159e871c83e19',1,'Parallel::Communicator']]],
+  ['reducetotemporaldimension',['reduceToTemporalDimension',['../class_parallel_1_1_communicator.html#a5d42989e7a3022de6042e3503aa35346',1,'Parallel::Communicator']]],
   ['rend',['rend',['../classnlohmann_1_1basic__json.html#ac77aed0925d447744676725ab0b6d535',1,'nlohmann::basic_json::rend() noexcept'],['../classnlohmann_1_1basic__json.html#a4f73d4cee67ea328d785979c22af0ae1',1,'nlohmann::basic_json::rend() const noexcept']]],
   ['reset',['reset',['../class_correlator.html#aacca40262d2cd62f0a3964e832f948c1',1,'Correlator::reset()'],['../class_lattice_action_charge_density.html#aebbc2cc72334e7b33d9cce2ad469280b',1,'LatticeActionChargeDensity::reset()'],['../class_master_sampler.html#a275a032513db03c899056fd07d71cc89',1,'MasterSampler::reset()'],['../class_master_sampler_topc_x_y_z.html#aef8d0b1b431711c6410cfece1c007b4a',1,'MasterSamplerTopcXYZ::reset()'],['../class_super_sampler.html#ab2f028561e015500fac1e3093aa4a725',1,'SuperSampler::reset()'],['../class_observable_storer.html#a7b6285a532d796816d75262f91d43dad',1,'ObservableStorer::reset()']]],
   ['run',['run',['../class_system.html#afa39feb75f96798930f4bfb48205f40b',1,'System::run()'],['../class_performance_tests.html#aa55ebdbc84db93cc45adfdf7163f90b4',1,'PerformanceTests::run()']]],

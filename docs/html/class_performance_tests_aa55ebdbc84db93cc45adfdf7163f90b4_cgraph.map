@@ -1,9 +1,6 @@
 <map id="PerformanceTests::run" name="PerformanceTests::run">
-<area shape="rect" id="node1" title=" " alt="" coords="5,156,161,181"/>
-<area shape="rect" id="node2" href="$class_parameters.html#a272f8ebfbd305fb4a3b03db68417fc90" title=" " alt="" coords="218,5,389,44"/>
-<area shape="rect" id="node3" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="223,68,383,107"/>
-<area shape="rect" id="node4" href="$class_parameters.html#abd70d1df3ee0109789496fc9d21c2aef" title=" " alt="" coords="213,131,393,156"/>
-<area shape="rect" id="node5" href="$class_parameters.html#a492a81a7a0951b1165f500f8c0768fe1" title=" " alt="" coords="209,180,398,205"/>
-<area shape="rect" id="node6" href="$class_parallel_1_1_communicator.html#a13263be32405fa088f06b07f7fdfe281" title=" " alt="" coords="223,229,383,268"/>
-<area shape="rect" id="node7" href="$class_parameters.html#a24545a7987ec3056a6c0ad742edd9ba5" title=" " alt="" coords="211,292,396,331"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,75,161,100"/>
+<area shape="rect" id="node2" href="$class_parameters.html#a272f8ebfbd305fb4a3b03db68417fc90" title=" " alt="" coords="209,5,380,44"/>
+<area shape="rect" id="node3" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="214,68,374,107"/>
+<area shape="rect" id="node4" href="$class_parallel_1_1_communicator.html#af61a4b8a49509982ae96d2a99dfb9f49" title=" " alt="" coords="214,131,374,169"/>
 </map>

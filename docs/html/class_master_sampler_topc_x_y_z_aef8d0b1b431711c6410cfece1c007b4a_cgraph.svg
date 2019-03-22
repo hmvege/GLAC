@@ -12,7 +12,7 @@
 <!-- Node58 -->
 <g id="node1" class="node">
 <title>Node58</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::reset resets ObservableStorer.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-32.5 0,-60.5 124.3691,-60.5 124.3691,-32.5 0,-32.5"/>
 <text text-anchor="start" x="8" y="-48.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="62.1846" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::reset</text>
@@ -22,7 +22,7 @@
 <!-- Node59 -->
 <g id="node2" class="node">
 <title>Node59</title>
-<g id="a_node2"><a xlink:href="class_observable_storer.html#a7b6285a532d796816d75262f91d43dad" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_observable_storer.html#a7b6285a532d796816d75262f91d43dad" target="_top" xlink:title="ObservableStorer::reset set all the members for observable storage to zero.">
 <polygon fill="#ffffff" stroke="#000000" points="167.0366,-74.5 167.0366,-92.5 289.1938,-92.5 289.1938,-74.5 167.0366,-74.5"/>
 <text text-anchor="middle" x="228.1152" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::reset</text>
 </a>

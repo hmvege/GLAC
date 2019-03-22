@@ -3,14 +3,14 @@
 <area shape="rect" id="node2" href="$class_i_o_1_1_field_i_o.html#a8af607f9a1d79e90d4514c36103c6601" title="IO::FieldIO::writeFieldToFile writes a lattice of SU3 matrix objects to file." alt="" coords="306,5,492,31"/>
 <area shape="rect" id="node3" href="$class_i_o_1_1_field_i_o.html#aaf2bac2025d67c06e7c61e8cc9f44777" title="IO::FieldIO::writeDoublesFieldToFile writes a lattice of doubles to file." alt="" coords="314,55,484,93"/>
 <area shape="rect" id="node5" href="$class_master_sampler_topc_x_y_z.html#ad8ba8f2c50c66d823c551f71fd62a99b" title=" " alt="" coords="313,117,486,156"/>
-<area shape="rect" id="node6" href="$class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" title=" " alt="" coords="30,260,226,299"/>
-<area shape="rect" id="node7" href="$class_master_sampler_topc_x_y_z.html#aef8d0b1b431711c6410cfece1c007b4a" title=" " alt="" coords="316,232,482,271"/>
+<area shape="rect" id="node6" href="$class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" title="Correlator::writeFlowObservablesToFile." alt="" coords="30,260,226,299"/>
+<area shape="rect" id="node7" href="$class_master_sampler_topc_x_y_z.html#aef8d0b1b431711c6410cfece1c007b4a" title="Correlator::reset resets ObservableStorer." alt="" coords="316,232,482,271"/>
 <area shape="rect" id="node8" href="$class_super_sampler.html#a6bf01b68f9befc5bf01c822e28c0c88d" title=" " alt="" coords="300,295,499,320"/>
-<area shape="rect" id="node9" href="$class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" title=" " alt="" coords="5,397,250,436"/>
-<area shape="rect" id="node10" href="$class_super_sampler.html#ab2f028561e015500fac1e3093aa4a725" title=" " alt="" coords="327,407,471,432"/>
-<area shape="rect" id="node11" href="$class_parallel_1_1_communicator.html#a3da13427d693e0ce924159e871c83e19" title=" " alt="" coords="298,344,500,383"/>
-<area shape="rect" id="node12" href="$class_parallel_1_1_communicator.html#a003d94aceebf2fddc6b4ceff584ac8d7" title=" " alt="" coords="315,508,483,547"/>
-<area shape="rect" id="node13" href="$class_parallel_1_1_communicator.html#a71baca622b377e6537799857be416a77" title=" " alt="" coords="319,571,479,609"/>
+<area shape="rect" id="node9" href="$class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" title="Correlator::writeFlowObservablesToFile." alt="" coords="5,397,250,436"/>
+<area shape="rect" id="node10" href="$class_super_sampler.html#ab2f028561e015500fac1e3093aa4a725" title="Correlator::reset resets ObservableStorer." alt="" coords="327,407,471,432"/>
+<area shape="rect" id="node11" href="$class_parallel_1_1_communicator.html#a5d42989e7a3022de6042e3503aa35346" title="Parallel::Communicator::reduceToTemporalDimension reduces the results to the temporal dimensions,..." alt="" coords="298,344,500,383"/>
+<area shape="rect" id="node12" href="$class_parallel_1_1_communicator.html#a5da7239eefebcebbeeabee499b2d724d" title="Parallel::Communicator::checkSubLatticeValidity runs a series of tests to ensure that the sub lattice..." alt="" coords="315,508,483,547"/>
+<area shape="rect" id="node13" href="$class_parallel_1_1_communicator.html#a3094d713d09225738ecf0250019db115" title=" " alt="" coords="319,571,479,609"/>
 <area shape="rect" id="node14" href="$class_test_suite.html#af7291e6d8b53443604ee0c1fcf1fadfc" title=" " alt="" coords="59,605,197,631"/>
-<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="35,55,221,93"/>
+<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title="Correlator::calculate calculates a observable." alt="" coords="35,55,221,93"/>
 </map>

@@ -1,8 +1,8 @@
 <map id="Parameters::getSubLatticeSize" name="Parameters::getSubLatticeSize">
 <area shape="rect" id="node1" title=" " alt="" coords="222,104,427,129"/>
 <area shape="rect" id="node2" href="$class_flow.html#a25ae85599c0ae330374f0840efde7ebc" title="Flow::Flow." alt="" coords="47,5,132,31"/>
-<area shape="rect" id="node3" href="$class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a" title=" " alt="" coords="16,55,163,80"/>
+<area shape="rect" id="node3" href="$class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a" title="Correlator::Correlator." alt="" coords="16,55,163,80"/>
 <area shape="rect" id="node4" href="$class_plaquette.html#a1c87b43fc7ee74b2b0289de63e03bb61" title=" " alt="" coords="19,104,160,129"/>
-<area shape="rect" id="node5" href="$class_parallel_1_1_communicator.html#a003d94aceebf2fddc6b4ceff584ac8d7" title=" " alt="" coords="5,153,174,192"/>
+<area shape="rect" id="node5" href="$class_parallel_1_1_communicator.html#a5da7239eefebcebbeeabee499b2d724d" title="Parallel::Communicator::checkSubLatticeValidity runs a series of tests to ensure that the sub lattice..." alt="" coords="5,153,174,192"/>
 <area shape="rect" id="node6" href="$class_test_suite.html#af7291e6d8b53443604ee0c1fcf1fadfc" title=" " alt="" coords="20,216,159,241"/>
 </map>

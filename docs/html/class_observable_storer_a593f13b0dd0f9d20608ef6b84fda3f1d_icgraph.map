@@ -1,14 +1,14 @@
 <map id="ObservableStorer::gatherResults" name="ObservableStorer::gatherResults">
-<area shape="rect" id="node1" title=" " alt="" coords="298,292,469,331"/>
-<area shape="rect" id="node2" href="$class_correlator.html#a35197b1d12b62ef30b79c0138a26456e" title=" " alt="" coords="48,5,208,31"/>
-<area shape="rect" id="node3" href="$class_correlator.html#a168512b2ce182d9478db47f100125fa6" title=" " alt="" coords="18,55,237,93"/>
-<area shape="rect" id="node4" href="$class_energy_density.html#a584e164453ce880a45478c9b48ce2c4b" title=" " alt="" coords="34,117,222,143"/>
-<area shape="rect" id="node5" href="$class_lattice_action_charge_density.html#a54226556dc1497c311e4a4d50bf44c26" title=" " alt="" coords="30,167,226,205"/>
-<area shape="rect" id="node6" href="$class_master_sampler.html#ad475928217ac61fae134128904aaa9f8" title=" " alt="" coords="40,229,216,268"/>
-<area shape="rect" id="node7" href="$class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" title=" " alt="" coords="30,292,226,331"/>
-<area shape="rect" id="node8" href="$class_master_sampler_topc_x_y_z.html#af748653ded9908f78383185475b9ddeb" title=" " alt="" coords="45,355,211,393"/>
-<area shape="rect" id="node9" href="$class_plaquette.html#aa54bf1807d9b192048026f94d585fa4f" title=" " alt="" coords="49,417,207,443"/>
-<area shape="rect" id="node10" href="$class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" title=" " alt="" coords="5,467,250,505"/>
-<area shape="rect" id="node11" href="$class_super_sampler.html#af96f7d461e9159adb4eef9bda9c6ecde" title=" " alt="" coords="35,529,221,555"/>
-<area shape="rect" id="node12" href="$class_topological_charge.html#ab9afadb9f37e638c0a168ebab5d41353" title=" " alt="" coords="58,579,197,617"/>
+<area shape="rect" id="node1" title="ObservableStorer::gatherResults." alt="" coords="298,292,469,331"/>
+<area shape="rect" id="node2" href="$class_correlator.html#a35197b1d12b62ef30b79c0138a26456e" title="Correlator::runStatistics." alt="" coords="48,5,208,31"/>
+<area shape="rect" id="node3" href="$class_correlator.html#a168512b2ce182d9478db47f100125fa6" title="Correlator::writeFlowObservablesToFile." alt="" coords="18,55,237,93"/>
+<area shape="rect" id="node4" href="$class_energy_density.html#a584e164453ce880a45478c9b48ce2c4b" title="Correlator::runStatistics." alt="" coords="34,117,222,143"/>
+<area shape="rect" id="node5" href="$class_lattice_action_charge_density.html#a54226556dc1497c311e4a4d50bf44c26" title="Correlator::writeFlowObservablesToFile." alt="" coords="30,167,226,205"/>
+<area shape="rect" id="node6" href="$class_master_sampler.html#ad475928217ac61fae134128904aaa9f8" title="Correlator::writeFlowObservablesToFile." alt="" coords="40,229,216,268"/>
+<area shape="rect" id="node7" href="$class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" title="Correlator::writeFlowObservablesToFile." alt="" coords="30,292,226,331"/>
+<area shape="rect" id="node8" href="$class_master_sampler_topc_x_y_z.html#af748653ded9908f78383185475b9ddeb" title="Correlator::runStatistics." alt="" coords="45,355,211,393"/>
+<area shape="rect" id="node9" href="$class_plaquette.html#aa54bf1807d9b192048026f94d585fa4f" title="Correlator::runStatistics." alt="" coords="49,417,207,443"/>
+<area shape="rect" id="node10" href="$class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" title="Correlator::writeFlowObservablesToFile." alt="" coords="5,467,250,505"/>
+<area shape="rect" id="node11" href="$class_super_sampler.html#af96f7d461e9159adb4eef9bda9c6ecde" title="Correlator::runStatistics." alt="" coords="35,529,221,555"/>
+<area shape="rect" id="node12" href="$class_topological_charge.html#ab9afadb9f37e638c0a168ebab5d41353" title="Correlator::runStatistics." alt="" coords="58,579,197,617"/>
 </map>

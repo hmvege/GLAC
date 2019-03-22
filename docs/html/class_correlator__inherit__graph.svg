@@ -12,7 +12,7 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="base class for observables.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-111.5 0,-129.5 60.458,-129.5 60.458,-111.5 0,-111.5"/>
 <text text-anchor="middle" x="30.229" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:href="class_energy_density.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_energy_density.html" target="_top" xlink:title="Solely calculates the energy density as given by, &#160;The &#160;is the clover.">
 <polygon fill="#ffffff" stroke="#000000" points="125.6426,-222.5 125.6426,-240.5 206.6719,-240.5 206.6719,-222.5 125.6426,-222.5"/>
 <text text-anchor="middle" x="166.1572" y="-228.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">EnergyDensity</text>
 </a>
@@ -36,7 +36,7 @@
 <!-- Node2 -->
 <g id="node3" class="node">
 <title>Node2</title>
-<g id="a_node3"><a xlink:href="class_lattice_action_charge_density.html" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_lattice_action_charge_density.html" target="_top" xlink:title="Method for calculating and storing the topological charge and energy density at every point of the la...">
 <polygon fill="#ffffff" stroke="#000000" points="96.458,-185.5 96.458,-203.5 235.8564,-203.5 235.8564,-185.5 96.458,-185.5"/>
 <text text-anchor="middle" x="166.1572" y="-191.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 </a>
@@ -51,7 +51,7 @@
 <!-- Node3 -->
 <g id="node4" class="node">
 <title>Node3</title>
-<g id="a_node4"><a xlink:href="class_master_sampler.html" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_master_sampler.html" target="_top" xlink:title="Observable for calculating the plaquette, topological charge and energy.">
 <polygon fill="#ffffff" stroke="#000000" points="124.2583,-148.5 124.2583,-166.5 208.0562,-166.5 208.0562,-148.5 124.2583,-148.5"/>
 <text text-anchor="middle" x="166.1572" y="-154.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler</text>
 </a>
@@ -66,7 +66,7 @@
 <!-- Node4 -->
 <g id="node5" class="node">
 <title>Node4</title>
-<g id="a_node5"><a xlink:href="class_master_sampler_topc_x_y_z.html" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="class_master_sampler_topc_x_y_z.html" target="_top" xlink:title="Observable for calculating the plaquette, energy and euclidean time topological charge.">
 <polygon fill="#ffffff" stroke="#000000" points="103.9727,-111.5 103.9727,-129.5 228.3418,-129.5 228.3418,-111.5 103.9727,-111.5"/>
 <text text-anchor="middle" x="166.1572" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 </a>
@@ -81,7 +81,7 @@
 <!-- Node5 -->
 <g id="node6" class="node">
 <title>Node5</title>
-<g id="a_node6"><a xlink:href="class_plaquette.html" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_plaquette.html" target="_top" xlink:title="Observable for calculating the plaquette.">
 <polygon fill="#ffffff" stroke="#000000" points="137.0293,-74.5 137.0293,-92.5 195.2852,-92.5 195.2852,-74.5 137.0293,-74.5"/>
 <text text-anchor="middle" x="166.1572" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Plaquette</text>
 </a>
@@ -96,7 +96,7 @@
 <!-- Node6 -->
 <g id="node7" class="node">
 <title>Node6</title>
-<g id="a_node7"><a xlink:href="class_super_sampler.html" target="_top" xlink:title=" ">
+<g id="a_node7"><a xlink:href="class_super_sampler.html" target="_top" xlink:title="Observable for calculating the Weinberg operator, plaquette, energy and euclidean time topological ch...">
 <polygon fill="#ffffff" stroke="#000000" points="126.1968,-37.5 126.1968,-55.5 206.1177,-55.5 206.1177,-37.5 126.1968,-37.5"/>
 <text text-anchor="middle" x="166.1572" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler</text>
 </a>
@@ -111,7 +111,7 @@
 <!-- Node7 -->
 <g id="node8" class="node">
 <title>Node7</title>
-<g id="a_node8"><a xlink:href="class_topological_charge.html" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_topological_charge.html" target="_top" xlink:title="Solely calculates the topological charge as given by, &#160;where &#160;is the position in the lattice in Eucli...">
 <polygon fill="#ffffff" stroke="#000000" points="116.7412,-.5 116.7412,-18.5 215.5732,-18.5 215.5732,-.5 116.7412,-.5"/>
 <text text-anchor="middle" x="166.1572" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TopologicalCharge</text>
 </a>

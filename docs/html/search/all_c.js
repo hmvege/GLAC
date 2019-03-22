@@ -24,6 +24,6 @@ var searchData=
   ['mat',['mat',['../class_s_u2.html#ad4227484be245b63489c44a2bc02a625',1,'SU2::mat()'],['../class_s_u3.html#af003668305abe616f56568a075434be0',1,'SU3::mat()']]],
   ['max_5fsize',['max_size',['../classnlohmann_1_1basic__json.html#a2f47d3c6a441c57dd2be00449fbb88e1',1,'nlohmann::basic_json']]],
   ['meta',['meta',['../classnlohmann_1_1basic__json.html#aef6d0eeccee7c5c7e1317c2ea1607fab',1,'nlohmann::basic_json']]],
-  ['mpiexit',['MPIExit',['../class_parallel_1_1_communicator.html#a6759125172843d9229c644f2a3a21ab7',1,'Parallel::Communicator']]],
-  ['mpiprint',['MPIPrint',['../class_parallel_1_1_communicator.html#ab1b15401de819cf343398b767d6730ed',1,'Parallel::Communicator']]]
+  ['mpiexit',['MPIExit',['../class_parallel_1_1_communicator.html#a57bb28ee8dbc4efd708a2695423778c4',1,'Parallel::Communicator']]],
+  ['mpiprint',['MPIPrint',['../class_parallel_1_1_communicator.html#a34a1d27c0e2b2b101b97a53734dbc4f8',1,'Parallel::Communicator']]]
 ];

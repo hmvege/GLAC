@@ -21,7 +21,7 @@
 <!-- Node37 -->
 <g id="node2" class="node">
 <title>Node37</title>
-<g id="a_node2"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" target="_top" xlink:title="allocate method for allocating memory.">
 <polygon fill="#ffffff" stroke="#000000" points="136.4727,-.5 136.4727,-18.5 221.96,-18.5 221.96,-.5 136.4727,-.5"/>
 <text text-anchor="middle" x="179.2163" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Lattice::allocate</text>
 </a>

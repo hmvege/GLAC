@@ -12,7 +12,7 @@
 <!-- Node58 -->
 <g id="node1" class="node">
 <title>Node58</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::printObservable prints the observable for the output.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-84.5 0,-112.5 139.3984,-112.5 139.3984,-84.5 0,-84.5"/>
 <text text-anchor="start" x="8" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="69.6992" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::printObservable</text>
@@ -53,7 +53,7 @@
 <!-- Node61 -->
 <g id="node4" class="node">
 <title>Node61</title>
-<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#a6c60f0fbbe23ef0bf342b0157d080007" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#ae5739683ff54a7c39af6e37920e70ea5" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="197.918,-84.5 197.918,-112.5 317.8438,-112.5 317.8438,-84.5 197.918,-84.5"/>
 <text text-anchor="start" x="205.918" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="257.8809" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::gatherDoubleResults</text>

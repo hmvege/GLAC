@@ -1,4 +1,4 @@
 <map id="Correlator::calculate" name="Correlator::calculate">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,146,31"/>
-<area shape="rect" id="node2" href="$class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" title=" " alt="" coords="194,5,295,31"/>
+<area shape="rect" id="node1" title="Correlator::calculate calculates a observable." alt="" coords="5,5,146,31"/>
+<area shape="rect" id="node2" href="$class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9" title="zeros sets all of the SU3 elements in the lattice to zero." alt="" coords="194,5,295,31"/>
 </map>

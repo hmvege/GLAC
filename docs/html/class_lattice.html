@@ -75,6 +75,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A method for holding a lattice of type T.  
+ <a href="class_lattice.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="lattice_8h_source.html">lattice.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -86,17 +89,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a006bd75dd4c599fe17f8ca7e96413487"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#a006bd75dd4c599fe17f8ca7e96413487">~Lattice</a> ()</td></tr>
 <tr class="separator:a006bd75dd4c599fe17f8ca7e96413487"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74cc98beb36f76dcfa27535e43528d57"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#a74cc98beb36f76dcfa27535e43528d57">Lattice</a> (const <a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt; &amp;other)</td></tr>
+<tr class="memdesc:a74cc98beb36f76dcfa27535e43528d57"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_lattice.html" title="A method for holding a lattice of type T.">Lattice</a> copy constructor.  <a href="#a74cc98beb36f76dcfa27535e43528d57">More...</a><br /></td></tr>
 <tr class="separator:a74cc98beb36f76dcfa27535e43528d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2826da8e42dcaea917b9a2e50ca1ca2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#ad2826da8e42dcaea917b9a2e50ca1ca2">Lattice</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt; &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:ad2826da8e42dcaea917b9a2e50ca1ca2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_lattice.html" title="A method for holding a lattice of type T.">Lattice</a> move constructor.  <a href="#ad2826da8e42dcaea917b9a2e50ca1ca2">More...</a><br /></td></tr>
 <tr class="separator:ad2826da8e42dcaea917b9a2e50ca1ca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc09c6b9abeafc6b735c3b95d8537edf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_lattice.html">Lattice</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#acc09c6b9abeafc6b735c3b95d8537edf">operator=</a> (const <a class="el" href="class_lattice.html">Lattice</a> &amp;other)</td></tr>
+<tr class="memdesc:acc09c6b9abeafc6b735c3b95d8537edf"><td class="mdescLeft">&#160;</td><td class="mdescRight">operator = Copy assignement operator  <a href="#acc09c6b9abeafc6b735c3b95d8537edf">More...</a><br /></td></tr>
 <tr class="separator:acc09c6b9abeafc6b735c3b95d8537edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29505c3ad95dc2695401c049cc34ba62"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_lattice.html">Lattice</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#a29505c3ad95dc2695401c049cc34ba62">operator=</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt; &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:a29505c3ad95dc2695401c049cc34ba62"><td class="mdescLeft">&#160;</td><td class="mdescRight">operator = Move assignement operator  <a href="#a29505c3ad95dc2695401c049cc34ba62">More...</a><br /></td></tr>
 <tr class="separator:a29505c3ad95dc2695401c049cc34ba62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b4e162f06f7b4b90b4a9335ed2aabb5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5">allocate</a> (std::vector&lt; unsigned int &gt; dim)</td></tr>
+<tr class="memdesc:a5b4e162f06f7b4b90b4a9335ed2aabb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">allocate method for allocating memory.  <a href="#a5b4e162f06f7b4b90b4a9335ed2aabb5">More...</a><br /></td></tr>
 <tr class="separator:a5b4e162f06f7b4b90b4a9335ed2aabb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7d585cf03c540d70ff91a58facbdef5"><td class="memItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#ab7d585cf03c540d70ff91a58facbdef5">operator[]</a> (unsigned long i)</td></tr>
+<tr class="memdesc:ab7d585cf03c540d70ff91a58facbdef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">operator [] access operator that has no boundary checking.  <a href="#ab7d585cf03c540d70ff91a58facbdef5">More...</a><br /></td></tr>
 <tr class="separator:ab7d585cf03c540d70ff91a58facbdef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae588d401adbaab9889698b3e9c6e00b1"><td class="memItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#ae588d401adbaab9889698b3e9c6e00b1">operator()</a> (unsigned long i)</td></tr>
+<tr class="memdesc:ae588d401adbaab9889698b3e9c6e00b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">operator () access operator that has boundary checking.  <a href="#ae588d401adbaab9889698b3e9c6e00b1">More...</a><br /></td></tr>
+<tr class="separator:ae588d401adbaab9889698b3e9c6e00b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5eb9113987a4a411cd57245d591a458"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#aa5eb9113987a4a411cd57245d591a458">operator+=</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt; &amp;B)</td></tr>
 <tr class="separator:aa5eb9113987a4a411cd57245d591a458"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83e9265a5da00384a19dc47eff5f9e00"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#a83e9265a5da00384a19dc47eff5f9e00">operator+=</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt; &amp;&amp;B)</td></tr>
@@ -122,10 +134,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afa9568877b23d2266c7d2f29fe0ec6ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#afa9568877b23d2266c7d2f29fe0ec6ad">operator/=</a> (<a class="el" href="classcomplex.html">complex</a> B)</td></tr>
 <tr class="separator:afa9568877b23d2266c7d2f29fe0ec6ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ad6bf603b4b455f0368362aeeddb748"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#a5ad6bf603b4b455f0368362aeeddb748">identity</a> ()</td></tr>
+<tr class="memdesc:a5ad6bf603b4b455f0368362aeeddb748"><td class="mdescLeft">&#160;</td><td class="mdescRight">identity method for setting the <a class="el" href="class_s_u3.html" title="class for holding  matrices.">SU3</a> matrices of the lattice to identity.  <a href="#a5ad6bf603b4b455f0368362aeeddb748">More...</a><br /></td></tr>
 <tr class="separator:a5ad6bf603b4b455f0368362aeeddb748"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e8bfb54f85e78f2c97e8b90d2b47dc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#a1e8bfb54f85e78f2c97e8b90d2b47dc9">zeros</a> ()</td></tr>
+<tr class="memdesc:a1e8bfb54f85e78f2c97e8b90d2b47dc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">zeros sets all of the <a class="el" href="class_s_u3.html" title="class for holding  matrices.">SU3</a> elements in the lattice to zero.  <a href="#a1e8bfb54f85e78f2c97e8b90d2b47dc9">More...</a><br /></td></tr>
 <tr class="separator:a1e8bfb54f85e78f2c97e8b90d2b47dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85154fbd1b0ae42af329135c6cd11f34"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#a85154fbd1b0ae42af329135c6cd11f34">copy</a> (<a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt; B)</td></tr>
+<tr class="memdesc:a85154fbd1b0ae42af329135c6cd11f34"><td class="mdescLeft">&#160;</td><td class="mdescRight">copy method for copying content of another lattice B onto itself.  <a href="#a85154fbd1b0ae42af329135c6cd11f34">More...</a><br /></td></tr>
 <tr class="separator:a85154fbd1b0ae42af329135c6cd11f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -137,7 +152,17 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a933045fb4a76f62d29472e6061ed8a34"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_lattice.html#a933045fb4a76f62d29472e6061ed8a34">m_latticeSize</a></td></tr>
 <tr class="separator:a933045fb4a76f62d29472e6061ed8a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;class T&gt;<br />
+class Lattice&lt; T &gt;</h3>
+
+<p>A method for holding a lattice of type T. </p>
+<p>The lattice class is implemented such that is uses move semantics, i.e. rule of 5.</p>
+<dl class="section author"><dt>Author</dt><dd>Mathias M. Vege </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2017-2019 </dd></dl>
+<dl class="section copyright"><dt>Copyright</dt><dd>MIT Licence </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac32e6300cc5ebc246a060cd67d99f370"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac32e6300cc5ebc246a060cd67d99f370">&#9670;&nbsp;</a></span>Lattice() <span class="overload">[1/4]</span></h2>
 
@@ -246,6 +271,14 @@ template&lt;class T&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_lattice.html" title="A method for holding a lattice of type T.">Lattice</a> copy constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="ad2826da8e42dcaea917b9a2e50ca1ca2"></a>
@@ -273,6 +306,14 @@ template&lt;class T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="class_lattice.html" title="A method for holding a lattice of type T.">Lattice</a> move constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -302,10 +343,19 @@ template&lt;class T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>allocate method for allocating memory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dim</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_lattice_a5b4e162f06f7b4b90b4a9335ed2aabb5_icgraph.svg" width="616" height="978"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_lattice_a5b4e162f06f7b4b90b4a9335ed2aabb5_icgraph.svg" width="616" height="978"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -335,10 +385,20 @@ template&lt;class T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>copy method for copying content of another lattice B onto itself. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">B</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>itself as copied from B. </dd></dl>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_lattice_a85154fbd1b0ae42af329135c6cd11f34_icgraph.svg" width="322" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_lattice_a85154fbd1b0ae42af329135c6cd11f34_icgraph.svg" width="322" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -367,10 +427,13 @@ template&lt;class T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>identity method for setting the <a class="el" href="class_s_u3.html" title="class for holding  matrices.">SU3</a> matrices of the lattice to identity. </p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_lattice_a5ad6bf603b4b455f0368362aeeddb748_icgraph.svg" width="411" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_lattice_a5ad6bf603b4b455f0368362aeeddb748_icgraph.svg" width="411" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -484,6 +547,43 @@ template&lt;class T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae588d401adbaab9889698b3e9c6e00b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae588d401adbaab9889698b3e9c6e00b1">&#9670;&nbsp;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T&amp; <a class="el" href="class_lattice.html">Lattice</a>&lt; T &gt;::operator() </td>
+          <td>(</td>
+          <td class="paramtype">unsigned long&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>operator () access operator that has boundary checking. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">i</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -737,6 +837,15 @@ template&lt;class T&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>operator = Copy assignement operator </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
 </div>
 </div>
 <a id="a29505c3ad95dc2695401c049cc34ba62"></a>
@@ -764,6 +873,15 @@ template&lt;class T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>operator = Move assignement operator </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -793,6 +911,15 @@ template&lt;class T&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>operator [] access operator that has no boundary checking. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">i</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
 </div>
 </div>
 <a id="a1e8bfb54f85e78f2c97e8b90d2b47dc9"></a>
@@ -819,10 +946,13 @@ template&lt;class T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>zeros sets all of the <a class="el" href="class_s_u3.html" title="class for holding  matrices.">SU3</a> elements in the lattice to zero. </p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_lattice_a1e8bfb54f85e78f2c97e8b90d2b47dc9_icgraph.svg" width="562" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_lattice_a1e8bfb54f85e78f2c97e8b90d2b47dc9_icgraph.svg" width="562" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>

@@ -1,11 +1,11 @@
 <map id="ObservableStorer::runStatistics" name="ObservableStorer::runStatistics">
-<area shape="rect" id="node1" title=" " alt="" coords="245,195,451,220"/>
-<area shape="rect" id="node2" href="$class_correlator.html#a35197b1d12b62ef30b79c0138a26456e" title=" " alt="" coords="21,5,182,31"/>
-<area shape="rect" id="node3" href="$class_energy_density.html#a584e164453ce880a45478c9b48ce2c4b" title=" " alt="" coords="7,55,195,80"/>
-<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#a21d608703811d2814e7f654588eaa0c0" title=" " alt="" coords="8,104,194,143"/>
-<area shape="rect" id="node5" href="$class_master_sampler.html#ab7913d0dbdea57af3f469a3cdd74f8fc" title=" " alt="" coords="5,167,197,192"/>
-<area shape="rect" id="node6" href="$class_master_sampler_topc_x_y_z.html#af748653ded9908f78383185475b9ddeb" title=" " alt="" coords="18,216,184,255"/>
-<area shape="rect" id="node7" href="$class_plaquette.html#aa54bf1807d9b192048026f94d585fa4f" title=" " alt="" coords="22,279,180,304"/>
-<area shape="rect" id="node8" href="$class_super_sampler.html#af96f7d461e9159adb4eef9bda9c6ecde" title=" " alt="" coords="8,328,195,353"/>
-<area shape="rect" id="node9" href="$class_topological_charge.html#ab9afadb9f37e638c0a168ebab5d41353" title=" " alt="" coords="32,377,171,416"/>
+<area shape="rect" id="node1" title="ObservableStorer::runStatistics." alt="" coords="245,195,451,220"/>
+<area shape="rect" id="node2" href="$class_correlator.html#a35197b1d12b62ef30b79c0138a26456e" title="Correlator::runStatistics." alt="" coords="21,5,182,31"/>
+<area shape="rect" id="node3" href="$class_energy_density.html#a584e164453ce880a45478c9b48ce2c4b" title="Correlator::runStatistics." alt="" coords="7,55,195,80"/>
+<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#a21d608703811d2814e7f654588eaa0c0" title="Correlator::runStatistics." alt="" coords="8,104,194,143"/>
+<area shape="rect" id="node5" href="$class_master_sampler.html#ab7913d0dbdea57af3f469a3cdd74f8fc" title="Correlator::runStatistics." alt="" coords="5,167,197,192"/>
+<area shape="rect" id="node6" href="$class_master_sampler_topc_x_y_z.html#af748653ded9908f78383185475b9ddeb" title="Correlator::runStatistics." alt="" coords="18,216,184,255"/>
+<area shape="rect" id="node7" href="$class_plaquette.html#aa54bf1807d9b192048026f94d585fa4f" title="Correlator::runStatistics." alt="" coords="22,279,180,304"/>
+<area shape="rect" id="node8" href="$class_super_sampler.html#af96f7d461e9159adb4eef9bda9c6ecde" title="Correlator::runStatistics." alt="" coords="8,328,195,353"/>
+<area shape="rect" id="node9" href="$class_topological_charge.html#ab9afadb9f37e638c0a168ebab5d41353" title="Correlator::runStatistics." alt="" coords="32,377,171,416"/>
 </map>

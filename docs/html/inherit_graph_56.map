@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_s_u3_matrix_generator.html" title=" " alt="" coords="5,5,149,31"/>
+<area shape="rect" id="node1" href="$class_s_u3_exp.html" title="SU3 matrix exponentiation method that uses the method from https://journals.aps.org/prd/abstract/10...." alt="" coords="5,80,76,105"/>
+<area shape="rect" id="node2" href="$class_exp_luscher.html" title="Uses method for exponentiating SU3 matrix found in Appendix A in https://arxiv.org/abs/hep&#45;lat/040910..." alt="" coords="124,5,215,31"/>
+<area shape="rect" id="node3" href="$class_taylor2_exp.html" title="Taylor expansion of second order." alt="" coords="126,55,213,80"/>
+<area shape="rect" id="node4" href="$class_taylor4_exp.html" title="Taylor expansion of second order." alt="" coords="126,104,213,129"/>
+<area shape="rect" id="node5" href="$class_taylor_exp.html" title="uses a general Taylor polynomial to approximate the exponentiation of a SU(3) matrix." alt="" coords="130,153,209,179"/>
 </map>

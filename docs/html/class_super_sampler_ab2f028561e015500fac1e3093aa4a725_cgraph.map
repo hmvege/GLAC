@@ -1,6 +1,6 @@
 <map id="SuperSampler::reset" name="SuperSampler::reset">
-<area shape="rect" id="node1" title=" " alt="" coords="5,55,149,80"/>
-<area shape="rect" id="node2" href="$class_observable_storer.html#a7b6285a532d796816d75262f91d43dad" title=" " alt="" coords="206,5,369,31"/>
+<area shape="rect" id="node1" title="Correlator::reset resets ObservableStorer." alt="" coords="5,55,149,80"/>
+<area shape="rect" id="node2" href="$class_observable_storer.html#a7b6285a532d796816d75262f91d43dad" title="ObservableStorer::reset set all the members for observable storage to zero." alt="" coords="206,5,369,31"/>
 <area shape="rect" id="node3" href="$class_parameters.html#a237ea1286459e8c648e983464829fe8d" title=" " alt="" coords="197,55,378,80"/>
 <area shape="rect" id="node4" href="$class_parameters.html#aae314edb18d426571ab7b6df60da70aa" title=" " alt="" coords="207,104,368,129"/>
 </map>

@@ -4,12 +4,12 @@
 <area shape="rect" id="node3" href="$class_parameters.html#a7870fae41b172caee9fa020c86d056ac" title=" " alt="" coords="200,232,384,271"/>
 <area shape="rect" id="node4" href="$class_parameters.html#a5ba21c056f0b7da17abcdd0a1eb2061f" title=" " alt="" coords="210,295,375,320"/>
 <area shape="rect" id="node5" href="$class_parameters.html#a4c24cb57765589a12eae030894423735" title=" " alt="" coords="196,344,388,369"/>
-<area shape="rect" id="node6" href="$class_s_u3_matrix_generator.html#a478a6d34a643f4ee30bc333ca1023b00" title=" " alt="" coords="220,393,364,432"/>
-<area shape="rect" id="node9" href="$class_s_u3_matrix_generator.html#a06dc59b5a86ba6863b848ef1ca26629a" title=" " alt="" coords="220,456,364,495"/>
-<area shape="rect" id="node11" href="$class_lattice.html#a5ad6bf603b4b455f0368362aeeddb748" title=" " alt="" coords="237,519,347,544"/>
+<area shape="rect" id="node6" href="$class_s_u3_matrix_generator.html#a478a6d34a643f4ee30bc333ca1023b00" title="SU3MatrixGenerator::generateRST generates a SU3 matrix close to unity." alt="" coords="220,393,364,432"/>
+<area shape="rect" id="node9" href="$class_s_u3_matrix_generator.html#a06dc59b5a86ba6863b848ef1ca26629a" title="SU3MatrixGenerator::generateRandom generates a fully random SU3 matrix." alt="" coords="220,456,364,495"/>
+<area shape="rect" id="node11" href="$class_lattice.html#a5ad6bf603b4b455f0368362aeeddb748" title="identity method for setting the SU3 matrices of the lattice to identity." alt="" coords="237,519,347,544"/>
 <area shape="rect" id="node12" href="$class_sys_print.html#a4572572643f6f4685081a3ae419e5ca9" title="SysPrint::printSystemInfo prints out parametesr from Parallel:Communicator and Parameters." alt="" coords="207,183,378,208"/>
-<area shape="rect" id="node19" href="$class_parallel_1_1_communicator.html#ad48e48ab0137dab329d31fc1e3ebf179" title=" " alt="" coords="212,568,372,607"/>
-<area shape="rect" id="node7" href="$class_s_u3_matrix_generator.html#aa4e04caff654a1df7c43280b85f359bc" title=" " alt="" coords="484,393,628,432"/>
+<area shape="rect" id="node19" href="$class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" title=" " alt="" coords="212,568,372,607"/>
+<area shape="rect" id="node7" href="$class_s_u3_matrix_generator.html#aa4e04caff654a1df7c43280b85f359bc" title="SU3MatrixGenerator::generateSU2 generates a random SU2 matrix close to unity." alt="" coords="484,393,628,432"/>
 <area shape="rect" id="node8" href="$class_s_u2.html#a348ca5d38346892060a05f7d9de02916" title=" " alt="" coords="724,400,811,425"/>
 <area shape="rect" id="node10" href="$class_s_u3.html#a9f3527fd882882ddfa18d72f5f43176c" title=" " alt="" coords="512,463,600,488"/>
 <area shape="rect" id="node13" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="476,68,636,107"/>

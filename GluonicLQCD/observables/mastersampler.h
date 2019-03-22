@@ -20,7 +20,7 @@
  * \f[
  *      Q = \frac{1}{32\pi^2} \sum_{n\in\Lambda} \epsilon_{\mu\nu\rho\sigma} \tr\left[F_{\mu\nu}(n)F_{\rho\sigma}(n)\right],
  * \f]
- * where \f$n\f$ is the position in the lattice.
+ * where \f$n\f$ is the position in the lattice. \f$F_{\nu\mu}\f$ is the clover.
  *
  * \author Mathias M. Vege
  * \version 1.0

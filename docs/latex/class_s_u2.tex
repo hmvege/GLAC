@@ -2,6 +2,11 @@
 \label{class_s_u2}\index{SU2@{SU2}}
 
 
+Class for holding $\mathrm{SU}(2)$ matrices.  
+
+
+
+
 {\ttfamily \#include $<$su2.\+h$>$}
 
 \subsection*{Public Member Functions}
@@ -18,7 +23,7 @@ void \mbox{\hyperlink{class_s_u2_a348ca5d38346892060a05f7d9de02916}{zeros}} ()
 void \mbox{\hyperlink{class_s_u2_a17ce46d1d9db179d045602b90b3d5af4}{identity}} ()
 \item 
 void \mbox{\hyperlink{class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12}{set\+Complex}} (\mbox{\hyperlink{classcomplex}{complex}} w, int i)
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12}{S\+U2\+::set\+Complex}}. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{class_s_u2_ad1eebb9f268f569b888f1ae6ab6a7e6c}{norm\+Squared}} (int i)
 \item 
 \mbox{\hyperlink{class_s_u2}{S\+U2}} \mbox{\hyperlink{class_s_u2_a798389d4b2bc24cea6a466473004e3f8}{transpose}} ()
@@ -26,7 +31,7 @@ double \mbox{\hyperlink{class_s_u2_ad1eebb9f268f569b888f1ae6ab6a7e6c}{norm\+Squa
 \mbox{\hyperlink{class_s_u2}{S\+U2}} \mbox{\hyperlink{class_s_u2_afb3a5fc8c00a45a0044113fb742727cc}{conjugate}} ()
 \item 
 \mbox{\hyperlink{class_s_u2}{S\+U2}} \mbox{\hyperlink{class_s_u2_a2f7f6ade28078418c8ee97234fff4dd0}{inv}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_s_u2_a2f7f6ade28078418c8ee97234fff4dd0}{S\+U2\+::inv}}. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{class_s_u2_a4f10c4617e00686b196653dd669e0697}{get}} (int i, int j, int k)
 \item 
 double \& \mbox{\hyperlink{class_s_u2_aa8dbfcb283189ab089c0b73007e08e7e}{operator\mbox{[}$\,$\mbox{]}}} (int i)
@@ -46,6 +51,25 @@ double \& \mbox{\hyperlink{class_s_u2_aa8dbfcb283189ab089c0b73007e08e7e}{operato
 \item 
 double \mbox{\hyperlink{class_s_u2_ad4227484be245b63489c44a2bc02a625}{mat}} \mbox{[}8\mbox{]}
 \end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for holding $\mathrm{SU}(2)$ matrices. 
+
+Operations have been overloaded for ease of use.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -88,6 +112,13 @@ double \mbox{\hyperlink{class_s_u2_ad4227484be245b63489c44a2bc02a625}{mat}} \mbo
 \subsubsection{\texorpdfstring{inv()}{inv()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} S\+U2\+::inv (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+\mbox{\hyperlink{class_s_u2_a2f7f6ade28078418c8ee97234fff4dd0}{S\+U2\+::inv}}. 
+
+\begin{DoxyReturn}{Returns}
+a copy of the inverse of itself. 
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_s_u2_ad1eebb9f268f569b888f1ae6ab6a7e6c}\label{class_s_u2_ad1eebb9f268f569b888f1ae6ab6a7e6c}} 
 \index{SU2@{SU2}!normSquared@{normSquared}}
 \index{normSquared@{normSquared}!SU2@{SU2}}
@@ -142,7 +173,19 @@ double \mbox{\hyperlink{class_s_u2_ad4227484be245b63489c44a2bc02a625}{mat}} \mbo
 \subsubsection{\texorpdfstring{setComplex()}{setComplex()}}
 {\footnotesize\ttfamily void S\+U2\+::set\+Complex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{w,  }\item[{int}]{i }\end{DoxyParamCaption})}
 
-Here is the caller graph for this function\+:\nopagebreak
+
+
+\mbox{\hyperlink{class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12}{S\+U2\+::set\+Complex}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em w} & complex number \\
+\hline
+{\em i} & matrix position(contigious) to set w as. \\
+\hline
+\end{DoxyParams}
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -161,7 +204,8 @@ Here is the caller graph for this function\+:\nopagebreak
 \subsubsection{\texorpdfstring{zeros()}{zeros()}}
 {\footnotesize\ttfamily void S\+U2\+::zeros (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-Here is the caller graph for this function\+:\nopagebreak
+Here is the caller graph for this function\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode

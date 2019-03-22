@@ -1,14 +1,14 @@
 <map id="MasterSamplerTopcXYZ::writeFlowObservablesToFile" name="MasterSamplerTopcXYZ::writeFlowObservablesToFile">
-<area shape="rect" id="node1" title=" " alt="" coords="5,340,201,379"/>
-<area shape="rect" id="node2" href="$class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" title=" " alt="" coords="291,163,462,201"/>
-<area shape="rect" id="node4" href="$class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" title=" " alt="" coords="282,225,471,264"/>
-<area shape="rect" id="node15" href="$class_parallel_1_1_communicator.html#a3da13427d693e0ce924159e871c83e19" title=" " alt="" coords="276,340,477,379"/>
+<area shape="rect" id="node1" title="Correlator::writeFlowObservablesToFile." alt="" coords="5,340,201,379"/>
+<area shape="rect" id="node2" href="$class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" title="ObservableStorer::gatherResults." alt="" coords="291,163,462,201"/>
+<area shape="rect" id="node4" href="$class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" title="ObservableStorer::writeFlowObservableToFile." alt="" coords="282,225,471,264"/>
+<area shape="rect" id="node15" href="$class_parallel_1_1_communicator.html#a5d42989e7a3022de6042e3503aa35346" title="Parallel::Communicator::reduceToTemporalDimension reduces the results to the temporal dimensions,..." alt="" coords="276,340,477,379"/>
 <area shape="rect" id="node16" href="$class_parameters.html#a237ea1286459e8c648e983464829fe8d" title=" " alt="" coords="571,443,752,468"/>
 <area shape="rect" id="node18" href="$class_observable_storer.html#ab8885ce7eb3baa3fdb39cda767be6c83" title=" " alt="" coords="267,455,487,493"/>
-<area shape="rect" id="node19" href="$namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" title=" " alt="" coords="590,279,733,304"/>
+<area shape="rect" id="node19" href="$namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" title="IO::writeMatrixToFile writes out a matrix of observables to file, i.e. the topological charge in Eucl..." alt="" coords="590,279,733,304"/>
 <area shape="rect" id="node20" href="$class_observable_storer.html#aa04dd06fe053670f4c8f027aa744277a" title=" " alt="" coords="249,517,504,543"/>
 <area shape="rect" id="node3" href="$class_parallel_1_1_communicator.html#a7b1f80fb49a0cc83f2031c3415174150" title=" " alt="" coords="581,163,741,201"/>
-<area shape="rect" id="node5" href="$namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" title=" " alt="" coords="560,229,763,255"/>
+<area shape="rect" id="node5" href="$namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" title="IO::writeFlowObservableToFile method for writing a flow observable to file, using ...." alt="" coords="560,229,763,255"/>
 <area shape="rect" id="node6" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="835,55,995,93"/>
 <area shape="rect" id="node7" href="$class_parameters.html#a96dbafc27f287de83dfaec3bc2d45efe" title=" " alt="" coords="821,117,1009,143"/>
 <area shape="rect" id="node8" href="$class_parameters.html#a58f15668b37e705d34d6588e287e4bc0" title=" " alt="" coords="824,167,1006,205"/>

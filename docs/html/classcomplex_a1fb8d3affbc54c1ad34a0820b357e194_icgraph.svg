@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="classcomplex.html#a4741546b5617d11e87ee7831067c84c5" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="classcomplex.html#a4741546b5617d11e87ee7831067c84c5" target="_top" xlink:title="complex::c">
 <polygon fill="#ffffff" stroke="#000000" points="128.1523,-37.5 128.1523,-55.5 191.9453,-55.5 191.9453,-37.5 128.1523,-37.5"/>
 <text text-anchor="middle" x="160.0488" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">complex::c</text>
 </a>

@@ -1,11 +1,11 @@
 <map id="ObservableStorer::setObservableName" name="ObservableStorer::setObservableName">
 <area shape="rect" id="node1" title=" " alt="" coords="513,187,768,212"/>
 <area shape="rect" id="node2" href="$class_energy_density.html#a1d23cfe5690c9daf8b2f0ec8f6471c5f" title=" " alt="" coords="263,5,465,31"/>
-<area shape="rect" id="node3" href="$class_lattice_action_charge_density.html#aba3131bbe5bd930adccc2852b4d44bb9" title=" " alt="" coords="271,55,457,93"/>
-<area shape="rect" id="node5" href="$class_master_sampler.html#a88e2eec68ea6bd60cc3f375ac04a8ded" title=" " alt="" coords="281,117,447,156"/>
-<area shape="rect" id="node7" href="$class_master_sampler_topc_x_y_z.html#af6d2cf2023d9626908fd26b07a7a0b84" title=" " alt="" coords="274,180,454,219"/>
+<area shape="rect" id="node3" href="$class_lattice_action_charge_density.html#aba3131bbe5bd930adccc2852b4d44bb9" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="271,55,457,93"/>
+<area shape="rect" id="node5" href="$class_master_sampler.html#a88e2eec68ea6bd60cc3f375ac04a8ded" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="281,117,447,156"/>
+<area shape="rect" id="node7" href="$class_master_sampler_topc_x_y_z.html#af6d2cf2023d9626908fd26b07a7a0b84" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="274,180,454,219"/>
 <area shape="rect" id="node9" href="$class_plaquette.html#a1c87b43fc7ee74b2b0289de63e03bb61" title=" " alt="" coords="293,243,435,268"/>
-<area shape="rect" id="node10" href="$class_super_sampler.html#a4429d6ae37247a02259bc0c6d665821c" title=" " alt="" coords="283,292,445,331"/>
+<area shape="rect" id="node10" href="$class_super_sampler.html#a4429d6ae37247a02259bc0c6d665821c" title="Correlator::initializeObservableStorer initializes ObservableStorer." alt="" coords="283,292,445,331"/>
 <area shape="rect" id="node12" href="$class_topological_charge.html#a415e32f865f7b5c83f4ac4471838d514" title=" " alt="" coords="294,355,434,393"/>
 <area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#acda2a43db75cca34586441d4ac7ec39e" title=" " alt="" coords="13,55,207,93"/>
 <area shape="rect" id="node6" href="$class_master_sampler.html#ac5ee503e8391aca36f73872a45bb6bd9" title=" " alt="" coords="5,124,215,149"/>

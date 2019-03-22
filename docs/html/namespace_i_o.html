@@ -83,10 +83,13 @@ Data Structures</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ad8cf5aef8f60d10b80292b69a091d5ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_i_o.html#ad8cf5aef8f60d10b80292b69a091d5ac">writeObservablesToFile</a> (double acceptanceRate, double averagedObservable, double varianceObservable, double stdObservable, std::vector&lt; double &gt; observables, unsigned int NObs, std::string observableName)</td></tr>
+<tr class="memdesc:ad8cf5aef8f60d10b80292b69a091d5ac"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespace_i_o.html#ad8cf5aef8f60d10b80292b69a091d5ac" title="IO::writeObservablesToFile method for writing an observable to file, using .15 precision.">IO::writeObservablesToFile</a> method for writing an observable to file, using .15 precision.  <a href="#ad8cf5aef8f60d10b80292b69a091d5ac">More...</a><br /></td></tr>
 <tr class="separator:ad8cf5aef8f60d10b80292b69a091d5ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f554804fd2ccd9c13c73777c5cbbf77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77">writeFlowObservableToFile</a> (std::vector&lt; double &gt; observables, std::string observableName, unsigned int configNumber)</td></tr>
+<tr class="memdesc:a4f554804fd2ccd9c13c73777c5cbbf77"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" title="IO::writeFlowObservableToFile method for writing a flow observable to file, using ....">IO::writeFlowObservableToFile</a> method for writing a flow observable to file, using .15 precision.  <a href="#a4f554804fd2ccd9c13c73777c5cbbf77">More...</a><br /></td></tr>
 <tr class="separator:a4f554804fd2ccd9c13c73777c5cbbf77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad77b7dd770afc8e2eb433d6187ea3616"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616">writeMatrixToFile</a> (std::vector&lt; double &gt; observables, std::string observableName, unsigned int configNumber, unsigned int N)</td></tr>
+<tr class="memdesc:ad77b7dd770afc8e2eb433d6187ea3616"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" title="IO::writeMatrixToFile writes out a matrix of observables to file, i.e. the topological charge in Eucl...">IO::writeMatrixToFile</a> writes out a matrix of observables to file, i.e. the topological charge in Euclidean time. Uses a .15 precision.  <a href="#ad77b7dd770afc8e2eb433d6187ea3616">More...</a><br /></td></tr>
 <tr class="separator:ad77b7dd770afc8e2eb433d6187ea3616"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -123,15 +126,32 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" title="IO::writeFlowObservableToFile method for writing a flow observable to file, using ....">IO::writeFlowObservableToFile</a> method for writing a flow observable to file, using .15 precision. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">observables</td><td>a vector of observables. </td></tr>
+    <tr><td class="paramname">observableName</td><td>observable name. </td></tr>
+    <tr><td class="paramname">configNumber</td><td>the configuration number.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Top 3 rows of the output file will contain,</p><ul>
+<li>beta,</li>
+<li>NFlows,</li>
+<li>FlowEpsilon, with the rest containing the flowed observable. </li>
+</ul>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_a4f554804fd2ccd9c13c73777c5cbbf77_cgraph.svg" width="456" height="458"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_a4f554804fd2ccd9c13c73777c5cbbf77_cgraph.svg" width="456" height="458"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_a4f554804fd2ccd9c13c73777c5cbbf77_icgraph.svg" width="744" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_a4f554804fd2ccd9c13c73777c5cbbf77_icgraph.svg" width="744" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -173,15 +193,33 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" title="IO::writeMatrixToFile writes out a matrix of observables to file, i.e. the topological charge in Eucl...">IO::writeMatrixToFile</a> writes out a matrix of observables to file, i.e. the topological charge in Euclidean time. Uses a .15 precision. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">observables</td><td>the observables in a vector of doubles. </td></tr>
+    <tr><td class="paramname">observableName</td><td>the name of the observable. </td></tr>
+    <tr><td class="paramname">configNumber</td><td>the configuration number. </td></tr>
+    <tr><td class="paramname">N</td><td>the number of columns in the matrix of observables. The number of rows in the matrix is the number of flow steps, NFlows, retrieved from <a class="el" href="class_parameters.html#aae314edb18d426571ab7b6df60da70aa">Parameters::getNFlows()</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Top 3 rows of the output file will contain,</p><ul>
+<li>beta,</li>
+<li>NFlows,</li>
+<li>FlowEpsilon, with the rest containing the flowed observable. </li>
+</ul>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_ad77b7dd770afc8e2eb433d6187ea3616_cgraph.svg" width="396" height="458"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_ad77b7dd770afc8e2eb433d6187ea3616_cgraph.svg" width="396" height="458"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_ad77b7dd770afc8e2eb433d6187ea3616_icgraph.svg" width="447" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_ad77b7dd770afc8e2eb433d6187ea3616_icgraph.svg" width="447" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -241,15 +279,41 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="namespace_i_o.html#ad8cf5aef8f60d10b80292b69a091d5ac" title="IO::writeObservablesToFile method for writing an observable to file, using .15 precision.">IO::writeObservablesToFile</a> method for writing an observable to file, using .15 precision. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">acceptanceRate</td><td>acceptance rate from the Metropolis algorithm. </td></tr>
+    <tr><td class="paramname">averagedObservable</td><td>the average of the observable. </td></tr>
+    <tr><td class="paramname">varianceObservable</td><td>the variance of the observable. </td></tr>
+    <tr><td class="paramname">stdObservable</td><td>the standard deviation of the observable. </td></tr>
+    <tr><td class="paramname">observables</td><td>vector of doubles containing the observable. </td></tr>
+    <tr><td class="paramname">NObs</td><td>the number of configurations, i.e. observables, to be written to file. </td></tr>
+    <tr><td class="paramname">observableName</td><td>name of the observable. Topological charge, plaquette, energy ect.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>The top 8 rows contains,</p><ul>
+<li>beta,</li>
+<li>acceptance rate,</li>
+<li>number of correlation updates used,</li>
+<li>number of configurations,</li>
+<li>number of thermalization steps,</li>
+<li>the average of the observable,</li>
+<li>the variance of the observable,</li>
+<li>the standard deviation of the observable, </li>
+</ul>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_ad8cf5aef8f60d10b80292b69a091d5ac_cgraph.svg" width="435" height="395"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_ad8cf5aef8f60d10b80292b69a091d5ac_cgraph.svg" width="435" height="395"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_ad8cf5aef8f60d10b80292b69a091d5ac_icgraph.svg" width="734" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespace_i_o_ad8cf5aef8f60d10b80292b69a091d5ac_icgraph.svg" width="734" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>

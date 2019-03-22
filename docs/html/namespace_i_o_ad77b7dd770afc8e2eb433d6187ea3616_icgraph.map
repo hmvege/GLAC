@@ -1,5 +1,5 @@
 <map id="IO::writeMatrixToFile" name="IO::writeMatrixToFile">
-<area shape="rect" id="node1" title=" " alt="" coords="298,44,441,69"/>
-<area shape="rect" id="node2" href="$class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" title=" " alt="" coords="30,5,226,44"/>
-<area shape="rect" id="node3" href="$class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" title=" " alt="" coords="5,68,250,107"/>
+<area shape="rect" id="node1" title="IO::writeMatrixToFile writes out a matrix of observables to file, i.e. the topological charge in Eucl..." alt="" coords="298,44,441,69"/>
+<area shape="rect" id="node2" href="$class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" title="Correlator::writeFlowObservablesToFile." alt="" coords="30,5,226,44"/>
+<area shape="rect" id="node3" href="$class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" title="Correlator::writeFlowObservablesToFile." alt="" coords="5,68,250,107"/>
 </map>

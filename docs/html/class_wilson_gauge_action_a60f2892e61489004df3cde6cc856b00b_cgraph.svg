@@ -22,7 +22,7 @@
 <!-- Node29 -->
 <g id="node2" class="node">
 <title>Node29</title>
-<g id="a_node2"><a xlink:href="functions_8h.html#a93863171e3da962b61804144857576a7" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="functions_8h.html#a93863171e3da962b61804144857576a7" target="_top" xlink:title="traceRealMultiplication">
 <polygon fill="#ffffff" stroke="#000000" points="145.3789,-5.5 145.3789,-23.5 261.9795,-23.5 261.9795,-5.5 145.3789,-5.5"/>
 <text text-anchor="middle" x="203.6792" y="-11.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">traceRealMultiplication</text>
 </a>

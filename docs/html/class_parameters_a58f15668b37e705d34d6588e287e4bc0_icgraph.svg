@@ -53,7 +53,7 @@
 <!-- Node58 -->
 <g id="node5" class="node">
 <title>Node58</title>
-<g id="a_node5"><a xlink:href="namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="namespace_i_o.html#a4f554804fd2ccd9c13c73777c5cbbf77" target="_top" xlink:title="IO::writeFlowObservableToFile method for writing a flow observable to file, using ....">
 <polygon fill="#ffffff" stroke="#000000" points="397.9941,-96.5 397.9941,-114.5 550.1465,-114.5 550.1465,-96.5 397.9941,-96.5"/>
 <text text-anchor="middle" x="474.0703" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::writeFlowObservableToFile</text>
 </a>
@@ -68,7 +68,7 @@
 <!-- Node65 -->
 <g id="node12" class="node">
 <title>Node65</title>
-<g id="a_node12"><a xlink:href="namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" target="_top" xlink:title=" ">
+<g id="a_node12"><a xlink:href="namespace_i_o.html#ad77b7dd770afc8e2eb433d6187ea3616" target="_top" xlink:title="IO::writeMatrixToFile writes out a matrix of observables to file, i.e. the topological charge in Eucl...">
 <polygon fill="#ffffff" stroke="#000000" points="237.3564,-52.5 237.3564,-70.5 344.4795,-70.5 344.4795,-52.5 237.3564,-52.5"/>
 <text text-anchor="middle" x="290.918" y="-58.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::writeMatrixToFile</text>
 </a>
@@ -83,7 +83,7 @@
 <!-- Node57 -->
 <g id="node4" class="node">
 <title>Node57</title>
-<g id="a_node4"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="221.2188,-138.5 221.2188,-166.5 360.6172,-166.5 360.6172,-138.5 221.2188,-138.5"/>
 <text text-anchor="start" x="229.2188" y="-154.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="290.918" y="-144.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::calculate</text>
@@ -99,7 +99,7 @@
 <!-- Node59 -->
 <g id="node6" class="node">
 <title>Node59</title>
-<g id="a_node6"><a xlink:href="class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_observable_storer.html#af51ebd65eae2a5087cfd47ddf230da93" target="_top" xlink:title="ObservableStorer::writeFlowObservableToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="219.8418,-91.5 219.8418,-119.5 361.9941,-119.5 361.9941,-91.5 219.8418,-91.5"/>
 <text text-anchor="start" x="227.8418" y="-107.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::writeFlow</text>
 <text text-anchor="middle" x="290.918" y="-97.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableToFile</text>
@@ -115,7 +115,7 @@
 <!-- Node60 -->
 <g id="node7" class="node">
 <title>Node60</title>
-<g id="a_node7"><a xlink:href="class_correlator.html#a168512b2ce182d9478db47f100125fa6" target="_top" xlink:title=" ">
+<g id="a_node7"><a xlink:href="class_correlator.html#a168512b2ce182d9478db47f100125fa6" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="9.7314,-188.5 9.7314,-216.5 174.1104,-216.5 174.1104,-188.5 9.7314,-188.5"/>
 <text text-anchor="start" x="17.7314" y="-204.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::writeFlowObservables</text>
 <text text-anchor="middle" x="91.9209" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>
@@ -131,7 +131,7 @@
 <!-- Node61 -->
 <g id="node8" class="node">
 <title>Node61</title>
-<g id="a_node8"><a xlink:href="class_lattice_action_charge_density.html#a54226556dc1497c311e4a4d50bf44c26" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_lattice_action_charge_density.html#a54226556dc1497c311e4a4d50bf44c26" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="18.623,-141.5 18.623,-169.5 165.2188,-169.5 165.2188,-141.5 18.623,-141.5"/>
 <text text-anchor="start" x="26.623" y="-157.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
 <text text-anchor="middle" x="91.9209" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::writeFlowObservablesToFile</text>
@@ -147,7 +147,7 @@
 <!-- Node62 -->
 <g id="node9" class="node">
 <title>Node62</title>
-<g id="a_node9"><a xlink:href="class_master_sampler.html#ad475928217ac61fae134128904aaa9f8" target="_top" xlink:title=" ">
+<g id="a_node9"><a xlink:href="class_master_sampler.html#ad475928217ac61fae134128904aaa9f8" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="26.1304,-94.5 26.1304,-122.5 157.7114,-122.5 157.7114,-94.5 26.1304,-94.5"/>
 <text text-anchor="start" x="34.1304" y="-110.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSampler::writeFlow</text>
 <text text-anchor="middle" x="91.9209" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservablesToFile</text>
@@ -163,7 +163,7 @@
 <!-- Node63 -->
 <g id="node10" class="node">
 <title>Node63</title>
-<g id="a_node10"><a xlink:href="class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" target="_top" xlink:title=" ">
+<g id="a_node10"><a xlink:href="class_master_sampler_topc_x_y_z.html#a4fba4290e4406e18ef3f2904c6ae364f" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="18.623,-.5 18.623,-28.5 165.2188,-28.5 165.2188,-.5 18.623,-.5"/>
 <text text-anchor="start" x="26.623" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">MasterSamplerTopcXYZ</text>
 <text text-anchor="middle" x="91.9209" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::writeFlowObservablesToFile</text>
@@ -179,7 +179,7 @@
 <!-- Node64 -->
 <g id="node11" class="node">
 <title>Node64</title>
-<g id="a_node11"><a xlink:href="class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" target="_top" xlink:title=" ">
+<g id="a_node11"><a xlink:href="class_super_sampler.html#a410b650ebccdb03519c88908a3a8013e" target="_top" xlink:title="Correlator::writeFlowObservablesToFile.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-47.5 0,-75.5 183.8418,-75.5 183.8418,-47.5 0,-47.5"/>
 <text text-anchor="start" x="8" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SuperSampler::writeFlowObservables</text>
 <text text-anchor="middle" x="91.9209" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ToFile</text>

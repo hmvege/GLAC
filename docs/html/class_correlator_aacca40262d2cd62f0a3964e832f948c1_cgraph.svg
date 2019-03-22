@@ -12,7 +12,7 @@
 <!-- Node46 -->
 <g id="node1" class="node">
 <title>Node46</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Correlator::reset resets ObservableStorer.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-.5 0,-18.5 88.2461,-18.5 88.2461,-.5 0,-.5"/>
 <text text-anchor="middle" x="44.123" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::reset</text>
 </a>
@@ -21,7 +21,7 @@
 <!-- Node47 -->
 <g id="node2" class="node">
 <title>Node47</title>
-<g id="a_node2"><a xlink:href="class_observable_storer.html#a7b6285a532d796816d75262f91d43dad" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="class_observable_storer.html#a7b6285a532d796816d75262f91d43dad" target="_top" xlink:title="ObservableStorer::reset set all the members for observable storage to zero.">
 <polygon fill="#ffffff" stroke="#000000" points="124.2461,-.5 124.2461,-18.5 246.4033,-18.5 246.4033,-.5 124.2461,-.5"/>
 <text text-anchor="middle" x="185.3247" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ObservableStorer::reset</text>
 </a>

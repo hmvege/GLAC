@@ -2,7 +2,7 @@
 <area shape="rect" id="node1" title=" " alt="" coords="514,83,684,121"/>
 <area shape="rect" id="node2" href="$class_i_o_1_1_field_i_o.html#a8af607f9a1d79e90d4514c36103c6601" title="IO::FieldIO::writeFieldToFile writes a lattice of SU3 matrix objects to file." alt="" coords="260,5,445,31"/>
 <area shape="rect" id="node3" href="$class_i_o_1_1_field_i_o.html#aaf2bac2025d67c06e7c61e8cc9f44777" title="IO::FieldIO::writeDoublesFieldToFile writes a lattice of doubles to file." alt="" coords="267,55,438,93"/>
-<area shape="rect" id="node5" href="$class_i_o_1_1_field_i_o.html#a02db864a48601edd7febaab5d655e495" title=" " alt="" coords="239,117,466,143"/>
-<area shape="rect" id="node6" href="$class_i_o_1_1_field_i_o.html#af23fb6e02a6bd1cafd5be4acacbf848e" title=" " alt="" coords="255,167,450,205"/>
-<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title=" " alt="" coords="5,55,191,93"/>
+<area shape="rect" id="node5" href="$class_i_o_1_1_field_i_o.html#a02db864a48601edd7febaab5d655e495" title="IO::FieldIO::loadFieldConfiguration loads a regular configuration into memory." alt="" coords="239,117,466,143"/>
+<area shape="rect" id="node6" href="$class_i_o_1_1_field_i_o.html#af23fb6e02a6bd1cafd5be4acacbf848e" title="IO::FieldIO::loadChromaFieldConfiguration loads a configuration from Chroma into memory." alt="" coords="255,167,450,205"/>
+<area shape="rect" id="node4" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title="Correlator::calculate calculates a observable." alt="" coords="5,55,191,93"/>
 </map>

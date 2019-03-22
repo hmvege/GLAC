@@ -1,4 +1,4 @@
 <map id="Taylor4Exp" name="Taylor4Exp">
-<area shape="rect" id="node1" title=" " alt="" coords="5,79,93,104"/>
-<area shape="rect" id="node2" href="$class_s_u3_exp.html" title=" " alt="" coords="14,5,84,31"/>
+<area shape="rect" id="node1" title="Taylor expansion of second order." alt="" coords="5,79,93,104"/>
+<area shape="rect" id="node2" href="$class_s_u3_exp.html" title="SU3 matrix exponentiation method that uses the method from https://journals.aps.org/prd/abstract/10...." alt="" coords="14,5,84,31"/>
 </map>

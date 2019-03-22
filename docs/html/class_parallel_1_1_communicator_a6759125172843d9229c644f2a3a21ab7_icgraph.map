@@ -1,7 +1,0 @@
-<map id="Parallel::Communicator::MPIExit" name="Parallel::Communicator::MPIExit">
-<area shape="rect" id="node1" title=" " alt="" coords="488,52,648,91"/>
-<area shape="rect" id="node2" href="$class_i_o_1_1_field_i_o.html#a02db864a48601edd7febaab5d655e495" title=" " alt="" coords="5,5,232,31"/>
-<area shape="rect" id="node3" href="$class_i_o_1_1_field_i_o.html#af23fb6e02a6bd1cafd5be4acacbf848e" title=" " alt="" coords="21,108,216,147"/>
-<area shape="rect" id="node4" href="$class_parallel_1_1_communicator.html#a0975f377dbde235d418ca7054001f3a3" title=" " alt="" coords="280,52,440,91"/>
-<area shape="rect" id="node5" href="$class_i_o_1_1_field_i_o.html#a8af607f9a1d79e90d4514c36103c6601" title="IO::FieldIO::writeFieldToFile writes a lattice of SU3 matrix objects to file." alt="" coords="26,59,212,84"/>
-</map>
