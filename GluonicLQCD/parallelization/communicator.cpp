@@ -26,6 +26,13 @@ Parallel::Communicator::~Communicator()
 {
 }
 
+/*!
+ * \brief Parallel::Communicator::MPIfetchSU3Positive fetches a SU3 matrix in the from the neighboring processor in front.
+ * \param lattice a lattice pointer for all four dimensions.
+ * \param n position in lattice to fetch link from.
+ * \param mu direction to shift in. Always positive in x, y, z and t directions.
+ * \param SU3Dir the dimension we are to shift lattice in, i.e. the index of the Lattice pointer.
+ */
 void Parallel::Communicator::MPIfetchSU3Positive(Lattice<SU3> *lattice, std::vector<int> n, int mu, int SU3Dir)
 {
     /*
@@ -33,7 +40,7 @@ void Parallel::Communicator::MPIfetchSU3Positive(Lattice<SU3> *lattice, std::vec
      * Arguments:
      *  lattice     : the entire lattice passed
      *  n           : position vector
-     *  mu          : lorentz index for shift direction(always negative in either x,y,z or t direction)
+     *  mu          : lorentz index for shift direction(always positive in either x,y,z or t direction)
      *  SU3Dir      : SU3 matrix direction at link
      */
     MPI_Sendrecv(&lattice[SU3Dir][Index::getIndex(n[0],n[1],n[2],n[3])],18,MPI_DOUBLE,Neighbours::getNeighbours(m_processRank)->list[2*mu],0, // Send
@@ -41,6 +48,13 @@ void Parallel::Communicator::MPIfetchSU3Positive(Lattice<SU3> *lattice, std::vec
             Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
 }
 
+/*!
+ * \brief Parallel::Communicator::MPIfetchSU3Negative fetches a SU3 matrix in the from the neighboring processor in front.
+ * \param lattice a lattice pointer for all four dimensions.
+ * \param n position in lattice to fetch link from.
+ * \param mu direction to shift in. Always negative in x, y, z and t directions.
+ * \param SU3Dir the dimension we are to shift lattice in, i.e. index of the Lattice pointer.
+ */
 void Parallel::Communicator::MPIfetchSU3Negative(Lattice<SU3> *lattice, std::vector<int> n, int mu, int SU3Dir)
 {
     /*
@@ -194,6 +208,11 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::reduceToTemporalDimension reduces the results to the temporal dimensions, i.e. Euclidean time.
+ * \param obsResults contigious vector containing
+ * \param obs
+ */
 void Parallel::Communicator::reduceToTemporalDimension(std::vector<double> &obsResults, std::vector<double> obs)
 {
     /*
@@ -227,6 +246,9 @@ void Parallel::Communicator::reduceToTemporalDimension(std::vector<double> &obsR
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::checkSubLatticeValidity runs a series of tests to ensure that the sub lattices has been correctly set up.
+ */
 void Parallel::Communicator::checkSubLatticeValidity()
 {
     /*
@@ -256,6 +278,11 @@ void Parallel::Communicator::checkSubLatticeValidity()
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::init initializes the communicater and sets up the lattice geometry.
+ * \param numberOfArguments number of command line arguments.
+ * \param cmdLineArguments command line arguments.
+ */
 void Parallel::Communicator::init(int *numberOfArguments, char ***cmdLineArguments)
 {
     // Initializing parallelization, HIDE THIS?
@@ -304,6 +331,11 @@ void Parallel::Communicator::init(int *numberOfArguments, char ***cmdLineArgumen
     checkProcessorValidity();
 }
 
+/*!
+ * \brief Parallel::Communicator::checkProcessorValidity checks that we do not have an odd number of processors.
+ *
+ * \todo: this could probably be changed such that it just leaves out one processor that is left over.
+ */
 void Parallel::Communicator::checkProcessorValidity()
 {
     /*

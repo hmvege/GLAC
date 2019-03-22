@@ -1,3 +1,16 @@
+/*!
+ * \class EnergyDensity
+ *
+ * \brief Solely calculates the energy density as given by,
+ * \f[
+ *      E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda}\sum_{\mu<\nu} \left(\tilde{C}_{\mu\nu}(n)\right)^2.
+ * \f]
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef ENERGYDENSITY_H
 #define ENERGYDENSITY_H
 

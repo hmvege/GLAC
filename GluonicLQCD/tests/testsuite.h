@@ -1,3 +1,11 @@
+/*!
+ * \brief
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef TESTSUITE_H
 #define TESTSUITE_H
 
@@ -125,6 +133,7 @@ private:
     // Other tests
     bool testSU3TraceMultiplication();
     bool testRSTMultiplication();
+    bool testRSTInverseMultiplication();
 
     // Paralell tests
     bool fullLatticeTests();

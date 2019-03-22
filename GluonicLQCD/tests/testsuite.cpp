@@ -390,6 +390,9 @@ bool TestSuite::runFunctionsTest()
     if (!testRSTMultiplication()) {
         passed = false;
     }
+    if (!testRSTInverseMultiplication()) {
+        passed = false;
+    }
     return passed;
 }
 
@@ -1099,6 +1102,24 @@ bool TestSuite::testRSTMultiplication()
     return passed;
 }
 
+bool TestSuite::testRSTInverseMultiplication()
+{
+    /*
+     * Function for checking that we are multiplying the SU2 matrices correctly when generating a SU3 matrix close to unity.
+     */
+    bool passed = true;
+    SU3 results = m_SU3Generator->testRSTMultiplicationInverse(s_r,s_s,s_t);
+    if (compareSU3(results,U_RST.inv())) {
+        if (m_verbose) cout << "    SUCCESS: RST inverse multiplication test passed." << endl;
+
+    } else {
+        if (m_verbose) results.print();
+        cout << "    FAILED: RST inverse multiplication test did not pass." << endl;
+        passed = false;
+    }
+    return passed;
+}
+
 // Perform tests on matrix X
 void TestSuite::testMatrix(SU3 X)
 {
@@ -1553,7 +1574,7 @@ bool TestSuite::testLatticeInverse() {
 
 bool TestSuite::testLatticeShift() {
     /*
-     * Tests the lattice shift function.
+     * Tests the lattice shift function for all possible directions.
      */
     bool passed = true;
 

@@ -1,3 +1,11 @@
+/*!
+ * \brief
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef TEST_H
 #define TEST_H
 

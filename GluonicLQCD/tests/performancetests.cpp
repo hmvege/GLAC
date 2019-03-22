@@ -42,13 +42,13 @@ void PerformanceTests::run()
      */
     m_NTaylorDegree = Parameters::getTaylorPolDegree();
     if (Parallel::Communicator::getProcessRank() == 0) {
-        testExponentiationTime(Parameters::getNExpTests());
-        testExponentiationAccuracy();
-        testRandomGenerators(Parameters::getNRandTests());
+//        testExponentiationTime(Parameters::getNExpTests());
+//        testExponentiationAccuracy();
+//        testRandomGenerators(Parameters::getNRandTests());
         testMatrixMultiplication();
     }
     Parallel::Communicator::setBarrierActive();
-    testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
+//    testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
 }
 
 void PerformanceTests::testExponentiationTime(unsigned int NTests)
@@ -374,7 +374,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
 
 void PerformanceTests::testMatrixMultiplication()
 {
-    unsigned int NTests = 100000000;
+    unsigned int NTests = 10000000;
 
     printf("\n\nRunning timing of SU3 matrix multiplication for %d tests",NTests);
 
@@ -385,8 +385,6 @@ void PerformanceTests::testMatrixMultiplication()
     double timer = 0;
     steady_clock::time_point preUpdate;
 
-    V0 = m_SU3Generator->generateRandom();
-    V1 = m_SU3Generator->generateRandom();
 
     V0Orig = V0;
     V1Orig = V1;
@@ -394,8 +392,10 @@ void PerformanceTests::testMatrixMultiplication()
     preUpdate = steady_clock::now();
 
     for (unsigned int i = 0; i < NTests; ++i) {
-        V0 = V0Orig;
-        V1 = V1Orig;
+        V0 = m_SU3Generator->generateRandom();
+        V1 = m_SU3Generator->generateRandom();
+//        V0 = V0Orig;
+//        V1 = V1Orig;
         V2 = V1*V0;
     }
 

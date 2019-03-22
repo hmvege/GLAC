@@ -1,7 +1,5 @@
 /*!
- * \class
- *
- * \brief
+ * \brief file for placing new SU3 exponentation methods.
  *
  * \author Mathias M. Vege
  * \version 1.0

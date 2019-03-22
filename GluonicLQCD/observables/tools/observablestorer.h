@@ -1,3 +1,15 @@
+/*!
+ * \class ObservableStorer
+ *
+ * \brief A class for storing the observable data.
+ *
+ * Contains methods for printing statistics, writing to file, setting observables and reseting ect.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef OBSERVABLESTORER_H
 #define OBSERVABLESTORER_H
 

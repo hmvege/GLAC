@@ -1,3 +1,11 @@
+/*!
+ * \brief Header including all of the available observables.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef OBSERVABLES_H
 #define OBSERVABLES_H
 

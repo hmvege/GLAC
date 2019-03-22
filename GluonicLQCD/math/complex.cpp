@@ -58,6 +58,10 @@ double complex::normSquared()
     return z[0]*z[0] + z[1]*z[1];
 }
 
+/*!
+ * \brief complex::conjugate
+ * \return the complex conjugate of itself.
+ */
 complex complex::conjugate()
 {
     /*
@@ -67,6 +71,10 @@ complex complex::conjugate()
     return *this;
 }
 
+/*!
+ * \brief complex::c
+ * \return a copy of the complex conjugate of itself.
+ */
 complex complex::c()
 {
     /*

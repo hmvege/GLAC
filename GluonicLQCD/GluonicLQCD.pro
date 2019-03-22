@@ -17,7 +17,6 @@ SOURCES += main.cpp \
     observables/mastersamplertopcxyz.cpp \
     observables/latticeactionchargedensity.cpp \
     observables/supersampler.cpp \
-    math/links.cpp \
     math/complex.cpp \
     math/matrices/su2.cpp \
     math/matrices/su3.cpp \
@@ -58,7 +57,6 @@ HEADERS += \
     observables/latticeactionchargedensity.h \
     observables/supersampler.h \
     math/functions.h \
-    math/links.h \
     math/complex.h \
     math/matrices/su2.h \
     math/matrices/su3.h \

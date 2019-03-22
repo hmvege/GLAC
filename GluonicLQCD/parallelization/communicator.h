@@ -1,3 +1,13 @@
+/*!
+ * \class Communicator
+ *
+ * \brief Communicator holds methods for performing single link communication, which is need in the Action.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef COMMUNICATOR_H
 #define COMMUNICATOR_H
 

@@ -1,7 +1,9 @@
 /*!
- * \class
+ * \class SU3MatrixGenerator
  *
- * \brief
+ * \brief Class for generating random SU3 matrices.
+ *
+ * Consists of two methods, one that generates fully random SU3 matrices, and one that generates matrices close to unity(RST method).
  *
  * \author Mathias M. Vege
  * \version 1.0
@@ -50,6 +52,7 @@ private:
 
     // Pauli matrices
     SU2 sigma[3];
+
 public:
     SU3MatrixGenerator();
     ~SU3MatrixGenerator();
@@ -57,11 +60,34 @@ public:
     SU3 generateRST();
     SU2 generateSU2();
 
-    // Testers
+    /*!
+     * \brief testRSTMultiplication wrapper for testing the RSTMatrixMultiplication method.
+     *
+     * Using a wrapper since it is an inline function intended for use only in the SU3 matrix generator.
+     *
+     * \param r SU2 matrix.
+     * \param s SU2 matrix.
+     * \param t SU2 matrix.
+     * \return SU3 matrix.
+     */
     SU3 testRSTMultiplication(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplication(r,s,t); }
+    /*!
+     * \brief testRSTMultiplicationInverse wrapper for testing the RSTMatrixMultiplicationInverse method.
+     *
+     * Using a wrapper since it is an inline function intended for use only in the SU3 matrix generator.
+     *
+     * \param r SU2 matrix.
+     * \param s SU2 matrix.
+     * \param t SU2 matrix.
+     * \return SU3 matrix.
+     */
     SU3 testRSTMultiplicationInverse(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplicationInverse(r,s,t); }
 };
 
+/*!
+ * \brief SU3MatrixGenerator::generateRandom generates a fully random SU3 matrix.
+ * \return a random SU3 matrix.
+ */
 inline SU3 SU3MatrixGenerator::generateRandom()
 {
     /*
@@ -130,6 +156,10 @@ inline SU3 SU3MatrixGenerator::generateRandom()
     return H;
 }
 
+/*!
+ * \brief SU3MatrixGenerator::generateRST generates a SU3 matrix close to unity.
+ * \return a SU3 matrix
+ */
 inline SU3 SU3MatrixGenerator::generateRST()
 {
     /*
@@ -158,6 +188,10 @@ inline SU3 SU3MatrixGenerator::generateRST()
     }
 }
 
+/*!
+ * \brief SU3MatrixGenerator::generateSU2 generates a random SU2 matrix close to unity.
+ * \return a SU2 matrix
+ */
 inline SU2 SU3MatrixGenerator::generateSU2()
 {
     U.zeros();

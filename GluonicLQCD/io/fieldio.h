@@ -12,7 +12,7 @@
 #define FIELDIO_H
 
 #include <string>
-#include "math/links.h"
+#include "math/matrices/su3.h"
 #include "math/lattice.h"
 
 namespace IO {

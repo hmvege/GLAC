@@ -1,5 +1,4 @@
 #include "plaquette.h"
-#include "math/links.h"
 #include "math/functions.h"
 #include "parallelization/parallel.h"
 #include "config/parameters.h"

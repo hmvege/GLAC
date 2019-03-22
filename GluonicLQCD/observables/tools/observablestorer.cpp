@@ -5,6 +5,12 @@
 #include <cmath>
 #include <mpi.h>
 
+/*!
+ * \brief ObservableStorer::ObservableStorer
+ * \param NSize the number of observables to allow storage for.
+ *
+ * Stores two arrays, one for observables, and one for observables squared.
+ */
 ObservableStorer::ObservableStorer(unsigned long int NSize)
 {
     /*
@@ -24,6 +30,11 @@ ObservableStorer::~ObservableStorer()
 {
 }
 
+/*!
+ * \brief ObservableStorer::gatherResults
+ *
+ * Performs a MPI reduce between all the data gathered and, if set - divides by the number of processors.
+ */
 void ObservableStorer::gatherResults()
 {
     /*
@@ -58,6 +69,11 @@ void ObservableStorer::gatherResults()
     }
 }
 
+/*!
+ * \brief ObservableStorer::runStatistics
+ *
+ * Performs simple statistics such as mean, variance and standard deviation.
+ */
 void ObservableStorer::runStatistics()
 {
     /*
@@ -95,6 +111,12 @@ void ObservableStorer::printStatistics()
     }
 }
 
+/*!
+ * \brief ObservableStorer::writeObservableToFile
+ * \param acceptanceRatio from the Metropolis algorithm
+ *
+ * Writes to file using the IO::writeObservablesToFile method.
+ */
 void ObservableStorer::writeObservableToFile(double acceptanceRatio)
 {
     /*
@@ -104,14 +126,23 @@ void ObservableStorer::writeObservableToFile(double acceptanceRatio)
                                m_stdObservable, m_observables, m_NObs, m_observableName);
 }
 
+/*!
+ * \brief ObservableStorer::writeFlowObservableToFile
+ * \param configNumber configuration number
+ *
+ * Writes to file using the IO::writeFlowObservableToFile method.
+ */
 void ObservableStorer::writeFlowObservableToFile(unsigned long int configNumber)
 {
     /*
      * Writes a flow observable to file
      */
-    IO::writeFlowObservableToFile(m_observables,m_observableName,configNumber);
+    IO::writeFlowObservableToFile(m_observables, m_observableName, configNumber);
 }
 
+/*!
+ * \brief ObservableStorer::reset set all the members for observable storage to zero.
+ */
 void ObservableStorer::reset()
 {
     /*

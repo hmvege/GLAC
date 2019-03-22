@@ -1,7 +1,5 @@
 /*!
- * \class
- *
- * \brief
+ * \brief Container for lattice relevant math. Including this, and all necessary math for performing lattice operations should be included.
  *
  * \author Mathias M. Vege
  * \version 1.0
@@ -16,7 +14,6 @@
 #include "math/matrices/su3.h"
 #include "math/matrices/su2.h"
 #include "math/complex.h"
-#include "math/links.h"
 #include "math/functions.h"
 
 #endif // LATTICEMATH_H

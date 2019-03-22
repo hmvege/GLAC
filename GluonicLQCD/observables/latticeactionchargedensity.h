@@ -1,3 +1,23 @@
+/*!
+ * \class LatticeActionChargeDensity
+ *
+ * \brief Method for calculating and storing the topological charge and energy density at every point of the lattice.
+ *
+ * The energy is given by,
+ * \f[
+ *      E(n) = -\frac{1}{64} \sum_{\mu<\nu} \left(\tilde{C}_{\mu\nu}(n)\right)^2,
+ * \f]
+ * and the topological charge is given by,
+ * \f[
+ *      q(n) = \frac{1}{32\pi^2} \epsilon_{\mu\nu\rho\sigma} \tr\left[F_{\mu\nu}(n)F_{\rho\sigma}(n)\right].
+ * \f]
+ * where \f$n\f$ is the position in the lattice.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef LATTICEACTIONCHARGEDENSITY_H
 #define LATTICEACTIONCHARGEDENSITY_H
 

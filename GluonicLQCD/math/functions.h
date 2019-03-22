@@ -1,7 +1,5 @@
 /*!
- * \class
- *
- * \brief
+ * \brief File for holding various functions.
  *
  * \author Mathias M. Vege
  * \version 1.0
@@ -35,6 +33,12 @@ inline complex SU3Determinant(SU3 H) {
                     + H[15]*H[4]*H[6] - H[15]*H[5]*H[7] - H[16]*H[2]*H[7] - H[16]*H[3]*H[6] - H[17]*H[2]*H[6] + H[17]*H[3]*H[7]);
 }
 
+/*!
+ * \brief traceRealMultiplication
+ * \param A
+ * \param B
+ * \return the real trace of the product of the multiplication of A and B.
+ */
 inline double traceRealMultiplication(SU3 A, SU3 B) {
     /*
      * For two regular non-sparse trace multiplications taking only real components.
@@ -44,6 +48,12 @@ inline double traceRealMultiplication(SU3 A, SU3 B) {
             A[12]*B[4] - A[13]*B[5] + A[14]*B[10] - A[15]*B[11] + A[16]*B[16] - A[17]*B[17]);
 }
 
+/*!
+ * \brief traceImagMultiplication
+ * \param A
+ * \param B
+ * \return the imaginary trace of the product of the multiplication of A and B.
+ */
 inline double traceImagMultiplication(SU3 A, SU3 B) {
     /*
      * For two regular non-sparse trace multiplications taking only imaginary components.
@@ -52,20 +62,6 @@ inline double traceImagMultiplication(SU3 A, SU3 B) {
             A[6]*B[3] + A[7]*B[2] + A[8]*B[9] + A[9]*B[8] + A[10]*B[15] + A[11]*B[14] +
             A[12]*B[5] + A[13]*B[4] + A[14]*B[11] + A[15]*B[10] + A[16]*B[17] + A[17]*B[16]);
 
-}
-
-inline double traceSparseRealMultiplication(SU3 A, SU3 B) {
-    /*
-     * When all imaginary elements are zero.
-     */
-    return (A[0]*B[0] + A[2]*B[6] + A[4]*B[12] + A[6]*B[2] + A[8]*B[8] + A[10]*B[14] + A[12]*B[4] + A[14]*B[10] + A[16]*B[16]);
-}
-
-inline double traceSparseImagMultiplication(SU3 A, SU3 B) {
-    /*
-     * When all real elements are zero.
-     */
-    return -(A[1]*B[1] + A[3]*B[7] + A[5]*B[13] + A[7]*B[3] + A[9]*B[9] + A[11]*B[15] + A[13]*B[5] + A[15]*B[11] + A[17]*B[17]);
 }
 
 #endif // FUNCTIONS_H

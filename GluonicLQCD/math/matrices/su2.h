@@ -129,10 +129,8 @@ inline SU2 &SU2::operator*=(SU2 B)
     temp[6] = mat[4]*B.mat[2] - mat[5]*B.mat[3] + mat[6]*B.mat[6] - mat[7]*B.mat[7];
     temp[7] = mat[4]*B.mat[3] + mat[5]*B.mat[2] + mat[6]*B.mat[7] + mat[7]*B.mat[6];
 
-    for (int i = 0; i < 8; i++)
-    {
-        mat[i] = temp[i];
-    }
+    std::memcpy(mat, temp, sizeof(double)*8);
+
     return *this;
 }
 
@@ -151,7 +149,7 @@ inline SU2 &SU2::operator*=(double b)
 
 /*!
  * \brief SU2::inv
- * \return the inverse of itself.
+ * \return a copy of the inverse of itself.
  */
 inline SU2 SU2::inv()
 {

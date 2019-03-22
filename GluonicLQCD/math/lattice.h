@@ -1,7 +1,9 @@
 /*!
- * \class
+ * \class Lattice
  *
- * \brief
+ * \brief A method for holding a lattice of type T.
+ *
+ * The lattice class is implemented such that is uses move semantics, i.e. rule of 5.
  *
  * \author Mathias M. Vege
  * \version 1.0
@@ -36,6 +38,10 @@ public:
     ~Lattice() {}
 
     // Copy constructor
+    /*!
+     * \brief Lattice copy constructor
+     * \param other
+     */
     Lattice(const Lattice<T>& other) :
         m_dim(other.m_dim),
         m_latticeSize(other.m_latticeSize)
@@ -44,6 +50,10 @@ public:
     }
 
     // Move constructor
+    /*!
+     * \brief Lattice move constructor
+     * \param other
+     */
     Lattice(Lattice<T> && other) noexcept :
         m_sites(std::move(other.m_sites)),
         m_dim(other.m_dim),
@@ -52,6 +62,11 @@ public:
     }
 
     // Copy assignement operator
+    /*!
+     * \brief operator = Copy assignement operator
+     * \param other
+     * \return
+     */
     Lattice &operator =(const Lattice& other) {
         Lattice tmp(other);
         *this = std::move(tmp);
@@ -59,6 +74,11 @@ public:
     }
 
     // Move assignement operator
+    /*!
+     * \brief operator = Move assignement operator
+     * \param other
+     * \return
+     */
     Lattice &operator= (Lattice<T>&& other) noexcept {
         m_latticeSize = other.m_latticeSize;
         m_dim  = other.m_dim;
@@ -66,11 +86,28 @@ public:
         return *this;
     }
 
+    /*!
+     * \brief allocate method for allocating memory.
+     * \param dim
+     */
     void allocate(std::vector<unsigned int> dim);
 
     // Overloading lattice position getter
-//    T &operator[](unsigned int i) { return m_sites[i]; }
+    /*!
+     * \brief operator [] access operator that has no boundary checking.
+     * \param i
+     * \return
+     */
     T &operator[](unsigned long i) {
+        return m_sites[i];
+    }
+
+    /*!
+     * \brief operator () access operator that has boundary checking.
+     * \param i
+     * \return
+     */
+    T &operator()(unsigned long i) {
         if (i >= m_latticeSize) {
             printf("OUT OF BUNDS WITH INDEX %lu of %lu", i, m_latticeSize);
             exit(1);
@@ -94,8 +131,19 @@ public:
     Lattice<T> &operator*=(complex B);
     Lattice<T> &operator/=(complex B);
     // Lattice value setters
+    /*!
+     * \brief identity method for setting the SU3 matrices of the lattice to identity.
+     */
     void identity();
+    /*!
+     * \brief zeros sets all of the SU3 elements in the lattice to zero.
+     */
     void zeros();
+    /*!
+     * \brief copy method for copying content of another lattice B onto itself.
+     * \param B
+     * \return itself as copied from B.
+     */
     Lattice<T> copy(Lattice<T> B);
 };
 
@@ -444,10 +492,10 @@ inline std::vector<double> sumSpatial(Lattice<double> L)
     std::vector<double> latticeSpatialSum(L.m_dim[3], 0);
 
     // Sums the xyz directions into the time axis
-    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
-        for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
+    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+        for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
                     latticeSpatialSum[it] += L[Parallel::Index::getIndex(ix,iy,iz,it)];
                 }
             }
@@ -467,10 +515,10 @@ inline Lattice<double> realTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
     latticeSum.allocate(L1.m_dim);
     latticeSum.zeros();
 
-    for (unsigned long int ix = 0; ix < L1.m_dim[0]; ix++) {
-        for (unsigned long int iy = 0; iy < L1.m_dim[1]; iy++) {
-            for (unsigned long int iz = 0; iz < L1.m_dim[2]; iz++) {
-                for (unsigned long int it = 0; it < L1.m_dim[3]; it++) {
+    for (unsigned int ix = 0; ix < L1.m_dim[0]; ix++) {
+        for (unsigned int iy = 0; iy < L1.m_dim[1]; iy++) {
+            for (unsigned int iz = 0; iz < L1.m_dim[2]; iz++) {
+                for (unsigned int it = 0; it < L1.m_dim[3]; it++) {
                     site = Parallel::Index::getIndex(ix,iy,iz,it);
                     latticeSum[site] += traceRealMultiplication(L1[site],L2[site]);
                 }
@@ -492,10 +540,10 @@ inline Lattice<double> imagTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
     latticeSum.allocate(L1.m_dim);
     latticeSum.zeros();
 
-    for (unsigned long int ix = 0; ix < L1.m_dim[0]; ix++) {
-        for (unsigned long int iy = 0; iy < L1.m_dim[1]; iy++) {
-            for (unsigned long int iz = 0; iz < L1.m_dim[2]; iz++) {
-                for (unsigned long int it = 0; it < L1.m_dim[3]; it++) {
+    for (unsigned int ix = 0; ix < L1.m_dim[0]; ix++) {
+        for (unsigned int iy = 0; iy < L1.m_dim[1]; iy++) {
+            for (unsigned int iz = 0; iz < L1.m_dim[2]; iz++) {
+                for (unsigned int it = 0; it < L1.m_dim[3]; it++) {
                     site = Parallel::Index::getIndex(ix,iy,iz,it);
                     latticeSum[site] += traceImagMultiplication(L1[site],L2[site]);
                 }
@@ -655,11 +703,28 @@ inline Lattice<SU3> makeHermitian(Lattice<SU3> &&B)
 //////// Communication functions /////////
 //////////////////////////////////////////
 // Enumerator container for direction
+/*!
+ * \enum DIR
+ *
+ * \brief The DIR enum specifies if we are to move BACKWARDS or FORWARDS in the lattice shifts.
+ */
 enum DIR {
     BACKWARDS = 0,
     FORWARDS = 1
 };
 
+/*!
+ * \brief shift copies the lattice L and shifts it in a specified lorentzVector direction DIR.
+ *
+ * The shift shares a face of the lattice with a neighbouring processsors, and retrieves a corresponding face from a neighboring processor, essentialle shifting the entire lattice one \f$\hat{\mu}\f$.
+ *
+ * \sa Chapter 5 in https://github.com/hmvege/LQCDMasterThesis contains a detailed description of the sharing process.
+ *
+ * \param L is the lattiece we are to shift
+ * \param direction we are shifting in. Either FORWARDS or BACKWARDS.
+ * \param lorentzVector the direction in the Lorentz index \f$\hat{\mu}\f$ we are shifting in. Either 0, 1, 2 or 3.
+ * \return a copy of the lattice L that contains the face of a neighboring lattice.
+ */
 inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVector)
 {
     /*
@@ -683,9 +748,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
              * Maximum use of 4 volumes, one for each direction(assuming that spatial directionality may vary) --> 0.12 MB in total for this part
              */
             // Populates package to send
-            for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) { // Ensure cube indexes match before and after in order to map correctly!!
+            for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) { // Ensure cube indexes match before and after in order to map correctly!!
                         sendCube[Parallel::Index::cubeIndex(iy,iz,it,L.m_dim[1],L.m_dim[2])] = L.m_sites[Parallel::Index::getIndex(L.m_dim[0]-1,iy,iz,it)];
                     }
                 }
@@ -694,10 +759,10 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             MPI_Isend(&sendCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(1),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
             MPI_Irecv(&recvCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(0),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
-            for (unsigned long int ix = 1; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                        for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 1; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix-1,iy,iz,it)];
                         }
                     }
@@ -707,9 +772,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
             MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
             // Repopulates the lattice with missing cube
-            for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                        _L.m_sites[Parallel::Index::getIndex(0,iy,iz,it)] = recvCube[Parallel::Index::cubeIndex(iy,iz,it,L.m_dim[1],L.m_dim[2])];
                     }
                 }
@@ -720,9 +785,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             sendCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
             recvCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
             // Populates package to send
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                         sendCube[Parallel::Index::cubeIndex(ix,iz,it,L.m_dim[0],L.m_dim[2])] = L.m_sites[Parallel::Index::getIndex(ix,L.m_dim[1]-1,iz,it)];
                     }
                 }
@@ -730,10 +795,10 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(3),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
             MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(2),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 1; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                        for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 1; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                             _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy-1,iz,it)];
                         }
                     }
@@ -742,9 +807,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             // Ensures all results have been sent and received
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
             MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                         _L.m_sites[Parallel::Index::getIndex(ix,0,iz,it)] = recvCube[Parallel::Index::cubeIndex(ix,iz,it,L.m_dim[0],L.m_dim[2])];
                     }
                 }
@@ -755,9 +820,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
             recvCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
             // Populates package to send
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                         sendCube[Parallel::Index::cubeIndex(ix,iy,it,L.m_dim[0],L.m_dim[1])] = L.m_sites[Parallel::Index::getIndex(ix,iy,L.m_dim[2]-1,it)];
                     }
                 }
@@ -765,10 +830,10 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(5),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
             MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(4),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 1; iz < L.m_dim[2]; iz++) {
-                        for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 1; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                             _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz-1,it)];
                         }
                     }
@@ -777,9 +842,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             // Ensures all results have been sent and received
             MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                         _L.m_sites[Parallel::Index::getIndex(ix,iy,0,it)] = recvCube[Parallel::Index::cubeIndex(ix,iy,it,L.m_dim[0],L.m_dim[1])];
                     }
                 }
@@ -790,9 +855,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
             recvCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
             // Populates package to send
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
                         sendCube[Parallel::Index::cubeIndex(ix,iy,iz,L.m_dim[0],L.m_dim[1])] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,L.m_dim[3]-1)];
                     }
                 }
@@ -800,10 +865,10 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(7),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
             MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(6),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                        for (unsigned long int it = 1; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 1; it < L.m_dim[3]; it++) {
                             _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it-1)];
                         }
                     }
@@ -812,9 +877,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             // Ensures all results have been sent and received
             MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
                        _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,0)] = recvCube[Parallel::Index::cubeIndex(ix,iy,iz,L.m_dim[0],L.m_dim[1])];
                     }
                 }
@@ -830,9 +895,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             sendCube.resize(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]);
             recvCube.resize(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]);
             // Populates package to send
-            for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                         sendCube[Parallel::Index::cubeIndex(iy,iz,it,L.m_dim[1],L.m_dim[2])] = L.m_sites[Parallel::Index::getIndex(0,iy,iz,it)];
                     }
                 }
@@ -841,10 +906,10 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             MPI_Isend(&sendCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(0),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
             MPI_Irecv(&recvCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(1),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
-            for (unsigned long int ix = 0; ix < L.m_dim[0] - 1; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                        for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0] - 1; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix+1,iy,iz,it)];
                         }
                     }
@@ -853,9 +918,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             // Ensures all results have been sent and received, then populates face cube with remaining results.
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
             MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
-            for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                        _L.m_sites[Parallel::Index::getIndex(L.m_dim[0]-1,iy,iz,it)] = recvCube[Parallel::Index::cubeIndex(iy,iz,it,L.m_dim[1],L.m_dim[2])];
                     }
                 }
@@ -866,9 +931,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             sendCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
             recvCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
             // Populates package to send
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                         sendCube[Parallel::Index::cubeIndex(ix,iz,it,L.m_dim[0],L.m_dim[2])] = L.m_sites[Parallel::Index::getIndex(ix,0,iz,it)];
                     }
                 }
@@ -876,10 +941,10 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(2),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
             MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(3),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1] - 1; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                        for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1] - 1; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy+1,iz,it)];
                         }
                     }
@@ -888,9 +953,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             // Ensures all results have been sent and received
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
             MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                        _L.m_sites[Parallel::Index::getIndex(ix,L.m_dim[1]-1,iz,it)] = recvCube[Parallel::Index::cubeIndex(ix,iz,it,L.m_dim[0],L.m_dim[2])];
                     }
                 }
@@ -901,9 +966,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
             recvCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
             // Populates package to send
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                         sendCube[Parallel::Index::cubeIndex(ix,iy,it,L.m_dim[0],L.m_dim[1])] = L.m_sites[Parallel::Index::getIndex(ix,iy,0,it)];
                     }
                 }
@@ -911,10 +976,10 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(4),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
             MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(5),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2] - 1; iz++) {
-                        for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2] - 1; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                             _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz+1,it)];
                         }
                     }
@@ -923,9 +988,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             // Ensures all results have been sent and received
             MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int it = 0; it < L.m_dim[3]; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
                         _L.m_sites[Parallel::Index::getIndex(ix,iy,L.m_dim[2]-1,it)] = recvCube[Parallel::Index::cubeIndex(ix,iy,it,L.m_dim[0],L.m_dim[1])];
                     }
                 }
@@ -936,9 +1001,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
             recvCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
             // Populates package to send
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
                         sendCube[Parallel::Index::cubeIndex(ix,iy,iz,L.m_dim[0],L.m_dim[1])] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,0)];
                     }
                 }
@@ -946,10 +1011,10 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(6),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
             MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(7),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
             // Populates shifted lattice by elements not required to share
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
-                        for (unsigned long int it = 0; it < L.m_dim[3] - 1; it++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3] - 1; it++) {
                             _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it+1)];
                         }
                     }
@@ -958,9 +1023,9 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
             // Ensures all results have been sent and received
             MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
             MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
-            for (unsigned long int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned long int iy = 0; iy < L.m_dim[1]; iy++) {
-                    for (unsigned long int iz = 0; iz < L.m_dim[2]; iz++) {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
                         _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,L.m_dim[3]-1)] = recvCube[Parallel::Index::cubeIndex(ix,iy,iz,L.m_dim[0],L.m_dim[1])];
                     }
                 }

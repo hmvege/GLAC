@@ -21,36 +21,8 @@ public:
     // Static matrix allocation
     double mat[18];
 
-    // Default contructor
+    // Default constructor
     SU3() {}
-
-
-//    // Copy constructor
-//    SU3(const SU3& other)
-//    {
-//        std::copy(mat, mat+18, other.mat);
-////        mat = other.mat;
-//    }
-
-//    // Move constructor
-//    SU3(SU3 && other) noexcept
-//    {
-////        mat = std::move(other.mat);
-//        std::swap(mat, other.mat);
-//    }
-
-//    // Copy assignement operator
-//    SU3 &operator =(const SU3& other) {
-//        SU3 tmp(other);
-//        *this = std::move(tmp);
-//        return *this;
-//    }
-
-//    // Move assignement operator
-//    SU3 &operator= (SU3 && other) noexcept {
-//        std::swap(mat, other.mat);
-//        return *this;
-//    }
 
     // Old copy assignement operator
     SU3 &operator =(const SU3& other)
@@ -241,8 +213,8 @@ inline SU3 &SU3::operator*=(SU3 B)
     // Swaps the memory content.
 //    std::swap(mat, temp);
 //    mat = std::move(temp);
-//    std::memmove(mat, temp, sizeof(double)*18);
-    std::memcpy(mat, temp, sizeof(double)*18);
+//    std::memmove(mat, temp, 144); // sizeof(double)*144
+    std::memcpy(mat, temp, 144); // sizeof(double)*144
 
     return *this;
 }
@@ -329,7 +301,7 @@ inline SU3 &SU3::operator =(const double& other)
 ///////////////////////////////
 /*!
  * \brief SU3::inv performs a matrix inversion.
- * \return the inverse of itself.
+ * \return a copy of the inverse of itself.
  */
 inline SU3 SU3::inv()
 {

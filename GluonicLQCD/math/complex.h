@@ -1,7 +1,7 @@
 /*!
- * \class
+ * \class complex
  *
- * \brief
+ * \brief A complex number class, consisting of t
  *
  * \author Mathias M. Vege
  * \version 1.0
@@ -23,7 +23,7 @@ public:
     complex (const complex &b); // Copy constructor
 
     double z[2];
-    double re() const { return z[0]; } // But why constant?
+    double re() const { return z[0]; }
     double im() const { return z[1]; }
     void setRe(double re) { z[0] = re; }
     void setIm(double im) { z[1] = im; }

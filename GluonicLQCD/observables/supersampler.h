@@ -1,3 +1,34 @@
+/*!
+ * \class SuperSampler
+ *
+ * \brief Observable for calculating the Weinberg operator, plaquette, energy and euclidean time topological charge.
+ *
+ * Plaqeutte definition:
+ * \f[
+ *      P = \frac{1}{16|\Lambda|} \sum_{n\in\Lambda} \sum_{\mu < \nu} \Re \tr P_{\mu\nu}.
+ * \f]
+ * where
+ * \f[
+ *      P_{\mu\nu}=U_\mu(n) U_{\nu}(n+\hat{\mu}) U_{\mu}(n+\hat{\nu})^\dagger U_{\nu} (n)^\dagger
+ * \f]
+ * is the plquette.
+ * Energy definition:
+ * \f[
+ *      E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda} \sum_{\mu<\nu} \left(\tilde{C}_{\mu\nu}(n)\right)^2.
+ * \f]
+ * Topological charge definition:
+ * \f[
+ *      q(n_e) = \frac{1}{32\pi^2} \sum_{n\in N^3} \epsilon_{\mu\nu\rho\sigma} \tr\left[F_{\mu\nu}(n)F_{\rho\sigma}(n)\right],
+ * \f]
+ * where \f$n_e\f$ is the position in the lattice in Euclidean time. \f$F_{\nu\mu}\f$ is the clover.
+ *
+ * See e.g. https://arxiv.org/abs/1711.04730 for a definition or the Weinberg operator.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef SUPERSAMPLER_H
 #define SUPERSAMPLER_H
 

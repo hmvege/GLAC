@@ -1,3 +1,15 @@
+/*!
+ * \class Correlator
+ *
+ * \brief base class for observables.
+ *
+ * \todo Rename to observable, as correlator is a bit misleading.
+ *
+ * \author Mathias M. Vege
+ * \version 1.0
+ * \date 2017-2019
+ * \copyright MIT Licence
+ */
 #ifndef CORRELATOR_H
 #define CORRELATOR_H
 
@@ -52,7 +64,6 @@ public:
 
     // Setters
     virtual void reset();
-    virtual void setObservable(unsigned int iObs, double obs);
     virtual void initializeObservableStorer(bool storeFlowObservable);
 };
 
