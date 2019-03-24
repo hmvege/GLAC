@@ -1,7 +1,7 @@
-<map id="GluonicLQCD/math/latticemath.h" name="GluonicLQCD/math/latticemath.h">
-<area shape="rect" id="node1" title=" " alt="" coords="91,5,307,31"/>
-<area shape="rect" id="node2" href="$testsuite_8h.html" title=" " alt="" coords="99,79,299,104"/>
-<area shape="rect" id="node3" href="$test_8h.html" title=" " alt="" coords="5,152,177,177"/>
-<area shape="rect" id="node5" href="$testsuite_8cpp.html" title=" " alt="" coords="202,152,416,177"/>
-<area shape="rect" id="node4" href="$main_8cpp.html" title=" " alt="" coords="11,225,172,251"/>
+<map id="GLAC/math/latticemath.h" name="GLAC/math/latticemath.h">
+<area shape="rect" id="node1" title=" " alt="" coords="68,5,239,31"/>
+<area shape="rect" id="node2" href="$testsuite_8h.html" title=" " alt="" coords="77,79,231,104"/>
+<area shape="rect" id="node3" href="$test_8h.html" title=" " alt="" coords="5,152,131,177"/>
+<area shape="rect" id="node5" href="$testsuite_8cpp.html" title=" " alt="" coords="155,152,323,177"/>
+<area shape="rect" id="node4" href="$main_8cpp.html" title=" " alt="" coords="11,225,126,251"/>
 </map>

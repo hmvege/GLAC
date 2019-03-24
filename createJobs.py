@@ -687,7 +687,7 @@ def main(args):
 
     # Default config
     config_default = {
-        "bin_fn"                    : "build/GluonicLQCD",
+        "bin_fn"                    : "build/GLAC",
         "runName"                   : "defaultRun",
         "N"                         : 8, # Small lattice as default
         "NT"                        : 16,

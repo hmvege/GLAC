@@ -5,7 +5,7 @@
  *
  * Plaqeutte definition:
  * \f[
- *      P = \frac{1}{16|\Lambda|} \sum_{n\in\Lambda} \sum_{\mu < \nu} \Re \tr P_{\mu\nu},
+ *      P = \frac{1}{16|\Lambda|} \sum_{n\in\Lambda} \sum_{\mu < \nu} \Re \mathrm{tr} P_{\mu\nu},
  * \f]
  * where
  * \f[

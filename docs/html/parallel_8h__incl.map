@@ -1,5 +1,5 @@
-<map id="GluonicLQCD/parallelization/parallel.h" name="GluonicLQCD/parallelization/parallel.h">
-<area shape="rect" id="node1" title=" " alt="" coords="83,5,272,44"/>
+<map id="GLAC/parallelization/parallel.h" name="GLAC/parallelization/parallel.h">
+<area shape="rect" id="node1" title=" " alt="" coords="106,5,249,44"/>
 <area shape="rect" id="node2" href="$communicator_8h.html" title=" " alt="" coords="25,92,140,117"/>
 <area shape="rect" id="node6" href="$index_8h.html" title=" " alt="" coords="27,239,176,264"/>
 <area shape="rect" id="node9" href="$parallelparameters_8h.html" title=" " alt="" coords="619,239,847,264"/>

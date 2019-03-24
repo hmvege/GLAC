@@ -3,7 +3,7 @@
  *
  * \brief Solely calculates the topological charge as given by,
  * \f[
- *      q(n_e) = \frac{1}{32\pi^2} \sum_{n\in N^3} \epsilon_{\mu\nu\rho\sigma} \tr\left[F_{\mu\nu}(n)F_{\rho\sigma}(n)\right],
+ *      q(n_e) = \frac{1}{32\pi^2} \sum_{n \in N^3} \epsilon_{\mu\nu\rho\sigma} \mathrm{tr}\big[F_{\mu\nu}(n)F_{\rho\sigma}(n)\big],
  * \f]
  * where \f$n_e\f$ is the position in the lattice in Euclidean time. \f$F_{\nu\mu}\f$ is the clover.
  *

@@ -1,7 +1,0 @@
-<map id="Parallel::Neighbours::getNeighbours" name="Parallel::Neighbours::getNeighbours">
-<area shape="rect" id="node1" title=" " alt="" coords="558,59,699,97"/>
-<area shape="rect" id="node2" href="$class_parallel_1_1_communicator.html#a27862560cf6c7b8ccf650a422e014776" title=" " alt="" coords="282,27,483,65"/>
-<area shape="rect" id="node5" href="$class_parallel_1_1_communicator.html#a1c598fae96e05e3b36db368e60453d63" title=" " alt="" coords="256,89,510,128"/>
-<area shape="rect" id="node3" href="$class_luscher_action.html#a42285b6e3015935588e1fab6b90c1a11" title="computeStaple computes the staple at given poisition." alt="" coords="5,5,208,31"/>
-<area shape="rect" id="node4" href="$class_wilson_gauge_action.html#af1f6ba42fcc2b923dc3b37bf150bfae9" title="computeStaple computes the staple at given poisition." alt="" coords="34,55,179,93"/>
-</map>

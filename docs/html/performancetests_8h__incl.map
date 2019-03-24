@@ -1,9 +1,9 @@
-<map id="GluonicLQCD/tests/performancetests.h" name="GluonicLQCD/tests/performancetests.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,259,31"/>
-<area shape="rect" id="node2" href="$su3matrixgenerator_8h.html" title=" " alt="" coords="15,79,249,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="15,152,81,177"/>
-<area shape="rect" id="node4" href="$su3_8h.html" title=" " alt="" coords="105,152,159,177"/>
-<area shape="rect" id="node7" href="$su2_8h.html" title=" " alt="" coords="182,152,236,177"/>
-<area shape="rect" id="node5" href="$complex_8h.html" title=" " alt="" coords="113,225,228,251"/>
-<area shape="rect" id="node6" title=" " alt="" coords="134,299,207,324"/>
+<map id="GLAC/tests/performancetests.h" name="GLAC/tests/performancetests.h">
+<area shape="rect" id="node1" title=" " alt="" coords="19,5,226,31"/>
+<area shape="rect" id="node2" href="$su3matrixgenerator_8h.html" title=" " alt="" coords="6,79,240,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,152,72,177"/>
+<area shape="rect" id="node4" href="$su3_8h.html" title=" " alt="" coords="96,152,150,177"/>
+<area shape="rect" id="node7" href="$su2_8h.html" title=" " alt="" coords="173,152,227,177"/>
+<area shape="rect" id="node5" href="$complex_8h.html" title=" " alt="" coords="104,225,219,251"/>
+<area shape="rect" id="node6" title=" " alt="" coords="125,299,198,324"/>
 </map>

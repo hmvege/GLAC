@@ -88,3 +88,6 @@ workspace
 !analysis/statistics/tests/plaq_beta6_2_t10.dat
 !analysis/statistics/tests/topc_beta6_2_t10.dat
 temp_outputfolder/
+
+# Backup files
+*.bak

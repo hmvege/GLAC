@@ -9,7 +9,7 @@
  * \f]
  * and the topological charge is given by,
  * \f[
- *      q(n) = \frac{1}{32\pi^2} \epsilon_{\mu\nu\rho\sigma} \tr\left[F_{\mu\nu}(n)F_{\rho\sigma}(n)\right].
+ *      q(n) = \frac{1}{32\pi^2} \epsilon_{\mu\nu\rho\sigma} \mathrm{tr}\left[F_{\mu\nu}(n)F_{\rho\sigma}(n)\right].
  * \f]
  * where \f$n\f$ is the position in the lattice. \f$F_{\nu\mu}\f$ is the clover.
  *

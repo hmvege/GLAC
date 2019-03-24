@@ -1,6 +1,6 @@
-<map id="GluonicLQCD/config/sysprint.h" name="GluonicLQCD/config/sysprint.h">
-<area shape="rect" id="node1" title=" " alt="" coords="172,5,315,44"/>
-<area shape="rect" id="node2" href="$parameters_8cpp.html" title=" " alt="" coords="5,92,148,131"/>
-<area shape="rect" id="node3" href="$sysprint_8cpp.html" title=" " alt="" coords="172,92,315,131"/>
-<area shape="rect" id="node4" href="$system_8cpp.html" title=" " alt="" coords="339,99,513,124"/>
+<map id="GLAC/config/sysprint.h" name="GLAC/config/sysprint.h">
+<area shape="rect" id="node1" title=" " alt="" coords="230,5,387,31"/>
+<area shape="rect" id="node2" href="$parameters_8cpp.html" title=" " alt="" coords="5,79,199,104"/>
+<area shape="rect" id="node3" href="$sysprint_8cpp.html" title=" " alt="" coords="223,79,395,104"/>
+<area shape="rect" id="node4" href="$system_8cpp.html" title=" " alt="" coords="419,79,548,104"/>
 </map>

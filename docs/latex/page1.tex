@@ -1,0 +1,11 @@
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{python2 createJobs.py setup local 8 -N 16 -NT 32 -fobs topct -NFlows 1000 -NCfgs 100 -NTh 100000 -fEps 0.01 -b 6.0 -rn GLACTestRun}
+\end{DoxyCode}
+ This will generate a .json file called {\ttfamily config\+\_\+\+G\+L\+A\+C\+Test\+Run.\+json} located in a folder called {\ttfamily input}. The system will be of size $ 16^3 \times 32$, and have $\beta = 6.0$. It will run $N_\mathrm{th} = 10^5$ thermalization steps, generate $N_\mathrm{cfg} = 100$ configurations, and flow each of the \$ $N_\mathrm{flow} = 1000$ a steps with a step size of $\epsilon_\mathrm{flow} = 0.01$. The name of the run will be G\+L\+A\+C\+Test\+Run.
+
+Type 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{python2 createJobs.py -h}
+\end{DoxyCode}
+ in order to see what options are available. 
