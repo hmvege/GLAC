@@ -1,0 +1,34 @@
+\hypertarget{observablesio_8h}{}\section{G\+L\+A\+C/io/observablesio.h File Reference}
+\label{observablesio_8h}\index{GLAC/io/observablesio.h@{GLAC/io/observablesio.h}}
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+Include dependency graph for observablesio.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=207pt]{observablesio_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{observablesio_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespace_i_o}{IO}}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespace_i_o_ad8cf5aef8f60d10b80292b69a091d5ac}{I\+O\+::write\+Observables\+To\+File}} (double acceptance\+Rate, double averaged\+Observable, double variance\+Observable, double std\+Observable, std\+::vector$<$ double $>$ observables, unsigned int N\+Obs, std\+::string observable\+Name)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{namespace_i_o_ad8cf5aef8f60d10b80292b69a091d5ac}{I\+O\+::write\+Observables\+To\+File}} method for writing an observable to file, using .15 precision. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespace_i_o_a4f554804fd2ccd9c13c73777c5cbbf77}{I\+O\+::write\+Flow\+Observable\+To\+File}} (std\+::vector$<$ double $>$ observables, std\+::string observable\+Name, unsigned int config\+Number)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{namespace_i_o_a4f554804fd2ccd9c13c73777c5cbbf77}{I\+O\+::write\+Flow\+Observable\+To\+File}} method for writing a flow observable to file, using .15 precision. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespace_i_o_ad77b7dd770afc8e2eb433d6187ea3616}{I\+O\+::write\+Matrix\+To\+File}} (std\+::vector$<$ double $>$ observables, std\+::string observable\+Name, unsigned int config\+Number, unsigned int N)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{namespace_i_o_ad77b7dd770afc8e2eb433d6187ea3616}{I\+O\+::write\+Matrix\+To\+File}} writes out a matrix of observables to file, i.\+e. the topological charge in Euclidean time. Uses a .15 precision. \end{DoxyCompactList}\end{DoxyCompactItemize}

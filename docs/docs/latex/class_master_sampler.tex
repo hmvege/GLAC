@@ -1,0 +1,388 @@
+\hypertarget{class_master_sampler}{}\section{Master\+Sampler Class Reference}
+\label{class_master_sampler}\index{MasterSampler@{MasterSampler}}
+
+
+Observable for calculating the plaquette, topological charge and energy.  
+
+
+
+
+{\ttfamily \#include $<$mastersampler.\+h$>$}
+
+
+
+Inheritance diagram for Master\+Sampler\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=164pt]{class_master_sampler__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Master\+Sampler\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{class_master_sampler__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_master_sampler_ac5ee503e8391aca36f73872a45bb6bd9}{Master\+Sampler}} (bool flow)
+\item 
+\mbox{\hyperlink{class_master_sampler_a040e460a888f8dc066de84563f83caa6}{$\sim$\+Master\+Sampler}} ()
+\item 
+void \mbox{\hyperlink{class_master_sampler_ad3cc7e36498dbf4a39238de3ac59ae8b}{calculate}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int i\+Obs)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator\+::calculate}} calculates a observable. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_master_sampler_a88e2eec68ea6bd60cc3f375ac04a8ded}{initialize\+Observable\+Storer}} (bool store\+Flow\+Observable)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_ab99886c09dd27dfc8676d0032cecf9bc}{Correlator\+::initialize\+Observable\+Storer}} initializes \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_master_sampler_a638714c38e1a6252ab8b6be1fa224bd4}{write\+Observable\+To\+File}} (double acceptance\+Ratio)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a9e8d80e30e4fbe3b7fe57521538cb5ff}{Correlator\+::write\+Observable\+To\+File}} calls the \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}} for writing observable to file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_master_sampler_ad475928217ac61fae134128904aaa9f8}{write\+Flow\+Observables\+To\+File}} (unsigned int i\+Flow)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a168512b2ce182d9478db47f100125fa6}{Correlator\+::write\+Flow\+Observables\+To\+File}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_master_sampler_a275a032513db03c899056fd07d71cc89}{reset}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_aacca40262d2cd62f0a3964e832f948c1}{Correlator\+::reset}} resets \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_master_sampler_ab7913d0dbdea57af3f469a3cdd74f8fc}{run\+Statistics}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator\+::run\+Statistics}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_master_sampler_a51b207672764c100e1ae258fd2e33fcf}{print\+Header}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_ac7c5a07d7cbee97c417a1659b93083b2}{Correlator\+::print\+Header}} prints a the observable name for output in header. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_master_sampler_a41853c3e4ab52fca7d93cf80e8702b7a}{print\+Observable}} (unsigned int i\+Obs)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a15744ddb9f2b71fff34ac762d101df38}{Correlator\+::print\+Observable}} prints the observable for the output. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_master_sampler_a9accfc83c05d3013396355e40257a562}{print\+Statistics}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator\+::print\+Statistics}} prints statistics from \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. \end{DoxyCompactList}\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{class_master_sampler_a471dffa3f29c68b4152b195708a9a5ac}{get\+Observables\+Vector}} (unsigned int i\+Obs)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a7fb062b098beb078f3e546f4717b4941}{Correlator\+::get\+Observables\+Vector}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_master_sampler_a893be9ba7dca98cb8d9d3cb30e42fcc3}{copy\+Observable}} (unsigned int i\+Obs, std\+::vector$<$ double $>$ obs)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_ac780d8b180294ee4801ede6e6a13f7f4}{Correlator\+::copy\+Observable}} copies the observable if has already been calculated at zero flow time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Observable for calculating the plaquette, topological charge and energy. 
+
+Plaqeutte definition\+: \[ P = \frac{1}{16|\Lambda|} \sum_{n\in\Lambda} \sum_{\mu < \nu} \Re \mathrm{tr} P_{\mu\nu}, \] where \[ P_{\mu\nu}=U_\mu(n) U_{\nu}(n+\hat{\mu}) U_{\mu}(n+\hat{\nu})^\dagger U_{\nu} (n)^\dagger \] is the plquette. Energy definition\+: \[ E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda} \sum_{\mu<\nu} \left(\tilde{C}_{\mu\nu}(n)\right)^2. \] Topological charge definition\+: \[ Q = \frac{1}{32\pi^2} \sum_{n\in\Lambda} \epsilon_{\mu\nu\rho\sigma} \mathrm{tr}\left[F_{\mu\nu}(n)F_{\rho\sigma}(n)\right], \] where $n$ is the position in the lattice. $F_{\nu\mu}$ is the clover.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_master_sampler_ac5ee503e8391aca36f73872a45bb6bd9}\label{class_master_sampler_ac5ee503e8391aca36f73872a45bb6bd9}} 
+\index{MasterSampler@{MasterSampler}!MasterSampler@{MasterSampler}}
+\index{MasterSampler@{MasterSampler}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{MasterSampler()}{MasterSampler()}}
+{\footnotesize\ttfamily Master\+Sampler\+::\+Master\+Sampler (\begin{DoxyParamCaption}\item[{bool}]{flow }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_ac5ee503e8391aca36f73872a45bb6bd9_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_master_sampler_a040e460a888f8dc066de84563f83caa6}\label{class_master_sampler_a040e460a888f8dc066de84563f83caa6}} 
+\index{MasterSampler@{MasterSampler}!````~MasterSampler@{$\sim$MasterSampler}}
+\index{````~MasterSampler@{$\sim$MasterSampler}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{$\sim$MasterSampler()}{~MasterSampler()}}
+{\footnotesize\ttfamily Master\+Sampler\+::$\sim$\+Master\+Sampler (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_master_sampler_ad3cc7e36498dbf4a39238de3ac59ae8b}\label{class_master_sampler_ad3cc7e36498dbf4a39238de3ac59ae8b}} 
+\index{MasterSampler@{MasterSampler}!calculate@{calculate}}
+\index{calculate@{calculate}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{calculate()}{calculate()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::calculate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{unsigned int}]{i\+Obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator\+::calculate}} calculates a observable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & pointer to lattice of \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices \\
+\hline
+{\em i\+Obs} & number of the observable \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_ad3cc7e36498dbf4a39238de3ac59ae8b_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_master_sampler_a893be9ba7dca98cb8d9d3cb30e42fcc3}\label{class_master_sampler_a893be9ba7dca98cb8d9d3cb30e42fcc3}} 
+\index{MasterSampler@{MasterSampler}!copyObservable@{copyObservable}}
+\index{copyObservable@{copyObservable}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{copyObservable()}{copyObservable()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::copy\+Observable (\begin{DoxyParamCaption}\item[{unsigned int}]{i\+Obs,  }\item[{std\+::vector$<$ double $>$}]{obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_ac780d8b180294ee4801ede6e6a13f7f4}{Correlator\+::copy\+Observable}} copies the observable if has already been calculated at zero flow time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i\+Obs} & observable number. \\
+\hline
+{\em obs} & vector containing observable information. Is a vector in case it consists of multiple values(e.\+g. topc in Euclidean time). \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ac780d8b180294ee4801ede6e6a13f7f4}{Correlator}}.
+
+\mbox{\Hypertarget{class_master_sampler_a471dffa3f29c68b4152b195708a9a5ac}\label{class_master_sampler_a471dffa3f29c68b4152b195708a9a5ac}} 
+\index{MasterSampler@{MasterSampler}!getObservablesVector@{getObservablesVector}}
+\index{getObservablesVector@{getObservablesVector}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{getObservablesVector()}{getObservablesVector()}}
+{\footnotesize\ttfamily std\+::vector$<$ double $>$ Master\+Sampler\+::get\+Observables\+Vector (\begin{DoxyParamCaption}\item[{unsigned int}]{i\+Obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a7fb062b098beb078f3e546f4717b4941}{Correlator\+::get\+Observables\+Vector}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i\+Obs} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a vector containing the observables at given i\+Obs. 
+\end{DoxyReturn}
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a7fb062b098beb078f3e546f4717b4941}{Correlator}}.
+
+\mbox{\Hypertarget{class_master_sampler_a88e2eec68ea6bd60cc3f375ac04a8ded}\label{class_master_sampler_a88e2eec68ea6bd60cc3f375ac04a8ded}} 
+\index{MasterSampler@{MasterSampler}!initializeObservableStorer@{initializeObservableStorer}}
+\index{initializeObservableStorer@{initializeObservableStorer}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{initializeObservableStorer()}{initializeObservableStorer()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::initialize\+Observable\+Storer (\begin{DoxyParamCaption}\item[{bool}]{store\+Flow\+Observable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_ab99886c09dd27dfc8676d0032cecf9bc}{Correlator\+::initialize\+Observable\+Storer}} initializes \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em store\+Flow\+Observable} & \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ab99886c09dd27dfc8676d0032cecf9bc}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_a88e2eec68ea6bd60cc3f375ac04a8ded_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_a88e2eec68ea6bd60cc3f375ac04a8ded_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_master_sampler_a51b207672764c100e1ae258fd2e33fcf}\label{class_master_sampler_a51b207672764c100e1ae258fd2e33fcf}} 
+\index{MasterSampler@{MasterSampler}!printHeader@{printHeader}}
+\index{printHeader@{printHeader}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{printHeader()}{printHeader()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::print\+Header (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_ac7c5a07d7cbee97c417a1659b93083b2}{Correlator\+::print\+Header}} prints a the observable name for output in header. 
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ac7c5a07d7cbee97c417a1659b93083b2}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_a51b207672764c100e1ae258fd2e33fcf_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_master_sampler_a41853c3e4ab52fca7d93cf80e8702b7a}\label{class_master_sampler_a41853c3e4ab52fca7d93cf80e8702b7a}} 
+\index{MasterSampler@{MasterSampler}!printObservable@{printObservable}}
+\index{printObservable@{printObservable}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{printObservable()}{printObservable()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::print\+Observable (\begin{DoxyParamCaption}\item[{unsigned int}]{i\+Obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a15744ddb9f2b71fff34ac762d101df38}{Correlator\+::print\+Observable}} prints the observable for the output. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i\+Obs} & \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a15744ddb9f2b71fff34ac762d101df38}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_a41853c3e4ab52fca7d93cf80e8702b7a_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_master_sampler_a9accfc83c05d3013396355e40257a562}\label{class_master_sampler_a9accfc83c05d3013396355e40257a562}} 
+\index{MasterSampler@{MasterSampler}!printStatistics@{printStatistics}}
+\index{printStatistics@{printStatistics}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{printStatistics()}{printStatistics()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::print\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator\+::print\+Statistics}} prints statistics from \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. 
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_a9accfc83c05d3013396355e40257a562_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_master_sampler_a275a032513db03c899056fd07d71cc89}\label{class_master_sampler_a275a032513db03c899056fd07d71cc89}} 
+\index{MasterSampler@{MasterSampler}!reset@{reset}}
+\index{reset@{reset}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{reset()}{reset()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::reset (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_aacca40262d2cd62f0a3964e832f948c1}{Correlator\+::reset}} resets \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. 
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_aacca40262d2cd62f0a3964e832f948c1}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_a275a032513db03c899056fd07d71cc89_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_master_sampler_ab7913d0dbdea57af3f469a3cdd74f8fc}\label{class_master_sampler_ab7913d0dbdea57af3f469a3cdd74f8fc}} 
+\index{MasterSampler@{MasterSampler}!runStatistics@{runStatistics}}
+\index{runStatistics@{runStatistics}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{runStatistics()}{runStatistics()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::run\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator\+::run\+Statistics}}. 
+
+Gathers results and performs statistics in the \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}} object. 
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_ab7913d0dbdea57af3f469a3cdd74f8fc_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_master_sampler_ad475928217ac61fae134128904aaa9f8}\label{class_master_sampler_ad475928217ac61fae134128904aaa9f8}} 
+\index{MasterSampler@{MasterSampler}!writeFlowObservablesToFile@{writeFlowObservablesToFile}}
+\index{writeFlowObservablesToFile@{writeFlowObservablesToFile}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{writeFlowObservablesToFile()}{writeFlowObservablesToFile()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::write\+Flow\+Observables\+To\+File (\begin{DoxyParamCaption}\item[{unsigned int}]{i\+Flow }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a168512b2ce182d9478db47f100125fa6}{Correlator\+::write\+Flow\+Observables\+To\+File}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i\+Flow} & Gathers results and performs statistics in the \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}} object. \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a168512b2ce182d9478db47f100125fa6}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_ad475928217ac61fae134128904aaa9f8_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_master_sampler_a638714c38e1a6252ab8b6be1fa224bd4}\label{class_master_sampler_a638714c38e1a6252ab8b6be1fa224bd4}} 
+\index{MasterSampler@{MasterSampler}!writeObservableToFile@{writeObservableToFile}}
+\index{writeObservableToFile@{writeObservableToFile}!MasterSampler@{MasterSampler}}
+\subsubsection{\texorpdfstring{writeObservableToFile()}{writeObservableToFile()}}
+{\footnotesize\ttfamily void Master\+Sampler\+::write\+Observable\+To\+File (\begin{DoxyParamCaption}\item[{double}]{acceptance\+Ratio }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a9e8d80e30e4fbe3b7fe57521538cb5ff}{Correlator\+::write\+Observable\+To\+File}} calls the \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}} for writing observable to file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em acceptance\+Ratio} & \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a9e8d80e30e4fbe3b7fe57521538cb5ff}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_master_sampler_a638714c38e1a6252ab8b6be1fa224bd4_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+G\+L\+A\+C/observables/\mbox{\hyperlink{mastersampler_8h}{mastersampler.\+h}}\item 
+G\+L\+A\+C/observables/\mbox{\hyperlink{mastersampler_8cpp}{mastersampler.\+cpp}}\end{DoxyCompactItemize}

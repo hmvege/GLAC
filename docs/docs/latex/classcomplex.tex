@@ -1,0 +1,405 @@
+\hypertarget{classcomplex}{}\section{complex Class Reference}
+\label{classcomplex}\index{complex@{complex}}
+
+
+A complex number class, consisting of t.  
+
+
+
+
+{\ttfamily \#include $<$complex.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcomplex_a1fb8d3affbc54c1ad34a0820b357e194}{complex}} ()
+\item 
+\mbox{\hyperlink{classcomplex_abd31d1c53fe873fa4ec0fbce50601485}{$\sim$complex}} ()
+\item 
+\mbox{\hyperlink{classcomplex_ab8d6f234864954c1ab460984a1e32bd3}{complex}} (double real, double imag)
+\item 
+\mbox{\hyperlink{classcomplex_a57fa59491a94c3aeeb5b005fed5d0ed4}{complex}} (const \mbox{\hyperlink{classcomplex}{complex}} \&b)
+\item 
+double \mbox{\hyperlink{classcomplex_a696019188accc543e7c8297595e297ec}{re}} () const
+\item 
+double \mbox{\hyperlink{classcomplex_a450461dea92da7f72b96402edafd07c2}{im}} () const
+\item 
+void \mbox{\hyperlink{classcomplex_a360f0c3963a8e654ccbc16712294f4d7}{set\+Re}} (double \mbox{\hyperlink{classcomplex_a696019188accc543e7c8297595e297ec}{re}})
+\item 
+void \mbox{\hyperlink{classcomplex_aa4c37b87b5b9beebddad476b3049394c}{set\+Im}} (double \mbox{\hyperlink{classcomplex_a450461dea92da7f72b96402edafd07c2}{im}})
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \& \mbox{\hyperlink{classcomplex_a83c122535af669e7f331d71de550e9ba}{operator=}} (const \mbox{\hyperlink{classcomplex}{complex}} \&b)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \& \mbox{\hyperlink{classcomplex_a8430406d485ddd82907b89aa38dfac18}{operator+=}} (\mbox{\hyperlink{classcomplex}{complex}} b)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \& \mbox{\hyperlink{classcomplex_ae776ea1bee9bed9540597a671abc3953}{operator+=}} (double b)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \& \mbox{\hyperlink{classcomplex_af797416b6b4b45c2bb54958fcd076a0e}{operator-\/=}} (\mbox{\hyperlink{classcomplex}{complex}} b)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \& \mbox{\hyperlink{classcomplex_a91a1788c52422330b8785ac3dc87972f}{operator-\/=}} (double b)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \& \mbox{\hyperlink{classcomplex_a1916e5817cf8faf91347120309e99e59}{operator $\ast$=}} (\mbox{\hyperlink{classcomplex}{complex}} b)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \& \mbox{\hyperlink{classcomplex_addc9b5f5da847cd8c3c0e72401ab6513}{operator $\ast$=}} (double b)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \& \mbox{\hyperlink{classcomplex_a2f33210a2ac9f91ad3f1f94958c52ee9}{operator/=}} (\mbox{\hyperlink{classcomplex}{complex}} b)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \& \mbox{\hyperlink{classcomplex_ae519ff68a81b3c9944a3e3ec60bbe80f}{operator/=}} (double b)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \mbox{\hyperlink{classcomplex_a969988c8e6c2a3af52c64e531471f6c0}{operator-\/}} () const
+\item 
+double \mbox{\hyperlink{classcomplex_a81dd00af9a4f56a86bd242b31cb1f8a4}{norm}} ()
+\item 
+double \mbox{\hyperlink{classcomplex_a5f69e50235222338ccd0e985de6b80d1}{norm\+Squared}} ()
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \mbox{\hyperlink{classcomplex_af21a3dae4577a3aab8e1105a1b919b81}{conjugate}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classcomplex_af21a3dae4577a3aab8e1105a1b919b81}{complex\+::conjugate}} \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcomplex}{complex}} \mbox{\hyperlink{classcomplex_a4741546b5617d11e87ee7831067c84c5}{c}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classcomplex_a4741546b5617d11e87ee7831067c84c5}{complex\+::c}} \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcomplex}{complex}} \mbox{\hyperlink{classcomplex_ab1009ede7230f86df1a13f9c5c258ac7}{zeros}} ()
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classcomplex_a24187dbb902b927fe283d138188ec6fe}{z}} \mbox{[}2\mbox{]}
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{classcomplex_aad6a59c1e6f7a869a693e1eba8b2604d}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{classcomplex}{complex}} \&a)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A complex number class, consisting of t. 
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcomplex_a1fb8d3affbc54c1ad34a0820b357e194}\label{classcomplex_a1fb8d3affbc54c1ad34a0820b357e194}} 
+\index{complex@{complex}!complex@{complex}}
+\index{complex@{complex}!complex@{complex}}
+\subsubsection{\texorpdfstring{complex()}{complex()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily complex\+::complex (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcomplex_a1fb8d3affbc54c1ad34a0820b357e194_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_abd31d1c53fe873fa4ec0fbce50601485}\label{classcomplex_abd31d1c53fe873fa4ec0fbce50601485}} 
+\index{complex@{complex}!````~complex@{$\sim$complex}}
+\index{````~complex@{$\sim$complex}!complex@{complex}}
+\subsubsection{\texorpdfstring{$\sim$complex()}{~complex()}}
+{\footnotesize\ttfamily complex\+::$\sim$complex (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcomplex_ab8d6f234864954c1ab460984a1e32bd3}\label{classcomplex_ab8d6f234864954c1ab460984a1e32bd3}} 
+\index{complex@{complex}!complex@{complex}}
+\index{complex@{complex}!complex@{complex}}
+\subsubsection{\texorpdfstring{complex()}{complex()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily complex\+::complex (\begin{DoxyParamCaption}\item[{double}]{real,  }\item[{double}]{imag }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcomplex_a57fa59491a94c3aeeb5b005fed5d0ed4}\label{classcomplex_a57fa59491a94c3aeeb5b005fed5d0ed4}} 
+\index{complex@{complex}!complex@{complex}}
+\index{complex@{complex}!complex@{complex}}
+\subsubsection{\texorpdfstring{complex()}{complex()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily complex\+::complex (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classcomplex}{complex}} \&}]{b }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=281pt]{classcomplex_a57fa59491a94c3aeeb5b005fed5d0ed4_cgraph}
+\end{center}
+\end{figure}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classcomplex_a4741546b5617d11e87ee7831067c84c5}\label{classcomplex_a4741546b5617d11e87ee7831067c84c5}} 
+\index{complex@{complex}!c@{c}}
+\index{c@{c}!complex@{complex}}
+\subsubsection{\texorpdfstring{c()}{c()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} complex\+::c (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{classcomplex_a4741546b5617d11e87ee7831067c84c5}{complex\+::c}} 
+
+\begin{DoxyReturn}{Returns}
+a copy of the complex conjugate of itself. 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=276pt]{classcomplex_a4741546b5617d11e87ee7831067c84c5_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=254pt]{classcomplex_a4741546b5617d11e87ee7831067c84c5_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_af21a3dae4577a3aab8e1105a1b919b81}\label{classcomplex_af21a3dae4577a3aab8e1105a1b919b81}} 
+\index{complex@{complex}!conjugate@{conjugate}}
+\index{conjugate@{conjugate}!complex@{complex}}
+\subsubsection{\texorpdfstring{conjugate()}{conjugate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} complex\+::conjugate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{classcomplex_af21a3dae4577a3aab8e1105a1b919b81}{complex\+::conjugate}} 
+
+\begin{DoxyReturn}{Returns}
+the complex conjugate of itself. 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=293pt]{classcomplex_af21a3dae4577a3aab8e1105a1b919b81_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_a450461dea92da7f72b96402edafd07c2}\label{classcomplex_a450461dea92da7f72b96402edafd07c2}} 
+\index{complex@{complex}!im@{im}}
+\index{im@{im}!complex@{complex}}
+\subsubsection{\texorpdfstring{im()}{im()}}
+{\footnotesize\ttfamily double complex\+::im (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcomplex_a450461dea92da7f72b96402edafd07c2_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_a81dd00af9a4f56a86bd242b31cb1f8a4}\label{classcomplex_a81dd00af9a4f56a86bd242b31cb1f8a4}} 
+\index{complex@{complex}!norm@{norm}}
+\index{norm@{norm}!complex@{complex}}
+\subsubsection{\texorpdfstring{norm()}{norm()}}
+{\footnotesize\ttfamily double complex\+::norm (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcomplex_a5f69e50235222338ccd0e985de6b80d1}\label{classcomplex_a5f69e50235222338ccd0e985de6b80d1}} 
+\index{complex@{complex}!normSquared@{normSquared}}
+\index{normSquared@{normSquared}!complex@{complex}}
+\subsubsection{\texorpdfstring{normSquared()}{normSquared()}}
+{\footnotesize\ttfamily double complex\+::norm\+Squared (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=340pt]{classcomplex_a5f69e50235222338ccd0e985de6b80d1_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_a1916e5817cf8faf91347120309e99e59}\label{classcomplex_a1916e5817cf8faf91347120309e99e59}} 
+\index{complex@{complex}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} \& complex\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{b }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=294pt]{classcomplex_a1916e5817cf8faf91347120309e99e59_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_addc9b5f5da847cd8c3c0e72401ab6513}\label{classcomplex_addc9b5f5da847cd8c3c0e72401ab6513}} 
+\index{complex@{complex}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} \& complex\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{double}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcomplex_a8430406d485ddd82907b89aa38dfac18}\label{classcomplex_a8430406d485ddd82907b89aa38dfac18}} 
+\index{complex@{complex}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} \& complex\+::operator+= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcomplex_ae776ea1bee9bed9540597a671abc3953}\label{classcomplex_ae776ea1bee9bed9540597a671abc3953}} 
+\index{complex@{complex}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} \& complex\+::operator+= (\begin{DoxyParamCaption}\item[{double}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcomplex_a969988c8e6c2a3af52c64e531471f6c0}\label{classcomplex_a969988c8e6c2a3af52c64e531471f6c0}} 
+\index{complex@{complex}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator-\/()}{operator-()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} complex\+::operator-\/ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=311pt]{classcomplex_a969988c8e6c2a3af52c64e531471f6c0_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_af797416b6b4b45c2bb54958fcd076a0e}\label{classcomplex_af797416b6b4b45c2bb54958fcd076a0e}} 
+\index{complex@{complex}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator-\/=()}{operator-=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} \& complex\+::operator-\/= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{b }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=291pt]{classcomplex_af797416b6b4b45c2bb54958fcd076a0e_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_a91a1788c52422330b8785ac3dc87972f}\label{classcomplex_a91a1788c52422330b8785ac3dc87972f}} 
+\index{complex@{complex}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator-\/=()}{operator-=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} \& complex\+::operator-\/= (\begin{DoxyParamCaption}\item[{double}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcomplex_a2f33210a2ac9f91ad3f1f94958c52ee9}\label{classcomplex_a2f33210a2ac9f91ad3f1f94958c52ee9}} 
+\index{complex@{complex}!operator/=@{operator/=}}
+\index{operator/=@{operator/=}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator/=()}{operator/=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} \& complex\+::operator/= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{b }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=340pt]{classcomplex_a2f33210a2ac9f91ad3f1f94958c52ee9_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_ae519ff68a81b3c9944a3e3ec60bbe80f}\label{classcomplex_ae519ff68a81b3c9944a3e3ec60bbe80f}} 
+\index{complex@{complex}!operator/=@{operator/=}}
+\index{operator/=@{operator/=}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator/=()}{operator/=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} \& complex\+::operator/= (\begin{DoxyParamCaption}\item[{double}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcomplex_a83c122535af669e7f331d71de550e9ba}\label{classcomplex_a83c122535af669e7f331d71de550e9ba}} 
+\index{complex@{complex}!operator=@{operator=}}
+\index{operator=@{operator=}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} \& complex\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classcomplex}{complex}} \&}]{b }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=287pt]{classcomplex_a83c122535af669e7f331d71de550e9ba_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_a696019188accc543e7c8297595e297ec}\label{classcomplex_a696019188accc543e7c8297595e297ec}} 
+\index{complex@{complex}!re@{re}}
+\index{re@{re}!complex@{complex}}
+\subsubsection{\texorpdfstring{re()}{re()}}
+{\footnotesize\ttfamily double complex\+::re (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcomplex_a696019188accc543e7c8297595e297ec_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_aa4c37b87b5b9beebddad476b3049394c}\label{classcomplex_aa4c37b87b5b9beebddad476b3049394c}} 
+\index{complex@{complex}!setIm@{setIm}}
+\index{setIm@{setIm}!complex@{complex}}
+\subsubsection{\texorpdfstring{setIm()}{setIm()}}
+{\footnotesize\ttfamily void complex\+::set\+Im (\begin{DoxyParamCaption}\item[{double}]{im }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=269pt]{classcomplex_aa4c37b87b5b9beebddad476b3049394c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=274pt]{classcomplex_aa4c37b87b5b9beebddad476b3049394c_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_a360f0c3963a8e654ccbc16712294f4d7}\label{classcomplex_a360f0c3963a8e654ccbc16712294f4d7}} 
+\index{complex@{complex}!setRe@{setRe}}
+\index{setRe@{setRe}!complex@{complex}}
+\subsubsection{\texorpdfstring{setRe()}{setRe()}}
+{\footnotesize\ttfamily void complex\+::set\+Re (\begin{DoxyParamCaption}\item[{double}]{re }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=269pt]{classcomplex_a360f0c3963a8e654ccbc16712294f4d7_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=275pt]{classcomplex_a360f0c3963a8e654ccbc16712294f4d7_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classcomplex_ab1009ede7230f86df1a13f9c5c258ac7}\label{classcomplex_ab1009ede7230f86df1a13f9c5c258ac7}} 
+\index{complex@{complex}!zeros@{zeros}}
+\index{zeros@{zeros}!complex@{complex}}
+\subsubsection{\texorpdfstring{zeros()}{zeros()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} complex\+::zeros (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classcomplex_aad6a59c1e6f7a869a693e1eba8b2604d}\label{classcomplex_aad6a59c1e6f7a869a693e1eba8b2604d}} 
+\index{complex@{complex}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!complex@{complex}}
+\subsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{classcomplex}{complex}} \&}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{classcomplex_a24187dbb902b927fe283d138188ec6fe}\label{classcomplex_a24187dbb902b927fe283d138188ec6fe}} 
+\index{complex@{complex}!z@{z}}
+\index{z@{z}!complex@{complex}}
+\subsubsection{\texorpdfstring{z}{z}}
+{\footnotesize\ttfamily double complex\+::z\mbox{[}2\mbox{]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+G\+L\+A\+C/math/\mbox{\hyperlink{complex_8h}{complex.\+h}}\item 
+G\+L\+A\+C/math/\mbox{\hyperlink{complex_8cpp}{complex.\+cpp}}\end{DoxyCompactItemize}

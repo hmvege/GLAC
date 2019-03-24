@@ -1,0 +1,111 @@
+\hypertarget{test_8h}{}\section{G\+L\+A\+C/tests/test.h File Reference}
+\label{test_8h}\index{GLAC/tests/test.h@{GLAC/tests/test.h}}
+{\ttfamily \#include \char`\"{}tests/testsuite.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}performancetests.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}parallelization/communicator.\+h\char`\"{}}\newline
+Include dependency graph for test.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{test_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=174pt]{test_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{test_8h_a91a9c7ea8af27bb3962f1207dd4cb8fd}{run\+Unit\+Tests}} (bool run\+Tests)
+\begin{DoxyCompactList}\small\item\em Header containing functions needed for running unit tests, integration tests and validation testing. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{test_8h_a78e241f531e5203858fdb59a4162d6ba}{run\+Performance\+Tests}} (bool run\+Tests)
+\begin{DoxyCompactList}\small\item\em run\+Performance\+Tests will run performance tests on program. Exits once complete. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{test_8h_a78e241f531e5203858fdb59a4162d6ba}\label{test_8h_a78e241f531e5203858fdb59a4162d6ba}} 
+\index{test.h@{test.h}!runPerformanceTests@{runPerformanceTests}}
+\index{runPerformanceTests@{runPerformanceTests}!test.h@{test.h}}
+\subsubsection{\texorpdfstring{runPerformanceTests()}{runPerformanceTests()}}
+{\footnotesize\ttfamily void run\+Performance\+Tests (\begin{DoxyParamCaption}\item[{bool}]{run\+Tests }\end{DoxyParamCaption})}
+
+
+
+run\+Performance\+Tests will run performance tests on program. Exits once complete. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em run\+Tests} & if true, will run performance tests. \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{test_8h_a78e241f531e5203858fdb59a4162d6ba_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=265pt]{test_8h_a78e241f531e5203858fdb59a4162d6ba_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{test_8h_a91a9c7ea8af27bb3962f1207dd4cb8fd}\label{test_8h_a91a9c7ea8af27bb3962f1207dd4cb8fd}} 
+\index{test.h@{test.h}!runUnitTests@{runUnitTests}}
+\index{runUnitTests@{runUnitTests}!test.h@{test.h}}
+\subsubsection{\texorpdfstring{runUnitTests()}{runUnitTests()}}
+{\footnotesize\ttfamily void run\+Unit\+Tests (\begin{DoxyParamCaption}\item[{bool}]{run\+Tests }\end{DoxyParamCaption})}
+
+
+
+Header containing functions needed for running unit tests, integration tests and validation testing. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000010}{Todo}}]add validation testing using Jacks chroma config. Load it from python and compare in unit testing program. 
+
+split into unit tests, integration tests and validation testing.\end{DoxyRefDesc}
+
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence
+\end{DoxyCopyright}
+run\+Unit\+Tests function that runs unit tests. Exits once complete. 
+\begin{DoxyParams}{Parameters}
+{\em run\+Tests} & if true, will run unit tests. \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{test_8h_a91a9c7ea8af27bb3962f1207dd4cb8fd_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=225pt]{test_8h_a91a9c7ea8af27bb3962f1207dd4cb8fd_icgraph}
+\end{center}
+\end{figure}

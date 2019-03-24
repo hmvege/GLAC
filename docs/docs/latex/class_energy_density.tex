@@ -1,0 +1,179 @@
+\hypertarget{class_energy_density}{}\section{Energy\+Density Class Reference}
+\label{class_energy_density}\index{EnergyDensity@{EnergyDensity}}
+
+
+Solely calculates the energy density as given by, \[ E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda}\sum_{\mu<\nu} \big(\tilde{C}_{\mu\nu}(n)\big)^2. \] The $F_{\mu\nu}$ is the clover.  
+
+
+
+
+{\ttfamily \#include $<$energydensity.\+h$>$}
+
+
+
+Inheritance diagram for Energy\+Density\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=161pt]{class_energy_density__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Energy\+Density\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{class_energy_density__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_energy_density_a1d23cfe5690c9daf8b2f0ec8f6471c5f}{Energy\+Density}} (bool store\+Flow\+Observable)
+\item 
+\mbox{\hyperlink{class_energy_density_a307e031858ac7149f5689911f8ff22fb}{$\sim$\+Energy\+Density}} ()
+\item 
+void \mbox{\hyperlink{class_energy_density_ae8e5e29257104d881bcabeadc3b2c9e7}{calculate}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int i\+Obs)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator\+::calculate}} calculates a observable. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_energy_density_ad108e32bc670f17f15b4ed433d8bbec7}{print\+Statistics}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator\+::print\+Statistics}} prints statistics from \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_energy_density_a59b320595bca439333d36e3753ca07f0}{get\+Observable\+Name}} ()
+\item 
+void \mbox{\hyperlink{class_energy_density_a584e164453ce880a45478c9b48ce2c4b}{run\+Statistics}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator\+::run\+Statistics}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Solely calculates the energy density as given by, \[ E = -\frac{1}{64|\Lambda|} \sum_{n\in\Lambda}\sum_{\mu<\nu} \big(\tilde{C}_{\mu\nu}(n)\big)^2. \] The $F_{\mu\nu}$ is the clover. 
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_energy_density_a1d23cfe5690c9daf8b2f0ec8f6471c5f}\label{class_energy_density_a1d23cfe5690c9daf8b2f0ec8f6471c5f}} 
+\index{EnergyDensity@{EnergyDensity}!EnergyDensity@{EnergyDensity}}
+\index{EnergyDensity@{EnergyDensity}!EnergyDensity@{EnergyDensity}}
+\subsubsection{\texorpdfstring{EnergyDensity()}{EnergyDensity()}}
+{\footnotesize\ttfamily Energy\+Density\+::\+Energy\+Density (\begin{DoxyParamCaption}\item[{bool}]{store\+Flow\+Observable }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_energy_density_a1d23cfe5690c9daf8b2f0ec8f6471c5f_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_energy_density_a307e031858ac7149f5689911f8ff22fb}\label{class_energy_density_a307e031858ac7149f5689911f8ff22fb}} 
+\index{EnergyDensity@{EnergyDensity}!````~EnergyDensity@{$\sim$EnergyDensity}}
+\index{````~EnergyDensity@{$\sim$EnergyDensity}!EnergyDensity@{EnergyDensity}}
+\subsubsection{\texorpdfstring{$\sim$EnergyDensity()}{~EnergyDensity()}}
+{\footnotesize\ttfamily Energy\+Density\+::$\sim$\+Energy\+Density (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_energy_density_ae8e5e29257104d881bcabeadc3b2c9e7}\label{class_energy_density_ae8e5e29257104d881bcabeadc3b2c9e7}} 
+\index{EnergyDensity@{EnergyDensity}!calculate@{calculate}}
+\index{calculate@{calculate}!EnergyDensity@{EnergyDensity}}
+\subsubsection{\texorpdfstring{calculate()}{calculate()}}
+{\footnotesize\ttfamily void Energy\+Density\+::calculate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{unsigned int}]{i\+Obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator\+::calculate}} calculates a observable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & pointer to lattice of \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices \\
+\hline
+{\em i\+Obs} & number of the observable \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_energy_density_ae8e5e29257104d881bcabeadc3b2c9e7_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_energy_density_a59b320595bca439333d36e3753ca07f0}\label{class_energy_density_a59b320595bca439333d36e3753ca07f0}} 
+\index{EnergyDensity@{EnergyDensity}!getObservableName@{getObservableName}}
+\index{getObservableName@{getObservableName}!EnergyDensity@{EnergyDensity}}
+\subsubsection{\texorpdfstring{getObservableName()}{getObservableName()}}
+{\footnotesize\ttfamily std\+::string Energy\+Density\+::get\+Observable\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ad1fa59e864917c3e48da037f90c3488f}{Correlator}}.
+
+\mbox{\Hypertarget{class_energy_density_ad108e32bc670f17f15b4ed433d8bbec7}\label{class_energy_density_ad108e32bc670f17f15b4ed433d8bbec7}} 
+\index{EnergyDensity@{EnergyDensity}!printStatistics@{printStatistics}}
+\index{printStatistics@{printStatistics}!EnergyDensity@{EnergyDensity}}
+\subsubsection{\texorpdfstring{printStatistics()}{printStatistics()}}
+{\footnotesize\ttfamily void Energy\+Density\+::print\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator\+::print\+Statistics}} prints statistics from \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. 
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_energy_density_ad108e32bc670f17f15b4ed433d8bbec7_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_energy_density_a584e164453ce880a45478c9b48ce2c4b}\label{class_energy_density_a584e164453ce880a45478c9b48ce2c4b}} 
+\index{EnergyDensity@{EnergyDensity}!runStatistics@{runStatistics}}
+\index{runStatistics@{runStatistics}!EnergyDensity@{EnergyDensity}}
+\subsubsection{\texorpdfstring{runStatistics()}{runStatistics()}}
+{\footnotesize\ttfamily void Energy\+Density\+::run\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator\+::run\+Statistics}}. 
+
+Gathers results and performs statistics in the \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}} object. 
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_energy_density_a584e164453ce880a45478c9b48ce2c4b_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+G\+L\+A\+C/observables/\mbox{\hyperlink{energydensity_8h}{energydensity.\+h}}\item 
+G\+L\+A\+C/observables/\mbox{\hyperlink{energydensity_8cpp}{energydensity.\+cpp}}\end{DoxyCompactItemize}

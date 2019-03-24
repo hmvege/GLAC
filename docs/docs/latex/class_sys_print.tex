@@ -1,0 +1,108 @@
+\hypertarget{class_sys_print}{}\section{Sys\+Print Class Reference}
+\label{class_sys_print}\index{SysPrint@{SysPrint}}
+
+
+Class for printing run information.  
+
+
+
+
+{\ttfamily \#include $<$sysprint.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_sys_print_a205d71843ed2243d76300df6b854bed8}{Sys\+Print}} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_sys_print_a4572572643f6f4685081a3ae419e5ca9}{print\+System\+Info}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_sys_print_a4572572643f6f4685081a3ae419e5ca9}{Sys\+Print\+::print\+System\+Info}} prints out parametesr from \mbox{\hyperlink{namespace_parallel}{Parallel}}\+:\mbox{\hyperlink{class_communicator}{Communicator}} and \mbox{\hyperlink{class_parameters}{Parameters}}. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_sys_print_abdf8282e73cc002e5e572c6f09266cc9}{print\+Line}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_sys_print_abdf8282e73cc002e5e572c6f09266cc9}{Sys\+Print\+::print\+Line}} prints a simple line for seperating outputs. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for printing run information. 
+
+Holds all of the parameters passed on from the json file. Stores parameters as static, thus being accessible from everywhere.
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]Make this class into a class that prints instead of having to do if rank=0 ect. Maybe move to \mbox{\hyperlink{namespace_i_o}{IO}} as well.\end{DoxyRefDesc}
+
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_sys_print_a205d71843ed2243d76300df6b854bed8}\label{class_sys_print_a205d71843ed2243d76300df6b854bed8}} 
+\index{SysPrint@{SysPrint}!SysPrint@{SysPrint}}
+\index{SysPrint@{SysPrint}!SysPrint@{SysPrint}}
+\subsubsection{\texorpdfstring{SysPrint()}{SysPrint()}}
+{\footnotesize\ttfamily Sys\+Print\+::\+Sys\+Print (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_sys_print_abdf8282e73cc002e5e572c6f09266cc9}\label{class_sys_print_abdf8282e73cc002e5e572c6f09266cc9}} 
+\index{SysPrint@{SysPrint}!printLine@{printLine}}
+\index{printLine@{printLine}!SysPrint@{SysPrint}}
+\subsubsection{\texorpdfstring{printLine()}{printLine()}}
+{\footnotesize\ttfamily void Sys\+Print\+::print\+Line (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+\mbox{\hyperlink{class_sys_print_abdf8282e73cc002e5e572c6f09266cc9}{Sys\+Print\+::print\+Line}} prints a simple line for seperating outputs. 
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_sys_print_abdf8282e73cc002e5e572c6f09266cc9_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_sys_print_a4572572643f6f4685081a3ae419e5ca9}\label{class_sys_print_a4572572643f6f4685081a3ae419e5ca9}} 
+\index{SysPrint@{SysPrint}!printSystemInfo@{printSystemInfo}}
+\index{printSystemInfo@{printSystemInfo}!SysPrint@{SysPrint}}
+\subsubsection{\texorpdfstring{printSystemInfo()}{printSystemInfo()}}
+{\footnotesize\ttfamily void Sys\+Print\+::print\+System\+Info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+\mbox{\hyperlink{class_sys_print_a4572572643f6f4685081a3ae419e5ca9}{Sys\+Print\+::print\+System\+Info}} prints out parametesr from \mbox{\hyperlink{namespace_parallel}{Parallel}}\+:\mbox{\hyperlink{class_communicator}{Communicator}} and \mbox{\hyperlink{class_parameters}{Parameters}}. 
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_sys_print_a4572572643f6f4685081a3ae419e5ca9_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_sys_print_a4572572643f6f4685081a3ae419e5ca9_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+G\+L\+A\+C/config/\mbox{\hyperlink{sysprint_8h}{sysprint.\+h}}\item 
+G\+L\+A\+C/config/\mbox{\hyperlink{sysprint_8cpp}{sysprint.\+cpp}}\end{DoxyCompactItemize}

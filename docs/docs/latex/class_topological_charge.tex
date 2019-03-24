@@ -1,0 +1,179 @@
+\hypertarget{class_topological_charge}{}\section{Topological\+Charge Class Reference}
+\label{class_topological_charge}\index{TopologicalCharge@{TopologicalCharge}}
+
+
+Solely calculates the topological charge as given by, \[ q(n_e) = \frac{1}{32\pi^2} \sum_{n \in N^3} \epsilon_{\mu\nu\rho\sigma} \mathrm{tr}\big[F_{\mu\nu}(n)F_{\rho\sigma}(n)\big], \] where $n_e$ is the position in the lattice in Euclidean time. $F_{\nu\mu}$ is the clover.  
+
+
+
+
+{\ttfamily \#include $<$topologicalcharge.\+h$>$}
+
+
+
+Inheritance diagram for Topological\+Charge\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=179pt]{class_topological_charge__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Topological\+Charge\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=195pt]{class_topological_charge__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_topological_charge_a415e32f865f7b5c83f4ac4471838d514}{Topological\+Charge}} (bool store\+Flow\+Observable)
+\item 
+\mbox{\hyperlink{class_topological_charge_aec647c5c45f8532639cebcac10865f2e}{$\sim$\+Topological\+Charge}} ()
+\item 
+void \mbox{\hyperlink{class_topological_charge_a8ed78c28c3484df04b1cb24187de2f5b}{calculate}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, unsigned int i\+Obs)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator\+::calculate}} calculates a observable. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_topological_charge_ab9afadb9f37e638c0a168ebab5d41353}{run\+Statistics}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator\+::run\+Statistics}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_topological_charge_ad56263921d283d315b04ab40c9594a2c}{print\+Statistics}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator\+::print\+Statistics}} prints statistics from \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_topological_charge_ad12d246692f3d9ea0ef591814010ef88}{get\+Observable\+Name}} ()
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Solely calculates the topological charge as given by, \[ q(n_e) = \frac{1}{32\pi^2} \sum_{n \in N^3} \epsilon_{\mu\nu\rho\sigma} \mathrm{tr}\big[F_{\mu\nu}(n)F_{\rho\sigma}(n)\big], \] where $n_e$ is the position in the lattice in Euclidean time. $F_{\nu\mu}$ is the clover. 
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_topological_charge_a415e32f865f7b5c83f4ac4471838d514}\label{class_topological_charge_a415e32f865f7b5c83f4ac4471838d514}} 
+\index{TopologicalCharge@{TopologicalCharge}!TopologicalCharge@{TopologicalCharge}}
+\index{TopologicalCharge@{TopologicalCharge}!TopologicalCharge@{TopologicalCharge}}
+\subsubsection{\texorpdfstring{TopologicalCharge()}{TopologicalCharge()}}
+{\footnotesize\ttfamily Topological\+Charge\+::\+Topological\+Charge (\begin{DoxyParamCaption}\item[{bool}]{store\+Flow\+Observable }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_topological_charge_a415e32f865f7b5c83f4ac4471838d514_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_topological_charge_aec647c5c45f8532639cebcac10865f2e}\label{class_topological_charge_aec647c5c45f8532639cebcac10865f2e}} 
+\index{TopologicalCharge@{TopologicalCharge}!````~TopologicalCharge@{$\sim$TopologicalCharge}}
+\index{````~TopologicalCharge@{$\sim$TopologicalCharge}!TopologicalCharge@{TopologicalCharge}}
+\subsubsection{\texorpdfstring{$\sim$TopologicalCharge()}{~TopologicalCharge()}}
+{\footnotesize\ttfamily Topological\+Charge\+::$\sim$\+Topological\+Charge (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_topological_charge_a8ed78c28c3484df04b1cb24187de2f5b}\label{class_topological_charge_a8ed78c28c3484df04b1cb24187de2f5b}} 
+\index{TopologicalCharge@{TopologicalCharge}!calculate@{calculate}}
+\index{calculate@{calculate}!TopologicalCharge@{TopologicalCharge}}
+\subsubsection{\texorpdfstring{calculate()}{calculate()}}
+{\footnotesize\ttfamily void Topological\+Charge\+::calculate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{unsigned int}]{i\+Obs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator\+::calculate}} calculates a observable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & pointer to lattice of \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices \\
+\hline
+{\em i\+Obs} & number of the observable \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ab33502ff305f891c5c2e6d66a26a0247}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_topological_charge_a8ed78c28c3484df04b1cb24187de2f5b_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_topological_charge_ad12d246692f3d9ea0ef591814010ef88}\label{class_topological_charge_ad12d246692f3d9ea0ef591814010ef88}} 
+\index{TopologicalCharge@{TopologicalCharge}!getObservableName@{getObservableName}}
+\index{getObservableName@{getObservableName}!TopologicalCharge@{TopologicalCharge}}
+\subsubsection{\texorpdfstring{getObservableName()}{getObservableName()}}
+{\footnotesize\ttfamily std\+::string Topological\+Charge\+::get\+Observable\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_ad1fa59e864917c3e48da037f90c3488f}{Correlator}}.
+
+\mbox{\Hypertarget{class_topological_charge_ad56263921d283d315b04ab40c9594a2c}\label{class_topological_charge_ad56263921d283d315b04ab40c9594a2c}} 
+\index{TopologicalCharge@{TopologicalCharge}!printStatistics@{printStatistics}}
+\index{printStatistics@{printStatistics}!TopologicalCharge@{TopologicalCharge}}
+\subsubsection{\texorpdfstring{printStatistics()}{printStatistics()}}
+{\footnotesize\ttfamily void Topological\+Charge\+::print\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator\+::print\+Statistics}} prints statistics from \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}}. 
+
+
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a2168d677f547769784781d2e2aaa53cf}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_topological_charge_ad56263921d283d315b04ab40c9594a2c_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_topological_charge_ab9afadb9f37e638c0a168ebab5d41353}\label{class_topological_charge_ab9afadb9f37e638c0a168ebab5d41353}} 
+\index{TopologicalCharge@{TopologicalCharge}!runStatistics@{runStatistics}}
+\index{runStatistics@{runStatistics}!TopologicalCharge@{TopologicalCharge}}
+\subsubsection{\texorpdfstring{runStatistics()}{runStatistics()}}
+{\footnotesize\ttfamily void Topological\+Charge\+::run\+Statistics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator\+::run\+Statistics}}. 
+
+Gathers results and performs statistics in the \mbox{\hyperlink{class_observable_storer}{Observable\+Storer}} object. 
+
+Reimplemented from \mbox{\hyperlink{class_correlator_a35197b1d12b62ef30b79c0138a26456e}{Correlator}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_topological_charge_ab9afadb9f37e638c0a168ebab5d41353_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+G\+L\+A\+C/observables/\mbox{\hyperlink{topologicalcharge_8h}{topologicalcharge.\+h}}\item 
+G\+L\+A\+C/observables/\mbox{\hyperlink{topologicalcharge_8cpp}{topologicalcharge.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,338 @@
+\hypertarget{class_s_u3}{}\section{S\+U3 Class Reference}
+\label{class_s_u3}\index{SU3@{SU3}}
+
+
+class for holding $\mathrm{SU}(3)$ matrices.  
+
+
+
+
+{\ttfamily \#include $<$su3.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_s_u3_a79a4b45ff8cbe77f1f90a108971f822d}{S\+U3}} ()
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_a722bf7fb87348f75132cd1d25922d9f5}{operator=}} (const \mbox{\hyperlink{class_s_u3}{S\+U3}} \&other)
+\item 
+\mbox{\hyperlink{class_s_u3_af1e314363e80a0404023494937c56afa}{$\sim$\+S\+U3}} ()
+\item 
+double \& \mbox{\hyperlink{class_s_u3_a44d830566de4abc27eeea8dd338b0528}{operator\mbox{[}$\,$\mbox{]}}} (int i)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_a16a4af3fc6b84d512c4a0ffd5aefaa87}{operator=}} (const double \&other)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_aa22070a659e60ee2e252002106e375cb}{operator+=}} (\mbox{\hyperlink{class_s_u3}{S\+U3}} B)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_a6edde88f3b6af05b8b5c3cc7415862b9}{operator-\/=}} (\mbox{\hyperlink{class_s_u3}{S\+U3}} B)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_a499ee2a922f1568eee9fe2e04d8cbe89}{operator $\ast$=}} (\mbox{\hyperlink{class_s_u3}{S\+U3}} B)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_a0dbe4da7ba00c8712e294984f9cbc0a8}{operator+=}} (\mbox{\hyperlink{classcomplex}{complex}} z)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_ab86d0576a1029b0ae58fea437c4606aa}{operator-\/=}} (\mbox{\hyperlink{classcomplex}{complex}} z)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_ad1b4ea5706f0d1764c7a9516255a74e4}{operator $\ast$=}} (\mbox{\hyperlink{classcomplex}{complex}} z)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_a66ffbe776e74e2c20040096ea6577037}{operator+=}} (double a)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_aaa29d14e952a9b9fcacad15f4a34c6d6}{operator-\/=}} (double a)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_a9b49b10ffea08d20b5a89409501ef7d5}{operator/=}} (double a)
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \& \mbox{\hyperlink{class_s_u3_aa339fae3b75bd58fac445d38c68582d7}{operator $\ast$=}} (double a)
+\item 
+void \mbox{\hyperlink{class_s_u3_a40d6e853cd73f87b4113e22a53d45e89}{print}} ()
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \mbox{\hyperlink{class_s_u3_aa0c34df7c067dcbb917d18cf587046a2}{get}} (int i, int j)
+\item 
+\mbox{\hyperlink{classcomplex}{complex}} \mbox{\hyperlink{class_s_u3_ac1c6438d29178aa1255ee4f2f48d2430}{trace}} ()
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_a7035a3e94f6dd27ece144b42473cade9}{make\+Hermitian}} ()
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_a25e7cd46d60f25138585b76115e791a3}{make\+Anti\+Hermitian}} ()
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_ad0e19706d3c6fdb50dcf788d4b48eb4c}{inv}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_s_u3_ad0e19706d3c6fdb50dcf788d4b48eb4c}{S\+U3\+::inv}} performs a matrix inversion. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_s_u3_a9f3527fd882882ddfa18d72f5f43176c}{zeros}} ()
+\item 
+void \mbox{\hyperlink{class_s_u3_af84aef1d34a4fdcda292200804eb1221}{identity}} ()
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_af0229a4940c6c4355a2994ccaa663d0e}{transpose}} ()
+\item 
+\mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_s_u3_a1db359a1ede38fcf858876292a8c9c43}{conjugate}} ()
+\item 
+void \mbox{\hyperlink{class_s_u3_a794ecde931082d02f625cab14d0e83e3}{set\+Complex}} (\mbox{\hyperlink{classcomplex}{complex}} w, int i)
+\item 
+double \mbox{\hyperlink{class_s_u3_a1f0faef4a7cf1a1a3e6ec525cef55561}{norm}} (int i)
+\item 
+double \mbox{\hyperlink{class_s_u3_a7926e38b8705e0f5c3eaf7d0361f3543}{norm\+Squared}} (int i)
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{class_s_u3_af003668305abe616f56568a075434be0}{mat}} \mbox{[}18\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+class for holding $\mathrm{SU}(3)$ matrices. 
+
+Operations have been overloaded for ease of use.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_s_u3_a79a4b45ff8cbe77f1f90a108971f822d}\label{class_s_u3_a79a4b45ff8cbe77f1f90a108971f822d}} 
+\index{SU3@{SU3}!SU3@{SU3}}
+\index{SU3@{SU3}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{SU3()}{SU3()}}
+{\footnotesize\ttfamily S\+U3\+::\+S\+U3 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_af1e314363e80a0404023494937c56afa}\label{class_s_u3_af1e314363e80a0404023494937c56afa}} 
+\index{SU3@{SU3}!````~SU3@{$\sim$SU3}}
+\index{````~SU3@{$\sim$SU3}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{$\sim$SU3()}{~SU3()}}
+{\footnotesize\ttfamily S\+U3\+::$\sim$\+S\+U3 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_s_u3_a1db359a1ede38fcf858876292a8c9c43}\label{class_s_u3_a1db359a1ede38fcf858876292a8c9c43}} 
+\index{SU3@{SU3}!conjugate@{conjugate}}
+\index{conjugate@{conjugate}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{conjugate()}{conjugate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+::conjugate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u3_aa0c34df7c067dcbb917d18cf587046a2}\label{class_s_u3_aa0c34df7c067dcbb917d18cf587046a2}} 
+\index{SU3@{SU3}!get@{get}}
+\index{get@{get}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} S\+U3\+::get (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{class_s_u3_aa0c34df7c067dcbb917d18cf587046a2_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_s_u3_af84aef1d34a4fdcda292200804eb1221}\label{class_s_u3_af84aef1d34a4fdcda292200804eb1221}} 
+\index{SU3@{SU3}!identity@{identity}}
+\index{identity@{identity}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{identity()}{identity()}}
+{\footnotesize\ttfamily void S\+U3\+::identity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=327pt]{class_s_u3_af84aef1d34a4fdcda292200804eb1221_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_s_u3_ad0e19706d3c6fdb50dcf788d4b48eb4c}\label{class_s_u3_ad0e19706d3c6fdb50dcf788d4b48eb4c}} 
+\index{SU3@{SU3}!inv@{inv}}
+\index{inv@{inv}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{inv()}{inv()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+::inv (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\mbox{\hyperlink{class_s_u3_ad0e19706d3c6fdb50dcf788d4b48eb4c}{S\+U3\+::inv}} performs a matrix inversion. 
+
+\begin{DoxyReturn}{Returns}
+a copy of the inverse of itself. 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=321pt]{class_s_u3_ad0e19706d3c6fdb50dcf788d4b48eb4c_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_s_u3_a25e7cd46d60f25138585b76115e791a3}\label{class_s_u3_a25e7cd46d60f25138585b76115e791a3}} 
+\index{SU3@{SU3}!makeAntiHermitian@{makeAntiHermitian}}
+\index{makeAntiHermitian@{makeAntiHermitian}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{makeAntiHermitian()}{makeAntiHermitian()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+::make\+Anti\+Hermitian (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_a7035a3e94f6dd27ece144b42473cade9}\label{class_s_u3_a7035a3e94f6dd27ece144b42473cade9}} 
+\index{SU3@{SU3}!makeHermitian@{makeHermitian}}
+\index{makeHermitian@{makeHermitian}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{makeHermitian()}{makeHermitian()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+::make\+Hermitian (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=299pt]{class_s_u3_a7035a3e94f6dd27ece144b42473cade9_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_s_u3_a1f0faef4a7cf1a1a3e6ec525cef55561}\label{class_s_u3_a1f0faef4a7cf1a1a3e6ec525cef55561}} 
+\index{SU3@{SU3}!norm@{norm}}
+\index{norm@{norm}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{norm()}{norm()}}
+{\footnotesize\ttfamily double S\+U3\+::norm (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u3_a7926e38b8705e0f5c3eaf7d0361f3543}\label{class_s_u3_a7926e38b8705e0f5c3eaf7d0361f3543}} 
+\index{SU3@{SU3}!normSquared@{normSquared}}
+\index{normSquared@{normSquared}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{normSquared()}{normSquared()}}
+{\footnotesize\ttfamily double S\+U3\+::norm\+Squared (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u3_a499ee2a922f1568eee9fe2e04d8cbe89}\label{class_s_u3_a499ee2a922f1568eee9fe2e04d8cbe89}} 
+\index{SU3@{SU3}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u3}{S\+U3}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_ad1b4ea5706f0d1764c7a9516255a74e4}\label{class_s_u3_ad1b4ea5706f0d1764c7a9516255a74e4}} 
+\index{SU3@{SU3}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_aa339fae3b75bd58fac445d38c68582d7}\label{class_s_u3_aa339fae3b75bd58fac445d38c68582d7}} 
+\index{SU3@{SU3}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{double}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_aa22070a659e60ee2e252002106e375cb}\label{class_s_u3_aa22070a659e60ee2e252002106e375cb}} 
+\index{SU3@{SU3}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator+= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u3}{S\+U3}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_a0dbe4da7ba00c8712e294984f9cbc0a8}\label{class_s_u3_a0dbe4da7ba00c8712e294984f9cbc0a8}} 
+\index{SU3@{SU3}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator+= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_a66ffbe776e74e2c20040096ea6577037}\label{class_s_u3_a66ffbe776e74e2c20040096ea6577037}} 
+\index{SU3@{SU3}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator+= (\begin{DoxyParamCaption}\item[{double}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_a6edde88f3b6af05b8b5c3cc7415862b9}\label{class_s_u3_a6edde88f3b6af05b8b5c3cc7415862b9}} 
+\index{SU3@{SU3}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator-\/=()}{operator-=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator-\/= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u3}{S\+U3}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_ab86d0576a1029b0ae58fea437c4606aa}\label{class_s_u3_ab86d0576a1029b0ae58fea437c4606aa}} 
+\index{SU3@{SU3}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator-\/=()}{operator-=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator-\/= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_aaa29d14e952a9b9fcacad15f4a34c6d6}\label{class_s_u3_aaa29d14e952a9b9fcacad15f4a34c6d6}} 
+\index{SU3@{SU3}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator-\/=()}{operator-=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator-\/= (\begin{DoxyParamCaption}\item[{double}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_a9b49b10ffea08d20b5a89409501ef7d5}\label{class_s_u3_a9b49b10ffea08d20b5a89409501ef7d5}} 
+\index{SU3@{SU3}!operator/=@{operator/=}}
+\index{operator/=@{operator/=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator/=()}{operator/=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator/= (\begin{DoxyParamCaption}\item[{double}]{a }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_a722bf7fb87348f75132cd1d25922d9f5}\label{class_s_u3_a722bf7fb87348f75132cd1d25922d9f5}} 
+\index{SU3@{SU3}!operator=@{operator=}}
+\index{operator=@{operator=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}}\& S\+U3\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_s_u3}{S\+U3}} \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_a16a4af3fc6b84d512c4a0ffd5aefaa87}\label{class_s_u3_a16a4af3fc6b84d512c4a0ffd5aefaa87}} 
+\index{SU3@{SU3}!operator=@{operator=}}
+\index{operator=@{operator=}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} \& S\+U3\+::operator= (\begin{DoxyParamCaption}\item[{const double \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_a44d830566de4abc27eeea8dd338b0528}\label{class_s_u3_a44d830566de4abc27eeea8dd338b0528}} 
+\index{SU3@{SU3}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily double\& S\+U3\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u3_a40d6e853cd73f87b4113e22a53d45e89}\label{class_s_u3_a40d6e853cd73f87b4113e22a53d45e89}} 
+\index{SU3@{SU3}!print@{print}}
+\index{print@{print}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily void S\+U3\+::print (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u3_a794ecde931082d02f625cab14d0e83e3}\label{class_s_u3_a794ecde931082d02f625cab14d0e83e3}} 
+\index{SU3@{SU3}!setComplex@{setComplex}}
+\index{setComplex@{setComplex}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{setComplex()}{setComplex()}}
+{\footnotesize\ttfamily void S\+U3\+::set\+Complex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{w,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=314pt]{class_s_u3_a794ecde931082d02f625cab14d0e83e3_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_s_u3_ac1c6438d29178aa1255ee4f2f48d2430}\label{class_s_u3_ac1c6438d29178aa1255ee4f2f48d2430}} 
+\index{SU3@{SU3}!trace@{trace}}
+\index{trace@{trace}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{trace()}{trace()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classcomplex}{complex}} S\+U3\+::trace (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u3_af0229a4940c6c4355a2994ccaa663d0e}\label{class_s_u3_af0229a4940c6c4355a2994ccaa663d0e}} 
+\index{SU3@{SU3}!transpose@{transpose}}
+\index{transpose@{transpose}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{transpose()}{transpose()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} S\+U3\+::transpose (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u3_a9f3527fd882882ddfa18d72f5f43176c}\label{class_s_u3_a9f3527fd882882ddfa18d72f5f43176c}} 
+\index{SU3@{SU3}!zeros@{zeros}}
+\index{zeros@{zeros}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{zeros()}{zeros()}}
+{\footnotesize\ttfamily void S\+U3\+::zeros (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_s_u3_a9f3527fd882882ddfa18d72f5f43176c_icgraph}
+\end{center}
+\end{figure}
+
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{class_s_u3_af003668305abe616f56568a075434be0}\label{class_s_u3_af003668305abe616f56568a075434be0}} 
+\index{SU3@{SU3}!mat@{mat}}
+\index{mat@{mat}!SU3@{SU3}}
+\subsubsection{\texorpdfstring{mat}{mat}}
+{\footnotesize\ttfamily double S\+U3\+::mat\mbox{[}18\mbox{]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+G\+L\+A\+C/math/matrices/\mbox{\hyperlink{su3_8h}{su3.\+h}}\item 
+G\+L\+A\+C/math/matrices/\mbox{\hyperlink{su3_8cpp}{su3.\+cpp}}\end{DoxyCompactItemize}

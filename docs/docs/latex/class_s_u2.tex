@@ -1,0 +1,229 @@
+\hypertarget{class_s_u2}{}\section{S\+U2 Class Reference}
+\label{class_s_u2}\index{SU2@{SU2}}
+
+
+Class for holding $\mathrm{SU}(2)$ matrices.  
+
+
+
+
+{\ttfamily \#include $<$su2.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_s_u2_a681fd5c1304d6f160686d7e9c0842ecb}{S\+U2}} ()
+\item 
+\mbox{\hyperlink{class_s_u2_a966f54ae31784aba31580b4569d83e1f}{$\sim$\+S\+U2}} ()
+\item 
+void \mbox{\hyperlink{class_s_u2_a1210d531ef84574deb5f03dd24de80cf}{print}} ()
+\item 
+void \mbox{\hyperlink{class_s_u2_a348ca5d38346892060a05f7d9de02916}{zeros}} ()
+\item 
+void \mbox{\hyperlink{class_s_u2_a17ce46d1d9db179d045602b90b3d5af4}{identity}} ()
+\item 
+void \mbox{\hyperlink{class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12}{set\+Complex}} (\mbox{\hyperlink{classcomplex}{complex}} w, int i)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12}{S\+U2\+::set\+Complex}}. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_s_u2_ad1eebb9f268f569b888f1ae6ab6a7e6c}{norm\+Squared}} (int i)
+\item 
+\mbox{\hyperlink{class_s_u2}{S\+U2}} \mbox{\hyperlink{class_s_u2_a798389d4b2bc24cea6a466473004e3f8}{transpose}} ()
+\item 
+\mbox{\hyperlink{class_s_u2}{S\+U2}} \mbox{\hyperlink{class_s_u2_afb3a5fc8c00a45a0044113fb742727cc}{conjugate}} ()
+\item 
+\mbox{\hyperlink{class_s_u2}{S\+U2}} \mbox{\hyperlink{class_s_u2_a2f7f6ade28078418c8ee97234fff4dd0}{inv}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_s_u2_a2f7f6ade28078418c8ee97234fff4dd0}{S\+U2\+::inv}}. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_s_u2_a4f10c4617e00686b196653dd669e0697}{get}} (int i, int j, int k)
+\item 
+double \& \mbox{\hyperlink{class_s_u2_aa8dbfcb283189ab089c0b73007e08e7e}{operator\mbox{[}$\,$\mbox{]}}} (int i)
+\item 
+\mbox{\hyperlink{class_s_u2}{S\+U2}} \& \mbox{\hyperlink{class_s_u2_a6b3df2e42e824e6a5f9d312e16132aa2}{operator=}} (const \mbox{\hyperlink{class_s_u2}{S\+U2}} \&B)
+\item 
+\mbox{\hyperlink{class_s_u2}{S\+U2}} \& \mbox{\hyperlink{class_s_u2_a36436ebbcc798eca5a5b1927038517c4}{operator+=}} (\mbox{\hyperlink{class_s_u2}{S\+U2}} B)
+\item 
+\mbox{\hyperlink{class_s_u2}{S\+U2}} \& \mbox{\hyperlink{class_s_u2_af1d50a5dec3c4dc888109e688bb9ec88}{operator-\/=}} (\mbox{\hyperlink{class_s_u2}{S\+U2}} B)
+\item 
+\mbox{\hyperlink{class_s_u2}{S\+U2}} \& \mbox{\hyperlink{class_s_u2_abf6e0365b7e284dfbf5a5ad228aadacd}{operator $\ast$=}} (\mbox{\hyperlink{class_s_u2}{S\+U2}} B)
+\item 
+\mbox{\hyperlink{class_s_u2}{S\+U2}} \& \mbox{\hyperlink{class_s_u2_a592fd0456666ba1e70abc4b31f9623b0}{operator $\ast$=}} (double B)
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{class_s_u2_ad4227484be245b63489c44a2bc02a625}{mat}} \mbox{[}8\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for holding $\mathrm{SU}(2)$ matrices. 
+
+Operations have been overloaded for ease of use.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_s_u2_a681fd5c1304d6f160686d7e9c0842ecb}\label{class_s_u2_a681fd5c1304d6f160686d7e9c0842ecb}} 
+\index{SU2@{SU2}!SU2@{SU2}}
+\index{SU2@{SU2}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{SU2()}{SU2()}}
+{\footnotesize\ttfamily S\+U2\+::\+S\+U2 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u2_a966f54ae31784aba31580b4569d83e1f}\label{class_s_u2_a966f54ae31784aba31580b4569d83e1f}} 
+\index{SU2@{SU2}!````~SU2@{$\sim$SU2}}
+\index{````~SU2@{$\sim$SU2}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{$\sim$SU2()}{~SU2()}}
+{\footnotesize\ttfamily S\+U2\+::$\sim$\+S\+U2 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_s_u2_afb3a5fc8c00a45a0044113fb742727cc}\label{class_s_u2_afb3a5fc8c00a45a0044113fb742727cc}} 
+\index{SU2@{SU2}!conjugate@{conjugate}}
+\index{conjugate@{conjugate}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{conjugate()}{conjugate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} S\+U2\+::conjugate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u2_a4f10c4617e00686b196653dd669e0697}\label{class_s_u2_a4f10c4617e00686b196653dd669e0697}} 
+\index{SU2@{SU2}!get@{get}}
+\index{get@{get}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily double S\+U2\+::get (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j,  }\item[{int}]{k }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u2_a17ce46d1d9db179d045602b90b3d5af4}\label{class_s_u2_a17ce46d1d9db179d045602b90b3d5af4}} 
+\index{SU2@{SU2}!identity@{identity}}
+\index{identity@{identity}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{identity()}{identity()}}
+{\footnotesize\ttfamily void S\+U2\+::identity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u2_a2f7f6ade28078418c8ee97234fff4dd0}\label{class_s_u2_a2f7f6ade28078418c8ee97234fff4dd0}} 
+\index{SU2@{SU2}!inv@{inv}}
+\index{inv@{inv}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{inv()}{inv()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} S\+U2\+::inv (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\mbox{\hyperlink{class_s_u2_a2f7f6ade28078418c8ee97234fff4dd0}{S\+U2\+::inv}}. 
+
+\begin{DoxyReturn}{Returns}
+a copy of the inverse of itself. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_s_u2_ad1eebb9f268f569b888f1ae6ab6a7e6c}\label{class_s_u2_ad1eebb9f268f569b888f1ae6ab6a7e6c}} 
+\index{SU2@{SU2}!normSquared@{normSquared}}
+\index{normSquared@{normSquared}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{normSquared()}{normSquared()}}
+{\footnotesize\ttfamily double S\+U2\+::norm\+Squared (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u2_abf6e0365b7e284dfbf5a5ad228aadacd}\label{class_s_u2_abf6e0365b7e284dfbf5a5ad228aadacd}} 
+\index{SU2@{SU2}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} \& S\+U2\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u2}{S\+U2}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u2_a592fd0456666ba1e70abc4b31f9623b0}\label{class_s_u2_a592fd0456666ba1e70abc4b31f9623b0}} 
+\index{SU2@{SU2}!operator $\ast$=@{operator $\ast$=}}
+\index{operator $\ast$=@{operator $\ast$=}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{operator $\ast$=()}{operator *=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} \& S\+U2\+::operator $\ast$= (\begin{DoxyParamCaption}\item[{double}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u2_a36436ebbcc798eca5a5b1927038517c4}\label{class_s_u2_a36436ebbcc798eca5a5b1927038517c4}} 
+\index{SU2@{SU2}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{operator+=()}{operator+=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} \& S\+U2\+::operator+= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u2}{S\+U2}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u2_af1d50a5dec3c4dc888109e688bb9ec88}\label{class_s_u2_af1d50a5dec3c4dc888109e688bb9ec88}} 
+\index{SU2@{SU2}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{operator-\/=()}{operator-=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} \& S\+U2\+::operator-\/= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u2}{S\+U2}}}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u2_a6b3df2e42e824e6a5f9d312e16132aa2}\label{class_s_u2_a6b3df2e42e824e6a5f9d312e16132aa2}} 
+\index{SU2@{SU2}!operator=@{operator=}}
+\index{operator=@{operator=}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} \& S\+U2\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_s_u2}{S\+U2}} \&}]{B }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u2_aa8dbfcb283189ab089c0b73007e08e7e}\label{class_s_u2_aa8dbfcb283189ab089c0b73007e08e7e}} 
+\index{SU2@{SU2}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily double\& S\+U2\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{class_s_u2_a1210d531ef84574deb5f03dd24de80cf}\label{class_s_u2_a1210d531ef84574deb5f03dd24de80cf}} 
+\index{SU2@{SU2}!print@{print}}
+\index{print@{print}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily void S\+U2\+::print (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12}\label{class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12}} 
+\index{SU2@{SU2}!setComplex@{setComplex}}
+\index{setComplex@{setComplex}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{setComplex()}{setComplex()}}
+{\footnotesize\ttfamily void S\+U2\+::set\+Complex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcomplex}{complex}}}]{w,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12}{S\+U2\+::set\+Complex}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em w} & complex number \\
+\hline
+{\em i} & matrix position(contigious) to set w as. \\
+\hline
+\end{DoxyParams}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=314pt]{class_s_u2_afe1d093aaf7325c1a7490f84e4c59b12_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_s_u2_a798389d4b2bc24cea6a466473004e3f8}\label{class_s_u2_a798389d4b2bc24cea6a466473004e3f8}} 
+\index{SU2@{SU2}!transpose@{transpose}}
+\index{transpose@{transpose}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{transpose()}{transpose()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u2}{S\+U2}} S\+U2\+::transpose (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_s_u2_a348ca5d38346892060a05f7d9de02916}\label{class_s_u2_a348ca5d38346892060a05f7d9de02916}} 
+\index{SU2@{SU2}!zeros@{zeros}}
+\index{zeros@{zeros}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{zeros()}{zeros()}}
+{\footnotesize\ttfamily void S\+U2\+::zeros (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_s_u2_a348ca5d38346892060a05f7d9de02916_icgraph}
+\end{center}
+\end{figure}
+
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{class_s_u2_ad4227484be245b63489c44a2bc02a625}\label{class_s_u2_ad4227484be245b63489c44a2bc02a625}} 
+\index{SU2@{SU2}!mat@{mat}}
+\index{mat@{mat}!SU2@{SU2}}
+\subsubsection{\texorpdfstring{mat}{mat}}
+{\footnotesize\ttfamily double S\+U2\+::mat\mbox{[}8\mbox{]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+G\+L\+A\+C/math/matrices/\mbox{\hyperlink{su2_8h}{su2.\+h}}\item 
+G\+L\+A\+C/math/matrices/\mbox{\hyperlink{su2_8cpp}{su2.\+cpp}}\end{DoxyCompactItemize}
