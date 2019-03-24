@@ -9,9 +9,9 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 33)">
 <title>Parallel::Communicator::init</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-33 197.6006,-33 197.6006,4 -4,4"/>
-<!-- Node125 -->
+<!-- Node126 -->
 <g id="node1" class="node">
-<title>Node125</title>
+<title>Node126</title>
 <g id="a_node1"><a xlink:title="Parallel::Communicator::init initializes the communicater and sets up the lattice geometry.">
 <polygon fill="#bfbfbf" stroke="#000000" points="73.6748,-.5 73.6748,-28.5 193.6006,-28.5 193.6006,-.5 73.6748,-.5"/>
 <text text-anchor="start" x="81.6748" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
@@ -19,18 +19,18 @@
 </a>
 </g>
 </g>
-<!-- Node126 -->
+<!-- Node127 -->
 <g id="node2" class="node">
-<title>Node126</title>
+<title>Node127</title>
 <g id="a_node2"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title="main loads in configurations and initiates program according to .json specifications.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-5.5 0,-23.5 37.6748,-23.5 37.6748,-5.5 0,-5.5"/>
 <text text-anchor="middle" x="18.8374" y="-11.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </a>
 </g>
 </g>
-<!-- Node125&#45;&gt;Node126 -->
+<!-- Node126&#45;&gt;Node127 -->
 <g id="edge1" class="edge">
-<title>Node125&#45;&gt;Node126</title>
+<title>Node126&#45;&gt;Node127</title>
 <path fill="none" stroke="#191970" d="M63.262,-14.5C53.9118,-14.5 45.0464,-14.5 37.73,-14.5"/>
 <polygon fill="#191970" stroke="#191970" points="63.5478,-18.0001 73.5478,-14.5 63.5478,-11.0001 63.5478,-18.0001"/>
 </g>

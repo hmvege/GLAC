@@ -1,12 +1,12 @@
 <map id="LuscherAction::computeStaple" name="LuscherAction::computeStaple">
-<area shape="rect" id="node1" title="computeStaple computes the staple at given poisition." alt="" coords="5,188,208,213"/>
+<area shape="rect" id="node1" title="computeStaple computes the staple at given poisition." alt="" coords="5,189,208,215"/>
 <area shape="rect" id="node2" href="$class_s_u3.html#a9f3527fd882882ddfa18d72f5f43176c" title=" " alt="" coords="314,5,402,31"/>
 <area shape="rect" id="node3" href="$class_luscher_action.html#a2bfa5f9b8bfb0c4440732000d2281519" title="updateMuIndex updates the m_muIndex based on mu." alt="" coords="256,55,461,80"/>
 <area shape="rect" id="node4" href="$class_luscher_action.html#a6496c97ed38401c0d94855bf940fd6ff" title="updateNuIndex updates the m_nuIndex based on nu." alt="" coords="256,104,460,129"/>
-<area shape="rect" id="node5" href="$class_parallel_1_1_communicator.html#aa716fcde544018dcc5967df9b6708bb5" title=" " alt="" coords="278,153,438,192"/>
-<area shape="rect" id="node6" href="$class_s_u3.html#ad0e19706d3c6fdb50dcf788d4b48eb4c" title="SU3::inv performs a matrix inversion." alt="" coords="322,216,394,241"/>
-<area shape="rect" id="node7" href="$class_parallel_1_1_index.html#af31faeef1369fdc0997d1910e008bfe2" title=" " alt="" coords="509,324,673,349"/>
+<area shape="rect" id="node5" href="$class_parallel_1_1_communicator.html#a1c8d402df4a44becc1cab7a762f51432" title="Parallel::Communicator::getPositiveLink fetches a link in the positive direction." alt="" coords="278,153,438,192"/>
+<area shape="rect" id="node6" href="$class_parallel_1_1_index.html#af31faeef1369fdc0997d1910e008bfe2" title=" " alt="" coords="509,271,673,296"/>
+<area shape="rect" id="node7" href="$class_s_u3.html#ad0e19706d3c6fdb50dcf788d4b48eb4c" title="SU3::inv performs a matrix inversion." alt="" coords="322,268,394,293"/>
 <area shape="rect" id="node8" href="$class_parallel_1_1_communicator.html#a27862560cf6c7b8ccf650a422e014776" title="Parallel::Communicator::getNeighboursNeighbourLink fetches a neighbours neighbor link." alt="" coords="257,380,459,419"/>
-<area shape="rect" id="node10" href="$class_parallel_1_1_communicator.html#ae843d16f4aed13d5b5179a05b717ec88" title="Parallel::Communicator::getPositiveLink fetches a link in the positive direction." alt="" coords="278,317,438,356"/>
+<area shape="rect" id="node10" href="$class_parallel_1_1_communicator.html#ae843d16f4aed13d5b5179a05b717ec88" title="Parallel::Communicator::getNegativeLink fetches a link in the negative direction." alt="" coords="278,317,438,356"/>
 <area shape="rect" id="node9" href="$class_parallel_1_1_neighbours.html#aa3e776b78a708f2c4ce9f287b81f263e" title="Parallel::Neighbours::getNeighbours returns a reference to the neighbour list of given process rank." alt="" coords="520,380,662,419"/>
 </map>

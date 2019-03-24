@@ -18,10 +18,10 @@ static void \mbox{\hyperlink{class_parallel_1_1_communicator_a4ed2a77c33cd899b31
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_a4ed2a77c33cd899b31131e44fc906fd7}{Parallel\+::\+Communicator\+::init}} initializes the communicater and sets up the lattice geometry. \end{DoxyCompactList}\item 
 static void \mbox{\hyperlink{class_parallel_1_1_communicator_a3094d713d09225738ecf0250019db115}{initialize\+Sub\+Lattice}} ()
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_a3094d713d09225738ecf0250019db115}{Parallel\+::\+Communicator\+::initialize\+Sub\+Lattice}}. \end{DoxyCompactList}\item 
-static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_aa716fcde544018dcc5967df9b6708bb5}{get\+Positive\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int S\+U3\+Dir)
-\item 
+static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432}{get\+Positive\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int S\+U3\+Dir)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432}{Parallel\+::\+Communicator\+::get\+Positive\+Link}} fetches a link in the positive direction. \end{DoxyCompactList}\item 
 static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_ae843d16f4aed13d5b5179a05b717ec88}{get\+Negative\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int S\+U3\+Dir)
-\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_aa716fcde544018dcc5967df9b6708bb5}{Parallel\+::\+Communicator\+::get\+Positive\+Link}} fetches a link in the positive direction. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_ae843d16f4aed13d5b5179a05b717ec88}{Parallel\+::\+Communicator\+::get\+Negative\+Link}} fetches a link in the negative direction. \end{DoxyCompactList}\item 
 static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_a27862560cf6c7b8ccf650a422e014776}{get\+Neighbours\+Neighbour\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int nu, int $\ast$nu\+Index, int S\+U3\+Dir)
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_communicator_a27862560cf6c7b8ccf650a422e014776}{Parallel\+::\+Communicator\+::get\+Neighbours\+Neighbour\+Link}} fetches a neighbours neighbor link. \end{DoxyCompactList}\item 
 static \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_a1c598fae96e05e3b36db368e60453d63}{get\+Neighbours\+Neighbour\+Negative\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int nu, int $\ast$nu\+Index, int S\+U3\+Dir)
@@ -198,7 +198,7 @@ Here is the caller graph for this function\+:
 
 
 
-\mbox{\hyperlink{class_parallel_1_1_communicator_aa716fcde544018dcc5967df9b6708bb5}{Parallel\+::\+Communicator\+::get\+Positive\+Link}} fetches a link in the positive direction. 
+\mbox{\hyperlink{class_parallel_1_1_communicator_ae843d16f4aed13d5b5179a05b717ec88}{Parallel\+::\+Communicator\+::get\+Negative\+Link}} fetches a link in the negative direction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -208,21 +208,9 @@ Here is the caller graph for this function\+:
 \hline
 {\em mu} & direction to shift in. Always negative in x, y, z and t directions. \mbox{\hyperlink{class_parallel_1_1_index}{Index}} is the same as the step direction of mu\+Index. \\
 \hline
-{\em mu\+Index} & is a unit vector containing a step in the direction of sharing. It is $\hat{\mu}\f in $U\+\_\+\textbackslash{}nu (n + \textbackslash{}hat\{mu\}) $. \param SU3Dir is the index of the tensor $\textbackslash{}mu\textbackslash{}f\$ in link $U_{\mu}$. \\
+{\em mu\+Index} & is a unit vector containing a step in the direction of sharing. It is $\hat{\mu}$ in $U_\nu (n + \hat{mu}) $. \\
 \hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-fetched \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix. $\ast$/ \mbox{\hyperlink{class_s_u3}{S\+U3}} \mbox{\hyperlink{class_parallel_1_1_communicator_aa716fcde544018dcc5967df9b6708bb5}{Parallel\+::\+Communicator\+::get\+Positive\+Link(\+Lattice$<$\+S\+U3$>$ $\ast$lattice, std\+::vector$<$int$>$ n, int mu, int $\ast$mu\+Index, int S\+U3\+Dir)}} \{ /$\ast$ Function for retrieving link in positive direction. Takes\+: lattice \+: constisting of links n \+: position vector in lattice mu \+: lorentz index mu mu\+Index \+: lorentz \char`\"{}vector\char`\"{} S\+U3\+Dir \+: which of the four \mbox{\hyperlink{class_s_u3}{S\+U3}} matrices which we need $\ast$/ if ((n\mbox{[}mu\mbox{]}+mu\+Index\mbox{[}mu\mbox{]}) \% m\+\_\+N\mbox{[}mu\mbox{]} == 0) \{ n\mbox{[}mu\mbox{]} = 0; M\+P\+Ifetch\+S\+U3\+Positive(lattice,n,mu,\+S\+U3\+Dir); return exchangeU; \} else \{ return lattice\mbox{[}S\+U3\+Dir\mbox{]}\mbox{[}\mbox{\hyperlink{class_parallel_1_1_index_af31faeef1369fdc0997d1910e008bfe2}{Index\+::get\+Index}}(n\mbox{[}0\mbox{]}+mu\+Index\mbox{[}0\mbox{]}, n\mbox{[}1\mbox{]}+mu\+Index\mbox{[}1\mbox{]}, n\mbox{[}2\mbox{]}+mu\+Index\mbox{[}2\mbox{]}, n\mbox{[}3\mbox{]}+mu\+Index\mbox{[}3\mbox{]})\mbox{]}; \} \}
-\end{DoxyReturn}
-/$\ast$! \mbox{\hyperlink{class_parallel_1_1_communicator_ae843d16f4aed13d5b5179a05b717ec88}{Parallel\+::\+Communicator\+::get\+Negative\+Link}} fetches a link in the negative direction. 
-\begin{DoxyParams}{Parameters}
-{\em lattice} & a lattice pointer for all four dimensions. \\
-\hline
-{\em n} & position in lattice to fetch link from. \\
-\hline
-{\em mu} & direction to shift in. Always negative in x, y, z and t directions. \mbox{\hyperlink{class_parallel_1_1_index}{Index}} is the same as the step direction of mu\+Index. \\
-\hline
-{\em mu\+Index} & is a unit vector containing a step in the direction of sharing. It is $\hat{\mu}\f in $U\+\_\+\textbackslash{}nu (n + \textbackslash{}hat\{mu\}) $. \param SU3Dir is the index of the tensor $\textbackslash{}mu\textbackslash{}f\$ in link $U_{\mu}$. \\
+{\em S\+U3\+Dir} & is the index of the tensor $\mu$ in link $U_{\mu}$. \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -348,18 +336,46 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{class_parallel_1_1_communicator_a7b1f80fb49a0cc83f2031c3415174150_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_communicator_aa716fcde544018dcc5967df9b6708bb5}\label{class_parallel_1_1_communicator_aa716fcde544018dcc5967df9b6708bb5}} 
+\mbox{\Hypertarget{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432}\label{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432}} 
 \index{Parallel::Communicator@{Parallel::Communicator}!getPositiveLink@{getPositiveLink}}
 \index{getPositiveLink@{getPositiveLink}!Parallel::Communicator@{Parallel::Communicator}}
 \subsubsection{\texorpdfstring{getPositiveLink()}{getPositiveLink()}}
-{\footnotesize\ttfamily static \mbox{\hyperlink{class_s_u3}{S\+U3}} Parallel\+::\+Communicator\+::get\+Positive\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_s_u3}{S\+U3}} Communicator\+::get\+Positive\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lattice}{Lattice}}$<$ \mbox{\hyperlink{class_s_u3}{S\+U3}} $>$ $\ast$}]{lattice,  }\item[{std\+::vector$<$ int $>$}]{n,  }\item[{int}]{mu,  }\item[{int $\ast$}]{mu\+Index,  }\item[{int}]{S\+U3\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
+
+
+\mbox{\hyperlink{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432}{Parallel\+::\+Communicator\+::get\+Positive\+Link}} fetches a link in the positive direction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lattice} & a lattice pointer for all four dimensions. \\
+\hline
+{\em n} & position in lattice to fetch link from. \\
+\hline
+{\em mu} & direction to shift in. Always negative in x, y, z and t directions. \mbox{\hyperlink{class_parallel_1_1_index}{Index}} is the same as the step direction of mu\+Index. \\
+\hline
+{\em mu\+Index} & is a unit vector containing a step in the direction of sharing. It is $\hat{\mu}$ in $U_\nu (n + \hat{mu}) $. \\
+\hline
+{\em S\+U3\+Dir} & is the index of the tensor $\mu$ in link $U_{\mu}$. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+fetched \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix. 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_communicator_aa716fcde544018dcc5967df9b6708bb5_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_communicator_a1c8d402df4a44becc1cab7a762f51432_icgraph}
 \end{center}
 \end{figure}
 \mbox{\Hypertarget{class_parallel_1_1_communicator_a474ab433da0e83ef372d74e26a7e5cb0}\label{class_parallel_1_1_communicator_a474ab433da0e83ef372d74e26a7e5cb0}} 

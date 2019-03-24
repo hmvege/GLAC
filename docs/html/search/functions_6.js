@@ -59,7 +59,7 @@ var searchData=
   ['getobservablesvector',['getObservablesVector',['../class_correlator.html#a7fb062b098beb078f3e546f4717b4941',1,'Correlator::getObservablesVector()'],['../class_lattice_action_charge_density.html#a72952fbe5ade96d53196d6c2c93896e5',1,'LatticeActionChargeDensity::getObservablesVector()'],['../class_master_sampler.html#a471dffa3f29c68b4152b195708a9a5ac',1,'MasterSampler::getObservablesVector()'],['../class_master_sampler_topc_x_y_z.html#a1a922db23320ff46f8f736788c6977bb',1,'MasterSamplerTopcXYZ::getObservablesVector()'],['../class_super_sampler.html#a2b81588289576169c2148a88ddad482f',1,'SuperSampler::getObservablesVector()']]],
   ['getoutputfolder',['getOutputFolder',['../class_parameters.html#afa4cfe5dc4302b1e8f8928606ea9b056',1,'Parameters']]],
   ['getperformancetesting',['getPerformanceTesting',['../class_parameters.html#a778a2311c27854392c34c15bd4ea19f8',1,'Parameters']]],
-  ['getpositivelink',['getPositiveLink',['../class_parallel_1_1_communicator.html#aa716fcde544018dcc5967df9b6708bb5',1,'Parallel::Communicator']]],
+  ['getpositivelink',['getPositiveLink',['../class_parallel_1_1_communicator.html#a1c8d402df4a44becc1cab7a762f51432',1,'Parallel::Communicator']]],
   ['getprocessordimensionposition',['getProcessorDimensionPosition',['../class_parallel_1_1_neighbours.html#ad1a2a616b4089eded3545faf11409b85',1,'Parallel::Neighbours']]],
   ['getprocessorsperdimension',['getProcessorsPerDimension',['../class_parameters.html#a6b13faa642ebaf458203ae111a536d7a',1,'Parameters']]],
   ['getprocessrank',['getProcessRank',['../class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0',1,'Parallel::Communicator']]],

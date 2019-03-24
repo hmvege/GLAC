@@ -1,5 +1,5 @@
 <map id="Parallel::Communicator::getNegativeLink" name="Parallel::Communicator::getNegativeLink">
-<area shape="rect" id="node1" title="Parallel::Communicator::getPositiveLink fetches a link in the positive direction." alt="" coords="256,27,415,65"/>
+<area shape="rect" id="node1" title="Parallel::Communicator::getNegativeLink fetches a link in the negative direction." alt="" coords="256,27,415,65"/>
 <area shape="rect" id="node2" href="$class_luscher_action.html#a42285b6e3015935588e1fab6b90c1a11" title="computeStaple computes the staple at given poisition." alt="" coords="5,5,208,31"/>
 <area shape="rect" id="node3" href="$class_wilson_gauge_action.html#af1f6ba42fcc2b923dc3b37bf150bfae9" title="computeStaple computes the staple at given poisition." alt="" coords="34,55,179,93"/>
 </map>

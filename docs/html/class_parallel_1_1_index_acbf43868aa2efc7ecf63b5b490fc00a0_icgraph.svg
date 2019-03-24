@@ -9,33 +9,33 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
 <title>Parallel::Index::setN</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-70 405.2354,-70 405.2354,4 -4,4"/>
-<!-- Node49 -->
+<!-- Node50 -->
 <g id="node1" class="node">
-<title>Node49</title>
+<title>Node50</title>
 <g id="a_node1"><a xlink:title="Parallel::Index::setN sets the sub lattice dimensionality.">
 <polygon fill="#bfbfbf" stroke="#000000" points="295.748,-26.5 295.748,-44.5 401.2354,-44.5 401.2354,-26.5 295.748,-26.5"/>
 <text text-anchor="middle" x="348.4917" y="-32.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Index::setN</text>
 </a>
 </g>
 </g>
-<!-- Node50 -->
+<!-- Node51 -->
 <g id="node2" class="node">
-<title>Node50</title>
+<title>Node51</title>
 <g id="a_node2"><a xlink:href="namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" target="_top" xlink:title="load">
 <polygon fill="#ffffff" stroke="#000000" points="149.5317,-47.5 149.5317,-65.5 250.0386,-65.5 250.0386,-47.5 149.5317,-47.5"/>
 <text text-anchor="middle" x="199.7852" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ConfigLoader::load</text>
 </a>
 </g>
 </g>
-<!-- Node49&#45;&gt;Node50 -->
+<!-- Node50&#45;&gt;Node51 -->
 <g id="edge1" class="edge">
-<title>Node49&#45;&gt;Node50</title>
+<title>Node50&#45;&gt;Node51</title>
 <path fill="none" stroke="#191970" d="M285.4994,-44.3956C273.8082,-46.0466 261.7332,-47.7518 250.4677,-49.3427"/>
 <polygon fill="#191970" stroke="#191970" points="286.2323,-47.8269 295.6446,-42.9629 285.2534,-40.8957 286.2323,-47.8269"/>
 </g>
-<!-- Node52 -->
+<!-- Node53 -->
 <g id="node4" class="node">
-<title>Node52</title>
+<title>Node53</title>
 <g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#a3094d713d09225738ecf0250019db115" target="_top" xlink:title="Parallel::Communicator::initializeSubLattice.">
 <polygon fill="#ffffff" stroke="#000000" points="139.8223,-.5 139.8223,-28.5 259.748,-28.5 259.748,-.5 139.8223,-.5"/>
 <text text-anchor="start" x="147.8223" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
@@ -43,39 +43,39 @@
 </a>
 </g>
 </g>
-<!-- Node49&#45;&gt;Node52 -->
+<!-- Node50&#45;&gt;Node53 -->
 <g id="edge3" class="edge">
-<title>Node49&#45;&gt;Node52</title>
+<title>Node50&#45;&gt;Node53</title>
 <path fill="none" stroke="#191970" d="M285.7006,-26.6328C277.1234,-25.4215 268.3357,-24.1806 259.8094,-22.9765"/>
 <polygon fill="#191970" stroke="#191970" points="285.2534,-30.1043 295.6446,-28.0371 286.2323,-23.1731 285.2534,-30.1043"/>
 </g>
-<!-- Node51 -->
+<!-- Node52 -->
 <g id="node3" class="node">
-<title>Node51</title>
+<title>Node52</title>
 <g id="a_node3"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title="main loads in configurations and initiates program according to .json specifications.">
 <polygon fill="#ffffff" stroke="#000000" points="33.0737,-47.5 33.0737,-65.5 70.7485,-65.5 70.7485,-47.5 33.0737,-47.5"/>
 <text text-anchor="middle" x="51.9111" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </a>
 </g>
 </g>
-<!-- Node50&#45;&gt;Node51 -->
+<!-- Node51&#45;&gt;Node52 -->
 <g id="edge2" class="edge">
-<title>Node50&#45;&gt;Node51</title>
+<title>Node51&#45;&gt;Node52</title>
 <path fill="none" stroke="#191970" d="M139.0209,-56.5C114.6587,-56.5 88.3247,-56.5 71.0643,-56.5"/>
 <polygon fill="#191970" stroke="#191970" points="139.3089,-60.0001 149.3089,-56.5 139.3089,-53.0001 139.3089,-60.0001"/>
 </g>
-<!-- Node53 -->
+<!-- Node54 -->
 <g id="node5" class="node">
-<title>Node53</title>
+<title>Node54</title>
 <g id="a_node5"><a xlink:href="class_test_suite.html#af7291e6d8b53443604ee0c1fcf1fadfc" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="0,-5.5 0,-23.5 103.8223,-23.5 103.8223,-5.5 0,-5.5"/>
 <text text-anchor="middle" x="51.9111" y="-11.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::TestSuite</text>
 </a>
 </g>
 </g>
-<!-- Node52&#45;&gt;Node53 -->
+<!-- Node53&#45;&gt;Node54 -->
 <g id="edge4" class="edge">
-<title>Node52&#45;&gt;Node53</title>
+<title>Node53&#45;&gt;Node54</title>
 <path fill="none" stroke="#191970" d="M129.5664,-14.5C120.9353,-14.5 112.2365,-14.5 103.942,-14.5"/>
 <polygon fill="#191970" stroke="#191970" points="129.6392,-18.0001 139.6391,-14.5 129.6391,-11.0001 129.6392,-18.0001"/>
 </g>
