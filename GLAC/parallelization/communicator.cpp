@@ -75,7 +75,7 @@ void Parallel::Communicator::MPIfetchSU3Negative(Lattice<SU3> *lattice, std::vec
  * \param lattice a lattice pointer for all four dimensions.
  * \param n position in lattice to fetch link from.
  * \param mu direction to shift in. Always negative in x, y, z and t directions. Index is the same as the step direction of muIndex.
- * \param muIndex is a unit vector containing a step in the direction of sharing. It is \f$\hat{\mu}\f in \f$U_\nu (n + \hat{mu}) \f$.
+ * \param muIndex is a unit vector containing a step in the direction of sharing. It is \f$\hat{\mu}\f$ in \f$U_\nu (n + \hat{mu}) \f$.
  * \param SU3Dir is the index of the tensor \f$\mu\f$ in link \f$U_{\mu}\f$.
  * \return fetched SU3 matrix.
  */
@@ -105,7 +105,7 @@ SU3 Parallel::Communicator::getPositiveLink(Lattice<SU3> *lattice, std::vector<i
  * \param lattice a lattice pointer for all four dimensions.
  * \param n position in lattice to fetch link from.
  * \param mu direction to shift in. Always negative in x, y, z and t directions. Index is the same as the step direction of muIndex.
- * \param muIndex is a unit vector containing a step in the direction of sharing. It is \f$\hat{\mu}\f in \f$U_\nu (n + \hat{mu}) \f$.
+ * \param muIndex is a unit vector containing a step in the direction of sharing. It is \f$\hat{\mu}\f$ in \f$U_\nu (n + \hat{mu}) \f$.
  * \param SU3Dir is the index of the tensor \f$\mu\f$ in link \f$U_{\mu}\f$.
  * \return fetched SU3 matrix.
  */
