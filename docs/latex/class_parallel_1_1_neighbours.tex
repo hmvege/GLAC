@@ -7,19 +7,19 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{class_parallel_1_1_neighbours_a4d96a6238767e2662ed3dbad9ff29a32}{Neighbours}} ()
+\mbox{\hyperlink{class_parallel_1_1_neighbours_a2bf11efc3bb079e65e9126c7a10d0097}{Neighbours}} ()
 \item 
-\mbox{\hyperlink{class_parallel_1_1_neighbours_a5c3a373ff91768a91099e7b347a62ce9}{$\sim$\+Neighbours}} ()
+\mbox{\hyperlink{class_parallel_1_1_neighbours_aba4f2d9818bc95b3e84255f04be64541}{$\sim$\+Neighbours}} ()
 \end{DoxyCompactItemize}
 \subsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-static void \mbox{\hyperlink{class_parallel_1_1_neighbours_a5838dbe2c3c086c5943b5b75ad8fa35c}{initialize}} (int process\+Rank, int numproc, int $\ast$processors\+Per\+Dim)
-\item 
+static void \mbox{\hyperlink{class_parallel_1_1_neighbours_a59e68da5867bfa27a867ed0b443267d7}{initialize}} (int process\+Rank, int numproc, int $\ast$processors\+Per\+Dim)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_neighbours_a59e68da5867bfa27a867ed0b443267d7}{Parallel\+::\+Neighbours\+::initialize}} initializes. \end{DoxyCompactList}\item 
 static int \mbox{\hyperlink{class_parallel_1_1_neighbours_a84653f3e22436280ac5a4689a24e7146}{get}} (int i\+Proc\+Dir)
-\item 
-static \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}} $\ast$ \mbox{\hyperlink{class_parallel_1_1_neighbours_a246afc374290bb0d3e86c07892872392}{get\+Neighbours}} (int Np)
-\item 
+\begin{DoxyCompactList}\small\item\em get returns the neighbourlist for the the calling processor/rank and the direction given py i\+Proc\+Dir. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}} $\ast$ \mbox{\hyperlink{class_parallel_1_1_neighbours_aa3e776b78a708f2c4ce9f287b81f263e}{get\+Neighbours}} (int Np)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_parallel_1_1_neighbours_aa3e776b78a708f2c4ce9f287b81f263e}{Parallel\+::\+Neighbours\+::get\+Neighbours}} returns a reference to the neighbour list of given process rank. \end{DoxyCompactList}\item 
 static int \mbox{\hyperlink{class_parallel_1_1_neighbours_aadbdf345a7b541bd6705bddac1969961}{get\+List\+Length}} ()
 \item 
 static long \mbox{\hyperlink{class_parallel_1_1_neighbours_ad1a2a616b4089eded3545faf11409b85}{get\+Processor\+Dimension\+Position}} (int dim)
@@ -27,17 +27,17 @@ static long \mbox{\hyperlink{class_parallel_1_1_neighbours_ad1a2a616b4089eded354
 
 
 \subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{class_parallel_1_1_neighbours_a4d96a6238767e2662ed3dbad9ff29a32}\label{class_parallel_1_1_neighbours_a4d96a6238767e2662ed3dbad9ff29a32}} 
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_a2bf11efc3bb079e65e9126c7a10d0097}\label{class_parallel_1_1_neighbours_a2bf11efc3bb079e65e9126c7a10d0097}} 
 \index{Parallel::Neighbours@{Parallel::Neighbours}!Neighbours@{Neighbours}}
 \index{Neighbours@{Neighbours}!Parallel::Neighbours@{Parallel::Neighbours}}
 \subsubsection{\texorpdfstring{Neighbours()}{Neighbours()}}
-{\footnotesize\ttfamily Parallel\+::\+Neighbours\+::\+Neighbours (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Neighbours\+::\+Neighbours (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_parallel_1_1_neighbours_a5c3a373ff91768a91099e7b347a62ce9}\label{class_parallel_1_1_neighbours_a5c3a373ff91768a91099e7b347a62ce9}} 
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_aba4f2d9818bc95b3e84255f04be64541}\label{class_parallel_1_1_neighbours_aba4f2d9818bc95b3e84255f04be64541}} 
 \index{Parallel::Neighbours@{Parallel::Neighbours}!````~Neighbours@{$\sim$Neighbours}}
 \index{````~Neighbours@{$\sim$Neighbours}!Parallel::Neighbours@{Parallel::Neighbours}}
 \subsubsection{\texorpdfstring{$\sim$Neighbours()}{~Neighbours()}}
-{\footnotesize\ttfamily Parallel\+::\+Neighbours\+::$\sim$\+Neighbours (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Neighbours\+::$\sim$\+Neighbours (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
 
@@ -48,6 +48,18 @@ static long \mbox{\hyperlink{class_parallel_1_1_neighbours_ad1a2a616b4089eded354
 \subsubsection{\texorpdfstring{get()}{get()}}
 {\footnotesize\ttfamily static int Parallel\+::\+Neighbours\+::get (\begin{DoxyParamCaption}\item[{int}]{i\+Proc\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
+
+
+get returns the neighbourlist for the the calling processor/rank and the direction given py i\+Proc\+Dir. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i\+Proc\+Dir} & the direction in which to look up its neighbour. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the rank of its neighbour. 
+\end{DoxyReturn}
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
@@ -62,18 +74,30 @@ Here is the caller graph for this function\+:
 \subsubsection{\texorpdfstring{getListLength()}{getListLength()}}
 {\footnotesize\ttfamily static int Parallel\+::\+Neighbours\+::get\+List\+Length (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-\mbox{\Hypertarget{class_parallel_1_1_neighbours_a246afc374290bb0d3e86c07892872392}\label{class_parallel_1_1_neighbours_a246afc374290bb0d3e86c07892872392}} 
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_aa3e776b78a708f2c4ce9f287b81f263e}\label{class_parallel_1_1_neighbours_aa3e776b78a708f2c4ce9f287b81f263e}} 
 \index{Parallel::Neighbours@{Parallel::Neighbours}!getNeighbours@{getNeighbours}}
 \index{getNeighbours@{getNeighbours}!Parallel::Neighbours@{Parallel::Neighbours}}
 \subsubsection{\texorpdfstring{getNeighbours()}{getNeighbours()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}} $\ast$ Parallel\+::\+Neighbours\+::get\+Neighbours (\begin{DoxyParamCaption}\item[{int}]{Np }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}} $\ast$ Neighbours\+::get\+Neighbours (\begin{DoxyParamCaption}\item[{int}]{Np }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
+
+
+\mbox{\hyperlink{class_parallel_1_1_neighbours_aa3e776b78a708f2c4ce9f287b81f263e}{Parallel\+::\+Neighbours\+::get\+Neighbours}} returns a reference to the neighbour list of given process rank. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Np} & process rank to find \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}} for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+reference to \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}}. 
+\end{DoxyReturn}
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_neighbours_a246afc374290bb0d3e86c07892872392_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_neighbours_aa3e776b78a708f2c4ce9f287b81f263e_icgraph}
 \end{center}
 \end{figure}
 \mbox{\Hypertarget{class_parallel_1_1_neighbours_ad1a2a616b4089eded3545faf11409b85}\label{class_parallel_1_1_neighbours_ad1a2a616b4089eded3545faf11409b85}} 
@@ -82,26 +106,38 @@ Here is the caller graph for this function\+:
 \subsubsection{\texorpdfstring{getProcessorDimensionPosition()}{getProcessorDimensionPosition()}}
 {\footnotesize\ttfamily static long Parallel\+::\+Neighbours\+::get\+Processor\+Dimension\+Position (\begin{DoxyParamCaption}\item[{int}]{dim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-Here is the caller graph for this function\+:
-\nopagebreak
+Here is the caller graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{class_parallel_1_1_neighbours_ad1a2a616b4089eded3545faf11409b85_icgraph}
 \end{center}
 \end{figure}
-\mbox{\Hypertarget{class_parallel_1_1_neighbours_a5838dbe2c3c086c5943b5b75ad8fa35c}\label{class_parallel_1_1_neighbours_a5838dbe2c3c086c5943b5b75ad8fa35c}} 
+\mbox{\Hypertarget{class_parallel_1_1_neighbours_a59e68da5867bfa27a867ed0b443267d7}\label{class_parallel_1_1_neighbours_a59e68da5867bfa27a867ed0b443267d7}} 
 \index{Parallel::Neighbours@{Parallel::Neighbours}!initialize@{initialize}}
 \index{initialize@{initialize}!Parallel::Neighbours@{Parallel::Neighbours}}
 \subsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily void Parallel\+::\+Neighbours\+::initialize (\begin{DoxyParamCaption}\item[{int}]{process\+Rank,  }\item[{int}]{numproc,  }\item[{int $\ast$}]{processors\+Per\+Dim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Neighbours\+::initialize (\begin{DoxyParamCaption}\item[{int}]{process\+Rank,  }\item[{int}]{numproc,  }\item[{int $\ast$}]{processors\+Per\+Dim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
+
+
+\mbox{\hyperlink{class_parallel_1_1_neighbours_a59e68da5867bfa27a867ed0b443267d7}{Parallel\+::\+Neighbours\+::initialize}} initializes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em process\+Rank} & the rank of the processor calling. \\
+\hline
+{\em numproc} & total number of active processors. \\
+\hline
+{\em processors\+Per\+Dim} & a int array of length four containing the total number of processors per dimension. \\
+\hline
+\end{DoxyParams}
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{class_parallel_1_1_neighbours_a5838dbe2c3c086c5943b5b75ad8fa35c_icgraph}
+\includegraphics[width=350pt]{class_parallel_1_1_neighbours_a59e68da5867bfa27a867ed0b443267d7_icgraph}
 \end{center}
 \end{figure}
 

@@ -17,6 +17,12 @@ Parallel::Neighbours::~Neighbours()
 {
 }
 
+/*!
+ * \brief Parallel::Neighbours::initialize initializes
+ * \param processRank the rank of the processor calling.
+ * \param numproc total number of active processors.
+ * \param processorsPerDim a int array of length four containing the total number of processors per dimension.
+ */
 void Parallel::Neighbours::initialize(int processRank, int numproc, int * processorsPerDim) {
     m_processRank = processRank;
     m_numproc = numproc;
@@ -32,6 +38,9 @@ void Parallel::Neighbours::initialize(int processRank, int numproc, int * proces
     m_P[3] = (long) (processRank / (m_Nx * m_Ny * m_Nz)) % m_Nt;
 }
 
+/*!
+ * \brief Parallel::Neighbours::generateNeighbourList generates the neighbour lists.
+ */
 void Parallel::Neighbours::generateNeighbourList()
 {
     /*
@@ -54,6 +63,11 @@ void Parallel::Neighbours::generateNeighbourList()
     }
 }
 
+/*!
+ * \brief Parallel::Neighbours::getNeighbours returns a reference to the neighbour list of given process rank.
+ * \param Np process rank to find NeighbourList for.
+ * \return reference to NeighbourList.
+ */
 NeighbourList * Parallel::Neighbours::getNeighbours(int Np) {
     /*
      * Must return a list. Therefore, returning a reference. Failure to do so, will result in segfault error.

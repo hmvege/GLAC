@@ -52,7 +52,7 @@
 <!-- Node45 -->
 <g id="node4" class="node">
 <title>Node45</title>
-<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#ae5739683ff54a7c39af6e37920e70ea5" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#ae5739683ff54a7c39af6e37920e70ea5" target="_top" xlink:title="Parallel::Communicator::gatherDoubleResults.">
 <polygon fill="#ffffff" stroke="#000000" points="218.4648,-84.5 218.4648,-112.5 338.3906,-112.5 338.3906,-84.5 218.4648,-84.5"/>
 <text text-anchor="start" x="226.4648" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="278.4277" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::gatherDoubleResults</text>

@@ -1,5 +1,6 @@
 <map id="TestSuite::run2x2MatrixTests" name="TestSuite::run2x2MatrixTests">
-<area shape="rect" id="node1" title=" " alt="" coords="376,5,568,31"/>
-<area shape="rect" id="node2" href="$class_test_suite.html#a0fa7e788a1b1c235faa475c0d1aaa1e3" title=" " alt="" coords="149,5,328,31"/>
-<area shape="rect" id="node3" href="$test_8h.html#a91a9c7ea8af27bb3962f1207dd4cb8fd" title=" " alt="" coords="5,5,101,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="474,5,666,31"/>
+<area shape="rect" id="node2" href="$class_test_suite.html#a0fa7e788a1b1c235faa475c0d1aaa1e3" title=" " alt="" coords="247,5,426,31"/>
+<area shape="rect" id="node3" href="$test_8h.html#a91a9c7ea8af27bb3962f1207dd4cb8fd" title="Header containing functions needed for running unit tests, integration tests and validation testing." alt="" coords="104,5,199,31"/>
+<area shape="rect" id="node4" href="$main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" title="main loads in configurations and initiates program according to .json specifications." alt="" coords="5,5,56,31"/>
 </map>

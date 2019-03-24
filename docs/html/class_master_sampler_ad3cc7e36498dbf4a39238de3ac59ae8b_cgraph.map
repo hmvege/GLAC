@@ -9,6 +9,6 @@
 <area shape="rect" id="node3" href="$class_lattice.html#a5b4e162f06f7b4b90b4a9335ed2aabb5" title="allocate method for allocating memory." alt="" coords="488,5,602,31"/>
 <area shape="rect" id="node4" href="$class_parallel_1_1_index.html#ac406d7ceb12e986a66d64ef98fcef5d3" title=" " alt="" coords="458,55,632,80"/>
 <area shape="rect" id="node5" href="$class_parallel_1_1_index.html#af31faeef1369fdc0997d1910e008bfe2" title=" " alt="" coords="463,104,627,129"/>
-<area shape="rect" id="node6" href="$class_parallel_1_1_neighbours.html#a84653f3e22436280ac5a4689a24e7146" title=" " alt="" coords="461,153,629,179"/>
+<area shape="rect" id="node6" href="$class_parallel_1_1_neighbours.html#a84653f3e22436280ac5a4689a24e7146" title="get returns the neighbourlist for the the calling processor/rank and the direction given py iProcDir." alt="" coords="461,153,629,179"/>
 <area shape="rect" id="node12" href="$functions_8h.html#a93863171e3da962b61804144857576a7" title="traceRealMultiplication" alt="" coords="467,252,623,277"/>
 </map>

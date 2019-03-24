@@ -124,7 +124,9 @@ void System::setObservable(std::vector<std::string> obsList, bool flow)
     }
 }
 
-
+/*!
+ * \brief System::~System de-allocates action, lattice, correlator RNGs, flow lattice, flow correlator and flow.
+ */
 System::~System()
 {
     /*
@@ -185,6 +187,9 @@ void System::copyToFlowLattice()
     }
 }
 
+/*!
+ * \brief System::latticeSetup sets up the lattice geometry and allocates memory.
+ */
 void System::latticeSetup()
 {
     /*
@@ -225,6 +230,12 @@ void System::latticeSetup()
     Parallel::Communicator::setBarrier();
 }
 
+/*!
+ * \brief System::run based on passed parameters, does one of three things:
+ *  - run regular metropolis to generate configurations.
+ *  - load a thermalized configuration and run metropolis to generate configurations.
+ *  - loads a set of configurations and flows them.
+ */
 void System::run()
 {
     /*
@@ -328,7 +339,7 @@ void System::update()
         for (unsigned int y = 0; y < m_N[1]; y++) {
             for (unsigned int z = 0; z < m_N[2]; z++) {
                 for (unsigned int t = 0; t < m_N[3]; t++) {
-                    for (unsigned int mu = 0; mu < 4; mu++) {
+                    for (int mu = 0; mu < 4; mu++) {
                         m_S->computeStaple(m_lattice, x, y, z, t, mu);
                         for (unsigned int n = 0; n < m_NUpdates; n++) // Runs avg 10 updates on link, as that is less costly than other parts
                         {
@@ -439,8 +450,6 @@ void System::runMetropolis()
         }
 
     }
-
-
 
     // Taking the average of the acceptance rate across the processors.
     MPI_Allreduce(&m_acceptanceScore, &m_acceptanceScore, 1, MPI_DOUBLE, MPI_SUM, Parallel::ParallelParameters::ACTIVE_COMM);
@@ -597,5 +606,5 @@ double System::getAcceptanceRate()
     /*
      * Returns the acceptance ratio of the main run of the System algorithm.
      */
-    return m_acceptanceScore/double(m_NCf*m_NCor*Parallel::Communicator::getNumProc());
+    return m_acceptanceScore/double(m_NCf*m_NCor*unsigned(Parallel::Communicator::getNumProc()));
 }

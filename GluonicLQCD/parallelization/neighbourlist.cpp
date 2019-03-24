@@ -20,6 +20,11 @@ NeighbourList::~NeighbourList()
 {
 }
 
+/*!
+ * \brief NeighbourList::print prints the geometry of a single processor.
+ *
+ * Usefull for debugging.
+ */
 void NeighbourList::print()
 {
     cout << "\nProcess rank = " << rank << endl;

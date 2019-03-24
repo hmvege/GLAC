@@ -1,5 +1,9 @@
 /*!
- * \brief
+ * \class System
+ *
+ * \brief System is the class that ties the program together. It initiates and sets up the sub-lattices, and performs holds the Metropolis algorithm.
+ *
+ * System takes on parameters as they are given by the class Parameters.
  *
  * \author Mathias M. Vege
  * \version 1.0

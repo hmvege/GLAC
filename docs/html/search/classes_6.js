@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['index',['Index',['../class_parallel_1_1_index.html',1,'Parallel']]],
+  ['index',['Index',['../class_parallel_1_1_index.html',1,'Parallel::Index'],['../class_index.html',1,'Index']]],
   ['is_5fbasic_5fjson_5fnested_5ftype',['is_basic_json_nested_type',['../structnlohmann_1_1detail_1_1is__basic__json__nested__type.html',1,'nlohmann::detail']]],
   ['is_5fcompatible_5farray_5ftype',['is_compatible_array_type',['../structnlohmann_1_1detail_1_1is__compatible__array__type.html',1,'nlohmann::detail']]],
   ['is_5fcompatible_5finteger_5ftype',['is_compatible_integer_type',['../structnlohmann_1_1detail_1_1is__compatible__integer__type.html',1,'nlohmann::detail']]],

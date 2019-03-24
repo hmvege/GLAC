@@ -11,8 +11,8 @@
 <area shape="rect" id="node13" href="$class_super_sampler.html#adf92b9281ee9a782e6c00424dd23451d" title="Correlator::printObservable prints the observable for the output." alt="" coords="399,437,607,463"/>
 <area shape="rect" id="node14" href="$class_observable_storer.html#a593f13b0dd0f9d20608ef6b84fda3f1d" title="ObservableStorer::gatherResults." alt="" coords="418,487,589,525"/>
 <area shape="rect" id="node26" href="$class_test_suite.html#af7291e6d8b53443604ee0c1fcf1fadfc" title=" " alt="" coords="434,549,573,575"/>
-<area shape="rect" id="node3" href="$main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" title=" " alt="" coords="5,77,56,103"/>
-<area shape="rect" id="node6" href="$class_system.html#a93c8a8258ac8f6382ec393bca1271011" title=" " alt="" coords="155,101,298,127"/>
+<area shape="rect" id="node3" href="$main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" title="main loads in configurations and initiates program according to .json specifications." alt="" coords="5,77,56,103"/>
+<area shape="rect" id="node6" href="$class_system.html#a93c8a8258ac8f6382ec393bca1271011" title="System::latticeSetup sets up the lattice geometry and allocates memory." alt="" coords="155,101,298,127"/>
 <area shape="rect" id="node9" href="$class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" title="Correlator::calculate calculates a observable." alt="" coords="133,175,319,213"/>
 <area shape="rect" id="node15" href="$class_correlator.html#a35197b1d12b62ef30b79c0138a26456e" title="Correlator::runStatistics." alt="" coords="146,237,306,263"/>
 <area shape="rect" id="node16" href="$class_correlator.html#a168512b2ce182d9478db47f100125fa6" title="Correlator::writeFlowObservablesToFile." alt="" coords="117,287,336,325"/>

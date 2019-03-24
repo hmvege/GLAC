@@ -9,33 +9,33 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 187.7201)">
 <title>Parameters::getNSpatial</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-187.7201 479.7031,-187.7201 479.7031,4 -4,4"/>
-<!-- Node224 -->
+<!-- Node233 -->
 <g id="node1" class="node">
-<title>Node224</title>
+<title>Node233</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="#bfbfbf" stroke="#000000" points="350.7627,-76.2201 350.7627,-94.2201 475.7031,-94.2201 475.7031,-76.2201 350.7627,-76.2201"/>
 <text text-anchor="middle" x="413.2329" y="-82.2201" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getNSpatial</text>
 </a>
 </g>
 </g>
-<!-- Node225 -->
+<!-- Node234 -->
 <g id="node2" class="node">
-<title>Node225</title>
+<title>Node234</title>
 <g id="a_node2"><a xlink:href="class_i_o_1_1_field_i_o.html#a8af607f9a1d79e90d4514c36103c6601" target="_top" xlink:title="IO::FieldIO::writeFieldToFile writes a lattice of SU3 matrix objects to file.">
 <polygon fill="#ffffff" stroke="#000000" points="175.3984,-165.2201 175.3984,-183.2201 314.7627,-183.2201 314.7627,-165.2201 175.3984,-165.2201"/>
 <text text-anchor="middle" x="245.0806" y="-171.2201" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::writeFieldToFile</text>
 </a>
 </g>
 </g>
-<!-- Node224&#45;&gt;Node225 -->
+<!-- Node233&#45;&gt;Node234 -->
 <g id="edge1" class="edge">
-<title>Node224&#45;&gt;Node225</title>
+<title>Node233&#45;&gt;Node234</title>
 <path fill="none" stroke="#191970" d="M395.7127,-100.9927C376.9575,-117.0867 345.7032,-141.7013 314.7627,-156.2201 307.071,-159.8294 298.549,-162.7912 290.1805,-165.195"/>
 <polygon fill="#191970" stroke="#191970" points="398.1819,-103.4829 403.4044,-94.2646 393.5732,-98.2141 398.1819,-103.4829"/>
 </g>
-<!-- Node226 -->
+<!-- Node235 -->
 <g id="node3" class="node">
-<title>Node226</title>
+<title>Node235</title>
 <g id="a_node3"><a xlink:href="class_i_o_1_1_field_i_o.html#aaf2bac2025d67c06e7c61e8cc9f44777" target="_top" xlink:title="IO::FieldIO::writeDoublesFieldToFile writes a lattice of doubles to file.">
 <polygon fill="#ffffff" stroke="#000000" points="181.2285,-118.2201 181.2285,-146.2201 308.9326,-146.2201 308.9326,-118.2201 181.2285,-118.2201"/>
 <text text-anchor="start" x="189.2285" y="-134.2201" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::writeDoubles</text>
@@ -43,15 +43,15 @@
 </a>
 </g>
 </g>
-<!-- Node224&#45;&gt;Node226 -->
+<!-- Node233&#45;&gt;Node235 -->
 <g id="edge2" class="edge">
-<title>Node224&#45;&gt;Node226</title>
+<title>Node233&#45;&gt;Node235</title>
 <path fill="none" stroke="#191970" d="M371.0035,-97.0235C348.0077,-103.4511 319.4059,-111.4455 295.2756,-118.1901"/>
 <polygon fill="#191970" stroke="#191970" points="372.1228,-100.3449 380.8114,-94.2821 370.2384,-93.6033 372.1228,-100.3449"/>
 </g>
-<!-- Node228 -->
+<!-- Node237 -->
 <g id="node5" class="node">
-<title>Node228</title>
+<title>Node237</title>
 <g id="a_node5"><a xlink:href="class_parallel_1_1_communicator.html#a5da7239eefebcebbeeabee499b2d724d" target="_top" xlink:title="Parallel::Communicator::checkSubLatticeValidity runs a series of tests to ensure that the sub lattice...">
 <polygon fill="#ffffff" stroke="#000000" points="181.8633,-71.2201 181.8633,-99.2201 308.2979,-99.2201 308.2979,-71.2201 181.8633,-71.2201"/>
 <text text-anchor="start" x="189.8633" y="-87.2201" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
@@ -59,46 +59,46 @@
 </a>
 </g>
 </g>
-<!-- Node224&#45;&gt;Node228 -->
+<!-- Node233&#45;&gt;Node237 -->
 <g id="edge4" class="edge">
-<title>Node224&#45;&gt;Node228</title>
+<title>Node233&#45;&gt;Node237</title>
 <path fill="none" stroke="#191970" d="M340.4558,-85.2201C329.7514,-85.2201 318.7983,-85.2201 308.3074,-85.2201"/>
 <polygon fill="#191970" stroke="#191970" points="340.6192,-88.7202 350.6192,-85.2201 340.6191,-81.7202 340.6192,-88.7202"/>
 </g>
-<!-- Node229 -->
+<!-- Node238 -->
 <g id="node6" class="node">
-<title>Node229</title>
-<g id="a_node6"><a xlink:href="class_parallel_1_1_communicator.html#a3094d713d09225738ecf0250019db115" target="_top" xlink:title=" ">
+<title>Node238</title>
+<g id="a_node6"><a xlink:href="class_parallel_1_1_communicator.html#a3094d713d09225738ecf0250019db115" target="_top" xlink:title="Parallel::Communicator::initializeSubLattice.">
 <polygon fill="#ffffff" stroke="#000000" points="185.1177,-24.2201 185.1177,-52.2201 305.0435,-52.2201 305.0435,-24.2201 185.1177,-24.2201"/>
 <text text-anchor="start" x="193.1177" y="-40.2201" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="245.0806" y="-30.2201" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initializeSubLattice</text>
 </a>
 </g>
 </g>
-<!-- Node224&#45;&gt;Node229 -->
+<!-- Node233&#45;&gt;Node238 -->
 <g id="edge5" class="edge">
-<title>Node224&#45;&gt;Node229</title>
+<title>Node233&#45;&gt;Node238</title>
 <path fill="none" stroke="#191970" d="M371.0035,-73.4166C348.0077,-66.9891 319.4059,-58.9946 295.2756,-52.25"/>
 <polygon fill="#191970" stroke="#191970" points="370.2384,-76.8368 380.8114,-76.158 372.1228,-70.0952 370.2384,-76.8368"/>
 </g>
-<!-- Node230 -->
+<!-- Node239 -->
 <g id="node7" class="node">
-<title>Node230</title>
+<title>Node239</title>
 <g id="a_node7"><a xlink:href="class_test_suite.html#af7291e6d8b53443604ee0c1fcf1fadfc" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="17.7881,-8.2201 17.7881,-26.2201 121.6104,-26.2201 121.6104,-8.2201 17.7881,-8.2201"/>
 <text text-anchor="middle" x="69.6992" y="-14.2201" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::TestSuite</text>
 </a>
 </g>
 </g>
-<!-- Node224&#45;&gt;Node230 -->
+<!-- Node233&#45;&gt;Node239 -->
 <g id="edge7" class="edge">
-<title>Node224&#45;&gt;Node230</title>
+<title>Node233&#45;&gt;Node239</title>
 <path fill="none" stroke="#191970" d="M397.5035,-68.9349C379.4365,-51.515 347.9823,-24.9474 314.7627,-14.2201 247.9539,7.3539 165.4614,-.1286 115.2563,-8.1742"/>
 <polygon fill="#191970" stroke="#191970" points="395.26,-71.6398 404.8208,-76.2052 400.1938,-66.674 395.26,-71.6398"/>
 </g>
-<!-- Node227 -->
+<!-- Node236 -->
 <g id="node4" class="node">
-<title>Node227</title>
+<title>Node236</title>
 <g id="a_node4"><a xlink:href="class_lattice_action_charge_density.html#a3dddc75188042c645fbdd1c8b3e80c8a" target="_top" xlink:title="Correlator::calculate calculates a observable.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-118.2201 0,-146.2201 139.3984,-146.2201 139.3984,-118.2201 0,-118.2201"/>
 <text text-anchor="start" x="8" y="-134.2201" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
@@ -106,15 +106,15 @@
 </a>
 </g>
 </g>
-<!-- Node226&#45;&gt;Node227 -->
+<!-- Node235&#45;&gt;Node236 -->
 <g id="edge3" class="edge">
-<title>Node226&#45;&gt;Node227</title>
+<title>Node235&#45;&gt;Node236</title>
 <path fill="none" stroke="#191970" d="M170.6003,-132.2201C160.3256,-132.2201 149.8032,-132.2201 139.615,-132.2201"/>
 <polygon fill="#191970" stroke="#191970" points="170.7709,-135.7202 180.7709,-132.2201 170.7709,-128.7202 170.7709,-135.7202"/>
 </g>
-<!-- Node229&#45;&gt;Node230 -->
+<!-- Node238&#45;&gt;Node239 -->
 <g id="edge6" class="edge">
-<title>Node229&#45;&gt;Node230</title>
+<title>Node238&#45;&gt;Node239</title>
 <path fill="none" stroke="#191970" d="M174.4729,-29.7656C156.835,-27.6536 138.238,-25.4268 121.6871,-23.445"/>
 <polygon fill="#191970" stroke="#191970" points="174.379,-33.2792 184.7243,-30.9931 175.2113,-26.3289 174.379,-33.2792"/>
 </g>

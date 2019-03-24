@@ -36,7 +36,7 @@
 <!-- Node115 -->
 <g id="node3" class="node">
 <title>Node115</title>
-<g id="a_node3"><a xlink:href="class_system.html#a93c8a8258ac8f6382ec393bca1271011" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_system.html#a93c8a8258ac8f6382ec393bca1271011" target="_top" xlink:title="System::latticeSetup sets up the lattice geometry and allocates memory.">
 <polygon fill="#ffffff" stroke="#000000" points="73.6748,-.5 73.6748,-18.5 180.8271,-18.5 180.8271,-.5 73.6748,-.5"/>
 <text text-anchor="middle" x="127.251" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">System::latticeSetup</text>
 </a>
@@ -51,7 +51,7 @@
 <!-- Node116 -->
 <g id="node4" class="node">
 <title>Node116</title>
-<g id="a_node4"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title="main loads in configurations and initiates program according to .json specifications.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-.5 0,-18.5 37.6748,-18.5 37.6748,-.5 0,-.5"/>
 <text text-anchor="middle" x="18.8374" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </a>

@@ -52,7 +52,7 @@
 <!-- Node11 -->
 <g id="node4" class="node">
 <title>Node11</title>
-<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#a57bb28ee8dbc4efd708a2695423778c4" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#a57bb28ee8dbc4efd708a2695423778c4" target="_top" xlink:title="Parallel::Communicator::MPIExit exits the program. Frees MPI groups before it exits.">
 <polygon fill="#ffffff" stroke="#000000" points="383.021,-153.5 383.021,-181.5 502.9468,-181.5 502.9468,-153.5 383.021,-153.5"/>
 <text text-anchor="start" x="391.021" y="-169.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="442.9839" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::MPIExit</text>
@@ -130,7 +130,7 @@
 <!-- Node16 -->
 <g id="node9" class="node">
 <title>Node16</title>
-<g id="a_node9"><a xlink:href="class_parallel_1_1_communicator.html#a9471bf9448f34a0b4575310a3c54af61" target="_top" xlink:title=" ">
+<g id="a_node9"><a xlink:href="class_parallel_1_1_communicator.html#a9471bf9448f34a0b4575310a3c54af61" target="_top" xlink:title="Parallel::Communicator::checkLattice checks if the lattice containts invalid numbers/nan.">
 <polygon fill="#ffffff" stroke="#000000" points="203.731,-123.5 203.731,-151.5 323.6567,-151.5 323.6567,-123.5 203.731,-123.5"/>
 <text text-anchor="start" x="211.731" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="263.6938" y="-129.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::checkLattice</text>

@@ -12,7 +12,7 @@
 <!-- Node15 -->
 <g id="node1" class="node">
 <title>Node15</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="System::latticeSetup sets up the lattice geometry and allocates memory.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-178.5 0,-196.5 107.1523,-196.5 107.1523,-178.5 0,-178.5"/>
 <text text-anchor="middle" x="53.5762" y="-184.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">System::latticeSetup</text>
 </a>
@@ -145,7 +145,7 @@
 <!-- Node33 -->
 <g id="node19" class="node">
 <title>Node33</title>
-<g id="a_node19"><a xlink:href="class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" target="_top" xlink:title=" ">
+<g id="a_node19"><a xlink:href="class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" target="_top" xlink:title="Parallel::Communicator::setBarrier.">
 <polygon fill="#ffffff" stroke="#000000" points="155.1006,-.5 155.1006,-28.5 275.0264,-28.5 275.0264,-.5 155.1006,-.5"/>
 <text text-anchor="start" x="163.1006" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="215.0635" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::setBarrier</text>

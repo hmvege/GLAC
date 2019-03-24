@@ -1,5 +1,12 @@
 /*!
- * \brief
+ * \class TestSuite
+ *
+ * \brief Runs unit tests on the methods of GLAC.
+ *
+ * Will test the matrix methods and the SU(N) properties of SU2 and SU3 classes.
+ * Will also test the complex class.
+ * Will also test lattice methods and random matrix generators.
+ * Will also test the gauge invariance of the lattice and the shift method.
  *
  * \author Mathias M. Vege
  * \version 1.0

@@ -1,5 +1,6 @@
 <map id="Parallel::Communicator::setBarrierActive" name="Parallel::Communicator::setBarrierActive">
-<area shape="rect" id="node1" title=" " alt="" coords="405,5,565,44"/>
-<area shape="rect" id="node2" href="$class_performance_tests.html#aa55ebdbc84db93cc45adfdf7163f90b4" title=" " alt="" coords="201,12,357,37"/>
-<area shape="rect" id="node3" href="$test_8h.html#a78e241f531e5203858fdb59a4162d6ba" title=" " alt="" coords="5,12,153,37"/>
+<area shape="rect" id="node1" title="Parallel::Communicator::setBarrierActive." alt="" coords="503,5,663,44"/>
+<area shape="rect" id="node2" href="$class_performance_tests.html#aa55ebdbc84db93cc45adfdf7163f90b4" title="PerformanceTests::run initiates performance testing on:" alt="" coords="300,12,455,37"/>
+<area shape="rect" id="node3" href="$test_8h.html#a78e241f531e5203858fdb59a4162d6ba" title="runPerformanceTests will run performance tests on program. Exits once complete." alt="" coords="104,12,252,37"/>
+<area shape="rect" id="node4" href="$main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" title="main loads in configurations and initiates program according to .json specifications." alt="" coords="5,12,56,37"/>
 </map>

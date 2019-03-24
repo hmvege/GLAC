@@ -70,6 +70,15 @@ void Parallel::Communicator::MPIfetchSU3Negative(Lattice<SU3> *lattice, std::vec
             Parallel::ParallelParameters::ACTIVE_COMM,MPI_STATUS_IGNORE);
 }
 
+/*!
+ * \brief Parallel::Communicator::getPositiveLink fetches a link in the positive direction.
+ * \param lattice a lattice pointer for all four dimensions.
+ * \param n position in lattice to fetch link from.
+ * \param mu direction to shift in. Always negative in x, y, z and t directions. Index is the same as the step direction of muIndex.
+ * \param muIndex is a unit vector containing a step in the direction of sharing. It is \f$\hat{\mu}\f in \f$U_\nu (n + \hat{mu}) \f$.
+ * \param SU3Dir is the index of the tensor \f$\mu\f$ in link \f$U_{\mu}\f$.
+ * \return fetched SU3 matrix.
+ */
 SU3 Parallel::Communicator::getPositiveLink(Lattice<SU3> *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
 {
     /*
@@ -91,6 +100,15 @@ SU3 Parallel::Communicator::getPositiveLink(Lattice<SU3> *lattice, std::vector<i
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::getNegativeLink fetches a link in the negative direction.
+ * \param lattice a lattice pointer for all four dimensions.
+ * \param n position in lattice to fetch link from.
+ * \param mu direction to shift in. Always negative in x, y, z and t directions. Index is the same as the step direction of muIndex.
+ * \param muIndex is a unit vector containing a step in the direction of sharing. It is \f$\hat{\mu}\f in \f$U_\nu (n + \hat{mu}) \f$.
+ * \param SU3Dir is the index of the tensor \f$\mu\f$ in link \f$U_{\mu}\f$.
+ * \return fetched SU3 matrix.
+ */
 SU3 Parallel::Communicator::getNegativeLink(Lattice<SU3> *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
 {
     /*
@@ -112,6 +130,20 @@ SU3 Parallel::Communicator::getNegativeLink(Lattice<SU3> *lattice, std::vector<i
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::getNeighboursNeighbourLink fetches a neighbours neighbor link.
+ *
+ * Fetches the link when it is given as \f$U_\mu(n + \hat{\mu} - \hat{\nu})\f$.
+ *
+ * \param lattice a lattice pointer for all four dimensions.
+ * \param n position in lattice to fetch link from.
+ * \param mu index of the muIndex vector we are sharing.
+ * \param muIndex is a unit vector containing a step in the direction of sharing.
+ * \param nu index of the nuIndex vector we are sharing.
+ * \param nuIndex is a unit vector containing a step in the direction of sharing.
+ * \param SU3Dir is the index of the tensor \f$\mu\f$ in link \f$U_{\mu}\f$.
+ * \return the fetched SU3 matrix.
+ */
 SU3 Parallel::Communicator::getNeighboursNeighbourLink(Lattice<SU3> * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
 {
     /*
@@ -160,6 +192,22 @@ SU3 Parallel::Communicator::getNeighboursNeighbourLink(Lattice<SU3> * lattice, s
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::getNeighboursNeighbourNegativeLink
+ *
+ * Fetches the link when it is given as \f$U_\mu(n - \hat{\mu} - \hat{\nu})\f$.
+ *
+ * \param lattice a lattice pointer for all four dimensions.
+ * \param n position in lattice to fetch link from.
+ * \param mu index of the muIndex vector we are sharing.
+ * \param muIndex is a unit vector containing a step in the direction of sharing.
+ * \param nu index of the nuIndex vector we are sharing.
+ * \param nuIndex is a unit vector containing a step in the direction of sharing.
+ * \param SU3Dir is the index of the tensor \f$\mu\f$ in link \f$U_{\mu}\f$.
+ * \return the fetched SU3 matrix.
+ *
+ * \todo Should probably pass n by reference, and set all elements as const.
+ */
 SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
 {
     /*
@@ -210,8 +258,11 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
 
 /*!
  * \brief Parallel::Communicator::reduceToTemporalDimension reduces the results to the temporal dimensions, i.e. Euclidean time.
- * \param obsResults contigious vector containing
- * \param obs
+ * \param obsResults contigious vector that results will be placed in.
+ * \param obs vector we are gathering results in.
+ *
+ * \todo Should probably pass by the obs by reference.
+ * \todo Should probably set obs as const.
  */
 void Parallel::Communicator::reduceToTemporalDimension(std::vector<double> &obsResults, std::vector<double> obs)
 {
@@ -350,6 +401,8 @@ void Parallel::Communicator::checkProcessorValidity()
 
 /*!
  * \brief Parallel::Communicator::checkSubLatticeDimensionsValidity
+ *
+ * Ensures that the lattice size is valid. If it is of size 2 or less, we exit.
  */
 void Parallel::Communicator::checkSubLatticeDimensionsValidity()
 {
@@ -368,6 +421,11 @@ void Parallel::Communicator::checkSubLatticeDimensionsValidity()
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::initializeSubLattice
+ *
+ * Sets up sublattices. Either by retrieving it from the Parameters class, or by setting it up manually.
+ */
 void Parallel::Communicator::initializeSubLattice()
 {
     int restProc = m_numprocs;
@@ -418,16 +476,31 @@ void Parallel::Communicator::initializeSubLattice()
     Parameters::setProcessorsPerDimension(m_processorsPerDimension);
 }
 
+/*!
+ * \brief Parallel::Communicator::setBarrier
+ *
+ * A MPI_Barrier for all processors.
+ */
 void Parallel::Communicator::setBarrier()
 {
     MPI_Barrier(MPI_COMM_WORLD);
 }
 
+/*!
+ * \brief Parallel::Communicator::setBarrierActive
+ *
+ * A MPI_Barrier for only the active processors, i.e. those used in flow or cfg. generation.
+ */
 void Parallel::Communicator::setBarrierActive()
 {
     MPI_Barrier(Parallel::ParallelParameters::ACTIVE_COMM);
 }
 
+/*!
+ * \brief Parallel::Communicator::freeMPIGroups
+ *
+ * Frees MPI groups and communicators.
+ */
 void Parallel::Communicator::freeMPIGroups()
 {
     MPI_Group_free(&Parallel::ParallelParameters::WORLD_GROUP);
@@ -440,6 +513,10 @@ void Parallel::Communicator::freeMPIGroups()
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::MPIExit exits the program. Frees MPI groups before it exits.
+ * \param message message to print before exiting.
+ */
 void Parallel::Communicator::MPIExit(std::string message)
 {
     if (m_processRank == 0) printf("\n%s", message.c_str());
@@ -448,6 +525,10 @@ void Parallel::Communicator::MPIExit(std::string message)
     exit(0);
 }
 
+/*!
+ * \brief Parallel::Communicator::MPIPrint prints a message from rank 0. Includes barriers.
+ * \param message to print.
+ */
 void Parallel::Communicator::MPIPrint(std::string message)
 {
     setBarrier();
@@ -455,6 +536,13 @@ void Parallel::Communicator::MPIPrint(std::string message)
     setBarrier();
 }
 
+/*!
+ * \brief Parallel::Communicator::gatherDoubleResults
+ * \param data to reduce.
+ * \param N number of points in data to reduce.
+ *
+ * \todo Remove the unsigned long int, and use instead just unsigned long? Change globally to only use long?
+ */
 void Parallel::Communicator::gatherDoubleResults(double * data, unsigned int N)
 {
     double tempData[N]; // Possibly bad?! TEST
@@ -462,6 +550,10 @@ void Parallel::Communicator::gatherDoubleResults(double * data, unsigned int N)
     for (unsigned long int i = 0; i < N; i++) data[i] = tempData[i];
 }
 
+/*!
+ * \brief Parallel::Communicator::setN sets the lattice dimensions in the Parallel::Communicator class.
+ * \param N vector of global lattice dimensions
+ */
 void Parallel::Communicator::setN(std::vector<unsigned int> N)
 {
     for (int i = 0; i < 4; i++) {
@@ -469,6 +561,11 @@ void Parallel::Communicator::setN(std::vector<unsigned int> N)
     }
 }
 
+/*!
+ * \brief Parallel::Communicator::checkLattice checks if the lattice containts invalid numbers/nan.
+ * \param lattice lattice to check.
+ * \param message to print if it contains nan numbers.
+ */
 void Parallel::Communicator::checkLattice(Lattice<SU3> *lattice, std::string message)
 {
     /*

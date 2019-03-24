@@ -156,7 +156,7 @@
 <!-- Node18 -->
 <g id="node6" class="node">
 <title>Node18</title>
-<g id="a_node6"><a xlink:href="class_parallel_1_1_neighbours.html#a84653f3e22436280ac5a4689a24e7146" target="_top" xlink:title=" ">
+<g id="a_node6"><a xlink:href="class_parallel_1_1_neighbours.html#a84653f3e22436280ac5a4689a24e7146" target="_top" xlink:title="get returns the neighbourlist for the the calling processor/rank and the direction given py iProcDir.">
 <polygon fill="#ffffff" stroke="#000000" points="342.0615,-74.5 342.0615,-92.5 467.5684,-92.5 467.5684,-74.5 342.0615,-74.5"/>
 <text text-anchor="middle" x="404.8149" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Neighbours::get</text>
 </a>

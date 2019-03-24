@@ -5,8 +5,7 @@
 {\ttfamily \#include \char`\"{}config/parameters.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}config/configloader.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}tests/test.\+h\char`\"{}}\newline
-Include dependency graph for main.\+cpp\+:
-\nopagebreak
+Include dependency graph for main.\+cpp\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -16,12 +15,8 @@ Include dependency graph for main.\+cpp\+:
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{main_8cpp_adc55d66d01b104380f72a64f36c4cb9d}{run\+Unit\+Tests}} ()
-\item 
-void \mbox{\hyperlink{main_8cpp_aa78448b51454a62a48e3b8221e29300f}{run\+Performance\+Tests}} ()
-\item 
 int \mbox{\hyperlink{main_8cpp_a4e6f00a867970a9eedf47b88a27b9eea}{main}} (int number\+Of\+Arguments, char $\ast$cmd\+Line\+Arguments\mbox{[}$\,$\mbox{]})
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em main loads in configurations and initiates program according to .json specifications. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
@@ -31,39 +26,28 @@ int \mbox{\hyperlink{main_8cpp_a4e6f00a867970a9eedf47b88a27b9eea}{main}} (int nu
 \subsubsection{\texorpdfstring{main()}{main()}}
 {\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{number\+Of\+Arguments,  }\item[{char $\ast$}]{cmd\+Line\+Arguments\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
 
+
+
+main loads in configurations and initiates program according to .json specifications. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em number\+Of\+Arguments} & \\
+\hline
+{\em cmd\+Line\+Arguments} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{_2_users_2hansmathiasmamenvege_2_programming_2_l_q_c_d_2_gluon_action_2_gluonic_l_q_c_d_2main_8cpp-example}{/\+Users/hansmathiasmamenvege/\+Programming/\+L\+Q\+C\+D/\+Gluon\+Action/\+Gluonic\+L\+Q\+C\+D/main.\+cpp}}.\end{Desc}
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[height=550pt]{main_8cpp_a4e6f00a867970a9eedf47b88a27b9eea_cgraph}
-\end{center}
-\end{figure}
-\mbox{\Hypertarget{main_8cpp_aa78448b51454a62a48e3b8221e29300f}\label{main_8cpp_aa78448b51454a62a48e3b8221e29300f}} 
-\index{main.cpp@{main.cpp}!runPerformanceTests@{runPerformanceTests}}
-\index{runPerformanceTests@{runPerformanceTests}!main.cpp@{main.cpp}}
-\subsubsection{\texorpdfstring{runPerformanceTests()}{runPerformanceTests()}}
-{\footnotesize\ttfamily void run\+Performance\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=265pt]{main_8cpp_aa78448b51454a62a48e3b8221e29300f_icgraph}
-\end{center}
-\end{figure}
-\mbox{\Hypertarget{main_8cpp_adc55d66d01b104380f72a64f36c4cb9d}\label{main_8cpp_adc55d66d01b104380f72a64f36c4cb9d}} 
-\index{main.cpp@{main.cpp}!runUnitTests@{runUnitTests}}
-\index{runUnitTests@{runUnitTests}!main.cpp@{main.cpp}}
-\subsubsection{\texorpdfstring{runUnitTests()}{runUnitTests()}}
-{\footnotesize\ttfamily void run\+Unit\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-Here is the caller graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=225pt]{main_8cpp_adc55d66d01b104380f72a64f36c4cb9d_icgraph}
 \end{center}
 \end{figure}

@@ -12,7 +12,7 @@
 <!-- Node4 -->
 <g id="node1" class="node">
 <title>Node4</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Parallel::Communicator::checkLattice checks if the lattice containts invalid numbers/nan.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-21.5 0,-49.5 119.9258,-49.5 119.9258,-21.5 0,-21.5"/>
 <text text-anchor="start" x="8" y="-37.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="59.9629" y="-27.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::checkLattice</text>
@@ -37,7 +37,7 @@
 <!-- Node6 -->
 <g id="node3" class="node">
 <title>Node6</title>
-<g id="a_node3"><a xlink:href="class_parallel_1_1_communicator.html#a57bb28ee8dbc4efd708a2695423778c4" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_parallel_1_1_communicator.html#a57bb28ee8dbc4efd708a2695423778c4" target="_top" xlink:title="Parallel::Communicator::MPIExit exits the program. Frees MPI groups before it exits.">
 <polygon fill="#ffffff" stroke="#000000" points="157.6079,-.5 157.6079,-28.5 277.5337,-28.5 277.5337,-.5 157.6079,-.5"/>
 <text text-anchor="start" x="165.6079" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="217.5708" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::MPIExit</text>

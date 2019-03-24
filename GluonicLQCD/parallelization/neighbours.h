@@ -1,5 +1,8 @@
 /*!
- * \brief
+ * \class Neighbours
+ *
+ * \brief Class for setting up the NeighbourList and stores them.
+ *
  *
  * \author Mathias M. Vege
  * \version 1.0
@@ -107,6 +110,11 @@ public:
 
     static void initialize(int processRank, int numproc, int * processorsPerDim);
 
+    /*!
+     * \brief get returns the neighbourlist for the the calling processor/rank and the direction given py iProcDir.
+     * \param iProcDir the direction in which to look up its neighbour.
+     * \return the rank of its neighbour.
+     */
     static int get(int iProcDir) { return m_neighbourLists[m_processRank][iProcDir]; } // Returns neighbour list for iP processor.
 
     // Getters

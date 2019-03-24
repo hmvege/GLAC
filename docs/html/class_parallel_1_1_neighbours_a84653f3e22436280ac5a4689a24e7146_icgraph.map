@@ -1,5 +1,5 @@
 <map id="Parallel::Neighbours::get" name="Parallel::Neighbours::get">
-<area shape="rect" id="node1" title=" " alt="" coords="333,243,500,268"/>
+<area shape="rect" id="node1" title="get returns the neighbourlist for the the calling processor/rank and the direction given py iProcDir." alt="" coords="333,243,500,268"/>
 <area shape="rect" id="node2" href="$lattice_8h.html#a53bbfaed8f54ee3a1db6f8049686ccdf" title="shift copies the lattice L and shifts it in a specified lorentzVector direction DIR." alt="" coords="239,243,285,268"/>
 <area shape="rect" id="node3" href="$class_luscher_action.html#ac11785b2df276816a098a87e6ac514c7" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="14,5,183,44"/>
 <area shape="rect" id="node4" href="$class_wilson_gauge_action.html#a43cf939cd53495b7225fbeaa8a0ff6e8" title="getActionDerivative, computes the derivative of the lattice in given direction." alt="" coords="25,68,171,107"/>

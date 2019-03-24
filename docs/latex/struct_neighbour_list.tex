@@ -12,31 +12,16 @@
 \mbox{\hyperlink{struct_neighbour_list_afcdbcc7fde83d4ce3a4fecc8d4105cd8}{$\sim$\+Neighbour\+List}} ()
 \item 
 void \mbox{\hyperlink{struct_neighbour_list_a9e8123deded59c4c702429fda52af140}{print}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{struct_neighbour_list_a9e8123deded59c4c702429fda52af140}{Neighbour\+List\+::print}} prints the geometry of a single processor. \end{DoxyCompactList}\item 
 int \& \mbox{\hyperlink{struct_neighbour_list_a9bd6ad04ef1eb6ad9737ac493b6864d1}{operator \mbox{[}$\,$\mbox{]}}} (int i)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em operator \mbox{[}\mbox{]} overloaded list accessing tool. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Data Fields}
 \begin{DoxyCompactItemize}
 \item 
 int \mbox{\hyperlink{struct_neighbour_list_ad55e922aabd4ef75711d22c5e5634165}{list}} \mbox{[}8\mbox{]}
-\item 
+\begin{DoxyCompactList}\small\item\em Neighbour list. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{struct_neighbour_list_abe10231f4cd3e607e19cea0b0d7aab03}{rank}}
-\end{DoxyCompactItemize}
-
-
-\subsection{Detailed Description}
-\begin{DoxyAuthor}{Author}
-Mathias M. Vege 
-\end{DoxyAuthor}
-\begin{DoxyVersion}{Version}
-1.\+0 
-\end{DoxyVersion}
-\begin{DoxyDate}{Date}
-2017-\/2019 
-\end{DoxyDate}
-\begin{DoxyCopyright}{Copyright}
-M\+IT Licence 
-\end{DoxyCopyright}
+\begin{DoxyCompactList}\small\item\em Rank of processor holding \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -61,6 +46,18 @@ M\+IT Licence
 \subsubsection{\texorpdfstring{operator []()}{operator []()}}
 {\footnotesize\ttfamily int\& Neighbour\+List\+::operator \mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+operator \mbox{[}\mbox{]} overloaded list accessing tool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & direction to look up. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the process rank in given i direction. 
+\end{DoxyReturn}
 \mbox{\Hypertarget{struct_neighbour_list_a9e8123deded59c4c702429fda52af140}\label{struct_neighbour_list_a9e8123deded59c4c702429fda52af140}} 
 \index{NeighbourList@{NeighbourList}!print@{print}}
 \index{print@{print}!NeighbourList@{NeighbourList}}
@@ -69,6 +66,10 @@ M\+IT Licence
 
 
 
+\mbox{\hyperlink{struct_neighbour_list_a9e8123deded59c4c702429fda52af140}{Neighbour\+List\+::print}} prints the geometry of a single processor. 
+
+Usefull for debugging. 
+
 \subsection{Field Documentation}
 \mbox{\Hypertarget{struct_neighbour_list_ad55e922aabd4ef75711d22c5e5634165}\label{struct_neighbour_list_ad55e922aabd4ef75711d22c5e5634165}} 
 \index{NeighbourList@{NeighbourList}!list@{list}}
@@ -76,11 +77,19 @@ M\+IT Licence
 \subsubsection{\texorpdfstring{list}{list}}
 {\footnotesize\ttfamily int Neighbour\+List\+::list\mbox{[}8\mbox{]}}
 
+
+
+Neighbour list. 
+
 \mbox{\Hypertarget{struct_neighbour_list_abe10231f4cd3e607e19cea0b0d7aab03}\label{struct_neighbour_list_abe10231f4cd3e607e19cea0b0d7aab03}} 
 \index{NeighbourList@{NeighbourList}!rank@{rank}}
 \index{rank@{rank}!NeighbourList@{NeighbourList}}
 \subsubsection{\texorpdfstring{rank}{rank}}
 {\footnotesize\ttfamily int Neighbour\+List\+::rank}
+
+
+
+Rank of processor holding \mbox{\hyperlink{struct_neighbour_list}{Neighbour\+List}}. 
 
 
 

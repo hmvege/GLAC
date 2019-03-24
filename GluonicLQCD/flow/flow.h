@@ -3,7 +3,7 @@
  *
  * \brief Class for applying gradient flow on lattice.
  *
- * Performs one step with gradient flow on the lattice, as described in https://arxiv.org/abs/1006.4518
+ * Performs one step with gradient flow on the lattice, see <a href="https://arxiv.org/abs/1006.4518">this paper</a> for a detailed description.
  *
  * \author Mathias M. Vege
  * \version 1.0

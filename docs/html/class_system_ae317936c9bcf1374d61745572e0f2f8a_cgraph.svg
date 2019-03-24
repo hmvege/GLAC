@@ -173,7 +173,7 @@
 <!-- Node11 -->
 <g id="node12" class="node">
 <title>Node11</title>
-<g id="a_node12"><a xlink:href="class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" target="_top" xlink:title=" ">
+<g id="a_node12"><a xlink:href="class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" target="_top" xlink:title="Parallel::Communicator::setBarrier.">
 <polygon fill="#ffffff" stroke="#000000" points="152.5859,-.5 152.5859,-28.5 272.5117,-28.5 272.5117,-.5 152.5859,-.5"/>
 <text text-anchor="start" x="160.5859" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="212.5488" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::setBarrier</text>

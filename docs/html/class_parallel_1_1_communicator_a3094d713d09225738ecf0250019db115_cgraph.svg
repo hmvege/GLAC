@@ -9,19 +9,19 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 312)">
 <title>Parallel::Communicator::initializeSubLattice</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-312 313.2158,-312 313.2158,4 -4,4"/>
-<!-- Node128 -->
+<!-- Node127 -->
 <g id="node1" class="node">
-<title>Node128</title>
-<g id="a_node1"><a xlink:title=" ">
+<title>Node127</title>
+<g id="a_node1"><a xlink:title="Parallel::Communicator::initializeSubLattice.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-144.5 0,-172.5 119.9258,-172.5 119.9258,-144.5 0,-144.5"/>
 <text text-anchor="start" x="8" y="-160.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="59.9629" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initializeSubLattice</text>
 </a>
 </g>
 </g>
-<!-- Node129 -->
+<!-- Node128 -->
 <g id="node2" class="node">
-<title>Node129</title>
+<title>Node128</title>
 <g id="a_node2"><a xlink:href="class_parameters.html#ab9d9f206373cdad11d48ab08222204e3" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="165.3716,-279.5 165.3716,-307.5 299.77,-307.5 299.77,-279.5 165.3716,-279.5"/>
 <text text-anchor="start" x="173.3716" y="-295.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getSubLattice</text>
@@ -29,106 +29,106 @@
 </a>
 </g>
 </g>
-<!-- Node128&#45;&gt;Node129 -->
+<!-- Node127&#45;&gt;Node128 -->
 <g id="edge1" class="edge">
-<title>Node128&#45;&gt;Node129</title>
+<title>Node127&#45;&gt;Node128</title>
 <path fill="none" stroke="#191970" d="M68.3727,-172.8311C83.0879,-196.6591 115.7939,-244.3816 155.9258,-270.5 158.5202,-272.1885 161.2436,-273.7573 164.0539,-275.2144"/>
 <polygon fill="#191970" stroke="#191970" points="162.7295,-278.4584 173.2732,-279.498 165.6791,-272.1102 162.7295,-278.4584"/>
 </g>
-<!-- Node130 -->
+<!-- Node129 -->
 <g id="node3" class="node">
-<title>Node130</title>
+<title>Node129</title>
 <g id="a_node3"><a xlink:href="class_parameters.html#a52b90e94a378ec9fe8c504cf546e98fa" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="170.1006,-242.5 170.1006,-260.5 295.041,-260.5 295.041,-242.5 170.1006,-242.5"/>
 <text text-anchor="middle" x="232.5708" y="-248.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getNSpatial</text>
 </a>
 </g>
 </g>
-<!-- Node128&#45;&gt;Node130 -->
+<!-- Node127&#45;&gt;Node129 -->
 <g id="edge2" class="edge">
-<title>Node128&#45;&gt;Node130</title>
+<title>Node127&#45;&gt;Node129</title>
 <path fill="none" stroke="#191970" d="M73.8922,-172.6448C91.4573,-189.6566 123.3211,-217.8694 155.9258,-233.5 160.5824,-235.7324 165.534,-237.6979 170.592,-239.4267"/>
 <polygon fill="#191970" stroke="#191970" points="169.8125,-242.8493 180.4004,-242.4674 171.8853,-236.1632 169.8125,-242.8493"/>
 </g>
-<!-- Node131 -->
+<!-- Node130 -->
 <g id="node4" class="node">
-<title>Node131</title>
+<title>Node130</title>
 <g id="a_node4"><a xlink:href="class_parameters.html#a237ea1286459e8c648e983464829fe8d" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="164.8247,-205.5 164.8247,-223.5 300.3169,-223.5 300.3169,-205.5 164.8247,-205.5"/>
 <text text-anchor="middle" x="232.5708" y="-211.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getNTemporal</text>
 </a>
 </g>
 </g>
-<!-- Node128&#45;&gt;Node131 -->
+<!-- Node127&#45;&gt;Node130 -->
 <g id="edge3" class="edge">
-<title>Node128&#45;&gt;Node131</title>
+<title>Node127&#45;&gt;Node130</title>
 <path fill="none" stroke="#191970" d="M91.9653,-172.5359C110.4243,-180.2858 134.2113,-189.6911 155.9258,-196.5 163.3538,-198.8292 171.2702,-201.0129 179.0901,-203.0006"/>
 <polygon fill="#191970" stroke="#191970" points="178.3534,-206.4236 188.8996,-205.4097 180.023,-199.6256 178.3534,-206.4236"/>
 </g>
-<!-- Node132 -->
+<!-- Node131 -->
 <g id="node5" class="node">
-<title>Node132</title>
-<g id="a_node5"><a xlink:href="class_parallel_1_1_index.html#ab8650936d7000d54b811dd128618f9ad" target="_top" xlink:title=" ">
+<title>Node131</title>
+<g id="a_node5"><a xlink:href="class_parallel_1_1_index.html#acbf43868aa2efc7ecf63b5b490fc00a0" target="_top" xlink:title="Parallel::Index::setN sets the sub lattice dimensionality.">
 <polygon fill="#ffffff" stroke="#000000" points="179.8271,-168.5 179.8271,-186.5 285.3145,-186.5 285.3145,-168.5 179.8271,-168.5"/>
 <text text-anchor="middle" x="232.5708" y="-174.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Index::setN</text>
 </a>
 </g>
 </g>
-<!-- Node128&#45;&gt;Node132 -->
+<!-- Node127&#45;&gt;Node131 -->
 <g id="edge4" class="edge">
-<title>Node128&#45;&gt;Node132</title>
+<title>Node127&#45;&gt;Node131</title>
 <path fill="none" stroke="#191970" d="M120.3328,-165.1453C136.2027,-166.8922 153.3624,-168.781 169.3761,-170.5438"/>
 <polygon fill="#191970" stroke="#191970" points="169.386,-174.0659 179.7089,-171.6812 170.152,-167.1079 169.386,-174.0659"/>
 </g>
-<!-- Node133 -->
+<!-- Node132 -->
 <g id="node6" class="node">
-<title>Node133</title>
+<title>Node132</title>
 <g id="a_node6"><a xlink:href="class_parameters.html#a0e0118ebbe8f19148a5c6d737c7a2c85" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="185.6694,-131.5 185.6694,-149.5 279.4722,-149.5 279.4722,-131.5 185.6694,-131.5"/>
 <text text-anchor="middle" x="232.5708" y="-137.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setN</text>
 </a>
 </g>
 </g>
-<!-- Node128&#45;&gt;Node133 -->
+<!-- Node127&#45;&gt;Node132 -->
 <g id="edge5" class="edge">
-<title>Node128&#45;&gt;Node133</title>
+<title>Node127&#45;&gt;Node132</title>
 <path fill="none" stroke="#191970" d="M120.3328,-152.2045C138.2116,-150.34 157.7274,-148.3049 175.3974,-146.4622"/>
 <polygon fill="#191970" stroke="#191970" points="175.9787,-149.9206 185.5617,-145.4022 175.2526,-142.9584 175.9787,-149.9206"/>
 </g>
-<!-- Node134 -->
+<!-- Node133 -->
 <g id="node7" class="node">
-<title>Node134</title>
+<title>Node133</title>
 <g id="a_node7"><a xlink:href="class_parameters.html#a978f5547036311816f21e3ebe8af77fc" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="155.9258,-94.5 155.9258,-112.5 309.2158,-112.5 309.2158,-94.5 155.9258,-94.5"/>
 <text text-anchor="middle" x="232.5708" y="-100.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setSubLatticeSize</text>
 </a>
 </g>
 </g>
-<!-- Node128&#45;&gt;Node134 -->
+<!-- Node127&#45;&gt;Node133 -->
 <g id="edge6" class="edge">
-<title>Node128&#45;&gt;Node134</title>
+<title>Node127&#45;&gt;Node133</title>
 <path fill="none" stroke="#191970" d="M94.7212,-144.3495C112.7997,-137.2738 135.3627,-128.8822 155.9258,-122.5 164.3923,-119.8722 173.4718,-117.3597 182.3146,-115.0718"/>
 <polygon fill="#191970" stroke="#191970" points="183.3122,-118.4299 192.1523,-112.5901 181.6,-111.6425 183.3122,-118.4299"/>
 </g>
-<!-- Node135 -->
+<!-- Node134 -->
 <g id="node8" class="node">
-<title>Node135</title>
-<g id="a_node8"><a xlink:href="class_parallel_1_1_neighbours.html#a5838dbe2c3c086c5943b5b75ad8fa35c" target="_top" xlink:title=" ">
+<title>Node134</title>
+<g id="a_node8"><a xlink:href="class_parallel_1_1_neighbours.html#a59e68da5867bfa27a867ed0b443267d7" target="_top" xlink:title="Parallel::Neighbours::initialize initializes.">
 <polygon fill="#ffffff" stroke="#000000" points="179.5464,-47.5 179.5464,-75.5 285.5952,-75.5 285.5952,-47.5 179.5464,-47.5"/>
 <text text-anchor="start" x="187.5464" y="-63.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Neighbours</text>
 <text text-anchor="middle" x="232.5708" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initialize</text>
 </a>
 </g>
 </g>
-<!-- Node128&#45;&gt;Node135 -->
+<!-- Node127&#45;&gt;Node134 -->
 <g id="edge7" class="edge">
-<title>Node128&#45;&gt;Node135</title>
+<title>Node127&#45;&gt;Node134</title>
 <path fill="none" stroke="#191970" d="M75.1096,-144.2748C93.1182,-128.0364 124.6823,-101.6424 155.9258,-85.5 160.2654,-83.2579 164.8525,-81.18 169.5382,-79.2633"/>
 <polygon fill="#191970" stroke="#191970" points="171.1542,-82.3928 179.2468,-75.5547 168.6562,-75.8536 171.1542,-82.3928"/>
 </g>
-<!-- Node136 -->
+<!-- Node135 -->
 <g id="node9" class="node">
-<title>Node136</title>
+<title>Node135</title>
 <g id="a_node9"><a xlink:href="class_parameters.html#a4c983b1ab17ec51be118792b3a6d17a5" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="164.2729,-.5 164.2729,-28.5 300.8687,-28.5 300.8687,-.5 164.2729,-.5"/>
 <text text-anchor="start" x="172.2729" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setProcessors</text>
@@ -136,9 +136,9 @@
 </a>
 </g>
 </g>
-<!-- Node128&#45;&gt;Node136 -->
+<!-- Node127&#45;&gt;Node135 -->
 <g id="edge8" class="edge">
-<title>Node128&#45;&gt;Node136</title>
+<title>Node127&#45;&gt;Node135</title>
 <path fill="none" stroke="#191970" d="M67.4672,-144.3897C81.494,-119.3541 114.0904,-67.112 155.9258,-38.5 158.8337,-36.5112 161.9141,-34.6813 165.1048,-32.9981"/>
 <polygon fill="#191970" stroke="#191970" points="166.7921,-36.0719 174.3366,-28.6334 163.8001,-29.7435 166.7921,-36.0719"/>
 </g>

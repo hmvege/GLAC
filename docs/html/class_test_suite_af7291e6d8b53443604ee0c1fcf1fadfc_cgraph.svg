@@ -113,7 +113,7 @@
 <!-- Node7 -->
 <g id="node8" class="node">
 <title>Node7</title>
-<g id="a_node8"><a xlink:href="class_parallel_1_1_communicator.html#a3094d713d09225738ecf0250019db115" target="_top" xlink:title=" ">
+<g id="a_node8"><a xlink:href="class_parallel_1_1_communicator.html#a3094d713d09225738ecf0250019db115" target="_top" xlink:title="Parallel::Communicator::initializeSubLattice.">
 <polygon fill="#ffffff" stroke="#000000" points="156.7852,-181.5 156.7852,-209.5 276.7109,-209.5 276.7109,-181.5 156.7852,-181.5"/>
 <text text-anchor="start" x="164.7852" y="-197.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="216.748" y="-187.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initializeSubLattice</text>
@@ -217,7 +217,7 @@
 <!-- Node9 -->
 <g id="node10" class="node">
 <title>Node9</title>
-<g id="a_node10"><a xlink:href="class_parallel_1_1_index.html#ab8650936d7000d54b811dd128618f9ad" target="_top" xlink:title=" ">
+<g id="a_node10"><a xlink:href="class_parallel_1_1_index.html#acbf43868aa2efc7ecf63b5b490fc00a0" target="_top" xlink:title="Parallel::Index::setN sets the sub lattice dimensionality.">
 <polygon fill="#ffffff" stroke="#000000" points="353.5752,-74.5 353.5752,-92.5 459.0625,-92.5 459.0625,-74.5 353.5752,-74.5"/>
 <text text-anchor="middle" x="406.3188" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Index::setN</text>
 </a>
@@ -262,7 +262,7 @@
 <!-- Node12 -->
 <g id="node13" class="node">
 <title>Node12</title>
-<g id="a_node13"><a xlink:href="class_parallel_1_1_neighbours.html#a5838dbe2c3c086c5943b5b75ad8fa35c" target="_top" xlink:title=" ">
+<g id="a_node13"><a xlink:href="class_parallel_1_1_neighbours.html#a59e68da5867bfa27a867ed0b443267d7" target="_top" xlink:title="Parallel::Neighbours::initialize initializes.">
 <polygon fill="#ffffff" stroke="#000000" points="353.2944,-205.5 353.2944,-233.5 459.3433,-233.5 459.3433,-205.5 353.2944,-205.5"/>
 <text text-anchor="start" x="361.2944" y="-221.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Neighbours</text>
 <text text-anchor="middle" x="406.3188" y="-211.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::initialize</text>

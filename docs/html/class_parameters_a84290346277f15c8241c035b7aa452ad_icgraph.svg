@@ -9,9 +9,9 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 33)">
 <title>Parameters::setStoreThermalizationObservables</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-33 390.2451,-33 390.2451,4 -4,4"/>
-<!-- Node510 -->
+<!-- Node521 -->
 <g id="node1" class="node">
-<title>Node510</title>
+<title>Node521</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="#bfbfbf" stroke="#000000" points="210.1816,-.5 210.1816,-28.5 386.2451,-28.5 386.2451,-.5 210.1816,-.5"/>
 <text text-anchor="start" x="218.1816" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setStoreThermalization</text>
@@ -19,33 +19,33 @@
 </a>
 </g>
 </g>
-<!-- Node511 -->
+<!-- Node522 -->
 <g id="node2" class="node">
-<title>Node511</title>
+<title>Node522</title>
 <g id="a_node2"><a xlink:href="namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" target="_top" xlink:title="load">
 <polygon fill="#ffffff" stroke="#000000" points="73.6748,-5.5 73.6748,-23.5 174.1816,-23.5 174.1816,-5.5 73.6748,-5.5"/>
 <text text-anchor="middle" x="123.9282" y="-11.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ConfigLoader::load</text>
 </a>
 </g>
 </g>
-<!-- Node510&#45;&gt;Node511 -->
+<!-- Node521&#45;&gt;Node522 -->
 <g id="edge1" class="edge">
-<title>Node510&#45;&gt;Node511</title>
+<title>Node521&#45;&gt;Node522</title>
 <path fill="none" stroke="#191970" d="M199.8187,-14.5C191.1447,-14.5 182.622,-14.5 174.6021,-14.5"/>
 <polygon fill="#191970" stroke="#191970" points="200.0497,-18.0001 210.0496,-14.5 200.0496,-11.0001 200.0497,-18.0001"/>
 </g>
-<!-- Node512 -->
+<!-- Node523 -->
 <g id="node3" class="node">
-<title>Node512</title>
-<g id="a_node3"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title=" ">
+<title>Node523</title>
+<g id="a_node3"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title="main loads in configurations and initiates program according to .json specifications.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-5.5 0,-23.5 37.6748,-23.5 37.6748,-5.5 0,-5.5"/>
 <text text-anchor="middle" x="18.8374" y="-11.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </a>
 </g>
 </g>
-<!-- Node511&#45;&gt;Node512 -->
+<!-- Node522&#45;&gt;Node523 -->
 <g id="edge2" class="edge">
-<title>Node511&#45;&gt;Node512</title>
+<title>Node522&#45;&gt;Node523</title>
 <path fill="none" stroke="#191970" d="M63.4826,-14.5C54.2852,-14.5 45.4183,-14.5 38.0439,-14.5"/>
 <polygon fill="#191970" stroke="#191970" points="63.5375,-18.0001 73.5375,-14.5 63.5374,-11.0001 63.5375,-18.0001"/>
 </g>

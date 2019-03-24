@@ -14,9 +14,9 @@ var searchData=
   ['runfulltestsuite',['runFullTestSuite',['../class_test_suite.html#a0fa7e788a1b1c235faa475c0d1aaa1e3',1,'TestSuite']]],
   ['runfunctionstest',['runFunctionsTest',['../class_test_suite.html#af257c555a7fff6934523f80b9c59309c',1,'TestSuite']]],
   ['runlatticetests',['runLatticeTests',['../class_test_suite.html#aa24e7ab393007d18d027fe95c5a3ec58',1,'TestSuite']]],
-  ['runperformancetests',['runPerformanceTests',['../main_8cpp.html#aa78448b51454a62a48e3b8221e29300f',1,'runPerformanceTests():&#160;main.cpp'],['../test_8h.html#a78e241f531e5203858fdb59a4162d6ba',1,'runPerformanceTests(bool runTests):&#160;test.h']]],
+  ['runperformancetests',['runPerformanceTests',['../test_8h.html#a78e241f531e5203858fdb59a4162d6ba',1,'test.h']]],
   ['runstatistics',['runStatistics',['../class_correlator.html#a35197b1d12b62ef30b79c0138a26456e',1,'Correlator::runStatistics()'],['../class_energy_density.html#a584e164453ce880a45478c9b48ce2c4b',1,'EnergyDensity::runStatistics()'],['../class_lattice_action_charge_density.html#a21d608703811d2814e7f654588eaa0c0',1,'LatticeActionChargeDensity::runStatistics()'],['../class_master_sampler.html#ab7913d0dbdea57af3f469a3cdd74f8fc',1,'MasterSampler::runStatistics()'],['../class_master_sampler_topc_x_y_z.html#af748653ded9908f78383185475b9ddeb',1,'MasterSamplerTopcXYZ::runStatistics()'],['../class_plaquette.html#aa54bf1807d9b192048026f94d585fa4f',1,'Plaquette::runStatistics()'],['../class_super_sampler.html#af96f7d461e9159adb4eef9bda9c6ecde',1,'SuperSampler::runStatistics()'],['../class_observable_storer.html#a41b3756b423d31c6535d2981ef92d1a1',1,'ObservableStorer::runStatistics()'],['../class_topological_charge.html#ab9afadb9f37e638c0a168ebab5d41353',1,'TopologicalCharge::runStatistics()']]],
   ['runsu2tests',['runSU2Tests',['../class_test_suite.html#a904ac34cad4166c281f7dbce9a682b2c',1,'TestSuite']]],
   ['runsu3tests',['runSU3Tests',['../class_test_suite.html#a7e884438760a81f7f4da7831043f88b0',1,'TestSuite']]],
-  ['rununittests',['runUnitTests',['../main_8cpp.html#adc55d66d01b104380f72a64f36c4cb9d',1,'runUnitTests():&#160;main.cpp'],['../test_8h.html#a91a9c7ea8af27bb3962f1207dd4cb8fd',1,'runUnitTests(bool runTests):&#160;test.h']]]
+  ['rununittests',['runUnitTests',['../test_8h.html#a91a9c7ea8af27bb3962f1207dd4cb8fd',1,'test.h']]]
 ];

@@ -9,18 +9,18 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 292)">
 <title>TestSuite::runFullTestSuite</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-292 318.2158,-292 318.2158,4 -4,4"/>
-<!-- Node33 -->
+<!-- Node36 -->
 <g id="node1" class="node">
-<title>Node33</title>
+<title>Node36</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-129.5 0,-147.5 134.3887,-147.5 134.3887,-129.5 0,-129.5"/>
 <text text-anchor="middle" x="67.1943" y="-135.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::runFullTestSuite</text>
 </a>
 </g>
 </g>
-<!-- Node34 -->
+<!-- Node37 -->
 <g id="node2" class="node">
-<title>Node34</title>
+<title>Node37</title>
 <g id="a_node2"><a xlink:href="class_parameters.html#a2645617063e170828a3da439094ab626" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="173.9971,-259.5 173.9971,-287.5 310.6074,-287.5 310.6074,-259.5 173.9971,-259.5"/>
 <text text-anchor="start" x="181.9971" y="-275.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getUnitTesting</text>
@@ -28,114 +28,114 @@
 </a>
 </g>
 </g>
-<!-- Node33&#45;&gt;Node34 -->
+<!-- Node36&#45;&gt;Node37 -->
 <g id="edge1" class="edge">
-<title>Node33&#45;&gt;Node34</title>
+<title>Node36&#45;&gt;Node37</title>
 <path fill="none" stroke="#191970" d="M73.022,-147.5132C87.1433,-168.6473 125.3644,-221.7728 170.3887,-250.5 173.0114,-252.1734 175.7659,-253.7342 178.6053,-255.1889"/>
 <polygon fill="#191970" stroke="#191970" points="177.3585,-258.4682 187.9047,-259.4818 180.2924,-252.1127 177.3585,-258.4682"/>
 </g>
-<!-- Node35 -->
+<!-- Node38 -->
 <g id="node3" class="node">
-<title>Node35</title>
+<title>Node38</title>
 <g id="a_node3"><a xlink:href="class_test_suite.html#a91444c36a86d453cc9922d888b248a6b" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="170.3887,-222.5 170.3887,-240.5 314.2158,-240.5 314.2158,-222.5 170.3887,-222.5"/>
 <text text-anchor="middle" x="242.3022" y="-228.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::run3x3MatrixTests</text>
 </a>
 </g>
 </g>
-<!-- Node33&#45;&gt;Node35 -->
+<!-- Node36&#45;&gt;Node38 -->
 <g id="edge2" class="edge">
-<title>Node33&#45;&gt;Node35</title>
+<title>Node36&#45;&gt;Node38</title>
 <path fill="none" stroke="#191970" d="M76.9061,-147.5834C94.289,-163.3501 132.4612,-195.7893 170.3887,-213.5 175.0787,-215.6901 180.0701,-217.6363 185.1523,-219.3612"/>
 <polygon fill="#191970" stroke="#191970" points="184.3944,-222.7906 194.9824,-222.4115 186.469,-216.105 184.3944,-222.7906"/>
 </g>
-<!-- Node36 -->
+<!-- Node39 -->
 <g id="node4" class="node">
-<title>Node36</title>
+<title>Node39</title>
 <g id="a_node4"><a xlink:href="class_test_suite.html#acf6d1ad1920132a4aed74457bb2df8cb" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="170.3887,-185.5 170.3887,-203.5 314.2158,-203.5 314.2158,-185.5 170.3887,-185.5"/>
 <text text-anchor="middle" x="242.3022" y="-191.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::run2x2MatrixTests</text>
 </a>
 </g>
 </g>
-<!-- Node33&#45;&gt;Node36 -->
+<!-- Node36&#45;&gt;Node39 -->
 <g id="edge3" class="edge">
-<title>Node33&#45;&gt;Node36</title>
+<title>Node36&#45;&gt;Node39</title>
 <path fill="none" stroke="#191970" d="M89.5027,-147.5064C110.2446,-155.6904 142.1098,-167.7819 170.3887,-176.5 177.6575,-178.7409 185.4031,-180.9065 193.0177,-182.9121"/>
 <polygon fill="#191970" stroke="#191970" points="192.3453,-186.3529 202.9015,-185.4494 194.0859,-179.5728 192.3453,-186.3529"/>
 </g>
-<!-- Node37 -->
+<!-- Node40 -->
 <g id="node5" class="node">
-<title>Node37</title>
+<title>Node40</title>
 <g id="a_node5"><a xlink:href="class_test_suite.html#a904ac34cad4166c281f7dbce9a682b2c" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="182.3345,-148.5 182.3345,-166.5 302.27,-166.5 302.27,-148.5 182.3345,-148.5"/>
 <text text-anchor="middle" x="242.3022" y="-154.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::runSU2Tests</text>
 </a>
 </g>
 </g>
-<!-- Node33&#45;&gt;Node37 -->
+<!-- Node36&#45;&gt;Node40 -->
 <g id="edge4" class="edge">
-<title>Node33&#45;&gt;Node37</title>
+<title>Node36&#45;&gt;Node40</title>
 <path fill="none" stroke="#191970" d="M134.3948,-145.7916C146.6769,-147.1242 159.5246,-148.5183 171.8969,-149.8607"/>
 <polygon fill="#191970" stroke="#191970" points="171.8357,-153.3745 182.1549,-150.9737 172.5908,-146.4154 171.8357,-153.3745"/>
 </g>
-<!-- Node38 -->
+<!-- Node41 -->
 <g id="node6" class="node">
-<title>Node38</title>
+<title>Node41</title>
 <g id="a_node6"><a xlink:href="class_test_suite.html#a7e884438760a81f7f4da7831043f88b0" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="182.3345,-111.5 182.3345,-129.5 302.27,-129.5 302.27,-111.5 182.3345,-111.5"/>
 <text text-anchor="middle" x="242.3022" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::runSU3Tests</text>
 </a>
 </g>
 </g>
-<!-- Node33&#45;&gt;Node38 -->
+<!-- Node36&#45;&gt;Node41 -->
 <g id="edge5" class="edge">
-<title>Node33&#45;&gt;Node38</title>
+<title>Node36&#45;&gt;Node41</title>
 <path fill="none" stroke="#191970" d="M134.3948,-131.5922C146.6769,-130.3297 159.5246,-129.009 171.8969,-127.7372"/>
 <polygon fill="#191970" stroke="#191970" points="172.5652,-131.1871 182.1549,-126.6828 171.8494,-124.2238 172.5652,-131.1871"/>
 </g>
-<!-- Node39 -->
+<!-- Node42 -->
 <g id="node7" class="node">
-<title>Node39</title>
+<title>Node42</title>
 <g id="a_node7"><a xlink:href="class_test_suite.html#af257c555a7fff6934523f80b9c59309c" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="172.8838,-74.5 172.8838,-92.5 311.7207,-92.5 311.7207,-74.5 172.8838,-74.5"/>
 <text text-anchor="middle" x="242.3022" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::runFunctionsTest</text>
 </a>
 </g>
 </g>
-<!-- Node33&#45;&gt;Node39 -->
+<!-- Node36&#45;&gt;Node42 -->
 <g id="edge6" class="edge">
-<title>Node33&#45;&gt;Node39</title>
+<title>Node36&#45;&gt;Node42</title>
 <path fill="none" stroke="#191970" d="M91.6218,-129.3788C112.4215,-121.757 143.1727,-110.8289 170.3887,-102.5 178.6426,-99.974 187.4891,-97.4718 196.056,-95.1531"/>
 <polygon fill="#191970" stroke="#191970" points="197.1684,-98.479 205.932,-92.5251 195.3682,-91.7144 197.1684,-98.479"/>
 </g>
-<!-- Node40 -->
+<!-- Node43 -->
 <g id="node8" class="node">
-<title>Node40</title>
+<title>Node43</title>
 <g id="a_node8"><a xlink:href="class_test_suite.html#a0597dcd7c68390ac33d8095f2a76ae0f" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="172.332,-37.5 172.332,-55.5 312.2725,-55.5 312.2725,-37.5 172.332,-37.5"/>
 <text text-anchor="middle" x="242.3022" y="-43.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::runComplexTests</text>
 </a>
 </g>
 </g>
-<!-- Node33&#45;&gt;Node40 -->
+<!-- Node36&#45;&gt;Node43 -->
 <g id="edge7" class="edge">
-<title>Node33&#45;&gt;Node40</title>
+<title>Node36&#45;&gt;Node43</title>
 <path fill="none" stroke="#191970" d="M77.2572,-129.4802C94.8771,-114.1453 133.0086,-82.9606 170.3887,-65.5 176.0704,-62.846 182.1844,-60.5152 188.3621,-58.4805"/>
 <polygon fill="#191970" stroke="#191970" points="189.5237,-61.7855 198.0695,-55.5229 187.4835,-55.0894 189.5237,-61.7855"/>
 </g>
-<!-- Node41 -->
+<!-- Node44 -->
 <g id="node9" class="node">
-<title>Node41</title>
+<title>Node44</title>
 <g id="a_node9"><a xlink:href="class_test_suite.html#aa24e7ab393007d18d027fe95c5a3ec58" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="177.3296,-.5 177.3296,-18.5 307.2749,-18.5 307.2749,-.5 177.3296,-.5"/>
 <text text-anchor="middle" x="242.3022" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::runLatticeTests</text>
 </a>
 </g>
 </g>
-<!-- Node33&#45;&gt;Node41 -->
+<!-- Node36&#45;&gt;Node44 -->
 <g id="edge8" class="edge">
-<title>Node33&#45;&gt;Node41</title>
+<title>Node36&#45;&gt;Node44</title>
 <path fill="none" stroke="#191970" d="M72.9682,-129.4984C86.9731,-108.419 124.961,-55.5954 170.3887,-28.5 174.5372,-26.0256 179.0088,-23.8687 183.6204,-21.9892"/>
 <polygon fill="#191970" stroke="#191970" points="185.0156,-25.2064 193.2245,-18.5084 182.6303,-18.6253 185.0156,-25.2064"/>
 </g>

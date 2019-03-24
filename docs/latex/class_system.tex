@@ -2,6 +2,11 @@
 \label{class_system}\index{System@{System}}
 
 
+\mbox{\hyperlink{class_system}{System}} is the class that ties the program together. It initiates and sets up the sub-\/lattices, and performs holds the Metropolis algorithm.  
+
+
+
+
 {\ttfamily \#include $<$system.\+h$>$}
 
 \subsection*{Public Member Functions}
@@ -10,11 +15,33 @@
 \mbox{\hyperlink{class_system_ae317936c9bcf1374d61745572e0f2f8a}{System}} ()
 \item 
 \mbox{\hyperlink{class_system_a3be70bb338e3f062f821173fd15680d0}{$\sim$\+System}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_system_a3be70bb338e3f062f821173fd15680d0}{System\+::$\sim$\+System}} de-\/allocates action, lattice, correlator R\+N\+Gs, flow lattice, flow correlator and flow. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_system_afa39feb75f96798930f4bfb48205f40b}{run}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_system_afa39feb75f96798930f4bfb48205f40b}{System\+::run}} based on passed parameters, does one of three things\+: \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_system_a93c8a8258ac8f6382ec393bca1271011}{lattice\+Setup}} ()
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_system_a93c8a8258ac8f6382ec393bca1271011}{System\+::lattice\+Setup}} sets up the lattice geometry and allocates memory. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\mbox{\hyperlink{class_system}{System}} is the class that ties the program together. It initiates and sets up the sub-\/lattices, and performs holds the Metropolis algorithm. 
+
+\mbox{\hyperlink{class_system}{System}} takes on parameters as they are given by the class \mbox{\hyperlink{class_parameters}{Parameters}}.
+
+\begin{DoxyAuthor}{Author}
+Mathias M. Vege 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2017-\/2019 
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+M\+IT Licence 
+\end{DoxyCopyright}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{_2_users_2hansmathiasmamenvege_2_programming_2_l_q_c_d_2_gluon_action_2_gluonic_l_q_c_d_2main_8cpp-example}{/\+Users/hansmathiasmamenvege/\+Programming/\+L\+Q\+C\+D/\+Gluon\+Action/\+Gluonic\+L\+Q\+C\+D/main.\+cpp}}.\end{Desc}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -40,6 +67,10 @@ Here is the call graph for this function\+:
 
 
 
+\mbox{\hyperlink{class_system_a3be70bb338e3f062f821173fd15680d0}{System\+::$\sim$\+System}} de-\/allocates action, lattice, correlator R\+N\+Gs, flow lattice, flow correlator and flow. 
+
+
+
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{class_system_a93c8a8258ac8f6382ec393bca1271011}\label{class_system_a93c8a8258ac8f6382ec393bca1271011}} 
 \index{System@{System}!latticeSetup@{latticeSetup}}
@@ -47,6 +78,13 @@ Here is the call graph for this function\+:
 \subsubsection{\texorpdfstring{latticeSetup()}{latticeSetup()}}
 {\footnotesize\ttfamily void System\+::lattice\+Setup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
+
+
+\mbox{\hyperlink{class_system_a93c8a8258ac8f6382ec393bca1271011}{System\+::lattice\+Setup}} sets up the lattice geometry and allocates memory. 
+
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{_2_users_2hansmathiasmamenvege_2_programming_2_l_q_c_d_2_gluon_action_2_gluonic_l_q_c_d_2main_8cpp-example}{/\+Users/hansmathiasmamenvege/\+Programming/\+L\+Q\+C\+D/\+Gluon\+Action/\+Gluonic\+L\+Q\+C\+D/main.\+cpp}}.\end{Desc}
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
@@ -69,6 +107,18 @@ Here is the caller graph for this function\+:
 \subsubsection{\texorpdfstring{run()}{run()}}
 {\footnotesize\ttfamily void System\+::run (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
+
+
+\mbox{\hyperlink{class_system_afa39feb75f96798930f4bfb48205f40b}{System\+::run}} based on passed parameters, does one of three things\+: 
+
+
+\begin{DoxyItemize}
+\item run regular metropolis to generate configurations.
+\item load a thermalized configuration and run metropolis to generate configurations.
+\item loads a set of configurations and flows them. 
+\end{DoxyItemize}\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{_2_users_2hansmathiasmamenvege_2_programming_2_l_q_c_d_2_gluon_action_2_gluonic_l_q_c_d_2main_8cpp-example}{/\+Users/hansmathiasmamenvege/\+Programming/\+L\+Q\+C\+D/\+Gluon\+Action/\+Gluonic\+L\+Q\+C\+D/main.\+cpp}}.\end{Desc}
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]

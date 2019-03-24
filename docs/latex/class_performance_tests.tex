@@ -8,11 +8,11 @@
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{class_performance_tests_ac8c32855dc70f74be063396bd6f76cf4}{Performance\+Tests}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_performance_tests_ac8c32855dc70f74be063396bd6f76cf4}{Performance\+Tests\+::\+Performance\+Tests}} constructor. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_performance_tests_adc3a6beb9f16d8442cb9918dd2e9a8bb}{$\sim$\+Performance\+Tests}} ()
-\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_performance_tests_adc3a6beb9f16d8442cb9918dd2e9a8bb}{Performance\+Tests\+::$\sim$\+Performance\+Tests}}. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_performance_tests_aa55ebdbc84db93cc45adfdf7163f90b4}{run}} ()
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_performance_tests_aa55ebdbc84db93cc45adfdf7163f90b4}{Performance\+Tests\+::run}} initiates performance testing on\+: \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -37,13 +37,21 @@ M\+IT Licence
 \subsubsection{\texorpdfstring{PerformanceTests()}{PerformanceTests()}}
 {\footnotesize\ttfamily Performance\+Tests\+::\+Performance\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_performance_tests_adc3a6beb9f16d8442cb9918dd2e9a8bb}\label{class_performance_tests_adc3a6beb9f16d8442cb9918dd2e9a8bb}} 
+
+
+\mbox{\hyperlink{class_performance_tests_ac8c32855dc70f74be063396bd6f76cf4}{Performance\+Tests\+::\+Performance\+Tests}} constructor. 
+
+Initializes random generators and a \mbox{\hyperlink{class_s_u3_matrix_generator}{S\+U3\+Matrix\+Generator}} instance. \mbox{\Hypertarget{class_performance_tests_adc3a6beb9f16d8442cb9918dd2e9a8bb}\label{class_performance_tests_adc3a6beb9f16d8442cb9918dd2e9a8bb}} 
 \index{PerformanceTests@{PerformanceTests}!````~PerformanceTests@{$\sim$PerformanceTests}}
 \index{````~PerformanceTests@{$\sim$PerformanceTests}!PerformanceTests@{PerformanceTests}}
 \subsubsection{\texorpdfstring{$\sim$PerformanceTests()}{~PerformanceTests()}}
 {\footnotesize\ttfamily Performance\+Tests\+::$\sim$\+Performance\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
+
+\mbox{\hyperlink{class_performance_tests_adc3a6beb9f16d8442cb9918dd2e9a8bb}{Performance\+Tests\+::$\sim$\+Performance\+Tests}}. 
+
+De-\/allocates the S\+U3\+Generator. 
 
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{class_performance_tests_aa55ebdbc84db93cc45adfdf7163f90b4}\label{class_performance_tests_aa55ebdbc84db93cc45adfdf7163f90b4}} 
@@ -52,7 +60,11 @@ M\+IT Licence
 \subsubsection{\texorpdfstring{run()}{run()}}
 {\footnotesize\ttfamily void Performance\+Tests\+::run (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-Here is the call graph for this function\+:
+
+
+\mbox{\hyperlink{class_performance_tests_aa55ebdbc84db93cc45adfdf7163f90b4}{Performance\+Tests\+::run}} initiates performance testing on\+: 
+
+test\+Exponentiation\+Time which tests the time of performing matrix exponentiations. test\+Exponentiation\+Accuracy tests the accuracy of the exponentiation methods. test\+Random\+Generators tests the random \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix generators test\+Matrix\+Multiplication times the \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix multiplication method. test\+Derivative\+Time\+And\+Accuracy tests the lattice derivative methods Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
@@ -65,7 +77,7 @@ Here is the caller graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=344pt]{class_performance_tests_aa55ebdbc84db93cc45adfdf7163f90b4_icgraph}
+\includegraphics[width=350pt]{class_performance_tests_aa55ebdbc84db93cc45adfdf7163f90b4_icgraph}
 \end{center}
 \end{figure}
 

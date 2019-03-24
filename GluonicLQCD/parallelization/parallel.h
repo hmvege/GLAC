@@ -1,5 +1,5 @@
 /*!
- * \brief
+ * \brief Header containing all relevant libraries for parallel communication.
  *
  * \author Mathias M. Vege
  * \version 1.0

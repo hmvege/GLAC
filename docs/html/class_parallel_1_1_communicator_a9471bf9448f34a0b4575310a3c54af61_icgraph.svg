@@ -12,7 +12,7 @@
 <!-- Node7 -->
 <g id="node1" class="node">
 <title>Node7</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Parallel::Communicator::checkLattice checks if the lattice containts invalid numbers/nan.">
 <polygon fill="#bfbfbf" stroke="#000000" points="205.9648,-42.5 205.9648,-70.5 325.8906,-70.5 325.8906,-42.5 205.9648,-42.5"/>
 <text text-anchor="start" x="213.9648" y="-58.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="265.9277" y="-48.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::checkLattice</text>

@@ -1,8 +1,8 @@
 <map id="runUnitTests" name="runUnitTests">
-<area shape="rect" id="node1" title=" " alt="" coords="5,248,101,273"/>
+<area shape="rect" id="node1" title="Header containing functions needed for running unit tests, integration tests and validation testing." alt="" coords="5,248,101,273"/>
 <area shape="rect" id="node2" href="$class_test_suite.html#a0fa7e788a1b1c235faa475c0d1aaa1e3" title=" " alt="" coords="149,192,328,217"/>
-<area shape="rect" id="node11" href="$class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" title=" " alt="" coords="158,241,318,280"/>
-<area shape="rect" id="node12" href="$class_parallel_1_1_communicator.html#aca0ac979aee1a649dbe5d4582b06a707" title=" " alt="" coords="158,304,318,343"/>
+<area shape="rect" id="node11" href="$class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" title="Parallel::Communicator::setBarrier." alt="" coords="158,241,318,280"/>
+<area shape="rect" id="node12" href="$class_parallel_1_1_communicator.html#aca0ac979aee1a649dbe5d4582b06a707" title="Parallel::Communicator::freeMPIGroups." alt="" coords="158,304,318,343"/>
 <area shape="rect" id="node3" href="$class_parameters.html#a2645617063e170828a3da439094ab626" title=" " alt="" coords="381,5,563,44"/>
 <area shape="rect" id="node4" href="$class_test_suite.html#a91444c36a86d453cc9922d888b248a6b" title=" " alt="" coords="376,68,568,93"/>
 <area shape="rect" id="node5" href="$class_test_suite.html#acf6d1ad1920132a4aed74457bb2df8cb" title=" " alt="" coords="376,117,568,143"/>

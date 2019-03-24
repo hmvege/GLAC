@@ -1,4 +1,5 @@
 <map id="PerformanceTests::run" name="PerformanceTests::run">
-<area shape="rect" id="node1" title=" " alt="" coords="201,5,357,31"/>
-<area shape="rect" id="node2" href="$test_8h.html#a78e241f531e5203858fdb59a4162d6ba" title=" " alt="" coords="5,5,153,31"/>
+<area shape="rect" id="node1" title="PerformanceTests::run initiates performance testing on:" alt="" coords="300,5,455,31"/>
+<area shape="rect" id="node2" href="$test_8h.html#a78e241f531e5203858fdb59a4162d6ba" title="runPerformanceTests will run performance tests on program. Exits once complete." alt="" coords="104,5,252,31"/>
+<area shape="rect" id="node3" href="$main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" title="main loads in configurations and initiates program according to .json specifications." alt="" coords="5,5,56,31"/>
 </map>

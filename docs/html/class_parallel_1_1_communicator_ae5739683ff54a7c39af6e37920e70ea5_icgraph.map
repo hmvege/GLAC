@@ -1,5 +1,5 @@
 <map id="Parallel::Communicator::gatherDoubleResults" name="Parallel::Communicator::gatherDoubleResults">
-<area shape="rect" id="node1" title=" " alt="" coords="267,89,426,128"/>
+<area shape="rect" id="node1" title="Parallel::Communicator::gatherDoubleResults." alt="" coords="267,89,426,128"/>
 <area shape="rect" id="node2" href="$class_lattice_action_charge_density.html#abb7db718d4069faab0ed19f31aa85ad4" title="Correlator::printObservable prints the observable for the output." alt="" coords="19,5,205,44"/>
 <area shape="rect" id="node3" href="$class_master_sampler.html#a41853c3e4ab52fca7d93cf80e8702b7a" title="Correlator::printObservable prints the observable for the output." alt="" coords="5,68,219,93"/>
 <area shape="rect" id="node4" href="$class_master_sampler_topc_x_y_z.html#ab2312c9e9dc1e9deeb5bce36784372ac" title="Correlator::printObservable prints the observable for the output." alt="" coords="29,117,195,156"/>

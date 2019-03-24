@@ -9,42 +9,42 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 23)">
 <title>Parameters::setOutputFolder</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-23 359.127,-23 359.127,4 -4,4"/>
-<!-- Node481 -->
+<!-- Node492 -->
 <g id="node1" class="node">
-<title>Node481</title>
+<title>Node492</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="#bfbfbf" stroke="#000000" points="210.1816,-.5 210.1816,-18.5 355.127,-18.5 355.127,-.5 210.1816,-.5"/>
 <text text-anchor="middle" x="282.6543" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::setOutputFolder</text>
 </a>
 </g>
 </g>
-<!-- Node482 -->
+<!-- Node493 -->
 <g id="node2" class="node">
-<title>Node482</title>
+<title>Node493</title>
 <g id="a_node2"><a xlink:href="namespace_config_loader.html#a26cf01adba9411ef1fa006d5068d7cc4" target="_top" xlink:title="load">
 <polygon fill="#ffffff" stroke="#000000" points="73.6748,-.5 73.6748,-18.5 174.1816,-18.5 174.1816,-.5 73.6748,-.5"/>
 <text text-anchor="middle" x="123.9282" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">ConfigLoader::load</text>
 </a>
 </g>
 </g>
-<!-- Node481&#45;&gt;Node482 -->
+<!-- Node492&#45;&gt;Node493 -->
 <g id="edge1" class="edge">
-<title>Node481&#45;&gt;Node482</title>
+<title>Node492&#45;&gt;Node493</title>
 <path fill="none" stroke="#191970" d="M199.733,-9.5C191.163,-9.5 182.6483,-9.5 174.59,-9.5"/>
 <polygon fill="#191970" stroke="#191970" points="199.7951,-13.0001 209.795,-9.5 199.795,-6.0001 199.7951,-13.0001"/>
 </g>
-<!-- Node483 -->
+<!-- Node494 -->
 <g id="node3" class="node">
-<title>Node483</title>
-<g id="a_node3"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title=" ">
+<title>Node494</title>
+<g id="a_node3"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title="main loads in configurations and initiates program according to .json specifications.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-.5 0,-18.5 37.6748,-18.5 37.6748,-.5 0,-.5"/>
 <text text-anchor="middle" x="18.8374" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </a>
 </g>
 </g>
-<!-- Node482&#45;&gt;Node483 -->
+<!-- Node493&#45;&gt;Node494 -->
 <g id="edge2" class="edge">
-<title>Node482&#45;&gt;Node483</title>
+<title>Node493&#45;&gt;Node494</title>
 <path fill="none" stroke="#191970" d="M63.4826,-9.5C54.2852,-9.5 45.4183,-9.5 38.0439,-9.5"/>
 <polygon fill="#191970" stroke="#191970" points="63.5375,-13.0001 73.5375,-9.5 63.5374,-6.0001 63.5375,-13.0001"/>
 </g>

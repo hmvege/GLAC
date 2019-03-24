@@ -21,6 +21,11 @@ using std::chrono::steady_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 
+/*!
+ * \brief PerformanceTests::PerformanceTests constructor
+ *
+ * Initializes random generators and a SU3MatrixGenerator instance.
+ */
 PerformanceTests::PerformanceTests()
 {
     // Sets pointers to use
@@ -30,11 +35,25 @@ PerformanceTests::PerformanceTests()
     m_uniform_distribution              = std::uniform_real_distribution<double>(0,1);
 }
 
+/*!
+ * \brief PerformanceTests::~PerformanceTests
+ *
+ * De-allocates the SU3Generator.
+ */
 PerformanceTests::~PerformanceTests()
 {
     delete m_SU3Generator;
 }
 
+/*!
+ * \brief PerformanceTests::run initiates performance testing on:
+ *
+ * testExponentiationTime which tests the time of performing matrix exponentiations.
+ * testExponentiationAccuracy tests the accuracy of the exponentiation methods.
+ * testRandomGenerators tests the random SU3 matrix generators
+ * testMatrixMultiplication times the SU3 matrix multiplication method.
+ * testDerivativeTimeAndAccuracy tests the lattice derivative methods
+ */
 void PerformanceTests::run()
 {
     /*
@@ -42,13 +61,13 @@ void PerformanceTests::run()
      */
     m_NTaylorDegree = Parameters::getTaylorPolDegree();
     if (Parallel::Communicator::getProcessRank() == 0) {
-//        testExponentiationTime(Parameters::getNExpTests());
-//        testExponentiationAccuracy();
-//        testRandomGenerators(Parameters::getNRandTests());
+        testExponentiationTime(Parameters::getNExpTests());
+        testExponentiationAccuracy();
+        testRandomGenerators(Parameters::getNRandTests());
         testMatrixMultiplication();
     }
     Parallel::Communicator::setBarrierActive();
-//    testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
+    testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
 }
 
 void PerformanceTests::testExponentiationTime(unsigned int NTests)
@@ -294,6 +313,9 @@ void PerformanceTests::testRandomGenerators(unsigned int NTests)
 
 void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
 {
+    /*
+     * Runs performance tests on the Action derivative times and its accuracy.
+     */
     if (Parallel::Communicator::getProcessRank() == 0) {
         printf("\n\nRunning timing of SU3 derivation methods with %d full lattice derivation tests.",NTests);
     }
@@ -374,6 +396,9 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
 
 void PerformanceTests::testMatrixMultiplication()
 {
+    /*
+     * Runs a SU3 matrix multiplication 10000000 time in order to test the performance.
+     */
     unsigned int NTests = 10000000;
 
     printf("\n\nRunning timing of SU3 matrix multiplication for %d tests",NTests);

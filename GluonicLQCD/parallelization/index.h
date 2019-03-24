@@ -1,5 +1,7 @@
 /*!
- * \brief
+ * \class Index
+ *
+ * \brief Class for contigious memory accessing.
  *
  * \author Mathias M. Vege
  * \version 1.0

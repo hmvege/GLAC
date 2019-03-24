@@ -6,6 +6,6 @@
 <area shape="rect" id="node5" href="$class_s_u3_exp.html#a9760c17b9c3a4b6d0a5cd4d88c6d577e" title=" " alt="" coords="346,167,445,192"/>
 <area shape="rect" id="node6" href="$class_s_u3_matrix_generator.html#ae76a62a4ba6af03901a0cc8e8632e856" title=" " alt="" coords="320,216,471,255"/>
 <area shape="rect" id="node7" href="$class_s_u3_matrix_generator.html#a06dc59b5a86ba6863b848ef1ca26629a" title="SU3MatrixGenerator::generateRandom generates a fully random SU3 matrix." alt="" coords="324,279,467,317"/>
-<area shape="rect" id="node8" href="$class_system.html#a93c8a8258ac8f6382ec393bca1271011" title=" " alt="" coords="104,285,246,311"/>
-<area shape="rect" id="node9" href="$main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" title=" " alt="" coords="5,285,56,311"/>
+<area shape="rect" id="node8" href="$class_system.html#a93c8a8258ac8f6382ec393bca1271011" title="System::latticeSetup sets up the lattice geometry and allocates memory." alt="" coords="104,285,246,311"/>
+<area shape="rect" id="node9" href="$main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" title="main loads in configurations and initiates program according to .json specifications." alt="" coords="5,285,56,311"/>
 </map>

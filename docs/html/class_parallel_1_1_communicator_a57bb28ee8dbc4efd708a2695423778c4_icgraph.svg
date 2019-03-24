@@ -9,34 +9,34 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 110)">
 <title>Parallel::Communicator::MPIExit</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-110 485.8164,-110 485.8164,4 -4,4"/>
-<!-- Node140 -->
+<!-- Node139 -->
 <g id="node1" class="node">
-<title>Node140</title>
-<g id="a_node1"><a xlink:title=" ">
+<title>Node139</title>
+<g id="a_node1"><a xlink:title="Parallel::Communicator::MPIExit exits the program. Frees MPI groups before it exits.">
 <polygon fill="#bfbfbf" stroke="#000000" points="361.8906,-42.5 361.8906,-70.5 481.8164,-70.5 481.8164,-42.5 361.8906,-42.5"/>
 <text text-anchor="start" x="369.8906" y="-58.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="421.8535" y="-48.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::MPIExit</text>
 </a>
 </g>
 </g>
-<!-- Node141 -->
+<!-- Node140 -->
 <g id="node2" class="node">
-<title>Node141</title>
+<title>Node140</title>
 <g id="a_node2"><a xlink:href="class_i_o_1_1_field_i_o.html#a02db864a48601edd7febaab5d655e495" target="_top" xlink:title="IO::FieldIO::loadFieldConfiguration loads a regular configuration into memory.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-87.5 0,-105.5 169.9648,-105.5 169.9648,-87.5 0,-87.5"/>
 <text text-anchor="middle" x="84.9824" y="-93.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::loadFieldConfiguration</text>
 </a>
 </g>
 </g>
-<!-- Node140&#45;&gt;Node141 -->
+<!-- Node139&#45;&gt;Node140 -->
 <g id="edge1" class="edge">
-<title>Node140&#45;&gt;Node141</title>
+<title>Node139&#45;&gt;Node140</title>
 <path fill="none" stroke="#191970" d="M362.8604,-73.0121C350.7154,-75.9141 337.9521,-78.6068 325.8906,-80.5 274.5429,-88.5598 216.4166,-92.5655 170.1256,-94.5536"/>
 <polygon fill="#191970" stroke="#191970" points="364.0173,-76.3317 372.8878,-70.5381 362.3405,-69.5355 364.0173,-76.3317"/>
 </g>
-<!-- Node142 -->
+<!-- Node141 -->
 <g id="node3" class="node">
-<title>Node142</title>
+<title>Node141</title>
 <g id="a_node3"><a xlink:href="class_i_o_1_1_field_i_o.html#af23fb6e02a6bd1cafd5be4acacbf848e" target="_top" xlink:title="IO::FieldIO::loadChromaFieldConfiguration loads a configuration from Chroma into memory.">
 <polygon fill="#ffffff" stroke="#000000" points="11.958,-.5 11.958,-28.5 158.0068,-28.5 158.0068,-.5 11.958,-.5"/>
 <text text-anchor="start" x="19.958" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::loadChromaField</text>
@@ -44,52 +44,52 @@
 </a>
 </g>
 </g>
-<!-- Node140&#45;&gt;Node142 -->
+<!-- Node139&#45;&gt;Node141 -->
 <g id="edge2" class="edge">
-<title>Node140&#45;&gt;Node142</title>
+<title>Node139&#45;&gt;Node141</title>
 <path fill="none" stroke="#191970" d="M362.4474,-39.97C350.4236,-37.0982 337.8117,-34.4217 325.8906,-32.5 269.992,-23.4892 206.0544,-18.9763 158.1014,-16.7233"/>
 <polygon fill="#191970" stroke="#191970" points="361.8342,-43.4235 372.381,-42.416 363.5079,-36.6265 361.8342,-43.4235"/>
 </g>
-<!-- Node143 -->
+<!-- Node142 -->
 <g id="node4" class="node">
-<title>Node143</title>
-<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#a9471bf9448f34a0b4575310a3c54af61" target="_top" xlink:title=" ">
+<title>Node142</title>
+<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#a9471bf9448f34a0b4575310a3c54af61" target="_top" xlink:title="Parallel::Communicator::checkLattice checks if the lattice containts invalid numbers/nan.">
 <polygon fill="#ffffff" stroke="#000000" points="205.9648,-42.5 205.9648,-70.5 325.8906,-70.5 325.8906,-42.5 205.9648,-42.5"/>
 <text text-anchor="start" x="213.9648" y="-58.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="265.9277" y="-48.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::checkLattice</text>
 </a>
 </g>
 </g>
-<!-- Node140&#45;&gt;Node143 -->
+<!-- Node139&#45;&gt;Node142 -->
 <g id="edge3" class="edge">
-<title>Node140&#45;&gt;Node143</title>
+<title>Node139&#45;&gt;Node142</title>
 <path fill="none" stroke="#191970" d="M351.349,-56.5C342.9008,-56.5 334.3347,-56.5 326.0524,-56.5"/>
 <polygon fill="#191970" stroke="#191970" points="351.5686,-60.0001 361.5685,-56.5 351.5685,-53.0001 351.5686,-60.0001"/>
 </g>
-<!-- Node143&#45;&gt;Node141 -->
+<!-- Node142&#45;&gt;Node140 -->
 <g id="edge5" class="edge">
-<title>Node143&#45;&gt;Node141</title>
+<title>Node142&#45;&gt;Node140</title>
 <path fill="none" stroke="#191970" d="M195.8886,-71.9829C172.135,-77.2339 146.3985,-82.9233 125.7028,-87.4983"/>
 <polygon fill="#191970" stroke="#191970" points="196.9181,-75.3399 205.9269,-69.7639 195.4071,-68.5049 196.9181,-75.3399"/>
 </g>
-<!-- Node143&#45;&gt;Node142 -->
+<!-- Node142&#45;&gt;Node141 -->
 <g id="edge6" class="edge">
-<title>Node143&#45;&gt;Node142</title>
+<title>Node142&#45;&gt;Node141</title>
 <path fill="none" stroke="#191970" d="M195.7345,-40.2071C179.1311,-36.3533 161.5671,-32.2764 145.4385,-28.5327"/>
 <polygon fill="#191970" stroke="#191970" points="195.3945,-43.7212 205.9269,-42.5729 196.9773,-36.9025 195.3945,-43.7212"/>
 </g>
-<!-- Node144 -->
+<!-- Node143 -->
 <g id="node5" class="node">
-<title>Node144</title>
+<title>Node143</title>
 <g id="a_node5"><a xlink:href="class_i_o_1_1_field_i_o.html#a8af607f9a1d79e90d4514c36103c6601" target="_top" xlink:title="IO::FieldIO::writeFieldToFile writes a lattice of SU3 matrix objects to file.">
 <polygon fill="#ffffff" stroke="#000000" points="15.3003,-47.5 15.3003,-65.5 154.6646,-65.5 154.6646,-47.5 15.3003,-47.5"/>
 <text text-anchor="middle" x="84.9824" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">IO::FieldIO::writeFieldToFile</text>
 </a>
 </g>
 </g>
-<!-- Node143&#45;&gt;Node144 -->
+<!-- Node142&#45;&gt;Node143 -->
 <g id="edge4" class="edge">
-<title>Node143&#45;&gt;Node144</title>
+<title>Node142&#45;&gt;Node143</title>
 <path fill="none" stroke="#191970" d="M195.7942,-56.5C182.3552,-56.5 168.2848,-56.5 154.8541,-56.5"/>
 <polygon fill="#191970" stroke="#191970" points="195.9269,-60.0001 205.9269,-56.5 195.9269,-53.0001 195.9269,-60.0001"/>
 </g>

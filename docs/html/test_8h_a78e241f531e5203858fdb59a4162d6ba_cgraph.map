@@ -1,9 +1,12 @@
 <map id="runPerformanceTests" name="runPerformanceTests">
-<area shape="rect" id="node1" title=" " alt="" coords="5,131,153,156"/>
-<area shape="rect" id="node2" href="$class_performance_tests.html#aa55ebdbc84db93cc45adfdf7163f90b4" title=" " alt="" coords="204,75,359,100"/>
-<area shape="rect" id="node6" href="$class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" title=" " alt="" coords="201,124,361,163"/>
-<area shape="rect" id="node7" href="$class_parallel_1_1_communicator.html#aca0ac979aee1a649dbe5d4582b06a707" title=" " alt="" coords="201,187,361,225"/>
-<area shape="rect" id="node3" href="$class_parameters.html#a272f8ebfbd305fb4a3b03db68417fc90" title=" " alt="" coords="409,5,580,44"/>
-<area shape="rect" id="node4" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="415,68,575,107"/>
-<area shape="rect" id="node5" href="$class_parallel_1_1_communicator.html#af61a4b8a49509982ae96d2a99dfb9f49" title=" " alt="" coords="415,131,575,169"/>
+<area shape="rect" id="node1" title="runPerformanceTests will run performance tests on program. Exits once complete." alt="" coords="5,212,153,237"/>
+<area shape="rect" id="node2" href="$class_performance_tests.html#aa55ebdbc84db93cc45adfdf7163f90b4" title="PerformanceTests::run initiates performance testing on:" alt="" coords="204,156,359,181"/>
+<area shape="rect" id="node9" href="$class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" title="Parallel::Communicator::setBarrier." alt="" coords="201,205,361,244"/>
+<area shape="rect" id="node10" href="$class_parallel_1_1_communicator.html#aca0ac979aee1a649dbe5d4582b06a707" title="Parallel::Communicator::freeMPIGroups." alt="" coords="201,268,361,307"/>
+<area shape="rect" id="node3" href="$class_parameters.html#a272f8ebfbd305fb4a3b03db68417fc90" title=" " alt="" coords="418,5,589,44"/>
+<area shape="rect" id="node4" href="$class_parallel_1_1_communicator.html#a474ab433da0e83ef372d74e26a7e5cb0" title=" " alt="" coords="424,68,584,107"/>
+<area shape="rect" id="node5" href="$class_parameters.html#abd70d1df3ee0109789496fc9d21c2aef" title=" " alt="" coords="414,131,594,156"/>
+<area shape="rect" id="node6" href="$class_parameters.html#a492a81a7a0951b1165f500f8c0768fe1" title=" " alt="" coords="409,180,598,205"/>
+<area shape="rect" id="node7" href="$class_parallel_1_1_communicator.html#af61a4b8a49509982ae96d2a99dfb9f49" title="Parallel::Communicator::setBarrierActive." alt="" coords="424,229,584,268"/>
+<area shape="rect" id="node8" href="$class_parameters.html#a24545a7987ec3056a6c0ad742edd9ba5" title=" " alt="" coords="411,292,596,331"/>
 </map>

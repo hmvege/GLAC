@@ -1120,7 +1120,11 @@ bool TestSuite::testRSTInverseMultiplication()
     return passed;
 }
 
-// Perform tests on matrix X
+/*!
+ * \brief Perform tests on SU3 matrix X.
+ *
+ * Checks if it is hermitian, orthogonal, normalized, det(X)=1.
+ */
 void TestSuite::testMatrix(SU3 X)
 {
     bool passed = true;

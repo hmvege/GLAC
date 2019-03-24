@@ -39,7 +39,7 @@ To run GLAC through its Python interface, you will for the moment being have to 
 
 Example:
 ```
-> python createJobs.py load weinberg_config.py -s slurm -bf {base directory}
+python createJobs.py load weinberg_config.py -s slurm -bf {base directory}
 ```
 This will automatically create a job script and submit it to the cluster the script is running on.
 
@@ -66,12 +66,12 @@ This will automatically create a job script and submit it to the cluster the scr
 
 If you need help, type -h, and you will get additional command line arguments.
 ```
-> python createJobs.py -h
+python createJobs.py -h
 ```
 
 If you want to perform a dryrun(i.e. no permanent change is performed), run:
 ```
-> python createJobs.py --dryrun load weinberg_config.py -bf ${base directory}
+python createJobs.py --dryrun load weinberg_config.py -bf ${base directory}
 ```
 This will then print out every detail of the run, without submitting the job. Useful for double check the settings without actually submitting.
 

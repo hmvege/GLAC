@@ -9,33 +9,33 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
 <title>Parameters::getSamplingFrequency</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-70 577.8604,-70 577.8604,4 -4,4"/>
-<!-- Node304 -->
+<!-- Node313 -->
 <g id="node1" class="node">
-<title>Node304</title>
+<title>Node313</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="#bfbfbf" stroke="#000000" points="397.7822,-26.5 397.7822,-44.5 573.8604,-44.5 573.8604,-26.5 397.7822,-26.5"/>
 <text text-anchor="middle" x="485.8213" y="-32.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getSamplingFrequency</text>
 </a>
 </g>
 </g>
-<!-- Node305 -->
+<!-- Node314 -->
 <g id="node2" class="node">
-<title>Node305</title>
+<title>Node314</title>
 <g id="a_node2"><a xlink:href="class_sys_print.html#a4572572643f6f4685081a3ae419e5ca9" target="_top" xlink:title="SysPrint::printSystemInfo prints out parametesr from Parallel:Communicator and Parameters.">
 <polygon fill="#ffffff" stroke="#000000" points="225.1743,-47.5 225.1743,-65.5 353.4351,-65.5 353.4351,-47.5 225.1743,-47.5"/>
 <text text-anchor="middle" x="289.3047" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">SysPrint::printSystemInfo</text>
 </a>
 </g>
 </g>
-<!-- Node304&#45;&gt;Node305 -->
+<!-- Node313&#45;&gt;Node314 -->
 <g id="edge1" class="edge">
-<title>Node304&#45;&gt;Node305</title>
+<title>Node313&#45;&gt;Node314</title>
 <path fill="none" stroke="#191970" d="M391.152,-45.6165C378.4064,-46.9785 365.5801,-48.3491 353.5326,-49.6365"/>
 <polygon fill="#191970" stroke="#191970" points="391.7686,-49.0706 401.3401,-44.5278 391.0248,-42.1102 391.7686,-49.0706"/>
 </g>
-<!-- Node308 -->
+<!-- Node317 -->
 <g id="node5" class="node">
-<title>Node308</title>
+<title>Node317</title>
 <g id="a_node5"><a xlink:href="class_lattice_action_charge_density.html#acda2a43db75cca34586441d4ac7ec39e" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="216.8271,-.5 216.8271,-28.5 361.7822,-28.5 361.7822,-.5 216.8271,-.5"/>
 <text text-anchor="start" x="224.8271" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">LatticeActionChargeDensity</text>
@@ -43,39 +43,39 @@
 </a>
 </g>
 </g>
-<!-- Node304&#45;&gt;Node308 -->
+<!-- Node313&#45;&gt;Node317 -->
 <g id="edge4" class="edge">
-<title>Node304&#45;&gt;Node308</title>
+<title>Node313&#45;&gt;Node317</title>
 <path fill="none" stroke="#191970" d="M391.152,-25.3835C381.3433,-24.3354 371.4868,-23.2821 361.9742,-22.2656"/>
 <polygon fill="#191970" stroke="#191970" points="391.0248,-28.8898 401.3401,-26.4722 391.7686,-21.9294 391.0248,-28.8898"/>
 </g>
-<!-- Node306 -->
+<!-- Node315 -->
 <g id="node3" class="node">
-<title>Node306</title>
-<g id="a_node3"><a xlink:href="class_system.html#a93c8a8258ac8f6382ec393bca1271011" target="_top" xlink:title=" ">
+<title>Node315</title>
+<g id="a_node3"><a xlink:href="class_system.html#a93c8a8258ac8f6382ec393bca1271011" target="_top" xlink:title="System::latticeSetup sets up the lattice geometry and allocates memory.">
 <polygon fill="#ffffff" stroke="#000000" points="73.6748,-47.5 73.6748,-65.5 180.8271,-65.5 180.8271,-47.5 73.6748,-47.5"/>
 <text text-anchor="middle" x="127.251" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">System::latticeSetup</text>
 </a>
 </g>
 </g>
-<!-- Node305&#45;&gt;Node306 -->
+<!-- Node314&#45;&gt;Node315 -->
 <g id="edge2" class="edge">
-<title>Node305&#45;&gt;Node306</title>
+<title>Node314&#45;&gt;Node315</title>
 <path fill="none" stroke="#191970" d="M214.4542,-56.5C203.1209,-56.5 191.6255,-56.5 180.8618,-56.5"/>
 <polygon fill="#191970" stroke="#191970" points="214.7912,-60.0001 224.7911,-56.5 214.7911,-53.0001 214.7912,-60.0001"/>
 </g>
-<!-- Node307 -->
+<!-- Node316 -->
 <g id="node4" class="node">
-<title>Node307</title>
-<g id="a_node4"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title=" ">
+<title>Node316</title>
+<g id="a_node4"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title="main loads in configurations and initiates program according to .json specifications.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-47.5 0,-65.5 37.6748,-65.5 37.6748,-47.5 0,-47.5"/>
 <text text-anchor="middle" x="18.8374" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </a>
 </g>
 </g>
-<!-- Node306&#45;&gt;Node307 -->
+<!-- Node315&#45;&gt;Node316 -->
 <g id="edge3" class="edge">
-<title>Node306&#45;&gt;Node307</title>
+<title>Node315&#45;&gt;Node316</title>
 <path fill="none" stroke="#191970" d="M63.2463,-56.5C54.0172,-56.5 45.18,-56.5 37.8534,-56.5"/>
 <polygon fill="#191970" stroke="#191970" points="63.3618,-60.0001 73.3618,-56.5 63.3618,-53.0001 63.3618,-60.0001"/>
 </g>

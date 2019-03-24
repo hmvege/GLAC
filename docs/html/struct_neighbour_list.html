@@ -84,23 +84,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afcdbcc7fde83d4ce3a4fecc8d4105cd8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_neighbour_list.html#afcdbcc7fde83d4ce3a4fecc8d4105cd8">~NeighbourList</a> ()</td></tr>
 <tr class="separator:afcdbcc7fde83d4ce3a4fecc8d4105cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e8123deded59c4c702429fda52af140"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_neighbour_list.html#a9e8123deded59c4c702429fda52af140">print</a> ()</td></tr>
+<tr class="memdesc:a9e8123deded59c4c702429fda52af140"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_neighbour_list.html#a9e8123deded59c4c702429fda52af140" title="NeighbourList::print prints the geometry of a single processor.">NeighbourList::print</a> prints the geometry of a single processor.  <a href="#a9e8123deded59c4c702429fda52af140">More...</a><br /></td></tr>
 <tr class="separator:a9e8123deded59c4c702429fda52af140"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bd6ad04ef1eb6ad9737ac493b6864d1"><td class="memItemLeft" align="right" valign="top">int &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_neighbour_list.html#a9bd6ad04ef1eb6ad9737ac493b6864d1">operator []</a> (int i)</td></tr>
+<tr class="memdesc:a9bd6ad04ef1eb6ad9737ac493b6864d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">operator [] overloaded list accessing tool.  <a href="#a9bd6ad04ef1eb6ad9737ac493b6864d1">More...</a><br /></td></tr>
 <tr class="separator:a9bd6ad04ef1eb6ad9737ac493b6864d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:ad55e922aabd4ef75711d22c5e5634165"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_neighbour_list.html#ad55e922aabd4ef75711d22c5e5634165">list</a> [8]</td></tr>
+<tr class="memdesc:ad55e922aabd4ef75711d22c5e5634165"><td class="mdescLeft">&#160;</td><td class="mdescRight">Neighbour list.  <a href="#ad55e922aabd4ef75711d22c5e5634165">More...</a><br /></td></tr>
 <tr class="separator:ad55e922aabd4ef75711d22c5e5634165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe10231f4cd3e607e19cea0b0d7aab03"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_neighbour_list.html#abe10231f4cd3e607e19cea0b0d7aab03">rank</a></td></tr>
+<tr class="memdesc:abe10231f4cd3e607e19cea0b0d7aab03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rank of processor holding <a class="el" href="struct_neighbour_list.html">NeighbourList</a>.  <a href="#abe10231f4cd3e607e19cea0b0d7aab03">More...</a><br /></td></tr>
 <tr class="separator:abe10231f4cd3e607e19cea0b0d7aab03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section author"><dt>Author</dt><dd>Mathias M. Vege </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2017-2019 </dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>MIT Licence </dd></dl>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab376c095d360ea03b0e499a8820bd0e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab376c095d360ea03b0e499a8820bd0e7">&#9670;&nbsp;</a></span>NeighbourList()</h2>
 
@@ -160,6 +159,15 @@ Data Fields</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>operator [] overloaded list accessing tool. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">i</td><td>direction to look up. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the process rank in given i direction. </dd></dl>
+
 </div>
 </div>
 <a id="a9e8123deded59c4c702429fda52af140"></a>
@@ -177,6 +185,9 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="struct_neighbour_list.html#a9e8123deded59c4c702429fda52af140" title="NeighbourList::print prints the geometry of a single processor.">NeighbourList::print</a> prints the geometry of a single processor. </p>
+<p>Usefull for debugging. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Field Documentation</h2>
@@ -192,6 +203,8 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Neighbour list. </p>
+
 </div>
 </div>
 <a id="abe10231f4cd3e607e19cea0b0d7aab03"></a>
@@ -205,6 +218,8 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Rank of processor holding <a class="el" href="struct_neighbour_list.html">NeighbourList</a>. </p>
 
 </div>
 </div>

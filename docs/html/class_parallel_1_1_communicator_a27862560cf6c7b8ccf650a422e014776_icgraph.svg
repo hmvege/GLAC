@@ -12,7 +12,7 @@
 <!-- Node40 -->
 <g id="node1" class="node">
 <title>Node40</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Parallel::Communicator::getNeighboursNeighbourLink fetches a neighbours neighbor link.">
 <polygon fill="#bfbfbf" stroke="#000000" points="187.6348,-21.5 187.6348,-49.5 338.7227,-49.5 338.7227,-21.5 187.6348,-21.5"/>
 <text text-anchor="start" x="195.6348" y="-37.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="263.1787" y="-27.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getNeighboursNeighbourLink</text>

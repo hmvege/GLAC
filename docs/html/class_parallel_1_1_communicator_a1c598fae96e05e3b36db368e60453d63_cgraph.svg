@@ -12,7 +12,7 @@
 <!-- Node43 -->
 <g id="node1" class="node">
 <title>Node43</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="Parallel::Communicator::getNeighboursNeighbourNegativeLink.">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-21.5 0,-49.5 190.5557,-49.5 190.5557,-21.5 0,-21.5"/>
 <text text-anchor="start" x="8" y="-37.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="95.2778" y="-27.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getNeighboursNeighbourNegativeLink</text>
@@ -37,7 +37,7 @@
 <!-- Node45 -->
 <g id="node3" class="node">
 <title>Node45</title>
-<g id="a_node3"><a xlink:href="class_parallel_1_1_neighbours.html#a246afc374290bb0d3e86c07892872392" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="class_parallel_1_1_neighbours.html#aa3e776b78a708f2c4ce9f287b81f263e" target="_top" xlink:title="Parallel::Neighbours::getNeighbours returns a reference to the neighbour list of given process rank.">
 <polygon fill="#ffffff" stroke="#000000" points="235.1763,-.5 235.1763,-28.5 341.2251,-28.5 341.2251,-.5 235.1763,-.5"/>
 <text text-anchor="start" x="243.1763" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Neighbours</text>
 <text text-anchor="middle" x="288.2007" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::getNeighbours</text>

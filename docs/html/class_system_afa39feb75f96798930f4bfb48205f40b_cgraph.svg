@@ -12,7 +12,7 @@
 <!-- Node36 -->
 <g id="node1" class="node">
 <title>Node36</title>
-<g id="a_node1"><a xlink:title=" ">
+<g id="a_node1"><a xlink:title="System::run based on passed parameters, does one of three things:">
 <polygon fill="#bfbfbf" stroke="#000000" points="0,-52.5 0,-70.5 69.3496,-70.5 69.3496,-52.5 0,-52.5"/>
 <text text-anchor="middle" x="34.6748" y="-58.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">System::run</text>
 </a>
@@ -53,7 +53,7 @@
 <!-- Node39 -->
 <g id="node4" class="node">
 <title>Node39</title>
-<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="class_parallel_1_1_communicator.html#a14aa3d54f5efe28094df886948e3dee2" target="_top" xlink:title="Parallel::Communicator::setBarrier.">
 <polygon fill="#ffffff" stroke="#000000" points="114.5342,-.5 114.5342,-28.5 234.46,-28.5 234.46,-.5 114.5342,-.5"/>
 <text text-anchor="start" x="122.5342" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
 <text text-anchor="middle" x="174.4971" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">::setBarrier</text>

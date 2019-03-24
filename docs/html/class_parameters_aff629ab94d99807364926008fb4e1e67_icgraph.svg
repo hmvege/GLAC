@@ -9,63 +9,63 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 181)">
 <title>Parameters::getSubLatticeSize</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-181 320.2861,-181 320.2861,4 -4,4"/>
-<!-- Node333 -->
+<!-- Node342 -->
 <g id="node1" class="node">
-<title>Node333</title>
+<title>Node342</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="#bfbfbf" stroke="#000000" points="162.4346,-84.5 162.4346,-102.5 316.2861,-102.5 316.2861,-84.5 162.4346,-84.5"/>
 <text text-anchor="middle" x="239.3604" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getSubLatticeSize</text>
 </a>
 </g>
 </g>
-<!-- Node334 -->
+<!-- Node343 -->
 <g id="node2" class="node">
-<title>Node334</title>
+<title>Node343</title>
 <g id="a_node2"><a xlink:href="class_flow.html#a25ae85599c0ae330374f0840efde7ebc" target="_top" xlink:title="Flow::Flow.">
 <polygon fill="#ffffff" stroke="#000000" points="31.3257,-158.5 31.3257,-176.5 95.1089,-176.5 95.1089,-158.5 31.3257,-158.5"/>
 <text text-anchor="middle" x="63.2173" y="-164.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Flow::Flow</text>
 </a>
 </g>
 </g>
-<!-- Node333&#45;&gt;Node334 -->
+<!-- Node342&#45;&gt;Node343 -->
 <g id="edge1" class="edge">
-<title>Node333&#45;&gt;Node334</title>
+<title>Node342&#45;&gt;Node343</title>
 <path fill="none" stroke="#191970" d="M214.4504,-107.5083C191.9567,-119.7538 157.6895,-137.4177 126.4346,-149.5 116.5358,-153.3266 105.4861,-156.7484 95.4281,-159.5546"/>
 <polygon fill="#191970" stroke="#191970" points="216.2528,-110.5115 223.3266,-102.624 212.878,-104.3787 216.2528,-110.5115"/>
 </g>
-<!-- Node335 -->
+<!-- Node344 -->
 <g id="node3" class="node">
-<title>Node335</title>
+<title>Node344</title>
 <g id="a_node3"><a xlink:href="class_correlator.html#aff48ef3bf789e9c6231eacc21cd9ed9a" target="_top" xlink:title="Correlator::Correlator.">
 <polygon fill="#ffffff" stroke="#000000" points="7.981,-121.5 7.981,-139.5 118.4536,-139.5 118.4536,-121.5 7.981,-121.5"/>
 <text text-anchor="middle" x="63.2173" y="-127.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Correlator::Correlator</text>
 </a>
 </g>
 </g>
-<!-- Node333&#45;&gt;Node335 -->
+<!-- Node342&#45;&gt;Node344 -->
 <g id="edge2" class="edge">
-<title>Node333&#45;&gt;Node335</title>
+<title>Node342&#45;&gt;Node344</title>
 <path fill="none" stroke="#191970" d="M186.3375,-104.6378C160.7009,-110.0229 130.3297,-116.4026 106.1668,-121.4782"/>
 <polygon fill="#191970" stroke="#191970" points="187.204,-108.0322 196.2709,-102.5512 185.765,-101.1817 187.204,-108.0322"/>
 </g>
-<!-- Node336 -->
+<!-- Node345 -->
 <g id="node4" class="node">
-<title>Node336</title>
+<title>Node345</title>
 <g id="a_node4"><a xlink:href="class_plaquette.html#a1c87b43fc7ee74b2b0289de63e03bb61" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="10.1831,-84.5 10.1831,-102.5 116.2515,-102.5 116.2515,-84.5 10.1831,-84.5"/>
 <text text-anchor="middle" x="63.2173" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Plaquette::Plaquette</text>
 </a>
 </g>
 </g>
-<!-- Node333&#45;&gt;Node336 -->
+<!-- Node342&#45;&gt;Node345 -->
 <g id="edge3" class="edge">
-<title>Node333&#45;&gt;Node336</title>
+<title>Node342&#45;&gt;Node345</title>
 <path fill="none" stroke="#191970" d="M152.1051,-93.5C139.869,-93.5 127.612,-93.5 116.2787,-93.5"/>
 <polygon fill="#191970" stroke="#191970" points="152.3577,-97.0001 162.3577,-93.5 152.3576,-90.0001 152.3577,-97.0001"/>
 </g>
-<!-- Node337 -->
+<!-- Node346 -->
 <g id="node5" class="node">
-<title>Node337</title>
+<title>Node346</title>
 <g id="a_node5"><a xlink:href="class_parallel_1_1_communicator.html#a5da7239eefebcebbeeabee499b2d724d" target="_top" xlink:title="Parallel::Communicator::checkSubLatticeValidity runs a series of tests to ensure that the sub lattice...">
 <polygon fill="#ffffff" stroke="#000000" points="0,-37.5 0,-65.5 126.4346,-65.5 126.4346,-37.5 0,-37.5"/>
 <text text-anchor="start" x="8" y="-53.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parallel::Communicator</text>
@@ -73,24 +73,24 @@
 </a>
 </g>
 </g>
-<!-- Node333&#45;&gt;Node337 -->
+<!-- Node342&#45;&gt;Node346 -->
 <g id="edge4" class="edge">
-<title>Node333&#45;&gt;Node337</title>
+<title>Node342&#45;&gt;Node346</title>
 <path fill="none" stroke="#191970" d="M191.7155,-82.1394C170.2614,-77.0239 144.7199,-70.9337 122.0818,-65.5358"/>
 <polygon fill="#191970" stroke="#191970" points="191.0341,-85.575 201.5732,-84.4899 192.6578,-78.7659 191.0341,-85.575"/>
 </g>
-<!-- Node338 -->
+<!-- Node347 -->
 <g id="node6" class="node">
-<title>Node338</title>
+<title>Node347</title>
 <g id="a_node6"><a xlink:href="class_test_suite.html#af7291e6d8b53443604ee0c1fcf1fadfc" target="_top" xlink:title=" ">
 <polygon fill="#ffffff" stroke="#000000" points="11.3062,-.5 11.3062,-18.5 115.1284,-18.5 115.1284,-.5 11.3062,-.5"/>
 <text text-anchor="middle" x="63.2173" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">TestSuite::TestSuite</text>
 </a>
 </g>
 </g>
-<!-- Node333&#45;&gt;Node338 -->
+<!-- Node342&#45;&gt;Node347 -->
 <g id="edge5" class="edge">
-<title>Node333&#45;&gt;Node338</title>
+<title>Node342&#45;&gt;Node347</title>
 <path fill="none" stroke="#191970" d="M217.3383,-78.7776C195.137,-64.435 159.514,-42.7643 126.4346,-28.5 117.5948,-24.6882 107.7498,-21.3322 98.511,-18.5433"/>
 <polygon fill="#191970" stroke="#191970" points="215.7,-81.8882 225.9848,-84.4328 219.5316,-76.0299 215.7,-81.8882"/>
 </g>

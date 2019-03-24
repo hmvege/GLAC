@@ -3,9 +3,28 @@
 \item[Class \mbox{\hyperlink{class_correlator}{Correlator}} ]\label{todo__todo000004}%
 \Hypertarget{todo__todo000004}%
 Rename to observable, as correlator is a bit misleading. 
-\item[Global \mbox{\hyperlink{class_parallel_1_1_communicator_acd7e2f114728e5207093743a58ab3a40}{Parallel::Communicator::check\+Processor\+Validity}} ()]\label{todo__todo000005}%
-\Hypertarget{todo__todo000005}%
+\item[Global \mbox{\hyperlink{class_parallel_1_1_communicator_acd7e2f114728e5207093743a58ab3a40}{Parallel::Communicator::check\+Processor\+Validity}} ()]\label{todo__todo000007}%
+\Hypertarget{todo__todo000007}%
 \+: this could probably be changed such that it just leaves out one processor that is left over.  
+\item[Global \mbox{\hyperlink{class_parallel_1_1_communicator_ae5739683ff54a7c39af6e37920e70ea5}{Parallel::Communicator::gather\+Double\+Results}} (double $\ast$data, unsigned int N)]\label{todo__todo000008}%
+\Hypertarget{todo__todo000008}%
+Remove the unsigned long int, and use instead just unsigned long? Change globally to only use long?  
+\item[Global \mbox{\hyperlink{class_parallel_1_1_communicator_a1c598fae96e05e3b36db368e60453d63}{Parallel::Communicator::get\+Neighbours\+Neighbour\+Negative\+Link}} (\mbox{\hyperlink{class_lattice}{Lattice$<$ S\+U3 $>$}} $\ast$lattice, std\+::vector$<$ int $>$ n, int mu, int $\ast$mu\+Index, int nu, int $\ast$nu\+Index, int S\+U3\+Dir)]\label{todo__todo000005}%
+\Hypertarget{todo__todo000005}%
+Should probably pass n by reference, and set all elements as const.  
+\item[Global \mbox{\hyperlink{class_parallel_1_1_communicator_a5d42989e7a3022de6042e3503aa35346}{Parallel::Communicator::reduce\+To\+Temporal\+Dimension}} (std\+::vector$<$ double $>$ \&obs\+Results, std\+::vector$<$ double $>$ obs)]\label{todo__todo000006}%
+\Hypertarget{todo__todo000006}%
+Should probably pass by the obs by reference. 
+
+Should probably set obs as const.  
+\item[Global \mbox{\hyperlink{class_parallel_1_1_index_acbf43868aa2efc7ecf63b5b490fc00a0}{Parallel::Index::setN}} (std\+::vector$<$ unsigned int $>$ N)]\label{todo__todo000009}%
+\Hypertarget{todo__todo000009}%
+\+: Rename to set\+SubN as that is more informative, and does not contradict other methods elsewhere.  
+\item[Global \mbox{\hyperlink{test_8h_a91a9c7ea8af27bb3962f1207dd4cb8fd}{run\+Unit\+Tests}} (bool run\+Tests)]\label{todo__todo000010}%
+\Hypertarget{todo__todo000010}%
+add validation testing using Jacks chroma config. Load it from python and compare in unit testing program. 
+
+split into unit tests, integration tests and validation testing. 
 \item[Class \mbox{\hyperlink{class_sys_print}{Sys\+Print}} ]\label{todo__todo000001}%
 \Hypertarget{todo__todo000001}%
 Make this class into a class that prints instead of having to do if rank=0 ect. Maybe move to \mbox{\hyperlink{namespace_i_o}{IO}} as well. 

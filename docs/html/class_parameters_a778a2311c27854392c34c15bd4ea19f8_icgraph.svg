@@ -9,9 +9,9 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 33)">
 <title>Parameters::getPerformanceTesting</title>
 <polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-33 222.0635,-33 222.0635,4 -4,4"/>
-<!-- Node292 -->
+<!-- Node301 -->
 <g id="node1" class="node">
-<title>Node292</title>
+<title>Node301</title>
 <g id="a_node1"><a xlink:title=" ">
 <polygon fill="#bfbfbf" stroke="#000000" points="73.6748,-.5 73.6748,-28.5 218.0635,-28.5 218.0635,-.5 73.6748,-.5"/>
 <text text-anchor="start" x="81.6748" y="-16.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Parameters::getPerformance</text>
@@ -19,18 +19,18 @@
 </a>
 </g>
 </g>
-<!-- Node293 -->
+<!-- Node302 -->
 <g id="node2" class="node">
-<title>Node293</title>
-<g id="a_node2"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title=" ">
+<title>Node302</title>
+<g id="a_node2"><a xlink:href="main_8cpp.html#a4e6f00a867970a9eedf47b88a27b9eea" target="_top" xlink:title="main loads in configurations and initiates program according to .json specifications.">
 <polygon fill="#ffffff" stroke="#000000" points="0,-5.5 0,-23.5 37.6748,-23.5 37.6748,-5.5 0,-5.5"/>
 <text text-anchor="middle" x="18.8374" y="-11.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </a>
 </g>
 </g>
-<!-- Node292&#45;&gt;Node293 -->
+<!-- Node301&#45;&gt;Node302 -->
 <g id="edge1" class="edge">
-<title>Node292&#45;&gt;Node293</title>
+<title>Node301&#45;&gt;Node302</title>
 <path fill="none" stroke="#191970" d="M63.4205,-14.5C53.9741,-14.5 45.1427,-14.5 37.8725,-14.5"/>
 <polygon fill="#191970" stroke="#191970" points="63.4476,-18.0001 73.4475,-14.5 63.4475,-11.0001 63.4476,-18.0001"/>
 </g>

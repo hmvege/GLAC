@@ -83,14 +83,12 @@ $(function() {
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for test.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="test_8h__incl.svg" width="1215" height="476"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="test_8h__incl.svg" width="1215" height="476"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="test_8h__dep__incl.svg" width="183" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="test_8h__dep__incl.svg" width="183" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="test_8h_source.html">Go to the source code of this file.</a></p>
@@ -98,8 +96,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a91a9c7ea8af27bb3962f1207dd4cb8fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="test_8h.html#a91a9c7ea8af27bb3962f1207dd4cb8fd">runUnitTests</a> (bool runTests)</td></tr>
+<tr class="memdesc:a91a9c7ea8af27bb3962f1207dd4cb8fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Header containing functions needed for running unit tests, integration tests and validation testing.  <a href="#a91a9c7ea8af27bb3962f1207dd4cb8fd">More...</a><br /></td></tr>
 <tr class="separator:a91a9c7ea8af27bb3962f1207dd4cb8fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78e241f531e5203858fdb59a4162d6ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="test_8h.html#a78e241f531e5203858fdb59a4162d6ba">runPerformanceTests</a> (bool runTests)</td></tr>
+<tr class="memdesc:a78e241f531e5203858fdb59a4162d6ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">runPerformanceTests will run performance tests on program. Exits once complete.  <a href="#a78e241f531e5203858fdb59a4162d6ba">More...</a><br /></td></tr>
 <tr class="separator:a78e241f531e5203858fdb59a4162d6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -118,10 +118,26 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>runPerformanceTests will run performance tests on program. Exits once complete. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">runTests</td><td>if true, will run performance tests. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2_users_2hansmathiasmamenvege_2_programming_2_l_q_c_d_2_gluon_action_2_gluonic_l_q_c_d_2main_8cpp-example.html#a5">/Users/hansmathiasmamenvege/Programming/LQCD/GluonAction/GluonicLQCD/main.cpp</a>.</dd>
+</dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="test_8h_a78e241f531e5203858fdb59a4162d6ba_cgraph.svg" width="586" height="231"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="test_8h_a78e241f531e5203858fdb59a4162d6ba_cgraph.svg" width="604" height="336"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="test_8h_a78e241f531e5203858fdb59a4162d6ba_icgraph.svg" width="258" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 
@@ -142,14 +158,33 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Header containing functions needed for running unit tests, integration tests and validation testing. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd><p class="startdd">add validation testing using Jacks chroma config. Load it from python and compare in unit testing program. </p>
+<p class="enddd">split into unit tests, integration tests and validation testing.</p>
+</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Mathias M. Vege </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2017-2019 </dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>MIT Licence </dd></dl>
+<dl class="section copyright"><dt>Copyright</dt><dd>MIT Licence</dd></dl>
+<p>runUnitTests function that runs unit tests. Exits once complete. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">runTests</td><td>if true, will run unit tests. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2_users_2hansmathiasmamenvege_2_programming_2_l_q_c_d_2_gluon_action_2_gluonic_l_q_c_d_2main_8cpp-example.html#a3">/Users/hansmathiasmamenvege/Programming/LQCD/GluonAction/GluonicLQCD/main.cpp</a>.</dd>
+</dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="test_8h_a91a9c7ea8af27bb3962f1207dd4cb8fd_cgraph.svg" width="574" height="395"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="test_8h_a91a9c7ea8af27bb3962f1207dd4cb8fd_icgraph.svg" width="204" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 

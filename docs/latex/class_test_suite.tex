@@ -2,6 +2,11 @@
 \label{class_test_suite}\index{TestSuite@{TestSuite}}
 
 
+Runs unit tests on the methods of G\+L\+AC.  
+
+
+
+
 {\ttfamily \#include $<$testsuite.\+h$>$}
 
 \subsection*{Public Member Functions}
@@ -28,10 +33,14 @@ bool \mbox{\hyperlink{class_test_suite_a91444c36a86d453cc9922d888b248a6b}{run3x3
 bool \mbox{\hyperlink{class_test_suite_af257c555a7fff6934523f80b9c59309c}{run\+Functions\+Test}} ()
 \item 
 void \mbox{\hyperlink{class_test_suite_ab5f5915eeeca7674592c8f170948f43d}{test\+Matrix}} (\mbox{\hyperlink{class_s_u3}{S\+U3}} X)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Perform tests on \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix X. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
+Runs unit tests on the methods of G\+L\+AC. 
+
+Will test the matrix methods and the S\+U(\+N) properties of \mbox{\hyperlink{class_s_u2}{S\+U2}} and \mbox{\hyperlink{class_s_u3}{S\+U3}} classes. Will also test the complex class. Will also test lattice methods and random matrix generators. Will also test the gauge invariance of the lattice and the shift method.
+
 \begin{DoxyAuthor}{Author}
 Mathias M. Vege 
 \end{DoxyAuthor}
@@ -131,7 +140,7 @@ Here is the caller graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=322pt]{class_test_suite_a0fa7e788a1b1c235faa475c0d1aaa1e3_icgraph}
+\includegraphics[width=350pt]{class_test_suite_a0fa7e788a1b1c235faa475c0d1aaa1e3_icgraph}
 \end{center}
 \end{figure}
 \mbox{\Hypertarget{class_test_suite_af257c555a7fff6934523f80b9c59309c}\label{class_test_suite_af257c555a7fff6934523f80b9c59309c}} 
@@ -197,6 +206,10 @@ Here is the caller graph for this function\+:
 {\footnotesize\ttfamily void Test\+Suite\+::test\+Matrix (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_s_u3}{S\+U3}}}]{X }\end{DoxyParamCaption})}
 
 
+
+Perform tests on \mbox{\hyperlink{class_s_u3}{S\+U3}} matrix X. 
+
+Checks if it is hermitian, orthogonal, normalized, det(\+X)=1. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
