@@ -10,13 +10,11 @@ Lattice Quantum Chromo Dynamics program for generating pure gauge field configur
     <i>The action density of a gauge field. Created using <a href="https://github.com/hmvege/LatViz">LatViz</a></i>
 </p>
 
-
-
 #### Program folder structure
 * `GLAC` contains main program. 
 * `config_folder` contains parameter-files for different runs.
 * `docs` contains the documentation of GLAC.
-* `python_scripts` contains various Python scripts used during development.
+* `scripts` contains various scripts, mostly written in Python, which has been used during development.
 * `JobRenamer.py` is a script for renaming Slurm `.out` output files.
 * `multiJobSetup.py` is script for starting multiple jobs.
 * `createJobs.py` is the main script for generating `.json` configuration files for GLAC, as well as submitting files to either Torque or Slurm.
