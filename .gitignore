@@ -91,3 +91,6 @@ temp_outputfolder/
 
 # Backup files
 *.bak
+
+# Adds docs folder regardless
+!docs/html/*.png
