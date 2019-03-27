@@ -46,20 +46,20 @@ This will automatically create a job script and submit it to the cluster the scr
 `-bf {base_directory}` is the full path leading up to where to output directory is situated. This would be the scratch space or wherever you want to store the output data. `createJobs.py` will automatically setup all relevant folders in a following structure,
 ```
 {base directory}/
-|── output/
-    └── {run-name}/
-        |── field_configurations/
-            └── {field configurations generated}.bin
-        |── flow_observables/
-            └── {observables}/
-                └── {observable output files for each flow time}.dat
-        |── observables/
-            └── {non-flowed observable data}.dat
-        └── scalar_fields/
-            └── {observables}/
-                └── {the observables for the entire lattice}.bin
+├── output/
+│   └── {run-name}/
+│   │   ├── field_configurations/
+│   │   │   └── {field configurations generated}.bin
+│   │   ├── flow_observables/
+│   │   │   └── {observables}/
+│   │   │   │   └── {observable output files for each flow time}.dat
+│   │   ├── observables/
+│   │   │   └── {non-flowed observable data}.dat
+│   │   └── scalar_fields/
+│   │   │   └── {observables}/
+│   │   │   │   └── {the observables for the entire lattice}.bin
 └── input/
-    └── {run-name}.json
+│   └── {run-name}.json
 ```
 
 If you need help, type -h, and you will get additional command line arguments.
