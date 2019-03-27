@@ -7,7 +7,7 @@ Lattice Quantum Chromo Dynamics program for generating pure gauge field configur
 </p>
     
 <p align="center">
-    <i>The action density of a gauge field. Created using <a href="https://github.com/hmvege/LatViz">LatViz</a></i>
+    <i>The action density of a gauge field. Created using <a href="https://github.com/hmvege/LatViz">LatViz</a>, a program developed by Mathias M. Vege and Giovanni Pederiva.</i>
 </p>
 
 #### Program folder structure
@@ -47,19 +47,19 @@ This will automatically create a job script and submit it to the cluster the scr
 ```
 {base directory}/
 |--- output/
-    |--- {run-name}/
+    └--- {run-name}/
         |--- field_configurations/
-            |-- {field configurations generated}.bin
+            └-- {field configurations generated}.bin
         |--- flow_observables/
-            |--- {observables}/
-                |--- {observable output files for each flow time}.dat
+            └--- {observables}/
+                └--- {observable output files for each flow time}.dat
         |--- observables/
-            |--- {non-flowed observable data}.dat
-        |--- scalar_fields/
-            |--- {observables}/
-                |--- {the observables for the entire lattice}.bin
-|--- input/
-    |--- {run-name}.json
+            └--- {non-flowed observable data}.dat
+        └--- scalar_fields/
+            └--- {observables}/
+                └--- {the observables for the entire lattice}.bin
+└--- input/
+    └--- {run-name}.json
 ```
 
 If you need help, type -h, and you will get additional command line arguments.
