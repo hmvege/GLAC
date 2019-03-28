@@ -157,10 +157,11 @@ class JobCreator:
     def _create_folders(self):
         """Sets up the relevant folders for the job."""
 
+        # Checking that we have an output folder.
+        self._checkFolderPath(self.outputFolder)
+        self._checkFolderPath(os.path.join(self.outputFolder, self.runName))
         if not self.uTest:
-            # Checking that we have an output folder.
-            self._checkFolderPath(self.outputFolder)
-            self._checkFolderPath(os.path.join(self.outputFolder, self.runName))
+
             if self.NFlows != 0:
 
                 # Only in the case we are not creating any scalar fields
@@ -181,11 +182,15 @@ class JobCreator:
                             self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", "topc"))
                         if "energy" in fobs.lower():
                             self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", "energy"))
-            if not self.load_field_configs and not self.create_fields_folders:
-                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "field_configurations"))
+
+        if not self.load_field_configs and not self.create_fields_folders:
+            self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "field_configurations"))
+            if not self.uTest:
                 self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "observables"))
+
         self._checkFolderPath(os.path.join(self.inputFolder))
         self._checkFolderPath(os.path.join("input", self.runName))
+
 
     def _checkFolderPath(self, folder):
         """
@@ -687,7 +692,7 @@ def main(args):
 
     # Default config
     config_default = {
-        "bin_fn"                    : "build/GLAC",
+        "bin_fn"                    : "build-release/GLAC",
         "runName"                   : "defaultRun",
         "N"                         : 8, # Small lattice as default
         "NT"                        : 16,
@@ -1091,6 +1096,11 @@ def main(args):
         config_default["uTest"] = True
         config_default["cpu_approx_runtime_hr"] = 0
         config_default["cpu_approx_runtime_min"] = 20
+
+        # In order to create output field cfg folders
+        config_default["load_field_configs"] = False
+        config_default["scalar_fields_folders"] = False
+
         partition = "normal"
         system = args.system
         config_default["uTestVerbose"] = args.verboseRun

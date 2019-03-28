@@ -521,6 +521,7 @@ void Parallel::Communicator::MPIExit(std::string message)
 {
     if (m_processRank == 0) printf("\n%s", message.c_str());
     freeMPIGroups();
+    setBarrier();
     MPI_Abort(MPI_COMM_WORLD, 0);
     exit(0);
 }

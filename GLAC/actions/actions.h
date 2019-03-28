@@ -15,6 +15,6 @@
 
 #include "action.h"
 #include "wilsongaugeaction.h"
-#include "luscheraction.h"
+#include "wilsonexplicitexp.h"
 
 #endif // ACTIONS_H

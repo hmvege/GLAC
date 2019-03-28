@@ -45,7 +45,6 @@ HEADERS += \
     actions/action.h \
     actions/wilsongaugeaction.h \
     actions/actions.h \
-    actions/luscheraction.h \
     observables/correlator.h \
     observables/plaquette.h \
     observables/topologicalcharge.h \
@@ -84,7 +83,8 @@ HEADERS += \
     config/configloader.h \
     config/sysprint.h \
     flow/flow.h \
-    lib/json.hpp
+    lib/json.hpp \
+    actions/wilsonexplicitexp.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx

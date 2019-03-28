@@ -15,7 +15,7 @@
 
 // Action imports
 #include "actions/wilsongaugeaction.h"
-#include "actions/luscheraction.h"
+#include "actions/wilsonexplicitexp.h"
 
 using std::chrono::steady_clock;
 using std::chrono::duration_cast;
@@ -331,16 +331,16 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
     unsigned long int subLatticeSize = Parameters::getSubLatticeSize();
 
     // Initiates the different types of action we will test
-    LuscherAction LusAct;
+    WilsonExplicitExp LusAct;
     WilsonGaugeAction MorAct;
 
     // Generates test lattices and allocates memeory
     Lattice<SU3> *testLattice = new Lattice<SU3>[4];
-    Lattice<SU3> *LuscherLattice = new Lattice<SU3>[4];
+    Lattice<SU3> *ExplicitExpLattice = new Lattice<SU3>[4];
     Lattice<SU3> *MorningstarLattice = new Lattice<SU3>[4];
     for (int mu = 0; mu < 4; mu++) {
         testLattice[mu].allocate(NLatticeDims);
-        LuscherLattice[mu].allocate(NLatticeDims);
+        ExplicitExpLattice[mu].allocate(NLatticeDims);
         MorningstarLattice[mu].allocate(NLatticeDims);
     }
 
@@ -349,7 +349,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
         for (unsigned long int iSite = 0; iSite < subLatticeSize; iSite++) {
             testLattice[mu][iSite] = m_SU3Generator->generateRST();
         }
-        LuscherLattice[mu].zeros();
+        ExplicitExpLattice[mu].zeros();
         MorningstarLattice[mu].zeros();
     }
 
@@ -366,14 +366,14 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
     preUpdate = steady_clock::now();
     for (unsigned long int i = 0; i < NTests; i++) {
         for (int mu = 0; mu < 4; mu++) {
-            LuscherLattice[mu] = LusAct.getActionDerivative(testLattice,mu);
+            ExplicitExpLattice[mu] = LusAct.getActionDerivative(testLattice,mu);
         }
     }
     luscherTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     // Prints results for time test
     if (Parallel::Communicator::getProcessRank() == 0) {
-        printf("\nLuscher derivation time:      %8.2f seconds (%8.2E seconds per lattice derivative)",luscherTimer,luscherTimer/double(4*NTests));
+        printf("\nExplicitExp derivation time:  %8.2f seconds (%8.2E seconds per lattice derivative)",luscherTimer,luscherTimer/double(4*NTests));
         printf("\nMorningstar derivation time:  %8.2f seconds (%8.2E seconds per lattice derivative)",morningstarTimer,morningstarTimer/double(4*NTests));
         printf("\nMorningstar/Luscher: %.4f",morningstarTimer/luscherTimer);
         printf("\n");
@@ -382,15 +382,15 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
     // Prints first element of lattice to compare derivative results with
     if (Parallel::Communicator::getProcessRank() == 0) {
         printf("\nComparison of the first element of the matrix in the Lattice to each method:");
-        printf("\nLuscher:     %.17e",LuscherLattice[0][0][6]);
+        printf("\nExplicitExp: %.17e",ExplicitExpLattice[0][0][6]);
         printf("\nMorningstar: %.17e",MorningstarLattice[0][0][6]);
-        printf("\nAbsolute difference: %.16e",fabs(LuscherLattice[0][0][6] - MorningstarLattice[0][0][6]));
+        printf("\nAbsolute difference: %.16e",fabs(ExplicitExpLattice[0][0][6] - MorningstarLattice[0][0][6]));
         printf("\n");
     }
 
     // De-allocates memory
     delete [] testLattice;
-    delete [] LuscherLattice;
+    delete [] ExplicitExpLattice;
     delete [] MorningstarLattice;
 }
 
@@ -404,23 +404,16 @@ void PerformanceTests::testMatrixMultiplication()
     printf("\n\nRunning timing of SU3 matrix multiplication for %d tests",NTests);
 
     SU3 V0, V1, V2;
-    SU3 V0Orig, V1Orig;
 
     // Timers
     double timer = 0;
     steady_clock::time_point preUpdate;
-
-
-    V0Orig = V0;
-    V1Orig = V1;
 
     preUpdate = steady_clock::now();
 
     for (unsigned int i = 0; i < NTests; ++i) {
         V0 = m_SU3Generator->generateRandom();
         V1 = m_SU3Generator->generateRandom();
-//        V0 = V0Orig;
-//        V1 = V1Orig;
         V2 = V1*V0;
     }
 

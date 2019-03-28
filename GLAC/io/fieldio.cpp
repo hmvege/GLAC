@@ -80,7 +80,6 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
 
     std::string filenamePath = Parameters::getFilePath() + Parameters::getOutputFolder() + Parameters::getBatchName() + "/field_configurations/" + filename;
 
-
     if (Parameters::getDebug()) {
         Parallel::Communicator::checkLattice(lattice, "Configuration is corrupt in IO::FieldIO write field before");
     }
@@ -111,7 +110,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
         Parallel::Communicator::checkLattice(lattice, "Configuration is corrupt in IO::FieldIO write field after");
     }
 
-    if (Parallel::Communicator::getProcessRank() == 0) {
+    if (Parallel::Communicator::getProcessRank() == 0 && !Parameters::getUnitTesting()) {
         printf("    %s written.", filename.c_str());
     }
 }
@@ -232,7 +231,9 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
     }
 
     MPI_File_close(&file);
-    if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration %s loaded", fname.c_str());
+    if (Parallel::Communicator::getProcessRank() == 0 && !Parameters::getUnitTesting()) {
+        printf("\nConfiguration %s loaded", fname.c_str());
+    }
 }
 
 /*!

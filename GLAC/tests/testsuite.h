@@ -146,11 +146,23 @@ private:
     bool fullLatticeTests();
     bool testLatticeShift();
     bool testFieldGaugeInvariance();
+
+    // Tests for action
+    bool testWilsonAction();
+    bool testExplicitExpAction();
+
+    // Tests for observables
+    bool testTopCharge();
+
+    // Test for IO
+    bool testIO();
 public:
     TestSuite();
     ~TestSuite();
 
     void runFullTestSuite();
+    bool runActionTests();
+    bool runObservableTests();
     bool runComplexTests();
     bool runLatticeTests();
     bool runSU2Tests();

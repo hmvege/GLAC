@@ -1,12 +1,17 @@
 #include "testsuite.h"
 #include <iostream>
 #include <iomanip>
-#include <ctime>
 #include <cmath>
+#include <chrono>
 #include "parallelization/communicator.h"
 #include "io/fieldio.h"
 #include "config/parameters.h"
-#include "observables/plaquette.h"
+#include "observables/observables.h"
+#include "actions/actions.h"
+
+using std::chrono::steady_clock;
+using std::chrono::duration_cast;
+using std::chrono::duration;
 
 using std::cout;
 using std::endl;
@@ -274,7 +279,7 @@ void TestSuite::runFullTestSuite()
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
     }
-    bool passed = fullLatticeTests();
+    bool passed = (fullLatticeTests() & testIO() & runActionTests());
     if (m_processRank == 0) {
         passed = (passed & run3x3MatrixTests() & run2x2MatrixTests() & runSU2Tests() & runSU3Tests() & runFunctionsTest()
                   & runComplexTests() & runLatticeTests());
@@ -456,7 +461,7 @@ bool TestSuite::fullLatticeTests()
     bool passed = true;
     // Initializes
     if (m_processRank == 0 && m_verbose) {
-        printf("Running Lattice parallel tests on sublattice of size %d^3 x %d.",m_N,m_NT);
+        printf("Running Lattice parallel tests on sublattice of size %d^3 x %d.\n",m_N,m_NT);
     }
     // Runs tests
     if (Parameters::getCheckFieldGaugeInvariance()) {
@@ -1631,6 +1636,8 @@ bool TestSuite::testLatticeShift() {
                             position = Parallel::Index::getIndex(i,j,(L.m_dim[2] - 1) * (dir % 2),k);
                         } else if (dir / 2 == 3) { // t direction
                             position = Parallel::Index::getIndex(i,j,k,(L.m_dim[3] - 1) * (dir % 2));
+                        } else {
+                            Parallel::Communicator::MPIExit("Error in testLatticeShift");
                         }
                         // Compares matrices at position.
                         for (unsigned int iMat = 0; iMat < 18; iMat++) {
@@ -1649,7 +1656,7 @@ bool TestSuite::testLatticeShift() {
 
     Parallel::Communicator::setBarrier();
     if (passed) {
-        if (m_processRank == 0) cout << "    SUCCESS: Lattice shift." << endl;
+        if (m_processRank == 0 && Parameters::getUnitTestingVerbose()) cout << "    SUCCESS: Lattice shift." << endl;
     } else {
         if (m_processRank == 0) cout << "    FAILED: Lattice shift." << endl;
     }
@@ -1663,39 +1670,48 @@ bool TestSuite::testFieldGaugeInvariance() {
      */
     bool passed = true;
     double obsBefore = 0, obsAfter = 0;
+
     // Temporary sets the number of observables we are to store to 2
     unsigned int tempNCf = Parameters::getNCf();
     Parameters::setNCf(2);
+
     // Temporary changes the input folder for the files, as the file is provided from the command line
     std::string tempInputFolderPath = Parameters::getInputFolder();
     Parameters::setInputFolder(std::string("/"));
+
     // Initializes the observable - the plaquette
     Plaquette P(false);
     P.setLatticeSize(m_subLatticeSize);
+
     // Initializes the lattice and allocates it with correct dimensions
     Lattice<SU3> L[4];
     for (int i = 0; i < 4; i++) L[i].allocate(m_dim);
+
     // Retrieves the gauge field to check the gauge invariance of
     std::string gaugeFieldFileName = Parameters::getGaugeFieldToCheck();
     IO::FieldIO::loadFieldConfiguration(gaugeFieldFileName,L);
+
     // Calculates the plaquette of the lattice
     P.calculate(L,0);
     obsBefore = P.getObservable(0);
     MPI_Allreduce(&obsBefore,&obsBefore,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
     obsBefore /= double(m_numprocs);
     if (m_processRank == 0 && m_verbose) printf("\n    Plaquette before gauge transformation: %20.16f\n",obsBefore);
+
     // Sets up the gauge invariance lattice and populates it with random SU3 matrices.
     Lattice<SU3> Omega,OmegaNext;
     Omega.allocate(m_dim);
     for (unsigned int iSite = 0; iSite < Omega.m_latticeSize; iSite++) {
         Omega[iSite] = m_SU3Generator->generateRST();
     }
+
     // Loops over the different directions and performs the gauge transformation.
     for (int mu = 0; mu < 4; mu++) {
         // Left hand multiplies.
         OmegaNext = inv(shift(Omega,FORWARDS,mu));
         L[mu] = Omega*L[mu]*OmegaNext;
     }
+
     // Calculates the plaquette after the gauge transformation
     P.calculate(L,1);
     obsAfter = P.getObservable(1);
@@ -1710,5 +1726,187 @@ bool TestSuite::testFieldGaugeInvariance() {
     }
     Parameters::setNCf(tempNCf);
     Parameters::setInputFolder(tempInputFolderPath);
+    return passed;
+}
+
+
+// Action tests
+bool TestSuite::runActionTests()
+{
+    if (m_processRank == 0 && m_verbose) {
+        printf("Running gauge action tests.\n");
+    }
+    bool passed = (testWilsonAction());// & testExplicitExpAction());
+//    bool passed = true;
+
+    if (passed) {
+        if (m_processRank == 0) cout << "PASSED: gauge action." << endl;
+    } else {
+        if (m_processRank == 0) cout << "FAILED: gauge action." << endl;
+    }
+    return passed;
+}
+
+bool TestSuite::testWilsonAction()
+{
+    bool passed = true;
+
+    WilsonGaugeAction S;
+
+    Lattice<SU3> * L = new Lattice<SU3>[4];
+    for (int i = 0; i < 4; i++) L[i].allocate(m_dim);
+
+    for (int mu = 0; mu < 4; mu++)
+    {
+        for (unsigned long iSite = 0; iSite < m_subLatticeSize; iSite++)
+        {
+            L[mu][iSite].identity();
+        }
+    }
+
+    // Tests the delta action, as used in cfg generation. The staple is indirectly tested.
+    SU3 updateLink;
+    updateLink.identity();
+    updateLink *= 2;
+
+    double dS = 0;
+
+    for (unsigned int x = 0; x < L->m_dim[0]; x++) {
+        for (unsigned int y = 0; y < L->m_dim[1]; y++) {
+            for (unsigned int z = 0; z < L->m_dim[2]; z++) {
+                for (unsigned int t = 0; t < L->m_dim[3]; t++) {
+                    for (int mu = 0; mu < 4; mu++) {
+                        S.computeStaple(L, x, y, z, t, mu);
+                        dS = S.getDeltaAction(L[mu][Parallel::Index::getIndex(x,y,z,t)], updateLink);
+                        if (fabs(dS + 36) > 1e-15) {
+                            cout << "Error in action: " << dS << endl;
+                            passed = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+//    // Tests the action derivative.
+//    L[0][0].print();
+//    Lattice<SU3> L1 = S.getActionDerivative(L, 0);
+//    L1[0].print();
+
+    delete [] L;
+
+    return passed;
+}
+
+bool TestSuite::testExplicitExpAction()
+{
+    bool passed = true;
+
+    return passed;
+}
+
+// Observable tests
+bool TestSuite::runObservableTests()
+{
+    bool passed = testTopCharge();
+
+    return passed;
+}
+
+bool TestSuite::testTopCharge()
+{
+    bool passed = false;
+
+    return passed;
+}
+
+// IO tests
+bool TestSuite::testIO()
+{
+    if (Parallel::Communicator::getProcessRank() == 0 && m_verbose) {
+        printf("Running Lattice IO tests on lattice of size %d^3 x %d\n", Parameters::getNSpatial(), Parameters::getNTemporal());
+    }
+
+
+    using std::chrono::steady_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+
+
+    bool passed = true;
+
+    if (Parallel::ParallelParameters::active) {
+
+        // Create lattice
+        // Initializes the lattice and allocates it with correct dimensions
+        Lattice<SU3> * LBefore = new Lattice<SU3>[4];
+        Lattice<SU3> * LAfter = new Lattice<SU3>[4];
+        for (int i = 0; i < 4; i++) LBefore[i].allocate(m_dim);
+        for (int i = 0; i < 4; i++) LAfter[i].allocate(m_dim);
+
+        for (int mu = 0; mu < 4; mu++)
+        {
+            for (unsigned long iSite = 0; iSite < m_subLatticeSize; iSite++)
+            {
+                LBefore[mu][iSite] = m_SU3Generator->generateRandom(); // Fully random
+            }
+        }
+
+        steady_clock::time_point t0;
+        steady_clock::time_point t1;
+
+        t0 = steady_clock::now();
+        // Save lattice
+        IO::FieldIO::writeFieldToFile(LBefore, 0);
+
+        // Since we are by default writing to output, we temporarily set the input to be output.
+        std::string tmpInputFolder = Parameters::getInputFolder();
+        Parameters::setInputFolder("/output/" + Parameters::getBatchName() + "/field_configurations/");
+
+        Parallel::Communicator::setBarrierActive();
+
+        // Simple cp from writeFieldToFile()
+        std::string cfg_name = Parameters::getBatchName() + "_b" + std::to_string(Parameters::getBeta())
+                + "_N" + std::to_string(Parameters::getNSpatial())
+                + "_NT" + std::to_string(Parameters::getNTemporal())
+                + "_np" + std::to_string(Parallel::Communicator::getNumProc())
+                + "_config" + std::string("00000") + ".bin";
+
+        // Load into new lattice
+        IO::FieldIO::loadFieldConfiguration(cfg_name, LAfter);
+        Parameters::setInputFolder(tmpInputFolder);
+
+        t1 = steady_clock::now();
+
+        if (m_processRank == 0 && m_verbose) {
+            printf("IO time: %.16f seconds\n", duration_cast<duration<double>>(t1 - t0).count());
+        }
+
+        // Compare loaded lattice with created lattice
+        for (int mu = 0; mu < 4; mu++)
+        {
+            for (unsigned long iSite = 0; iSite < m_subLatticeSize; iSite++)
+            {
+                for (int i = 0; i < 18; i++) {
+                    if (fabs(LBefore[mu][iSite][i] - LAfter[mu][iSite][i]) > 1e-15) {
+                        cout << "Error in: " << LBefore[mu][iSite][i] << " " << LAfter[mu][iSite][i] << endl;
+                        passed = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        delete [] LBefore;
+        delete [] LAfter;
+    }
+
+    if (passed) {
+        if (m_processRank == 0) cout << "PASSED: IO lattice write and load." << endl;
+    } else {
+        if (m_processRank == 0) cout << "FAILED: IO lattice write or load." << endl;
+    }
+
+
     return passed;
 }

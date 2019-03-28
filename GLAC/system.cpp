@@ -51,7 +51,7 @@ void System::setAction()
     if (Parameters::getActionType() == "wilson") {
         m_S = new WilsonGaugeAction;
     } else if (Parameters::getActionType() == "luscher") {
-        m_S = new LuscherAction;
+        m_S = new WilsonExplicitExp;
     } else {
         std::string msg = "ERROR: Action type " + Parameters::getActionType() + "not recognized";
         Parallel::Communicator::MPIExit(msg);

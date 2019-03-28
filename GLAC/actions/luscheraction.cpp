@@ -1,9 +1,9 @@
-#include "luscheraction.h"
+#include "WilsonExplicitExp.h"
 #include "config/parameters.h"
 #include "math/functions.h"
 #include "parallelization/communicator.h"
 
-LuscherAction::LuscherAction(): Action()
+WilsonExplicitExp::WilsonExplicitExp(): Action()
 {
     m_beta = Parameters::getBeta();
     m_multiplicationFactor = -m_beta/3.0;
@@ -16,16 +16,16 @@ LuscherAction::LuscherAction(): Action()
     m_tempStaple2.allocate(m_N);
 }
 
-LuscherAction::~LuscherAction()
+WilsonExplicitExp::~WilsonExplicitExp()
 {
 }
 
-double LuscherAction::getDeltaAction(SU3 U, SU3 UPrime)
+double WilsonExplicitExp::getDeltaAction(SU3 U, SU3 UPrime)
 {
     return traceRealMultiplication((UPrime - U),m_staple)*m_multiplicationFactor;
 }
 
-void LuscherAction::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+void WilsonExplicitExp::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
 {
     m_staple.zeros();
     updateMuIndex(mu);
@@ -51,7 +51,7 @@ void LuscherAction::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigne
     }
 }
 
-Lattice<SU3> LuscherAction::getActionDerivative(Lattice<SU3> *lattice, int mu)
+Lattice<SU3> WilsonExplicitExp::getActionDerivative(Lattice<SU3> *lattice, int mu)
 {
     /*!
      * A slightly modified version of the Action derivative
