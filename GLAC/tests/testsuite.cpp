@@ -279,12 +279,12 @@ void TestSuite::runFullTestSuite()
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
     }
-//    bool passed = (fullLatticeTests() & testIO() & runActionTests() & testIOWriteDoubles());
+    bool passed = (fullLatticeTests() & testIO() & runActionTests() & testIOWriteDoubles());
 //    bool passed = (testIO());// & testIO() & runActionTests());
-    bool passed = (testIOWriteDoubles());// & testIO() & runActionTests());
+//    bool passed = (testIOWriteDoubles());// & testIO() & runActionTests());
     if (m_processRank == 0) {
-//        passed = (passed & run3x3MatrixTests() & run2x2MatrixTests() & runSU2Tests() & runSU3Tests() & runFunctionsTest()
-//                  & runComplexTests() & runLatticeTests());
+        passed = (passed & run3x3MatrixTests() & run2x2MatrixTests() & runSU2Tests() & runSU3Tests() & runFunctionsTest()
+                  & runComplexTests() & runLatticeTests());
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
         if (passed) {
@@ -1591,23 +1591,6 @@ bool TestSuite::testLatticeShift() {
 
     Parallel::Communicator::setBarrier();
 
-//    for (int dir = 0; dir < 8; dir++) {
-//        for (int iRank = 0; iRank < Parallel::Communicator::getNumProc(); iRank++) {
-//            if (m_processRank==iRank) {
-//                printf("\nRank: %d  Dir: %d Expected-neighbour from %d: %d\n", m_processRank, dir, (dir + 1) % 2 + (dir / 2) * 2, Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2));
-//                Parallel::Neighbours::getNeighbours(m_processRank)->print();
-//                cout << "Processor position: ";
-//                for (int iDim = 0; iDim < 4; iDim++) {
-//                    cout << Parallel::Neighbours::getProcessorDimensionPosition(iDim) << " ";
-//                }
-//                cout << endl;
-//            }
-//            Parallel::Communicator::setBarrier();
-//        }
-//    }
-//    Parallel::Communicator::setBarrier();
-//    if (m_processRank==0) cout << "Starting test." <<endl;
-
     if (Parallel::ParallelParameters::active) {
         unsigned int position = 0;
         unsigned int N1,N2,N3;
@@ -1945,7 +1928,7 @@ bool TestSuite::testIO()
         Parameters::setInputFolder(tmpInputFolder);
 
         if (m_processRank == 0 && m_verbose) {
-            printf("Write time: %.16f seconds.\nRead time:  %.16f\n",
+            printf("    Write time: %.16f seconds.\n    Read time:  %.16f\n",
                    duration_cast<duration<double>>(t1_write - t0_write).count(),
                    duration_cast<duration<double>>(t1_read - t0_read).count());
         }
@@ -1982,7 +1965,7 @@ bool TestSuite::testIO()
 bool TestSuite::testIOWriteDoubles()
 {
     if (Parallel::Communicator::getProcessRank() == 0 && m_verbose) {
-        printf("Testing IO doubles writing for lattice of size %d^3 x %d\n", Parameters::getNSpatial(), Parameters::getNTemporal());
+        printf("    Testing IO doubles writing for lattice of size %d^3 x %d\n", Parameters::getNSpatial(), Parameters::getNTemporal());
     }
 
     using std::chrono::steady_clock;
@@ -2061,7 +2044,7 @@ bool TestSuite::testIOWriteDoubles()
         Parameters::setInputFolder(tmpInputFolder);
 
         if (m_processRank == 0 && m_verbose) {
-            printf("\nWrite time: %.16f seconds.\n",
+            printf("    Write time: %.16f seconds.\n",
                    duration_cast<duration<double>>(t1_write - t0_write).count());
         }
 
@@ -2079,9 +2062,9 @@ bool TestSuite::testIOWriteDoubles()
     }
 
     if (passed) {
-        if (m_processRank == 0) cout << "PASSED: IO lattice write and load." << endl;
+        if (m_processRank == 0) cout << "PASSED: IO lattice doubles write and load." << endl;
     } else {
-        if (m_processRank == 0) cout << "FAILED: IO lattice write or load." << endl;
+        if (m_processRank == 0) cout << "FAILED: IO lattice doubles write or load." << endl;
     }
 
 

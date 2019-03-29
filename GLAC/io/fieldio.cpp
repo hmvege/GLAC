@@ -251,6 +251,8 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
  * \param filename
  * \param lattice is a pointer of four lattice objects, one for each Lorentz index, that will filled with the configuration read from file.
  *
+ * \todo implement faster Chroma IO.
+ *
  * If debug is true in the passed .json parameter file, it will perform a check for lattice corruption.
  */
 void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3> *lattice)
@@ -270,13 +272,10 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
         Parallel::Communicator::MPIExit("File " + fname + " does not exist");
     }
 
-    //    if (Parallel::Communicator::getProcessRank() == 0) printf("\nConfiguration to be loaded: %s", fname.c_str());
-
     MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
 
     MPI_Offset offset = 0;
     long long nt = 0, nz = 0, ny = 0, nx = 0;
-
 
     double temp = 0;
     for (long long mu = 0; mu < 4; mu++) {
@@ -318,6 +317,8 @@ inline double IO::FieldIO::reverseDouble(const double inDouble)
 {
     /*
     * Method for reversing the bytes in a double, since Chroma uses a reversed ordering for its doubles.
+    *
+    * Since we are only retrieving the adresses of retVal and inDouble, there is no memory leak.
     */
     double retVal;
     char *doubleToConvert = ( char* ) & inDouble;
@@ -332,6 +333,5 @@ inline double IO::FieldIO::reverseDouble(const double inDouble)
     returnDouble[5] = doubleToConvert[2];
     returnDouble[6] = doubleToConvert[1];
     returnDouble[7] = doubleToConvert[0];
-    //   delete [] doubleToConvert; // MEMORY LEAK HERE?
     return retVal;
 }
