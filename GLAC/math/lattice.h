@@ -730,6 +730,14 @@ inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVec
     /*
      * Function for shifting lattice in on or another direction.
      * The direction of the matrix is taken care if in what lattice we are passing.
+     *
+     * The FORWADS/BACKWARDS semantic is quite confusing, but consider this:
+     * When shifting e.g. BACKWARDS, we want to update the current lattice at processor P
+     * with the lattice from the processor in-front, i.e. shifting it one step backwards,
+     *  [x11 x12 x13] [y11 y12 y13]    [x12 x13 y11] [y12 y13 x11]
+     *  [x21 x22 x23] [y21 y22 y23] -> [x22 x23 y21] [y22 y23 x21]
+     *  [x31 x32 x33] [y31 y32 y33]    [x32 x33 y31] [y32 y33 x31]
+     * The shifted lattice, is then returned.
      */
     Lattice<SU3> _L;
     _L.allocate(L.m_dim);// MOVE THIS TO INITIALIZATION/HEADER-THING?

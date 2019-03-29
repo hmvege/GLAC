@@ -279,10 +279,10 @@ void TestSuite::runFullTestSuite()
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
     }
-    bool passed = (fullLatticeTests() & testIO() & runActionTests());
+    bool passed = (fullLatticeTests());// & testIO() & runActionTests());
     if (m_processRank == 0) {
-        passed = (passed & run3x3MatrixTests() & run2x2MatrixTests() & runSU2Tests() & runSU3Tests() & runFunctionsTest()
-                  & runComplexTests() & runLatticeTests());
+//        passed = (passed & run3x3MatrixTests() & run2x2MatrixTests() & runSU2Tests() & runSU3Tests() & runFunctionsTest()
+//                  & runComplexTests() & runLatticeTests());
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
         if (passed) {
@@ -464,9 +464,9 @@ bool TestSuite::fullLatticeTests()
         printf("Running Lattice parallel tests on sublattice of size %d^3 x %d.\n",m_N,m_NT);
     }
     // Runs tests
-    if (Parameters::getCheckFieldGaugeInvariance()) {
-        passed = testFieldGaugeInvariance();
-    }
+//    if (Parameters::getCheckFieldGaugeInvariance()) {
+//        passed = testFieldGaugeInvariance();
+//    }
     if (passed && testLatticeShift()) {
         if (m_processRank == 0) cout << "PASSED: Parallel lattice tests." << endl;
     } else {
@@ -1587,16 +1587,38 @@ bool TestSuite::testLatticeShift() {
      */
     bool passed = true;
 
+    Parallel::Communicator::setBarrier();
+
+//    for (int dir = 0; dir < 8; dir++) {
+//        for (int iRank = 0; iRank < Parallel::Communicator::getNumProc(); iRank++) {
+//            if (m_processRank==iRank) {
+//                printf("\nRank: %d  Dir: %d Expected-neighbour from %d: %d\n", m_processRank, dir, (dir + 1) % 2 + (dir / 2) * 2, Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2));
+//                Parallel::Neighbours::getNeighbours(m_processRank)->print();
+//                cout << "Processor position: ";
+//                for (int iDim = 0; iDim < 4; iDim++) {
+//                    cout << Parallel::Neighbours::getProcessorDimensionPosition(iDim) << " ";
+//                }
+//                cout << endl;
+//            }
+//            Parallel::Communicator::setBarrier();
+//        }
+//    }
+//    Parallel::Communicator::setBarrier();
+//    if (m_processRank==0) cout << "Starting test." <<endl;
+
     if (Parallel::ParallelParameters::active) {
         unsigned int position = 0;
         unsigned int N1,N2,N3;
         Lattice<SU3>L;
         L.allocate(m_dim);
         for (int dir = 0; dir < 8; dir++) {
+
             // Sets the lattice sites with the value of the processor they are running on.
             for (unsigned int iSite = 0; iSite < m_subLatticeSize; iSite++) {
                 L[iSite] = double(m_processRank);
             }
+
+            // Specifies if we are going backwards or farwards
             if (dir % 2 == 0) {
                 // Backwards
                 L = shift(L,BACKWARDS,dir / 2);
@@ -1604,6 +1626,8 @@ bool TestSuite::testLatticeShift() {
                 // Forwards
                 L = shift(L,FORWARDS,dir / 2);
             }
+
+            // Sets correct sublattice face to check.
             if (dir / 2 == 0) {
                 N1 = L.m_dim[1];
                 N2 = L.m_dim[2];
@@ -1624,10 +1648,13 @@ bool TestSuite::testLatticeShift() {
                 N2 = L.m_dim[1];
                 N3 = L.m_dim[2];
             }
+
             // Loops over cube and checks that it has received the correct values
             for (unsigned int i = 0; i < N1; i++) {
                 for (unsigned int j = 0; j < N2; j++) {
                     for (unsigned int k = 0; k < N3; k++) {
+
+                        // Sets correct position
                         if (dir / 2 == 0) { // x direction
                             position = Parallel::Index::getIndex((L.m_dim[0] - 1) * (dir % 2),i,j,k);
                         } else if (dir / 2 == 1) { // y direction
@@ -1639,15 +1666,43 @@ bool TestSuite::testLatticeShift() {
                         } else {
                             Parallel::Communicator::MPIExit("Error in testLatticeShift");
                         }
+
                         // Compares matrices at position.
                         for (unsigned int iMat = 0; iMat < 18; iMat++) {
-                            if (L.m_sites[position].mat[iMat] != double(Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2))) {
+
+                            // Remember, we are shifting the lattice, such that we for say FORWARDS shift, we update the values at 0
+                            // in a given face with the values from the preceding shift.
+                            if (L.m_sites[position].mat[iMat] != double(Parallel::Neighbours::get((dir) % 2 + (dir / 2) * 2))) {
                                 passed = false;
-//                                exit(m_processRank);
-//                                break;
+
+                                // Prints diagnostics by rank order.
+                                for (int iRank = 0; iRank < Parallel::Communicator::getNumProc(); iRank++) {
+                                    if (m_processRank==iRank) {
+                                        printf("\nRank: %d Shift: %d Dir: %d Expected-neighbour from %d: %d Value received: %f\n",
+                                               m_processRank, dir%2, dir, (dir + 1) % 2 + (dir / 2) * 2,
+                                               Parallel::Neighbours::get((dir + 1) % 2 + (dir / 2) * 2),
+                                               L.m_sites[position].mat[iMat]);
+                                        Parallel::Neighbours::getNeighbours(m_processRank)->print();
+                                        cout << "Processor position: ";
+                                        for (int iDim = 0; iDim < 4; iDim++) {
+                                            cout << Parallel::Neighbours::getProcessorDimensionPosition(iDim) << " ";
+                                        }
+                                        cout << endl;
+                                    }
+                                    Parallel::Communicator::setBarrier();
+                                }
+                                if (m_processRank == 0) {
+                                    cout << "Error print done. Stopping test." << endl;
+                                }
+
+                                i = N1;
+                                j = N2;
+                                k = N3;
+                                iMat = 18;
+                                dir = 8;
+                                break;
                             }
                         }
-                        if (!passed) break;
                     }
                 }
             }

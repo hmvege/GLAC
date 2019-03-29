@@ -230,7 +230,7 @@ def get_file_length(fname):
 	return i
 
 def main():
-	n_proc_list = [2,2,2,4]
+	n_proc_list = [1,2,2,4]
 	numprocs = np.prod(np.asarray(n_proc_list))
 	neighbors = Neighbors(numprocs, n_proc_list)
 	neighbors.print_basics()

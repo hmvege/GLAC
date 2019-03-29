@@ -1,10 +1,10 @@
 import numpy as np
 
 # Processors in one dimension
-Nx = 4
-Ny = 4
-Nz = 4
-Nt = 8
+Nx = 1
+Ny = 1
+Nz = 1
+Nt = 4
 
 def print_break(Np, neighbours_string):
 	if (Np+1) % (Nx*Ny*Nz) == 0:
@@ -148,17 +148,17 @@ def print_neighbours(n_lists,Np):
 	print "t-1 = %2d t+1 = %2d" % (n_list[6],n_list[7])
 
 def main():
-	# ## Printing neighbour-lists
-	# print_X_neighbours()
-	# print_Y_neighbours()
-	# print_Z_neighbours()
-	# print_T_neighbours()
+	## Printing neighbour-lists
+	print_X_neighbours()
+	print_Y_neighbours()
+	print_Z_neighbours()
+	print_T_neighbours()
 
 	neighbour_lists = getNeighbourLists()
 	print_processor_lattice()
 
-	# for i in range(Nx*Ny*Nz*Nt):
-	# 	print_neighbours(neighbour_lists,i)
+	for i in range(Nx*Ny*Nz*Nt):
+		print_neighbours(neighbour_lists,i)
 
 	# print_neighbours(neighbour_lists[0],0)
 
