@@ -7,7 +7,7 @@ SOURCES += main.cpp \
     system.cpp \
     actions/action.cpp \
     actions/wilsongaugeaction.cpp \
-    actions/luscheraction.cpp \
+    actions/wilsonexplicitexp.cpp \
     observables/correlator.cpp \
     observables/plaquette.cpp \
     observables/topologicalcharge.cpp \
@@ -44,6 +44,7 @@ HEADERS += \
     system.h \
     actions/action.h \
     actions/wilsongaugeaction.h \
+    actions/wilsonexplicitexp.h \
     actions/actions.h \
     observables/correlator.h \
     observables/plaquette.h \
@@ -83,8 +84,7 @@ HEADERS += \
     config/configloader.h \
     config/sysprint.h \
     flow/flow.h \
-    lib/json.hpp \
-    actions/wilsonexplicitexp.h
+    lib/json.hpp
 
 # MPI Settings
 QMAKE_CXX = mpicxx

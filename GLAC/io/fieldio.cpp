@@ -88,22 +88,28 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
     long long nt = 0, nz = 0, ny = 0, nx = 0;
     MPI_Offset offset = 0;
 
-    for (long long mu = 0; mu < 4; mu++) {
-        for (long long t = 0; t < m_N[3]; t++) {
-            nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
-            for (long long z = 0; z < m_N[2]; z++) {
-                nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
-                for (long long y = 0; y < m_N[1]; y++) {
-                    ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
+    SU3 writeBuffer[4 * Parameters::getNSpatial()];
+
+    for (long long t = 0; t < m_N[3]; t++) {
+        nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
+        for (long long z = 0; z < m_N[2]; z++) {
+            nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
+            for (long long y = 0; y < m_N[1]; y++) {
+                ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
+
+
+                for (long long mu = 0; mu < 4; mu++) {
                     for (long long x = 0; x < m_N[0]; x++) {
-                        nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
-                        offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size;
-                        MPI_File_write_at(file, offset, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+                        writeBuffer[4*x + mu] = lattice[mu][Parallel::Index::getIndex(x,y,z,t)];
                     }
                 }
+
+                offset = Parallel::Index::getGlobalIndex(0,ny,nz,nt)*m_linkSize;
+                MPI_File_write_at(file, offset, &writeBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
             }
         }
     }
+
     MPI_File_close(&file);
 
     if (Parameters::getDebug()) {
@@ -209,17 +215,20 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
     MPI_Offset offset = 0;
     long long nt = 0, nz = 0, ny = 0, nx = 0;
 
-    for (long long mu = 0; mu < 4; mu++) {
-        for (long long t = 0; t < m_N[3]; t++) {
-            nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
-            for (long long z = 0; z < m_N[2]; z++) {
-                nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
-                for (long long y = 0; y < m_N[1]; y++) {
-                    ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
-                    for (long long x = 0; x < m_N[0]; x++) { // TODO: Maybe change this to read x at once
-                        nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
-                        offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*m_linkSize + mu*m_SU3Size;
-                        MPI_File_read_at(file, offset, &lattice[mu][Parallel::Index::getIndex(x,y,z,t)], m_SU3Doubles, MPI_DOUBLE, MPI_STATUS_IGNORE);
+    SU3 readBuffer[4*Parameters::getNSpatial()];
+
+    for (long long t = 0; t < m_N[3]; t++) {
+        nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
+        for (long long z = 0; z < m_N[2]; z++) {
+            nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
+            for (long long y = 0; y < m_N[1]; y++) {
+                ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
+
+                offset = Parallel::Index::getGlobalIndex(0,ny,nz,nt)*m_linkSize;
+                MPI_File_read_at(file, offset, &readBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
+                for (long long x = 0; x < m_N[0]; x++) {
+                    for (long long mu = 0; mu < 4; mu++) {
+                        lattice[mu][Parallel::Index::getIndex(x,y,z,t)] = readBuffer[4*x + mu];
                     }
                 }
             }

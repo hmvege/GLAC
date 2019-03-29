@@ -279,7 +279,8 @@ void TestSuite::runFullTestSuite()
         for (int i = 0; i < 60; i++) cout << "=";
         cout << endl;
     }
-    bool passed = (fullLatticeTests());// & testIO() & runActionTests());
+//    bool passed = (fullLatticeTests() & testIO() & runActionTests());
+    bool passed = (testIO());// & testIO() & runActionTests());
     if (m_processRank == 0) {
 //        passed = (passed & run3x3MatrixTests() & run2x2MatrixTests() & runSU2Tests() & runSU3Tests() & runFunctionsTest()
 //                  & runComplexTests() & runLatticeTests());
@@ -464,9 +465,9 @@ bool TestSuite::fullLatticeTests()
         printf("Running Lattice parallel tests on sublattice of size %d^3 x %d.\n",m_N,m_NT);
     }
     // Runs tests
-//    if (Parameters::getCheckFieldGaugeInvariance()) {
-//        passed = testFieldGaugeInvariance();
-//    }
+    if (Parameters::getCheckFieldGaugeInvariance()) {
+        passed = testFieldGaugeInvariance();
+    }
     if (passed && testLatticeShift()) {
         if (m_processRank == 0) cout << "PASSED: Parallel lattice tests." << endl;
     } else {
@@ -1907,12 +1908,17 @@ bool TestSuite::testIO()
             }
         }
 
-        steady_clock::time_point t0;
-        steady_clock::time_point t1;
+        steady_clock::time_point t0_write;
+        steady_clock::time_point t1_write;
+        steady_clock::time_point t0_read;
+        steady_clock::time_point t1_read;
 
-        t0 = steady_clock::now();
+        t0_write = steady_clock::now();
+
         // Save lattice
         IO::FieldIO::writeFieldToFile(LBefore, 0);
+
+        t1_write= steady_clock::now();
 
         // Since we are by default writing to output, we temporarily set the input to be output.
         std::string tmpInputFolder = Parameters::getInputFolder();
@@ -1927,14 +1933,20 @@ bool TestSuite::testIO()
                 + "_np" + std::to_string(Parallel::Communicator::getNumProc())
                 + "_config" + std::string("00000") + ".bin";
 
+        t0_read = steady_clock::now();
+
         // Load into new lattice
         IO::FieldIO::loadFieldConfiguration(cfg_name, LAfter);
+
+        t1_read = steady_clock::now();
+
+        // Resets the input folder
         Parameters::setInputFolder(tmpInputFolder);
 
-        t1 = steady_clock::now();
-
         if (m_processRank == 0 && m_verbose) {
-            printf("IO time: %.16f seconds\n", duration_cast<duration<double>>(t1 - t0).count());
+            printf("Write time: %.16f seconds.\nRead time:  %.16f\n",
+                   duration_cast<duration<double>>(t1_write - t0_write).count(),
+                   duration_cast<duration<double>>(t1_read - t0_read).count());
         }
 
         // Compare loaded lattice with created lattice
