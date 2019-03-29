@@ -156,6 +156,7 @@ private:
 
     // Test for IO
     bool testIO();
+    bool testIOWriteDoubles();
 public:
     TestSuite();
     ~TestSuite();

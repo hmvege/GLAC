@@ -163,23 +163,24 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned int 
     MPI_Offset offset = 0;
     long long nt = 0, nz = 0, ny = 0, nx = 0;
 
+    // Writes each element of x directly.
+    nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0]);
+
     for (unsigned long int t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
         for (unsigned long int z = 0; z < m_N[2]; z++) {
             nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
             for (unsigned long int y = 0; y < m_N[1]; y++) {
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
-                for (unsigned long int x = 0; x < m_N[0]; x++) {
-                    nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0] + x);
-                    offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*sizeof(double);
-                    MPI_File_write_at(file, offset, &lattice[Parallel::Index::getIndex(x,y,z,t)], 1, MPI_DOUBLE, MPI_STATUS_IGNORE);
-                }
+
+                offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*sizeof(double);
+                MPI_File_write_at(file, offset, &lattice[Parallel::Index::getIndex(0,y,z,t)], m_N[0], MPI_DOUBLE, MPI_STATUS_IGNORE);
             }
         }
     }
     MPI_File_close(&file);
 
-    if (Parallel::Communicator::getProcessRank() == 0) {
+    if (Parallel::Communicator::getProcessRank() == 0 && !Parameters::getUnitTesting()) {
         printf("\n    %s written.", filenamePath.c_str());
     }
 }

@@ -160,6 +160,19 @@ class JobCreator:
         # Checking that we have an output folder.
         self._checkFolderPath(self.outputFolder)
         self._checkFolderPath(os.path.join(self.outputFolder, self.runName))
+
+        if not self.load_field_configs and not self.create_fields_folders:
+            self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "field_configurations"))
+            if not self.uTest:
+                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "observables"))
+
+            if self.uTest or (self.NFlows != 0 and self.create_fields_folders):
+                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields"))
+
+                if self.uTest:
+                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", "ioDoublesIOTest"))
+
+
         if not self.uTest:
 
             if self.NFlows != 0:
@@ -167,8 +180,6 @@ class JobCreator:
                 # Only in the case we are not creating any scalar fields
                 if not self.create_fields_folders:
                     self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables"))
-                if self.create_fields_folders:
-                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields"))
 
                 for fobs in self.flow_observables:
 
@@ -183,10 +194,6 @@ class JobCreator:
                         if "energy" in fobs.lower():
                             self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", "energy"))
 
-        if not self.load_field_configs and not self.create_fields_folders:
-            self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "field_configurations"))
-            if not self.uTest:
-                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "observables"))
 
         self._checkFolderPath(os.path.join(self.inputFolder))
         self._checkFolderPath(os.path.join("input", self.runName))
