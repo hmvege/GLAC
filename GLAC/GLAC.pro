@@ -38,7 +38,17 @@ SOURCES += main.cpp \
     config/parameters.cpp \
     config/configloader.cpp \
     config/sysprint.cpp \
-    flow/flow.cpp
+    flow/flow.cpp \
+    tests/unit_tests/actiontests.cpp \
+    tests/unit_tests/observabletests.cpp \
+    tests/unit_tests/iotests.cpp \
+    tests/unit_tests/randommatrixtests.cpp \
+    tests/unit_tests/latticeoperations.cpp \
+    tests/unit_tests/su3operations.cpp \
+    tests/unit_tests/su2operations.cpp \
+    tests/unit_tests/complexoperations.cpp \
+    tests/unit_tests/testcore.cpp \
+    tests/unit_tests/su3exptest.cpp
 
 HEADERS += \
     system.h \
@@ -84,7 +94,17 @@ HEADERS += \
     config/configloader.h \
     config/sysprint.h \
     flow/flow.h \
-    lib/json.hpp
+    lib/json.hpp \
+    tests/unit_tests/actiontests.h \
+    tests/unit_tests/observabletests.h \
+    tests/unit_tests/iotests.h \
+    tests/unit_tests/randommatrixtests.h \
+    tests/unit_tests/latticeoperations.h \
+    tests/unit_tests/su3operations.h \
+    tests/unit_tests/su2operations.h \
+    tests/unit_tests/complexoperations.h \
+    tests/unit_tests/testcore.h \
+    tests/unit_tests/su3exptest.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx

@@ -66,7 +66,7 @@ public:
     WilsonExplicitExp();
     ~WilsonExplicitExp();
     double getDeltaAction(SU3 U, SU3 UPrime);
-    void computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    void computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu);
     Lattice<SU3> getActionDerivative(Lattice<SU3> *lattice, int mu);
 
     /*!

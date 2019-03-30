@@ -58,7 +58,7 @@ public:
      * \param mu lorentz index, \f$\mu\f$.
      * \return Returns change in action \f$\Delta S\f$
      */
-    virtual void computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu);
+    virtual void computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu);
 
     /*!
      * \brief getActionDerivative, computes the derivative of the lattice in given direction.

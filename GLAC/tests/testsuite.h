@@ -142,7 +142,7 @@ private:
     bool testRSTMultiplication();
     bool testRSTInverseMultiplication();
 
-    // Paralell tests
+    // Parallel tests
     bool fullLatticeTests();
     bool testLatticeShift();
     bool testFieldGaugeInvariance();

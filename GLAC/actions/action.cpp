@@ -19,7 +19,7 @@ double Action::getDeltaAction(SU3 U, SU3 UPrime)
     return 1.0;
 }
 
-void Action::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+void Action::computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu)
 {
     cout << "In Action::computeStaple: If you are seeing this, something is wrong!" << endl;
     exit(1);

@@ -268,6 +268,7 @@ inline Lattice<T> &Lattice<T>::operator*=(Lattice<T>& B) {
     }
     return *this;
 }
+
 template <class T>
 inline Lattice<T> &Lattice<T>::operator*=(Lattice<T>&& B) {
     for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
@@ -275,6 +276,7 @@ inline Lattice<T> &Lattice<T>::operator*=(Lattice<T>&& B) {
     }
     return *this;
 }
+
 // Double operator overloading
 template <class T>
 inline Lattice<T> &Lattice<T>::operator*=(double b) {

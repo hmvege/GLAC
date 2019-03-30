@@ -16,6 +16,16 @@
 #include "performancetests.h"
 #include "parallelization/communicator.h"
 
+#include "tests/unit_tests/actiontests.h"
+#include "tests/unit_tests/complexoperations.h"
+#include "tests/unit_tests/iotests.h"
+#include "tests/unit_tests/latticeoperations.h"
+#include "tests/unit_tests/observabletests.h"
+#include "tests/unit_tests/randommatrixtests.h"
+#include "tests/unit_tests/su2operations.h"
+#include "tests/unit_tests/su3operations.h"
+//#include "tests/unit_tests/testcore.h"
+
 /*!
  * \brief runUnitTests function that runs unit tests. Exits once complete.
  * \param runTests if true, will run unit tests.
@@ -24,8 +34,51 @@ void runUnitTests(bool runTests)
 {
     if (runTests)
     {
-        TestSuite unitTester;
-        unitTester.runFullTestSuite();
+//        TestSuite unitTester;
+//        unitTester.runFullTestSuite();
+
+        bool passed = true;
+        if (Parallel::Communicator::getProcessRank() == 0) {
+            for (int i = 0; i < 60; i++) cout << "=";
+            cout << endl;
+        }
+
+        ActionTests actionTest = ActionTests();
+        passed = passed & actionTest.runActionTests();
+
+        ComplexOperations cmplxTest = ComplexOperations();
+        passed = passed & cmplxTest.runComplexTests();
+
+        IOTests IOTest = IOTests();
+        passed = passed & IOTest.runIOTests();
+
+        LatticeOperations latTest = LatticeOperations();
+        passed = passed & latTest.runLatticeTests();
+
+        ObservableTests obsTest = ObservableTests();
+        passed = passed & obsTest.runObservableTests();
+
+        RandomMatrixTests rndTest = RandomMatrixTests();
+        passed = passed & rndTest.runRandomMatrixTests();
+
+        SU2Operations SU2Test = SU2Operations();
+        passed = passed & SU2Test.runSU2Tests();
+
+        SU3Operations SU3Test = SU3Operations();
+        passed = passed & SU3Test.runSU3Tests();
+
+        if (Parallel::Communicator::getProcessRank() == 0) {
+            for (int i = 0; i < 60; i++) cout << "=";
+            cout << endl;
+            if (passed) {
+                cout << "SUCCESS: All tests passed." << endl;
+            } else {
+                cout << "FAILURE: One or more test(s) failed." << endl;
+            }
+            for (int i = 0; i < 60; i++) cout << "=";
+            cout << endl;
+        }
+
         Parallel::Communicator::setBarrier();
         Parallel::Communicator::freeMPIGroups();
         Parallel::Communicator::setBarrier();

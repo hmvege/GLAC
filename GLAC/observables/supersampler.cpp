@@ -425,6 +425,7 @@ void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
 
         m_temp.zeros();
 
+        /// \todo can probably reduce the number of copy operations here, by splitting the A = B*inv(C) into several lines. I.e. A = B, A *= inv(C).
         // Retrieves the contracted term
         for (int iLambda = 1; iLambda < 4; iLambda++) {
             if (iLambda != nu) {

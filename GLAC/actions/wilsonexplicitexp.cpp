@@ -1,4 +1,4 @@
-#include "WilsonExplicitExp.h"
+#include "wilsonexplicitexp.h"
 #include "config/parameters.h"
 #include "math/functions.h"
 #include "parallelization/communicator.h"
@@ -25,7 +25,7 @@ double WilsonExplicitExp::getDeltaAction(SU3 U, SU3 UPrime)
     return traceRealMultiplication((UPrime - U),m_staple)*m_multiplicationFactor;
 }
 
-void WilsonExplicitExp::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+void WilsonExplicitExp::computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu)
 {
     m_staple.zeros();
     updateMuIndex(mu);

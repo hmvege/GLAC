@@ -74,5 +74,6 @@ SU3 SU3Exp::exp(SU3 Q)
     f0.setComplex(f[0],8);
     f0.setComplex(f[0],16);
 
+    /// \todo Implement better return method, as we create extra here by not writing one operation per line.
     return f0 + Q*f[1] + QSquared*f[2];
 }

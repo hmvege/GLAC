@@ -26,7 +26,7 @@ double WilsonGaugeAction::getDeltaAction(SU3 U, SU3 UPrime)
     return traceRealMultiplication((UPrime - U),m_staple)*m_multiplicationFactor;
 }
 
-void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, unsigned int i, unsigned int j, unsigned int k, unsigned int l, int mu)
+void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu)
 {
     m_staple.zeros();
     updateMuIndex(mu);
