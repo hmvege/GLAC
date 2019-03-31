@@ -5,6 +5,7 @@
 #include "config/parameters.h"
 #include <mpi.h>
 #include <cmath>
+#include "math/lattice.h"
 
 // Internal variables
 bool Parallel::Communicator::muDir = 0;
@@ -454,6 +455,7 @@ void Parallel::Communicator::initializeSubLattice()
         setN(m_N);
     }
 
+
     // Gets the total size of the sub-lattice(without faces)
     for (int i = 0; i < 4; i++) {
         subLatticeSize *= m_N[i];
@@ -474,6 +476,10 @@ void Parallel::Communicator::initializeSubLattice()
     // Initializes the neighbour lists
     Parallel::Neighbours::initialize(m_processRank, m_numprocs, m_processorsPerDimension);
     Parameters::setProcessorsPerDimension(m_processorsPerDimension);
+
+    // Initialize sub-lattices
+
+//    initializseLatticeSharing(Parameters::getN());
 }
 
 /*!

@@ -70,7 +70,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
 
     // Converting config number to a more machine friendly layout
     char cfg_number[6];
-    sprintf(cfg_number, "%05d", configNumber + Parameters::getConfigStartNumber());
+    sprintf(cfg_number, "%05d", configNumber + unsigned(Parameters::getConfigStartNumber()));
 
     std::string filename = Parameters::getBatchName() + "_b" + std::to_string(Parameters::getBeta())
             + "_N" + std::to_string(Parameters::getNSpatial())
@@ -85,10 +85,10 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
     }
 
     MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, filenamePath.c_str(), MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &file);
-    long long nt = 0, nz = 0, ny = 0, nx = 0;
+    long long nt = 0, nz = 0, ny = 0;
     MPI_Offset offset = 0;
 
-    SU3 writeBuffer[4 * Parameters::getNSpatial()];
+    SU3 * writeBuffer = new SU3[4 * Parameters::getNSpatial()];
 
     for (long long t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
@@ -105,7 +105,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
                 }
 
                 offset = Parallel::Index::getGlobalIndex(0,ny,nz,nt)*m_linkSize;
-                MPI_File_write_at(file, offset, &writeBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
+                MPI_File_write_at(file, offset, writeBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
             }
         }
     }
@@ -119,6 +119,8 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
     if (Parallel::Communicator::getProcessRank() == 0 && !Parameters::getUnitTesting()) {
         printf("    %s written.", filename.c_str());
     }
+
+    delete [] writeBuffer;
 }
 
 /*!
@@ -166,11 +168,11 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned int 
     // Writes each element of x directly.
     nx = (Parallel::Neighbours::getProcessorDimensionPosition(0) * m_N[0]);
 
-    for (unsigned long int t = 0; t < m_N[3]; t++) {
+    for (long long t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
-        for (unsigned long int z = 0; z < m_N[2]; z++) {
+        for (long long z = 0; z < m_N[2]; z++) {
             nz = (Parallel::Neighbours::getProcessorDimensionPosition(2) * m_N[2] + z);
-            for (unsigned long int y = 0; y < m_N[1]; y++) {
+            for (long long y = 0; y < m_N[1]; y++) {
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
 
                 offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*sizeof(double);
@@ -214,9 +216,9 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
     MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
 
     MPI_Offset offset = 0;
-    long long nt = 0, nz = 0, ny = 0, nx = 0;
+    long long nt = 0, nz = 0, ny = 0;
 
-    SU3 readBuffer[4*Parameters::getNSpatial()];
+    SU3 * readBuffer = new SU3[4*Parameters::getNSpatial()];
 
     for (long long t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
@@ -226,7 +228,7 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
 
                 offset = Parallel::Index::getGlobalIndex(0,ny,nz,nt)*m_linkSize;
-                MPI_File_read_at(file, offset, &readBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
+                MPI_File_read_at(file, offset, readBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
                 for (long long x = 0; x < m_N[0]; x++) {
                     for (long long mu = 0; mu < 4; mu++) {
                         lattice[mu][Parallel::Index::getIndex(x,y,z,t)] = readBuffer[4*x + mu];
@@ -244,6 +246,8 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
     if (Parallel::Communicator::getProcessRank() == 0 && !Parameters::getUnitTesting()) {
         printf("\nConfiguration %s loaded", fname.c_str());
     }
+
+    delete [] readBuffer;
 }
 
 /*!

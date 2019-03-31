@@ -130,22 +130,68 @@ public:
     Lattice<T> &operator-=(complex B);
     Lattice<T> &operator*=(complex B);
     Lattice<T> &operator/=(complex B);
-    // Lattice value setters
+
     /*!
      * \brief identity method for setting the SU3 matrices of the lattice to identity.
      */
     void identity();
+
     /*!
      * \brief zeros sets all of the SU3 elements in the lattice to zero.
      */
     void zeros();
+
+    /*!
+     * \brief makeHermitian converts the SU3 matrices of the lattice to hermitian matrices.
+     */
+    void makeHermitian();
+
+    /*!
+     * \brief makeHermitian converts the SU3 matrices of the lattice to anti-hermitian matrices.
+     */
+    void makeAntiHermitian();
+
     /*!
      * \brief copy method for copying content of another lattice B onto itself.
      * \param B
      * \return itself as copied from B.
      */
     Lattice<T> copy(Lattice<T> B);
+
+    // Make private?
+//    static std::vector<SU3> sendCubeX;
+//    static std::vector<SU3> recvCubeX;
+//    static std::vector<SU3> sendCubeY;
+//    static std::vector<SU3> recvCubeY;
+//    static std::vector<SU3> sendCubeZ;
+//    static std::vector<SU3> recvCubeZ;
+//    static std::vector<SU3> sendCubeT;
+//    static std::vector<SU3> recvCubeT;
+
+//    void initializeShiftVariables() {
+//        sendCubeX.resize();
+//    }
 };
+
+//void initializseLatticeSharing(std::vector<unsigned int> dim) {
+//    sendCubeX.resize(dim[1]*dim[2]*dim[3]);
+//    recvCubeX.resize(dim[1]*dim[2]*dim[3]);
+//    sendCubeY.resize(dim[0]*dim[2]*dim[3]);
+//    recvCubeY.resize(dim[0]*dim[2]*dim[3]);
+//    sendCubeZ.resize(dim[0]*dim[1]*dim[3]);
+//    recvCubeZ.resize(dim[0]*dim[1]*dim[3]);
+//    sendCubeT.resize(dim[0]*dim[1]*dim[2]);
+//    recvCubeT.resize(dim[0]*dim[1]*dim[2]);
+//}
+
+//std::vector<SU3> Lattice::sendCubeX;
+//std::vector<SU3> Lattice<SU3>::recvCubeX;
+//std::vector<SU3> sendCubeY;
+//std::vector<SU3> recvCubeY;
+//std::vector<SU3> sendCubeZ;
+//std::vector<SU3> recvCubeZ;
+//std::vector<SU3> sendCubeT;
+//std::vector<SU3> recvCubeT;
 
 //////////////////////////////////////////
 ////// External operator overloading /////
@@ -372,6 +418,20 @@ template <>
 inline void Lattice<double>::zeros() {
     for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
         m_sites[iSite] = 0;
+    }
+}
+
+template <>
+inline void Lattice<SU3>::makeHermitian() {
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+        m_sites[iSite].makeHermitian();
+    }
+}
+
+template <>
+inline void Lattice<SU3>::makeAntiHermitian() {
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+        m_sites[iSite].makeAntiHermitian();
     }
 }
 
@@ -641,62 +701,6 @@ inline Lattice<SU3> conjugate(Lattice<SU3> &&B)
     _L.allocate(B.m_dim);
     for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
         _L.m_sites[iSite] = B.m_sites[iSite].conjugate();
-    }
-    return std::move(_L);
-}
-
-template <class SU3>
-inline Lattice<SU3> makeAntiHermitian(Lattice<SU3> &B)
-{
-    /*
-     * Multiplies by (i).
-     */
-    Lattice<SU3> _L;
-    _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
-        _L.m_sites[iSite] = B.m_sites[iSite].makeAntiHermitian();
-    }
-    return std::move(_L);
-}
-
-template <class SU3>
-inline Lattice<SU3> makeAntiHermitian(Lattice<SU3> &&B)
-{
-    /*
-     * Multiplies by (i).
-     */
-    Lattice<SU3> _L;
-    _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
-        _L.m_sites[iSite] = B.m_sites[iSite].makeAntiHermitian();
-    }
-    return std::move(_L);
-}
-
-template <class SU3>
-inline Lattice<SU3> makeHermitian(Lattice<SU3> &B)
-{
-    /*
-     * Multiplies by (-i).
-     */
-    Lattice<SU3> _L;
-    _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
-        _L.m_sites[iSite] = B.m_sites[iSite].makeHermitian();
-    }
-    return std::move(_L);
-}
-
-template <class SU3>
-inline Lattice<SU3> makeHermitian(Lattice<SU3> &&B)
-{
-    /*
-     * Multiplies by (-i).
-     */
-    Lattice<SU3> _L;
-    _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
-        _L.m_sites[iSite] = B.m_sites[iSite].makeHermitian();
     }
     return std::move(_L);
 }

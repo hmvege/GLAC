@@ -21,6 +21,19 @@ private:
     bool testLatticeSumRealTraceMultiplication();
     bool testLatticeInverse();
 
+    /*
+     * identity, su3, complex, double
+     * zeros, su3, complex, double
+     * sumSpatial, doubles
+     * realTraceMultiplication, SU3
+     * imagTraceMultiplication, SU3
+     * transpose
+     * conjugate
+     * makeAntiHermitian
+     * makeHermitian
+     *
+     */
+
     // Tests including parallel communication
     bool fullLatticeTests();
     bool testLatticeShift();

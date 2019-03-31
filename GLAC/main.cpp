@@ -53,6 +53,9 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 
     ConfigLoader::load(std::string(cmdLineArguments[1]));
 
+    // Initialises lattice sharing in the communicator
+//    Parallel::Communicator::initializeSubLattice();
+
     // Unit and performance tests
     runUnitTests(Parameters::getUnitTesting());
     runPerformanceTests(Parameters::getPerformanceTesting());
