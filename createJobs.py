@@ -6,7 +6,6 @@ import time
 import sys
 import argparse
 import json
-import ast
 import shutil
 import re
 
@@ -923,7 +922,8 @@ def main(args):
         """
         COMMAND FOR LOADING SCRIPT JOBS AND GENERATING CONFIGS OR FLOWING
         """
-        configuration = ast.literal_eval(open(args.file, "r").read())
+        with open(args.file, "r") as f:
+            configuration = json.loads(re.sub("//.*", "", f.read(), flags=re.MULTILINE))
 
         # Sets the base folder
         configuration["base_folder"] = args.base_folder
@@ -1163,7 +1163,8 @@ def main(args):
 
         if args.config_file != False:
             # Loads the config file
-            configuration = ast.literal_eval(open(args.config_file, "r").read())
+            with open(args.file, "r") as f:
+                configuration = json.loads(re.sub("//.*", "", f.read(), flags=re.MULTILINE))
 
             # Ensures we do not have a conflicting job setup
             if args.NSpatial != configuration["N"] and args.NSpatial:

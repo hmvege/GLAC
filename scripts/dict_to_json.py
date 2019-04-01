@@ -32,12 +32,12 @@ for w in os.walk(path_configs_to_convert):
                 with open(file_path, "r") as _f:
                     file_contents = _f.read()
 
-                file_contents.replace("True","true")
-                file_contents.replace("true","false")
-                file_contents.replace("#","//")
+                file_contents = file_contents.replace("True","true")
+                file_contents = file_contents.replace("False","false")
+                file_contents = file_contents.replace("#","//")
 
                 with open(file_path, "w") as _f:
-                    _f.write(file_contents_modified)
+                    _f.write(file_contents)
 
                 os.rename(file_path, new_file_path)
 

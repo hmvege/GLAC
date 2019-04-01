@@ -1,0 +1,43 @@
+{
+    "bin_fn": "build/GluonicLQCD", 
+    "runName": "strong_scaling_np64_flow", 
+    "N": 32, 
+    "NT": 16, 
+    "subDims": [
+        16, 
+        8, 
+        8, 
+        8
+    ], 
+    "beta": 6.0, 
+    "NCf": 0, 
+    "NCor": 0, 
+    "NTherm": 0, 
+    "NFlows": 1000, 
+    "NUpdates": 0, 
+    "storeCfgs": false, 
+    "storeThermCfgs": false, 
+    "verboseRun": false, 
+    "hotStart": false, 
+    "expFunc": "morningstar", 
+    "observables": [
+        "plaq"
+    ], 
+    "flowObservables": [
+        "plaq", 
+        "topc", 
+        "energy", 
+        "topct"
+    ], 
+    "uTest": false, 
+    "uTestVerbose": false, 
+    "SU3Eps": 0.24, 
+    "flowEpsilon": 0.01, 
+    "metropolisSeed": 0, 
+    "randomMatrixSeed": 0, 
+    "threads": 64, 
+    "cpu_approx_runtime_hr": 16, 
+    "cpu_approx_runtime_min": 0, 
+    "cpu_memory": 3800, 
+    "account_name": "nn2977k"
+}
