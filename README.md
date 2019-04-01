@@ -20,7 +20,7 @@ Lattice Quantum Chromo Dynamics program for generating pure gauge field configur
 * `createJobs.py` is the main script for generating `.json` configuration files for GLAC, as well as submitting files to either Torque or Slurm.
 
 #### Installation
-Compile with following libraries:
+Compile with following libraries(these should be available at most HPC cluster, should run without any problems):
 ```
 GNU/4.9
 OpenMPI/1.10.0
@@ -78,3 +78,6 @@ This will then print out every detail of the run, without submitting the job. Us
 * To generate visualizations of the topological charge or energy, we used a program called [LatViz](https://github.com/hmvege/LatViz).
 * A list of the Slurm commands can be found [here](https://slurm.schedmd.com/pdfs/summary.pdf). A list of the Torque commands can be found [here](https://gif.biotech.iastate.edu/torque-pbs-job-management-cheat-sheet). A Rosetta stone for going between Slurm and Torque can be seen [here](https://slurm.schedmd.com/rosetta.pdf).
 * To read `.json`-files, we make use of the highly recommended json reader provided [here](https://github.com/nlohmann/json).
+
+#### Todo's
+[ ] Add check in `createJobs.py` such that when loading a single gauge configurations and generating new ones, we make sure that no previous gauge configurations of the names we will generates exist in the provided folder. Do this perhaps for observables as well.
