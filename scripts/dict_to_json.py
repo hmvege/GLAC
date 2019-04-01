@@ -1,6 +1,6 @@
 import os
 
-dryrun = True
+dryrun = False
 if dryrun:
     print("**** DRYRUN ****")
 
@@ -24,7 +24,23 @@ for w in os.walk(path_configs_to_convert):
 
             if not dryrun:
                 count += 1
+
+                # First open file
+                # change False -> false
+                # change True -> true
+                # change # -> //
+                with open(file_path, "r") as _f:
+                    file_contents = _f.read()
+
+                file_contents.replace("True","true")
+                file_contents.replace("true","false")
+                file_contents.replace("#","//")
+
+                with open(file_path, "w") as _f:
+                    _f.write(file_contents_modified)
+
                 os.rename(file_path, new_file_path)
+
             print("> mv {} {}".format(file_path, new_file_path))
 
 print("{} files renamed to .json format.".format(count))
