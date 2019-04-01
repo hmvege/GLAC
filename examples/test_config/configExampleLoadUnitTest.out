@@ -1,0 +1,78 @@
+> mpirun -n 2 build-release/GLAC input/config_defaultTestRun.json                                                                                                                            [±master ●●]
+============================================================
+Running gauge action tests.
+Testing WilsonGaugeAction.
+PASSED: gauge action.
+Running complex tests.
+    SUCCESS: complex addition is correct.
+    SUCCESS: complex subtraction is correct.
+    SUCCESS: complex multiplication is correct.
+    SUCCESS: complex division is correct.
+    SUCCESS: complex conjugate() and c() is correct.
+    SUCCESS: complex norm is correct.
+    SUCCESS: complex normSquared is correct.
+    SUCCESS: setting complex to minus is correct.
+PASSED: Complex operations.
+    Testing IO doubles writing for lattice of size 4^3 x 8
+    Write time: 0.0092932910000000 seconds.
+PASSED: IO lattice doubles write and load.
+Running Lattice IO tests on lattice of size 4^3 x 8
+    Write time: 0.0027047660000000 seconds.
+    Read time:  0.0012280890000000
+PASSED: IO lattice write and load.
+PASSED: IO properties.
+Running lattice tests.
+    SUCCESS: lattice SU3, complex and double addition is correct.
+    SUCCESS: lattice SU3, complex and double subtraction is correct.
+    SUCCESS: lattice SU3, complex and double multiplication is correct.
+    SUCCESS: lattice complex and double division is correct.
+    SUCCESS: realTrace() of a SU3 lattice is correct.
+    SUCCESS: imagTrace() of a SU3 lattice is correct.
+    SUCCESS: subtractReal() of a SU3 lattice is correct.
+    SUCCESS: subtractImag() of a SU3 lattice is correct.
+    SUCCESS: sum() of a SU3 lattice is correct.
+    SUCCESS: sumRealTrace() of a SU3 lattice is correct.
+    SUCCESS: sumRealTraceMultiplication() of a SU3 lattice is correct.
+    SUCCESS: lattice inverse is correct.
+    SUCCESS: trace() of a SU3 lattice is correct.
+Running Lattice parallel tests on sublattice of size 4^3 x 8.
+
+    Plaquette before gauge transformation:   0.6035365817240989
+    Plaquette after gauge transformation:    0.6035365817240990
+    SUCCESS: Lattice output/configExampleLoad/field_configurations/configExampleLoad_b6.000000_N4_NT8_np2_config00000.bin is invariant under a SU3 gauge transformation.
+    SUCCESS: Lattice shift.
+PASSED: Parallel lattice tests.
+PASSED: Lattice operations and functions.
+Running observables tests.
+PASSED: observable tests.
+Running tests for Random matrix generation.
+    SUCCESS: RST multiplication test passed.
+    SUCCESS: RST inverse multiplication test passed.
+PASSED: random matrix generation methods.
+Running SU2 property tests.
+    SUCCESS: randomly generated SU2 matrix is hermitian.
+    SUCCESS: randomly generated SU2 matrix is orthogonal.
+    SUCCESS: randomly generated SU2 matrices have columns of length 1.
+    SUCCESS: random SU2 matrix determinants is 1.
+PASSED: SU2 properties.
+Running basic SU3 matrix tests.
+    SUCCESS: Matrix addition passed
+    SUCCESS: Matrix subtraction passed
+    SUCCESS: Matrix multiplication passed
+    SUCCESS: Matrix conjugate passed
+    SUCCESS: Matrix transpose passed
+PASSED: Basic SU3 matrix operations.
+Running SU3 property tests.
+    SUCCESS: random SU3 matrices generated with RST and random methods are hermitian.
+    SUCCESS: random SU3 matrices generated with RST and random methods are orthogonal matrices.
+    SUCCESS: random SU3 matrices generated with RST and random methods have columns of length 1.
+    SUCCESS: random SU3 matrix determinants is 1.
+    SUCCESS: makeAntiHermitian() is correct.
+    SUCCESS: makeHermitian() is correct.
+    SUCCESS: SU3 trace is correct.
+    SUCCESS: traced real results of matrix multiplication are correct.
+PASSED: SU3 properties.
+============================================================
+SUCCESS: All tests passed.
+============================================================
+                                                                 

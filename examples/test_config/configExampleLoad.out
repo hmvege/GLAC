@@ -1,0 +1,83 @@
+> mpirun -n 2 build-release/GLAC input/config_configExampleLoad.json                                                                                                                         [±master ●●]
+
+Lattice setup complete
+====================================================================================================
+Batch name:                            configExampleLoad
+Threads:                               2
+Lattice size:                          512
+Lattice dimensions(spatial, temporal): 4 8
+Sub lattice size:                      256
+Sub lattice dimensions:                4 4 4 4 
+Processsors per dimension:             1 1 1 2 
+Beta:                                  6
+N configurations:                      10
+N correlation updates:                 200
+N thermalization updates:              500
+N flow updates per configuration:      500
+N link updates:                        10
+Output folder:                         /Users/hansmathiasmamenvege/Programming/LQCD/GLAC/output/
+Input folder:                          /Users/hansmathiasmamenvege/Programming/LQCD/GLAC/input/
+Store field configurations:            TRUE
+Store thermalization observables:      FALSE
+Exponentiation function:               morningstar
+Action type:                           wilson
+Observables:                           topct, plaq, topc, energy
+Flow observables:                      topct, plaq, topc, energy
+Flow epsilon:                          0.01
+SU3Eps:                                0.24
+Hot start:                             FALSE
+====================================================================================================
+
+Initiating thermalization.
+  4.00 % done. Avg. update time:   0.009336 sec
+  8.00 % done. Avg. update time:   0.009366 sec
+ 12.00 % done. Avg. update time:   0.009046 sec
+ 16.00 % done. Avg. update time:   0.008843 sec
+ 20.00 % done. Avg. update time:   0.008810 sec
+ 24.00 % done. Avg. update time:   0.008797 sec
+ 28.00 % done. Avg. update time:   0.008741 sec
+ 32.00 % done. Avg. update time:   0.008938 sec
+ 36.00 % done. Avg. update time:   0.008873 sec
+ 40.00 % done. Avg. update time:   0.008827 sec
+ 44.00 % done. Avg. update time:   0.008785 sec
+ 48.00 % done. Avg. update time:   0.008793 sec
+ 52.00 % done. Avg. update time:   0.008804 sec
+ 56.00 % done. Avg. update time:   0.008774 sec
+ 60.00 % done. Avg. update time:   0.008740 sec
+ 64.00 % done. Avg. update time:   0.008720 sec
+ 68.00 % done. Avg. update time:   0.008689 sec
+ 72.00 % done. Avg. update time:   0.008664 sec
+ 76.00 % done. Avg. update time:   0.008643 sec
+ 80.00 % done. Avg. update time:   0.008633 sec
+ 84.00 % done. Avg. update time:   0.008612 sec
+ 88.00 % done. Avg. update time:   0.008595 sec
+ 92.00 % done. Avg. update time:   0.008578 sec
+ 96.00 % done. Avg. update time:   0.008564 sec
+100.00 % done. Avg. update time:   0.008549 sec
+100.00 % done. Avg. update time:   0.008532 sec
+Termalization complete. Acceptance rate: 0.214129
+i    plaq                 topc                 energy               topct                Avg.Update-time  Accept/reject Config-filename
+0    0.60353658           0.01577232           -123.23769988        0.01577232           0.00816607       0.10756494    configExampleLoad_b6.000000_N4_NT8_np2_config00000.bin written.
+1    0.58615566           0.11858709           -130.04256667        0.11858709           0.00828516                     configExampleLoad_b6.000000_N4_NT8_np2_config00001.bin written.
+2    0.60581965           -0.00390726          -123.64956315        -0.00390726          0.00834112                     configExampleLoad_b6.000000_N4_NT8_np2_config00002.bin written.
+3    0.60296651           0.04257522           -129.30262931        0.04257522           0.00846046                     configExampleLoad_b6.000000_N4_NT8_np2_config00003.bin written.
+4    0.59396066           -0.01089564          -126.42113814        -0.01089564          0.00845831                     configExampleLoad_b6.000000_N4_NT8_np2_config00004.bin written.
+5    0.59986059           0.08353195           -123.14213995        0.08353195           0.00846361                     configExampleLoad_b6.000000_N4_NT8_np2_config00005.bin written.
+6    0.59454736           -0.10991773          -126.15841358        -0.10991773          0.00846491                     configExampleLoad_b6.000000_N4_NT8_np2_config00006.bin written.
+7    0.59676180           -0.25155926          -123.11152935        -0.25155926          0.00848668                     configExampleLoad_b6.000000_N4_NT8_np2_config00007.bin written.
+8    0.59096302           0.03047439           -127.80281604        0.03047439           0.00848134                     configExampleLoad_b6.000000_N4_NT8_np2_config00008.bin written.
+9    0.58405070           0.11265211           -132.58937490        0.11265211           0.00848032                     configExampleLoad_b6.000000_N4_NT8_np2_config00009.bin written.
+====================================================================================================
+System completed.
+Acceptancerate: 0.1079086669921875 
+Average update time: 0.008480 sec.
+Total update time for 2000 updates: 21.235055 sec.
+====================================================================================================
+
+/Users/hansmathiasmamenvege/Programming/LQCD/GLAC/output/configExampleLoad/observables/plaq_configExampleLoad.dat written.
+/Users/hansmathiasmamenvege/Programming/LQCD/GLAC/output/configExampleLoad/observables/topc_configExampleLoad.dat written.
+/Users/hansmathiasmamenvege/Programming/LQCD/GLAC/output/configExampleLoad/observables/energy_configExampleLoad.dat written.
+plaq                 0.297931126072851         0.000001220974058         0.001104976949117         
+topc                 0.002731318620980         0.001121444347173         0.033487973172073         
+energy               -126.545787097067119      1.008088117089574         1.004035914242899         
+Program complete. Time used: 0.015245 hours (54.881540 seconds)
