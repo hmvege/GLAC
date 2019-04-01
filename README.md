@@ -10,7 +10,7 @@ Lattice Quantum Chromo Dynamics program for generating pure gauge field configur
     <i>The action density of a gauge field. Created using <a href="https://github.com/hmvege/LatViz">LatViz</a>, a program developed by Mathias M. Vege and Giovanni Pederiva.</i>
 </p>
 
-#### Program folder structure
+## Program folder structure
 * `GLAC` contains main program. 
 * `config_folder` contains parameter-files for different runs.
 * `docs` contains the documentation of GLAC.
@@ -19,7 +19,7 @@ Lattice Quantum Chromo Dynamics program for generating pure gauge field configur
 * `multiJobSetup.py` is script for starting multiple jobs.
 * `createJobs.py` is the main script for generating `.json` configuration files for GLAC, as well as submitting files to either Torque or Slurm.
 
-#### Installation
+## Installation
 Compile with following libraries(these should be available at most HPC cluster, should run without any problems):
 ```
 GNU/4.9
@@ -32,7 +32,7 @@ qmake ../GLAC/GLAC.pro
 make
 ```
 
-#### A (short) guide to GLAC
+## A (short) guide to GLAC
 To run GLAC through its Python interface, you will for the moment being have to use python 2.7.
 
 Example:
@@ -76,7 +76,7 @@ This will then print out every detail of the run, without submitting the job. Us
 For a more extensive guide to GLAC, see the [examples folder](https://github.com/hmvege/GLAC/tree/master/examples). For more implementation specific details, see the [GLAC Documentation](http://hmvege.github.io/GLAC/html/index.html).
 
 
-#### Additional resources
+## Additional resources
 * The analysis code used for this thesis program can be seen in [LatticeAnalyser](https://github.com/hmvege/LatticeAnalyser).
 * To generate visualizations of the topological charge or energy, we used a program called [LatViz](https://github.com/hmvege/LatViz).
 * A list of the Slurm commands can be found [here](https://slurm.schedmd.com/pdfs/summary.pdf). A list of the Torque commands can be found [here](https://gif.biotech.iastate.edu/torque-pbs-job-management-cheat-sheet). A Rosetta stone for going between Slurm and Torque can be seen [here](https://slurm.schedmd.com/rosetta.pdf).
