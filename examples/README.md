@@ -20,8 +20,6 @@ First, a quick note of the three types of systems we can run on,
 **NOTE:** if one specifies to load configurations with `-lcfg`, no additional configurations will be generated. In order to generate configurations, pass a single configuration file path to `-lcfgr` (load configuration and run) and specify how many configuration to generate with `-NCfgs`.
 
 
-
-
 ## Example: `setup`
 The `setup` allows the user to setup a run while specifying all of the available parameters.
 
@@ -121,6 +119,9 @@ python2 createJobs.py --dryrun -v field_density -s local -nt 8 -lcfg testRunLoca
 
 
 ## Example: Chroma
+Examples on how to load a Chroma configuration. The data produced with the `topct` flow observable should match those files in `chroma_output` that starts with `_Qt`. The files starting with `_Wt` should match that of `weinberg` flow observable. Both should match down to the \~15 decimal, thus serving as good validation test.
+
+#### Chroma load example
 Some LQCD programs saves the configurations with reversed byte order. An example of such a program is Chroma. To load and run configurations from Chroma, one can do the following,
 ```
 python createJobs.py setup local 8 -rn chromaTest -N 16 -NT 32 -b 6.0 -lcfg input/chroma_config -fobs topct -obs topct -chroma -NFlows 10 -fEps 0.1
