@@ -22,7 +22,7 @@ def get_arg_max_index(N):
     """For getting the maximum index of an list."""
     val = N[0]
     index = 0
-    for i in xrange(4):
+    for i in range(4):
         if N[i] > val:
             val = N[i]
             index = i
@@ -43,7 +43,7 @@ def create_square(numprocs, NSpatial, NTemporal):
 
     restProc = numprocs;
     N = [0,0,0,0]
-    for i in xrange(3):
+    for i in range(3):
         N[i] = NSpatial
         N[3] = NTemporal;
     while restProc >= 2:
@@ -149,7 +149,7 @@ class JobCreator:
     def _createDictionary(self, **kwargs):
         return_dict = {}
         ordered_dict_list = []
-        for key, value in kwargs.items():
+        for key, value in list(kwargs.items()):
             return_dict[key] = value
         return return_dict
 
@@ -179,6 +179,9 @@ class JobCreator:
                 # Only in the case we are not creating any scalar fields
                 if not self.create_fields_folders:
                     self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables"))
+
+                if not os.path.isdir(os.path.join(self.outputFolder, self.runName, "scalar_fields")) and self.create_fields_folders:
+                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields"))
 
                 for fobs in self.flow_observables:
 
@@ -212,7 +215,7 @@ class JobCreator:
             if not self.dryrun:
                 os.mkdir(os.path.join(self.base_folder, folder))
             if self.dryrun or self.verbose:
-                print "> mkdir %s" % os.path.join(self.base_folder, folder)
+                print("> mkdir %s" % os.path.join(self.base_folder, folder))
 
     def _check_lcfgr_path(self, config_dict):
         """Performs a check when loading and running from a configuration, 
@@ -246,7 +249,7 @@ class JobCreator:
         cleaned_p = (os.sep + os.path.normpath(cleaned_p) + os.sep).replace("//", os.sep)
 
         if self.verbose or self.dryrun and not quiet:
-            print "Cleaned path from:\n    %s\nto\n    %s" % (p, cleaned_p)
+            print("Cleaned path from:\n    %s\nto\n    %s" % (p, cleaned_p))
 
         return cleaned_p
 
@@ -327,12 +330,12 @@ class JobCreator:
 
         # Prints configuration file content if verbose or dryrun is true
         if self.dryrun or self.verbose:
-            print "Writing json configuration file at location {0:<s}:\n".format(json_fpath)
-            print json.dumps(json_dict, indent=4, separators=(", ", ": ")), "\n"
+            print("Writing json configuration file at location {0:<s}:\n".format(json_fpath))
+            print(json.dumps(json_dict, indent=4, separators=(", ", ": ")), "\n")
 
         # Creates configuration file
         if not self.dryrun:
-            with file(json_fpath, "w+") as json_file:
+            with open(json_fpath, "w+") as json_file:
                 json.dump(json_dict, json_file, indent=4)
             shutil.copy(json_fpath, "%s.bak" % json_cfgpath)
 
@@ -441,8 +444,8 @@ class JobCreator:
                 nodes = threads/tasks_per_node
             if threads % tasks_per_node != 0:
                 if ignore_tasks_per_node:
-                    print "Warning: Tasks(number of threads) are not divisible by 16: {0:d} % {1:d} = {2:d}".format(
-                        threads, tasks_per_node, threads % tasks_per_node)
+                    print("Warning: Tasks(number of threads) are not divisible by 16: {0:d} % {1:d} = {2:d}".format(
+                        threads, tasks_per_node, threads % tasks_per_node))
                 else:
                     raise ValueError("Tasks(number of threads) have to be divisible by 16.")
 
@@ -519,7 +522,7 @@ class JobCreator:
             outfile.write(content)
             outfile.close()
         if self.dryrun or self.verbose:
-            print "Writing %s to slurm batch file: \n\n" % job, content, "\n"
+            print("Writing %s to slurm batch file: \n\n" % job, content, "\n")
 
         # Sets up command based on system we have.
         if system == "slurm":
@@ -529,7 +532,7 @@ class JobCreator:
 
         # Submits job
         if self.dryrun or self.verbose:
-            print "> %s %s" % tuple(cmd)
+            print("> %s %s" % tuple(cmd))
             ID = 123456
         if not self.dryrun:
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
@@ -543,7 +546,7 @@ class JobCreator:
                     tmp2 = tmp2.split(".")[0]
                     ID = int(tmp2) # ID of laconia job
             except IndexError:
-                print "ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0)
+                print("ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0))
 
         # Stores job in job dictionary
         job_dict =  self._createDictionary( 
@@ -573,7 +576,7 @@ class JobCreator:
         if not self.dryrun:
             os.system('mv %s job_%d.sh' % (job, ID))
         if self.dryrun or self.verbose:
-            print '> mv %s job_%d.sh' % (job, ID)
+            print('> mv %s job_%d.sh' % (job, ID))
 
         # Updates ID file only if it is not a dryrun
         if not self.dryrun:
@@ -583,10 +586,10 @@ class JobCreator:
         """Rewrites the .ids.txt file with additional job ID."""
 
         if self.dryrun:
-            print "Updating %s file." % self.idFilesName
+            print("Updating %s file." % self.idFilesName)
         else:
             if self.verbose:
-                print "Updating %s file." % self.idFilesName
+                print("Updating %s file." % self.idFilesName)
             with open(self.idFilesName, "w+") as f:
                 json.dump(self.jobs, f, indent=4)
 
@@ -606,7 +609,7 @@ class JobCreator:
         if not self.dryrun:
             os.system("{0:s} {1:d}".format(system_cmd, jobID))
         if self.dryrun or self.verbose:
-            print "> {0:s} {1:d}".format(system_cmd, jobID)
+            print("> {0:s} {1:d}".format(system_cmd, jobID))
 
     def cancel_all_jobs(self):
         """Cancels all jobs."""
@@ -615,13 +618,13 @@ class JobCreator:
             if not self.dryrun:
                 os.system("{0:s} {1:d}".format(system_cmd, int(i)))
             if self.dryrun or self.verbose:
-                print "> {0:s} {1:d}".format(system_cmd, int(i))
+                print("> {0:s} {1:d}".format(system_cmd, int(i)))
 
     def list_jobs(self):
         """Shows jobs with ID numbers."""
 
         if len(self.jobs) == 0:
-            print "No jobs running"
+            print("No jobs running")
         else:
             # Takes the jobs out of their dictionary, and zips values and keys together for creating a header
             # Sorts jobs by their ID. Newest are printed at the bottom
@@ -629,10 +632,10 @@ class JobCreator:
 
             # Will order list based on the last header element, e.g. the most updated one
             last_job = self.jobs[sorted_job_keys[-1]]
-            last_job_sorted = sorted(zip(last_job.keys(), last_job.values()), key=lambda i: i[-1][0])
+            last_job_sorted = sorted(zip(list(last_job.keys()), list(last_job.values())), key=lambda i: i[-1][0])
 
             # Creates the header
-            print "{0:<{w}}".format("ID", w=10),
+            print("{0:<{w}}".format("ID", w=10), end=' ')
 
             # Sorts based on the number give nto the header element
             for elem in last_job_sorted:
@@ -643,20 +646,20 @@ class JobCreator:
                 width = elem[1][1]
                 
                 # Prints the column name
-                print "{0:<{w}}".format(name, w=width),
+                print("{0:<{w}}".format(name, w=width), end=' ')
 
             # Prints the jobs
             for jobID in sorted_job_keys:
                 # Prints job ID
-                print "\n{0:<{w}}".format(jobID, w=10),
+                print("\n{0:<{w}}".format(jobID, w=10), end=' ')
 
                 # Takes the jobs out of their dictionary, and zips values and keys together for printing their values
-                for i,item in enumerate(sorted(zip(self.jobs[jobID].keys(), self.jobs[jobID].values()), key=lambda i: i[-1][0])):
+                for i,item in enumerate(sorted(zip(list(self.jobs[jobID].keys()), list(self.jobs[jobID].values())), key=lambda i: i[-1][0])):
                     # Width based on the last job committed
                     width = last_job_sorted[i][1][1]
 
                     # Prints the item for the job id
-                    print "{0:<{w}}".format(item[1][-1], w=width),
+                    print("{0:<{w}}".format(item[1][-1], w=width), end=' ')
 
     def print_job_id_info(self, jobID):
         """
@@ -667,20 +670,20 @@ class JobCreator:
         """
         jobID = str(jobID)
         if len(self.jobs) == 0:
-            print "No jobs running"
+            print("No jobs running")
         else:
             # Takes the jobs out of their dictionary, and zips values and keys together for creating a header
-            sorted_jobs = sorted(zip(self.jobs.values()[0].keys(), self.jobs.values()[0].values()), key=lambda i: i[-1][0])
-            print "{0:<{w}}".format("ID", w=10),
+            sorted_jobs = sorted(zip(list(self.jobs.values())[0].keys(), list(self.jobs.values())[0].values()), key=lambda i: i[-1][0])
+            print("{0:<{w}}".format("ID", w=10), end=' ')
             for i in sorted_jobs:
-                print "{0:<{w}}".format(i[0], w=i[-1][1]),
+                print("{0:<{w}}".format(i[0], w=i[-1][1]), end=' ')
 
             # Prints a single job
-            print "\n{0:<{w}}".format(jobID, w=10),
+            print("\n{0:<{w}}".format(jobID, w=10), end=' ')
 
             # Takes the jobs out of their dictionary, and zips values and keys together for printing their values
-            for item in sorted(zip(self.jobs[jobID].keys(), self.jobs[jobID].values()), key=lambda i: i[-1][0]):
-                print "{0:<{w}}".format(item[-1][-1], w=item[-1][1]),
+            for item in sorted(zip(list(self.jobs[jobID].keys()), list(self.jobs[jobID].values())), key=lambda i: i[-1][0]):
+                print("{0:<{w}}".format(item[-1][-1], w=item[-1][1]), end=' ')
 
     def clear_id_file(self):
         """Clears the ID file."""
@@ -689,7 +692,7 @@ class JobCreator:
         if not self.dryrun:
             self.update_id_file()
         if self.dryrun or self.verbose:
-            print "Clearing ID file."
+            print("Clearing ID file.")
 
 def main(args):
     # Default configuration file.
@@ -990,7 +993,7 @@ def main(args):
             configuration["flowObservables"] = []
         if args.debug != False:
             configuration["debug"] = args.debug
-        for key in config_default.keys():
+        for key in list(config_default.keys()):
             if not key in configuration:
                 configuration[key] = config_default[key]
 
@@ -1233,7 +1236,7 @@ def main(args):
             configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
             configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
 
-        for key in config_default.keys():
+        for key in list(config_default.keys()):
             if not key in configuration:
                 configuration[key] = config_default[key]
 
@@ -1243,7 +1246,7 @@ def main(args):
         """
         ERROR CATCHING
         """
-        print 'Parse error: %s \n--> exiting' % args
+        print('Parse error: %s \n--> exiting' % args)
         exit(0)
 
 if __name__ == '__main__':
