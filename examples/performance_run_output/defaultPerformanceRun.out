@@ -1,0 +1,30 @@
+> mpirun -n 8 build/GluonicLQCD input/config_defaultPerformanceRun.json
+
+Running performance tests for exponentiation timing with 100000 samples.
+Luscher exponentiation time:          0.18 seconds
+Morningstar exponentiation time:      0.05 seconds
+Taylor2 exponentiation time:          0.01 seconds
+Taylor4 exponentiation time:          0.03 seconds
+Taylor16 exponentiation time:         0.12 seconds
+Morningstar/Taylor16: 0.3927
+
+Comparing first element of test matrix
+Luscher:       0.9367633651597754   abs(Luscher - Taylor16)     = 5.640052869250178347e-04
+Morningstar:   0.9361993598728502   abs(Morningstar - Taylor16) = 2.220446049250313081e-16
+Taylor2:       0.9352664954905464   abs(Taylor2 - Taylor16)     = 9.328643823039994842e-04
+Taylor4:       0.9362051149151238   abs(Taylor4 - Taylor16)     = 5.755042273403176978e-06
+Taylor16:      0.9361993598728504
+
+Running performance tests for random SU3 matrix generation timing with 100000 samples.
+RST random generation time:       0.02 seconds (2.43E-07 seconds per test)
+Full random generation time:      0.04 seconds (3.85E-07 seconds per test)
+
+Running timing of SU3 derivation methods with 100 full lattice derivation tests.
+Luscher derivation time:          1.04 seconds (2.61E-03 seconds per lattice derivative)
+Morningstar derivation time:      1.40 seconds (3.51E-03 seconds per lattice derivative)
+Morningstar/Luscher: 1.3456
+
+Comparison of the first element of the matrix in the Lattice to each method:
+Luscher:     3.12022816933973379e-01
+Morningstar: 3.12022816933973379e-01
+Absolute difference: 0.0000000000000000e+00

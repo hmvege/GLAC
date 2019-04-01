@@ -32,7 +32,7 @@ qmake ../GLAC/GLAC.pro
 make
 ```
 
-#### A guide to GLAC
+#### A (short) guide to GLAC
 To run GLAC through its Python interface, you will for the moment being have to use python 2.7.
 
 Example:
@@ -73,6 +73,9 @@ python createJobs.py --dryrun load weinberg_config.py -bf ${base directory}
 ```
 This will then print out every detail of the run, without submitting the job. Useful for double check the settings without actually submitting.
 
+For a more extensive guide to GLAC, see the [examples folder](https://github.com/hmvege/GLAC/tree/master/examples). For more implementation specific details, see the [GLAC Documentation](http://hmvege.github.io/GLAC/html/index.html).
+
+
 #### Additional resources
 * The analysis code used for this thesis program can be seen in [LatticeAnalyser](https://github.com/hmvege/LatticeAnalyser).
 * To generate visualizations of the topological charge or energy, we used a program called [LatViz](https://github.com/hmvege/LatViz).
@@ -80,4 +83,4 @@ This will then print out every detail of the run, without submitting the job. Us
 * To read `.json`-files, we make use of the highly recommended json reader provided [here](https://github.com/nlohmann/json).
 
 #### Todo's
-[ ] Add check in `createJobs.py` such that when loading a single gauge configurations and generating new ones, we make sure that no previous gauge configurations of the names we will generates exist in the provided folder. Do this perhaps for observables as well.
+* [ ] Add check in `createJobs.py` such that when loading a single gauge configurations and generating new ones, we make sure that no previous gauge configurations of the names we will generates exist in the provided folder. Do this perhaps for observables as well.

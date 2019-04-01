@@ -144,21 +144,29 @@ Run parameters:
 
 
 ## Example: `perf_test`
-The `perf_test` tells GLAC to perform performance tests. An example is
+The `perf_test` tells GLAC to run performance tests, i.e. time how long certain operations take. Useful when trying to optimize certain parts. Should be extendable for future improvements.
 ```
-python2 createJobs.py -v perf_test local 8 -NExpTests 100 -TaylorPolDegree 16 -NDerivativeTests 10 -NRandTests 1000000 
+python2 createJobs.py perf_test local 8 -NExpTests 100000 -TaylorPolDegree 16 -NDerivativeTests 100 -NRandTests 100000
 ```
 
+Run parameters:
+* `-NExpTests 100000` will run 100000 exponentiation tests, timing each method available.
+* `-TaylorPolDegree 16` highest polynomial degree to test for in the exponentiation tests.
+* `-NDerivativeTests 100` number of derivation tests to run for when comparing the explicit and default derivative methods.
+* `-NRandTests 100000` number of random matrix generation tests to run.
 
 
 
 
 ## Example: `field_density`
-The `field_density` loads a configurations and flows it, storing the observable at every lattice point at a given frequency.
+The `field_density` loads a configurations and flows it, storing the observable at every lattice point at a given frequency. This is intended for generating configurations to be used by [LatViz](https://github.com/hmvege/LatViz). For optimal results, one should use large lattice as that will provide higher resolution.
 
 ```
-python2 createJobs.py -v field_density -s local -nt 8 -lcfg testRunLocal/testRunLocal_beta6.000000_spatial8_temporal16_threads8_config00000.bin -rn lattice-density-test1 -N 8 -NT 16 -b 6.0 -sd 8 8 4 4 -NFlows 1000 -NCfgs 0
+python2 createJobs.py field_density -s local -nt 8 -lcfg testRunLocal/{large-config} -rn lattice-density-test1 -N 32 -NT 64 -b 6.2 -NFlows 1000 -NCfgs 0 -sf 10
 ```
+
+Run parameters:
+* `-sf 10` specifies the sampling frequency, i.e. how often we will write the entire lattice to file. In this case we will sample and store the field configurations every 10th flow step.
 
 
 
@@ -172,6 +180,7 @@ Some LQCD programs saves the configurations with reversed byte order. An example
 python createJobs.py setup local 8 -rn chromaTest -N 16 -NT 32 -b 6.0 -lcfg input/chroma_config -fobs topct -obs topct -chroma -NFlows 10 -fEps 0.1
 mpirun -n 8 build/GLAC input/config_chromaTest.json
 ```
+
 Run parameters:
 * `local` specifies that we will run on local computer. The next line is the run command.
 * `8` specifies number of cores to utilize, which is needed in order to verify that the lattice size is valid.
