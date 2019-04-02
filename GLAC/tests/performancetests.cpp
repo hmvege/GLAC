@@ -533,7 +533,7 @@ void PerformanceTests::testShift()
         }
     }
 
-    unsigned int NTests = 100;
+    unsigned int NTests = 1000;
 
     // Timers
     double timer = 0;
