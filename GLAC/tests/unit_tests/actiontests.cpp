@@ -132,10 +132,10 @@ bool ActionTests::testExplicitExpAction()
 {
     bool passed = true;
 
-    WilsonExplicitExp S;
+    WilsonExplicitDer S;
 
     if (m_verbose && m_processRank == 0) {
-        cout << "Testing WilsonExplicitExp." << endl;
+        cout << "Testing WilsonExplicitDer." << endl;
     }
     passed = testActionDeltaS(S);
 //    passed = testActionDerivative(S);

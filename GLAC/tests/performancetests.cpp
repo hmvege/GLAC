@@ -16,7 +16,7 @@
 
 // Action imports
 #include "actions/wilsongaugeaction.h"
-#include "actions/wilsonexplicitexp.h"
+#include "actions/wilsonexplicitder.h"
 
 // Flow import
 #include "flow/flow.h"
@@ -338,8 +338,8 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
     unsigned long int subLatticeSize = Parameters::getSubLatticeSize();
 
     // Initiates the different types of action we will test
-    WilsonExplicitExp LusAct;
-    WilsonGaugeAction MorAct;
+    WilsonExplicitDer WilsonExpDerAct;
+    WilsonGaugeAction WilsonGaugeAct;
 
     // Generates test lattices and allocates memeory
     Lattice<SU3> *testLattice = new Lattice<SU3>[4];
@@ -364,7 +364,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
     preUpdate = steady_clock::now();
     for (unsigned long int i = 0; i < NTests; i++) {
         for (int mu = 0; mu < 4; mu++) {
-            MorningstarLattice[mu] = MorAct.getActionDerivative(testLattice,mu);
+            MorningstarLattice[mu] = WilsonGaugeAct.getActionDerivative(testLattice,mu);
         }
     }
     morningstarTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
@@ -373,7 +373,7 @@ void PerformanceTests::testDerivativeTimeAndAccuracy(unsigned int NTests)
     preUpdate = steady_clock::now();
     for (unsigned long int i = 0; i < NTests; i++) {
         for (int mu = 0; mu < 4; mu++) {
-            ExplicitExpLattice[mu] = LusAct.getActionDerivative(testLattice,mu);
+            ExplicitExpLattice[mu] = WilsonExpDerAct.getActionDerivative(testLattice,mu);
         }
     }
     luscherTimer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
@@ -448,29 +448,60 @@ void PerformanceTests::testFlow()
         printf("\nRunning flow performance tests for a lattice of size: %d^3 x %d", m_N, m_NT);
     }
 
+    unsigned int NFlow = 100;
+
+    // Timers
+    double timerWilsonGauge = 0;
+    double timerWilsonExplicit = 0;
+    steady_clock::time_point preUpdate;
+
+    // Scopes the test to save memory in the flow method.
+    {
+        // Runs performance test with Wilson Gauge Action
+        WilsonGaugeAction S1;
+        Flow flow(&S1);
+
+
+        preUpdate = steady_clock::now();
+
+        for (unsigned int iflow = 0; iflow < NFlow; ++iflow) {
+            flow.flowField(L);
+        }
+
+        timerWilsonGauge = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
+        if (m_processRank == 0) {
+            printf("\nFlow test for Wilson Action:  %8.4f seconds (%8.4E seconds per flow step)",timerWilsonGauge,timerWilsonGauge/double(NFlow));
+        }
+
+    }
+
+    // Resets the lattice
     for (unsigned int mu = 0; mu < 4; ++mu) {
         for (unsigned int isite = 0; isite < L[0].m_latticeSize; ++isite) {
             L[mu][isite] = m_SU3Generator->generateRST();
         }
     }
 
-    unsigned int NFlow = 50;
+    // Scopes the test to save memory in the flow method.
+    {
+        // Runs performance test with Wilson Explicit Exponential Action
+        // Sets new flow
+        WilsonExplicitDer S2;
+        Flow flow2(&S2);
 
-    WilsonGaugeAction S;
-    Flow flow(&S);
+        preUpdate = steady_clock::now();
+        for (unsigned int iflow = 0; iflow < NFlow; ++iflow) {
+            flow2.flowField(L);
+        }
 
-    // Timers
-    double timer = 0;
-    steady_clock::time_point preUpdate;
-    preUpdate = steady_clock::now();
-
-    for (unsigned int iflow = 0; iflow < NFlow; ++iflow) {
-        flow.flowField(L);
+        timerWilsonExplicit = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
+        if (m_processRank == 0) {
+            printf("\nFlow test for Wilson explicit Action:  %8.4f seconds (%8.4E seconds per flow step)",timerWilsonExplicit,timerWilsonExplicit/double(NFlow));
+        }
     }
 
-    timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
     if (m_processRank == 0) {
-        printf("\nFlow test:  %8.4f seconds (%8.4E seconds per flow step)",timer,timer/double(NFlow));
+        printf("\nFlow test improvement for (Wilson Gauge Action) / (Wilson explicit Action) = %8.4f\n", timerWilsonGauge/timerWilsonExplicit);
     }
 
     delete [] L;

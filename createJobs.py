@@ -15,7 +15,7 @@ AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct", "weinberg", "weinber
 # AVAILABLE_SCALAR_FIELDS = ["plaq", "topc", "energy", "weinberg"]
 AVAILABLE_SCALAR_FIELDS = ["energyTopcFieldDensity"]
 AVAILABLE_EXP_FUNCS = ["morningstar", "luscher", "taylor2", "taylor4"]
-AVAILABLE_ACTIONS = ["luscher", "wilson"]
+AVAILABLE_ACTIONS = ["wilson", "wilsonExplicitDer"]
 AVAILABLE_HPC_SYSTEMS = ["slurm", "torque", "local"]
 
 def get_arg_max_index(N):
@@ -718,7 +718,7 @@ def main(args):
         "hotStart"                  : False,
         "RSTHotStart"               : False,
         "expFunc"                   : "morningstar",
-        "action"                    : "wilson", # options: wilson, luscher - both first order
+        "action"                    : "wilsonExplicitDer", # options: wilson, wilsonExplicitDer - both first order
         "observables"               : ["plaq"],
         "flowObservables"           : ["plaq","topc","energy"],
         "load_field_configs"        : False,

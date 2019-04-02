@@ -15,6 +15,6 @@
 
 #include "action.h"
 #include "wilsongaugeaction.h"
-#include "wilsonexplicitexp.h"
+#include "wilsonexplicitder.h"
 
 #endif // ACTIONS_H

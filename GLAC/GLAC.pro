@@ -7,7 +7,6 @@ SOURCES += main.cpp \
     system.cpp \
     actions/action.cpp \
     actions/wilsongaugeaction.cpp \
-    actions/wilsonexplicitexp.cpp \
     observables/correlator.cpp \
     observables/plaquette.cpp \
     observables/topologicalcharge.cpp \
@@ -48,13 +47,13 @@ SOURCES += main.cpp \
     tests/unit_tests/su2operations.cpp \
     tests/unit_tests/complexoperations.cpp \
     tests/unit_tests/testcore.cpp \
-    tests/unit_tests/su3exptest.cpp
+    tests/unit_tests/su3exptest.cpp \
+    actions/wilsonexplicitder.cpp
 
 HEADERS += \
     system.h \
     actions/action.h \
     actions/wilsongaugeaction.h \
-    actions/wilsonexplicitexp.h \
     actions/actions.h \
     observables/correlator.h \
     observables/plaquette.h \
@@ -104,7 +103,8 @@ HEADERS += \
     tests/unit_tests/su2operations.h \
     tests/unit_tests/complexoperations.h \
     tests/unit_tests/testcore.h \
-    tests/unit_tests/su3exptest.h
+    tests/unit_tests/su3exptest.h \
+    actions/wilsonexplicitder.h
 
 # MPI Settings
 QMAKE_CXX = mpicxx

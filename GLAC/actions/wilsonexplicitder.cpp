@@ -1,9 +1,9 @@
-#include "wilsonexplicitexp.h"
+#include "wilsonexplicitder.h"
 #include "config/parameters.h"
 #include "math/functions.h"
 #include "parallelization/communicator.h"
 
-WilsonExplicitExp::WilsonExplicitExp(): Action()
+WilsonExplicitDer::WilsonExplicitDer(): Action()
 {
     m_beta = Parameters::getBeta();
     m_multiplicationFactor = -m_beta/3.0;
@@ -16,16 +16,16 @@ WilsonExplicitExp::WilsonExplicitExp(): Action()
     m_tempStaple2.allocate(m_N);
 }
 
-WilsonExplicitExp::~WilsonExplicitExp()
+WilsonExplicitDer::~WilsonExplicitDer()
 {
 }
 
-double WilsonExplicitExp::getDeltaAction(SU3 U, SU3 UPrime)
+double WilsonExplicitDer::getDeltaAction(SU3 U, SU3 UPrime)
 {
     return traceRealMultiplication((UPrime - U),m_staple)*m_multiplicationFactor;
 }
 
-void WilsonExplicitExp::computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu)
+void WilsonExplicitDer::computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu)
 {
     m_staple.zeros();
     updateMuIndex(mu);
@@ -51,7 +51,7 @@ void WilsonExplicitExp::computeStaple(Lattice<SU3> *lattice, int i, int j, int k
     }
 }
 
-Lattice<SU3> WilsonExplicitExp::getActionDerivative(Lattice<SU3> *lattice, int mu)
+Lattice<SU3> WilsonExplicitDer::getActionDerivative(Lattice<SU3> *lattice, int mu)
 {
     /*!
      * A slightly modified version of the Action derivative

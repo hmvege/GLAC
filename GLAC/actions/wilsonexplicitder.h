@@ -1,5 +1,5 @@
 /**
- * \class WilsonExplicitExp
+ * \class WilsonExplicitDer
  *
  * \brief An implementation of the Wilson gauge action,
  *
@@ -16,12 +16,12 @@
  * \date 2017-2019
  * \copyright MIT Licence
  */
-#ifndef WILSONEXPLICITEXP_H
-#define WILSONEXPLICITEXP_H
+#ifndef WILSONEXPLICITDER_H
+#define WILSONEXPLICITDER_H
 
 #include "action.h"
 
-class WilsonExplicitExp : public Action
+class WilsonExplicitDer : public Action
 {
 private:
     /*!
@@ -63,8 +63,8 @@ private:
     Lattice<SU3> m_latticeStaple,m_tempStaple1,m_tempStaple2;
 
 public:
-    WilsonExplicitExp();
-    ~WilsonExplicitExp();
+    WilsonExplicitDer();
+    ~WilsonExplicitDer();
     double getDeltaAction(SU3 U, SU3 UPrime);
     void computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu);
     Lattice<SU3> getActionDerivative(Lattice<SU3> *lattice, int mu);
@@ -94,4 +94,4 @@ public:
     }
 };
 
-#endif // WILSONEXPLICITEXP_H
+#endif // WILSONEXPLICITDER_H
