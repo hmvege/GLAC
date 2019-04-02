@@ -129,7 +129,8 @@ inline SU2 &SU2::operator*=(SU2 B)
     temp[6] = mat[4]*B.mat[2] - mat[5]*B.mat[3] + mat[6]*B.mat[6] - mat[7]*B.mat[7];
     temp[7] = mat[4]*B.mat[3] + mat[5]*B.mat[2] + mat[6]*B.mat[7] + mat[7]*B.mat[6];
 
-    std::memcpy(mat, temp, sizeof(double)*8);
+//    std::memcpy(mat, temp, 64);
+    std::copy(temp, temp+8, mat);
 
     return *this;
 }

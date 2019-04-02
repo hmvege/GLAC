@@ -214,7 +214,8 @@ inline SU3 &SU3::operator*=(SU3 B)
 //    std::swap(mat, temp);
 //    mat = std::move(temp);
 //    std::memmove(mat, temp, 144); // sizeof(double)*144
-    std::memcpy(mat, temp, 144); // sizeof(double)*144
+//    std::memcpy(mat, temp, 144); // sizeof(double)*144
+    std::copy(temp, temp+18, mat);
 
     return *this;
 }

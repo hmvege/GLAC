@@ -65,16 +65,16 @@ void PerformanceTests::run()
      * Main function for running performance tests.
      */
 //    m_NTaylorDegree = Parameters::getTaylorPolDegree();
-//    if (Parallel::Communicator::getProcessRank() == 0) {
+    if (Parallel::Communicator::getProcessRank() == 0) {
 //        testExponentiationTime(Parameters::getNExpTests());
 //        testExponentiationAccuracy();
 //        testRandomGenerators(Parameters::getNRandTests());
-//        testMatrixMultiplication();
-//    }
+        testMatrixMultiplication();
+    }
     Parallel::Communicator::setBarrierActive();
 //    testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
-    testShift();
-    testFlow();
+//    testShift();
+//    testFlow();
 }
 
 void PerformanceTests::testExponentiationTime(unsigned int NTests)
