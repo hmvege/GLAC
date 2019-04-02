@@ -1,4 +1,8 @@
 #include "iotests.h"
+
+// Including chrono for taking IO times.
+#include <chrono>
+
 #include "parallelization/parallel.h"
 #include "config/parameters.h"
 #include "io/fieldio.h"

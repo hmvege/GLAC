@@ -1,4 +1,8 @@
 #include "testcore.h"
+
+// Including ctime for std::time(nullptr)
+#include <ctime>
+
 #include "parallelization/parallel.h"
 #include "config/parameters.h"
 #include "io/fieldio.h"
