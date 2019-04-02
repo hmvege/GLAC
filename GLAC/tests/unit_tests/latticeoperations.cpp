@@ -1,10 +1,12 @@
 #include "latticeoperations.h"
 #include "parallelization/parallel.h"
 #include "config/parameters.h"
+#include "parallelization/index.h"
 
 // Needed for performing gauge invariance test
 #include "io/fieldio.h"
 #include "observables/plaquette.h"
+
 
 LatticeOperations::LatticeOperations()
 {
@@ -327,6 +329,303 @@ bool LatticeOperations::testLatticeInverse() {
     return passed;
 }
 
+bool LatticeOperations::testMakeHermitian() {
+    /*
+     * Tests the make Hermitian function in the lattice, and compares it with the SU3 method.
+     */
+    bool passed = true ;
+    SU3 UHermitian = m_SU3Generator->generateRST();
+    Lattice<SU3> L;
+    L.allocate(m_dim);
+
+    // Copies content
+    for (unsigned int isite = 0; isite < L.m_latticeSize; isite++) {
+        L[isite] = UHermitian;
+    }
+    UHermitian.makeHermitian();
+    L.makeHermitian();
+
+    for (unsigned int isite = 0; isite < L.m_latticeSize; isite++) {
+        if (!compareSU3(UHermitian, L[isite])) {
+            passed = false;
+            cout << "    FAILED: makeHermitian() method of a SU3 lattice is not correct." << endl;
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: makeHermitian() of a SU3 lattice is correct." << endl;
+    return passed;
+}
+
+bool LatticeOperations::testMakeAntiHermitian() {
+    /*
+     * Tests the make anti-Hermitian function in the lattice, and compares it with the SU3 method.
+     */
+    bool passed = true ;
+    SU3 UHermitian = m_SU3Generator->generateRST();
+    Lattice<SU3> L;
+    L.allocate(m_dim);
+
+    // Copies content
+    for (unsigned int isite = 0; isite < L.m_latticeSize; isite++) {
+        L[isite] = UHermitian;
+    }
+    UHermitian.makeAntiHermitian();
+    L.makeAntiHermitian();
+
+    for (unsigned int isite = 0; isite < L.m_latticeSize; isite++) {
+        if (!compareSU3(UHermitian, L[isite])) {
+            passed = false;
+            cout << "    FAILED: makeAntiHermitian() method of a SU3 lattice is not correct." << endl;
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: makeAntiHermitian() of a SU3 lattice is correct." << endl;
+    return passed;
+}
+
+bool LatticeOperations::testLatticeSumSpatial() {
+    /*
+     * Tests the sum spatial function in the lattice, and compares it with the expected answer.
+     */
+    bool passed = true ;
+
+    // Populates vector for storing the elements that will be stored in the spatial dimensions at each t.
+    std::vector<double> randomVector(m_dim[3], 0);
+    for (unsigned int t = 0; t < m_dim[3]; ++t) {
+        randomVector[t] = m_uniform_distribution(m_generator);
+    }
+
+    std::vector<unsigned int> m_dimTemp = Parallel::Index::getN();
+    Parallel::Index::setN(m_dim);
+    Lattice<double> L;
+    L.allocate(m_dim);
+    L.zeros();
+
+    // Copies content
+    for (unsigned int t = 0; t < L.m_dim[3]; t++) {
+        for (unsigned int x = 0; x < L.m_dim[0]; x++) {
+            for (unsigned int y = 0; y < L.m_dim[1]; y++) {
+                for (unsigned int z = 0; z < L.m_dim[2]; z++) {
+                    L[Parallel::Index::getIndex(x, y, z, t)] = randomVector[t];
+                }
+            }
+        }
+    }
+
+    std::vector<double> LSummed = sumSpatial(L);
+
+    unsigned int spatialVolume = m_dim[0]*m_dim[1]*m_dim[2];
+    std::vector<double> tmp(L.m_dim[3], 0);
+
+    for (unsigned int t = 0; t < L.m_dim[3]; ++t) {
+        for (unsigned int icube = 0; icube < spatialVolume; ++icube) {
+            tmp[t] += randomVector[t];
+        }
+    }
+    randomVector = tmp;
+
+    for (unsigned int t = 0; t < L.m_dim[3]; t++) {
+        if (fabs(LSummed[t] - randomVector[t]) > m_machineEpsilon) {
+            passed = false;
+            cout << "    FAILED: sumSpatial() method of a double lattice is not correct." << endl;
+            printf("     Result: LatticeSummed[%d] - Vec[%d] = %.16f - %.16f = %.16f.\n", t, t,
+                   LSummed[t], (spatialVolume*randomVector[t]),
+                   LSummed[t] - (spatialVolume*randomVector[t]));
+            break;
+        }
+    }
+
+    // Resets the Index lattice dimensions.
+    Parallel::Index::setN(m_dimTemp);
+
+    if (m_verbose && passed) cout << "    SUCCESS: sumSpatial() of a double lattice is correct." << endl;
+    return passed;
+}
+
+bool LatticeOperations::testLatticeRealTraceMultiplication() {
+    /*
+     * Test of the lattice realTraceMultiplication method.
+     */
+    bool passed = true ;
+    SU3 UTest1 = m_SU3Generator->generateRST();
+    SU3 UTest2 = m_SU3Generator->generateRST();
+    Lattice<SU3> L1, L2;
+    L1.allocate(m_dim);
+    L2.allocate(m_dim);
+    for (unsigned int isite = 0; isite < L1.m_latticeSize; ++isite) {
+        L1[isite] = UTest1;
+        L2[isite] = UTest2;
+    }
+    Lattice<double> LResult = realTraceMultiplication(L1, L2);
+    double UResult = (UTest1*UTest2).trace().re();
+    for (unsigned int isite = 0; isite  < LResult.m_latticeSize; ++isite ) {
+        if (fabs(LResult[isite] - UResult) > 1e-15) {
+            passed = false;
+            cout << "    FAILED: realTraceMultiplication() of a SU3 lattice is not correct." << endl;
+            printf("    Results: Lattice - U = %.16f - %.16f = %.16f\n", LResult[isite], UResult, LResult[isite] - UResult);
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: realTraceMultiplication() of a SU3 lattice is correct." << endl;
+
+    return passed;
+}
+
+bool LatticeOperations::testLatticeImagTraceMultiplication() {
+    /*
+     * Test of the lattice imagTraceMultiplication method.
+     */
+    bool passed = true ;
+    SU3 UTest1 = m_SU3Generator->generateRST();
+    SU3 UTest2 = m_SU3Generator->generateRST();
+    Lattice<SU3> L1, L2;
+    L1.allocate(m_dim);
+    L2.allocate(m_dim);
+    for (unsigned int isite = 0; isite < L1.m_latticeSize; ++isite) {
+        L1[isite] = UTest1;
+        L2[isite] = UTest2;
+    }
+    Lattice<double> LResult = imagTraceMultiplication(L1, L2);
+    double UResult = (UTest1*UTest2).trace().im();
+    for (unsigned int isite = 0; isite  < LResult.m_latticeSize; ++isite ) {
+        if (fabs(LResult[isite] - UResult) > 1e-15) {
+            passed = false;
+            cout << "    FAILED: imagTraceMultiplication() of a SU3 lattice is not correct." << endl;
+            printf("    Results: Lattice - U = %.16f - %.16f = %.16f\n", LResult[isite], UResult, LResult[isite] - UResult);
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: imagTraceMultiplication() of a SU3 lattice is correct." << endl;
+
+    return passed;
+}
+
+bool LatticeOperations::testTranpose() {
+    /*
+     * Test of the lattice transpose method.
+     */
+    bool passed = true;
+    SU3 UTest = m_SU3Generator->generateRST();
+    Lattice<SU3> L1, L2;
+    L1.allocate(m_dim);
+    L2.allocate(m_dim);
+    for (unsigned int isite = 0; isite < L1.m_latticeSize; ++isite) {
+        L1[isite] = UTest;
+        L2[isite] = UTest;
+    }
+
+    Lattice<SU3> LResult = transpose(L1*L2);
+    L2 = transpose(L1);
+
+    SU3 UTestTransposed1 = UTest;
+    UTestTransposed1.transpose();
+
+    SU3 UTestTransposed2 = (UTest*UTest);
+    UTestTransposed2.transpose();
+
+    for (unsigned int isite = 0; isite  < L2.m_latticeSize; isite++) {
+        if (!compareSU3(UTestTransposed1, L2[isite])) {
+            passed = false;
+            cout << "    FAILED: & tranpose() of a SU3 lattice is not correct." << endl;
+            break;
+        }
+        if (!compareSU3(UTestTransposed2, LResult[isite])) {
+            passed = false;
+            cout << "    FAILED: && tranpose() of a SU3 lattice is not correct." << endl;
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: tranpose() of a SU3 lattice is correct." << endl;
+
+    return passed;
+}
+
+bool LatticeOperations::testConjugate() {
+    /*
+     * Test of the lattice conjugate method.
+     */
+    bool passed = true;
+    SU3 UTest = m_SU3Generator->generateRST();
+    Lattice<SU3> L1, L2;
+    L1.allocate(m_dim);
+    L2.allocate(m_dim);
+    for (unsigned int isite = 0; isite < L1.m_latticeSize; ++isite) {
+        L1[isite] = UTest;
+        L2[isite] = UTest;
+    }
+
+    Lattice<SU3> LResult = conjugate(L1*L2);
+    L2 = conjugate(L1);
+
+    SU3 UTestConjugate1 = UTest;
+    UTestConjugate1.conjugate();
+
+    SU3 UTestConjugate2 = (UTest*UTest);
+    UTestConjugate2.conjugate();
+
+    for (unsigned int isite = 0; isite  < L2.m_latticeSize; isite++) {
+        if (!compareSU3(UTestConjugate1, L2[isite])) {
+            passed = false;
+            cout << "    FAILED: & conjugate() of a SU3 lattice is not correct." << endl;
+            break;
+        }
+        if (!compareSU3(UTestConjugate2, LResult[isite])) {
+            passed = false;
+            cout << "    FAILED: && conjugate() of a SU3 lattice is not correct." << endl;
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: conjugate() of a SU3 lattice is correct." << endl;
+
+    return passed;
+}
+
+bool LatticeOperations::testIdentity() {
+    /*
+     * Test of the lattice identity method.
+     */
+    bool passed = true;
+    SU3 UTest;
+    UTest.identity();
+    Lattice<SU3> L;
+    L.allocate(m_dim);
+    L.identity();
+
+    for (unsigned int isite = 0; isite  < L.m_latticeSize; isite++) {
+        if (!compareSU3(UTest, L[isite])) {
+            passed = false;
+            cout << "    FAILED: & .zeros() of a SU3 lattice is not correct." << endl;
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: .zeros() of a SU3 lattice is correct." << endl;
+
+    return passed;
+}
+
+bool LatticeOperations::testZeros() {
+    /*
+     * Test of the lattice zeros method.
+     */
+    bool passed = true;
+    SU3 UTest;
+    UTest.zeros();
+    Lattice<SU3> L;
+    L.allocate(m_dim);
+    L.zeros();
+
+    for (unsigned int isite = 0; isite  < L.m_latticeSize; isite++) {
+        if (!compareSU3(UTest, L[isite])) {
+            passed = false;
+            cout << "    FAILED: & .zeros() of a SU3 lattice is not correct." << endl;
+            break;
+        }
+    }
+    if (m_verbose && passed) cout << "    SUCCESS: .zeros() of a SU3 lattice is correct." << endl;
+
+    return passed;
+}
+
 bool LatticeOperations::testLatticeShift() {
     /*
      * Tests the lattice shift function for all possible directions.
@@ -562,13 +861,16 @@ bool LatticeOperations::runLatticeTests()
                   && testLatticeDivision() && testLatticeRealTrace() && testLatticeImagTrace()
                   && testLatticeSubtractReal() && testLatticeSubtractImag() && testLatticeSum()
                   && testLatticeSumRealTrace() && testLatticeSumRealTraceMultiplication()
-                  && testLatticeInverse() && testLatticeTrace());
+                  && testLatticeInverse() && testLatticeTrace() && testMakeHermitian()
+                  && testMakeAntiHermitian() && testLatticeSumSpatial()
+                  && testLatticeRealTraceMultiplication() && testLatticeImagTraceMultiplication()
+                  && testTranpose() && testConjugate() && testZeros() && testIdentity());
     }
 
     MPI_Bcast(&passed, 1, MPI_BYTE, 0, MPI_COMM_WORLD);
     Parallel::Communicator::setBarrier();
 
-    passed = passed && fullLatticeTests();
+//    passed = passed && fullLatticeTests();
 
     if (passed) {
         if (m_processRank == 0) cout << "PASSED: Lattice operations and functions." << endl;

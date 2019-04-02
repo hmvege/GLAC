@@ -34,6 +34,16 @@ private:
      *
      */
 
+    bool testMakeHermitian();
+    bool testMakeAntiHermitian();
+    bool testLatticeSumSpatial();
+    bool testLatticeRealTraceMultiplication();
+    bool testLatticeImagTraceMultiplication();
+    bool testTranpose();
+    bool testConjugate();
+    bool testIdentity();
+    bool testZeros();
+
     // Tests including parallel communication
     bool fullLatticeTests();
     bool testLatticeShift();

@@ -39,6 +39,9 @@ namespace Parallel {
         // Setters
         static void setN(std::vector<unsigned int> N);
         static void setNTot(unsigned int NSpatial, unsigned int NTemporal);
+
+        // Getter
+        static std::vector<unsigned int> getN() { return m_N; }
     };
 }
 #endif // INDEX_H

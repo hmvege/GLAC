@@ -1,10 +1,11 @@
 #include "performancetests.h"
 
 #include <chrono>
-#include "config/parameters.h"
-#include "parallelization/communicator.h"
 #include <fstream>
 #include <iomanip>
+
+#include "config/parameters.h"
+#include "parallelization/communicator.h"
 
 // Exponentiation imports
 #include "math/exponentiation/expluscher.h"
@@ -16,6 +17,10 @@
 // Action imports
 #include "actions/wilsongaugeaction.h"
 #include "actions/wilsonexplicitexp.h"
+
+// Flow import
+#include "flow/flow.h"
+
 
 using std::chrono::steady_clock;
 using std::chrono::duration_cast;
@@ -59,15 +64,17 @@ void PerformanceTests::run()
     /*
      * Main function for running performance tests.
      */
-    m_NTaylorDegree = Parameters::getTaylorPolDegree();
-    if (Parallel::Communicator::getProcessRank() == 0) {
-        testExponentiationTime(Parameters::getNExpTests());
-        testExponentiationAccuracy();
-        testRandomGenerators(Parameters::getNRandTests());
-        testMatrixMultiplication();
-    }
+//    m_NTaylorDegree = Parameters::getTaylorPolDegree();
+//    if (Parallel::Communicator::getProcessRank() == 0) {
+//        testExponentiationTime(Parameters::getNExpTests());
+//        testExponentiationAccuracy();
+//        testRandomGenerators(Parameters::getNRandTests());
+//        testMatrixMultiplication();
+//    }
     Parallel::Communicator::setBarrierActive();
-    testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
+//    testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
+    testShift();
+    testFlow();
 }
 
 void PerformanceTests::testExponentiationTime(unsigned int NTests)
@@ -420,4 +427,99 @@ void PerformanceTests::testMatrixMultiplication()
     timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
 
     printf("\nMatrix multiplication tests:  %8.4f seconds (%8.4E seconds per test)",timer,timer/double(NTests));
+}
+
+void PerformanceTests::testFlow()
+{
+    /*
+     * Runs performance tests on the flow method.
+     */
+    Lattice<SU3> *L = new Lattice<SU3>[4];
+    for (unsigned int mu = 0; mu < 4; ++mu) {
+        L[mu].allocate(m_dim);
+    }
+    for (unsigned int mu = 0; mu < 4; ++mu) {
+        for (unsigned int isite = 0; isite < L[0].m_latticeSize; ++isite) {
+            L[mu][isite] = m_SU3Generator->generateRST();
+        }
+    }
+
+    if (m_processRank == 0) {
+        printf("\nRunning flow performance tests for a lattice of size: %d^3 x %d", m_N, m_NT);
+    }
+
+    for (unsigned int mu = 0; mu < 4; ++mu) {
+        for (unsigned int isite = 0; isite < L[0].m_latticeSize; ++isite) {
+            L[mu][isite] = m_SU3Generator->generateRST();
+        }
+    }
+
+    unsigned int NFlow = 50;
+
+    WilsonGaugeAction S;
+    Flow flow(&S);
+
+    // Timers
+    double timer = 0;
+    steady_clock::time_point preUpdate;
+    preUpdate = steady_clock::now();
+
+    for (unsigned int iflow = 0; iflow < NFlow; ++iflow) {
+        flow.flowField(L);
+    }
+
+    timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
+    if (m_processRank == 0) {
+        printf("\nFlow test:  %8.4f seconds (%8.4E seconds per flow step)",timer,timer/double(NFlow));
+    }
+
+    delete [] L;
+}
+
+void PerformanceTests::testShift()
+{
+    /*
+     * Runs performance tests on the shift method.
+     */
+
+    Lattice<SU3> *L = new Lattice<SU3>[4];
+    for (unsigned int mu = 0; mu < 4; ++mu) {
+        L[mu].allocate(m_dim);
+    }
+    for (unsigned int mu = 0; mu < 4; ++mu) {
+        for (unsigned int isite = 0; isite < L[0].m_latticeSize; ++isite) {
+            L[mu][isite] = m_SU3Generator->generateRST();
+        }
+    }
+
+    if (m_processRank == 0) {
+        printf("\nRunning shift performance tests for a lattice of size: %d^3 x %d", m_N, m_NT);
+    }
+
+    for (unsigned int mu = 0; mu < 4; ++mu) {
+        for (unsigned int isite = 0; isite < L[0].m_latticeSize; ++isite) {
+            L[mu][isite] = m_SU3Generator->generateRST();
+        }
+    }
+
+    unsigned int NTests = 100;
+
+    // Timers
+    double timer = 0;
+    steady_clock::time_point preUpdate;
+    preUpdate = steady_clock::now();
+
+    for (unsigned int itest = 0; itest < NTests; itest++) {
+        for (unsigned int mu = 0; mu < 4; mu++) {
+            L[mu] = shift(L[mu], FORWARDS, mu);
+            L[mu] = shift(L[mu], BACKWARDS, mu);
+        }
+    }
+
+    timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
+    if (m_processRank == 0) {
+        printf("\nShift test:  %8.4f seconds (%8.4E seconds per flow step)",timer,timer/double(NTests));
+    }
+
+    delete [] L;
 }
