@@ -525,7 +525,7 @@ void Parallel::Communicator::freeMPIGroups()
  */
 void Parallel::Communicator::MPIExit(std::string message)
 {
-    if (m_processRank == 0) printf("\n%s", message.c_str());
+    if (m_processRank == 0) cout << "\n" << message.c_str() << endl;
     freeMPIGroups();
     setBarrier();
     MPI_Abort(MPI_COMM_WORLD, 0);
@@ -539,7 +539,7 @@ void Parallel::Communicator::MPIExit(std::string message)
 void Parallel::Communicator::MPIPrint(std::string message)
 {
     setBarrier();
-    if (m_processRank == 0) printf("\n%s", message.c_str());
+    if (m_processRank == 0) cout << "\n" << message.c_str() << endl;
     setBarrier();
 }
 
@@ -552,7 +552,7 @@ void Parallel::Communicator::MPIPrint(std::string message)
  */
 void Parallel::Communicator::gatherDoubleResults(double * data, unsigned int N)
 {
-    double tempData[N]; // Possibly bad?! TEST
+    double tempData[N];
     MPI_Allreduce(data,tempData,N,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
     for (unsigned long int i = 0; i < N; i++) data[i] = tempData[i];
 }

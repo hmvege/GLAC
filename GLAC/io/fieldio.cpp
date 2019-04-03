@@ -312,7 +312,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
 
 }
 
-inline bool IO::FieldIO::check_file_existence (const std::string fname) {
+bool IO::FieldIO::check_file_existence (const std::string fname) {
     std::ifstream infile(fname);
     return infile.good();
 }

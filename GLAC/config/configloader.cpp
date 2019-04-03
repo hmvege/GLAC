@@ -29,6 +29,11 @@ namespace ConfigLoader {
             }
             Parameters::setFieldConfigurationFileNames(fieldConfigFileNames);
         }
+
+        bool check_file_existence (const std::string fname) {
+            std::ifstream infile(fname);
+            return infile.good();
+        }
     }
 
     /*!
@@ -39,6 +44,10 @@ namespace ConfigLoader {
      */
     void  load(std::string jsonFileName)
     {
+        if (!check_file_existence(jsonFileName.c_str())) {
+            Parallel::Communicator::MPIExit("File " + jsonFileName + " does not exist");
+        }
+
         std::ifstream i(jsonFileName.c_str());
         json j;
         i >> j;
