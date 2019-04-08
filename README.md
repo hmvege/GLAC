@@ -87,12 +87,14 @@ Aspirational goals and todo's that could/should be implemented.
 
 #### Todo's
 * [ ] Add check in `createJobs.py` such that when loading a single gauge configurations and generating new ones, we make sure that no previous gauge configurations of the names we will generates exist in the provided folder. Do this perhaps for observables as well.
-* [ ] Add unit tests for the Action derivatives
-* [ ] Add unit tests for the observables
-* [ ] Add unit tests for remaining lattice methods and make sure they match their equivalent SU3 unit tests or similar.
-* [ ] Add unit tests for the SU3 matrix exponential methods.
-* [ ] Add performance timing for the flow method.
+* [ ] Add unit tests for the Action derivatives. Test through validation testing.
+* [ ] Add unit tests for the observables. Test through validation testing.
+* [x] Add unit tests for remaining lattice methods and make sure they match their equivalent SU3 unit tests or similar.
+* [ ] Add unit tests for the SU3 matrix exponential methods. Compare with output from known source.
+* [x] Add performance timing for the flow method.
 * [ ] Investigate ways of allocating the cubes for sharing at the beginning of a program. Will need to have the performance timing method implemented to check if this helps.
+
+**Note: validation testing has been performed, and has shown the action, the observables, the SU3 exp method and the flow to be correct. Only need to implement this into a larger framework in either `createJobs.py` or an external script.**
 
 #### Future goals
 * [ ] Implement the Luscher-Weisz action.
