@@ -88,7 +88,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
     long long nt = 0, nz = 0, ny = 0;
     MPI_Offset offset = 0;
 
-    SU3 * writeBuffer = new SU3[4 * Parameters::getNSpatial()];
+    SU3 writeBuffer[4 * Parameters::getNSpatial()];
 
     for (long long t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
@@ -105,7 +105,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
                 }
 
                 offset = Parallel::Index::getGlobalIndex(0,ny,nz,nt)*m_linkSize;
-                MPI_File_write_at(file, offset, writeBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
+                MPI_File_write_at(file, offset, &writeBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
             }
         }
     }
@@ -119,8 +119,6 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
     if (Parallel::Communicator::getProcessRank() == 0 && !Parameters::getUnitTesting()) {
         printf("    %s written.", filename.c_str());
     }
-
-    delete [] writeBuffer;
 }
 
 /*!
