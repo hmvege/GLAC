@@ -216,7 +216,7 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
     MPI_Offset offset = 0;
     long long nt = 0, nz = 0, ny = 0;
 
-    SU3 * readBuffer = new SU3[4*Parameters::getNSpatial()];
+    SU3 readBuffer[4*Parameters::getNSpatial()];
 
     for (long long t = 0; t < m_N[3]; t++) {
         nt = (Parallel::Neighbours::getProcessorDimensionPosition(3) * m_N[3] + t);
@@ -226,7 +226,7 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
 
                 offset = Parallel::Index::getGlobalIndex(0,ny,nz,nt)*m_linkSize;
-                MPI_File_read_at(file, offset, readBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
+                MPI_File_read_at(file, offset, &readBuffer, m_linkDoubles*Parameters::getNSpatial(), MPI_DOUBLE, MPI_STATUS_IGNORE);
                 for (long long x = 0; x < m_N[0]; x++) {
                     for (long long mu = 0; mu < 4; mu++) {
                         lattice[mu][Parallel::Index::getIndex(x,y,z,t)] = readBuffer[4*x + mu];
@@ -245,7 +245,6 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
         printf("\nConfiguration %s loaded", fname.c_str());
     }
 
-    delete [] readBuffer;
 }
 
 /*!
