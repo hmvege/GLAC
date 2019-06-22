@@ -30,7 +30,7 @@ public:
 
     // Default contructors
     Lattice() {}
-    Lattice(std::vector<unsigned int> latticeDimensions)
+    Lattice(const std::vector<unsigned int> &latticeDimensions)
     {
         allocate(latticeDimensions);
     }
@@ -836,7 +836,7 @@ inline Lattice<SU3> shift(const Lattice<SU3> &L, const DIR direction, const unsi
      * The shifted lattice, is then returned.
      */
     Lattice<SU3> _L;
-    _L.allocate(L.m_dim);// MOVE THIS TO INITIALIZATION/HEADER-THING?
+    _L.allocate(L.m_dim); // MOVE THIS TO INITIALIZATION/HEADER-THING?
     std::vector<SU3> sendCube; // Move indexes to index in order to avoid 2 integer multiplications)
     std::vector<SU3> recvCube; // MOVE THIS TO HEADER; SO WE DONT ALLOCATE EVERY TIME!
     // INSTEAD OF CUBE INDEX, JUST DO INDEX WITH DIMENSION SET TO ZERO

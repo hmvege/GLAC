@@ -110,7 +110,7 @@ private:
     // Debug parameter
     static bool m_debug;
 
-    static double calculateLatticeSpacing(double beta);
+    static double calculateLatticeSpacing(const double beta);
 public:
     Parameters();
     ~Parameters();
@@ -119,9 +119,9 @@ public:
     //// Setters ////
     /////////////////
     // Lattice related run setters
-    static void setNSpatial(unsigned int NSpatial);
-    static void setNTemporal(unsigned int NTemporal);
-    static void setBeta(double beta);
+    static void setNSpatial(const unsigned int NSpatial);
+    static void setNTemporal(const unsigned int NTemporal);
+    static void setBeta(const double beta);
     static void setNCf(unsigned int NCf) { m_NCf = NCf; }
     static void setNCor(unsigned int NCor) { m_NCor = NCor; }
     static void setNTherm(unsigned int NTherm) { m_NTherm = NTherm; }
@@ -144,31 +144,31 @@ public:
     static void setRSTHotStart(bool RSTHotStart) { m_RSTHotStart = RSTHotStart; }
 
     // Testing related setters
-    static void setUnitTesting(bool unitTesting) { m_unitTesting = unitTesting; }
-    static void setUnitTestingVerbose(bool unitTestingVerbose) { m_unitTestingVerbose = unitTestingVerbose; }
-    static void setCheckFieldGaugeInvariance(bool testLatticeGaugeInvariance) { m_testLatticeGaugeInvariance = testLatticeGaugeInvariance; }
-    static void setGaugeFieldToCheck(std::string latticeFileNameToCheck) { m_latticeFileNameToCheck = latticeFileNameToCheck; }
+    static void setUnitTesting(const bool unitTesting) { m_unitTesting = unitTesting; }
+    static void setUnitTestingVerbose(const bool unitTestingVerbose) { m_unitTestingVerbose = unitTestingVerbose; }
+    static void setCheckFieldGaugeInvariance(const bool testLatticeGaugeInvariance) { m_testLatticeGaugeInvariance = testLatticeGaugeInvariance; }
+    static void setGaugeFieldToCheck(const std::string &latticeFileNameToCheck) { m_latticeFileNameToCheck = latticeFileNameToCheck; }
 
     // Performance testing related setters
-    static void setPerformanceTesting(bool performanceTesting) { m_performanceTesting = performanceTesting; }
-    static void setNExpTests(unsigned int NExpTests) { m_NExpTests = NExpTests; }
-    static void setNRandTests(unsigned int NRandTests) { m_NRandTests = NRandTests; }
-    static void setNDerivaitveTests(unsigned int NDerivativeTests) { m_NDerivativeTests = NDerivativeTests; }
-    static void setTaylorPolDegree(unsigned int NTaylorPolDegree) { m_NTaylorPolDegree = NTaylorPolDegree; }
+    static void setPerformanceTesting(const bool performanceTesting) { m_performanceTesting = performanceTesting; }
+    static void setNExpTests(const unsigned int NExpTests) { m_NExpTests = NExpTests; }
+    static void setNRandTests(const unsigned int NRandTests) { m_NRandTests = NRandTests; }
+    static void setNDerivaitveTests(const unsigned int NDerivativeTests) { m_NDerivativeTests = NDerivativeTests; }
+    static void setTaylorPolDegree(const unsigned int NTaylorPolDegree) { m_NTaylorPolDegree = NTaylorPolDegree; }
 
     // Data generation related setters
-    static void setFlowEpsilon(double flowEpsilon) { m_flowEpsilon = flowEpsilon; }
-    static void setSU3Eps(double SU3Eps) { m_SU3Eps = SU3Eps; }
-    static void setMetropolisSeed(double metropolisSeed);
+    static void setFlowEpsilon(const double flowEpsilon) { m_flowEpsilon = flowEpsilon; }
+    static void setSU3Eps(const double SU3Eps) { m_SU3Eps = SU3Eps; }
+    static void setMetropolisSeed(const double metropolisSeed);
     static void setRandomMatrixSeed(double randomMatrixSeed);
 
     // Lattice related setters, initiated after config input
-    static void setLatticeSize(unsigned int latticeSize) { m_latticeSize = latticeSize; }
+    static void setLatticeSize(const unsigned int latticeSize) { m_latticeSize = latticeSize; }
 
     // Sub lattice / parallel related setters
-    static void setN(std::vector<unsigned int> N) { m_N = N; }
-    static void setSubLatticePreset(bool subLatticeSizePreset) { m_subLatticeSizePreset = subLatticeSizePreset; }
-    static void setSubLatticeSize(unsigned int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
+    static void setN(const std::vector<unsigned int> N) { m_N = N; }
+    static void setSubLatticePreset(const bool subLatticeSizePreset) { m_subLatticeSizePreset = subLatticeSizePreset; }
+    static void setSubLatticeSize(const unsigned int subLatticeSize) { m_subLatticeSize = subLatticeSize; }
     static void setProcessorsPerDimension(int *processorsPerDimension) { for (unsigned int i = 0; i < 4; i++) m_processorsPerDimension[i] = processorsPerDimension[i]; }
 
     // Action type

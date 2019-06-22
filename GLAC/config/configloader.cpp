@@ -7,30 +7,40 @@
 
 using nlohmann::json;
 
-namespace ConfigLoader {
-    namespace {
+namespace ConfigLoader
+{
+namespace
+    {
         // Namespace unaccessible outside of the ConfigLoader namespace.
-        void setObservable(json iterable, bool flow) {
+        void setObservable(json iterable, bool flow)
+        {
             std::vector<std::string> observableVector;
-            for (unsigned int i = 0; i < iterable.size(); i++) {
+            for (unsigned int i = 0; i < iterable.size(); i++)
+            {
                 observableVector.push_back(iterable[i]);
             }
-            if (flow) {
+            if (flow)
+            {
                 Parameters::setFlowObservablesList(observableVector);
-            } else {
+            }
+            else
+            {
                 Parameters::setObservableList(observableVector);
             }
         }
 
-        void setFieldConfigurations(json iterable) {
+        void setFieldConfigurations(json iterable)
+        {
             std::vector<std::string> fieldConfigFileNames;
-            for (unsigned int i = 0; i < iterable.size(); i++) {
+            for (unsigned int i = 0; i < iterable.size(); i++)
+            {
                 fieldConfigFileNames.push_back(iterable[i]);
             }
             Parameters::setFieldConfigurationFileNames(fieldConfigFileNames);
         }
 
-        bool check_file_existence (const std::string fname) {
+        bool check_file_existence (const std::string fname)
+        {
             std::ifstream infile(fname);
             return infile.good();
         }
@@ -44,7 +54,8 @@ namespace ConfigLoader {
      */
     void  load(const std::string &jsonFileName)
     {
-        if (!check_file_existence(jsonFileName.c_str())) {
+        if (!check_file_existence(jsonFileName.c_str()))
+        {
             Parallel::Communicator::MPIExit("File " + jsonFileName + " does not exist");
         }
 
@@ -82,7 +93,8 @@ namespace ConfigLoader {
         Parameters::setRSTHotStart(bool(j["RSTHotStart"]));
 
         // Sub dimension setting
-        if (!j["subDims"].empty()) {
+        if (!j["subDims"].empty())
+        {
             std::vector<unsigned int> tempN = {j["subDims"][0],j["subDims"][1],j["subDims"][2],j["subDims"][3]};
             Parameters::setN(tempN);
             Parameters::setSubLatticePreset(true);
@@ -100,7 +112,8 @@ namespace ConfigLoader {
         setObservable(j["flowObservables"], true);
 
         // Loads field configurations if they are present
-        if (j["load_field_configs"]) {
+        if (j["load_field_configs"])
+        {
             setFieldConfigurations(j["field_configs"]);
             Parameters::setLoadFieldConfigurations(bool(j["load_field_configs"]));
             Parameters::setLoadChromaConfigurations(bool(j["chroma_config"]));
@@ -108,7 +121,8 @@ namespace ConfigLoader {
 
         // Sets a field configuration to load, and then run the metropolis algorithm from the loaded configuration that is assumed to be thermalized
         std::string config_to_load = j["load_config_and_run"];
-        if (config_to_load.length() != 0) { // If this is not empty, I will load and run a configuration
+        if (config_to_load.length() != 0)
+        { // If this is not empty, I will load and run a configuration
             std::vector<std::string> tempVec;
             tempVec.push_back(j["load_config_and_run"]);
             setFieldConfigurations(tempVec);
@@ -117,7 +131,8 @@ namespace ConfigLoader {
             Parameters::setLoadChromaConfigurations(bool(j["chroma_config"]));
         }
 
-        if (!j["config_start_number"].empty()) {
+        if (!j["config_start_number"].empty())
+        {
             Parameters::setConfigStartNumber(j["config_start_number"]);
         }
 
@@ -137,21 +152,27 @@ namespace ConfigLoader {
 
         // Checking if we have provideda gauge field to test
         std::string test_gauge_field = j["uTestFieldGaugeInvarince"];
-        if (test_gauge_field.length() != 0) {
+        if (test_gauge_field.length() != 0)
+        {
             Parameters::setCheckFieldGaugeInvariance(true);
             Parameters::setGaugeFieldToCheck(j["uTestFieldGaugeInvarince"]);
         }
         // Data generation related variables
         Parameters::setSU3Eps(j["SU3Eps"]);
         Parameters::setFlowEpsilon(j["flowEpsilon"]);
-        if (j["metropolisSeed"] != 0) {
+        if (j["metropolisSeed"] != 0)
+        {
             Parameters::setMetropolisSeed(j["metropolisSeed"]);
-        } else {
+        } else
+        {
             Parameters::setMetropolisSeed(std::time(nullptr) + double(Parallel::Communicator::getNumProc()) + double(Parallel::Communicator::getProcessRank()));
         }
-        if (j["randomMatrixSeed"] != 0) {
+        if (j["randomMatrixSeed"] != 0)
+        {
             Parameters::setRandomMatrixSeed(j["randomMatrixSeed"]);
-        } else {
+        }
+        else
+        {
             Parameters::setRandomMatrixSeed(std::time(nullptr) + double(Parallel::Communicator::getProcessRank()));
         }
 

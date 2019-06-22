@@ -102,7 +102,7 @@ Parameters::~Parameters()
 
 }
 
-void Parameters::setBeta(double beta)
+void Parameters::setBeta(const double beta)
 {
     /*
      * Sets the beta value, and finds the lattice spacing a.
@@ -111,7 +111,7 @@ void Parameters::setBeta(double beta)
     m_a = calculateLatticeSpacing(beta);
 }
 
-double Parameters::calculateLatticeSpacing(double beta)
+double Parameters::calculateLatticeSpacing(const double beta)
 {
     /*
      * Calculates the lattice spaing from the beta value.
@@ -122,13 +122,13 @@ double Parameters::calculateLatticeSpacing(double beta)
     return a/r0;
 }
 
-void Parameters::setNSpatial(unsigned int NSpatial)
+void Parameters::setNSpatial(const unsigned int NSpatial)
 {
     m_NSpatial = NSpatial;
     m_latticeSize *= NSpatial*NSpatial*NSpatial;
 }
 
-void Parameters::setNTemporal(unsigned int NTemporal)
+void Parameters::setNTemporal(const unsigned int NTemporal)
 {
     m_NTemporal = NTemporal;
     m_latticeSize *= NTemporal;
@@ -140,10 +140,9 @@ void Parameters::setNTemporal(unsigned int NTemporal)
  *
  * Will ensure a different seed is used for each processor.
  */
-void Parameters::setMetropolisSeed(double metropolisSeed)
+void Parameters::setMetropolisSeed(const double metropolisSeed)
 {
-        metropolisSeed += double(Parallel::Communicator::getNumProc()) + double(Parallel::Communicator::getProcessRank());
-        m_metropolisSeed = metropolisSeed;
+    m_metropolisSeed = metropolisSeed + double(Parallel::Communicator::getNumProc()) + double(Parallel::Communicator::getProcessRank());
 }
 
 /*!
