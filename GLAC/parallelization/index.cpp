@@ -21,7 +21,7 @@ Parallel::Index::~Index()
  *
  * \todo: Rename to setSubN as that is more informative, and does not contradict other methods elsewhere.
  */
-void Parallel::Index::setN(std::vector<unsigned int> N)
+void Parallel::Index::setN(const std::vector<unsigned int> &N)
 {
     /*
      * Function for setting the dimensionality of the sublattice.
@@ -36,7 +36,7 @@ void Parallel::Index::setN(std::vector<unsigned int> N)
  * \param NSpatial
  * \param NTemporal
  */
-void Parallel::Index::setNTot(unsigned int NSpatial, unsigned int NTemporal)
+void Parallel::Index::setNTot(const unsigned int NSpatial, const unsigned int NTemporal)
 {
     /*
      * Function for setting the dimensionality of the total lattice.

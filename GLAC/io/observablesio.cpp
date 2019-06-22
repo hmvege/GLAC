@@ -26,18 +26,19 @@
  * - the variance of the observable,
  * - the standard deviation of the observable,
  */
-void IO::writeObservablesToFile(double acceptanceRate,
-                                double averagedObservable,
-                                double varianceObservable,
-                                double stdObservable,
-                                std::vector<double> observables,
-                                unsigned int NObs,
-                                std::string observableName)
+void IO::writeObservablesToFile(const double acceptanceRate,
+                                const double averagedObservable,
+                                const double varianceObservable,
+                                const double stdObservable,
+                                const std::vector<double> &observables,
+                                const unsigned int NObs,
+                                const std::string &observableName)
 {
     /*
      * Function to write thermalization and configuration observables to file.
      */
-    if (Parallel::Communicator::getProcessRank() == 0) {
+    if (Parallel::Communicator::getProcessRank() == 0)
+    {
         auto oldPrecision = cout.precision(15);
         std::ofstream file;
         std::string fname = Parameters::getFilePath()
@@ -55,7 +56,7 @@ void IO::writeObservablesToFile(double acceptanceRate,
         file << "Average" << observableName << " " << averagedObservable << endl;
         file << "Variance" << observableName << " " << varianceObservable << endl;
         file << "std"  << observableName << " " << stdObservable << endl;
-        for (unsigned int i = 0; i < NObs; i++) {
+        for (unsigned int i = 0; i < NObs; i++){
             file << observables[i] << endl;
         }
         file.close();
@@ -76,14 +77,15 @@ void IO::writeObservablesToFile(double acceptanceRate,
  * - FlowEpsilon,
  * with the rest containing the flowed observable.
  */
-void IO::writeFlowObservableToFile(std::vector<double> observables,
-                                   std::string observableName,
-                                   unsigned int configNumber)
+void IO::writeFlowObservableToFile(const std::vector<double> &observables,
+                                   const std::string &observableName,
+                                   const unsigned int configNumber)
 {
     /*
      * Method for writing a flow variable to file.
      */
-    if (Parallel::Communicator::getProcessRank() == 0) {
+    if (Parallel::Communicator::getProcessRank() == 0)
+    {
         auto oldPrecision = cout.precision(15);
         double flowStep = Parameters::getFlowEpsilon();
         std::ofstream file;
@@ -111,7 +113,8 @@ void IO::writeFlowObservableToFile(std::vector<double> observables,
         file << std::fixed << std::setprecision(15);
 
         // Writes out the observable
-        for (unsigned int i = 0; i < Parameters::getNFlows() + 1; i++) {
+        for (unsigned int i = 0; i < Parameters::getNFlows() + 1; i++)
+        {
             file << i*flowStep << " " << observables[i] << endl;
         }
 
@@ -135,14 +138,16 @@ void IO::writeFlowObservableToFile(std::vector<double> observables,
  * - FlowEpsilon,
  * with the rest containing the flowed observable.
  */
-void IO::writeMatrixToFile(std::vector<double> observables, std::string observableName, unsigned int configNumber, unsigned int N)
+void IO::writeMatrixToFile(const std::vector<double> &observables, const std::string &observableName,
+                           const unsigned int configNumber, const unsigned int N)
 {
     /*
      * Function for writing out a matrix of observables to file, e.g. the topc in euclidean time.
      */
 
     // Writes to file
-    if (Parallel::Communicator::getProcessRank() == 0) {
+    if (Parallel::Communicator::getProcessRank() == 0)
+    {
         auto oldPrecision = cout.precision(15);
         double flowStep = Parameters::getFlowEpsilon();
         std::ofstream file;
@@ -170,9 +175,11 @@ void IO::writeMatrixToFile(std::vector<double> observables, std::string observab
         file << std::fixed << std::setprecision(15);
 
         // Writing out the matrix columns along each line
-        for (unsigned int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++) {
+        for (unsigned int iFlow = 0; iFlow < Parameters::getNFlows() + 1; iFlow++)
+        {
             file << iFlow*flowStep;
-            for (unsigned int i = 0; i < N; i++) {
+            for (unsigned int i = 0; i < N; i++)
+            {
                 file << " " << observables[iFlow * N + i];
             }
             file << endl;

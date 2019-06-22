@@ -21,12 +21,12 @@ WilsonGaugeAction::~WilsonGaugeAction()
 {
 }
 
-double WilsonGaugeAction::getDeltaAction(SU3 U, SU3 UPrime)
+double WilsonGaugeAction::getDeltaAction(SU3 &U, SU3 &UPrime)
 {
-    return traceRealMultiplication((UPrime - U),m_staple)*m_multiplicationFactor;
+    return traceRealMultiplication((UPrime - U), m_staple)*m_multiplicationFactor;
 }
 
-void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu)
+void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, const int i, const int j, const int k, const int l, const int mu)
 {
     m_staple.zeros();
     updateMuIndex(mu);
@@ -52,7 +52,7 @@ void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, int i, int j, int k
     }
 }
 
-Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, int mu)
+Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, const int mu)
 {
     // Computes the staple for current link
     m_latticeStaple.zeros();

@@ -59,7 +59,7 @@ void System::setAction()
 }
 
 
-void System::setObservable(std::vector<std::string> obsList, bool flow)
+void System::setObservable(const std::vector<std::string> &obsList, const bool flow)
 {
     /*
      * Sets the observables to be sampled.
@@ -318,7 +318,7 @@ void System::thermalize()
     }
 }
 
-void System::updateLink(unsigned int iSite, int mu)
+void System::updateLink(const unsigned int iSite, const int mu)
 {
     /*
      * Private function used for updating our system. Updates a single gauge link.
@@ -468,7 +468,7 @@ void System::runMetropolis()
     m_correlator->printStatistics();
 }
 
-void System::flowConfiguration(unsigned int iConfig)
+void System::flowConfiguration(const unsigned int iConfig)
 {
     /*
      * Flows configuration, performs flow statistics and writes it to a file.
@@ -539,7 +539,7 @@ void System::loadConfigurationAndRunMetropolis()
 }
 
 
-void System::load(std::string configurationName)
+void System::load(const std::string &configurationName)
 {
     /*
      * Method for loading regular a configuration and continuing and evolving it(without the need for any thermalization)
@@ -553,7 +553,7 @@ void System::load(std::string configurationName)
     }
 }
 
-void System::loadChroma(std::string configurationName)
+void System::loadChroma(const std::string &configurationName)
 {
     /*
      * Method for loading regular a configuration and continuing and evolving it(without the need for any thermalization)

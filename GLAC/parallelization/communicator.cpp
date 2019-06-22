@@ -34,7 +34,7 @@ Parallel::Communicator::~Communicator()
  * \param mu direction to shift in. Always positive in x, y, z and t directions.
  * \param SU3Dir the dimension we are to shift lattice in, i.e. the index of the Lattice pointer.
  */
-void Parallel::Communicator::MPIfetchSU3Positive(Lattice<SU3> *lattice, std::vector<int> n, int mu, int SU3Dir)
+void Parallel::Communicator::MPIfetchSU3Positive(Lattice<SU3> *lattice, std::vector<int> n, const int mu, const int SU3Dir)
 {
     /*
      * Performs an MPI call to retrieve matrix in the positive direction.
@@ -56,7 +56,7 @@ void Parallel::Communicator::MPIfetchSU3Positive(Lattice<SU3> *lattice, std::vec
  * \param mu direction to shift in. Always negative in x, y, z and t directions.
  * \param SU3Dir the dimension we are to shift lattice in, i.e. index of the Lattice pointer.
  */
-void Parallel::Communicator::MPIfetchSU3Negative(Lattice<SU3> *lattice, std::vector<int> n, int mu, int SU3Dir)
+void Parallel::Communicator::MPIfetchSU3Negative(Lattice<SU3> *lattice, std::vector<int> n, const int mu, const int SU3Dir)
 {
     /*
      * Performs an MPI call to retrieve matrix in the negative direction.
@@ -80,7 +80,7 @@ void Parallel::Communicator::MPIfetchSU3Negative(Lattice<SU3> *lattice, std::vec
  * \param SU3Dir is the index of the tensor \f$\mu\f$ in link \f$U_{\mu}\f$.
  * \return fetched SU3 matrix.
  */
-SU3 Parallel::Communicator::getPositiveLink(Lattice<SU3> *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
+SU3 Parallel::Communicator::getPositiveLink(Lattice<SU3> *lattice, std::vector<int> n, const int mu, int *muIndex, const int SU3Dir)
 {
     /*
      * Function for retrieving link in positive direction.
@@ -110,7 +110,7 @@ SU3 Parallel::Communicator::getPositiveLink(Lattice<SU3> *lattice, std::vector<i
  * \param SU3Dir is the index of the tensor \f$\mu\f$ in link \f$U_{\mu}\f$.
  * \return fetched SU3 matrix.
  */
-SU3 Parallel::Communicator::getNegativeLink(Lattice<SU3> *lattice, std::vector<int> n, int mu, int *muIndex, int SU3Dir)
+SU3 Parallel::Communicator::getNegativeLink(Lattice<SU3> *lattice, std::vector<int> n, const int mu, int *muIndex, const int SU3Dir)
 {
     /*
      * Function for retrieving link in negative direction.
@@ -145,7 +145,7 @@ SU3 Parallel::Communicator::getNegativeLink(Lattice<SU3> *lattice, std::vector<i
  * \param SU3Dir is the index of the tensor \f$\mu\f$ in link \f$U_{\mu}\f$.
  * \return the fetched SU3 matrix.
  */
-SU3 Parallel::Communicator::getNeighboursNeighbourLink(Lattice<SU3> * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
+SU3 Parallel::Communicator::getNeighboursNeighbourLink(Lattice<SU3> * lattice, std::vector<int> n, const int mu, int *muIndex, const int nu, int *nuIndex, const int SU3Dir)
 {
     /*
      * Gets the neighbours neighbour link.
@@ -209,7 +209,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourLink(Lattice<SU3> * lattice, s
  *
  * \todo Should probably pass n by reference, and set all elements as const.
  */
-SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * lattice, std::vector<int> n, int mu, int *muIndex, int nu, int *nuIndex, int SU3Dir)
+SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * lattice, std::vector<int> &n, const int mu, int *muIndex, const int nu, int *nuIndex, const int SU3Dir)
 {
     /*
      * Gets the neighbours neighbour link.
@@ -265,7 +265,7 @@ SU3 Parallel::Communicator::getNeighboursNeighbourNegativeLink(Lattice<SU3> * la
  * \todo Should probably pass by the obs by reference.
  * \todo Should probably set obs as const.
  */
-void Parallel::Communicator::reduceToTemporalDimension(std::vector<double> &obsResults, std::vector<double> obs)
+void Parallel::Communicator::reduceToTemporalDimension(std::vector<double> &obsResults, const std::vector<double> &obs)
 {
     /*
      * Reduces flow results in matrix format to a the temporal dimension
@@ -523,7 +523,7 @@ void Parallel::Communicator::freeMPIGroups()
  * \brief Parallel::Communicator::MPIExit exits the program. Frees MPI groups before it exits.
  * \param message message to print before exiting.
  */
-void Parallel::Communicator::MPIExit(std::string message)
+void Parallel::Communicator::MPIExit(const std::string &message)
 {
     if (m_processRank == 0) cout << "\n" << message.c_str() << endl;
     freeMPIGroups();
@@ -536,7 +536,7 @@ void Parallel::Communicator::MPIExit(std::string message)
  * \brief Parallel::Communicator::MPIPrint prints a message from rank 0. Includes barriers.
  * \param message to print.
  */
-void Parallel::Communicator::MPIPrint(std::string message)
+void Parallel::Communicator::MPIPrint(const std::string &message)
 {
     setBarrier();
     if (m_processRank == 0) cout << "\n" << message.c_str() << endl;
@@ -550,7 +550,7 @@ void Parallel::Communicator::MPIPrint(std::string message)
  *
  * \todo Remove the unsigned long int, and use instead just unsigned long? Change globally to only use long?
  */
-void Parallel::Communicator::gatherDoubleResults(double * data, unsigned int N)
+void Parallel::Communicator::gatherDoubleResults(double * data, const unsigned int N)
 {
     double tempData[N];
     MPI_Allreduce(data,tempData,N,MPI_DOUBLE,MPI_SUM,Parallel::ParallelParameters::ACTIVE_COMM);
@@ -561,7 +561,7 @@ void Parallel::Communicator::gatherDoubleResults(double * data, unsigned int N)
  * \brief Parallel::Communicator::setN sets the lattice dimensions in the Parallel::Communicator class.
  * \param N vector of global lattice dimensions
  */
-void Parallel::Communicator::setN(std::vector<unsigned int> N)
+void Parallel::Communicator::setN(const std::vector<unsigned int> &N)
 {
     for (int i = 0; i < 4; i++) {
         m_N[i] = N[i];
@@ -573,7 +573,7 @@ void Parallel::Communicator::setN(std::vector<unsigned int> N)
  * \param lattice lattice to check.
  * \param message to print if it contains nan numbers.
  */
-void Parallel::Communicator::checkLattice(Lattice<SU3> *lattice, std::string message)
+void Parallel::Communicator::checkLattice(Lattice<SU3> *lattice, const std::string &message)
 {
     /*
      * Test for bug hunting in a large lattice.

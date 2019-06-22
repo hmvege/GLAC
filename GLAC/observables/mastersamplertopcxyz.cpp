@@ -5,7 +5,7 @@
 #include "config/parameters.h"
 #include "io/observablesio.h"
 
-MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(bool flow) : Correlator()
+MasterSamplerTopcXYZ::MasterSamplerTopcXYZ(const bool flow) : Correlator()
 {
     // Sets up observable storage containers
     initializeObservableStorer(flow);
@@ -43,7 +43,7 @@ MasterSamplerTopcXYZ::~MasterSamplerTopcXYZ()
     delete m_topctObservable;
 }
 
-void MasterSamplerTopcXYZ::initializeObservableStorer(bool storeFlowObservable)
+void MasterSamplerTopcXYZ::initializeObservableStorer(const bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
     if (m_storeFlowObservable) {
@@ -72,7 +72,7 @@ void MasterSamplerTopcXYZ::initializeObservableStorer(bool storeFlowObservable)
     m_topctObservable->setObservableName("topct");
 }
 
-void MasterSamplerTopcXYZ::writeFlowObservablesToFile(unsigned int configNumber)
+void MasterSamplerTopcXYZ::writeFlowObservablesToFile(const unsigned int configNumber)
 {
     // Gathers and writes plaquette results to file
     m_plaqObservable->gatherResults();
@@ -93,7 +93,7 @@ void MasterSamplerTopcXYZ::writeFlowObservablesToFile(unsigned int configNumber)
     IO::writeMatrixToFile(m_topctGatherVector,m_topctObservable->getObservableName(),configNumber,Parameters::getNTemporal());
 }
 
-void MasterSamplerTopcXYZ::writeObservableToFile(double acceptanceRatio)
+void MasterSamplerTopcXYZ::writeObservableToFile(const double acceptanceRatio)
 {
     // Writes plaquette results to file
     m_plaqObservable->writeObservableToFile(acceptanceRatio);
@@ -154,7 +154,7 @@ void MasterSamplerTopcXYZ::printHeader()
     }
 }
 
-void MasterSamplerTopcXYZ::printObservable(unsigned int iObs)
+void MasterSamplerTopcXYZ::printObservable(const unsigned int iObs)
 {
     if (!m_storeFlowObservable) {
         double topctObs = 0;
@@ -210,7 +210,7 @@ void MasterSamplerTopcXYZ::printStatistics()
     m_energyObservable->printStatistics();
 }
 
-void MasterSamplerTopcXYZ::copyObservable(unsigned int iObs, std::vector<double> obs)
+void MasterSamplerTopcXYZ::copyObservable(const unsigned int iObs, const std::vector<double> &obs)
 {
     (*m_plaqObservable)[iObs] = obs[0];
     (*m_topcObservable)[iObs] = obs[1];
@@ -220,7 +220,7 @@ void MasterSamplerTopcXYZ::copyObservable(unsigned int iObs, std::vector<double>
     }
 }
 
-std::vector<double> MasterSamplerTopcXYZ::getObservablesVector(unsigned int iObs)
+std::vector<double> MasterSamplerTopcXYZ::getObservablesVector(const unsigned int iObs)
 {
     std::vector<double> obs(3 + m_N[3]);
     obs[0] = (*m_plaqObservable)[iObs];
@@ -233,7 +233,7 @@ std::vector<double> MasterSamplerTopcXYZ::getObservablesVector(unsigned int iObs
     return obs;
 }
 
-void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, unsigned int iObs)
+void MasterSamplerTopcXYZ::calculate(Lattice<SU3> *lattice, const unsigned int iObs)
 {
     ///////////////////////////
     //// SYMMETRIC CLOVER /////

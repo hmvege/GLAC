@@ -31,10 +31,10 @@ private:
     Lattice <double> m_tempDiag;
     Lattice<SU3> m_clov1, m_clov2, m_U2Temp, m_U3Temp, m_temp;
 public:
-    TopologicalCharge(bool storeFlowObservable);
+    TopologicalCharge(const bool storeFlowObservable);
     ~TopologicalCharge();
 
-    void calculate(Lattice<SU3> *lattice, unsigned int iObs);
+    void calculate(Lattice<SU3> *lattice, const unsigned int iObs);
 
     // Stats
     void runStatistics();

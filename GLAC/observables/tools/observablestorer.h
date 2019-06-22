@@ -33,11 +33,11 @@ private:
     std::vector<double> m_observables;
     std::vector<double> m_observablesSquared;
 public:
-    ObservableStorer(unsigned long int NSize);
+    ObservableStorer(const unsigned long int NSize);
     ~ObservableStorer();
 
     // Accessor for the observable
-    double &operator[](unsigned long int iObs) { return m_observables.at(iObs); }
+    double &operator[](const unsigned long int iObs) { return m_observables.at(iObs); }
 //    double &operator[](unsigned long int iObs) { return m_observables[iObs]; }
 
     // Runs statistics, perhaps create its own class? But that increases overhead, so maybe not
@@ -48,17 +48,17 @@ public:
     void printStatistics();
 
     // File writers
-    void writeObservableToFile(double acceptanceRatio);
-    void writeFlowObservableToFile(unsigned long int configNumber);
+    void writeObservableToFile(const double acceptanceRatio);
+    void writeFlowObservableToFile(const unsigned long int configNumber);
 
     // Getters
     std::vector<double> getObservableArray() { return m_observables; }
-    double getObservable(unsigned long int iObs) { return m_observables[iObs]; }
+    double getObservable(const unsigned long int iObs) { return m_observables[iObs]; }
     std::string getObservableName() { return m_observableName; }
 
     // Setters
-    void setObservableName(std::string observableName) { m_observableName = observableName; }
-    void setNormalizeObservableByProcessor(bool norm) { m_normalizeObservableByProcessor = norm; }
+    void setObservableName(const std::string &observableName) { m_observableName = observableName; }
+    void setNormalizeObservableByProcessor(const bool norm) { m_normalizeObservableByProcessor = norm; }
     void reset();
 };
 

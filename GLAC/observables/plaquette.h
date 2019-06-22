@@ -34,17 +34,17 @@ private:
     const std::string m_observableName = "Plaquette";
     const std::string m_observableNameCompact = "plaq";
 public:
-    Plaquette(bool storeFlowObservable);
+    Plaquette(const bool storeFlowObservable);
     ~Plaquette();
-    void calculate(Lattice<SU3> *lattice, unsigned int iObs);
+    void calculate(Lattice<SU3> *lattice, const unsigned int iObs);
     // Statistics getter
     void runStatistics();
     // Setters
-    void setLatticeSize(unsigned long int latticeSize);
+    void setLatticeSize(const unsigned long int latticeSize);
     // Getters
     std::string getObservableName() { return m_observableName; }
     // Printers
-    void printObservable(unsigned int iObs);
+    void printObservable(const unsigned int iObs);
     void printHeader();
 };
 

@@ -5,7 +5,7 @@
 #include "io/observablesio.h"
 //#include <map>
 
-SuperSampler::SuperSampler(bool flow) : Correlator()
+SuperSampler::SuperSampler(const bool flow) : Correlator()
 {
     // Sets up observable storage containers
     initializeObservableStorer(flow);
@@ -51,7 +51,7 @@ SuperSampler::~SuperSampler()
     delete m_wtObservable;
 }
 
-void SuperSampler::initializeObservableStorer(bool storeFlowObservable)
+void SuperSampler::initializeObservableStorer(const bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
     if (m_storeFlowObservable) {
@@ -100,7 +100,7 @@ void SuperSampler::initializeObservableStorer(bool storeFlowObservable)
     m_wtObservable->setObservableName("weinbergt");
 }
 
-void SuperSampler::writeFlowObservablesToFile(unsigned int configNumber)
+void SuperSampler::writeFlowObservablesToFile(const unsigned int configNumber)
 {
     // Gathers and writes plaquette results to file
     m_plaqObservable->gatherResults();
@@ -127,7 +127,7 @@ void SuperSampler::writeFlowObservablesToFile(unsigned int configNumber)
     IO::writeMatrixToFile(m_wtGatherVector, m_wtObservable->getObservableName(), configNumber, Parameters::getNTemporal());
 }
 
-void SuperSampler::writeObservableToFile(double acceptanceRatio)
+void SuperSampler::writeObservableToFile(const double acceptanceRatio)
 {
     // Writes plaquette results to file
     m_plaqObservable->writeObservableToFile(acceptanceRatio);
@@ -194,7 +194,7 @@ void SuperSampler::printHeader()
     }
 }
 
-void SuperSampler::printObservable(unsigned int iObs)
+void SuperSampler::printObservable(const unsigned int iObs)
 {
     if (!m_storeFlowObservable) {
         double topctObs = 0;
@@ -266,7 +266,7 @@ void SuperSampler::printStatistics()
     m_wObservable->printStatistics();
 }
 
-void SuperSampler::copyObservable(unsigned int iObs, std::vector<double> obs)
+void SuperSampler::copyObservable(const unsigned int iObs, const std::vector<double> &obs)
 {
     (*m_plaqObservable)[iObs] = obs[0];
     (*m_topcObservable)[iObs] = obs[1];
@@ -280,7 +280,7 @@ void SuperSampler::copyObservable(unsigned int iObs, std::vector<double> obs)
     }
 }
 
-std::vector<double> SuperSampler::getObservablesVector(unsigned int iObs)
+std::vector<double> SuperSampler::getObservablesVector(const unsigned int iObs)
 {
     std::vector<double> obs(4 + 2*m_N[3]);
     obs[0] = (*m_plaqObservable)[iObs];
@@ -295,7 +295,7 @@ std::vector<double> SuperSampler::getObservablesVector(unsigned int iObs)
     return obs;
 }
 
-void SuperSampler::calculate(Lattice<SU3> *lattice, unsigned int iObs)
+void SuperSampler::calculate(Lattice<SU3> *lattice, const unsigned int iObs)
 {
     ///////////////////////////
     //// SYMMETRIC CLOVER /////

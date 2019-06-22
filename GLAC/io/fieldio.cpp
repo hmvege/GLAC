@@ -58,7 +58,7 @@ void IO::FieldIO::init()
  *
  * If debug is true in the passed .json parameter file, it will perform a check for lattice corruption.
  */
-void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNumber)
+void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, const unsigned int configNumber)
 {
     /*
      * C-method for writing out configuration to file.
@@ -134,7 +134,7 @@ void IO::FieldIO::writeFieldToFile(Lattice<SU3> *lattice, unsigned int configNum
  *
  * If debug is true in the passed .json parameter file, it will perform a check for lattice corruption.
  */
-void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned int configNumber, std::string observable)
+void IO::FieldIO::writeDoublesFieldToFile(const Lattice<double> &lattice, const unsigned int configNumber, const std::string &observable)
 {
     /*
      * C-method for writing out single double lattice field to file. No lorentz indices
@@ -174,7 +174,7 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned int 
                 ny = (Parallel::Neighbours::getProcessorDimensionPosition(1) * m_N[1] + y);
 
                 offset = Parallel::Index::getGlobalIndex(nx,ny,nz,nt)*sizeof(double);
-                MPI_File_write_at(file, offset, &lattice[Parallel::Index::getIndex(0,y,z,t)], m_N[0], MPI_DOUBLE, MPI_STATUS_IGNORE);
+                MPI_File_write_at(file, offset, &lattice.m_sites[Parallel::Index::getIndex(0,y,z,t)], m_N[0], MPI_DOUBLE, MPI_STATUS_IGNORE);
             }
         }
     }
@@ -192,7 +192,7 @@ void IO::FieldIO::writeDoublesFieldToFile(Lattice<double> lattice, unsigned int 
  *
  * If debug is true in the passed .json parameter file, it will perform a check for lattice corruption.
  */
-void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lattice)
+void IO::FieldIO::loadFieldConfiguration(const std::string &filename, Lattice<SU3> *lattice)
 {
     /*
      * Method for loading a field configuration and running the plaquettes on them.
@@ -256,7 +256,7 @@ void IO::FieldIO::loadFieldConfiguration(std::string filename, Lattice<SU3> *lat
  *
  * If debug is true in the passed .json parameter file, it will perform a check for lattice corruption.
  */
-void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3> *lattice)
+void IO::FieldIO::loadChromaFieldConfiguration(const std::string &filename, Lattice<SU3> *lattice)
 {
     /*
      * Method for loading a field configuration and running the plaquettes on them.
@@ -309,7 +309,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(std::string filename, Lattice<SU3
 
 }
 
-bool IO::FieldIO::check_file_existence (const std::string fname) {
+bool IO::FieldIO::check_file_existence (const std::string &fname) {
     std::ifstream infile(fname);
     return infile.good();
 }

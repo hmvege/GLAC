@@ -18,7 +18,7 @@ void SysPrint::printLine()
     cout << endl;
 }
 
-std::string SysPrint::getListString(std::vector<std::string> observableList)
+std::string SysPrint::getListString(const std::vector<std::string> &observableList)
 {
     std::string returnString = observableList[0];
     for (unsigned int i = 1; i < observableList.size(); i++) {
@@ -27,7 +27,7 @@ std::string SysPrint::getListString(std::vector<std::string> observableList)
     return returnString;
 }
 
-std::string SysPrint::getTrueOrFalseString(bool i)
+std::string SysPrint::getTrueOrFalseString(const bool i)
 {
     if (i) {
         return "TRUE";

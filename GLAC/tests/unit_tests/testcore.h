@@ -74,8 +74,10 @@ inline bool TestCore::compareComplex(const complex a, const complex b)
     /*
      * Function that compares two complex numbers and returns false if they are different.
      */
-    for (int i = 0; i < 2; i++) {
-        if (fabs(a.z[i] - b.z[i]) > m_machineEpsilon) {
+    for (int i = 0; i < 2; i++)
+    {
+        if (fabs(a.z[i] - b.z[i]) > m_machineEpsilon)
+        {
             return false;
         }
     }
@@ -87,8 +89,10 @@ inline bool TestCore::compareSU2(const SU2 A, const SU2 B)
     /*
      * Function that compares two SU2 matrices and returns false if they are not EXACTLY the same.
      */
-    for (int i = 0; i < 8; i++) {
-        if (fabs(A.mat[i] - B.mat[i]) > m_machineEpsilon) {
+    for (int i = 0; i < 8; i++)
+    {
+        if (fabs(A.mat[i] - B.mat[i]) > m_machineEpsilon)
+        {
             return false;
         }
     }
@@ -100,8 +104,10 @@ inline bool TestCore::compareSU3(const SU3 A, const SU3 B)
     /*
      * Function that compares two SU3 matrices and returns false if they are not EXACTLY the same.
      */
-    for (int i = 0; i < 18; i++) {
-        if (fabs(A.mat[i] - B.mat[i]) > m_machineEpsilon) {
+    for (int i = 0; i < 18; i++)
+    {
+        if (fabs(A.mat[i] - B.mat[i]) > m_machineEpsilon)
+        {
             return false;
         }
     }
@@ -112,26 +118,30 @@ inline bool TestCore::compareSU3(const SU3 A, const SU3 B)
 /////// Vector dot prodcts /////////
 ////////////////////////////////////
 // Inline dot product between two columns of a 3x3 matrix
-inline complex TestCore::dot(complex * a, complex * b) {
+inline complex TestCore::dot(complex * a, complex * b)
+{
     /*
      * Dot product defined as:
      *  (v,u*) = v*conjugate(u)
      */
     complex returnSum(0,0);
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++)
+    {
         returnSum += a[i].c()*b[i];
     }
     return returnSum;
 }
 
 // Inline dot product between two columns of a 2x2 matrix
-inline complex TestCore::dot2(complex * a, complex * b) {
+inline complex TestCore::dot2(complex * a, complex * b)
+{
     /*
      * Dot product defined as:
      *  (v,u*) = v*conjugate(u)
      */
     complex returnSum(0,0);
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++)
+    {
         returnSum += a[i].c()*b[i];
     }
     return returnSum;

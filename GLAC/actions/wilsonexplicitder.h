@@ -65,9 +65,9 @@ private:
 public:
     WilsonExplicitDer();
     ~WilsonExplicitDer();
-    double getDeltaAction(SU3 U, SU3 UPrime);
-    void computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu);
-    Lattice<SU3> getActionDerivative(Lattice<SU3> *lattice, int mu);
+    double getDeltaAction(SU3 &U, SU3 &UPrime);
+    void computeStaple(Lattice<SU3> *lattice, const int i, const int j, const int k, const int l, const int mu);
+    Lattice<SU3> getActionDerivative(Lattice<SU3> *lattice, const int mu);
 
     /*!
      * \brief updateMuIndex updates the m_muIndex based on mu.

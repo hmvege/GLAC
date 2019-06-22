@@ -46,7 +46,7 @@ public:
      * \param U Old link
      * \param UPrime Updated link
      */
-    virtual double getDeltaAction(SU3 U, SU3 UPrime);
+    virtual double getDeltaAction(SU3 &U, SU3 &UPrime) = 0;
 
     /*!
      * \brief computeStaple computes the staple at given poisition.
@@ -58,14 +58,14 @@ public:
      * \param mu lorentz index, \f$\mu\f$.
      * \return Returns change in action \f$\Delta S\f$
      */
-    virtual void computeStaple(Lattice<SU3> *lattice, int i, int j, int k, int l, int mu);
+    virtual void computeStaple(Lattice<SU3> *lattice, const int i, const int j, const int k, const int l, const int mu) = 0;
 
     /*!
      * \brief getActionDerivative, computes the derivative of the lattice in given direction.
      * \param lattice a pointer of four lattice objects, one for each lorentz index.
      * \param mu lorentz index, \f$\mu\f$.
      */
-    virtual Lattice<SU3> getActionDerivative(Lattice<SU3> * lattice, int mu);
+    virtual Lattice<SU3> getActionDerivative(Lattice<SU3> * lattice, const int mu) = 0;
 };
 
 

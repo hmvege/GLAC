@@ -4,7 +4,7 @@
 #include "config/parameters.h"
 #include "io/fieldio.h"
 
-LatticeActionChargeDensity::LatticeActionChargeDensity(bool flow) : Correlator()
+LatticeActionChargeDensity::LatticeActionChargeDensity(const bool flow) : Correlator()
 {
     // Sets up observable storage containers
     initializeObservableStorer(flow);
@@ -38,7 +38,7 @@ LatticeActionChargeDensity::~LatticeActionChargeDensity()
     delete m_energyObservable;
 }
 
-void LatticeActionChargeDensity::initializeObservableStorer(bool storeFlowObservable)
+void LatticeActionChargeDensity::initializeObservableStorer(const bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
     if (m_storeFlowObservable) {
@@ -63,7 +63,7 @@ void LatticeActionChargeDensity::initializeObservableStorer(bool storeFlowObserv
     m_energyObservable->setObservableName("energy");
 }
 
-void LatticeActionChargeDensity::writeFlowObservablesToFile(unsigned int iFlow)
+void LatticeActionChargeDensity::writeFlowObservablesToFile(const unsigned int iFlow)
 {
     // Gathers and writes plaquette results to file
     m_plaqObservable->gatherResults();
@@ -76,7 +76,7 @@ void LatticeActionChargeDensity::writeFlowObservablesToFile(unsigned int iFlow)
     m_energyObservable->writeFlowObservableToFile(iFlow);
 }
 
-void LatticeActionChargeDensity::writeObservableToFile(double acceptanceRatio)
+void LatticeActionChargeDensity::writeObservableToFile(const double acceptanceRatio)
 {
     m_plaqObservable->writeObservableToFile(acceptanceRatio);
     m_topcObservable->writeObservableToFile(acceptanceRatio);
@@ -116,7 +116,7 @@ void LatticeActionChargeDensity::printHeader()
     }
 }
 
-void LatticeActionChargeDensity::printObservable(unsigned int iObs)
+void LatticeActionChargeDensity::printObservable(const unsigned int iObs)
 {
     if (!m_storeFlowObservable) {
         if (Parallel::Communicator::getProcessRank() == 0) {
@@ -150,14 +150,14 @@ void LatticeActionChargeDensity::printStatistics()
     m_energyObservable->printStatistics();
 }
 
-void LatticeActionChargeDensity::copyObservable(unsigned int iObs, std::vector<double> obs)
+void LatticeActionChargeDensity::copyObservable(const unsigned int iObs, const std::vector<double> &obs)
 {
     (*m_plaqObservable)[iObs] = obs[0];
     (*m_topcObservable)[iObs] = obs[1];
     (*m_energyObservable)[iObs] = obs[2];
 }
 
-std::vector<double> LatticeActionChargeDensity::getObservablesVector(unsigned int iObs)
+std::vector<double> LatticeActionChargeDensity::getObservablesVector(const unsigned int iObs)
 {
     std::vector<double> obs(3);
     obs[0] = (*m_plaqObservable)[iObs];
@@ -166,7 +166,7 @@ std::vector<double> LatticeActionChargeDensity::getObservablesVector(unsigned in
     return obs;
 }
 
-void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, unsigned int iObs)
+void LatticeActionChargeDensity::calculate(Lattice<SU3> *lattice, const unsigned int iObs)
 {
     ///////////////////////////
     //// SYMMETRIC CLOVER /////

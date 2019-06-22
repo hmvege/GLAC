@@ -10,10 +10,8 @@ bool Parallel::ParallelParameters::active = true;
 
 Parallel::ParallelParameters::ParallelParameters()
 {
-
 }
 
 Parallel::ParallelParameters::~ParallelParameters()
 {
-
 }

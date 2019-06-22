@@ -36,6 +36,7 @@ private:
 
     // Tests for shift
     void testShift();
+    void testDoubleShift();
 public:
     PerformanceTests();
     ~PerformanceTests();

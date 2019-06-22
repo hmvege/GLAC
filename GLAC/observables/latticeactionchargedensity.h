@@ -39,20 +39,20 @@ private:
     ObservableStorer * m_topcObservable = nullptr;
     ObservableStorer * m_energyObservable = nullptr;
 public:
-    LatticeActionChargeDensity(bool flow);
+    LatticeActionChargeDensity(const bool flow);
     ~LatticeActionChargeDensity();
-    void calculate(Lattice<SU3> * lattice, unsigned int iObs);
-    void initializeObservableStorer(bool storeFlowObservable);
+    void calculate(Lattice<SU3> * lattice, const unsigned int iObs);
+    void initializeObservableStorer(const bool storeFlowObservable);
 
-    void writeObservableToFile(double acceptanceRatio);
-    void writeFlowObservablesToFile(unsigned int iFlow);
+    void writeObservableToFile(const double acceptanceRatio);
+    void writeFlowObservablesToFile(const unsigned int iFlow);
     void reset();
     void runStatistics();
     void printHeader();
-    void printObservable(unsigned int iObs);
+    void printObservable(const unsigned int iObs);
     void printStatistics();
-    std::vector<double> getObservablesVector(unsigned int iObs);
-    void copyObservable(unsigned int iObs, std::vector<double> obs);
+    std::vector<double> getObservablesVector(const unsigned int iObs);
+    void copyObservable(const unsigned int iObs, const std::vector<double> &obs);
 };
 
 #endif // LATTICEACTIONCHARGEDENSITY_H

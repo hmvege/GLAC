@@ -17,8 +17,15 @@
 #include "su3.h"
 #include "su2.h"
 
+class TestCore;
+class TestSuite;
+class RandomMatrixTests;
+
 class SU3MatrixGenerator
 {
+    friend class TestCore;
+    friend class TestSuite;
+    friend class RandomMatrixTests;
 private:
     // RNG
     std::mt19937_64 m_generator;
@@ -33,8 +40,8 @@ private:
     double m_sqrtOneMinusEpsSquared;
     double m_projectionFactor[2];
     double m_columnLength = 0;
-    inline SU3 RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t);
-    inline SU3 RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 t);
+    inline SU3 RSTMatrixMultiplication(SU2 &r, SU2 &s, SU2 &t);
+    inline SU3 RSTMatrixMultiplicationInverse(SU2 &r, SU2 &s, SU2 &t);
 
     // Used for creating a random matrix
     SU3 H;
@@ -60,28 +67,28 @@ public:
     SU3 generateRST();
     SU2 generateSU2();
 
-    /*!
-     * \brief testRSTMultiplication wrapper for testing the RSTMatrixMultiplication method.
-     *
-     * Using a wrapper since it is an inline function intended for use only in the SU3 matrix generator.
-     *
-     * \param r SU2 matrix.
-     * \param s SU2 matrix.
-     * \param t SU2 matrix.
-     * \return SU3 matrix.
-     */
-    SU3 testRSTMultiplication(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplication(r,s,t); }
-    /*!
-     * \brief testRSTMultiplicationInverse wrapper for testing the RSTMatrixMultiplicationInverse method.
-     *
-     * Using a wrapper since it is an inline function intended for use only in the SU3 matrix generator.
-     *
-     * \param r SU2 matrix.
-     * \param s SU2 matrix.
-     * \param t SU2 matrix.
-     * \return SU3 matrix.
-     */
-    SU3 testRSTMultiplicationInverse(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplicationInverse(r,s,t); }
+//    /*!
+//     * \brief testRSTMultiplication wrapper for testing the RSTMatrixMultiplication method.
+//     *
+//     * Using a wrapper since it is an inline function intended for use only in the SU3 matrix generator.
+//     *
+//     * \param r SU2 matrix.
+//     * \param s SU2 matrix.
+//     * \param t SU2 matrix.
+//     * \return SU3 matrix.
+//     */
+//    SU3 testRSTMultiplication(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplication(r,s,t); }
+//    /*!
+//     * \brief testRSTMultiplicationInverse wrapper for testing the RSTMatrixMultiplicationInverse method.
+//     *
+//     * Using a wrapper since it is an inline function intended for use only in the SU3 matrix generator.
+//     *
+//     * \param r SU2 matrix.
+//     * \param s SU2 matrix.
+//     * \param t SU2 matrix.
+//     * \return SU3 matrix.
+//     */
+//    SU3 testRSTMultiplicationInverse(SU2 r, SU2 s, SU2 t) { return RSTMatrixMultiplicationInverse(r,s,t); }
 };
 
 /*!
@@ -235,7 +242,7 @@ inline SU2 SU3MatrixGenerator::generateSU2()
     return U;
 }
 
-inline SU3 SU3MatrixGenerator::RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t)
+inline SU3 SU3MatrixGenerator::RSTMatrixMultiplication(SU2 &r, SU2 &s, SU2 &t)
 {
     /*
      * Generatores a random SU3 matrix.
@@ -274,7 +281,7 @@ inline SU3 SU3MatrixGenerator::RSTMatrixMultiplication(SU2 r, SU2 s, SU2 t)
     return X;
 }
 
-inline SU3 SU3MatrixGenerator::RSTMatrixMultiplicationInverse(SU2 r, SU2 s, SU2 t)
+inline SU3 SU3MatrixGenerator::RSTMatrixMultiplicationInverse(SU2 &r, SU2 &s, SU2 &t)
 {
     /*
      * Generatores a random SU3 matrix.

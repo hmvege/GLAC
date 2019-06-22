@@ -249,7 +249,8 @@ TestCore::TestCore()
     latticeComplex_z2.allocate(m_dim);
     latticeDouble1.allocate(m_dim);
     latticeDouble2.allocate(m_dim);
-    for (unsigned int iSite = 0; iSite < latticeSU3_U1.m_latticeSize; iSite++) {
+    for (unsigned int iSite = 0; iSite < latticeSU3_U1.m_latticeSize; iSite++)
+    {
         latticeSU3_U1[iSite] = U1;
         latticeSU3_U2[iSite] = U2;
         latticeComplex_z1[iSite] = z1;

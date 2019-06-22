@@ -21,8 +21,10 @@
  * \brief Parallel contains all of the relevant methods for communicating between the lattices.
  */
 
-namespace Parallel {
-class ParallelParameters {
+namespace Parallel
+{
+class ParallelParameters
+{
 public:
     //! The WORLD_GROUP is the communicator used all processors allocated to the program.
     static MPI_Group WORLD_GROUP;

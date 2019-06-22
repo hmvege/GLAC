@@ -41,7 +41,7 @@ private:
     Lattice<double> latticeDouble1, latticeDouble2;
 
     // Limit we demand matrix properties to be retained at
-    double m_eps = 2*1e-14;
+    const double m_eps = 2*1e-14;
     double m_tracedMatrix;
 
     // Variables used for full lattice testing

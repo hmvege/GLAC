@@ -35,20 +35,6 @@ Correlator::~Correlator()
 }
 
 /*!
- * \brief Correlator::calculate calculates a observable
- * \param lattice pointer to lattice of SU3 matrices
- * \param iObs number of the observable
- */
-void Correlator::calculate(Lattice<SU3> *lattice, unsigned int iObs)
-{
-    /*
-     * Default correlator is not implemented. Pushes to observable array at position iObs.
-     */
-    lattice[0][iObs].zeros();
-    printf("\nIf you see this, something is wrong! Should not call correlator.cpp");
-}
-
-/*!
  * \brief Correlator::printHeader prints a the observable name for output in header.
  */
 void Correlator::printHeader()
@@ -61,7 +47,7 @@ void Correlator::printHeader()
  * \param iObs number of the observable to print.
  * \return the observable for given iObs.
  */
-double Correlator::getObservable(unsigned int iObs)
+double Correlator::getObservable(const unsigned int iObs)
 {
     return (*m_observable)[iObs];
 }
@@ -70,7 +56,7 @@ double Correlator::getObservable(unsigned int iObs)
  * \brief Correlator::printObservable prints the observable for the output.
  * \param iObs
  */
-void Correlator::printObservable(unsigned int iObs)
+void Correlator::printObservable(const unsigned int iObs)
 {
     if (Parallel::Communicator::getProcessRank() == 0)
     {
@@ -105,7 +91,7 @@ void Correlator::runStatistics()
  *
  * Gathers results and performs statistics in the ObservableStorer object.
  */
-void Correlator::writeFlowObservablesToFile(unsigned int iFlow)
+void Correlator::writeFlowObservablesToFile(const unsigned int iFlow)
 {
     m_observable->gatherResults();
     m_observable->writeFlowObservableToFile(iFlow);
@@ -115,7 +101,7 @@ void Correlator::writeFlowObservablesToFile(unsigned int iFlow)
  * \brief Correlator::writeObservableToFile calls the ObservableStorer for writing observable to file.
  * \param acceptanceRatio
  */
-void Correlator::writeObservableToFile(double acceptanceRatio)
+void Correlator::writeObservableToFile(const double acceptanceRatio)
 {
     m_observable->writeObservableToFile(acceptanceRatio);
 }
@@ -124,15 +110,21 @@ void Correlator::writeObservableToFile(double acceptanceRatio)
  * \brief Correlator::initializeObservableStorer initializes ObservableStorer.
  * \param storeFlowObservable
  */
-void Correlator::initializeObservableStorer(bool storeFlowObservable)
+void Correlator::initializeObservableStorer(const bool storeFlowObservable)
 {
     m_storeFlowObservable = storeFlowObservable;
-    if (m_storeFlowObservable) {
+    if (m_storeFlowObservable)
+    {
         m_observable = new ObservableStorer(Parameters::getNFlows() + 1); // +1 as we are storing the initial value at t=0 as well.
-    } else {
-        if (Parameters::getStoreThermalizationObservables()) {
+    }
+    else
+    {
+        if (Parameters::getStoreThermalizationObservables())
+        {
             m_observable = new ObservableStorer(Parameters::getNCf() + Parameters::getNTherm() + 1);
-        } else {
+        }
+        else
+        {
             m_observable = new ObservableStorer(Parameters::getNCf());
         }
     }
@@ -151,7 +143,8 @@ void Correlator::reset()
  * \param iObs observable number.
  * \param obs vector containing observable information. Is a vector in case it consists of multiple values(e.g. topc in Euclidean time).
  */
-void Correlator::copyObservable(unsigned int iObs, std::vector<double> obs) {
+void Correlator::copyObservable(const unsigned int iObs, const std::vector<double> &obs)
+{
     /*
      * Used when we already have calculated the observable in the
      */
@@ -163,7 +156,8 @@ void Correlator::copyObservable(unsigned int iObs, std::vector<double> obs) {
  * \param iObs
  * \return a vector containing the observables at given iObs.
  */
-std::vector<double> Correlator::getObservablesVector(unsigned int iObs) {
+std::vector<double> Correlator::getObservablesVector(const unsigned int iObs)
+{
     std::vector<double> obs(1);
     obs[0] = (*m_observable)[iObs];
     return obs;

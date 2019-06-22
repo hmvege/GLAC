@@ -21,8 +21,8 @@
 class SysPrint
 {
 private:
-    static std::string getTrueOrFalseString(bool i);
-    static std::string getListString(std::vector<std::string> observableList);
+    static std::string getTrueOrFalseString(const bool i);
+    static std::string getListString(const std::vector<std::string> &observableList);
 public:
     SysPrint();
 

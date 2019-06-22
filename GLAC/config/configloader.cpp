@@ -42,7 +42,7 @@ namespace ConfigLoader {
      *
      * Method for loading json files.
      */
-    void  load(std::string jsonFileName)
+    void  load(const std::string &jsonFileName)
     {
         if (!check_file_existence(jsonFileName.c_str())) {
             Parallel::Communicator::MPIExit("File " + jsonFileName + " does not exist");

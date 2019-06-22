@@ -74,6 +74,7 @@ void PerformanceTests::run()
     Parallel::Communicator::setBarrierActive();
     testDerivativeTimeAndAccuracy(Parameters::getNDerivativeTests());
     testShift();
+    testDoubleShift();
     testFlow();
 }
 
@@ -533,7 +534,7 @@ void PerformanceTests::testShift()
         }
     }
 
-    unsigned int NTests = 1000;
+    const unsigned int NTests = 1000;
 
     // Timers
     double timer = 0;
@@ -550,6 +551,54 @@ void PerformanceTests::testShift()
     timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
     if (m_processRank == 0) {
         printf("\nShift test:  %8.4f seconds (%8.4E seconds per flow step)",timer,timer/double(NTests));
+    }
+
+    delete [] L;
+}
+
+void PerformanceTests::testDoubleShift()
+{
+    /*
+     * Runs performance tests on the shift method.
+     */
+
+    Lattice<SU3> *L = new Lattice<SU3>[4];
+    for (unsigned int mu = 0; mu < 4; ++mu) {
+        L[mu].allocate(m_dim);
+    }
+    for (unsigned int mu = 0; mu < 4; ++mu) {
+        for (unsigned int isite = 0; isite < L[0].m_latticeSize; ++isite) {
+            L[mu][isite] = m_SU3Generator->generateRST();
+        }
+    }
+
+    if (m_processRank == 0) {
+        printf("\nRunning shift performance tests for a lattice of size: %d^3 x %d", m_N, m_NT);
+    }
+
+    for (unsigned int mu = 0; mu < 4; ++mu) {
+        for (unsigned int isite = 0; isite < L[0].m_latticeSize; ++isite) {
+            L[mu][isite] = m_SU3Generator->generateRST();
+        }
+    }
+
+    const unsigned int NTests = 1000;
+
+    // Timers
+    double timer = 0;
+    steady_clock::time_point preUpdate;
+    preUpdate = steady_clock::now();
+
+    for (unsigned int itest = 0; itest < NTests; itest++) {
+        for (unsigned int mu = 0; mu < 4; mu++) {
+            L[mu] = shift(shift(L[mu], FORWARDS, mu), BACKWARDS, mu);
+            L[mu] = shift(shift(L[mu], BACKWARDS, mu), FORWARDS, mu);
+        }
+    }
+
+    timer = duration_cast<duration<double>>(steady_clock::now() - preUpdate).count();
+    if (m_processRank == 0) {
+        printf("\nDouble shift test:  %8.4f seconds (%8.4E seconds per flow step)",timer,timer/double(NTests));
     }
 
     delete [] L;

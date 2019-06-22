@@ -29,8 +29,9 @@ public:
     unsigned long m_latticeSize;
 
     // Default contructors
-    Lattice() { }
-    Lattice(std::vector<unsigned int>latticeDimensions) {
+    Lattice() {}
+    Lattice(std::vector<unsigned int> latticeDimensions)
+    {
         allocate(latticeDimensions);
     }
 
@@ -42,7 +43,7 @@ public:
      * \brief Lattice copy constructor
      * \param other
      */
-    Lattice(const Lattice<T>& other) :
+    Lattice(const Lattice<T> &other) :
         m_dim(other.m_dim),
         m_latticeSize(other.m_latticeSize)
     {
@@ -54,7 +55,7 @@ public:
      * \brief Lattice move constructor
      * \param other
      */
-    Lattice(Lattice<T> && other) noexcept :
+    Lattice(Lattice<T> &&other) noexcept :
         m_sites(std::move(other.m_sites)),
         m_dim(other.m_dim),
         m_latticeSize(other.m_latticeSize)
@@ -67,7 +68,8 @@ public:
      * \param other
      * \return
      */
-    Lattice &operator =(const Lattice& other) {
+    Lattice &operator =(const Lattice& other)
+    {
         Lattice tmp(other);
         *this = std::move(tmp);
         return *this;
@@ -79,7 +81,8 @@ public:
      * \param other
      * \return
      */
-    Lattice &operator= (Lattice<T>&& other) noexcept {
+    Lattice &operator= (Lattice<T> &&other) noexcept
+    {
         m_latticeSize = other.m_latticeSize;
         m_dim  = other.m_dim;
         m_sites = std::move(other.m_sites);
@@ -90,7 +93,7 @@ public:
      * \brief allocate method for allocating memory.
      * \param dim
      */
-    void allocate(std::vector<unsigned int> dim);
+    void allocate(const std::vector<unsigned int> &dim);
 
     // Overloading lattice position getter
     /*!
@@ -98,7 +101,8 @@ public:
      * \param i
      * \return
      */
-    T &operator[](unsigned long i) {
+    T &operator[](const unsigned long i)
+    {
         return m_sites[i];
     }
 
@@ -107,8 +111,10 @@ public:
      * \param i
      * \return
      */
-    T &operator()(unsigned long i) {
-        if (i >= m_latticeSize) {
+    T &operator()(const unsigned long i)
+    {
+        if (i >= m_latticeSize)
+        {
             printf("OUT OF BUNDS WITH INDEX %lu of %lu", i, m_latticeSize);
             exit(1);
         }
@@ -116,20 +122,20 @@ public:
     }
 
     // Overloading lattice operations
-    Lattice<T> &operator+=(Lattice<T>& B);
+    Lattice<T> &operator+=(const Lattice<T>& B);
     Lattice<T> &operator+=(Lattice<T>&& B);
-    Lattice<T> &operator-=(Lattice<T>& B);
+    Lattice<T> &operator-=(const Lattice<T>& B);
     Lattice<T> &operator-=(Lattice<T>&& B);
-    Lattice<T> &operator*=(Lattice<T>& B);
+    Lattice<T> &operator*=(const Lattice<T>& B);
     Lattice<T> &operator*=(Lattice<T>&& B);
     // Operators using doubles, operations affect the whole of lattice
-    Lattice<T> &operator*=(double B);
-    Lattice<T> &operator/=(double B);
+    Lattice<T> &operator*=(const double B);
+    Lattice<T> &operator/=(const double B);
     // Operations involving complex operators
-    Lattice<T> &operator+=(complex B);
-    Lattice<T> &operator-=(complex B);
-    Lattice<T> &operator*=(complex B);
-    Lattice<T> &operator/=(complex B);
+    Lattice<T> &operator+=(const complex B);
+    Lattice<T> &operator-=(const complex B);
+    Lattice<T> &operator*=(const complex B);
+    Lattice<T> &operator/=(const complex B);
 
     /*!
      * \brief identity method for setting the SU3 matrices of the lattice to identity.
@@ -156,7 +162,7 @@ public:
      * \param B
      * \return itself as copied from B.
      */
-    Lattice<T> copy(Lattice<T> B);
+    Lattice<T> copy(const Lattice<T> &B);
 
     // Make private?
 //    static std::vector<SU3> sendCubeX;
@@ -198,75 +204,87 @@ public:
 //////////////////////////////////////////
 // External lattice operator overloading
 template <class T>
-inline Lattice<T> operator+(Lattice<T> A, Lattice<T>& B) {
+inline Lattice<T> operator+(Lattice<T> A, Lattice<T>& B)
+{
     A += B;
     return A;
 }
 
 template <class T>
-inline Lattice<T> operator+(Lattice<T> A, Lattice<T>&& B) {
+inline Lattice<T> operator+(Lattice<T> A, Lattice<T>&& B)
+{
     A += B;
     return A;
 }
 
 template <class T>
-inline Lattice<T> operator-(Lattice<T> A, Lattice<T>& B) {
+inline Lattice<T> operator-(Lattice<T> A, Lattice<T>& B)
+{
     A -= B;
     return A;
 }
 
 template <class T>
-inline Lattice<T> operator-(Lattice<T> A, Lattice<T>&& B) {
+inline Lattice<T> operator-(Lattice<T> A, Lattice<T>&& B)
+{
     A -= B;
     return A;
 }
 
 template <class T>
-inline Lattice<T> operator*(Lattice<T> A, Lattice<T>& B) {
+inline Lattice<T> operator*(Lattice<T> A, Lattice<T>& B)
+{
     A *= B;
     return A;
 }
 
 template <class T>
-inline Lattice<T> operator*(Lattice<T> A, Lattice<T>&& B) {
+inline Lattice<T> operator*(Lattice<T> A, Lattice<T>&& B)
+{
     A *= B;
     return A;
 }
 
 // External double operator overloading
 template <class T>
-inline Lattice<T> operator*(Lattice<T> A, double b) {
+inline Lattice<T> operator*(Lattice<T> A, double b)
+{
     A *= b;
     return A;
 }
 
 template <class T>
-inline Lattice<T> operator/(Lattice<T> A, double b) {
+inline Lattice<T> operator/(Lattice<T> A, double b)
+{
     A /= b;
     return A;
 }
 
 // External complex operator overloading
 template <class T>
-inline Lattice<T> operator+(Lattice<T> A, complex b) {
+inline Lattice<T> operator+(Lattice<T> A, complex b)
+{
     A += b;
     return A;
 }
 
 template <class T>
-inline Lattice<T> operator-(Lattice<T> A, complex b) {
+inline Lattice<T> operator-(Lattice<T> A, complex b)
+{
     A -= b;
     return A;
 }
 
 template <class T>
-inline Lattice<T> operator*(Lattice<T> A, complex b) {
+inline Lattice<T> operator*(Lattice<T> A, complex b)
+{
     A *= b;
     return A;
 }
 
 template <class T>
-inline Lattice<T> operator/(Lattice<T> A, complex b) {
+inline Lattice<T> operator/(Lattice<T> A, complex b)
+{
     A /= b;
     return A;
 }
@@ -276,65 +294,81 @@ inline Lattice<T> operator/(Lattice<T> A, complex b) {
 //////////////////////////////////////////
 // Lattice operator overloading
 template <class T>
-inline Lattice<T> &Lattice<T>::operator+=(Lattice<T>& B) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
-        m_sites[iSite] += B[iSite];
+inline Lattice<T> &Lattice<T>::operator+=(const Lattice<T>& B)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
+        m_sites[iSite] += B.m_sites[iSite];
     }
     return *this;
 }
 
 template <class T>
-inline Lattice<T> &Lattice<T>::operator+=(Lattice<T>&& B) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
-        m_sites[iSite] += B[iSite];
+inline Lattice<T> &Lattice<T>::operator+=(Lattice<T>&& B)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
+        m_sites[iSite] += B.m_sites[iSite];
     }
     return *this;
 }
 
 template <class T>
-inline Lattice<T> &Lattice<T>::operator-=(Lattice<T>& B) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
-        m_sites[iSite] -= B[iSite];
+inline Lattice<T> &Lattice<T>::operator-=(const Lattice<T>& B)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
+        m_sites[iSite] -= B.m_sites[iSite];
     }
     return *this;
 }
 
 template <class T>
-inline Lattice<T> &Lattice<T>::operator-=(Lattice<T>&& B) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
-        m_sites[iSite] -= B[iSite];
+inline Lattice<T> &Lattice<T>::operator-=(Lattice<T>&& B)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
+        m_sites[iSite] -= B.m_sites[iSite];
     }
     return *this;
 }
 
 template <class T>
-inline Lattice<T> &Lattice<T>::operator*=(Lattice<T>& B) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
-        m_sites[iSite] *= B[iSite];
+inline Lattice<T> &Lattice<T>::operator*=(const Lattice<T>& B)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
+        m_sites[iSite] *= B.m_sites[iSite];
     }
     return *this;
 }
 
 template <class T>
-inline Lattice<T> &Lattice<T>::operator*=(Lattice<T>&& B) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
-        m_sites[iSite] *= B[iSite];
+inline Lattice<T> &Lattice<T>::operator*=(Lattice<T>&& B)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
+        m_sites[iSite] *= B.m_sites[iSite];
     }
     return *this;
 }
 
 // Double operator overloading
 template <class T>
-inline Lattice<T> &Lattice<T>::operator*=(double b) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline Lattice<T> &Lattice<T>::operator*=(const double b)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite] *= b;
     }
     return *this;
 }
 
 template <class T>
-inline Lattice<T> &Lattice<T>::operator/=(double b) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline Lattice<T> &Lattice<T>::operator/=(const double b)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite] /= b;
     }
     return *this;
@@ -342,32 +376,40 @@ inline Lattice<T> &Lattice<T>::operator/=(double b) {
 
 // Complex operator overloading
 template <class T>
-inline Lattice<T> &Lattice<T>::operator+=(complex b) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline Lattice<T> &Lattice<T>::operator+=(const complex b)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite] += b;
     }
     return *this;
 }
 
 template <class T>
-inline Lattice<T> &Lattice<T>::operator-=(complex b) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline Lattice<T> &Lattice<T>::operator-=(const complex b)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite] -= b;
     }
     return *this;
 }
 
 template <class T>
-inline Lattice<T> &Lattice<T>::operator*=(complex b) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline Lattice<T> &Lattice<T>::operator*=(const complex b)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite] *= b;
     }
     return *this;
 }
 
 template <class T>
-inline Lattice<T> &Lattice<T>::operator/=(complex b) {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline Lattice<T> &Lattice<T>::operator/=(const complex b)
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite] /= b;
     }
     return *this;
@@ -378,78 +420,97 @@ inline Lattice<T> &Lattice<T>::operator/=(complex b) {
 //////////////////////////////////////////
 // Value setters of the lattice
 template <class T>
-inline void Lattice<T>::identity() {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline void Lattice<T>::identity()
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite].identity();
     }
 }
 
 template <>
-inline void Lattice<complex>::identity() {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline void Lattice<complex>::identity()
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite].z[0] = 1.0;
         m_sites[iSite].z[1] = 0.0;
     }
 }
 
 template <>
-inline void Lattice<double>::identity() {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline void Lattice<double>::identity()
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite] = 1.0;
     }
 }
 
 template <class T>
-inline void Lattice<T>::zeros() {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline void Lattice<T>::zeros()
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite].zeros();
     }
 }
 
 template <>
-inline void Lattice<complex>::zeros() {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline void Lattice<complex>::zeros()
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite].z[0] = 0;
         m_sites[iSite].z[1] = 0;
     }
 }
 
 template <>
-inline void Lattice<double>::zeros() {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline void Lattice<double>::zeros()
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite] = 0;
     }
 }
 
 template <>
-inline void Lattice<SU3>::makeHermitian() {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline void Lattice<SU3>::makeHermitian()
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite].makeHermitian();
     }
 }
 
 template <>
-inline void Lattice<SU3>::makeAntiHermitian() {
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
+inline void Lattice<SU3>::makeAntiHermitian()
+{
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
         m_sites[iSite].makeAntiHermitian();
     }
 }
 
 // Allocates memory to the lattice. Has to be called every time(unless we are copying)
 template <class T>
-inline void Lattice<T>::allocate(std::vector<unsigned int> dim) {
+inline void Lattice<T>::allocate(const std::vector<unsigned int> &dim)
+{
     m_latticeSize = dim[0] * dim[1] * dim[2] * dim[3];
     m_dim = dim;
     m_sites.resize(m_latticeSize);
 }
 
 template <class T> // TEMP TEST!!
-inline Lattice<T> Lattice<T>::copy(Lattice<T> B) {
+inline Lattice<T> Lattice<T>::copy(const Lattice<T> &B)
+{
     m_dim = B.m_dim;
     m_latticeSize = B.m_latticeSize;
     m_sites.resize(m_latticeSize);
-    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++) {
-        m_sites[iSite] = B[iSite];
+    for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
+    {
+        m_sites[iSite] = B.m_sites[iSite];
     }
     return *this;
 }
@@ -458,32 +519,35 @@ inline Lattice<T> Lattice<T>::copy(Lattice<T> B) {
 ////////// Lattice functions /////////////
 //////////////////////////////////////////
 template <class SU3>
-inline Lattice<double> realTrace(Lattice<SU3> L)
+inline Lattice<double> realTrace(const Lattice<SU3> &L)
 {
     Lattice<double> tempTraceSum(L.m_dim);
-    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++) {
-        tempTraceSum[iSite] = (L[iSite][0] + L[iSite][8] + L[iSite][16]);
+    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++)
+    {
+        tempTraceSum[iSite] = (L.m_sites[iSite].mat[0] + L.m_sites[iSite].mat[8] + L.m_sites[iSite].mat[16]);
     }
     return tempTraceSum;
 }
 
 template <class SU3>
-inline Lattice<double> imagTrace(Lattice<SU3> L)
+inline Lattice<double> imagTrace(const Lattice<SU3> &L)
 {
     Lattice<double> tempTraceSum(L.m_dim);
-    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++) {
-        tempTraceSum[iSite] = (L[iSite][1] + L[iSite][9] + L[iSite][17]);
+    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++)
+    {
+        tempTraceSum[iSite] = (L.m_sites[iSite].mat[1] + L.m_sites[iSite].mat[9] + L.m_sites[iSite].mat[17]);
     }
     return tempTraceSum;
 }
 
 template <class SU3>
-inline Lattice<complex> trace(Lattice<SU3> L)
+inline Lattice<complex> trace(const Lattice<SU3> &L)
 {
     Lattice<complex> tempTraceSum(L.m_dim);
-    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++) {
-        tempTraceSum[iSite] = complex(L[iSite][0] + L[iSite][8] + L[iSite][16],
-                                      L[iSite][1] + L[iSite][9] + L[iSite][17]);
+    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++)
+    {
+        tempTraceSum[iSite] = complex(L.m_sites[iSite].mat[0] + L.m_sites[iSite].mat[8] + L.m_sites[iSite].mat[16],
+                                      L.m_sites[iSite].mat[1] + L.m_sites[iSite].mat[9] + L.m_sites[iSite].mat[17]);
     }
     return tempTraceSum;
 }
@@ -491,7 +555,8 @@ inline Lattice<complex> trace(Lattice<SU3> L)
 template <class SU3>
 inline Lattice<SU3> subtractImag(Lattice <SU3> &L, const Lattice <double> &other)
 {
-    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++)
+    {
         L[iSite][1] -= other.m_sites[iSite];
         L[iSite][9] -= other.m_sites[iSite];
         L[iSite][17] -= other.m_sites[iSite];
@@ -502,7 +567,8 @@ inline Lattice<SU3> subtractImag(Lattice <SU3> &L, const Lattice <double> &other
 template <class SU3>
 inline Lattice<SU3> subtractImag(Lattice <SU3> &&L, Lattice <double> &&other)
 {
-    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++)
+    {
         L[iSite][1] -= other[iSite];
         L[iSite][9] -= other[iSite];
         L[iSite][17] -= other[iSite];
@@ -513,7 +579,8 @@ inline Lattice<SU3> subtractImag(Lattice <SU3> &&L, Lattice <double> &&other)
 template <class SU3>
 inline Lattice<SU3> subtractReal(Lattice <SU3> &L, const Lattice <double> &other)
 {
-    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++)
+    {
         L[iSite][0] -= other.m_sites[iSite];
         L[iSite][8] -= other.m_sites[iSite];
         L[iSite][16] -= other.m_sites[iSite];
@@ -524,7 +591,8 @@ inline Lattice<SU3> subtractReal(Lattice <SU3> &L, const Lattice <double> &other
 template <class SU3>
 inline Lattice<SU3> subtractReal(Lattice <SU3> &&L, Lattice <double> &&other)
 {
-    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++)
+    {
         L[iSite][0] -= other[iSite];
         L[iSite][8] -= other[iSite];
         L[iSite][16] -= other[iSite];
@@ -533,18 +601,19 @@ inline Lattice<SU3> subtractReal(Lattice <SU3> &&L, Lattice <double> &&other)
 }
 
 template <class T>
-inline T sum(Lattice<T> L)
+inline T sum(const Lattice<T> &L)
 {
     T latticeSum;
     latticeSum = 0.0;
-    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++) {
-        latticeSum += L[iSite];
+    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++)
+    {
+        latticeSum += L.m_sites[iSite];
     }
     return latticeSum;
 }
 
 //template <>
-inline std::vector<double> sumSpatial(Lattice<double> L)
+inline std::vector<double> sumSpatial(const Lattice<double> &L)
 {
     /*
      * For summing the topological charge xyz into the time axis.
@@ -554,11 +623,15 @@ inline std::vector<double> sumSpatial(Lattice<double> L)
     std::vector<double> latticeSpatialSum(L.m_dim[3], 0);
 
     // Sums the xyz directions into the time axis
-    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
-        for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
-            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
-                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
-                    latticeSpatialSum[it] += L[Parallel::Index::getIndex(ix,iy,iz,it)];
+    for (unsigned int it = 0; it < L.m_dim[3]; it++)
+    {
+        for (unsigned int iy = 0; iy < L.m_dim[1]; iy++)
+        {
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++)
+            {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++)
+                {
+                    latticeSpatialSum[it] += L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)];
                 }
             }
         }
@@ -567,22 +640,26 @@ inline std::vector<double> sumSpatial(Lattice<double> L)
     return latticeSpatialSum;
 }
 
-inline Lattice<double> realTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
+inline Lattice<double> realTraceMultiplication(const Lattice<SU3> &L1, const Lattice<SU3> &L2)
 {
     /*
      * Function for multiplying lattice and taking the real trace without summing the matrix
      */
     unsigned long site = 0;
-    Lattice<double>latticeSum;
+    Lattice<double> latticeSum;
     latticeSum.allocate(L1.m_dim);
     latticeSum.zeros();
 
-    for (unsigned int ix = 0; ix < L1.m_dim[0]; ix++) {
-        for (unsigned int iy = 0; iy < L1.m_dim[1]; iy++) {
-            for (unsigned int iz = 0; iz < L1.m_dim[2]; iz++) {
-                for (unsigned int it = 0; it < L1.m_dim[3]; it++) {
+    for (unsigned int ix = 0; ix < L1.m_dim[0]; ix++)
+    {
+        for (unsigned int iy = 0; iy < L1.m_dim[1]; iy++)
+        {
+            for (unsigned int iz = 0; iz < L1.m_dim[2]; iz++)
+            {
+                for (unsigned int it = 0; it < L1.m_dim[3]; it++)
+                {
                     site = Parallel::Index::getIndex(ix,iy,iz,it);
-                    latticeSum[site] += traceRealMultiplication(L1[site],L2[site]);
+                    latticeSum[site] += traceRealMultiplication(L1.m_sites[site], L2.m_sites[site]);
                 }
             }
         }
@@ -592,22 +669,26 @@ inline Lattice<double> realTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
 }
 
 
-inline Lattice<double> imagTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
+inline Lattice<double> imagTraceMultiplication(const Lattice<SU3> &L1, const Lattice<SU3> &L2)
 {
     /*
      * Function for multiplying lattice and taking the imaginary trace without summing the matrix.
      */
     unsigned long site = 0;
-    Lattice<double>latticeSum;
+    Lattice<double> latticeSum;
     latticeSum.allocate(L1.m_dim);
     latticeSum.zeros();
 
-    for (unsigned int ix = 0; ix < L1.m_dim[0]; ix++) {
-        for (unsigned int iy = 0; iy < L1.m_dim[1]; iy++) {
-            for (unsigned int iz = 0; iz < L1.m_dim[2]; iz++) {
-                for (unsigned int it = 0; it < L1.m_dim[3]; it++) {
+    for (unsigned int ix = 0; ix < L1.m_dim[0]; ix++)
+    {
+        for (unsigned int iy = 0; iy < L1.m_dim[1]; iy++)
+        {
+            for (unsigned int iz = 0; iz < L1.m_dim[2]; iz++)
+            {
+                for (unsigned int it = 0; it < L1.m_dim[3]; it++)
+                {
                     site = Parallel::Index::getIndex(ix,iy,iz,it);
-                    latticeSum[site] += traceImagMultiplication(L1[site],L2[site]);
+                    latticeSum[site] += traceImagMultiplication(L1.m_sites[site], L2.m_sites[site]);
                 }
             }
         }
@@ -618,23 +699,25 @@ inline Lattice<double> imagTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
 
 
 template <class SU3>
-inline double sumRealTrace(Lattice<SU3> L)
+inline double sumRealTrace(const Lattice<SU3> &L)
 {
     double latticeSum;
     latticeSum = 0.0;
-    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++) {
-        latticeSum += L[iSite][0] + L[iSite][8] + L[iSite][16];
+    for (unsigned long int iSite = 0; iSite < L.m_latticeSize; iSite++)
+    {
+        latticeSum += L.m_sites[iSite].mat[0] + L.m_sites[iSite].mat[8] + L.m_sites[iSite].mat[16];
     }
     return latticeSum;
 }
 
 template <class SU3>
-inline double sumRealTraceMultiplication(Lattice<SU3> L1,Lattice<SU3> L2)
+inline double sumRealTraceMultiplication(const Lattice<SU3> &L1, const Lattice<SU3> &L2)
 {
     double latticeSum;
     latticeSum = 0.0;
-    for (unsigned long int iSite = 0; iSite < L1.m_latticeSize; iSite++) {
-        latticeSum += traceRealMultiplication(L1[iSite],L2[iSite]);
+    for (unsigned long int iSite = 0; iSite < L1.m_latticeSize; iSite++)
+    {
+        latticeSum += traceRealMultiplication(L1.m_sites[iSite],L2.m_sites[iSite]);
     }
     return latticeSum;
 }
@@ -644,7 +727,8 @@ inline Lattice<SU3> inv(Lattice<SU3> &B)
 {
     Lattice<SU3> _L;
     _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++)
+    {
         _L.m_sites[iSite] = B.m_sites[iSite].inv();
     }
     return std::move(_L);
@@ -655,7 +739,8 @@ inline Lattice<SU3> inv(Lattice<SU3> &&B)
 {
     Lattice<SU3> _L;
     _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++)
+    {
         _L.m_sites[iSite] = B.m_sites[iSite].inv();
     }
     return std::move(_L);
@@ -666,7 +751,8 @@ inline Lattice<SU3> transpose(Lattice<SU3> &B)
 {
     Lattice<SU3> _L;
     _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++)
+    {
         _L.m_sites[iSite] = B.m_sites[iSite].transpose();
     }
     return std::move(_L);
@@ -677,7 +763,8 @@ inline Lattice<SU3> transpose(Lattice<SU3> &&B)
 {
     Lattice<SU3> _L;
     _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++)
+    {
         _L.m_sites[iSite] = B.m_sites[iSite].transpose();
     }
     return std::move(_L);
@@ -688,7 +775,8 @@ inline Lattice<SU3> conjugate(Lattice<SU3> &B)
 {
     Lattice<SU3> _L;
     _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++)
+    {
         _L.m_sites[iSite] = B.m_sites[iSite].conjugate();
     }
     return std::move(_L);
@@ -699,7 +787,8 @@ inline Lattice<SU3> conjugate(Lattice<SU3> &&B)
 {
     Lattice<SU3> _L;
     _L.allocate(B.m_dim);
-    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++) {
+    for (unsigned long int iSite = 0; iSite < B.m_latticeSize; iSite++)
+    {
         _L.m_sites[iSite] = B.m_sites[iSite].conjugate();
     }
     return std::move(_L);
@@ -714,7 +803,8 @@ inline Lattice<SU3> conjugate(Lattice<SU3> &&B)
  *
  * \brief The DIR enum specifies if we are to move BACKWARDS or FORWARDS in the lattice shifts.
  */
-enum DIR {
+enum DIR
+{
     BACKWARDS = 0,
     FORWARDS = 1
 };
@@ -731,7 +821,329 @@ enum DIR {
  * \param lorentzVector the direction in the Lorentz index \f$\hat{\mu}\f$ we are shifting in. Either 0, 1, 2 or 3.
  * \return a copy of the lattice L that contains the face of a neighboring lattice.
  */
-inline Lattice<SU3> shift(Lattice<SU3> L, DIR direction, unsigned int lorentzVector)
+inline Lattice<SU3> shift(const Lattice<SU3> &L, const DIR direction, const unsigned int lorentzVector)
+{
+    /*
+     * Function for shifting lattice in on or another direction.
+     * The direction of the matrix is taken care if in what lattice we are passing.
+     *
+     * The FORWADS/BACKWARDS semantic is quite confusing, but consider this:
+     * When shifting e.g. BACKWARDS, we want to update the current lattice at processor P
+     * with the lattice from the processor in-front, i.e. shifting it one step backwards,
+     *  [x11 x12 x13] [y11 y12 y13]    [x12 x13 y11] [y12 y13 x11]
+     *  [x21 x22 x23] [y21 y22 y23] -> [x22 x23 y21] [y22 y23 x21]
+     *  [x31 x32 x33] [y31 y32 y33]    [x32 x33 y31] [y32 y33 x31]
+     * The shifted lattice, is then returned.
+     */
+    Lattice<SU3> _L;
+    _L.allocate(L.m_dim);// MOVE THIS TO INITIALIZATION/HEADER-THING?
+    std::vector<SU3> sendCube; // Move indexes to index in order to avoid 2 integer multiplications)
+    std::vector<SU3> recvCube; // MOVE THIS TO HEADER; SO WE DONT ALLOCATE EVERY TIME!
+    // INSTEAD OF CUBE INDEX, JUST DO INDEX WITH DIMENSION SET TO ZERO
+    MPI_Request sendReq,recvReq;
+    switch(direction) {
+    case BACKWARDS: {
+        switch(lorentzVector) {
+        case 0: {
+            sendCube.resize(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]); // Four of these can actually be stored globally
+            recvCube.resize(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]);
+            /* Max memory usage: 48*48*48*96 /w 512 procs -->  12 12 12 12 --> 4 cubes of size 12^3 = 1728*18 bytes
+             * --> 1728*28 / 1024(to kilobytes) / 1024(to megabytes) = 0.03 MB per processor.
+             * Maximum use of 4 volumes, one for each direction(assuming that spatial directionality may vary) --> 0.12 MB in total for this part
+             */
+            // Populates package to send
+            for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) { // Ensure cube indexes match before and after in order to map correctly!!
+                        sendCube[Parallel::Index::cubeIndex(iy,iz,it,L.m_dim[1],L.m_dim[2])] = L.m_sites[Parallel::Index::getIndex(L.m_dim[0]-1,iy,iz,it)];
+                    }
+                }
+            }
+            // Sends and receives packages
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(1),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(0),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
+            // Populates shifted lattice by elements not required to share
+            for (unsigned int ix = 1; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                           _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix-1,iy,iz,it)];
+                        }
+                    }
+                }
+            }
+            // Ensures all results have been sent and received, then populates face cube with remaining results.
+            MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
+            // Repopulates the lattice with missing cube
+            for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                       _L.m_sites[Parallel::Index::getIndex(0,iy,iz,it)] = recvCube[Parallel::Index::cubeIndex(iy,iz,it,L.m_dim[1],L.m_dim[2])];
+                    }
+                }
+            }
+            return _L;
+        }
+        case 1: {
+            sendCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
+            recvCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
+            // Populates package to send
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                        sendCube[Parallel::Index::cubeIndex(ix,iz,it,L.m_dim[0],L.m_dim[2])] = L.m_sites[Parallel::Index::getIndex(ix,L.m_dim[1]-1,iz,it)];
+                    }
+                }
+            }
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(3),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(2),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
+            // Populates shifted lattice by elements not required to share
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 1; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy-1,iz,it)];
+                        }
+                    }
+                }
+            }
+            // Ensures all results have been sent and received
+            MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                        _L.m_sites[Parallel::Index::getIndex(ix,0,iz,it)] = recvCube[Parallel::Index::cubeIndex(ix,iz,it,L.m_dim[0],L.m_dim[2])];
+                    }
+                }
+            }
+            return _L;
+        }
+        case 2: {
+            sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
+            recvCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
+            // Populates package to send
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                        sendCube[Parallel::Index::cubeIndex(ix,iy,it,L.m_dim[0],L.m_dim[1])] = L.m_sites[Parallel::Index::getIndex(ix,iy,L.m_dim[2]-1,it)];
+                    }
+                }
+            }
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(5),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(4),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
+            // Populates shifted lattice by elements not required to share
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 1; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz-1,it)];
+                        }
+                    }
+                }
+            }
+            // Ensures all results have been sent and received
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                        _L.m_sites[Parallel::Index::getIndex(ix,iy,0,it)] = recvCube[Parallel::Index::cubeIndex(ix,iy,it,L.m_dim[0],L.m_dim[1])];
+                    }
+                }
+            }
+            return _L;
+        }
+        case 3: {
+            sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
+            recvCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
+            // Populates package to send
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        sendCube[Parallel::Index::cubeIndex(ix,iy,iz,L.m_dim[0],L.m_dim[1])] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,L.m_dim[3]-1)];
+                    }
+                }
+            }
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(7),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(6),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
+            // Populates shifted lattice by elements not required to share
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 1; it < L.m_dim[3]; it++) {
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it-1)];
+                        }
+                    }
+                }
+            }
+            // Ensures all results have been sent and received
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                       _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,0)] = recvCube[Parallel::Index::cubeIndex(ix,iy,iz,L.m_dim[0],L.m_dim[1])];
+                    }
+                }
+            }
+            return _L;
+        }
+        }
+        break;
+    }
+    case FORWARDS: {
+        switch(lorentzVector) {
+        case 0: { // x direction
+            sendCube.resize(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]);
+            recvCube.resize(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]);
+            // Populates package to send
+            for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                        sendCube[Parallel::Index::cubeIndex(iy,iz,it,L.m_dim[1],L.m_dim[2])] = L.m_sites[Parallel::Index::getIndex(0,iy,iz,it)];
+                    }
+                }
+            }
+            // Sends and receives packages
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(0),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[1]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(1),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
+            // Populates shifted lattice by elements not required to share
+            for (unsigned int ix = 0; ix < L.m_dim[0] - 1; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                           _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix+1,iy,iz,it)];
+                        }
+                    }
+                }
+            }
+            // Ensures all results have been sent and received, then populates face cube with remaining results.
+            MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
+            for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                       _L.m_sites[Parallel::Index::getIndex(L.m_dim[0]-1,iy,iz,it)] = recvCube[Parallel::Index::cubeIndex(iy,iz,it,L.m_dim[1],L.m_dim[2])];
+                    }
+                }
+            }
+            return _L;
+        }
+        case 1: { // y direction
+            sendCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
+            recvCube.resize(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]);
+            // Populates package to send
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                        sendCube[Parallel::Index::cubeIndex(ix,iz,it,L.m_dim[0],L.m_dim[2])] = L.m_sites[Parallel::Index::getIndex(ix,0,iz,it)];
+                    }
+                }
+            }
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(2),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[2]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(3),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
+            // Populates shifted lattice by elements not required to share
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1] - 1; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                           _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy+1,iz,it)];
+                        }
+                    }
+                }
+            }
+            // Ensures all results have been sent and received
+            MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                       _L.m_sites[Parallel::Index::getIndex(ix,L.m_dim[1]-1,iz,it)] = recvCube[Parallel::Index::cubeIndex(ix,iz,it,L.m_dim[0],L.m_dim[2])];
+                    }
+                }
+            }
+            return _L;
+        }
+        case 2: { // z direction
+            sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
+            recvCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]);
+            // Populates package to send
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                        sendCube[Parallel::Index::cubeIndex(ix,iy,it,L.m_dim[0],L.m_dim[1])] = L.m_sites[Parallel::Index::getIndex(ix,iy,0,it)];
+                    }
+                }
+            }
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(4),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[3]),MPI_DOUBLE,Parallel::Neighbours::get(5),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
+            // Populates shifted lattice by elements not required to share
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2] - 1; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz+1,it)];
+                        }
+                    }
+                }
+            }
+            // Ensures all results have been sent and received
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int it = 0; it < L.m_dim[3]; it++) {
+                        _L.m_sites[Parallel::Index::getIndex(ix,iy,L.m_dim[2]-1,it)] = recvCube[Parallel::Index::cubeIndex(ix,iy,it,L.m_dim[0],L.m_dim[1])];
+                    }
+                }
+            }
+            return _L;
+        }
+        case 3: { // t direction
+            sendCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
+            recvCube.resize(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]);
+            // Populates package to send
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        sendCube[Parallel::Index::cubeIndex(ix,iy,iz,L.m_dim[0],L.m_dim[1])] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,0)];
+                    }
+                }
+            }
+            MPI_Isend(&sendCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(6),0,Parallel::ParallelParameters::ACTIVE_COMM,&sendReq);
+            MPI_Irecv(&recvCube.front(),18*(L.m_dim[0]*L.m_dim[1]*L.m_dim[2]),MPI_DOUBLE,Parallel::Neighbours::get(7),0,Parallel::ParallelParameters::ACTIVE_COMM,&recvReq);
+            // Populates shifted lattice by elements not required to share
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        for (unsigned int it = 0; it < L.m_dim[3] - 1; it++) {
+                            _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it)] = L.m_sites[Parallel::Index::getIndex(ix,iy,iz,it+1)];
+                        }
+                    }
+                }
+            }
+            // Ensures all results have been sent and received
+            MPI_Wait(&recvReq,MPI_STATUS_IGNORE);
+            MPI_Wait(&sendReq,MPI_STATUS_IGNORE);
+            for (unsigned int ix = 0; ix < L.m_dim[0]; ix++) {
+                for (unsigned int iy = 0; iy < L.m_dim[1]; iy++) {
+                    for (unsigned int iz = 0; iz < L.m_dim[2]; iz++) {
+                        _L.m_sites[Parallel::Index::getIndex(ix,iy,iz,L.m_dim[3]-1)] = recvCube[Parallel::Index::cubeIndex(ix,iy,iz,L.m_dim[0],L.m_dim[1])];
+                    }
+                }
+            }
+            return _L;
+        }
+        }
+        break;
+    }
+    }
+    return _L;
+}
+
+inline Lattice<SU3> shift(Lattice<SU3> &&L, const DIR direction, const unsigned int lorentzVector)
 {
     /*
      * Function for shifting lattice in on or another direction.

@@ -11,7 +11,7 @@
  *
  * Stores two arrays, one for observables, and one for observables squared.
  */
-ObservableStorer::ObservableStorer(unsigned long int NSize)
+ObservableStorer::ObservableStorer(const unsigned long NSize)
 {
     /*
      * Initialization of a observable storage container.
@@ -117,7 +117,7 @@ void ObservableStorer::printStatistics()
  *
  * Writes to file using the IO::writeObservablesToFile method.
  */
-void ObservableStorer::writeObservableToFile(double acceptanceRatio)
+void ObservableStorer::writeObservableToFile(const double acceptanceRatio)
 {
     /*
      * Writes a regular observable to file
@@ -132,7 +132,7 @@ void ObservableStorer::writeObservableToFile(double acceptanceRatio)
  *
  * Writes to file using the IO::writeFlowObservableToFile method.
  */
-void ObservableStorer::writeFlowObservableToFile(unsigned long int configNumber)
+void ObservableStorer::writeFlowObservableToFile(const unsigned long configNumber)
 {
     /*
      * Writes a flow observable to file

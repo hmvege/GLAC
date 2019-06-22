@@ -43,28 +43,28 @@ public:
     Correlator(bool storeFlowObservable);
     Correlator();
     virtual ~Correlator();
-    virtual void calculate(Lattice<SU3> *lattice, unsigned int iObs);
-    virtual void writeObservableToFile(double acceptanceRatio);
-    virtual void writeFlowObservablesToFile(unsigned int iFlow);
+    virtual void calculate(Lattice<SU3> *lattice, unsigned int iObs) = 0;
+    virtual void writeObservableToFile(const double acceptanceRatio);
+    virtual void writeFlowObservablesToFile(const unsigned int iFlow);
     virtual void runStatistics();
 
     // Printers
-    virtual void printObservable(unsigned int iObs);
+    virtual void printObservable(const unsigned int iObs);
     virtual void printHeader();
     virtual void printStatistics();
 
     // Observable copyer
-    virtual void copyObservable(unsigned int iObs, std::vector<double> obs);
-    virtual std::vector<double> getObservablesVector(unsigned int iObs);
+    virtual void copyObservable(const unsigned int iObs, const std::vector<double> &obs);
+    virtual std::vector<double> getObservablesVector(const unsigned int iObs);
 
     // Getters
-    virtual double getObservable(unsigned int iObs);
+    virtual double getObservable(const unsigned int iObs);
     virtual std::string getObservableName() { return m_observableName; }
     virtual int getHeaderWidth() { return m_headerWidth; }
 
     // Setters
     virtual void reset();
-    virtual void initializeObservableStorer(bool storeFlowObservable);
+    virtual void initializeObservableStorer(const bool storeFlowObservable);
 };
 
 

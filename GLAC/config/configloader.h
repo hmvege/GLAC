@@ -17,7 +17,7 @@
 
 namespace ConfigLoader
 {
-    void load(std::string jsonFileName);
+    void load(const std::string &jsonFileName);
 }
 
 #endif // CONFIGLOADER_H

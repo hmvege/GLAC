@@ -5,7 +5,7 @@
 #include <vector>
 #include <cmath>
 
-Plaquette::Plaquette(bool storeFlowObservable) : Correlator(storeFlowObservable)
+Plaquette::Plaquette(const bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     m_observable->setObservableName(m_observableNameCompact);
     m_observable->setNormalizeObservableByProcessor(true);
@@ -16,14 +16,14 @@ Plaquette::~Plaquette()
 {
 }
 
-void Plaquette::setLatticeSize(unsigned long latticeSize)
+void Plaquette::setLatticeSize(const unsigned long latticeSize)
 {
     m_latticeSize = double(latticeSize);
     m_temp.allocate(m_N);
     m_multiplicationFactor = 1/(18.0*m_latticeSize); // 3 from SU3, 6 from number of plaquettes, 3*6=18
 }
 
-void Plaquette::calculate(Lattice<SU3> *lattice, unsigned int iObs)
+void Plaquette::calculate(Lattice<SU3> *lattice, const unsigned int iObs)
 {
     m_tempObservable = 0;
     for (unsigned int mu = 0; mu < 4; mu++) {
@@ -50,7 +50,7 @@ void Plaquette::runStatistics()
     m_observable->runStatistics();
 }
 
-void Plaquette::printObservable(unsigned int iObs)
+void Plaquette::printObservable(const unsigned int iObs)
 {
     if (Parallel::Communicator::getProcessRank() == 0) {
         if (!m_storeFlowObservable) {

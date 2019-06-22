@@ -74,7 +74,7 @@ private:
     double m_updateStorerTherm = 0;
 
     // Function for choosing and setting the correlators/observables
-    void setObservable(std::vector<std::string> obsList, bool flow);
+    void setObservable(const std::vector<std::string> &obsList, const bool flow);
 
     // Storing the action as a pointer
     void setAction();
@@ -88,13 +88,13 @@ private:
 
     // Flow
     Flow * m_flow = nullptr;
-    void flowConfiguration(unsigned int iConfig);
+    void flowConfiguration(const unsigned int iConfig);
     void copyToFlowLattice();
     Lattice<SU3> * m_flowLattice;
 
     // Function for updating our system using the Metropolis algorithm
     void update();
-    inline void updateLink(unsigned int iSite, int mu);
+    inline void updateLink(const unsigned int iSite, const int mu);
 
     // Thermalization function
     void thermalize();
@@ -107,8 +107,8 @@ private:
     std::uniform_real_distribution<double> m_uniform_distribution;
 
     // Functions loading fields configurations from file
-    void loadChroma(std::string configurationName);
-    void load(std::string configurationName);
+    void loadChroma(const std::string &configurationName);
+    void load(const std::string &configurationName);
     void flowConfigurations();
     void loadConfigurationAndRunMetropolis();
 

@@ -1,6 +1,6 @@
 #include "energydensity.h"
 
-EnergyDensity::EnergyDensity(bool storeFlowObservable) : Correlator(storeFlowObservable)
+EnergyDensity::EnergyDensity(const bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     m_observable->setObservableName(m_observableNameCompact);
     m_observable->setNormalizeObservableByProcessor(false);
@@ -21,7 +21,7 @@ EnergyDensity::~EnergyDensity()
 
 }
 
-void EnergyDensity::calculate(Lattice<SU3> *lattice, unsigned int iObs)
+void EnergyDensity::calculate(Lattice<SU3> *lattice, const unsigned int iObs)
 {
     m_energyDensity = 0;
     mu = 0;

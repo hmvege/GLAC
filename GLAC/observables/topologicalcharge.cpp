@@ -4,7 +4,7 @@
 #include "config/parameters.h"
 #include <cmath>
 
-TopologicalCharge::TopologicalCharge(bool storeFlowObservable) : Correlator(storeFlowObservable)
+TopologicalCharge::TopologicalCharge(const bool storeFlowObservable) : Correlator(storeFlowObservable)
 {
     m_multiplicationFactor = 1.0/(16*16*M_PI*M_PI);
     m_observable->setObservableName(m_observableNameCompact);
@@ -23,7 +23,7 @@ TopologicalCharge::~TopologicalCharge()
 
 }
 
-void TopologicalCharge::calculate(Lattice<SU3> *lattice, unsigned int iObs)
+void TopologicalCharge::calculate(Lattice<SU3> *lattice, const unsigned int iObs)
 {
     /*
      * Function to be used when no clover is provided. SHOULD BE TESTED

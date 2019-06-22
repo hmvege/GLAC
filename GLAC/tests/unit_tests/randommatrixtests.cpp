@@ -13,7 +13,7 @@ bool RandomMatrixTests::testRSTMultiplication()
      * Function for checking that we are multiplying the SU2 matrices correctly when generating a SU3 matrix close to unity.
      */
     bool passed = true;
-    SU3 results = m_SU3Generator->testRSTMultiplication(s_r,s_s,s_t);
+    SU3 results = m_SU3Generator->RSTMatrixMultiplication(s_r,s_s,s_t);
     if (compareSU3(results,U_RST)) {
         if (m_verbose && (m_processRank==0)) cout << "    SUCCESS: RST multiplication test passed." << endl;
 
@@ -33,7 +33,7 @@ bool RandomMatrixTests::testRSTInverseMultiplication()
      * Function for checking that we are multiplying the SU2 matrices correctly when generating a SU3 matrix close to unity.
      */
     bool passed = true;
-    SU3 results = m_SU3Generator->testRSTMultiplicationInverse(s_r,s_s,s_t);
+    SU3 results = m_SU3Generator->RSTMatrixMultiplicationInverse(s_r,s_s,s_t);
     if (compareSU3(results,U_RST.inv())) {
         if (m_verbose) cout << "    SUCCESS: RST inverse multiplication test passed." << endl;
 
