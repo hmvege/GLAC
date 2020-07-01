@@ -549,6 +549,7 @@ void Parallel::Communicator::MPIPrint(const std::string &message)
  * \param N number of points in data to reduce.
  *
  * \todo Remove the unsigned long int, and use instead just unsigned long? Change globally to only use long?
+ * \todo This should really be a std::vector, not a pointer.
  */
 void Parallel::Communicator::gatherDoubleResults(double * data, const unsigned int N)
 {

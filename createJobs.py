@@ -10,6 +10,7 @@ import shutil
 import re
 
 # TODO: implement a way of checking that the .bin file exists in case of lcfgr
+# TODO: create yml file for conda env
 
 AVAILABLE_OBSERVABLES = ["plaq", "topc", "energy", "topct", "weinberg", "weinbergt"]
 # AVAILABLE_SCALAR_FIELDS = ["plaq", "topc", "energy", "weinberg"]
@@ -103,7 +104,7 @@ def set_field_configs(config, config_folder, config_start_number, base_folder=""
 
     corrected_configs = [] 
     for cfg in config["field_configs"]:
-        cfg_number = [int(num) for num in re.split('(\d+)', cfg) if num.isdigit()][-1]
+        cfg_number = [int(num) for num in re.split(r'(\d+)', cfg) if num.isdigit()][-1]
         if int(cfg_number) >= config_start_number:
             corrected_configs.append(cfg)
     config["field_configs"] = corrected_configs
@@ -122,7 +123,7 @@ def natural_sort(l):
     """
 
     convert = lambda text: int(text) if text.isdigit() else text.lower()
-    alphanum_key = lambda key: [convert(c) for c in re.split('(\d+)', key)]
+    alphanum_key = lambda key: [convert(c) for c in re.split(r'(\d+)', key)]
     return sorted(l, key=alphanum_key)
 
 class JobCreator:
