@@ -19,6 +19,7 @@ AVAILABLE_EXP_FUNCS = ["morningstar", "luscher", "taylor2", "taylor4"]
 AVAILABLE_ACTIONS = ["wilson", "wilsonExplicitDer"]
 AVAILABLE_HPC_SYSTEMS = ["slurm", "torque", "local"]
 
+
 def get_arg_max_index(N):
     """For getting the maximum index of an list."""
     val = N[0]
@@ -28,6 +29,7 @@ def get_arg_max_index(N):
             val = N[i]
             index = i
     return index
+
 
 def create_square(numprocs, NSpatial, NTemporal):
     """
@@ -42,18 +44,19 @@ def create_square(numprocs, NSpatial, NTemporal):
         A list of length 4 with containing a square as possible hypercube.
     """
 
-    restProc = numprocs;
-    N = [0,0,0,0]
+    restProc = numprocs
+    N = [0, 0, 0, 0]
     for i in range(3):
         N[i] = NSpatial
-        N[3] = NTemporal;
+        N[3] = NTemporal
     while restProc >= 2:
         max_index = get_arg_max_index(N)
         N[max_index] /= 2
         restProc /= 2
-        if (restProc < 2):
+        if restProc < 2:
             break
-    return N[::-1] # Reversing seems to be quicker.
+    return N[::-1]  # Reversing seems to be quicker.
+
 
 def check_sub_dim_viability(subDims):
     """
@@ -63,8 +66,8 @@ def check_sub_dim_viability(subDims):
         subDims: list of length 4 containing of the sub lattice dimensions.
 
     Raises:
-        ValueError: exits if the length of the sub dimensions is not 4, or if 
-            it is not containing only integers, or if the any sub dimension is 
+        ValueError: exits if the length of the sub dimensions is not 4, or if
+            it is not containing only integers, or if the any sub dimension is
             less than 2.
     """
 
@@ -77,14 +80,15 @@ def check_sub_dim_viability(subDims):
         if dim <= 2:
             raise ValueError("%d is not a valid dimension" % dim)
 
+
 def set_field_configs(config, config_folder, config_start_number, base_folder=""):
     """
-    Populates list of sorted field configs from folder config_folder into the 
+    Populates list of sorted field configs from folder config_folder into the
     config dictionary.
 
     Args:
         config: dictionary containing the job setup.
-        config_folder: string containing the inputFolder for where the 
+        config_folder: string containing the inputFolder for where the
             configurations will the loaded from.
         config_start_number: integer on which the the new configuration
             will be numbered from.
@@ -98,24 +102,31 @@ def set_field_configs(config, config_folder, config_start_number, base_folder=""
     config["inputFolder"] = os.path.relpath(config["inputFolder"], base_folder)
 
     if os.path.isdir(config_folder):
-        config["field_configs"] = natural_sort([fpath for fpath in os.listdir(config_folder) if (os.path.splitext(fpath)[-1] == ".bin")])
+        config["field_configs"] = natural_sort(
+            [
+                fpath
+                for fpath in os.listdir(config_folder)
+                if (os.path.splitext(fpath)[-1] == ".bin")
+            ]
+        )
     else:
         raise OSError("Error: %s is not a directory." % (config_folder))
 
-    corrected_configs = [] 
+    corrected_configs = []
     for cfg in config["field_configs"]:
-        cfg_number = [int(num) for num in re.split(r'(\d+)', cfg) if num.isdigit()][-1]
+        cfg_number = [int(num) for num in re.split(r"(\d+)", cfg) if num.isdigit()][-1]
         if int(cfg_number) >= config_start_number:
             corrected_configs.append(cfg)
     config["field_configs"] = corrected_configs
     return config
+
 
 def natural_sort(l):
     """
     Natural sorting function.
 
     Args:
-        l: list of strings where each string contains a number, either on 
+        l: list of strings where each string contains a number, either on
             format of 1,2,3... or 00001, 00002 ect.
 
     Returns:
@@ -123,8 +134,9 @@ def natural_sort(l):
     """
 
     convert = lambda text: int(text) if text.isdigit() else text.lower()
-    alphanum_key = lambda key: [convert(c) for c in re.split(r'(\d+)', key)]
+    alphanum_key = lambda key: [convert(c) for c in re.split(r"(\d+)", key)]
     return sorted(l, key=alphanum_key)
+
 
 class JobCreator:
     """Class for initializing jobs."""
@@ -162,45 +174,84 @@ class JobCreator:
         self._checkFolderPath(os.path.join(self.outputFolder, self.runName))
 
         if not self.load_field_configs and not self.create_fields_folders:
-            self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "field_configurations"))
+            self._checkFolderPath(
+                os.path.join(self.outputFolder, self.runName, "field_configurations")
+            )
             if not self.uTest:
-                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "observables"))
+                self._checkFolderPath(
+                    os.path.join(self.outputFolder, self.runName, "observables")
+                )
 
             if self.uTest or (self.NFlows != 0 and self.create_fields_folders):
-                self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields"))
+                self._checkFolderPath(
+                    os.path.join(self.outputFolder, self.runName, "scalar_fields")
+                )
 
                 if self.uTest:
-                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", "ioDoublesIOTest"))
-
+                    self._checkFolderPath(
+                        os.path.join(
+                            self.outputFolder,
+                            self.runName,
+                            "scalar_fields",
+                            "ioDoublesIOTest",
+                        )
+                    )
 
         if not self.uTest:
-
             if self.NFlows != 0:
-
                 # Only in the case we are not creating any scalar fields
                 if not self.create_fields_folders:
-                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables"))
+                    self._checkFolderPath(
+                        os.path.join(
+                            self.outputFolder, self.runName, "flow_observables"
+                        )
+                    )
 
-                if not os.path.isdir(os.path.join(self.outputFolder, self.runName, "scalar_fields")) and self.create_fields_folders:
-                    self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields"))
+                if (
+                    not os.path.isdir(
+                        os.path.join(self.outputFolder, self.runName, "scalar_fields")
+                    )
+                    and self.create_fields_folders
+                ):
+                    self._checkFolderPath(
+                        os.path.join(self.outputFolder, self.runName, "scalar_fields")
+                    )
 
                 for fobs in self.flow_observables:
-
                     # Only in the case we are not creating any scalar fields
                     if not self.create_fields_folders:
-                        self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "flow_observables", fobs))
+                        self._checkFolderPath(
+                            os.path.join(
+                                self.outputFolder,
+                                self.runName,
+                                "flow_observables",
+                                fobs,
+                            )
+                        )
 
                     # The name of the observable for the scalar fields is different than the default names.
                     if self.create_fields_folders and fobs in AVAILABLE_SCALAR_FIELDS:
                         if "topc" in fobs.lower():
-                            self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", "topc"))
+                            self._checkFolderPath(
+                                os.path.join(
+                                    self.outputFolder,
+                                    self.runName,
+                                    "scalar_fields",
+                                    "topc",
+                                )
+                            )
                         if "energy" in fobs.lower():
-                            self._checkFolderPath(os.path.join(self.outputFolder, self.runName, "scalar_fields", "energy"))
-
+                            self._checkFolderPath(
+                                os.path.join(
+                                    self.outputFolder,
+                                    self.runName,
+                                    "scalar_fields",
+                                    "energy",
+                                )
+                            )
 
         self._checkFolderPath(os.path.join(self.inputFolder))
         self._checkFolderPath(os.path.join("input", self.runName))
-
 
     def _checkFolderPath(self, folder):
         """
@@ -219,18 +270,20 @@ class JobCreator:
                 print("> mkdir %s" % os.path.join(self.base_folder, folder))
 
     def _check_lcfgr_path(self, config_dict):
-        """Performs a check when loading and running from a configuration, 
+        """Performs a check when loading and running from a configuration,
         assuring the binary file we are loading exists at assumed location.
         """
-        input_folder =  self._clean_file_path(config_dict["inputFolder"], quiet=True)
+        input_folder = self._clean_file_path(config_dict["inputFolder"], quiet=True)
         if len(config_dict["load_config_and_run"]) != 0:
-            cfg_path = os.path.join(os.path.normpath(self.base_folder) + 
-                os.path.normpath(input_folder),
-                config_dict["load_config_and_run"])
+            cfg_path = os.path.join(
+                os.path.normpath(self.base_folder) + os.path.normpath(input_folder),
+                config_dict["load_config_and_run"],
+            )
             if not os.path.isfile(cfg_path):
-                exit("ERROR: binary file for 'load_config_and_run' not "
-                    "found: {0:s}".format(cfg_path))
-
+                exit(
+                    "ERROR: binary file for 'load_config_and_run' not "
+                    "found: {0:s}".format(cfg_path)
+                )
 
     def _clean_file_path(self, p, quiet=False):
         """
@@ -247,7 +300,9 @@ class JobCreator:
         else:
             cleaned_p = p
 
-        cleaned_p = (os.sep + os.path.normpath(cleaned_p) + os.sep).replace("//", os.sep)
+        cleaned_p = (os.sep + os.path.normpath(cleaned_p) + os.sep).replace(
+            "//", os.sep
+        )
 
         if self.verbose or self.dryrun and not quiet:
             print("Cleaned path from:\n    %s\nto\n    %s" % (p, cleaned_p))
@@ -268,7 +323,9 @@ class JobCreator:
         # Lattice related run variables
         json_dict["NSpatial"] = config_dict["N"]
         json_dict["NTemporal"] = config_dict["NT"]
-        json_dict["subDims"] = config_dict["subDims"] # Will have to check for this being false
+        json_dict["subDims"] = config_dict[
+            "subDims"
+        ]  # Will have to check for this being false
         json_dict["beta"] = config_dict["beta"]
         json_dict["NCf"] = config_dict["NCf"]
         json_dict["NCor"] = config_dict["NCor"]
@@ -327,11 +384,17 @@ class JobCreator:
         json_fpath = os.path.join(self.base_folder, "input", self.json_file_name)
 
         # Dest
-        json_cfgpath = os.path.join(self.base_folder, "input", self.runName, self.json_file_name)
+        json_cfgpath = os.path.join(
+            self.base_folder, "input", self.runName, self.json_file_name
+        )
 
         # Prints configuration file content if verbose or dryrun is true
         if self.dryrun or self.verbose:
-            print("Writing json configuration file at location {0:<s}:\n".format(json_fpath))
+            print(
+                "Writing json configuration file at location {0:<s}:\n".format(
+                    json_fpath
+                )
+            )
             print(json.dumps(json_dict, indent=4, separators=(", ", ": ")), "\n")
 
         # Creates configuration file
@@ -340,14 +403,21 @@ class JobCreator:
                 json.dump(json_dict, json_file, indent=4)
             shutil.copy(json_fpath, "%s.bak" % json_cfgpath)
 
-    def submit_job(self, job_config, system, partition, excluded_nodes=False, ignore_tasks_per_node=False):
+    def submit_job(
+        self,
+        job_config,
+        system,
+        partition,
+        excluded_nodes=False,
+        ignore_tasks_per_node=False,
+    ):
         if excluded_nodes:
             sbatch_exclusions = "#SBATCH --exclude=%s" % excluded_nodes
         else:
             sbatch_exclusions = ""
 
         # Checks if flow is sampling more observables than the regular config sampler, then sets it equal
-        if (job_config["NFlows"] != 0):
+        if job_config["NFlows"] != 0:
             job_config["observables"] = job_config["flowObservables"]
 
         # Since topct gives us all of the observables basically for free,
@@ -361,44 +431,46 @@ class JobCreator:
             job_config["observables"] = list(set(job_config["observables"]))
 
         # Retrieving config contents
-        self.base_folder        = job_config["base_folder"]
-        binary_filename         = job_config["bin_fn"]
-        self.runName            = job_config["runName"]
+        self.base_folder = job_config["base_folder"]
+        binary_filename = job_config["bin_fn"]
+        self.runName = job_config["runName"]
         self.load_field_configs = job_config["load_field_configs"]
-        threads                 = job_config["threads"]
-        beta                    = job_config["beta"]
-        NSpatial                = job_config["N"]
-        NTemporal               = job_config["NT"]
-        NTherm                  = job_config["NTherm"]
-        NCor                    = job_config["NCor"] 
-        NCf                     = job_config["NCf"]
-        self.NFlows             = job_config["NFlows"]
-        NUpdates                = job_config["NUpdates"]
-        SU3Eps                  = job_config["SU3Eps"]
-        self.flow_observables   = job_config["flowObservables"]
-        self.inputFolder        = job_config["inputFolder"]
-        self.outputFolder       = job_config["outputFolder"]
-        self.observables        = job_config["observables"]
-        flowEpsilon             = job_config["flowEpsilon"]
-        storeCfgs               = job_config["storeCfgs"]
-        storeThermCfgs          = job_config["storeThermCfgs"]
-        hotStart                = job_config["hotStart"]
-        RSTHotStart             = job_config["RSTHotStart"]
-        subDims                 = job_config["subDims"]
-        verboseRun              = job_config["verboseRun"]
-        self.uTest              = job_config["uTest"]
-        uTestVerbose            = job_config["uTestVerbose"]
-        cpu_approx_runtime_hr   = job_config["cpu_approx_runtime_hr"]
-        cpu_approx_runtime_min  = job_config["cpu_approx_runtime_min"]
+        threads = job_config["threads"]
+        beta = job_config["beta"]
+        NSpatial = job_config["N"]
+        NTemporal = job_config["NT"]
+        NTherm = job_config["NTherm"]
+        NCor = job_config["NCor"]
+        NCf = job_config["NCf"]
+        self.NFlows = job_config["NFlows"]
+        NUpdates = job_config["NUpdates"]
+        SU3Eps = job_config["SU3Eps"]
+        self.flow_observables = job_config["flowObservables"]
+        self.inputFolder = job_config["inputFolder"]
+        self.outputFolder = job_config["outputFolder"]
+        self.observables = job_config["observables"]
+        flowEpsilon = job_config["flowEpsilon"]
+        storeCfgs = job_config["storeCfgs"]
+        storeThermCfgs = job_config["storeThermCfgs"]
+        hotStart = job_config["hotStart"]
+        RSTHotStart = job_config["RSTHotStart"]
+        subDims = job_config["subDims"]
+        verboseRun = job_config["verboseRun"]
+        self.uTest = job_config["uTest"]
+        uTestVerbose = job_config["uTestVerbose"]
+        cpu_approx_runtime_hr = job_config["cpu_approx_runtime_hr"]
+        cpu_approx_runtime_min = job_config["cpu_approx_runtime_min"]
         self.create_fields_folders = job_config["scalar_fields_folders"]
-        self.user_mail          = job_config["user_mail"]
+        self.user_mail = job_config["user_mail"]
 
         self._check_lcfgr_path(job_config)
 
         # Checks that binary file exists in expected location
         if not os.path.isfile(os.path.join(self.CURRENT_PATH, binary_filename)):
-            exit("ERROR: binary file path not in expected location %s/%s" % (
-                self.CURRENT_PATH, binary_filename))
+            exit(
+                "ERROR: binary file path not in expected location %s/%s"
+                % (self.CURRENT_PATH, binary_filename)
+            )
 
         # Ensures that we have a viable number of sub dimensions
         if len(subDims) != 0:
@@ -412,16 +484,22 @@ class JobCreator:
 
         # If we are on local computer(e.g. laptop), will create configuration file and quit
         if system == "local":
-            sys.exit("Configuration file %s for local production created." 
-                % os.path.join(self.base_folder, "input", self.json_file_name))
+            sys.exit(
+                "Configuration file %s for local production created."
+                % os.path.join(self.base_folder, "input", self.json_file_name)
+            )
 
         # Setting job name before creating content file.
-        job_name = "b{0:<3.2f}_cfg{1:<d}_nf{2:<d}_{3:<d}cube{4:<d}_{5:<d}threads".format(
-            beta, NCf, self.NFlows, NSpatial, NTemporal, threads)
+        job_name = (
+            "b{0:<3.2f}_cfg{1:<d}_nf{2:<d}_{3:<d}cube{4:<d}_{5:<d}threads".format(
+                beta, NCf, self.NFlows, NSpatial, NTemporal, threads
+            )
+        )
 
         # Setting approximated run time
         estimated_time = "{0:0>2d}:{1:0>2d}:00".format(
-            cpu_approx_runtime_hr, cpu_approx_runtime_min)
+            cpu_approx_runtime_hr, cpu_approx_runtime_min
+        )
 
         # # Choosing system
         # if system == "smaug":
@@ -438,17 +516,22 @@ class JobCreator:
             # Abel specific commands
             cpu_memory = job_config["cpu_memory"]
             account_name = job_config["account_name"]
-            tasks_per_node = 16 # Maximum number of threads per node
-            
+            tasks_per_node = 16  # Maximum number of threads per node
+
             nodes = 1
             if threads > tasks_per_node:
-                nodes = threads/tasks_per_node
+                nodes = threads / tasks_per_node
             if threads % tasks_per_node != 0:
                 if ignore_tasks_per_node:
-                    print("Warning: Tasks(number of threads) are not divisible by 16: {0:d} % {1:d} = {2:d}".format(
-                        threads, tasks_per_node, threads % tasks_per_node))
+                    print(
+                        "Warning: Tasks(number of threads) are not divisible by 16: {0:d} % {1:d} = {2:d}".format(
+                            threads, tasks_per_node, threads % tasks_per_node
+                        )
+                    )
                 else:
-                    raise ValueError("Tasks(number of threads) have to be divisible by 16.")
+                    raise ValueError(
+                        "Tasks(number of threads) have to be divisible by 16."
+                    )
 
             content = "#!/bin/bash"
             content += "\n#SBATCH --job-name={0:<s}".format(job_name)
@@ -468,14 +551,14 @@ class JobCreator:
         elif system == "torque":
             account_name = "ptg"
             tasks_per_node = 28
-            
+
             nodes = 1
             if threads > tasks_per_node:
-                nodes = threads/tasks_per_node
+                nodes = threads / tasks_per_node
 
             if threads % (tasks_per_node * nodes) != 0:
                 nodes += 1
-            
+
             threads = tasks_per_node * nodes
 
             cpu_memory = job_config["cpu_memory"]
@@ -483,7 +566,9 @@ class JobCreator:
 
             content = "#! /bin/bash -login"
             content += "\n#PBS -A {0:<s}".format(account_name)
-            content += "\n#PBS -l walltime={0:<s},nodes={1:<1d}:ppn={2:<d},mem={3:<4d}MB".format(estimated_time, nodes, tasks_per_node, cpu_memory*threads)
+            content += "\n#PBS -l walltime={0:<s},nodes={1:<1d}:ppn={2:<d},mem={3:<4d}MB".format(
+                estimated_time, nodes, tasks_per_node, cpu_memory * threads
+            )
             content += "\n#PBS -N {0:<s}".format(job_name)
             content += "\n#PBS -M {0:<s}".format(self.user_mail)
             content += "\n#PBS -m bea"
@@ -491,10 +576,12 @@ class JobCreator:
             # content += "\nmodule load OpenMPI/2.0.2"
             content += "\nmodule load GNU/4.9"
             content += "\nmodule load OpenMPI/1.10.0"
-            #content += "\nmodule load Qt/5.6.2"
+            # content += "\nmodule load Qt/5.6.2"
 
         elif system == "local":
-            sys.exit("ERROR: this is a local production run. Should never see this error message.")
+            sys.exit(
+                "ERROR: this is a local production run. Should never see this error message."
+            )
         else:
             sys.exit("ERROR: system %s not recognized." % system)
 
@@ -513,13 +600,13 @@ class JobCreator:
         content += "\n" + run_command
 
         if system == "slurm":
-            job = 'jobfile.slurm'
+            job = "jobfile.slurm"
         else:
-            job = 'jobfile.qsub'
+            job = "jobfile.qsub"
 
         # Writes slurm file to be submitted
         if not self.dryrun:
-            outfile = open(job, 'w')
+            outfile = open(job, "w")
             outfile.write(content)
             outfile.close()
         if self.dryrun or self.verbose:
@@ -527,9 +614,9 @@ class JobCreator:
 
         # Sets up command based on system we have.
         if system == "slurm":
-            cmd = ['sbatch', os.path.join(self.CURRENT_PATH,job)]
+            cmd = ["sbatch", os.path.join(self.CURRENT_PATH, job)]
         else:
-            cmd = ['qsub', os.path.join(self.CURRENT_PATH,job)]
+            cmd = ["qsub", os.path.join(self.CURRENT_PATH, job)]
 
         # Submits job
         if self.dryrun or self.verbose:
@@ -541,43 +628,44 @@ class JobCreator:
             # tmp = "123 456" # Used for bug-hunting
             try:
                 if system == "slurm":
-                    ID = int(tmp.split()[-1]) # ID of job
+                    ID = int(tmp.split()[-1])  # ID of job
                 else:
                     tmp2 = tmp.split()[-1]
                     tmp2 = tmp2.split(".")[0]
-                    ID = int(tmp2) # ID of laconia job
+                    ID = int(tmp2)  # ID of laconia job
             except IndexError:
                 print("ERROR: IndexError for line: \n", tmp, "--> exiting", exit(0))
 
         # Stores job in job dictionary
-        job_dict =  self._createDictionary( 
-            Partition = [0, 9, partition],
-            RunName = [1, 35, self.runName],
-            Beta = [2, 5, beta],
-            N = [3, 4, NSpatial],
-            NT = [4, 4, NTemporal],
-            NCf = [5, 4, NCf],
-            NTherm = [6, 6, NTherm],
-            NCor = [7, 4, NCor],
-            NUpdates = [8, 9, NUpdates],
-            NFlows = [9, 7, self.NFlows],
-            SU3Eps = [10, 6, SU3Eps],
-            Threads = [11, 8, threads],
-            StoreCfgs = [12, 10, bool(storeCfgs)],
-            StoreThermCfgs = [13, len("StoreThermCfgs") + 1, bool(storeThermCfgs)],
-            HotStart = [14, len("HotStart") + 1, bool(hotStart)],
-            SubDims = [15, 15, ' '.join(map(str, subDims))],
-            CPU_hr = [16, 7, cpu_approx_runtime_hr],
-            CPU_min = [17, 7, cpu_approx_runtime_min])
+        job_dict = self._createDictionary(
+            Partition=[0, 9, partition],
+            RunName=[1, 35, self.runName],
+            Beta=[2, 5, beta],
+            N=[3, 4, NSpatial],
+            NT=[4, 4, NTemporal],
+            NCf=[5, 4, NCf],
+            NTherm=[6, 6, NTherm],
+            NCor=[7, 4, NCor],
+            NUpdates=[8, 9, NUpdates],
+            NFlows=[9, 7, self.NFlows],
+            SU3Eps=[10, 6, SU3Eps],
+            Threads=[11, 8, threads],
+            StoreCfgs=[12, 10, bool(storeCfgs)],
+            StoreThermCfgs=[13, len("StoreThermCfgs") + 1, bool(storeThermCfgs)],
+            HotStart=[14, len("HotStart") + 1, bool(hotStart)],
+            SubDims=[15, 15, " ".join(map(str, subDims))],
+            CPU_hr=[16, 7, cpu_approx_runtime_hr],
+            CPU_min=[17, 7, cpu_approx_runtime_min],
+        )
 
         if not self.dryrun:
             self.jobs[ID] = job_dict
 
         # Changes name of job script
         if not self.dryrun:
-            os.system('mv %s job_%d.sh' % (job, ID))
+            os.system("mv %s job_%d.sh" % (job, ID))
         if self.dryrun or self.verbose:
-            print('> mv %s job_%d.sh' % (job, ID))
+            print("> mv %s job_%d.sh" % (job, ID))
 
         # Updates ID file only if it is not a dryrun
         if not self.dryrun:
@@ -602,7 +690,6 @@ class JobCreator:
             return "scancel"
         else:
             raise KeyError("{} not a recognized system".format(system))
-
 
     def cancel_job(self, jobID, system):
         """Cancels jobID."""
@@ -633,10 +720,13 @@ class JobCreator:
 
             # Will order list based on the last header element, e.g. the most updated one
             last_job = self.jobs[sorted_job_keys[-1]]
-            last_job_sorted = sorted(zip(list(last_job.keys()), list(last_job.values())), key=lambda i: i[-1][0])
+            last_job_sorted = sorted(
+                zip(list(last_job.keys()), list(last_job.values())),
+                key=lambda i: i[-1][0],
+            )
 
             # Creates the header
-            print("{0:<{w}}".format("ID", w=10), end=' ')
+            print("{0:<{w}}".format("ID", w=10), end=" ")
 
             # Sorts based on the number give nto the header element
             for elem in last_job_sorted:
@@ -645,22 +735,30 @@ class JobCreator:
 
                 # Retrieves the width of the header column
                 width = elem[1][1]
-                
+
                 # Prints the column name
-                print("{0:<{w}}".format(name, w=width), end=' ')
+                print("{0:<{w}}".format(name, w=width), end=" ")
 
             # Prints the jobs
             for jobID in sorted_job_keys:
                 # Prints job ID
-                print("\n{0:<{w}}".format(jobID, w=10), end=' ')
+                print("\n{0:<{w}}".format(jobID, w=10), end=" ")
 
                 # Takes the jobs out of their dictionary, and zips values and keys together for printing their values
-                for i,item in enumerate(sorted(zip(list(self.jobs[jobID].keys()), list(self.jobs[jobID].values())), key=lambda i: i[-1][0])):
+                for i, item in enumerate(
+                    sorted(
+                        zip(
+                            list(self.jobs[jobID].keys()),
+                            list(self.jobs[jobID].values()),
+                        ),
+                        key=lambda i: i[-1][0],
+                    )
+                ):
                     # Width based on the last job committed
                     width = last_job_sorted[i][1][1]
 
                     # Prints the item for the job id
-                    print("{0:<{w}}".format(item[1][-1], w=width), end=' ')
+                    print("{0:<{w}}".format(item[1][-1], w=width), end=" ")
 
     def print_job_id_info(self, jobID):
         """
@@ -674,17 +772,26 @@ class JobCreator:
             print("No jobs running")
         else:
             # Takes the jobs out of their dictionary, and zips values and keys together for creating a header
-            sorted_jobs = sorted(zip(list(self.jobs.values())[0].keys(), list(self.jobs.values())[0].values()), key=lambda i: i[-1][0])
-            print("{0:<{w}}".format("ID", w=10), end=' ')
+            sorted_jobs = sorted(
+                zip(
+                    list(self.jobs.values())[0].keys(),
+                    list(self.jobs.values())[0].values(),
+                ),
+                key=lambda i: i[-1][0],
+            )
+            print("{0:<{w}}".format("ID", w=10), end=" ")
             for i in sorted_jobs:
-                print("{0:<{w}}".format(i[0], w=i[-1][1]), end=' ')
+                print("{0:<{w}}".format(i[0], w=i[-1][1]), end=" ")
 
             # Prints a single job
-            print("\n{0:<{w}}".format(jobID, w=10), end=' ')
+            print("\n{0:<{w}}".format(jobID, w=10), end=" ")
 
             # Takes the jobs out of their dictionary, and zips values and keys together for printing their values
-            for item in sorted(zip(list(self.jobs[jobID].keys()), list(self.jobs[jobID].values())), key=lambda i: i[-1][0]):
-                print("{0:<{w}}".format(item[-1][-1], w=item[-1][1]), end=' ')
+            for item in sorted(
+                zip(list(self.jobs[jobID].keys()), list(self.jobs[jobID].values())),
+                key=lambda i: i[-1][0],
+            ):
+                print("{0:<{w}}".format(item[-1][-1], w=item[-1][1]), end=" ")
 
     def clear_id_file(self):
         """Clears the ID file."""
@@ -695,221 +802,809 @@ class JobCreator:
         if self.dryrun or self.verbose:
             print("Clearing ID file.")
 
+
 def main(args):
     # Default configuration file.
     if not os.path.isdir(os.path.join(os.getcwd(), "build")):
-        raise EnvironmentError("Build folder is not present at location %s." % os.path.join(os.getcwd(), "build"))
+        raise EnvironmentError(
+            "Build folder is not present at location %s."
+            % os.path.join(os.getcwd(), "build")
+        )
 
     # Default config
     config_default = {
-        "bin_fn"                    : "build-release/GLAC",
-        "runName"                   : "defaultRun",
-        "N"                         : 8, # Small lattice as default
-        "NT"                        : 16,
-        "subDims"                   : [],
-        "beta"                      : 6.0,
-        "NCf"                       : 100,
-        "NCor"                      : 20,
-        "NTherm"                    : 200,
-        "NFlows"                    : 0,
-        "NUpdates"                  : 10,
-        "storeCfgs"                 : True,
-        "storeThermCfgs"            : False,
-        "verboseRun"                : False,
-        "hotStart"                  : False,
-        "RSTHotStart"               : False,
-        "expFunc"                   : "morningstar",
-        "action"                    : "wilsonExplicitDer", # options: wilson, wilsonExplicitDer - both first order
-        "observables"               : ["plaq"],
-        "flowObservables"           : ["plaq","topc","energy"],
-        "load_field_configs"        : False,
-        "load_config_and_run"       : "",
-        "config_start_number"       : 0,
-        "chroma_config"             : False,
-        "base_folder"               : os.getcwd(),
-        "inputFolder"               : "input",
-        "outputFolder"              : "output",
-        "field_configs"             : [],
-        "uTest"                     : False,
-        "uTestVerbose"              : False,
-        "uTestFieldGaugeInvarince"  : "",
-        "performanceTesting"        : False,
-        "NExpTests"                 : int(1e6),
-        "NRandTests"                : int(1e6),
-        "NDerivativeTests"          : int(1e2),
-        "TaylorPolDegree"           : 8,
-        "SU3Eps"                    : 0.24,
-        "flowEpsilon"               : 0.01,
-        "metropolisSeed"            : 0,
-        "randomMatrixSeed"          : 0,
-        "threads"                   : 64,
-        "scalar_fields_folders"     : False,
-        "samplingFrequency"         : 25,
-        "debug"                     : False,
-        "cpu_approx_runtime_hr"     : 2, # In order to catch if config we are loading contains cpu approx time
-        "cpu_approx_runtime_min"    : 0,
-        "cpu_memory"                : 3800,
-        "account_name"              : "nn2977k",
-        "user_mail"                 : "h.m.m.vege@fys.uio.no",
+        "bin_fn": "build/GLAC",
+        "runName": "defaultRun",
+        "N": 8,  # Small lattice as default
+        "NT": 16,
+        "subDims": [],
+        "beta": 6.0,
+        "NCf": 100,
+        "NCor": 20,
+        "NTherm": 200,
+        "NFlows": 0,
+        "NUpdates": 10,
+        "storeCfgs": True,
+        "storeThermCfgs": False,
+        "verboseRun": False,
+        "hotStart": False,
+        "RSTHotStart": False,
+        "expFunc": "morningstar",
+        "action": "wilsonExplicitDer",  # options: wilson, wilsonExplicitDer - both first order
+        "observables": ["plaq"],
+        "flowObservables": ["plaq", "topc", "energy"],
+        "load_field_configs": False,
+        "load_config_and_run": "",
+        "config_start_number": 0,
+        "chroma_config": False,
+        "base_folder": os.getcwd(),
+        "inputFolder": "input",
+        "outputFolder": "output",
+        "field_configs": [],
+        "uTest": False,
+        "uTestVerbose": False,
+        "uTestFieldGaugeInvarince": "",
+        "performanceTesting": False,
+        "NExpTests": int(1e6),
+        "NRandTests": int(1e6),
+        "NDerivativeTests": int(1e2),
+        "TaylorPolDegree": 8,
+        "SU3Eps": 0.24,
+        "flowEpsilon": 0.01,
+        "metropolisSeed": 0,
+        "randomMatrixSeed": 0,
+        "threads": 64,
+        "scalar_fields_folders": False,
+        "samplingFrequency": 25,
+        "debug": False,
+        "cpu_approx_runtime_hr": 2,  # In order to catch if config we are loading contains cpu approx time
+        "cpu_approx_runtime_min": 0,
+        "cpu_memory": 3800,
+        "account_name": "nn2977k",
+        "user_mail": "h.m.m.vege@fys.uio.no",
     }
 
     ######## Initiating command line parser ########
-    description_string = '''
+    description_string = """
     Program for starting large parallel Lattice Quantum Chromo Dynamics jobs.
-    '''
-    parser = argparse.ArgumentParser(prog='GLAC job creator', description=description_string)
-    
+    """
+    parser = argparse.ArgumentParser(
+        prog="GLAC job creator", description=description_string
+    )
+
     ######## Prints program version if prompted ########
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0.2')
-    parser.add_argument('--dryrun', default=False, action='store_true', help='Dryrun to not perform any critical actions.')
-    parser.add_argument('-v', '--verbose', default=False, action='store_true', help='A more verbose output when generating.')
+    parser.add_argument("--version", action="version", version="%(prog)s 1.0.2")
+    parser.add_argument(
+        "--dryrun",
+        default=False,
+        action="store_true",
+        help="Dryrun to not perform any critical actions.",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        default=False,
+        action="store_true",
+        help="A more verbose output when generating.",
+    )
 
     ######## Sets up subparsers ########
-    subparser = parser.add_subparsers(dest='subparser')
+    subparser = parser.add_subparsers(dest="subparser")
 
     ######## Job control ########
-    sbatch_parser = subparser.add_parser('sbatch', help='Views, stops, clears and list jobs.')
+    sbatch_parser = subparser.add_parser(
+        "sbatch", help="Views, stops, clears and list jobs."
+    )
     sbatch_group = sbatch_parser.add_mutually_exclusive_group(required=True)
-    sbatch_group.add_argument('--scancel',                      default=False,      type=int, help='Cancel a job of given ID.')
-    sbatch_group.add_argument('--scancel_all',                  default=False,      action='store_true', help='Cancel all jobs')
-    sbatch_group.add_argument('-ls', '--list_jobs',             default=False,      action='store_true', help='List all jobs currently running.')
-    sbatch_group.add_argument('--clear_id_file',                default=False,      action='store_true', help='Clears the job ID file.')
-    sbatch_group.add_argument('-id', '--list_job_id',           default=False,      type=int, help='Shows details about job with given ID.')
+    sbatch_group.add_argument(
+        "--scancel", default=False, type=int, help="Cancel a job of given ID."
+    )
+    sbatch_group.add_argument(
+        "--scancel_all", default=False, action="store_true", help="Cancel all jobs"
+    )
+    sbatch_group.add_argument(
+        "-ls",
+        "--list_jobs",
+        default=False,
+        action="store_true",
+        help="List all jobs currently running.",
+    )
+    sbatch_group.add_argument(
+        "--clear_id_file",
+        default=False,
+        action="store_true",
+        help="Clears the job ID file.",
+    )
+    sbatch_group.add_argument(
+        "-id",
+        "--list_job_id",
+        default=False,
+        type=int,
+        help="Shows details about job with given ID.",
+    )
 
     ######## Manual job setup ########
-    job_parser = subparser.add_parser('setup', help='Sets up the job.')
-    job_parser.add_argument('system',                           default=False,                                      type=str, choices=AVAILABLE_HPC_SYSTEMS, help='Specify system we are running on.')
-    job_parser.add_argument('threads',                          default=False,                                      type=int, help='Number of threads to run on')
-    job_parser.add_argument('-p', '--partition',                default="normal",                                   type=str, help='Specify partition to run program on.')
-    job_parser.add_argument('-rn', '--run_name',                default=config_default["runName"],                  type=str, help='Specify the run name')
+    job_parser = subparser.add_parser("setup", help="Sets up the job.")
+    job_parser.add_argument(
+        "system",
+        default=False,
+        type=str,
+        choices=AVAILABLE_HPC_SYSTEMS,
+        help="Specify system we are running on.",
+    )
+    job_parser.add_argument(
+        "threads", default=False, type=int, help="Number of threads to run on"
+    )
+    job_parser.add_argument(
+        "-p",
+        "--partition",
+        default="normal",
+        type=str,
+        help="Specify partition to run program on.",
+    )
+    job_parser.add_argument(
+        "-rn",
+        "--run_name",
+        default=config_default["runName"],
+        type=str,
+        help="Specify the run name",
+    )
 
     # Lattice related run variables
-    job_parser.add_argument('-N', '--NSpatial',                 default=config_default["N"],                        type=int, help='spatial lattice dimension')
-    job_parser.add_argument('-NT', '--NTemporal',               default=config_default["NT"],                       type=int, help='temporal lattice dimension')
-    job_parser.add_argument('-sd', '--subDims',                 default=False,                                      type=int, nargs=4, help='List of sub lattice dimension sizes, length 4')
-    job_parser.add_argument('-b', '--beta',                     default=config_default["beta"],                     type=float, help='beta value')
-    job_parser.add_argument('-NCfgs', '-Ncfg', '-NCf', '--NConfigs', default=config_default["NCf"],                      type=int, help='number of configurations to generate')
-    job_parser.add_argument('-NCor', '-NCorr', '--NCor',        default=config_default["NCor"],                     type=int, help='number of correlation updates to perform')
-    job_parser.add_argument('-NTh', '--NTherm',                 default=config_default["NTherm"],                   type=int, help='number of thermalization steps')
-    job_parser.add_argument('-NFlows', '--NFlows',              default=config_default["NFlows"],                   type=int, help='number of flows to perform per configuration')
-    job_parser.add_argument('-NUp', '--NUpdates',               default=config_default["NUpdates"],                 type=int, help='number of updates per link')
+    job_parser.add_argument(
+        "-N",
+        "--NSpatial",
+        default=config_default["N"],
+        type=int,
+        help="spatial lattice dimension",
+    )
+    job_parser.add_argument(
+        "-NT",
+        "--NTemporal",
+        default=config_default["NT"],
+        type=int,
+        help="temporal lattice dimension",
+    )
+    job_parser.add_argument(
+        "-sd",
+        "--subDims",
+        default=False,
+        type=int,
+        nargs=4,
+        help="List of sub lattice dimension sizes, length 4",
+    )
+    job_parser.add_argument(
+        "-b", "--beta", default=config_default["beta"], type=float, help="beta value"
+    )
+    job_parser.add_argument(
+        "-NCfgs",
+        "-Ncfg",
+        "-NCf",
+        "--NConfigs",
+        default=config_default["NCf"],
+        type=int,
+        help="number of configurations to generate",
+    )
+    job_parser.add_argument(
+        "-NCor",
+        "-NCorr",
+        "--NCor",
+        default=config_default["NCor"],
+        type=int,
+        help="number of correlation updates to perform",
+    )
+    job_parser.add_argument(
+        "-NTh",
+        "--NTherm",
+        default=config_default["NTherm"],
+        type=int,
+        help="number of thermalization steps",
+    )
+    job_parser.add_argument(
+        "-NFlows",
+        "--NFlows",
+        default=config_default["NFlows"],
+        type=int,
+        help="number of flows to perform per configuration",
+    )
+    job_parser.add_argument(
+        "-NUp",
+        "--NUpdates",
+        default=config_default["NUpdates"],
+        type=int,
+        help="number of updates per link",
+    )
 
     # Data storage related variables
-    job_parser.add_argument('-sc', '--storeCfgs',               default=config_default["storeCfgs"],                type=int, choices=[0,1], help='Specifying if we are to store configurations')
-    job_parser.add_argument('-st', '--storeThermCfgs',          default=config_default["storeThermCfgs"],           type=int, choices=[0,1], help='Specifies if we are to store the thermalization plaquettes')
-    job_parser.add_argument('-bf', '--base_folder',             default=config_default["base_folder"],              type=str, help='Sets the base folder. Default is os.path.getcwd().') # Human readable output related variables
-    job_parser.add_argument('-vr', '--verboseRun',              default=config_default["verboseRun"],               action='store_true', help='Verbose run of GLAC. By default, it is off.')
+    job_parser.add_argument(
+        "-sc",
+        "--storeCfgs",
+        default=config_default["storeCfgs"],
+        type=int,
+        choices=[0, 1],
+        help="Specifying if we are to store configurations",
+    )
+    job_parser.add_argument(
+        "-st",
+        "--storeThermCfgs",
+        default=config_default["storeThermCfgs"],
+        type=int,
+        choices=[0, 1],
+        help="Specifies if we are to store the thermalization plaquettes",
+    )
+    job_parser.add_argument(
+        "-bf",
+        "--base_folder",
+        default=config_default["base_folder"],
+        type=str,
+        help="Sets the base folder. Default is os.path.getcwd().",
+    )  # Human readable output related variables
+    job_parser.add_argument(
+        "-vr",
+        "--verboseRun",
+        default=config_default["verboseRun"],
+        action="store_true",
+        help="Verbose run of GLAC. By default, it is off.",
+    )
 
     # Setup related variables
-    job_parser.add_argument('-hs', '--hotStart',                default=config_default["hotStart"],                 type=int, choices=[0,1], help='Hot start or cold start')
-    job_parser.add_argument('-rsths', '--RSTHotStart',          default=config_default["RSTHotStart"],              type=int, choices=[0,1], help='RST hot start is closer to unity')
-    job_parser.add_argument('-expf', '--expFunc',               default=config_default["expFunc"],                  type=str, choices=AVAILABLE_EXP_FUNCS, help='Sets the exponentiation function to be used in flow. Default is method by Morningstar.')
-    job_parser.add_argument('-obs', '--observables',            default=config_default["observables"],              type=str, choices=AVAILABLE_OBSERVABLES, nargs='+', help='Observables to sample for in flow.')
-    job_parser.add_argument('-fobs', '--flowObservables',       default=config_default["flowObservables"],          type=str, choices=AVAILABLE_OBSERVABLES, nargs='+', help='Observables to sample for in flow.')
-    job_parser.add_argument('-act', '--action',                 default=config_default["action"],                   type=str, choices=AVAILABLE_ACTIONS, nargs=None, help='Action to use.')
+    job_parser.add_argument(
+        "-hs",
+        "--hotStart",
+        default=config_default["hotStart"],
+        type=int,
+        choices=[0, 1],
+        help="Hot start or cold start",
+    )
+    job_parser.add_argument(
+        "-rsths",
+        "--RSTHotStart",
+        default=config_default["RSTHotStart"],
+        type=int,
+        choices=[0, 1],
+        help="RST hot start is closer to unity",
+    )
+    job_parser.add_argument(
+        "-expf",
+        "--expFunc",
+        default=config_default["expFunc"],
+        type=str,
+        choices=AVAILABLE_EXP_FUNCS,
+        help="Sets the exponentiation function to be used in flow. Default is method by Morningstar.",
+    )
+    job_parser.add_argument(
+        "-obs",
+        "--observables",
+        default=config_default["observables"],
+        type=str,
+        choices=AVAILABLE_OBSERVABLES,
+        nargs="+",
+        help="Observables to sample for in flow.",
+    )
+    job_parser.add_argument(
+        "-fobs",
+        "--flowObservables",
+        default=config_default["flowObservables"],
+        type=str,
+        choices=AVAILABLE_OBSERVABLES,
+        nargs="+",
+        help="Observables to sample for in flow.",
+    )
+    job_parser.add_argument(
+        "-act",
+        "--action",
+        default=config_default["action"],
+        type=str,
+        choices=AVAILABLE_ACTIONS,
+        nargs=None,
+        help="Action to use.",
+    )
 
     # Data generation related variables
-    job_parser.add_argument('-SU3Eps', '--SU3Epsilon',          default=config_default["SU3Eps"],                   type=float, help='SU3 epsilon random increment value.')
-    job_parser.add_argument('-fEps', '--flowEpsilon',           default=config_default["flowEpsilon"],              type=float, help='Flow epsilon derivative small change value.')
-    job_parser.add_argument('-mSeed', '--metropolisSeed',       default=config_default["metropolisSeed"],           type=float, help='Seed for the Metropolis algorithm.')
-    job_parser.add_argument('-rSeed', '--randomMatrixSeed',     default=config_default["randomMatrixSeed"],         type=float, help='Seed for the random matrix generation.')
+    job_parser.add_argument(
+        "-SU3Eps",
+        "--SU3Epsilon",
+        default=config_default["SU3Eps"],
+        type=float,
+        help="SU3 epsilon random increment value.",
+    )
+    job_parser.add_argument(
+        "-fEps",
+        "--flowEpsilon",
+        default=config_default["flowEpsilon"],
+        type=float,
+        help="Flow epsilon derivative small change value.",
+    )
+    job_parser.add_argument(
+        "-mSeed",
+        "--metropolisSeed",
+        default=config_default["metropolisSeed"],
+        type=float,
+        help="Seed for the Metropolis algorithm.",
+    )
+    job_parser.add_argument(
+        "-rSeed",
+        "--randomMatrixSeed",
+        default=config_default["randomMatrixSeed"],
+        type=float,
+        help="Seed for the random matrix generation.",
+    )
 
     # Other usefull parsing options
-    job_parser.add_argument('-sq', '--square',                  default=False,                                      action='store_true', help='Enforce square sub lattices(or as close as possible).')
-    job_parser.add_argument('-chr', '--cpu_approx_runtime_hr',  default=2,                                          type=int, help='Approximate cpu time in hours that will be used')
-    job_parser.add_argument('-cmin', '--cpu_approx_runtime_min',default=0,                                          type=int, help='Approximate cpu time in minutes that will be used')
-    job_parser.add_argument('-ex', '--exclude',                 default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
-    job_parser.add_argument('-lcfg', '--load_configurations',   default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder by scanning and for files with .bin extensions.')
-    job_parser.add_argument('-chroma', '--chroma_config',       default=config_default["chroma_config"],            action='store_true', help='If flagged, loads the configuration as a chroma configuration.')
-    job_parser.add_argument('-lcfgr', '--load_config_and_run',  default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
-    job_parser.add_argument('-cfgnum', '--config_start_number', default=config_default["config_start_number"],      type=int, help='Starts naming the configuration from this number.')
-    job_parser.add_argument('-igntsk', '--ignore_tasks_per_node', default=False,                                    action='store_true', help='If enabled, will ignore requirement of having 16 tasks per node.')
+    job_parser.add_argument(
+        "-sq",
+        "--square",
+        default=False,
+        action="store_true",
+        help="Enforce square sub lattices(or as close as possible).",
+    )
+    job_parser.add_argument(
+        "-chr",
+        "--cpu_approx_runtime_hr",
+        default=2,
+        type=int,
+        help="Approximate cpu time in hours that will be used",
+    )
+    job_parser.add_argument(
+        "-cmin",
+        "--cpu_approx_runtime_min",
+        default=0,
+        type=int,
+        help="Approximate cpu time in minutes that will be used",
+    )
+    job_parser.add_argument(
+        "-ex", "--exclude", default=False, type=str, nargs="+", help="Nodes to exclude."
+    )
+    job_parser.add_argument(
+        "-lcfg",
+        "--load_configurations",
+        default=config_default["load_field_configs"],
+        type=str,
+        help="Loads configurations from a folder by scanning and for files with .bin extensions.",
+    )
+    job_parser.add_argument(
+        "-chroma",
+        "--chroma_config",
+        default=config_default["chroma_config"],
+        action="store_true",
+        help="If flagged, loads the configuration as a chroma configuration.",
+    )
+    job_parser.add_argument(
+        "-lcfgr",
+        "--load_config_and_run",
+        default=False,
+        type=str,
+        help="Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.",
+    )
+    job_parser.add_argument(
+        "-cfgnum",
+        "--config_start_number",
+        default=config_default["config_start_number"],
+        type=int,
+        help="Starts naming the configuration from this number.",
+    )
+    job_parser.add_argument(
+        "-igntsk",
+        "--ignore_tasks_per_node",
+        default=False,
+        action="store_true",
+        help="If enabled, will ignore requirement of having 16 tasks per node.",
+    )
 
     # Debug option
-    job_parser.add_argument('--debug',                          default=config_default["debug"],                    action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
+    job_parser.add_argument(
+        "--debug",
+        default=config_default["debug"],
+        action="store_true",
+        help="Debug option. Will check lattices for corruption and zeros.",
+    )
 
     ######## Abel specific commands ########
-    job_parser.add_argument('--cpu_memory',                     default=config_default["cpu_memory"],               type=int, help='CPU memory to be allocated to each core')
-    job_parser.add_argument('--account_name',                   default=config_default["account_name"],             type=str, help='Account name associated to the abel cluster')
+    job_parser.add_argument(
+        "--cpu_memory",
+        default=config_default["cpu_memory"],
+        type=int,
+        help="CPU memory to be allocated to each core",
+    )
+    job_parser.add_argument(
+        "--account_name",
+        default=config_default["account_name"],
+        type=str,
+        help="Account name associated to the abel cluster",
+    )
 
     ######## Job load parser ########
-    load_parser = subparser.add_parser('load', help='Loads a configuration file into the program')
-    load_parser.add_argument('file',                            default=False,                                      type=str, help='Loads config file')
-    load_parser.add_argument('-s', '--system',                  default=False,                                      type=str, required=True, choices=AVAILABLE_HPC_SYSTEMS, help='Cluster name')
-    load_parser.add_argument('-p', '--partition',               default="normal",                                   type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
-    load_parser.add_argument('-lcfg', '--load_configurations',  default=config_default["load_field_configs"],       type=str, help='Loads configurations from a folder by scanning and for files with .bin extensions.')
-    load_parser.add_argument('-lcfgr', '--load_config_and_run', default=False,                                      type=str, help='Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.')
-    load_parser.add_argument('-NCfgs', '-NCfg', '-NCf', '--NConfigs', default=False,                                type=int, help='N configurations to generate based on loaded configuration.')
-    load_parser.add_argument('-NFlows', '--NFlows',             default=False,                                      type=int, help='number of flows to perform per configuration')
-    load_parser.add_argument('-chroma', '--chroma_config',      default=config_default["chroma_config"],            action='store_true', help='If flagged, loads the configuration as a chroma configuration.')
-    load_parser.add_argument('-lhr', '--load_config_hr_time_estimate', default=None,                                type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
-    load_parser.add_argument('-lmin', '--load_config_min_time_estimate', default=None,                              type=int, help='Approximate cpu time in minutes that will be used.')
-    load_parser.add_argument('-bf', '--base_folder',            default=config_default["base_folder"],              type=str, help='Sets the base folder. Default is os.path.getcwd().')
-    load_parser.add_argument('-nf', '--no_flow',                default=False,                                      action='store_true', help='If toggled, will not perform any flows.')
-    load_parser.add_argument('-cfgnum', '--config_start_number',default=config_default["config_start_number"],      type=int, help='Starts naming the configuration from this number.')
-    load_parser.add_argument('-rn', '--run_name',               default=False,                                      type=str, help='Specify the run name')
-    load_parser.add_argument('-ex', '--exclude',                default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
-    load_parser.add_argument('-NUp', '--NUpdates',              default=False,                                      type=int, help='number of updates per link')
-    load_parser.add_argument('-NCor', '-NCorr', '--NCor',       default=False,                                      type=int, help='number of correlation updates to perform')
-    load_parser.add_argument('--debug',                         default=False,                                      action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
-    load_parser.add_argument('-vr', '--verboseRun',             default=config_default["verboseRun"],              action='store_true', help='Verbose run of GLAC. By default, it is off.')
-    load_parser.add_argument('-igntsk', '--ignore_tasks_per_node', default=False,                                   action='store_true', help='If enabled, will ignore requirement of having 16 tasks per node.')
-    load_parser.add_argument('--account_name',                   default=config_default["account_name"],             type=str, help='Account name associated to the abel cluster')
+    load_parser = subparser.add_parser(
+        "load", help="Loads a configuration file into the program"
+    )
+    load_parser.add_argument("file", default=False, type=str, help="Loads config file")
+    load_parser.add_argument(
+        "-s",
+        "--system",
+        default=False,
+        type=str,
+        required=True,
+        choices=AVAILABLE_HPC_SYSTEMS,
+        help="Cluster name",
+    )
+    load_parser.add_argument(
+        "-p",
+        "--partition",
+        default="normal",
+        type=str,
+        help="Partition to run on. Default is normal. If some nodes are down, manual input may be needed.",
+    )
+    load_parser.add_argument(
+        "-lcfg",
+        "--load_configurations",
+        default=config_default["load_field_configs"],
+        type=str,
+        help="Loads configurations from a folder by scanning and for files with .bin extensions.",
+    )
+    load_parser.add_argument(
+        "-lcfgr",
+        "--load_config_and_run",
+        default=False,
+        type=str,
+        help="Loads a configuration that is already thermalized and continues generating N configurations based on required -NCfgs argument.",
+    )
+    load_parser.add_argument(
+        "-NCfgs",
+        "-NCfg",
+        "-NCf",
+        "--NConfigs",
+        default=False,
+        type=int,
+        help="N configurations to generate based on loaded configuration.",
+    )
+    load_parser.add_argument(
+        "-NFlows",
+        "--NFlows",
+        default=False,
+        type=int,
+        help="number of flows to perform per configuration",
+    )
+    load_parser.add_argument(
+        "-chroma",
+        "--chroma_config",
+        default=config_default["chroma_config"],
+        action="store_true",
+        help="If flagged, loads the configuration as a chroma configuration.",
+    )
+    load_parser.add_argument(
+        "-lhr",
+        "--load_config_hr_time_estimate",
+        default=None,
+        type=int,
+        help="Number of hours that we estimate we need to run the loaded configurations for.",
+    )
+    load_parser.add_argument(
+        "-lmin",
+        "--load_config_min_time_estimate",
+        default=None,
+        type=int,
+        help="Approximate cpu time in minutes that will be used.",
+    )
+    load_parser.add_argument(
+        "-bf",
+        "--base_folder",
+        default=config_default["base_folder"],
+        type=str,
+        help="Sets the base folder. Default is os.path.getcwd().",
+    )
+    load_parser.add_argument(
+        "-nf",
+        "--no_flow",
+        default=False,
+        action="store_true",
+        help="If toggled, will not perform any flows.",
+    )
+    load_parser.add_argument(
+        "-cfgnum",
+        "--config_start_number",
+        default=config_default["config_start_number"],
+        type=int,
+        help="Starts naming the configuration from this number.",
+    )
+    load_parser.add_argument(
+        "-rn", "--run_name", default=False, type=str, help="Specify the run name"
+    )
+    load_parser.add_argument(
+        "-ex", "--exclude", default=False, type=str, nargs="+", help="Nodes to exclude."
+    )
+    load_parser.add_argument(
+        "-NUp", "--NUpdates", default=False, type=int, help="number of updates per link"
+    )
+    load_parser.add_argument(
+        "-NCor",
+        "-NCorr",
+        "--NCor",
+        default=False,
+        type=int,
+        help="number of correlation updates to perform",
+    )
+    load_parser.add_argument(
+        "--debug",
+        default=False,
+        action="store_true",
+        help="Debug option. Will check lattices for corruption and zeros.",
+    )
+    load_parser.add_argument(
+        "-vr",
+        "--verboseRun",
+        default=config_default["verboseRun"],
+        action="store_true",
+        help="Verbose run of GLAC. By default, it is off.",
+    )
+    load_parser.add_argument(
+        "-igntsk",
+        "--ignore_tasks_per_node",
+        default=False,
+        action="store_true",
+        help="If enabled, will ignore requirement of having 16 tasks per node.",
+    )
+    load_parser.add_argument(
+        "--account_name",
+        default=config_default["account_name"],
+        type=str,
+        help="Account name associated to the abel cluster",
+    )
 
     ######## Unit test parser ########
-    unit_test_parser = subparser.add_parser('utest', help='Runs unit tests embedded in the GLAC program. Will exit when complete.')
-    unit_test_parser.add_argument('system',                     default=False,                                      type=str, choices=AVAILABLE_HPC_SYSTEMS, help='Specify system we are running on.')
-    unit_test_parser.add_argument('threads',                    default=False,                                      type=int, help='Number of threads to run on')
-    unit_test_parser.add_argument('-vr', '--verboseRun',        default=config_default["verboseRun"],               action='store_true', help='Prints more information during testing.')
-    unit_test_parser.add_argument('-cgi', '--check_gauge_invariance', default=False,                                type=str, help='Loads and checks the gauge field invariance of a field.')
-    unit_test_parser.add_argument('-sq', '--square',            default=False,                                      action='store_true', help='Enforce square sub lattices(or as close as possible).')
-    unit_test_parser.add_argument('-N', '--NSpatial',           default=config_default["N"],                        type=int, help='spatial lattice dimension')
-    unit_test_parser.add_argument('-NT', '--NTemporal',         default=config_default["NT"],                       type=int, help='temporal lattice dimension')
-    unit_test_parser.add_argument('-ex', '--exclude',           default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
-    unit_test_parser.add_argument('-igntsk', '--ignore_tasks_per_node', default=False,                              action='store_true', help='If enabled, will ignore requirement of having 16 tasks per node.')
+    unit_test_parser = subparser.add_parser(
+        "utest",
+        help="Runs unit tests embedded in the GLAC program. Will exit when complete.",
+    )
+    unit_test_parser.add_argument(
+        "system",
+        default=False,
+        type=str,
+        choices=AVAILABLE_HPC_SYSTEMS,
+        help="Specify system we are running on.",
+    )
+    unit_test_parser.add_argument(
+        "threads", default=False, type=int, help="Number of threads to run on"
+    )
+    unit_test_parser.add_argument(
+        "-vr",
+        "--verboseRun",
+        default=config_default["verboseRun"],
+        action="store_true",
+        help="Prints more information during testing.",
+    )
+    unit_test_parser.add_argument(
+        "-cgi",
+        "--check_gauge_invariance",
+        default=False,
+        type=str,
+        help="Loads and checks the gauge field invariance of a field.",
+    )
+    unit_test_parser.add_argument(
+        "-sq",
+        "--square",
+        default=False,
+        action="store_true",
+        help="Enforce square sub lattices(or as close as possible).",
+    )
+    unit_test_parser.add_argument(
+        "-N",
+        "--NSpatial",
+        default=config_default["N"],
+        type=int,
+        help="spatial lattice dimension",
+    )
+    unit_test_parser.add_argument(
+        "-NT",
+        "--NTemporal",
+        default=config_default["NT"],
+        type=int,
+        help="temporal lattice dimension",
+    )
+    unit_test_parser.add_argument(
+        "-ex", "--exclude", default=False, type=str, nargs="+", help="Nodes to exclude."
+    )
+    unit_test_parser.add_argument(
+        "-igntsk",
+        "--ignore_tasks_per_node",
+        default=False,
+        action="store_true",
+        help="If enabled, will ignore requirement of having 16 tasks per node.",
+    )
 
     ######## Performance test parser ########
-    performance_test_parser = subparser.add_parser('perf_test', help='Runs performance tests on the certain components of the GLAC program. Will exit when complete.')
-    performance_test_parser.add_argument('system',              default=False,                                      type=str, choices=AVAILABLE_HPC_SYSTEMS, help='Specify system we are running on.')
-    performance_test_parser.add_argument('threads',             default=False,                                      type=int, help='Number of threads to run on')
-    performance_test_parser.add_argument('-NExpTests',          default=config_default["NExpTests"],                type=int, help='Number of exponentiation tests we will run.')
-    performance_test_parser.add_argument('-NRandTests',         default=config_default["NRandTests"],               type=int, help='Number of random tests we will run.')
-    performance_test_parser.add_argument('-NDerivativeTests',   default=config_default["NDerivativeTests"],         type=int, help='Number of full lattice derivative tests we will run.')
-    performance_test_parser.add_argument('-TaylorPolDegree',    default=config_default["TaylorPolDegree"],          type=int, help='Degree of the Taylor polynomial for exponentiation(default is 8).')
-    performance_test_parser.add_argument('-ex', '--exclude',    default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
-    performance_test_parser.add_argument('-igntsk', '--ignore_tasks_per_node', default=False,                       action='store_true', help='If enabled, will ignore requirement of having 16 tasks per node.')
+    performance_test_parser = subparser.add_parser(
+        "perf_test",
+        help="Runs performance tests on the certain components of the GLAC program. Will exit when complete.",
+    )
+    performance_test_parser.add_argument(
+        "system",
+        default=False,
+        type=str,
+        choices=AVAILABLE_HPC_SYSTEMS,
+        help="Specify system we are running on.",
+    )
+    performance_test_parser.add_argument(
+        "threads", default=False, type=int, help="Number of threads to run on"
+    )
+    performance_test_parser.add_argument(
+        "-NExpTests",
+        default=config_default["NExpTests"],
+        type=int,
+        help="Number of exponentiation tests we will run.",
+    )
+    performance_test_parser.add_argument(
+        "-NRandTests",
+        default=config_default["NRandTests"],
+        type=int,
+        help="Number of random tests we will run.",
+    )
+    performance_test_parser.add_argument(
+        "-NDerivativeTests",
+        default=config_default["NDerivativeTests"],
+        type=int,
+        help="Number of full lattice derivative tests we will run.",
+    )
+    performance_test_parser.add_argument(
+        "-TaylorPolDegree",
+        default=config_default["TaylorPolDegree"],
+        type=int,
+        help="Degree of the Taylor polynomial for exponentiation(default is 8).",
+    )
+    performance_test_parser.add_argument(
+        "-ex", "--exclude", default=False, type=str, nargs="+", help="Nodes to exclude."
+    )
+    performance_test_parser.add_argument(
+        "-igntsk",
+        "--ignore_tasks_per_node",
+        default=False,
+        action="store_true",
+        help="If enabled, will ignore requirement of having 16 tasks per node.",
+    )
 
     ######## Field densities sampler ########
-    field_density_parser = subparser.add_parser("field_density", help="Will run a single config through the energyTopcFieldDensity observable and produce observables of the entire field from them")
-    
+    field_density_parser = subparser.add_parser(
+        "field_density",
+        help="Will run a single config through the energyTopcFieldDensity observable and produce observables of the entire field from them",
+    )
+
     # Setup related variable
-    field_density_parser.add_argument('-s', '--system',        default=False,                                      type=str, required=True, choices=AVAILABLE_HPC_SYSTEMS, help='Cluster name')
-    field_density_parser.add_argument('-nt', '--threads',      default=config_default["threads"],                  type=int, required=True, help='Number of threads to run on')
-    field_density_parser.add_argument('-cfgf', '--config_file', default=False,                                     type=str, help='Loads config file')
-    field_density_parser.add_argument('-p', '--partition',     default="normal",                                   type=str, help='Partition to run on. Default is normal. If some nodes are down, manual input may be needed.')
-    field_density_parser.add_argument('-lcfg', '--load_configuration', default=False,                              type=str, required=True, help='Loads a single configuration with .bin extension.')
-    field_density_parser.add_argument('-rn', '--run_name',     default=config_default["runName"],                  type=str, help='Specify the run name')
-    field_density_parser.add_argument('-lhr', '--load_config_hr_time_estimate', default=None,                      type=int, help='Number of hours that we estimate we need to run the loaded configurations for.')
-    field_density_parser.add_argument('-lmin', '--load_config_min_time_estimate', default=None,                    type=int, help='Approximate cpu time in minutes that will be used.')
-    field_density_parser.add_argument('-ex', '--exclude',      default=False,                                      type=str, nargs='+', help='Nodes to exclude.')
-    field_density_parser.add_argument('-igntsk', '--ignore_tasks_per_node', default=False,                         action='store_true', help='If enabled, will ignore requirement of having 16 tasks per node.')
-    
+    field_density_parser.add_argument(
+        "-s",
+        "--system",
+        default=False,
+        type=str,
+        required=True,
+        choices=AVAILABLE_HPC_SYSTEMS,
+        help="Cluster name",
+    )
+    field_density_parser.add_argument(
+        "-nt",
+        "--threads",
+        default=config_default["threads"],
+        type=int,
+        required=True,
+        help="Number of threads to run on",
+    )
+    field_density_parser.add_argument(
+        "-cfgf", "--config_file", default=False, type=str, help="Loads config file"
+    )
+    field_density_parser.add_argument(
+        "-p",
+        "--partition",
+        default="normal",
+        type=str,
+        help="Partition to run on. Default is normal. If some nodes are down, manual input may be needed.",
+    )
+    field_density_parser.add_argument(
+        "-lcfg",
+        "--load_configuration",
+        default=False,
+        type=str,
+        required=True,
+        help="Loads a single configuration with .bin extension.",
+    )
+    field_density_parser.add_argument(
+        "-rn",
+        "--run_name",
+        default=config_default["runName"],
+        type=str,
+        help="Specify the run name",
+    )
+    field_density_parser.add_argument(
+        "-lhr",
+        "--load_config_hr_time_estimate",
+        default=None,
+        type=int,
+        help="Number of hours that we estimate we need to run the loaded configurations for.",
+    )
+    field_density_parser.add_argument(
+        "-lmin",
+        "--load_config_min_time_estimate",
+        default=None,
+        type=int,
+        help="Approximate cpu time in minutes that will be used.",
+    )
+    field_density_parser.add_argument(
+        "-ex", "--exclude", default=False, type=str, nargs="+", help="Nodes to exclude."
+    )
+    field_density_parser.add_argument(
+        "-igntsk",
+        "--ignore_tasks_per_node",
+        default=False,
+        action="store_true",
+        help="If enabled, will ignore requirement of having 16 tasks per node.",
+    )
+
     # Lattice related run variables
-    field_density_parser.add_argument('-b', '--beta',          default=False,                                      type=float, help='beta value')
-    field_density_parser.add_argument('-N', '--NSpatial',      default=False,                                      type=int, help='spatial lattice dimension')
-    field_density_parser.add_argument('-NT', '--NTemporal',    default=False,                                      type=int, help='temporal lattice dimension')
-    field_density_parser.add_argument('-sd', '--subDims',      default=config_default["subDims"],                  type=int, nargs=4, help='List of sub lattice dimension sizes, length 4')
-    field_density_parser.add_argument('-NFlows', '--NFlows',   default=config_default["NFlows"],                   type=int, help='number of flows to perform per configuration')
-    field_density_parser.add_argument('-fEps', '--flowEpsilon', default=config_default["flowEpsilon"],             type=float, help='Flow epsilon derivative small change value.')
-    field_density_parser.add_argument('-sq', '--square',       default=False,                                      action='store_true', help='Enforce square sub lattices(or as close as possible).')
-    
+    field_density_parser.add_argument(
+        "-b", "--beta", default=False, type=float, help="beta value"
+    )
+    field_density_parser.add_argument(
+        "-N", "--NSpatial", default=False, type=int, help="spatial lattice dimension"
+    )
+    field_density_parser.add_argument(
+        "-NT", "--NTemporal", default=False, type=int, help="temporal lattice dimension"
+    )
+    field_density_parser.add_argument(
+        "-sd",
+        "--subDims",
+        default=config_default["subDims"],
+        type=int,
+        nargs=4,
+        help="List of sub lattice dimension sizes, length 4",
+    )
+    field_density_parser.add_argument(
+        "-NFlows",
+        "--NFlows",
+        default=config_default["NFlows"],
+        type=int,
+        help="number of flows to perform per configuration",
+    )
+    field_density_parser.add_argument(
+        "-fEps",
+        "--flowEpsilon",
+        default=config_default["flowEpsilon"],
+        type=float,
+        help="Flow epsilon derivative small change value.",
+    )
+    field_density_parser.add_argument(
+        "-sq",
+        "--square",
+        default=False,
+        action="store_true",
+        help="Enforce square sub lattices(or as close as possible).",
+    )
+
     # Data storage related variables
-    field_density_parser.add_argument('-bf', '--base_folder',  default=config_default["base_folder"],              type=str, help='Sets the base folder. Default is os.path.getcwd().')
-    field_density_parser.add_argument('-sf', '--samplingFrequency', default=config_default["samplingFrequency"],   type=int, help='Sets the sampling frequency of the flow. Lattice to be written to file every given number.')
-    field_density_parser.add_argument('-vr', '--verboseRun',   default=config_default["verboseRun"],               action='store_true', help='Verbose run of GLAC. By default, it is off.')
-    
+    field_density_parser.add_argument(
+        "-bf",
+        "--base_folder",
+        default=config_default["base_folder"],
+        type=str,
+        help="Sets the base folder. Default is os.path.getcwd().",
+    )
+    field_density_parser.add_argument(
+        "-sf",
+        "--samplingFrequency",
+        default=config_default["samplingFrequency"],
+        type=int,
+        help="Sets the sampling frequency of the flow. Lattice to be written to file every given number.",
+    )
+    field_density_parser.add_argument(
+        "-vr",
+        "--verboseRun",
+        default=config_default["verboseRun"],
+        action="store_true",
+        help="Verbose run of GLAC. By default, it is off.",
+    )
+
     # Debug variables
-    field_density_parser.add_argument('--debug',               default=config_default["debug"],                    action='store_true', help='Debug option. Will check lattices for corruption and zeros.')
+    field_density_parser.add_argument(
+        "--debug",
+        default=config_default["debug"],
+        action="store_true",
+        help="Debug option. Will check lattices for corruption and zeros.",
+    )
 
     args = parser.parse_args()
 
@@ -922,7 +1617,7 @@ def main(args):
     s = JobCreator(dryrun, verbose)
 
     # Loads one configuration
-    if args.subparser == 'load':
+    if args.subparser == "load":
         """
         COMMAND FOR LOADING SCRIPT JOBS AND GENERATING CONFIGS OR FLOWING
         """
@@ -936,32 +1631,59 @@ def main(args):
         if args.load_configurations:
             if args.load_config_and_run:
                 # Error catching in case user is using load_config_and_run together with load_configurations.
-                sys.exit("ERROR: can not load and run configurations(-lcfgr) together with load configurations(-lcfg).")
-            
+                sys.exit(
+                    "ERROR: can not load and run configurations(-lcfgr) together with load configurations(-lcfg)."
+                )
+
             # Requiring flow to be specified if we are loading configurations to flow
             if configuration["NFlows"] == 0 or args.no_flow:
-                sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
+                sys.exit(
+                    "ERROR: when loading configuration for to flow, need to specifiy number of flows."
+                )
 
             # Sets the number of configurations to run for to be zero just in case
             configuration["NCf"] = 0
 
             # Requiring an new estimate of the run time if we are flowing
-            configuration = set_field_configs(configuration, args.load_configurations, args.config_start_number, base_folder=configuration["base_folder"])
-            if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
-                if "cpu_approx_runtime_hr" in configuration and "cpu_approx_runtime_min" in configuration:
-                    args.load_config_hr_time_estimate = configuration["cpu_approx_runtime_hr"]
-                    args.load_config_min_time_estimate = configuration["cpu_approx_runtime_min"]
+            configuration = set_field_configs(
+                configuration,
+                args.load_configurations,
+                args.config_start_number,
+                base_folder=configuration["base_folder"],
+            )
+            if (
+                args.load_config_min_time_estimate == None
+                or args.load_config_hr_time_estimate == None
+            ):
+                if (
+                    "cpu_approx_runtime_hr" in configuration
+                    and "cpu_approx_runtime_min" in configuration
+                ):
+                    args.load_config_hr_time_estimate = configuration[
+                        "cpu_approx_runtime_hr"
+                    ]
+                    args.load_config_min_time_estimate = configuration[
+                        "cpu_approx_runtime_min"
+                    ]
                 else:
-                    sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
+                    sys.exit(
+                        "ERROR: Need an estimate of the runtime for the flowing of configurations."
+                    )
 
         # For loading and running configurations
         if args.load_config_and_run:
             if not args.NConfigs and configuration["NCf"]:
                 # Error catching, as we require to know how many addition configurations we wish to create from loaded configuration.
-                sys.exit("ERROR: we require to know how many addition configurations we wish to create from loaded configuration(specified by -lcfgr).")
+                sys.exit(
+                    "ERROR: we require to know how many addition configurations we wish to create from loaded configuration(specified by -lcfgr)."
+                )
             _config_path, _config_file = os.path.split(args.load_config_and_run)
-            assert not os.path.isdir(args.load_config_and_run), "%s is a folder and not a binary(.bin) file." % args.load_config_and_run
-            assert _config_file.split(".")[-1] == "bin", "%s is not a binary(.bin) file." % _config_file
+            assert not os.path.isdir(args.load_config_and_run), (
+                "%s is a folder and not a binary(.bin) file." % args.load_config_and_run
+            )
+            assert _config_file.split(".")[-1] == "bin", (
+                "%s is not a binary(.bin) file." % _config_file
+            )
             configuration["load_config_and_run"] = _config_file
             configuration["inputFolder"] = os.path.normpath(_config_path)
 
@@ -970,7 +1692,7 @@ def main(args):
 
         # Excludes certain nodes if arguments have been provided
         if args.exclude:
-            excluded_nodes = ','.join(args.exclude)
+            excluded_nodes = ",".join(args.exclude)
         else:
             excluded_nodes = ""
 
@@ -1000,85 +1722,109 @@ def main(args):
 
         configuration["account_name"] = args.account_name
 
-
         configuration["verboseRun"] = args.verboseRun
         configuration["chroma_config"] = args.chroma_config
         configuration["config_start_number"] = args.config_start_number
 
         # Submitting job
-        s.submit_job(configuration, args.system, args.partition, excluded_nodes, ignore_tasks_per_node=args.ignore_tasks_per_node)
+        s.submit_job(
+            configuration,
+            args.system,
+            args.partition,
+            excluded_nodes,
+            ignore_tasks_per_node=args.ignore_tasks_per_node,
+        )
 
-    elif args.subparser == 'setup':
+    elif args.subparser == "setup":
         """
         COMMAND FOR SETTING UP JOBS WITHOUT ANY PREDEFINED SCRIPTS
         """
-        config_default["runName"]                   = args.run_name
-        config_default["threads"]                   = args.threads
-        config_default["N"]                         = args.NSpatial
-        config_default["NT"]                        = args.NTemporal
-        config_default["beta"]                      = args.beta
+        config_default["runName"] = args.run_name
+        config_default["threads"] = args.threads
+        config_default["N"] = args.NSpatial
+        config_default["NT"] = args.NTemporal
+        config_default["beta"] = args.beta
         if args.NConfigs == 0:
-            config_default["NCf"]                   = 1
+            config_default["NCf"] = 1
         else:
-            config_default["NCf"]                   = args.NConfigs
-        config_default["NCor"]                      = args.NCor
-        config_default["NTherm"]                    = args.NTherm
-        config_default["NFlows"]                    = args.NFlows
-        config_default["NUpdates"]                  = args.NUpdates
-        config_default["storeCfgs"]                 = bool(args.storeCfgs)
-        config_default["storeThermCfgs"]            = bool(args.storeThermCfgs)
-        config_default["verboseRun"]                = args.verboseRun
-        config_default["hotStart"]                  = bool(args.hotStart)
-        config_default["RSTHotStart"]               = bool(args.RSTHotStart)
-        config_default["expFunc"]                   = args.expFunc
-        config_default["action"]                    = args.action
-        config_default["observables"]               = args.observables
-        config_default["flowObservables"]           = args.flowObservables
-        config_default["SU3Eps"]                    = args.SU3Epsilon
-        config_default["flowEpsilon"]               = args.flowEpsilon
-        config_default["metropolisSeed"]            = args.metropolisSeed
-        config_default["randomMatrixSeed"]          = args.randomMatrixSeed
-        config_default["cpu_approx_runtime_hr"]     = args.cpu_approx_runtime_hr
-        config_default["cpu_approx_runtime_min"]    = args.cpu_approx_runtime_min
-        config_default["account_name"]              = args.account_name
-        config_default["cpu_memory"]                = args.cpu_memory
-        config_default["base_folder"]               = args.base_folder
-        config_default["debug"]                     = args.debug
+            config_default["NCf"] = args.NConfigs
+        config_default["NCor"] = args.NCor
+        config_default["NTherm"] = args.NTherm
+        config_default["NFlows"] = args.NFlows
+        config_default["NUpdates"] = args.NUpdates
+        config_default["storeCfgs"] = bool(args.storeCfgs)
+        config_default["storeThermCfgs"] = bool(args.storeThermCfgs)
+        config_default["verboseRun"] = args.verboseRun
+        config_default["hotStart"] = bool(args.hotStart)
+        config_default["RSTHotStart"] = bool(args.RSTHotStart)
+        config_default["expFunc"] = args.expFunc
+        config_default["action"] = args.action
+        config_default["observables"] = args.observables
+        config_default["flowObservables"] = args.flowObservables
+        config_default["SU3Eps"] = args.SU3Epsilon
+        config_default["flowEpsilon"] = args.flowEpsilon
+        config_default["metropolisSeed"] = args.metropolisSeed
+        config_default["randomMatrixSeed"] = args.randomMatrixSeed
+        config_default["cpu_approx_runtime_hr"] = args.cpu_approx_runtime_hr
+        config_default["cpu_approx_runtime_min"] = args.cpu_approx_runtime_min
+        config_default["account_name"] = args.account_name
+        config_default["cpu_memory"] = args.cpu_memory
+        config_default["base_folder"] = args.base_folder
+        config_default["debug"] = args.debug
 
         # Non-trivial default values
         if args.subDims:
             check_sub_dim_viability(args.subDims)
             config_default["subDims"] = args.subDims
         if args.square:
-            config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
+            config_default["subDims"] = create_square(
+                config_default["threads"], config_default["N"], config_default["NT"]
+            )
 
         # Excludes certain nodes if arguments have been provided
         if args.exclude:
-            excluded_nodes = ','.join(args.exclude)
+            excluded_nodes = ",".join(args.exclude)
         else:
             excluded_nodes = ""
 
         if args.load_config_and_run != False:
             _config_path, _config_file = os.path.split(args.load_config_and_run)
-            assert not os.path.isdir(args.load_config_and_run), "%s is a folder and not a binary(.bin) file." % args.load_config_and_run
-            assert _config_file.split(".")[-1] == "bin", "%s is not a binary(.bin) file." % _config_file
+            assert not os.path.isdir(args.load_config_and_run), (
+                "%s is a folder and not a binary(.bin) file." % args.load_config_and_run
+            )
+            assert _config_file.split(".")[-1] == "bin", (
+                "%s is not a binary(.bin) file." % _config_file
+            )
             config_default["load_config_and_run"] = _config_file
             config_default["inputFolder"] = os.path.normpath(_config_path)
 
         config_default["config_start_number"] = args.config_start_number
 
         if args.load_configurations:
-            config_default = set_field_configs(config_default, args.load_configurations, args.config_start_number,  base_folder=config_default["base_folder"])
+            config_default = set_field_configs(
+                config_default,
+                args.load_configurations,
+                args.config_start_number,
+                base_folder=config_default["base_folder"],
+            )
             config_default["chroma_config"] = args.chroma_config
 
             # Requiring flow to be specified if we are loading configurations to flow
             if config_default["NFlows"] == 0:
-                sys.exit("ERROR: when loading configuration for to flow, need to specifiy number of flows.")
+                sys.exit(
+                    "ERROR: when loading configuration for to flow, need to specifiy number of flows."
+                )
 
         # Submitting job
-        s.submit_job(config_default, args.system, args.partition, excluded_nodes, ignore_tasks_per_node=args.ignore_tasks_per_node)
+        s.submit_job(
+            config_default,
+            args.system,
+            args.partition,
+            excluded_nodes,
+            ignore_tasks_per_node=args.ignore_tasks_per_node,
+        )
 
-    elif args.subparser == 'sbatch':
+    elif args.subparser == "sbatch":
         """
         COMMAND FOR VIEWING JOBS
         """
@@ -1098,7 +1844,7 @@ def main(args):
             s.print_job_id_info(args.list_job_id)
             return
 
-    elif args.subparser == 'utest':
+    elif args.subparser == "utest":
         """
         COMMAND FOR UNIT TESTING
         """
@@ -1119,22 +1865,30 @@ def main(args):
             config_default["uTestFieldGaugeInvarince"] = args.check_gauge_invariance
             if not args.NSpatial or not args.NTemporal:
                 sys.exit("ERROR: need to specifiy dimensions of loaded lattice.")
-        
+
         config_default["N"] = args.NSpatial
         config_default["NT"] = args.NTemporal
         if args.square:
-            config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
+            config_default["subDims"] = create_square(
+                config_default["threads"], config_default["N"], config_default["NT"]
+            )
 
         # Checks if we are to exclude any of the nodes
         if args.exclude:
-            excluded_nodes = ','.join(args.exclude)
+            excluded_nodes = ",".join(args.exclude)
         else:
             excluded_nodes = ""
 
         # Submitting job
-        s.submit_job(config_default, system, partition, excluded_nodes, ignore_tasks_per_node=args.ignore_tasks_per_node)
+        s.submit_job(
+            config_default,
+            system,
+            partition,
+            excluded_nodes,
+            ignore_tasks_per_node=args.ignore_tasks_per_node,
+        )
 
-    elif args.subparser == 'perf_test':
+    elif args.subparser == "perf_test":
         """
         COMMAND FOR RUNNING PERFORMANCE TESTS.
         """
@@ -1145,7 +1899,9 @@ def main(args):
         config_default["N"] = 8
         config_default["NT"] = 16
         config_default["threads"] = args.threads
-        config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
+        config_default["subDims"] = create_square(
+            config_default["threads"], config_default["N"], config_default["NT"]
+        )
         partition = "normal"
         config_default["NExpTests"] = args.NExpTests
         config_default["NRandTests"] = args.NRandTests
@@ -1154,31 +1910,59 @@ def main(args):
 
         # Checks if we are to exclude any of the nodes
         if args.exclude:
-            excluded_nodes = ','.join(args.exclude)
+            excluded_nodes = ",".join(args.exclude)
         else:
             excluded_nodes = ""
 
         # Submitting job
-        s.submit_job(config_default, args.system, partition, excluded_nodes, ignore_tasks_per_node=args.ignore_tasks_per_node)
+        s.submit_job(
+            config_default,
+            args.system,
+            partition,
+            excluded_nodes,
+            ignore_tasks_per_node=args.ignore_tasks_per_node,
+        )
 
     elif args.subparser == "field_density":
-        field_density_parser = subparser.add_parser("field_density", help=("Will run a single config through the "
-            "energyTopcFieldDensity observable and produce observables of the entire field from them"))
+        field_density_parser = subparser.add_parser(
+            "field_density",
+            help=(
+                "Will run a single config through the "
+                "energyTopcFieldDensity observable and produce observables of the entire field from them"
+            ),
+        )
 
         if args.config_file != False:
             # Loads the config file
             with open(args.file, "r") as f:
-                configuration = json.loads(re.sub("//.*", "", f.read(), flags=re.MULTILINE))
+                configuration = json.loads(
+                    re.sub("//.*", "", f.read(), flags=re.MULTILINE)
+                )
 
             # Ensures we do not have a conflicting job setup
             if args.NSpatial != configuration["N"] and args.NSpatial:
-                raise KeyError("Spatial dimension already provided in configuration file %s." % args.config_file)
+                raise KeyError(
+                    "Spatial dimension already provided in configuration file %s."
+                    % args.config_file
+                )
             if args.NTemporal != configuration["NT"] and args.NTemporal:
-                raise KeyError("Temporal dimension already provided in configuration file %s." % args.config_file)
+                raise KeyError(
+                    "Temporal dimension already provided in configuration file %s."
+                    % args.config_file
+                )
             if args.beta != configuration["beta"] and args.beta:
-                raise KeyError("Beta value already provided in configuration file %s." % args.config_file)
-            if args.subDims != configuration["subDims"] and args.subDims != config_default["subDims"]:
-                raise KeyError("Sub-dimensions is already provided in configuration file %s." % args.config_file)
+                raise KeyError(
+                    "Beta value already provided in configuration file %s."
+                    % args.config_file
+                )
+            if (
+                args.subDims != configuration["subDims"]
+                and args.subDims != config_default["subDims"]
+            ):
+                raise KeyError(
+                    "Sub-dimensions is already provided in configuration file %s."
+                    % args.config_file
+                )
         else:
             # Sets default configuration as baseline
             configuration = config_default
@@ -1195,7 +1979,9 @@ def main(args):
                 check_sub_dim_viability(args.subDims)
                 config_default["subDims"] = args.subDims
             if args.square:
-                config_default["subDims"] = create_square(config_default["threads"], config_default["N"], config_default["NT"])
+                config_default["subDims"] = create_square(
+                    config_default["threads"], config_default["N"], config_default["NT"]
+                )
 
         # Creates a folder to place scalar field values in.
         configuration["scalar_fields_folders"] = True
@@ -1207,8 +1993,12 @@ def main(args):
 
         # Requiring an new estimate of the run time if we are flowing
         _config_path, _config_file = os.path.split(args.load_configuration)
-        assert not os.path.isdir(args.load_configuration), "%s is a folder and not a binary(.bin) file." % args.load_configuration
-        assert _config_file.split(".")[-1] == "bin", "%s is not a binary(.bin) file." % _config_file
+        assert not os.path.isdir(args.load_configuration), (
+            "%s is a folder and not a binary(.bin) file." % args.load_configuration
+        )
+        assert _config_file.split(".")[-1] == "bin", (
+            "%s is not a binary(.bin) file." % _config_file
+        )
         config_default["load_config_and_run"] = _config_file
         config_default["inputFolder"] = os.path.normpath(_config_path)
         config_default["config_start_number"] = 0
@@ -1226,14 +2016,19 @@ def main(args):
 
         # Sets nodes to skip, usefull when clusters contain bad nodes
         if args.exclude:
-            excluded_nodes = ','.join(args.exclude)
+            excluded_nodes = ",".join(args.exclude)
         else:
             excluded_nodes = ""
 
         # Requires an estimation of the total run time when not running on local computer
         if args.system != "local":
-            if args.load_config_min_time_estimate == None or args.load_config_hr_time_estimate == None:
-                sys.exit("ERROR: Need an estimate of the runtime for the flowing of configurations.")
+            if (
+                args.load_config_min_time_estimate == None
+                or args.load_config_hr_time_estimate == None
+            ):
+                sys.exit(
+                    "ERROR: Need an estimate of the runtime for the flowing of configurations."
+                )
             configuration["cpu_approx_runtime_min"] = args.load_config_min_time_estimate
             configuration["cpu_approx_runtime_hr"] = args.load_config_hr_time_estimate
 
@@ -1241,14 +2036,21 @@ def main(args):
             if not key in configuration:
                 configuration[key] = config_default[key]
 
-        s.submit_job(configuration, args.system, args.partition, excluded_nodes, ignore_tasks_per_node=args.ignore_tasks_per_node)
+        s.submit_job(
+            configuration,
+            args.system,
+            args.partition,
+            excluded_nodes,
+            ignore_tasks_per_node=args.ignore_tasks_per_node,
+        )
 
     else:
         """
         ERROR CATCHING
         """
-        print('Parse error: %s \n--> exiting' % args)
+        print("Parse error: %s \n--> exiting" % args)
         exit(0)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main(sys.argv[1:])

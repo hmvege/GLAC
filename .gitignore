@@ -1,26 +1,20 @@
-# OS Junk
+# MacOS Junk
 .DS_Store
 
 # Output files
 output/*
-*.txt
 *.dat
 
 # Binary files
 *.bin
 
-# Numpy binary
+# Python
 *.npy
-
-# Config folder
-# config_folder
+*.pyc
+venv
 
 # Ignoring all zip files
 *.zip
-
-# Config files
-config_folder/beta6_0test_config.py
-config_folder/test_config_file.py
 
 # Input files
 input/*
@@ -34,10 +28,6 @@ build*
 *.user*
 *.autosave
 
-# Files not of importance
-dim_sketch.py
-test_env
-
 # Smaug files
 *.slurm
 *.ids.json
@@ -46,48 +36,11 @@ job*.sh
 # Plot figures
 *.png
 
-# Jacks data
-jacks_data
-
 # Data
-data5
-data6
-data7
-data8
-data9
-DataGiovanni
+data*
 
 # Lattice density figures
-figures/act_density
-figures/b60
-figures/b61
-figures/b62
-figures/b645
-figures/prodRunBeta6_0
-figures/prodRunBeta6_1
-figures/prodRunBeta6_2
-scalar_fields_data
-figures/lattice_field_density8x16
-figures/lattice_field_density4x8
-figures/field_density_freq10_NF400_beta60/
-figures/field_density_freq10_NF400_beta61/
-figures/field_density_freq10_NF400_beta62/
-
-# Old config files
-old_configs
-
-# HPC profiler related stuff
-hpctoolkit*
-GluonicLQCD.hpcstruct
-workspace
-
-# Python junk
-*.pyc
-
-# Files to include regardless of rule
-!analysis/statistics/tests/plaq_beta6_2_t10.dat
-!analysis/statistics/tests/topc_beta6_2_t10.dat
-temp_outputfolder/
+figures/
 
 # Backup files
 *.bak

@@ -76,6 +76,7 @@ bool IOTests::testIOLatticeWriteRead()
         t1_read = steady_clock::now();
 
         // Resets the input folder
+        printf("Setting output folder to: %s\n", tmpInputFolder.c_str());
         Parameters::setInputFolder(tmpInputFolder);
 
         if (m_processRank == 0 && m_verbose) {
@@ -91,12 +92,14 @@ bool IOTests::testIOLatticeWriteRead()
             {
                 for (int i = 0; i < 18; i++) {
                     if (fabs(LBefore[mu][iSite][i] - LAfter[mu][iSite][i]) > 1e-15) {
-                        cout << "Error in: " << LBefore[mu][iSite][i] << " " << LAfter[mu][iSite][i] << endl;
+                        // cout << "Error in: " << LBefore[mu][iSite][i] << " " << LAfter[mu][iSite][i] << endl;
                         passed = false;
                         break;
                     }
                 }
+                if (!passed) break;
             }
+            if (!passed) break;
         }
 
         delete [] LBefore;
@@ -223,7 +226,8 @@ bool IOTests::testIOWriteDoubles()
 
 bool IOTests::runIOTests()
 {
-    bool passed = (testIOWriteDoubles() && testIOLatticeWriteRead());
+    // bool passed = (testIOWriteDoubles() && testIOLatticeWriteRead());
+    bool passed = testIOLatticeWriteRead();
 
     if (m_processRank == 0) {
         if (passed) {

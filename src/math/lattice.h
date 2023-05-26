@@ -68,7 +68,7 @@ public:
      * \param other
      * \return
      */
-    Lattice &operator =(const Lattice& other)
+    Lattice &operator =(const Lattice<T>& other)
     {
         Lattice tmp(other);
         *this = std::move(tmp);
@@ -84,7 +84,7 @@ public:
     Lattice &operator= (Lattice<T> &&other) noexcept
     {
         m_latticeSize = other.m_latticeSize;
-        m_dim  = other.m_dim;
+        m_dim = other.m_dim;
         m_sites = std::move(other.m_sites);
         return *this;
     }
