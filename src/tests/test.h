@@ -34,8 +34,8 @@ void runUnitTests(bool runTests)
 {
     if (runTests)
     {
-//        TestSuite unitTester;
-//        unitTester.runFullTestSuite();
+       TestSuite unitTester;
+       unitTester.runFullTestSuite();
 
         bool passed = true;
         if (Parallel::Communicator::getProcessRank() == 0) {
@@ -43,29 +43,29 @@ void runUnitTests(bool runTests)
             cout << endl;
         }
 
-        // ActionTests actionTest = ActionTests();
-        // passed = passed & actionTest.runActionTests();
+        ActionTests actionTest = ActionTests();
+        passed = passed & actionTest.runActionTests();
 
-        // ComplexOperations cmplxTest = ComplexOperations();
-        // passed = passed & cmplxTest.runComplexTests();
+        ComplexOperations cmplxTest = ComplexOperations();
+        passed = passed & cmplxTest.runComplexTests();
 
         IOTests IOTest = IOTests();
         passed = passed & IOTest.runIOTests();
 
-        // LatticeOperations latTest = LatticeOperations();
-        // passed = passed & latTest.runLatticeTests();
+        LatticeOperations latTest = LatticeOperations();
+        passed = passed & latTest.runLatticeTests();
 
-        // ObservableTests obsTest = ObservableTests();
-        // passed = passed & obsTest.runObservableTests();
+        ObservableTests obsTest = ObservableTests();
+        passed = passed & obsTest.runObservableTests();
 
-        // RandomMatrixTests rndTest = RandomMatrixTests();
-        // passed = passed & rndTest.runRandomMatrixTests();
+        RandomMatrixTests rndTest = RandomMatrixTests();
+        passed = passed & rndTest.runRandomMatrixTests();
 
-        // SU2Operations SU2Test = SU2Operations();
-        // passed = passed & SU2Test.runSU2Tests();
+        SU2Operations SU2Test = SU2Operations();
+        passed = passed & SU2Test.runSU2Tests();
 
-        // SU3Operations SU3Test = SU3Operations();
-        // passed = passed & SU3Test.runSU3Tests();
+        SU3Operations SU3Test = SU3Operations();
+        passed = passed & SU3Test.runSU3Tests();
 
         if (Parallel::Communicator::getProcessRank() == 0) {
             for (int i = 0; i < 60; i++) cout << "=";
