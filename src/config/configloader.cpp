@@ -1,6 +1,6 @@
 #include "configloader.h"
 #include <fstream>
-#include "lib/json.hpp"
+#include "json.hpp"
 #include "parameters.h"
 #include "parallelization/parallel.h"
 
