@@ -8,6 +8,7 @@ set(TEST_SOURCES
 
 set(TEST_UTILS
     utils/helper_comparers.h
+    utils/helper_fixtures.h
     utils/helper_generators.h
     utils/helper_math.h
 )
@@ -16,4 +17,5 @@ set(TEST_UTILS
 add_executable(tests ${TEST_SOURCES})
 
 # Link the necessary libraries
-target_link_libraries(tests PRIVATE math Catch2::Catch2WithMain)
+target_link_libraries(tests PRIVATE math config Catch2::Catch2WithMain)
+target_include_directories(tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utils)

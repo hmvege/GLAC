@@ -1,5 +1,7 @@
 #include "su3.h"
+
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 
 using std::cout;
@@ -110,4 +112,58 @@ void SU3::print()
         if (i != 2) printf("\n");
     }
     printf("]\n");
+}
+
+// Overloading stream operator
+std::ostream& operator<<(std::ostream& os, const SU3& mat)
+{
+    const auto prec = std::cout.precision();
+    os << std::setprecision(2);
+    os << std::scientific;
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (i == 0) {
+            os << "[";
+        } else {
+            os << " ";
+        }
+        os << "[";
+        for (int j = 0; j < 3; j++)
+        {
+            os << std::setw(8) << mat.mat[6*i + 2*j];
+            if (mat.mat[6*i + 2*j + 1] < 0)
+            {
+                os << " - ";
+            }
+            else
+            {
+                os << " + ";
+            }
+            os << std::setw(8) << std::fabs(mat.mat[6*i + 2*j + 1]) << "i";
+            if (j == 2)
+            {
+                {
+                    os << "]";
+                }
+                if (i != 2)
+                {
+                    os << ",";
+                }
+            }
+            else
+            {
+                os << ", ";
+            }
+
+        }
+        if (i != 2)
+        {
+            os << "\n";
+        }
+    }
+    os << "]";
+    os << std::setprecision(prec);
+
+    return os;
 }

@@ -43,6 +43,7 @@ public:
     // Overloading the setting operator
     SU3 &operator =(const double& other);
 
+    // Comparison operators
     inline bool operator==(const SU3& other) const;
     inline bool operator!=(const SU3& other) const;
 
@@ -61,6 +62,7 @@ public:
     SU3 &operator*=(double a);
 
     // Printing functions
+    friend std::ostream& operator<<(std::ostream& os, const SU3& mat);
     void print();
 
     // Complex element getter
