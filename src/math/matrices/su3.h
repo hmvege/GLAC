@@ -43,6 +43,9 @@ public:
     // Overloading the setting operator
     SU3 &operator =(const double& other);
 
+    inline bool operator==(const SU3& other) const;
+    inline bool operator!=(const SU3& other) const;
+
     // SU3 matrix operations overloading
     SU3 &operator+=(SU3 B);
     SU3 &operator-=(SU3 B);
@@ -296,6 +299,20 @@ inline SU3 &SU3::operator =(const double& other)
     return *this;
 }
 
+inline bool SU3::operator==(const SU3 &other) const
+{
+    for (int i = 0; i < 18; i++)
+    {
+        if (mat[i] != other.mat[i])
+            return false;
+    }
+    return true;
+}
+
+inline bool SU3::operator!=(const SU3 &other) const 
+{
+    return !(this->operator==(other));
+}
 
 ///////////////////////////////
 //// SU3 specific functions ///
