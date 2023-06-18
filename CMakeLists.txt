@@ -6,7 +6,7 @@ DESCRIPTION "Lattice Quantum Chromo Dynamics program for generating pure gauge f
 LANGUAGES CXX)
 
 # Specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add compile options
@@ -30,7 +30,8 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/flow)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/io)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/observables)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/parallelization)
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests_old)
+add_subdirectory(tests)
 
 # Add the executable
 add_executable(GLAC ${CMAKE_SOURCE_DIR}/src/main.cpp ${CMAKE_SOURCE_DIR}/src/system.cpp)
@@ -46,4 +47,7 @@ LINK_FLAGS "${MPI_LINK_FLAGS}")
 
 # Link the libraries to the executable
 # target_link_libraries(GLAC math actions config flow io observables parallelization tests)
-target_link_libraries(GLAC config flow io math observables parallelization actions tests)
+target_link_libraries(GLAC config flow io math observables parallelization actions tests_old)
+
+# Add a custom target to run the tests
+add_custom_target(run_tests COMMAND tests)
