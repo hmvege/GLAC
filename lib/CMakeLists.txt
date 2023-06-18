@@ -1,5 +1,2 @@
-set(SOURCES
-    json.hpp
-)
-
-add_library(lib ${SOURCES})
+# Add the current directory to the include directories
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
