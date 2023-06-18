@@ -2,7 +2,8 @@
 #include "system.h"
 #include "config/parameters.h"
 #include "config/configloader.h"
-#include "tests/test.h"
+
+#include "tests_old/test.h"
 
 using std::chrono::steady_clock;
 using std::chrono::duration_cast;
