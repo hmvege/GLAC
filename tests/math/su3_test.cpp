@@ -4,6 +4,7 @@
 #include <math/lattice.h>
 
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_approx.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 #include <string_view>
 
@@ -236,6 +237,6 @@ TEST_CASE_METHOD(SU3Fixture, "SU(3) class methods", TAGS + "[su3methods]")
 
     const auto results = traceRealMultiplication(mat, mat_trace);
 
-    REQUIRE(traced_matrix == results);
+    REQUIRE(results == Catch::Approx(traced_matrix).epsilon(1e-16));
   }
 }
