@@ -123,9 +123,12 @@ std::ostream& operator<<(std::ostream& os, const SU3& mat)
 
     for (int i = 0; i < 3; i++)
     {
-        if (i == 0) {
+        if (i == 0)
+        {
             os << "[";
-        } else {
+        }
+        else 
+        {
             os << " ";
         }
         os << "[";
@@ -143,9 +146,7 @@ std::ostream& operator<<(std::ostream& os, const SU3& mat)
             os << std::setw(8) << std::fabs(mat.mat[6*i + 2*j + 1]) << "i";
             if (j == 2)
             {
-                {
-                    os << "]";
-                }
+                os << "]";
                 if (i != 2)
                 {
                     os << ",";

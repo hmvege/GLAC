@@ -42,7 +42,7 @@ complex::complex(const complex &b )
 ////// Complex functions //////
 ///////////////////////////////
 
-double complex::norm()
+double complex::norm() const
 {
     /*
      * Returns the norm of the complex number.
@@ -50,7 +50,7 @@ double complex::norm()
     return sqrt(z[0]*z[0] + z[1]*z[1]);
 }
 
-double complex::normSquared()
+double complex::normSquared() const
 {
     /*
      * Returns the norm squared of the complex number.
@@ -75,7 +75,7 @@ complex complex::conjugate()
  * \brief complex::c
  * \return a copy of the complex conjugate of itself.
  */
-complex complex::c()
+complex complex::c() const
 {
     /*
      * Returns the complex conjugate of the object instance.

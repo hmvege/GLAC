@@ -45,10 +45,10 @@ public:
     complex &operator/=(double b);
     complex operator-() const;
 
-    double norm();
-    double normSquared();
+    double norm() const;
+    double normSquared() const;
     complex conjugate();
-    complex c();
+    complex c() const;
     complex zeros();
 
     friend std::ostream& operator<<(std::ostream& os, const complex& a);

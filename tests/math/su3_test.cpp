@@ -147,22 +147,28 @@ TEST_CASE_METHOD(UnitaryMatrixGenerator, "SU(3) random generator properties",
 {
   SECTION("Default random generator")
   {
-    const auto mat = generator.generateRandom();
+    const auto mat = generateSU3();
 
-    SECTION("Hermiticity") { REQUIRE(checkSU3Hermiticity(mat)); }
-    SECTION("Orthogonality") { REQUIRE(checkSU3Orthogonality(mat)); }
-    SECTION("Norm") { REQUIRE(checkSU3Norm(mat)); }
-    SECTION("Determinant") { REQUIRE(checkSU3Determinant(mat)); }
+    SECTION("Hermiticity") { REQUIRE(SU3Helpers::checkSU3Hermiticity(mat)); }
+    SECTION("Orthogonality")
+    {
+      REQUIRE(SU3Helpers::checkSU3Orthogonality(mat));
+    }
+    SECTION("Norm") { REQUIRE(SU3Helpers::checkSU3Norm(mat)); }
+    SECTION("Determinant") { REQUIRE(SU3Helpers::checkSU3Determinant(mat)); }
   }
 
   SECTION("RST random generator")
   {
-    const auto mat = generator.generateRST();
+    const auto mat = generateSU3RST();
 
-    SECTION("Hermiticity") { REQUIRE(checkSU3Hermiticity(mat)); }
-    SECTION("Orthogonality") { REQUIRE(checkSU3Orthogonality(mat)); }
-    SECTION("Norm") { REQUIRE(checkSU3Norm(mat)); }
-    SECTION("Determinant") { REQUIRE(checkSU3Determinant(mat)); }
+    SECTION("Hermiticity") { REQUIRE(SU3Helpers::checkSU3Hermiticity(mat)); }
+    SECTION("Orthogonality")
+    {
+      REQUIRE(SU3Helpers::checkSU3Orthogonality(mat));
+    }
+    SECTION("Norm") { REQUIRE(SU3Helpers::checkSU3Norm(mat)); }
+    SECTION("Determinant") { REQUIRE(SU3Helpers::checkSU3Determinant(mat)); }
   }
 }
 
@@ -206,7 +212,7 @@ TEST_CASE_METHOD(SU3Fixture, "SU(3) class methods", TAGS + "[su3methods]")
       SU3 mat = mat_anti_hermitian;
       mat.makeHermitian();
 
-      REQUIRE(is_close_su3(mat, mat_hermitian));
+      REQUIRE(SU3Helpers::is_close_su3(mat, mat_hermitian));
     }
 
     SECTION("Anti-hermitian")
@@ -214,7 +220,7 @@ TEST_CASE_METHOD(SU3Fixture, "SU(3) class methods", TAGS + "[su3methods]")
       SU3 mat = mat_hermitian;
       mat.makeAntiHermitian();
 
-      REQUIRE(is_close_su3(mat, mat_anti_hermitian));
+      REQUIRE(SU3Helpers::is_close_su3(mat, mat_anti_hermitian));
     }
   }
 

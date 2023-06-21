@@ -47,4 +47,47 @@ public:
   const SU3 mat1, mat2;
 };
 
+class SU2Fixture
+{
+public:
+  SU2Fixture() : mat1(setupMatrix1()), mat2(setupMatrix2()) {}
+
+  ~SU2Fixture() {}
+
+  /** Setting up matrix mat1 */
+  SU2 setupMatrix1()
+  {
+    SU2 temp;
+    temp.setComplex(complex(1, 1), 0);
+    temp.setComplex(complex(1, 2), 2);
+    temp.setComplex(complex(2, 1), 4);
+    temp.setComplex(complex(2, 2), 6);
+
+    return temp;
+  }
+
+  /** Setting up matrix mat2 */
+  SU2 setupMatrix2()
+  {
+    SU2 temp;
+    temp.setComplex(complex(4, 4), 0);
+    temp.setComplex(complex(4, 5), 2);
+    temp.setComplex(complex(5, 4), 4);
+    temp.setComplex(complex(5, 5), 6);
+
+    return temp;
+  }
+
+  const SU2 mat1, mat2;
+};
+
+class ComplexFixture
+{
+public:
+  ComplexFixture() : c1(complex(1, 2)), c2(complex(3, 4)) {}
+  ~ComplexFixture() {}
+
+  const complex c1, c2;
+};
+
 #endif  // GLAC_TESTS_HELPERS_FIXTURES

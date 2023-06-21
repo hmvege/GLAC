@@ -32,7 +32,10 @@ public:
 
     double mat[8];
 
-    void print();
+    // Printers
+    void print() const;
+    friend std::ostream& operator<<(std::ostream& os, const SU2& mat);
+    
     void zeros();
     void identity();
     void setComplex(complex w, int i);
@@ -45,6 +48,10 @@ public:
     // Getters, mostly using .mat[]
     inline double get(int i, int j, int k) { return mat[(4*i + 2*j) + k]; } // k is complex number of a position.
     inline double &operator[](int i) { return mat[i]; }
+
+    // Comparison operators
+    inline bool operator==(const SU2& other) const;
+    inline bool operator!=(const SU2& other) const;
 
     // Operations
     SU2 &operator=(const SU2 &B);
@@ -142,6 +149,21 @@ inline SU2 &SU2::operator*=(double b)
         mat[i] *= b;
     }
     return *this;
+}
+
+inline bool SU2::operator==(const SU2 &other) const
+{
+    for (int i = 0; i < 8; i++)
+    {
+        if (mat[i] != other.mat[i])
+            return false;
+    }
+    return true;
+}
+
+inline bool SU2::operator!=(const SU2 &other) const 
+{
+    return !(this->operator==(other));
 }
 
 ///////////////////////////////

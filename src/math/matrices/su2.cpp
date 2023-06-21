@@ -1,5 +1,6 @@
 #include "su2.h"
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 
 /*!
@@ -19,27 +20,6 @@ double SU2::normSquared(int i)
      * Returns the norm squared of the complex number.
      */
     return mat[i]*mat[i] + mat[i+1]*mat[i+1];
-}
-
-void SU2::print()
-{
-    /*
-     * Temporary class for printing matrix. Might remove in the future to get better performance
-     */
-    for (int i = 0; i < 2; i++)
-    {
-        for (int j = 0; j < 2; j++)
-        {
-            if (mat[4*i+2*j+1] < 0) {
-                printf("%12.8f - %12.8fi", mat[4*i+2*j], fabs(mat[4*i+2*j+1]));
-            }
-            else {
-                printf("%12.8f + %12.8fi", mat[4*i+2*j], mat[4*i+2*j+1]);
-            }
-            printf("      ");
-        }
-        printf("\n");
-    }
 }
 
 SU2 SU2::transpose()
@@ -67,4 +47,79 @@ SU2 SU2::conjugate()
         mat[2*i+1] = -mat[2*i+1];
     }
     return *this;
+}
+
+void SU2::print() const
+{
+    /*
+     * Temporary class for printing matrix. Might remove in the future to get better performance
+     */
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            if (mat[4*i+2*j+1] < 0) {
+                printf("%12.8f - %12.8fi", mat[4*i+2*j], fabs(mat[4*i+2*j+1]));
+            }
+            else {
+                printf("%12.8f + %12.8fi", mat[4*i+2*j], mat[4*i+2*j+1]);
+            }
+            printf("      ");
+        }
+        printf("\n");
+    }
+}
+
+// Overloading stream operator
+std::ostream& operator<<(std::ostream& os, const SU2& mat)
+{
+    const auto prec = std::cout.precision();
+    os << std::setprecision(2);
+    os << std::scientific;
+
+    for (int i = 0; i < 2; i++)
+    {
+        if (i == 0) 
+        {
+            os << "[";
+        }
+        else
+        {
+            os << " ";
+        }
+        os << "[";
+        for (int j = 0; j < 2; j++)
+        {
+            os << std::setw(8) << mat.mat[4*i + 2*j];
+            if (mat.mat[4*i + 2*j + 1] < 0)
+            {
+                os << " - ";
+            }
+            else
+            {
+                os << " + ";
+            }
+            os << std::setw(8) << std::fabs(mat.mat[4*i + 2*j + 1]) << "i";
+            if (j == 1)
+            {
+                os << "]";
+                if (i != 1)
+                {
+                    os << ",";
+                }
+            }
+            else
+            {
+                os << ", ";
+            }
+        }
+        if (i != 1)
+        {
+            os << "\n";
+        }
+    }
+    os << "]";
+    os << std::setprecision(prec);
+
+    return os;
 }

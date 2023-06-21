@@ -9,6 +9,11 @@ public:
   UnitaryMatrixGenerator() { generator = SU3MatrixGenerator(); }
   ~UnitaryMatrixGenerator() = default;
 
+  SU2 generateSU2() { return generator.generateSU2(); }
+  SU3 generateSU3() { return generator.generateRandom(); }
+  SU3 generateSU3RST() { return generator.generateRST(); }
+
+private:
   SU3MatrixGenerator generator;
 };
 
