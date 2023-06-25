@@ -32,6 +32,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/observables)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/parallelization)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/tests_old)
 add_subdirectory(tests)
+add_subdirectory(tests_mpi)
 
 # Add the executable
 add_executable(GLAC ${CMAKE_SOURCE_DIR}/src/main.cpp ${CMAKE_SOURCE_DIR}/src/system.cpp)
@@ -51,3 +52,4 @@ target_link_libraries(GLAC config flow io math observables parallelization actio
 
 # Add a custom target to run the tests
 add_custom_target(run_tests COMMAND tests)
+add_custom_target(run_mpi_tests COMMAND mpi_tests)
