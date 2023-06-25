@@ -6,5 +6,8 @@
 int main()
 {
   std::cout << "Starting MPI tests\n";
-  return 0;
+
+  bool passed = true;
+
+  return passed;
 }
