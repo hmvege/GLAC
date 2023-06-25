@@ -24,6 +24,8 @@ public:
     // Default constructor
     SU3() {}
 
+    // TODO: add new constructor which is parametrized
+
     // Old copy assignement operator
     SU3 &operator =(const SU3& other)
     {
@@ -76,7 +78,7 @@ public:
     SU3 makeAntiHermitian();
 
     // Returns the inverse of the matrix(the conjugate transpose)
-    SU3 inv();
+    SU3 inv() const;
 
     // Sets the matrix to zero
     void zeros();
@@ -323,7 +325,7 @@ inline bool SU3::operator!=(const SU3 &other) const
  * \brief SU3::inv performs a matrix inversion.
  * \return a copy of the inverse of itself.
  */
-inline SU3 SU3::inv()
+inline SU3 SU3::inv() const
 {
     /*
      * Takes the inverse of the matrix(which is transpose and conjugate).

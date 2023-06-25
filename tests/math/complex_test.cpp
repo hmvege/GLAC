@@ -1,6 +1,4 @@
 #include <helper_fixtures.h>
-// #include <helper_generators.h>
-// #include <helper_math.h>
 #include <math/complex.h>
 
 #include <catch2/catch_all.hpp>
@@ -10,7 +8,8 @@
 
 const std::string TAGS = "[Complex]";
 
-TEST_CASE_METHOD(ComplexFixture, "Complex unit tests", TAGS + "[operations]")
+TEST_CASE_METHOD(ComplexFixture, "Complex number class unit tests",
+                 TAGS + "[operations]")
 {
   SECTION("Equality")
   {

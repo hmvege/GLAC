@@ -48,6 +48,7 @@ public:
     // Getters, mostly using .mat[]
     inline double get(int i, int j, int k) { return mat[(4*i + 2*j) + k]; } // k is complex number of a position.
     inline double &operator[](int i) { return mat[i]; }
+    inline const double operator[](int i) const { return mat[i]; }
 
     // Comparison operators
     inline bool operator==(const SU2& other) const;

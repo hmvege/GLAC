@@ -5,6 +5,7 @@ set(TEST_SOURCES
     math/su3_test.cpp
     math/su2_test.cpp
     math/complex_test.cpp
+    math/random_matrix_test.cpp
     # config/config_test.cpp
 )
 
