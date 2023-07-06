@@ -50,7 +50,13 @@ using std::chrono::duration;
  */
 int main(int numberOfArguments, char* cmdLineArguments[])
 {
-    Parallel::Communicator::init(&numberOfArguments, &cmdLineArguments);
+    if (numberOfArguments != 2)
+    {
+        Parallel::Communicator::exitApplication("Error: no json config file provided");
+        return EXIT_FAILURE;
+    }
+    
+    Parallel::Communicator::init(numberOfArguments, cmdLineArguments);
 
     ConfigLoader::load(std::string(cmdLineArguments[1]));
 
@@ -81,5 +87,5 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Parallel::Communicator::setBarrier();
     MPI_Finalize();
 
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -208,7 +208,7 @@ void IO::FieldIO::loadFieldConfiguration(const std::string &filename, Lattice<SU
 
     // Checks if file we are trying to load exists or not
     if (!check_file_existence(fname.c_str())) {
-        Parallel::Communicator::MPIExit("File " + fname + " does not exist");
+        Parallel::Communicator::exitApplication("File " + fname + " does not exist");
     }
 
     MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
@@ -270,7 +270,7 @@ void IO::FieldIO::loadChromaFieldConfiguration(const std::string &filename, Latt
 
     // Checks if file we are trying to load exists or not
     if (!check_file_existence(fname.c_str())) {
-        Parallel::Communicator::MPIExit("File " + fname + " does not exist");
+        Parallel::Communicator::exitApplication("File " + fname + " does not exist");
     }
 
     MPI_File_open(Parallel::ParallelParameters::ACTIVE_COMM, fname.c_str(), MPI_MODE_RDONLY, MPI_INFO_NULL, &file);

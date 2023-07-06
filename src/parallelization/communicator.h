@@ -39,7 +39,7 @@ public:
     ~Communicator();
 
     // Initializers
-    static void init(int *numberOfArguments, char ***cmdLineArguments);
+    static void init(int numberOfArguments, char **cmdLineArguments);
     static void initializeSubLattice();
 
     // Link getters
@@ -56,12 +56,12 @@ public:
     static void setN(const std::vector<unsigned int> &N);
 
     // MPI
-    static void MPIExit(const std::string &message);
+    static void exitApplication(const std::string &message);
     static void MPIPrint(const std::string &message);
     static void setBarrier();
     static void setBarrierActive();
     static void gatherDoubleResults(double * data, const unsigned int N);
-    static void freeMPIGroups();
+    static int freeMPIGroups();
 
     // MPI method for reducing to a single dimension
     static void reduceToTemporalDimension(std::vector<double> &obsResults, const std::vector<double> &obs);

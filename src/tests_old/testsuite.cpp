@@ -1649,7 +1649,7 @@ bool TestSuite::testLatticeShift() {
                         } else if (dir / 2 == 3) { // t direction
                             position = Parallel::Index::getIndex(i,j,k,(L.m_dim[3] - 1) * (dir % 2));
                         } else {
-                            Parallel::Communicator::MPIExit("Error in testLatticeShift");
+                            Parallel::Communicator::exitApplication("Error in testLatticeShift");
                         }
 
                         // Compares matrices at position.

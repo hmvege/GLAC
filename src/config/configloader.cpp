@@ -56,7 +56,7 @@ namespace
     {
         if (!check_file_existence(jsonFileName.c_str()))
         {
-            Parallel::Communicator::MPIExit("File " + jsonFileName + " does not exist");
+            Parallel::Communicator::exitApplication("File " + jsonFileName + " does not exist");
         }
 
         std::ifstream i(jsonFileName.c_str());

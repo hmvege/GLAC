@@ -326,7 +326,7 @@ void Parallel::Communicator::checkSubLatticeValidity()
         errMsg += ": dimensions:  ";
         for (int j = 0; j < 4; j++) errMsg += std::to_string(m_N[j]) + " ";
         errMsg += " --> exiting.";
-        MPIExit(errMsg);
+        exitApplication(errMsg);
     }
 }
 
@@ -335,16 +335,12 @@ void Parallel::Communicator::checkSubLatticeValidity()
  * \param numberOfArguments number of command line arguments.
  * \param cmdLineArguments command line arguments.
  */
-void Parallel::Communicator::init(int *numberOfArguments, char ***cmdLineArguments)
+void Parallel::Communicator::init(int numberOfArguments, char **cmdLineArguments)
 {
     // Initializing parallelization, HIDE THIS?
-    MPI_Init (numberOfArguments, cmdLineArguments);
+    MPI_Init (&numberOfArguments, &cmdLineArguments);
     MPI_Comm_size (MPI_COMM_WORLD, &m_numprocs);
     MPI_Comm_rank (MPI_COMM_WORLD, &m_processRank);
-
-    if ((*numberOfArguments) != 2) {
-        MPIExit("Error: please provide a json file to parse.");
-    }
 
     int maxProcRank = m_numprocs;
     int binaryCounter = 1;
@@ -395,7 +391,7 @@ void Parallel::Communicator::checkProcessorValidity()
      */
     if (m_numprocs >= 2) {
         if (m_numprocs % 2 != 0) {
-            MPIExit("Error: odd number of processors --> exiting.");
+            exitApplication("Error: odd number of processors --> exiting.");
         }
     }
 }
@@ -417,7 +413,7 @@ void Parallel::Communicator::checkSubLatticeDimensionsValidity()
             errMsg += "Error: lattice size of 2 or less are not allowed: "; // Due to instabilities, possibly?
             for (int j = 0; j < 4; j++) errMsg += std::to_string(m_N[j]) + " ";
             errMsg += " --> exiting.";
-            MPIExit(errMsg);
+            exitApplication(errMsg);
         }
     }
 }
@@ -507,29 +503,74 @@ void Parallel::Communicator::setBarrierActive()
  *
  * Frees MPI groups and communicators.
  */
-void Parallel::Communicator::freeMPIGroups()
+int Parallel::Communicator::freeMPIGroups()
 {
-    MPI_Group_free(&Parallel::ParallelParameters::WORLD_GROUP);
-    MPI_Group_free(&Parallel::ParallelParameters::ACTIVE_GROUP);
+    int error = MPI_SUCCESS;
+    
+    if (Parallel::ParallelParameters::WORLD_GROUP != MPI_GROUP_NULL
+        && Parallel::ParallelParameters::WORLD_GROUP != MPI_GROUP_EMPTY)
+        error = MPI_Group_free(&Parallel::ParallelParameters::WORLD_GROUP);
+
+        if (error != MPI_SUCCESS)
+            return error;
+    
+    if (Parallel::ParallelParameters::ACTIVE_GROUP != MPI_GROUP_NULL
+        && Parallel::ParallelParameters::ACTIVE_GROUP != MPI_GROUP_EMPTY)
+        error = MPI_Group_free(&Parallel::ParallelParameters::ACTIVE_GROUP);
+
+        if (error != MPI_SUCCESS)
+            return error;
 
     // Only freeing those who has an active comm, processors who are
     // inactive have MPI_COMM_NULL, are not need to be freed.
     if (Parallel::ParallelParameters::ACTIVE_COMM != MPI_COMM_NULL) {
-        MPI_Comm_free(&Parallel::ParallelParameters::ACTIVE_COMM);
+        error = MPI_Comm_free(&Parallel::ParallelParameters::ACTIVE_COMM);
+
+        if (error != MPI_SUCCESS)
+            return error;
     }
+
+    return error;
 }
 
 /*!
- * \brief Parallel::Communicator::MPIExit exits the program. Frees MPI groups before it exits.
+ * \brief Parallel::Communicator::exitApplication exits the program. Frees MPI groups before it exits.
  * \param message message to print before exiting.
  */
-void Parallel::Communicator::MPIExit(const std::string &message)
+void Parallel::Communicator::exitApplication(const std::string &message)
 {
-    if (m_processRank == 0) cout << "\n" << message.c_str() << endl;
-    freeMPIGroups();
+    if (m_processRank == 0)
+    {
+        cout << "\n" << message.c_str() << "\n";
+    }
+
+    // Checks if MPI is already finalized
+    {    
+        int finalized;
+        MPI_Finalized(&finalized);
+        if (finalized)
+        {
+            std::cout << "Program already finalized\n";
+            return;
+        }
+    }
+    
+    // Ensures synchronization before freeing groups
     setBarrier();
-    MPI_Abort(MPI_COMM_WORLD, 0);
-    exit(0);
+
+    // Ensures the freeing of MPI groups occurs as intended
+    if (int error = freeMPIGroups(); error != MPI_SUCCESS)
+    {
+        char error_string[MPI_MAX_ERROR_STRING];
+        int length_of_error_string;
+        MPI_Error_string(error, error_string, &length_of_error_string);
+        std::cerr << "Error freeing MPI groups and communicators: " << error_string << "\n";
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+        exit(EXIT_FAILURE);
+    }
+
+    MPI_Finalize();
+    exit(EXIT_SUCCESS);
 }
 
 /*!
@@ -589,7 +630,7 @@ void Parallel::Communicator::checkLattice(Lattice<SU3> *lattice, const std::stri
                             {
                                 printf("\nProc: %d Pos: %d %d %d %d index: %lu\n", m_processRank, x, y, z, t, Parallel::Index::getIndex(x,y,z,t));
                                 lattice[mu][Parallel::Index::getIndex(x,y,z,t)].print();
-                                Parallel::Communicator::MPIExit(message);
+                                Parallel::Communicator::exitApplication(message);
                             }
                         }
                     }

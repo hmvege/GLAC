@@ -54,7 +54,7 @@ void System::setAction()
         m_S = new WilsonExplicitDer;
     } else {
         std::string msg = "ERROR: Action type " + Parameters::getActionType() + "not recognized.";
-        Parallel::Communicator::MPIExit(msg);
+        Parallel::Communicator::exitApplication(msg);
     }
 }
 
@@ -526,7 +526,7 @@ void System::loadConfigurationAndRunMetropolis()
     // Loads the configuration we are flowing from(should only be one).
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
     if (configurationNames.size() != 1) {
-        Parallel::Communicator::MPIExit("Should only be one configuration loaded(there are currently " + std::to_string(configurationNames.size()) + "configurations.");
+        Parallel::Communicator::exitApplication("Should only be one configuration loaded(there are currently " + std::to_string(configurationNames.size()) + "configurations.");
     }
 
     // Loads configuration, either in chroma format(reversed doubles) or regular format.
@@ -576,7 +576,7 @@ void System::flowConfigurations()
     std::vector<std::string> configurationNames = Parameters::getFieldConfigurationFileNames();
 
     if (configurationNames.size() == 0) {
-        Parallel::Communicator::MPIExit("Missing configurations to flow. Check input folder: " + Parameters::getInputFolder());
+        Parallel::Communicator::exitApplication("Missing configurations to flow. Check input folder: " + Parameters::getInputFolder());
     }
 
     for (unsigned int i = 0; i < configurationNames.size(); i++) {
