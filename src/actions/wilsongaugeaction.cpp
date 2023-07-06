@@ -42,7 +42,7 @@ void WilsonGaugeAction::computeStaple(Lattice<SU3> *lattice, const int i, const 
         m_staple1 = Parallel::Communicator::getPositiveLink(lattice,m_position,mu,m_muIndex,nu);
         m_staple1 *= Parallel::Communicator::getPositiveLink(lattice,m_position,nu,m_nuIndex,mu).inv();
         m_staple1 *= lattice[nu][Parallel::Index::getIndex(i,j,k,l)].inv();
-        // Getting second part of staple
+        // Getting second part of staple 
         m_staple2 = Parallel::Communicator::getNeighboursNeighbourLink(lattice,m_position,mu,m_muIndex,nu,m_nuIndex,nu).inv();
         m_staple2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,m_nuIndex,mu).inv();
         m_staple2 *= Parallel::Communicator::getNegativeLink(lattice,m_position,nu,m_nuIndex,nu);
@@ -82,5 +82,6 @@ Lattice<SU3> WilsonGaugeAction::getActionDerivative(Lattice<SU3> *lattice, const
     m_tempDiag = imagTrace(m_tempStaple1)/3.0;
     m_tempStaple1 = subtractImag(m_tempStaple1,m_tempDiag);
     m_tempStaple1 *= 0.5;
+    
     return m_tempStaple1;
 }
