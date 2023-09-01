@@ -79,11 +79,7 @@ void Flow::setSU3ExpFunc()
      * Does nothing if name is not recognized.
      * If Morningstar, do nothing as that is default.
      */
-    if (Parameters::getExpFuncName() == "taylor2") { // ENSURE WE DONT GO OUT OF SCOPE!!
-        m_SU3ExpFunc = new Taylor2Exp;
-    } else if (Parameters::getExpFuncName() == "taylor4") {
-        m_SU3ExpFunc = new Taylor4Exp;
-    } else if (Parameters::getExpFuncName() == "luscher") {
+    if (Parameters::getExpFuncName() == "luscher") {
         m_SU3ExpFunc = new ExpLuscher;
     } else if (Parameters::getExpFuncName() == "morningstar") {
         m_SU3ExpFunc = new SU3Exp;

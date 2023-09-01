@@ -478,6 +478,7 @@ inline void Lattice<double>::zeros()
 template <>
 inline void Lattice<SU3>::makeHermitian()
 {
+    // TODO: move this method to perhaps 'functions.cpp'
     for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
     {
         m_sites[iSite].makeHermitian();
@@ -487,6 +488,7 @@ inline void Lattice<SU3>::makeHermitian()
 template <>
 inline void Lattice<SU3>::makeAntiHermitian()
 {
+    // TODO: move this method to perhaps 'functions.cpp'
     for (unsigned long int iSite = 0; iSite < m_latticeSize; iSite++)
     {
         m_sites[iSite].makeAntiHermitian();

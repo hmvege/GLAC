@@ -6,20 +6,14 @@ set(TEST_SOURCES
     math/su2_test.cpp
     math/complex_test.cpp
     math/random_matrix_test.cpp
-    # config/config_test.cpp
+    math/exp_test.cpp
+    math/taylor_exp_test.cpp
+    math/functions_test.cpp
 )
 
 set(TEST_UTILS
     utils/helper_math.cpp
 )
-
-
-# set(TEST_UTILS
-#     utils/helper_comparers.h
-#     utils/helper_fixtures.h
-#     utils/helper_generators.h
-#     utils/helper_math.h
-# )
 
 # Add the test executable(These tests can use the Catch2-provided main)
 add_executable(tests ${TEST_SOURCES} ${TEST_UTILS})

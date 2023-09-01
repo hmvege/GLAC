@@ -2,37 +2,47 @@
 #include <math/functions.h>
 #include <math/matrices/su3.h>
 
+#include <catch2/catch_all.hpp>
 #include <cmath>
 
-// Inline dot product between two columns of a 3x3 matrix
-inline complex dot(complex* a, complex* b)
+namespace ComplexHelpers
 {
-  /*
-   * Dot product defined as:
-   *  (v,u*) = v*conjugate(u)
-   */
-  complex return_sum(0, 0);
-  for (int i = 0; i < 3; i++)
+  bool isWithinAbs(const complex& a, const complex& b, double epsilon)
   {
-    return_sum += a[i].c() * b[i];
+    return (std::abs(a.re() - b.re()) <= epsilon) &&
+           (std::abs(a.im() - b.im()) <= epsilon);
   }
-  return return_sum;
-}
 
-// Inline dot product between two columns of a 2x2 matrix
-inline complex dot2(complex* a, complex* b)
-{
-  /*
-   * Dot product defined as:
-   *  (v,u*) = v*conjugate(u)
-   */
-  complex return_sum(0, 0);
-  for (int i = 0; i < 2; i++)
+  // Inline dot product between two columns of a 3x3 matrix
+  inline complex dot(complex* a, complex* b)
   {
-    return_sum += a[i].c() * b[i];
+    /*
+     * Dot product defined as:
+     *  (v,u*) = v*conjugate(u)
+     */
+    complex return_sum(0, 0);
+    for (int i = 0; i < 3; i++)
+    {
+      return_sum += a[i].c() * b[i];
+    }
+    return return_sum;
   }
-  return return_sum;
-}
+
+  // Inline dot product between two columns of a 2x2 matrix
+  inline complex dot2(complex* a, complex* b)
+  {
+    /*
+     * Dot product defined as:
+     *  (v,u*) = v*conjugate(u)
+     */
+    complex return_sum(0, 0);
+    for (int i = 0; i < 2; i++)
+    {
+      return_sum += a[i].c() * b[i];
+    }
+    return return_sum;
+  }
+}  // namespace ComplexHelpers
 
 namespace SU3Helpers
 {
@@ -89,9 +99,9 @@ namespace SU3Helpers
       col3[i].setRe(H[6 * i + 4]);
       col3[i].setIm(H[6 * i + 5]);
     }
-    complex c12dot = dot(col1, col2);
-    complex c13dot = dot(col1, col3);
-    complex c23dot = dot(col2, col3);
+    complex c12dot = ComplexHelpers::dot(col1, col2);
+    complex c13dot = ComplexHelpers::dot(col1, col3);
+    complex c23dot = ComplexHelpers::dot(col2, col3);
     if ((std::fabs(c12dot.re()) > eps) || (fabs(c12dot.im()) > eps))
     {
       passed = false;
@@ -218,7 +228,7 @@ namespace SU2Helpers
       col2[i].setRe(H[4 * i + 2]);
       col2[i].setIm(H[4 * i + 3]);
     }
-    complex c12dot = dot2(col1, col2);
+    complex c12dot = ComplexHelpers::dot2(col1, col2);
     if ((std::fabs(c12dot.re()) > eps) || (std::fabs(c12dot.im()) > eps))
     {
       passed = false;

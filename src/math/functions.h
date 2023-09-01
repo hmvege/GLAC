@@ -25,7 +25,7 @@ inline complex SU3Determinant(const SU3 &H)
     /*
      * Function for taking the determinant of
      */
-    // Redo! Move into CLASS perhaps best?
+    // TODO: clean up this with a namespace
     return complex( - H.mat[0]*H.mat[10]*H.mat[14] + H.mat[0]*H.mat[11]*H.mat[15] + H.mat[0]*H.mat[16]*H.mat[8] - H.mat[0]*H.mat[17]*H.mat[9] + H.mat[1]*H.mat[10]*H.mat[15] + H.mat[1]*H.mat[11]*H.mat[14]
                     - H.mat[1]*H.mat[16]*H.mat[9] - H.mat[1]*H.mat[17]*H.mat[8] + H.mat[10]*H.mat[12]*H.mat[2] - H.mat[10]*H.mat[13]*H.mat[3] - H.mat[11]*H.mat[12]*H.mat[3] - H.mat[11]*H.mat[13]*H.mat[2]
                     - H.mat[12]*H.mat[4]*H.mat[8] + H.mat[12]*H.mat[5]*H.mat[9] + H.mat[13]*H.mat[4]*H.mat[9] + H.mat[13]*H.mat[5]*H.mat[8] + H.mat[14]*H.mat[4]*H.mat[6] - H.mat[14]*H.mat[5]*H.mat[7]
@@ -45,7 +45,7 @@ inline complex SU3Determinant(const SU3 &H)
 inline double traceRealMultiplication(const SU3 &A, const SU3 &B)
 {
     /*
-     * For two regular non-sparse trace multiplications taking only real components.
+     * For two regular complex 3x3 matrices trace multiplications taking only real components.
      */
     return (A.mat[0]*B.mat[0] - A.mat[1]*B.mat[1] + A.mat[2]*B.mat[6] - A.mat[3]*B.mat[7] + A.mat[4]*B.mat[12] - A.mat[5]*B.mat[13] +
             A.mat[6]*B.mat[2] - A.mat[7]*B.mat[3] + A.mat[8]*B.mat[8] - A.mat[9]*B.mat[9] + A.mat[10]*B.mat[14] - A.mat[11]*B.mat[15] +
@@ -54,7 +54,7 @@ inline double traceRealMultiplication(const SU3 &A, const SU3 &B)
 inline double traceRealMultiplication(SU3 &&A, const SU3 &B)
 {
     /*
-     * For two regular non-sparse trace multiplications taking only real components.
+     * For two regular complex 3x3 matrices trace multiplications taking only real components.
      */
     return (A.mat[0]*B.mat[0] - A.mat[1]*B.mat[1] + A.mat[2]*B.mat[6] - A.mat[3]*B.mat[7] + A.mat[4]*B.mat[12] - A.mat[5]*B.mat[13] +
             A.mat[6]*B.mat[2] - A.mat[7]*B.mat[3] + A.mat[8]*B.mat[8] - A.mat[9]*B.mat[9] + A.mat[10]*B.mat[14] - A.mat[11]*B.mat[15] +
@@ -63,7 +63,7 @@ inline double traceRealMultiplication(SU3 &&A, const SU3 &B)
 inline double traceRealMultiplication(const SU3 &A, SU3 &&B)
 {
     /*
-     * For two regular non-sparse trace multiplications taking only real components.
+     * For two regular complex 3x3 matrices trace multiplications taking only real components.
      */
     return (A.mat[0]*B.mat[0] - A.mat[1]*B.mat[1] + A.mat[2]*B.mat[6] - A.mat[3]*B.mat[7] + A.mat[4]*B.mat[12] - A.mat[5]*B.mat[13] +
             A.mat[6]*B.mat[2] - A.mat[7]*B.mat[3] + A.mat[8]*B.mat[8] - A.mat[9]*B.mat[9] + A.mat[10]*B.mat[14] - A.mat[11]*B.mat[15] +
@@ -79,7 +79,7 @@ inline double traceRealMultiplication(const SU3 &A, SU3 &&B)
 inline double traceImagMultiplication(const SU3 &A, const SU3 &B)
 {
     /*
-     * For two regular non-sparse trace multiplications taking only imaginary components.
+     * For two regular complex 3x3 matrices trace multiplications taking only imaginary components.
      */
     return (A.mat[0]*B.mat[1] + A.mat[1]*B.mat[0] + A.mat[2]*B.mat[7] + A.mat[3]*B.mat[6] + A.mat[4]*B.mat[13] + A.mat[5]*B.mat[12] +
             A.mat[6]*B.mat[3] + A.mat[7]*B.mat[2] + A.mat[8]*B.mat[9] + A.mat[9]*B.mat[8] + A.mat[10]*B.mat[15] + A.mat[11]*B.mat[14] +
@@ -89,7 +89,7 @@ inline double traceImagMultiplication(const SU3 &A, const SU3 &B)
 inline double traceImagMultiplication(SU3 &&A, const SU3 &B)
 {
     /*
-     * For two regular non-sparse trace multiplications taking only imaginary components.
+     * For two regular complex 3x3 matrices trace multiplications taking only imaginary components.
      */
     return (A.mat[0]*B.mat[1] + A.mat[1]*B.mat[0] + A.mat[2]*B.mat[7] + A.mat[3]*B.mat[6] + A.mat[4]*B.mat[13] + A.mat[5]*B.mat[12] +
             A.mat[6]*B.mat[3] + A.mat[7]*B.mat[2] + A.mat[8]*B.mat[9] + A.mat[9]*B.mat[8] + A.mat[10]*B.mat[15] + A.mat[11]*B.mat[14] +
@@ -99,7 +99,7 @@ inline double traceImagMultiplication(SU3 &&A, const SU3 &B)
 inline double traceImagMultiplication(const SU3 &A, SU3 &&B)
 {
     /*
-     * For two regular non-sparse trace multiplications taking only imaginary components.
+     * For two regular complex 3x3 matrices trace multiplications taking only imaginary components.
      */
     return (A.mat[0]*B.mat[1] + A.mat[1]*B.mat[0] + A.mat[2]*B.mat[7] + A.mat[3]*B.mat[6] + A.mat[4]*B.mat[13] + A.mat[5]*B.mat[12] +
             A.mat[6]*B.mat[3] + A.mat[7]*B.mat[2] + A.mat[8]*B.mat[9] + A.mat[9]*B.mat[8] + A.mat[10]*B.mat[15] + A.mat[11]*B.mat[14] +

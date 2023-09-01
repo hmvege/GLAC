@@ -25,6 +25,7 @@ public:
     SU3() {}
 
     // TODO: add new constructor which is parametrized
+    // TODO: add new methods allowing for proper const usage
 
     // Old copy assignement operator
     SU3 &operator =(const SU3& other)
@@ -362,6 +363,10 @@ inline SU3 SU3::makeAntiHermitian()
     /*
  * Multiplies by (i). Ensure this is correct in unit tests!
  */
+    // TODO: this is wrong(see below)
+    // TODO: figure out why this exists, and if it is useful
+    // TODO: rename to HermitianToAntiHermitian
+    // TODO: write that it assumes matrix is hermitian already
     double temp;
     for (int i = 0; i < 9; i++) {
         temp = mat[2*i];
@@ -376,6 +381,10 @@ inline SU3 SU3::makeHermitian()
     /*
      * An anti-hermitian matrix is made hermitian by multiplying by (-i)
      */
+    // TODO: this is wrong: the complex conjugate is not about switching signs, its a transpose + complex conjugate
+    // TODO: figure out why this exists, and if it is useful
+    // TODO: rename to AntiHermitianToHermitian
+    // TODO: Is this function only useful once we have a hermitian matrix? Is it not slightly misleading?
     double temp;
     for (int i = 0; i < 9; i++) {
         temp = mat[2*i];

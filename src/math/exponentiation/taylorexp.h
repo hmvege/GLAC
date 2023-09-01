@@ -18,10 +18,19 @@ class TaylorExp : public SU3Exp
 private:
     // Taylor degree
     unsigned int m_N;
-    double m_taylorFactor = 1;
-    SU3 m_QMul, m_QSum;
+
+    /** 
+     * Method which verifies the Taylor degree
+     * 
+     * Minimum degree is 1, and maximum is 16 (however, after degree 12,
+     * no further improvement are seen)
+     */
+    void verifyTaylorDegree(int n);
+    
 public:
     TaylorExp(unsigned int N);
+
+    /** \brief Exponentiate using regular Taylor expansion */
     SU3 exp(SU3 Q);
 
     void setTaylorDegree(unsigned int N);
