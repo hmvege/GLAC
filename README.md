@@ -90,7 +90,7 @@ Aspirational goals and todo's that could/should be implemented.
 * [ ] Add unit tests for the Action derivatives. Test through validation testing.
 * [ ] Add unit tests for the observables. Test through validation testing.
 * [x] Add unit tests for remaining lattice methods and make sure they match their equivalent SU3 unit tests or similar.
-* [ ] Add unit tests for the SU3 matrix exponential methods. Compare with output from known source.
+* [x] Add unit tests for the SU3 matrix exponential methods. Compare with output from known source.
 * [x] Add performance timing for the flow method.
 * [ ] Investigate ways of allocating the cubes for sharing at the beginning of a program. Will need to have the performance timing method implemented to check if this helps.
 
@@ -103,3 +103,19 @@ Aspirational goals and todo's that could/should be implemented.
 * [ ] Implement O(a^6) error correction for the field strength tensor.
 * [ ] Implement a better method for selecting the observables to run for.
 * [ ] Clean up the observables selection. Currently quite confusing names for the observables as well as a convoluted way of selecting observables.
+
+
+---
+
+Following is the beginning of a the updated README, starting with a TODO section.
+
+## TODO
+* [ ] Update unit tests
+* [ ] Modernize code to C++17
+* [ ] Improve Parameters handling
+* [ ] Improve helper script, or possible remove `createJobs.py` altogether.
+* [ ] Clean up scripts.
+* [ ] Improve how observables are measured
+* [ ] Implement a Catch2-MPI helper script
+    - See [wiki](https://github.com/catchorg/Catch2/blob/devel/docs/reporters.md) for details on how to do this.
+    - See `src/catch2/reporters/catch_reporter_cumulative_base.cpp` and similar files in directory for how it is implemented in Catch2.
