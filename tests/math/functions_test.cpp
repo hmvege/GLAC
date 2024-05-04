@@ -31,6 +31,7 @@ TEST_CASE_METHOD(DeterminantMatrices, "Determinant verification",
       REQUIRE(ComplexHelpers::isWithinAbs(
         determinant, complex(0.10144648144193713, -1.6677931532846635),
         epsilon));
+      REQUIRE(0);
     }
   }
 

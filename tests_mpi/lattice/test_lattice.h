@@ -1,0 +1,6 @@
+#ifndef TEST_LATTICE_OPERATIONS_H
+#define TEST_LATTICE_OPERATIONS_H
+
+bool testLattice();
+
+#endif  // TEST_LATTICE_OPERATIONS_H

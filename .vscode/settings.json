@@ -65,6 +65,7 @@
         "variant": "cpp"
     },
     "cSpell.words": [
+        "Allreduce",
         "exponentiated",
         "GLAC",
         "hermiticity"
