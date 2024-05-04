@@ -109,6 +109,15 @@ Aspirational goals and todo's that could/should be implemented.
 
 Following is the beginning of a the updated README, starting with a TODO section.
 
+Installation guide:
+
+- CMake
+- Compiler specification (GCC-11 or greater?, Clang?)
+- Installation guide for:
+  - `Catch2-3.3.2.tar.gz`
+  - [JSON](https://github.com/nlohmann/json)
+  - OpenMPI
+
 ## TODO
 * [ ] Update unit tests
 * [ ] Modernize code to C++17
