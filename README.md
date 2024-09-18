@@ -128,4 +128,13 @@ Installation guide:
 * [x] Implement a Catch2-MPI helper script
     - See [wiki](https://github.com/catchorg/Catch2/blob/devel/docs/reporters.md) for details on how to do this.
     - See `src/catch2/reporters/catch_reporter_cumulative_base.cpp` and similar files in directory for how it is implemented in Catch2.
+    - https://github.com/catchorg/Catch2/blob/devel/docs/logging.md
+    - https://github.com/catchorg/Catch2/blob/devel/docs/reporter-events.md
+    - https://github.com/catchorg/Catch2/blob/devel/docs/reporter-events.md
+    - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_console.cpp#L514
+    - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_console.hpp
+    - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_helpers.cpp#L103
+    - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_console.hpp
+    - https://mpitutorial.com/tutorials/mpi-scatter-gather-and-allgather/
 * [ ] Add MPI tests using .
+* 
