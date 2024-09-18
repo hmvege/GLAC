@@ -13,13 +13,21 @@ TEST_CASE("MPI Test", "[mpi]")
 
       double b = 3.14;
       CAPTURE(b);
-      REQUIRE(1 + 1 == 3);
+      // REQUIRE(1 + 1 == 3);
+
+      INFO("Running test for rank " + rank);
 
       if (rank == 0)
       {
         // Test something on the master process
         std::cout << "Ok from 0\n";
         REQUIRE(1 + 1 == 2);
+      }
+      else if (rank == 2)
+      {
+        std::cout << "Not Ok from 2\n";
+        const int x = 1;
+        REQUIRE(1 + x == 3);
       }
       else
       {
