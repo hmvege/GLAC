@@ -51,6 +51,8 @@
 //   return passed && MPI_Finalize();
 // }
 
+#include <iomanip>
+
 #define CATCH_CONFIG_RUNNER  // This tells Catch to provide a main() function
 #include <mpi.h>
 
@@ -61,7 +63,15 @@
 #include <catch2/reporters/catch_reporter_streaming_base.hpp>
 
 namespace
-{}  // namespace
+{
+  // Define ANSI color codes
+  const std::string RED = "\033[31m";
+  const std::string GREEN = "\033[32m";
+  const std::string YELLOW = "\033[33m";
+  const std::string CYAN = "\033[36m";
+  const std::string RESET = "\033[0m";
+  const std::string BOLD = "\033[1m";
+}  // namespace
 
 class MPIMasterReporter : public Catch::StreamingReporterBase
 {
@@ -75,39 +85,12 @@ public:
   {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    // std::cout << "Rank: " << rank << "\n";
 
     if (!assertionStats.assertionResult.isOk())
     {
-      // m_stream << StreamingReporterBase::currentTestCaseInfo->name << "\n";
-      // m_stream << StreamingReporterBase::currentTestCaseInfo->className <<
-      // "\n"; m_stream << StreamingReporterBase::currentTestRunInfo.name <<
-      // "\n";
-
-      // m_stream << Catch::lineOfChars('-') << "\n";
-      // m_stream << "Assertion failed at process of: "
-      //          << m_colour->guardColour(Catch::Colour::Yellow) << "RANK "
-      //          << rank << "\n";
-
-      // // Printing source file and line
-      // m_stream << assertionStats.assertionResult.getSourceInfo() << ": ";
-      // m_stream << m_colour->guardColour(Catch::Colour::Red) << "FAILED";
-      // // Printing out the expression that failed.
-      // m_stream << "\n\t"
-      //          << assertionStats.assertionResult.getExpressionInMacro() <<
-      //          "\n";
-
-      // // In case there are any additional messages(e.g. captures), we print
-      // // those.
-      // if (assertionStats.assertionResult.hasMessage())
-      // {
-      //   m_stream << assertionStats.assertionResult.getMessage() << "\n";
-      // }
-      // m_stream << Catch::lineOfChars('.') << "\n";
-
       std::ostringstream oss;
       //  Prints failed process
-      oss << Catch::lineOfChars('*') << "\n";
+      oss << "\n" << Catch::lineOfChars('*') << "\n";
       oss << "Assertion failed at process RANK " << rank << ":\n";
 
       // Prints location of the failed test
@@ -125,98 +108,22 @@ public:
       }
 
       // Prints section location
-      oss << Catch::lineOfChars('-') << "\n";
+      oss << Catch::lineOfChars('.') << "\n";
       oss << m_sectionStack.back().lineInfo << "\n";
       oss << Catch::lineOfChars('.') << "\n";
 
       // Prints failed test
-      oss << assertionStats.assertionResult.getSourceInfo() << ": FAILED:\n";
+      oss << assertionStats.assertionResult.getSourceInfo() << ": " << RED
+          << "FAILED:" << RESET << "\n";
       oss << "  " << assertionStats.assertionResult.getExpression() << "\n";
       oss << "with expansion\n";
       oss << "  " << assertionStats.assertionResult.getExpandedExpression()
           << "\n";
 
-      // oss << "  Test case: " << currentTestCaseInfo->name << "\n";
-      // oss << "  Assertion: "
-      //     << assertionStats.assertionResult.getExpressionInMacro() << "\n";
-      // oss << "  Message: " << assertionStats.assertionResult.getMessage()
-      //     << "\n";
-
-      // m_stream << "getExpandedExpression: "
-      //          << assertionStats.assertionResult.getExpandedExpression()
-      //          << "\n";  // Fetches full expression! USE THIS!
-      // m_stream << "  Message: " <<
-      // assertionStats.assertionResult.getMessage()
-      //          << "\n";
-      // m_stream << "getExpressionInMacro: "
-      //          << assertionStats.assertionResult.getExpressionInMacro() <<
-      //          "\n";
-      // m_stream << "getExpression: "
-      //          << assertionStats.assertionResult.getExpression() << "\n";
-      // m_stream << "getSourceInfo: "
-      //          << assertionStats.assertionResult.getSourceInfo() << "\n";
-      // m_stream << "getTestMacroName: "
-      //          << assertionStats.assertionResult.getTestMacroName() << "\n";
-
-      oss << Catch::lineOfChars('-') << "\n";
+      oss << "\n";
       m_failure_messages.push_back(oss.str());
     }
-    // StreamingReporterBase::assertionEnded(assertionStats);
-
-    m_stream << "ASSERTION END\n";
   }
-
-  // // Override necessary methods
-  // void testCaseEnded(Catch::TestCaseStats const& testCaseStats) override
-  // {
-  //   int rank;
-  //   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  //   // MPI_Barrier(MPI_COMM_WORLD);
-
-  //   if (testCaseStats.totals.testCases.failed > 0)
-  //   {
-  //     m_stream << "\n";
-  //     m_stream << "Test case failed at process of: "
-  //              << m_colour->guardColour(Catch::Colour::Yellow) << "RANK "
-  //              << rank << "\n";
-  //     m_stream << "Failed test: " << testCaseStats.testInfo->name << "\n";
-  //     // testCaseStats.testInfo->properties
-  //     // for (const auto t : testCaseStats.testInfo->tags)
-  //     // {
-  //     //   m_stream << t.original << "\n";
-  //     // }
-  //     m_stream << "    Failed at: " << testCaseStats.testInfo->lineInfo <<
-  //     "\n"; if (testCaseStats.stdOut.length() > 0)
-  //     {
-  //       m_stream << testCaseStats.stdOut << "\n";
-  //     }
-  //     if (testCaseStats.stdErr.length() > 0)
-  //     {
-  //       m_stream << testCaseStats.stdErr << "\n";
-  //     }
-  //     // for (auto c : testCaseStats.testInfo->tags)
-  //     //   std::cout << c.original
-  //     // m_stream << testCaseStats.totals.assertions.failed << "\n";
-  //     m_stream << Catch::lineOfChars('-') << "\n";
-  //   }
-  //   StreamingReporterBase::testCaseEnded(testCaseStats);
-  // }
-
-  // void sectionEnded(Catch::SectionStats const& sectionStats)
-  // {
-  //   int rank;
-  //   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  //   MPI_Barrier(MPI_COMM_WORLD);
-  //   if (!sectionStats.assertions.allPassed())
-  //   {
-  //     // m_stream << "Test section failed at process of: "
-  //     //          << m_colour->guardColour(Catch::Colour::Yellow) << "RANK "
-  //     //          << rank << "\n";
-  //     m_stream << "\t" << sectionStats.sectionInfo.name << "\n";
-  //     m_stream << Catch::lineOfChars('#') << "\n";
-  //   }
-  //   StreamingReporterBase::sectionEnded(sectionStats);
-  // }
 
   void testRunEnded(Catch::TestRunStats const& testRunStats) override
   {
@@ -227,22 +134,37 @@ public:
     // Use MPI to determine if any process has failed
     int localFailedProcs = testRunStats.totals.testCases.failed > 0 ? 1 : 0;
     int globalFailedProcs = 0;
-    MPI_Allreduce(&localFailedProcs, &globalFailedProcs, 1, MPI_INT, MPI_MAX,
+    MPI_Allreduce(&localFailedProcs, &globalFailedProcs, 1, MPI_INT, MPI_SUM,
                   MPI_COMM_WORLD);
 
-    int totalLocalPassed = testRunStats.totals.testCases.passed;
-    int totalGlobalPassed = 0;
-    MPI_Allreduce(&totalLocalPassed, &totalGlobalPassed, 1, MPI_INT, MPI_MAX,
+    int localAssertions = testRunStats.totals.assertions.total();
+    int globalAssertions = 0;
+    MPI_Allreduce(&localAssertions, &globalAssertions, 1, MPI_INT, MPI_SUM,
                   MPI_COMM_WORLD);
 
-    int totalLocalFailed = testRunStats.totals.testCases.failed;
-    int totalGlobalFailed = 0;
-    MPI_Allreduce(&totalLocalFailed, &totalGlobalFailed, 1, MPI_INT, MPI_MAX,
+    int localAssertionsPassed = testRunStats.totals.assertions.passed;
+    int globalAssertionsPassed = 0;
+    MPI_Allreduce(&localAssertionsPassed, &globalAssertionsPassed, 1, MPI_INT,
+                  MPI_SUM, MPI_COMM_WORLD);
+
+    int localAssertionsFailed = testRunStats.totals.assertions.failed;
+    int globalAssertionsFailed = 0;
+    MPI_Allreduce(&localAssertionsFailed, &globalAssertionsFailed, 1, MPI_INT,
+                  MPI_SUM, MPI_COMM_WORLD);
+
+    int localCases = testRunStats.totals.testCases.total();
+    int globalCases = 0;
+    MPI_Allreduce(&localCases, &globalCases, 1, MPI_INT, MPI_SUM,
                   MPI_COMM_WORLD);
 
-    int totalLocalSkipped = testRunStats.totals.testCases.skipped;
-    int totalGlobalSkipped = 0;
-    MPI_Allreduce(&totalLocalSkipped, &totalGlobalSkipped, 1, MPI_INT, MPI_MAX,
+    int localCasesPassed = testRunStats.totals.testCases.passed;
+    int globalCasesPassed = 0;
+    MPI_Allreduce(&localCasesPassed, &globalCasesPassed, 1, MPI_INT, MPI_SUM,
+                  MPI_COMM_WORLD);
+
+    int localCasesFailed = testRunStats.totals.testCases.failed;
+    int globalCasesFailed = 0;
+    MPI_Allreduce(&localCasesFailed, &globalCasesFailed, 1, MPI_INT, MPI_SUM,
                   MPI_COMM_WORLD);
 
     // Fetches all of the local messages into 1 long string
@@ -287,33 +209,51 @@ public:
 
       m_stream << "Catch tests for '" << testRunStats.runInfo.name
                << "' completed.\n";
-      m_stream << Catch::lineOfChars('=') << "\n";
+      m_stream << Catch::lineOfChars('-') << "\n";
 
       // If there's a global failure, print a custom summary
-      if (totalGlobalFailed > 0)
+      if (globalCasesFailed > 0)
       {
         m_stream << "There were failures in the test cases.\n";
+        m_stream << Catch::lineOfChars('=') << "\n";
         m_stream << failure_message << "\n";
       }
       else
       {
         // Print the normal summary
         m_stream << "All tests passed.\n";
+        m_stream << Catch::lineOfChars('=') << "\n\n";
       }
 
       m_stream << Catch::lineOfChars('=') << "\n";
-      m_stream << "Total test cases: " << testRunStats.totals.testCases.total()
-               << "\n";
-      m_stream << m_colour->guardColour(Catch::Colour::Green)
-               << "PASSED: " << totalGlobalPassed << "\n";
-      m_stream << m_colour->guardColour(Catch::Colour::Red)
-               << "FAILED: " << totalGlobalFailed << "\n";
+      m_stream << "Total test cases run in parallel: "
+               << testRunStats.totals.testCases.total() << "\n";
 
-      if (totalGlobalSkipped > 0)
-      {
-        m_stream << m_colour->guardColour(Catch::Colour::Skip)
-                 << "SKIPPED: " << totalGlobalSkipped << "\n";
-      }
+      int width_passed = std::to_string(globalAssertions).size() - 1;
+      int width_failed = std::to_string(globalAssertionsFailed).size() - 1;
+
+      // Printing test cases
+      m_stream << "Test cases (total): " << std::setw(width_passed)
+               << globalCases << " | "
+               << m_colour->guardColour(Catch::Colour::Green)
+               << globalCasesPassed
+               << m_colour->guardColour(Catch::Colour::Green) << " passed"
+               << " | " << std::setw(width_failed)
+               << m_colour->guardColour(Catch::Colour::Red) << globalCasesFailed
+               << m_colour->guardColour(Catch::Colour::Red) << " failed"
+               << "\n";
+
+      // Printing assertions
+      m_stream << "Assertions (total): " << std::setw(width_passed)
+               << globalAssertions << " | "
+               << m_colour->guardColour(Catch::Colour::Green)
+               << globalAssertionsPassed
+               << m_colour->guardColour(Catch::Colour::Green) << " passed"
+               << " | " << std::setw(width_failed)
+               << m_colour->guardColour(Catch::Colour::Red)
+               << globalAssertionsFailed
+               << m_colour->guardColour(Catch::Colour::Red) << " failed"
+               << "\n";
 
       m_stream << Catch::lineOfChars('=') << "\n";
     }

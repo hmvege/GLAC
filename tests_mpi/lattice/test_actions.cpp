@@ -38,28 +38,28 @@ TEST_CASE("MPI Test", "[mpi]")
     }
   }
 
-  // SECTION("Sub-sec2")
-  // {
-  //   int rank;
-  //   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  SECTION("Sub-sec2")
+  {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  //   double b = 3.14;
-  //   CAPTURE(b);
-  //   REQUIRE(1 + 1 == 4);
+    double b = 3.14;
+    CAPTURE(b);
+    // REQUIRE(1 + 1 == 4);
 
-  //   if (rank == 0)
-  //   {
-  //     // Test something on the master process
-  //     std::cout << "Ok from 0\n";
-  //     REQUIRE(1 + 1 == 2);
-  //   }
-  //   else
-  //   {
-  //     // Test something on the worker processes
-  //     std::cout << "Ok from others\n";
-  //     REQUIRE(2 + 2 == 4);
-  //   }
-  // }
+    if (rank == 0)
+    {
+      // Test something on the master process
+      std::cout << "Ok from 0\n";
+      REQUIRE(1 + 1 == 2);
+    }
+    else
+    {
+      // Test something on the worker processes
+      std::cout << "Ok from others\n";
+      REQUIRE(2 + 2 == 4);
+    }
+  }
 }
 
 // TEST_CASE("MPI counter test", "[mpi]")
