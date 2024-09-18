@@ -45,5 +45,8 @@ figures/
 # Backup files
 *.bak
 
+# Ignoring Catch2 
+lib/Catch2
+
 # Adds docs folder regardless
 !docs/html/*.png
