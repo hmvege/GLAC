@@ -1,63 +1,9 @@
-// #include <lattice/test_lattice.h>
-// #include <parallelization/communicator.h>
-
-// #include <iomanip>
-// #include <iostream>
-
-// int main(int numberOfArguments, char* cmdLineArguments[])
-// {
-//   Parallel::Communicator::init(numberOfArguments, cmdLineArguments);
-
-//   std::cout << "Starting MPI tests\n";
-
-//   bool passed = true;
-
-//   if (Parallel::ParallelParameters::active)
-//   {
-//     // Test math
-//     // passed &= testLattice();
-
-//     // TODO: implement this properly after clean-up of observables has been
-//     // performed.
-//     // Test observables
-//     // passed &= testCorrelator();
-//     // passed &= testObservablesStorer();
-
-//     // System actions
-//     // passed &= testAction();
-//     // passed &= testWilsonExplicitDer();
-//     // passed &= testGaugeAction();
-
-//     // System flow
-//     // passed &= testFlow();
-
-//     // System tests
-//     // passed &= testSystem();
-
-//     // Config tests
-//     // passed &= testParameters(); // TODO: implement after improved
-//     parameters
-//     // passed &= testConfigLoader();
-//     // passed &= testSystemPrint();
-
-//     // Parallelization tests
-//     // passed &= testIndex(); // TODO: perhaps use MPIs implementation
-//     // passed &= testParallelParameters();
-//     // passed &= testCommunicator();
-//     // passed &= testNeighbourList();
-//     // passed &= testNeighbors();
-//   }
-
-//   return passed && MPI_Finalize();
-// }
-
 #include <iomanip>
 
 #define CATCH_CONFIG_RUNNER  // This tells Catch to provide a main() function
 #include <mpi.h>
 
 #include <catch2/catch_all.hpp>
-// #include <catch2/catch_reporter_bases.hpp>
 #include <catch2/catch_test_case_info.hpp>
 #include <catch2/reporters/catch_reporter_registrars.hpp>
 #include <catch2/reporters/catch_reporter_streaming_base.hpp>
@@ -295,9 +241,6 @@ int main(int argc, char* argv[])
     MPI_Finalize();
     return returnCode;
   }
-
-  // TODO: make a dummy test which tests with proc 1 and 3 failing ,and see that
-  // printing if happening in order
 
   int numFailed = session.run();
 

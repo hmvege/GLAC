@@ -125,6 +125,7 @@ Installation guide:
 * [ ] Improve helper script, or possible remove `createJobs.py` altogether.
 * [ ] Clean up scripts.
 * [ ] Improve how observables are measured
-* [ ] Implement a Catch2-MPI helper script
+* [x] Implement a Catch2-MPI helper script
     - See [wiki](https://github.com/catchorg/Catch2/blob/devel/docs/reporters.md) for details on how to do this.
     - See `src/catch2/reporters/catch_reporter_cumulative_base.cpp` and similar files in directory for how it is implemented in Catch2.
+* [ ] Add MPI tests using .

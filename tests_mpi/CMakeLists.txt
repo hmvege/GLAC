@@ -2,7 +2,6 @@ find_package(Catch2 3 REQUIRED)
 
 # Add the test files
 set(MPI_TEST_SOURCES
-    # mpi_tests.cpp
     # lattice/test_lattice.cpp
     lattice/test_actions.cpp
     # lattice/action_test.cpp

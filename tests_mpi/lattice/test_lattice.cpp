@@ -3,9 +3,9 @@
 #include <catch2/catch_all.hpp>
 
 // #include <actions/action.h>
-#include <actions/actions.h>
+// #include <actions/actions.h>
 #include <config/parameters.h>
-#include <lattice/test_lattice_operations.h>
+// #include <lattice/test_lattice_operations.h>
 #include <parallelization/communicator.h>
 #include <parallelization/index.h>
 
