@@ -19,7 +19,7 @@ Lattice Quantum Chromo Dynamics program for generating pure gauge field configur
 * `multiJobSetup.py` is script for starting multiple jobs.
 * `createJobs.py` is the main script for generating `.json` configuration files for GLAC, as well as submitting files to either Torque or Slurm.
 
-## Installation
+## Installation (OUTDATED)
 Compile with following libraries(these should be available at most HPC cluster, should run without any problems):
 ```
 GNU/4.9
@@ -97,10 +97,10 @@ Aspirational goals and todo's that could/should be implemented.
 **Note: validation testing has been performed, and has shown the action, the observables, the SU3 exp method and the flow to be correct. Only need to implement this into a larger framework in either `createJobs.py` or an external script.**
 
 #### Future goals
-* [ ] Implement the Luscher-Weisz action.
-* [ ] Implement the option of calculating the field strength tensor with the plaquette.
-* [ ] Implement O(a^4) error correction for the field strength tensor.
-* [ ] Implement O(a^6) error correction for the field strength tensor.
+* ~~[ ] Implement the Luscher-Weisz action.~~
+* ~~[ ] Implement the option of calculating the field strength tensor with the plaquette.~~
+* ~~[ ] Implement O(a^4) error correction for the field strength tensor.~~
+* ~~[ ] Implement O(a^6) error correction for the field strength tensor.~~
 * [ ] Implement a better method for selecting the observables to run for.
 * [ ] Clean up the observables selection. Currently quite confusing names for the observables as well as a convoluted way of selecting observables.
 
@@ -114,13 +114,17 @@ Installation guide:
 - CMake
 - Compiler specification (GCC-11 or greater?, Clang?)
 - Installation guide for:
-  - `Catch2-3.3.2.tar.gz`
   - [JSON](https://github.com/nlohmann/json)
   - OpenMPI
+    - Use system default way of installing OpenMPI.
+  - `git submodule update --init --recursive` whenever downloading the repo initially
+    - Fetches Catch2
+
 
 ## TODO
 * [ ] Update unit tests
-* [ ] Modernize code to C++17
+* [ ] JSON Nlohmann should use submodules instead
+* [ ] Modernize code to ~~C++17~~ C++23
 * [ ] Improve Parameters handling
 * [ ] Improve helper script, or possible remove `createJobs.py` altogether.
 * [ ] Clean up scripts.
@@ -136,5 +140,5 @@ Installation guide:
     - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_helpers.cpp#L103
     - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_console.hpp
     - https://mpitutorial.com/tutorials/mpi-scatter-gather-and-allgather/
-* [ ] Add MPI tests using .
+* [ ] Add MPI tests using Catch2
 * 
