@@ -10,6 +10,5 @@ set(SOURCES
 # Add the executable
 add_library(parallelization ${SOURCES})
 
-message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
-
+target_link_libraries(parallelization PUBLIC MPI::MPI_CXX)
 target_include_directories(parallelization PUBLIC ${CMAKE_SOURCE_DIR}/src/)

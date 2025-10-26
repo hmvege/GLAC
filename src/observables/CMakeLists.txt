@@ -11,5 +11,5 @@ set(SOURCES
 )
 
 add_library(observables ${SOURCES})
-
+target_link_libraries(observables PUBLIC MPI::MPI_CXX)
 target_include_directories(observables PUBLIC ${CMAKE_SOURCE_DIR}/src/)

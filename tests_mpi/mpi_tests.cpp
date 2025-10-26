@@ -1,6 +1,8 @@
 #include <iomanip>
 
-#define CATCH_CONFIG_RUNNER  // This tells Catch to provide a main() function
+#define CATCH_CONFIG_RUNNER  // This tells Catch that I will provide a main()
+                             // function, and ensures Catch::Sessions API is
+                             // available.
 #include <mpi.h>
 
 #include <catch2/catch_all.hpp>

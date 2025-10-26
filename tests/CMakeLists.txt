@@ -1,4 +1,5 @@
-find_package(Catch2 3 REQUIRED)
+include(CTest)
+include(Catch)
 
 # Add the test files
 set(TEST_SOURCES
@@ -21,3 +22,6 @@ add_executable(tests ${TEST_SOURCES} ${TEST_UTILS})
 # Link the necessary libraries
 target_link_libraries(tests PRIVATE math config Catch2::Catch2WithMain)
 target_include_directories(tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utils)
+
+# Auto-register each Catch2 TEST_CASE with CTest
+catch_discover_tests(tests)

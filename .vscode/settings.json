@@ -68,7 +68,10 @@
         "charconv": "cpp",
         "format": "cpp",
         "numbers": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "csignal": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp"
     },
     "cSpell.words": [
         "Allreduce",

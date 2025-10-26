@@ -10,4 +10,5 @@ set(SOURCES
 
 add_library(math ${SOURCES})
 
+target_link_libraries(math PUBLIC MPI::MPI_CXX)
 target_include_directories(math PUBLIC ${CMAKE_SOURCE_DIR}/src/)
