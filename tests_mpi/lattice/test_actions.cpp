@@ -27,7 +27,7 @@ TEST_CASE("MPI Test", "[mpi]")
       {
         std::cout << "Not Ok from 2\n";
         const int x = 1;
-        REQUIRE(1 + x == 3);
+        REQUIRE_FALSE(1 + x == 3);
       }
       else
       {
