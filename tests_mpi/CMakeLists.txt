@@ -30,6 +30,3 @@ add_test(NAME mpi_tests_np${MPI_TEST_NPROCS}
     $<TARGET_FILE:mpi_tests>
     ${MPIEXEC_POSTFLAGS}
 )
-
-# # Avoid running multiple mpirun jobs in parallel (optional)
-# set_tests_properties(mpi_tests_np${MPI_TEST_NPROCS} PROPERTIES RUN_SERIAL TRUE)
