@@ -47,6 +47,7 @@ figures/
 
 # Ignoring Catch2 
 lib/Catch2
+CTest*.txt
 
 # Adds docs folder regardless
 !docs/html/*.png
