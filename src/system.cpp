@@ -133,15 +133,18 @@ System::~System()
      * Class destructor
      */
     if (Parallel::ParallelParameters::active) {
-        delete m_S;
-        delete m_SU3Generator;
-        delete [] m_lattice;
-        delete m_correlator;
-
+        
         // Deleting flow related variables - should strictly speaking not be necesseary.
-        delete [] m_flowLattice;
         delete m_flowCorrelator;
         delete m_flow;
+        if (m_NFlows != 0) {
+            delete [] m_flowLattice;
+        }
+        
+        delete m_S;
+        delete m_SU3Generator;
+        delete m_correlator;
+        delete [] m_lattice;
     }
 }
 

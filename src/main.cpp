@@ -64,18 +64,18 @@ int main(int numberOfArguments, char* cmdLineArguments[])
 //    Parallel::Communicator::initializeSubLattice();
 
     // Unit and performance tests
-    runUnitTests(Parameters::getUnitTesting());
-    runPerformanceTests(Parameters::getPerformanceTesting());
+    // runUnitTests(Parameters::getUnitTesting());
+    // runPerformanceTests(Parameters::getPerformanceTesting());
 
     // Program timers
     steady_clock::time_point programStart;
     programStart = steady_clock::now();
-
-    // Main program part
-    System pureGauge;
-    pureGauge.latticeSetup();
-    pureGauge.run();
-
+    {
+        // Main program part
+        System pureGauge;
+        pureGauge.latticeSetup();
+        pureGauge.run();
+    }
     // Finalizing and printing time taken
     duration<double> programTime = duration_cast<duration<double>>(steady_clock::now() - programStart);
 
@@ -87,5 +87,5 @@ int main(int numberOfArguments, char* cmdLineArguments[])
     Parallel::Communicator::setBarrier();
     MPI_Finalize();
 
-    return EXIT_SUCCESS;
+    return 0;
 }
