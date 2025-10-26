@@ -246,7 +246,12 @@ int main(int argc, char* argv[])
 
   int numFailed = session.run();
 
+  // Turn local failures into a 0/1 flag
+  int localFail = (numFailed > 0) ? 1 : 0;
+  int globalFail = 0;
+  MPI_Allreduce(&localFail, &globalFail, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+
   MPI_Finalize();
 
-  return 0;
+  return globalFail ? 1 : 0;
 }
