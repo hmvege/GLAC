@@ -6,11 +6,12 @@ project(GLAC VERSION 1.0
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# MPI discovery (no compiler overrides)
+# MPI discovery
 find_package(MPI 3.0 REQUIRED COMPONENTS CXX)
 
-# External libraries
-include_directories(${CMAKE_SOURCE_DIR}/lib)
+# JSON discovery
+add_subdirectory(external/nlohmann_json EXCLUDE_FROM_ALL)
+# find_package(nlohm^ann_json 3.12.0 REQUIRED)
 
 # GLAC
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)

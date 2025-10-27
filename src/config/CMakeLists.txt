@@ -8,4 +8,4 @@ add_library(config ${SOURCES})
 
 target_include_directories(config PUBLIC ${CMAKE_SOURCE_DIR}/src/)
 
-target_link_libraries(config parallelization)
+target_link_libraries(config parallelization nlohmann_json::nlohmann_json)
