@@ -13,7 +13,6 @@ TEST_CASE("MPI Test", "[mpi]")
 
       double b = 3.14;
       CAPTURE(b);
-      // REQUIRE(1 + 1 == 3);
 
       INFO("Running test for rank " + rank);
 
