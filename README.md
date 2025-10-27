@@ -111,24 +111,28 @@ Following is the beginning of a the updated README, starting with a TODO section
 
 Installation guide:
 
-- CMake
 - Compiler specification (GCC-11 or greater?, Clang?)
 - Installation guide for:
-  - [JSON](https://github.com/nlohmann/json)
+  - Preferably CMake 4
   - OpenMPI
     - Use system default way of installing OpenMPI.
-  - `git submodule update --init --recursive` whenever downloading the repo initially
+  - `git submodule update --init --recursive` whenever downloading the repo initially.
     - Fetches Catch2
+    - Fetches nlohmann JSON
 
+## Versioning
+- `v1.0.0` offers code which most closely resembles what was used to run HPC simulations.
+- `v2.0.0` is modernized, but may require compilers more modern than what is available on HPC 
 
 ## TODO
-* [ ] Update unit tests
-* [ ] JSON Nlohmann should use submodules instead
-* [ ] Modernize code to ~~C++17~~ C++23
+* [ ] Modernize code to ~~C++17~~ C++20
 * [ ] Improve Parameters handling
-* [ ] Improve helper script, or possible remove `createJobs.py` altogether.
-* [ ] Clean up scripts.
-* [ ] Improve how observables are measured
+* [ ] Improve helper scripts (kinda legacy code)
+  - Possible remove `createJobs.py` altogether.
+* [ ] Add MPI tests using Catch2
+* [ ] Improve how observables are set up and measured
+* [x] Update unit tests
+* [x] JSON Nlohmann should use submodules instead
 * [x] Implement a Catch2-MPI helper script
     - See [wiki](https://github.com/catchorg/Catch2/blob/devel/docs/reporters.md) for details on how to do this.
     - See `src/catch2/reporters/catch_reporter_cumulative_base.cpp` and similar files in directory for how it is implemented in Catch2.
@@ -140,5 +144,3 @@ Installation guide:
     - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_helpers.cpp#L103
     - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_console.hpp
     - https://mpitutorial.com/tutorials/mpi-scatter-gather-and-allgather/
-* [ ] Add MPI tests using Catch2
-* 
