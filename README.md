@@ -144,3 +144,21 @@ Installation guide:
     - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_helpers.cpp#L103
     - https://github.com/catchorg/Catch2/blob/devel/src/catch2/reporters/catch_reporter_console.hpp
     - https://mpitutorial.com/tutorials/mpi-scatter-gather-and-allgather/
+
+## Troubleshooting
+
+### MPI tests fail on Ubuntu 24.04 + Wayland with authorization errors
+If running MPI tests are unable to start, and gives:
+```
+Authorization required, but no authorization protocol specified
+```
+The cause is `hwloc` attempts to load its OpenGL (`gl`) component, which can fail under Wayland/XWayland authorization.
+
+A working fix is either to place
+```
+export HWLOC_COMPONENTS=-gl
+```
+in your profile (e.g. `.bashrc` or `.zshrc`), or scope it to one command:
+```
+mpirun -x HWLOC_COMPONENTS=-gl -n 4 ./bin/mpi_tests
+```
