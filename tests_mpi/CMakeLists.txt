@@ -4,7 +4,7 @@ set(MPI_TEST_SOURCES
     lattice/test_actions.cpp
     # lattice/action_test.cpp
     # lattice/observable_test.cpp
-    # io/io_test.cpp
+    io/test_io.cpp
     mpi_tests.cpp
 )
 
@@ -13,7 +13,15 @@ add_executable(mpi_tests ${MPI_TEST_SOURCES})
 target_compile_features(mpi_tests PRIVATE cxx_std_17)
 
 # Link the necessary libraries
-target_link_libraries(mpi_tests PRIVATE math actions MPI::MPI_CXX Catch2::Catch2)
+target_link_libraries(mpi_tests PRIVATE
+  math
+  actions
+  io
+  config
+  parallelization
+  MPI::MPI_CXX
+  Catch2::Catch2
+)
 target_include_directories(mpi_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Registers CMake tests
