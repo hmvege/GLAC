@@ -1,6 +1,7 @@
 #include <mpi.h>
 
 #include <catch2/catch_all.hpp>
+#include <string>
 
 TEST_CASE("MPI Test", "[mpi]")
 {
@@ -14,7 +15,7 @@ TEST_CASE("MPI Test", "[mpi]")
       double b = 3.14;
       CAPTURE(b);
 
-      INFO("Running test for rank " + rank);
+      INFO("Running test for rank " + std::to_string(rank));
 
       if (rank == 0)
       {
