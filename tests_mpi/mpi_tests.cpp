@@ -1,4 +1,8 @@
+#include <algorithm>
 #include <iomanip>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #define CATCH_CONFIG_RUNNER  // This tells Catch that I will provide a main()
                              // function, and ensures Catch::Sessions API is
@@ -9,6 +13,7 @@
 #include <catch2/catch_test_case_info.hpp>
 #include <catch2/reporters/catch_reporter_registrars.hpp>
 #include <catch2/reporters/catch_reporter_streaming_base.hpp>
+#include <parallelization/communicator.h>
 
 namespace
 {
@@ -217,12 +222,19 @@ CATCH_REGISTER_REPORTER(MPI_CATCH_REPORTER, MPIMasterReporter)
 
 int main(int argc, char* argv[])
 {
-  MPI_Init(&argc, &argv);
+  Parallel::Communicator::init(argc, argv);
 
   // Prepare command line arguments for Catch
   std::vector<std::string> args(argv, argv + argc);
-  args.push_back("--reporter");
-  args.push_back(MPI_CATCH_REPORTER);
+  const bool reporterSpecified = std::find(args.begin(), args.end(), "--reporter")
+                                   != args.end()
+                                 || std::find(args.begin(), args.end(), "-r")
+                                      != args.end();
+  if (!reporterSpecified)
+  {
+    args.push_back("--reporter");
+    args.push_back(MPI_CATCH_REPORTER);
+  }
   args.push_back("--colour-mode");
   args.push_back("ansi");
 
@@ -240,6 +252,7 @@ int main(int argc, char* argv[])
 
   if (returnCode != 0)
   {
+    Parallel::Communicator::freeMPIGroups();
     MPI_Finalize();
     return returnCode;
   }
@@ -251,6 +264,7 @@ int main(int argc, char* argv[])
   int globalFail = 0;
   MPI_Allreduce(&localFail, &globalFail, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
 
+  Parallel::Communicator::freeMPIGroups();
   MPI_Finalize();
 
   return globalFail ? 1 : 0;
